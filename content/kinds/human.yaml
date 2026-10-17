@@ -1,0 +1,21 @@
+id: human
+name: Human
+status: draft
+plane: earth
+summary: Generalists who start with a little of everything and can't push any stat as far as other Kinds.
+tags: [generalist, earth]
+features:
+  - name: Generalists
+    description: Humans start with 1 point in every Outer Ring stat.
+  - name: Unexceptional
+    description: Humans can't exceed 15 in any Outer Ring stat unless otherwise modified.
+stats:
+  endurance: { start: 1, max: 15 }
+  power: { start: 1, max: 15 }
+  grace: { start: 1, max: 15 }
+  empathy: { start: 1, max: 15 }
+  persuasion: { start: 1, max: 15 }
+  demeanor: { start: 1, max: 15 }
+  logic: { start: 1, max: 15 }
+  intuition: { start: 1, max: 15 }
+  memory: { start: 1, max: 15 }

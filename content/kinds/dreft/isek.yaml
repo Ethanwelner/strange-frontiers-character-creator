@@ -1,0 +1,27 @@
+id: isek
+name: Isek
+status: placeholder
+plane: isekai
+region: dreft
+summary: The “Free Elves.” Nigh-immortal, and in no hurry to act like it. Young Isek chase rebellion and adventure; the few who grow old tend to grow bitter and live apart.
+tags: [elf, immortal, rebel, adventurer]
+features:
+  - name: Nigh Immortal
+    description: Isek don’t age past their prime. Most don’t live long enough for it to matter.
+  - name: Reckless
+    description: Higher Power and Grace maximums, lower Demeanor maximum.
+  - name: Rebel’s Doctrine
+    description: Starts with the Isek doctrine of rebellion and seeking as a knowledge feat.
+  - name: Restless
+    description: Ill-suited to farm life. Isek have easier access to military, guild, and caravan feats.
+featAccess: [military, guild, caravan]
+stats:
+  endurance: { start: 1, max: 15 }
+  power: { start: 2, max: 18 }
+  grace: { start: 2, max: 18 }
+  empathy: { start: 1, max: 14 }
+  persuasion: { start: 1, max: 15 }
+  demeanor: { start: 0, max: 10 }
+  logic: { start: 0, max: 14 }
+  intuition: { start: 1, max: 16 }
+  memory: { start: 1, max: 15 }

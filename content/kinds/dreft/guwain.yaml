@@ -1,0 +1,26 @@
+id: guwain
+name: Guwain
+status: placeholder
+plane: isekai
+region: dreft
+summary: The “Brine Dwarves.” Averaging four feet and well over 250 pounds. Most live along the coast; a few hold out in mountaintop villages where the air is thin and cold.
+tags: [dwarf, sea, diving, mountains]
+features:
+  - name: Stout
+    description: Higher Endurance and Power maximums, lower Grace maximum.
+  - name: Deep Walker
+    description: Can walk the sea floor, and with training hold their breath for hours.
+  - name: Thin Air
+    description: Unbothered by altitude and cold that would slow other Kinds.
+  - name: Beard Nets
+    description: A long enough beard doubles as a net. It’s more useful than it sounds.
+stats:
+  endurance: { start: 2, max: 20 }
+  power: { start: 2, max: 17 }
+  grace: { start: 0, max: 10 }
+  empathy: { start: 1, max: 15 }
+  persuasion: { start: 1, max: 14 }
+  demeanor: { start: 1, max: 16 }
+  logic: { start: 1, max: 15 }
+  intuition: { start: 0, max: 14 }
+  memory: { start: 1, max: 14 }
