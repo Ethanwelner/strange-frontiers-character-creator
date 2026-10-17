@@ -1,0 +1,13 @@
+id: hedge-witch
+name: Hedge Witch
+status: placeholder
+plane: isekai
+region: dreft
+summary: "Practices magic outside the licensed system. Usually cheaper, and usually less safe."
+tags: [witch, magic, unlicensed, folk]
+type: profession
+grants:
+  - { trait: folk-remedies }
+  - { trait: concealment }
+  - { trait: magic-on-isekai }
+  - { trait: herbalism }

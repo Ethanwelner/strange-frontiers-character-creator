@@ -1,0 +1,13 @@
+id: royal-guard
+name: Royal Guard
+status: placeholder
+plane: isekai
+region: dreft
+summary: "Sworn to the crown, which currently has no one wearing it."
+tags: [guard, military, crown, court]
+type: profession
+grants:
+  - { trait: shield-wall }
+  - { trait: vigilance }
+  - { trait: court-etiquette }
+  - { trait: port-herminst }

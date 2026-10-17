@@ -1,0 +1,11 @@
+id: port-herminst
+name: Port Herminst
+status: placeholder
+plane: isekai
+region: dreft
+summary: Knowing your way around Dreft’s capital and biggest port.
+tags: [city, port, capital]
+lore: herminst
+category: knowledge
+ranked: true
+effect: Placeholder. Effect not yet written.

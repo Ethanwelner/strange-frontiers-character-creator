@@ -1,0 +1,11 @@
+id: the-switch-port
+name: The Switch Port
+status: placeholder
+plane: isekai
+region: dreft
+summary: "The switch port at Castle Tetra, where Dreft meets the systems."
+tags: [switch-port, tetra, caravan]
+lore: tetra-switch-port
+category: knowledge
+ranked: true
+effect: Placeholder. Effect not yet written.

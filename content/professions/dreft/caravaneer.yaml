@@ -1,0 +1,17 @@
+id: caravaneer
+name: Caravaneer
+status: placeholder
+plane: isekai
+region: dreft
+summary: "Drives trade between the switch port and the rest of Dreft, and occasionally lives to retire."
+tags: [caravan, trade, travel, merchant]
+type: profession
+grants:
+  - { trait: teamster }
+  - { trait: haggler }
+  - { trait: trade-roads }
+  - { trait: bandits-and-brigands }
+choices:
+  - choose: 1
+    from: contact
+    note: 1 additional Contact

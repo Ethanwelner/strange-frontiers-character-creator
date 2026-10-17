@@ -1,0 +1,13 @@
+id: sunrise-refugee
+name: Sunrise Refugee
+status: placeholder
+plane: isekai
+region: dreft
+summary: Fled the Sunrise Princedoms when Drovus finished absorbing them.
+tags: [refugee, sunrise, drovus, survival]
+type: past
+grants:
+  - { trait: survivalist }
+  - { trait: concealment }
+  - { trait: the-drovus-empire }
+  - { trait: the-sunrise-princedoms }

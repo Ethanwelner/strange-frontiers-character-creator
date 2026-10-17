@@ -1,0 +1,16 @@
+id: merchant-dynasty
+name: Merchant Dynasty
+status: placeholder
+plane: isekai
+region: dreft
+summary: "Child of a trade family grown rich off the switch port, and resented for it."
+tags: [merchant, trade, wealth, family]
+type: past
+grants:
+  - { trait: haggler }
+  - { trait: appraisal }
+  - { trait: trade-law }
+choices:
+  - choose: 1
+    from: language
+    note: 1 additional Language

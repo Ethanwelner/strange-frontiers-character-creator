@@ -1,0 +1,13 @@
+id: raised-in-the-caravan-town
+name: Raised in the Caravan Town
+status: placeholder
+plane: isekai
+region: dreft
+summary: "Grew up in the shadow of Castle Tetra, among foreigners and the people who profit from them."
+tags: [switch-port, urban, caravan, foreigners]
+type: past
+grants:
+  - { trait: streetwise }
+  - { trait: sleight-of-hand }
+  - { trait: caravan-routes }
+  - { trait: earth-baseline-customs }
