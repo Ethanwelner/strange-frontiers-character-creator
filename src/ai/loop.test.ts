@@ -146,10 +146,10 @@ describe("describeCharacter", () => {
     expect(second.accepted).toBe(false);
     expect(second.unknownIds).toEqual([{ path: "traits[0]", message: 'Trait "fireball" doesn\'t exist' }]);
 
-    // Accepted with the Contact left for the player.
+    // Legal, with the Contact left for the player.
     expect(result.status).toBe("accepted");
     expect(result.check?.openChoices).toEqual([expect.objectContaining({ package: "caravaneer", from: "contact" })]);
-    expect(result.check?.legal).toBe(false);
+    expect(result.check?.legal).toBe(true);
   });
 
   it("asks for a reason for every choice", async () => {

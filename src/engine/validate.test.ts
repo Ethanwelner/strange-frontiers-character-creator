@@ -326,12 +326,18 @@ describe("rule 6: package grants and choices", () => {
     expect(r.warnings).toEqual([]);
     // Contacts aren't Traits, so they don't show up as held Traits.
     expect(r.summary!.traits.map((h) => h.trait)).not.toContain("my cousin in the harbor guard");
-    expect(codes(check({ ...isek, choices: named([]) }))).toEqual(["choice"]);
+    expect(codes(check({ ...isek, choices: named(["Oyl", "Wenna"]) }))).toEqual(["choice"]);
+    expect(codes(check({ ...isek, choices: named(["Oyl", "Oyl"]) }))).toEqual(["choice", "choice"]);
   });
 
-  it("asks the player to record an unanswered Contact", () => {
-    const r = check({ ...isek, choices: isek.choices!.filter((c) => c.from !== "contact") });
-    expect(r.errors).toEqual([expect.objectContaining({ code: "choice", message: "Caravaneer gives 1 Contact: record who on the Choices step" })]);
+  it("reminds the player to record a Contact, without making the build illegal", () => {
+    const reminder = expect.objectContaining({ code: "choice", message: "Caravaneer gives 1 Contact: record who on the Choices step" });
+    const missing = check({ ...isek, choices: isek.choices!.filter((c) => c.from !== "contact") });
+    expectLegal(missing);
+    expect(missing.warnings).toEqual([reminder]);
+    const empty = check({ ...isek, choices: isek.choices!.map((c) => (c.from === "contact" ? { ...c, traits: [] } : c)) });
+    expectLegal(empty);
+    expect(empty.warnings).toEqual([reminder]);
   });
 
   it("answers Dreftian-language choices from Dreftian languages only", () => {

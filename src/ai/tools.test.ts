@@ -120,13 +120,12 @@ describe("validate_build", () => {
     expect(checkBuild(build, content).accepted).toBe(false);
   });
 
-  it("leaves choices from empty pools to the player", () => {
+  it("leaves Contacts to the player, and the build is still legal", () => {
     expect(openChoices(caravaneer, content)).toEqual([{ package: "caravaneer", from: "contact", count: 1, note: "1 additional Contact" }]);
     const out = checkBuild(caravaneer, content);
-    // Accepted for the loop, but not legal until the player picks a Contact.
     expect(out.accepted).toBe(true);
-    expect(out.legal).toBe(false);
-    expect(out.warnings).toEqual([]);
+    expect(out.legal).toBe(true);
+    expect(out.warnings).toEqual([expect.objectContaining({ code: "choice", message: "Caravaneer gives 1 Contact: record who on the Choices step" })]);
   });
 });
 

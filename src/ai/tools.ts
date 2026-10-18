@@ -231,8 +231,9 @@ export function unknownIds(build: unknown, content: Content): IdIssue[] {
 }
 
 // Checks a proposed build: unknown ids first, then validateBuild. Choices left
-// for the player are filled with placeholders for the engine, so they don't
-// count against the build; `legal` reports the build exactly as proposed.
+// for the player from pools with no content are filled with placeholders for
+// the engine, so they don't count against the build (an unrecorded Contact is
+// only a warning anyway); `legal` reports the build exactly as proposed.
 export function checkBuild(build: unknown, content: Content, campaign: Campaign = DEFAULT_CAMPAIGN): BuildCheck {
   const ids = unknownIds(build, content);
   const strict = validateBuild(build, content, campaign);
@@ -240,10 +241,10 @@ export function checkBuild(build: unknown, content: Content, campaign: Campaign 
   const b = obj(build);
   let result = strict;
   let placeholderPaths = new Set<string>();
-  if (b && open.length > 0) {
+  if (b && open.some((o) => !isFreeTextPool(o.from))) {
     const choices = list(b.choices);
     const answered = (o: OpenChoice) => choices.some((a) => obj(a)?.package === o.package && obj(a)?.from === o.from);
-    const filled = open.filter((o) => !answered(o)).map((o) => ({
+    const filled = open.filter((o) => !answered(o) && !isFreeTextPool(o.from)).map((o) => ({
       package: o.package,
       from: o.from,
       traits: Array.from({ length: o.count }, (_, i) => `${PLACEHOLDER}-${i + 1}`),

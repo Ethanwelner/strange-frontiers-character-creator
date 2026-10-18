@@ -84,7 +84,7 @@ for (const [i, p] of prompts.entries()) {
   const b = (result.build ?? {}) as Record<string, unknown>;
   const kindMatches = !p.expect || (b.kind === p.expect.kind && (!p.expect.form || b.form === p.expect.form));
   const open = check?.openChoices.map((c) => `${c.count} ${c.from} (${c.package})`).join(", ");
-  const verdict = ok ? (check?.legal ? "PASS" : `PASS, player picks: ${open}`) : `FAIL (${result.status})`;
+  const verdict = ok ? `PASS${open ? `, player records: ${open}` : ""}` : `FAIL (${result.status})`;
   const u = result.usage;
   const stats = `${result.turns} turns, ${seconds}s, ${u.inputTokens} in / ${u.cacheReadTokens} cached / ${u.outputTokens} out`;
   console.log(`${verdict}${kindMatches ? "" : " · KIND MISMATCH"} · ${stats}`);
