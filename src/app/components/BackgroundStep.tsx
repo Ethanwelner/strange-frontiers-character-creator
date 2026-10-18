@@ -1,0 +1,84 @@
+import type { BackgroundPackage } from "../../schema/index.js";
+import { content } from "../content.js";
+import type { Draft } from "../draft.js";
+import { Card, Chip, title, traitName } from "./ui.js";
+
+const SLOTS = ["origin", "profession", "past"] as const;
+
+const BLURB = {
+  origin: "Where you're from.",
+  profession: "What you do for a living.",
+  past: "What shaped you before the story starts.",
+};
+
+export function PackageGrants({ pkg }: { pkg: BackgroundPackage }) {
+  return (
+    <div className="grants">
+      {pkg.grants.length > 0 && (
+        <div>
+          <span className="label">Grants</span>
+          {pkg.grants.map((g) => (
+            <Chip key={g.trait} tone="accent">
+              {traitName(g.trait)}
+              {g.rank ? ` ${g.rank}` : ""}
+            </Chip>
+          ))}
+        </div>
+      )}
+      {pkg.choices.length > 0 && (
+        <div>
+          <span className="label">Choose</span>
+          {pkg.choices.map((c, i) => (
+            <Chip key={i}>{c.note ?? `${c.choose} from ${c.from}`}</Chip>
+          ))}
+        </div>
+      )}
+      {pkg.backgroundTraits.length > 0 && (
+        <div>
+          <span className="label">Background list</span>
+          {pkg.backgroundTraits.map((t) => (
+            <Chip key={t}>{traitName(t)}</Chip>
+          ))}
+        </div>
+      )}
+      {pkg.features.map((f) => (
+        <p key={f.name}>
+          <strong>{f.name}.</strong> {f.description}
+        </p>
+      ))}
+    </div>
+  );
+}
+
+export function BackgroundStep({ draft, onChange }: { draft: Draft; onChange: (d: Draft) => void }) {
+  const choose = (slot: (typeof SLOTS)[number], id: string) => {
+    const old = draft[slot];
+    if (old === id) return;
+    // Answers to the old package's choices no longer apply.
+    onChange({ ...draft, [slot]: id, choices: draft.choices.filter((c) => c.package !== old) });
+  };
+  return (
+    <section>
+      <h2>Background</h2>
+      <p className="lede">Pick an Origin, a Profession and a Past. Their Traits come free and don't use picks.</p>
+      {SLOTS.map((slot) => (
+        <div key={slot} className="slot">
+          <h3 className="subhead">
+            {title(slot)} <span className="muted">{BLURB[slot]}</span>
+          </h3>
+          <div className="cards" role="radiogroup" aria-label={title(slot)}>
+            {content.packages
+              .filter((p) => p.type === slot)
+              .map((p) => (
+                <Card key={p.id} label={p.name} selected={draft[slot] === p.id} onSelect={() => choose(slot, p.id)}>
+                  <h3>{p.name}</h3>
+                  <p>{p.summary}</p>
+                  <PackageGrants pkg={p} />
+                </Card>
+              ))}
+          </div>
+        </div>
+      ))}
+    </section>
+  );
+}
