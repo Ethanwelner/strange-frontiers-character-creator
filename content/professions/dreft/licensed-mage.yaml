@@ -1,0 +1,13 @@
+id: licensed-mage
+name: Licensed Mage
+status: placeholder
+plane: isekai
+region: dreft
+summary: "Trained in Port Herminst’s schools in officially sanctioned, and supposedly safe, magic."
+tags: [mage, magic, licensed, scholar]
+type: profession
+grants:
+  - { trait: incantation }
+  - { trait: relic-handling }
+  - { trait: magic-on-isekai }
+  - { trait: dreftian-law }

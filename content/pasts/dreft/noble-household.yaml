@@ -1,0 +1,13 @@
+id: noble-household
+name: Noble Household
+status: placeholder
+plane: isekai
+region: dreft
+summary: "Born or raised in service to a noble house, just in time for the succession crisis."
+tags: [nobility, court, intrigue, succession]
+type: past
+grants:
+  - { trait: courtly-manners }
+  - { trait: schemer }
+  - { trait: noble-houses-of-dreft }
+  - { trait: succession-law }

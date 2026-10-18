@@ -43,3 +43,4 @@ Content flow: write in Campfire → convert to data files here (Claude-assisted,
 - Universal feat picks at creation: how many, and which pools, per Kind and level.
 - Whether characters start at level 1 or 2–3, as the sample sheet suggests.
 - Items: needs its own schema once equipment rules settle.
+- Choice pools: `choices.from` names a pool (`contact`, `language`, `dreftian-language`) that nothing defines yet. Contacts map to the `contact` category and languages to the `language` type, but no Dreftian languages exist yet, so the validator can't check these.

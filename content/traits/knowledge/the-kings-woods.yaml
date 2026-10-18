@@ -1,0 +1,11 @@
+id: the-kings-woods
+name: The King’s Woods
+status: placeholder
+plane: isekai
+region: dreft
+summary: "The forest east of the switch port, and what lives in it."
+tags: [forest, wilderness, monsters]
+lore: kings-woods
+category: knowledge
+ranked: true
+effect: Placeholder. Effect not yet written.

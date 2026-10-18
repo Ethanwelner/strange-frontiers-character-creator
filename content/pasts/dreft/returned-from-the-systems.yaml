@@ -1,0 +1,18 @@
+id: returned-from-the-systems
+name: Returned from the Systems
+status: placeholder
+plane: isekai
+region: dreft
+summary: "Left Dreft for the systems and came back changed, like everyone who comes back."
+tags: [systems, traveler, technology, earth]
+type: past
+grants:
+  - { trait: tinkerer }
+  - { trait: earth-baseline-technology }
+choices:
+  - choose: 1
+    from: contact
+    note: 1 additional Contact
+  - choose: 1
+    from: language
+    note: 1 additional Language

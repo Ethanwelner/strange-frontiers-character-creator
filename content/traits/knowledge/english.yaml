@@ -1,0 +1,9 @@
+id: english
+name: English
+status: placeholder
+plane: earth
+summary: "The English language, as spoken in the systems."
+tags: [language, earth]
+category: knowledge
+types: [language]
+effect: Placeholder. Effect not yet written.

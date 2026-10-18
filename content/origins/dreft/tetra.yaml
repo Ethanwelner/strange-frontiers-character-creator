@@ -1,0 +1,13 @@
+id: tetra
+name: Tetra (Switch Port Town)
+status: placeholder
+plane: isekai
+region: dreft
+summary: "The caravan town that grew up around Castle Tetra, where Dreft meets the systems."
+tags: [town, switch-port, caravan, foreigners]
+lore: tetra-switch-port
+type: origin
+grants:
+  - { trait: english }
+  - { trait: earth-baseline-customs, rank: 1 }
+  - { trait: the-switch-port, rank: 1 }
