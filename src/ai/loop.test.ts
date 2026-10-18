@@ -1,10 +1,12 @@
-// The loop against a scripted fake of the Messages API. Nothing here calls
-// the real API.
+// The loop through the Claude adapter, against a scripted fake of the
+// Messages API. Nothing here calls the real API.
 import type Anthropic from "@anthropic-ai/sdk";
 import { describe, expect, it, vi } from "vitest";
 import type { BuildInput } from "../engine/build.js";
 import { loadContent } from "../engine/content.js";
-import { DescribeFailure, describeCharacter, MODEL, type CreateMessage } from "./loop.js";
+import { anthropicProvider, CLAUDE_MODEL as MODEL, type CreateMessage } from "./anthropic.js";
+import { describeCharacter } from "./loop.js";
+import { DescribeFailure } from "./model.js";
 import type { Reason } from "./types.js";
 
 const { content } = loadContent();
@@ -80,7 +82,7 @@ describe("describeCharacter", () => {
       message([toolUse("validate_build", { build: goblinoid })]),
       message([submit(goblinoid)]),
     );
-    const result = await describeCharacter({ description: "A small goblin who studied magic at Tetra.", content, create });
+    const result = await describeCharacter({ description: "A small goblin who studied magic at Tetra.", content, provider: anthropicProvider(create) });
 
     expect(result.status).toBe("accepted");
     expect(result.build).toEqual(goblinoid);
@@ -112,7 +114,7 @@ describe("describeCharacter", () => {
   it("sends engine errors back and accepts the repaired build", async () => {
     const broken = { ...goblinoid, levels: [{ group: "mental", points: { logic: 5 } }] };
     const { create, calls } = script(message([submit(broken)]), message([submit(goblinoid)]));
-    const result = await describeCharacter({ description: "A goblin mage.", content, create });
+    const result = await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create) });
 
     expect(result.status).toBe("accepted");
     expect(result.build).toEqual(goblinoid);
@@ -138,7 +140,7 @@ describe("describeCharacter", () => {
       message([toolUse("validate_build", { build: unknownTrait })]),
       message([submit(fixed)]),
     );
-    const result = await describeCharacter({ description: "A goblin caravan driver.", content, create });
+    const result = await describeCharacter({ description: "A goblin caravan driver.", content, provider: anthropicProvider(create) });
 
     const first = JSON.parse(resultsOf(calls[1]!)[0]!.content as string);
     expect(first.unknownIds).toEqual([expect.objectContaining({ path: "choices[0]" })]);
@@ -154,7 +156,7 @@ describe("describeCharacter", () => {
 
   it("asks for a reason for every choice", async () => {
     const { create, calls } = script(message([submit(goblinoid, reasonsFor(goblinoid).slice(1))]), message([submit(goblinoid)]));
-    const result = await describeCharacter({ description: "A goblin mage.", content, create });
+    const result = await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create) });
     expect(result.status).toBe("accepted");
     const body = JSON.parse(resultsOf(calls[1]!)[0]!.content as string);
     expect(body.reasonProblems).toEqual(["Add a reason for: kind."]);
@@ -167,7 +169,7 @@ describe("describeCharacter", () => {
       message([toolUse("validate_build", { build: broken })]),
       message([toolUse("search_traits", { query: "magic" })]),
     );
-    const result = await describeCharacter({ description: "A goblin mage.", content, create, maxTurns: 3 });
+    const result = await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create), maxTurns: 3 });
 
     expect(create).toHaveBeenCalledTimes(3);
     expect(result.status).toBe("turn-limit");
@@ -178,19 +180,19 @@ describe("describeCharacter", () => {
 
   it("nudges Claude to submit when it answers without a tool", async () => {
     const { create, calls } = script(message([{ type: "text", text: "Here's my idea…", citations: null } as Block], "end_turn"), message([submit(goblinoid)]));
-    const result = await describeCharacter({ description: "A goblin mage.", content, create });
+    const result = await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create) });
     expect(result.status).toBe("accepted");
     expect(calls[1]!.messages.at(-1)!.content).toContain("submit_build");
   });
 
   it("returns tool errors to Claude instead of failing", async () => {
     const { create, calls } = script(message([toolUse("get_package", { id: "pirate-king" })]), message([submit(goblinoid)]));
-    await describeCharacter({ description: "A goblin mage.", content, create });
+    await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create) });
     expect(resultsOf(calls[1]!)[0]).toEqual(expect.objectContaining({ is_error: true }));
   });
 
   it("fails clearly on a refusal", async () => {
     const { create } = script(message([], "refusal"));
-    await expect(describeCharacter({ description: "x", content, create })).rejects.toBeInstanceOf(DescribeFailure);
+    await expect(describeCharacter({ description: "x", content, provider: anthropicProvider(create) })).rejects.toBeInstanceOf(DescribeFailure);
   });
 });

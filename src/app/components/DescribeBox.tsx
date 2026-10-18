@@ -51,7 +51,7 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
       const body = (await res.json().catch(() => undefined)) as DescribeResult | DescribeError | undefined;
       if (!body) throw new Error(`The AI server answered ${res.status} with no details. Is npm run dev running?`);
       if ("error" in body) throw new Error(body.message);
-      if (!body.build) throw new Error("Claude didn't propose a build. Try again, or describe the character differently.");
+      if (!body.build) throw new Error("The model didn't propose a build. Try again, or describe the character differently.");
       onBuilt(body, text);
     } catch (err) {
       setError(err instanceof TypeError ? "Couldn't reach the AI server. Start it with npm run dev." : err instanceof Error ? err.message : String(err));
@@ -67,7 +67,7 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
           <h3>Describe your character</h3>
         </label>
         <p className="hint">
-          Say who they are in your own words. Claude picks from the game's real Kinds, packages and Traits, the rules engine checks every
+          Say who they are in your own words. The AI picks from the game's real Kinds, packages and Traits, the rules engine checks every
           choice, and you can change anything afterward.
         </p>
         <textarea
@@ -85,7 +85,7 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
           </button>
           {busy && (
             <span className="muted" role="status">
-              Claude is choosing and checking. This can take a minute.
+              Choosing and checking. A local model can take a few minutes.
             </span>
           )}
         </div>
@@ -105,10 +105,10 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
           <div className="describe-head">
             <p className={`describe-status ${notes.status === "accepted" ? "good" : "bad"}`}>
               {notes.status === "accepted"
-                ? "Built from your description. Edit anything below; the panel keeps checking."
-                : "Claude ran out of turns before the build was legal. The panel shows what's left to fix."}
+                ? `Built from your description${notes.model ? ` by ${notes.model}` : ""}. Edit anything below; the panel keeps checking.`
+                : `${notes.model ?? "The model"} ran out of turns before the build was legal. The panel shows what's left to fix.`}
             </p>
-            <button className="link" onClick={onDismiss} aria-label="Hide Claude's reasons">
+            <button className="link" onClick={onDismiss} aria-label="Hide the reasons">
               ✕
             </button>
           </div>

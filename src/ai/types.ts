@@ -3,7 +3,7 @@
 import type { BuildInput } from "../engine/build.js";
 import type { BuildSummary, Issue } from "../engine/validate.js";
 
-// One line on why Claude made a choice. `target` names the part of the build:
+// One line on why the model made a choice. `target` names the part of the build:
 // "kind", "form", "origin", "profession", "past", "levels", a Trait id from
 // the build's picks, or "choice:<package>/<pool>".
 export interface Reason {
@@ -11,9 +11,8 @@ export interface Reason {
   reason: string;
 }
 
-// A package choice whose pool has no Traits in content yet (Contacts and
-// Dreftian languages, for now). Claude can't answer it without inventing an
-// id, so it's left for the player.
+// A package choice the model leaves for the player: a Contact, which the
+// player decides, or a pool with no Traits in content yet.
 export interface OpenChoice {
   package: string;
   from: string;
@@ -48,11 +47,13 @@ export interface Usage {
 }
 
 export interface DescribeResult {
-  // "accepted": Claude submitted a build the engine accepts. "turn-limit":
-  // the loop stopped first, and `build` is the last one Claude proposed.
+  // "accepted": the model submitted a build the engine accepts. "turn-limit":
+  // the loop stopped first, and `build` is the last one it proposed.
   status: "accepted" | "turn-limit";
+  // The model that built it, e.g. "deepseek-r1:14b".
+  model: string;
   build?: BuildInput;
-  // One or two sentences on the character, in Claude's words.
+  // One or two sentences on the character, in the model's words.
   summary?: string;
   reasons: Reason[];
   check?: BuildCheck;
@@ -66,6 +67,6 @@ export interface DescribeRequest {
 }
 
 export interface DescribeError {
-  error: "missing-key" | "bad-request" | "auth" | "rate-limit" | "api" | "refused" | "server";
+  error: "missing-key" | "unavailable" | "bad-request" | "auth" | "rate-limit" | "api" | "refused" | "server";
   message: string;
 }

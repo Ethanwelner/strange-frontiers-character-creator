@@ -20,9 +20,10 @@ export interface Draft {
 export const STEPS = ["kind", "background", "levels", "choices", "traits", "sheet"] as const;
 export type Step = (typeof STEPS)[number];
 
-// What the builder keeps from Claude's last build, so the reasons survive a reload.
+// What the builder keeps from the last AI build, so the reasons survive a reload.
 export interface AiNotes {
   description: string;
+  model?: string;
   status: DescribeResult["status"];
   summary?: string;
   reasons: Reason[];

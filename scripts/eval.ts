@@ -1,12 +1,18 @@
-// Runs the sample prompts in evals/prompts.md against the real Claude API and
-// reports, for each, whether the build is legal and what Claude made, so the
-// theme can be judged by eye. Needs ANTHROPIC_API_KEY in .env.
+// Runs the sample prompts in evals/prompts.md through the build loop and
+// reports, for each, whether the build is legal and what the model made, so
+// the theme can be judged by eye. Uses the same model settings as the server
+// (.env): local Ollama by default, or the Claude API with SF_PROVIDER=anthropic.
 //
-//   npm run eval              every prompt
-//   npm run eval -- goblin    only prompts whose heading contains "goblin"
-import Anthropic from "@anthropic-ai/sdk";
+//   npm run eval                          every prompt
+//   npm run eval -- goblin                only prompts whose heading contains "goblin"
+//   npm run eval -- --model qwen3:30b-a3b another Ollama model
+//   npm run eval -- --mode tools          native tool calling instead of JSON
+//   npm run eval -- --provider anthropic  the Claude API (needs ANTHROPIC_API_KEY)
+//   npm run eval -- --trace               print each turn's tool calls
+//   npm run eval -- --turns 6             a different turn limit
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { describeCharacter } from "../src/ai/loop.js";
+import { MISSING_KEY_MESSAGE, providerFor, settingsFromEnv } from "../src/server/describe.js";
 import type { DescribeResult } from "../src/ai/types.js";
 import { loadContent } from "../src/engine/content.js";
 
@@ -16,10 +22,28 @@ const RESULTS = new URL("../evals/results/", import.meta.url);
 try {
   process.loadEnvFile();
 } catch {
-  // No .env; checked below.
+  // No .env; the defaults (local Ollama) apply.
 }
-if (!process.env.ANTHROPIC_API_KEY?.trim()) {
-  console.error("No Anthropic API key found. Add ANTHROPIC_API_KEY=your-key to .env (see .env.example), then run npm run eval again.");
+
+const args = process.argv.slice(2);
+const flag = (name: string) => {
+  const i = args.indexOf(name);
+  return i >= 0 ? args.splice(i, 2)[1] : undefined;
+};
+const settings = settingsFromEnv(process.env);
+const providerFlag = flag("--provider");
+if (providerFlag) settings.provider = providerFlag === "anthropic" ? "anthropic" : "ollama";
+const turnsFlag = flag("--turns");
+const maxTurns = turnsFlag ? Number(turnsFlag) : undefined;
+const trace = args.includes("--trace");
+if (trace) args.splice(args.indexOf("--trace"), 1);
+const modelFlag = flag("--model");
+if (modelFlag) settings.ollamaModel = modelFlag;
+const modeFlag = flag("--mode");
+if (modeFlag) settings.ollamaMode = modeFlag === "tools" ? "tools" : "json";
+const provider = providerFor(settings);
+if (!provider) {
+  console.error(MISSING_KEY_MESSAGE);
   process.exit(1);
 }
 
@@ -53,15 +77,15 @@ if (errors.length) {
 }
 const name = (id: unknown, list: { id: string; name: string }[]) => list.find((x) => x.id === id)?.name ?? String(id);
 
-const filter = process.argv.slice(2).join(" ").toLowerCase();
+const filter = args.join(" ").toLowerCase();
 const prompts = parsePrompts(readFileSync(PROMPTS, "utf8")).filter((p) => !filter || p.title.toLowerCase().includes(filter));
 if (prompts.length === 0) {
   console.error(filter ? `No prompt heading contains "${filter}".` : "No prompts found in evals/prompts.md.");
   process.exit(1);
 }
 
-const client = new Anthropic();
-const report: string[] = [`# Eval run ${new Date().toISOString()}`, ""];
+console.log(`Building with ${provider.model}\n`);
+const report: string[] = [`# Eval run ${new Date().toISOString()} · ${provider.model}`, ""];
 let passed = 0;
 
 for (const [i, p] of prompts.entries()) {
@@ -70,7 +94,11 @@ for (const [i, p] of prompts.entries()) {
   const started = Date.now();
   let result: DescribeResult;
   try {
-    result = await describeCharacter({ description: p.description, content, create: (params) => client.beta.messages.create(params) });
+    const onTurn = trace
+      ? (turn: number, calls: { name: string; input: unknown }[]) =>
+          console.log(`\n  turn ${turn}: ${calls.map((c) => `${c.name} ${JSON.stringify(c.input).slice(0, 160)}`).join("\n          ") || "(no tool call)"}`)
+      : undefined;
+    result = await describeCharacter({ description: p.description, content, provider, onTurn, maxTurns });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.log(`FAIL (error: ${message})`);
@@ -89,8 +117,8 @@ for (const [i, p] of prompts.entries()) {
   const stats = `${result.turns} turns, ${seconds}s, ${u.inputTokens} in / ${u.cacheReadTokens} cached / ${u.outputTokens} out`;
   console.log(`${verdict}${kindMatches ? "" : " · KIND MISMATCH"} · ${stats}`);
 
-  const kind = `${name(b.kind, content.kinds)}${b.form ? ` (${String(b.form)})` : ""}`;
-  const packages = ["origin", "profession", "past"].map((s) => name(b[s], content.packages)).join(" · ");
+  const kind = result.build ? `${name(b.kind, content.kinds)}${b.form ? ` (${String(b.form)})` : ""}` : "no build proposed";
+  const packages = result.build ? ["origin", "profession", "past"].map((s) => name(b[s], content.packages)).join(" · ") : "";
   const traits = (Array.isArray(b.traits) ? b.traits : []).map((t) => `${name(t.trait, content.traits)}${t.rank > 1 ? ` ${t.rank}` : ""}`);
   console.log(`  ${b.name ? `${String(b.name)}: ` : ""}${kind} · ${packages}`);
   if (result.summary) console.log(`  ${result.summary}`);

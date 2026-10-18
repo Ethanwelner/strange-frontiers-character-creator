@@ -1,19 +1,22 @@
 // The local AI server. `npm run dev` runs it next to Vite, which proxies
-// /api here. The API key is read from .env on this side only: it never goes
-// to the browser and is never logged.
+// /api here. It builds with a local Ollama model by default, or the Claude
+// API with SF_PROVIDER=anthropic. Settings come from .env on this side only:
+// the API key never goes to the browser and is never logged.
 import { createServer, type IncomingMessage } from "node:http";
 import { loadContent } from "../engine/content.js";
-import { handleDescribe } from "./describe.js";
+import { DEFAULT_OLLAMA_HOST, DEFAULT_OLLAMA_MODEL } from "../ai/ollama.js";
+import { handleDescribe, settingsFromEnv } from "./describe.js";
 
 try {
   process.loadEnvFile();
 } catch {
-  // No .env yet. Requests get the "add your key" message.
+  // No .env yet; the defaults (local Ollama) apply.
 }
 
 const PORT = Number(process.env.AI_PORT ?? 8787);
 const MAX_BODY = 64 * 1024;
 
+const settings = settingsFromEnv(process.env);
 const { content, errors } = loadContent();
 if (errors.length) console.error(`Content has ${errors.length} problem(s); run npm run validate.`);
 
@@ -44,7 +47,7 @@ const server = createServer(async (req, res) => {
   }
   const started = Date.now();
   try {
-    const reply = await handleDescribe(body, { apiKey: process.env.ANTHROPIC_API_KEY, content });
+    const reply = await handleDescribe(body, { settings, content });
     const b = reply.body;
     const detail = "status" in b ? `${b.status}, ${b.turns} turn(s)` : b.error;
     console.log(`describe → ${reply.status} (${detail}) in ${((Date.now() - started) / 1000).toFixed(1)}s`);
@@ -55,7 +58,13 @@ const server = createServer(async (req, res) => {
   }
 });
 
+// Local models can take several minutes over a long repair loop.
+server.requestTimeout = 15 * 60_000;
+
 server.listen(PORT, "127.0.0.1", () => {
-  const key = process.env.ANTHROPIC_API_KEY?.trim() ? "found" : "missing (add it to .env)";
-  console.log(`AI server on http://127.0.0.1:${PORT} · API key ${key}`);
+  const using =
+    settings.provider === "ollama"
+      ? `Ollama ${settings.ollamaModel ?? DEFAULT_OLLAMA_MODEL} at ${settings.ollamaHost ?? DEFAULT_OLLAMA_HOST}`
+      : `Claude API · key ${settings.apiKey ? "found" : "missing (add it to .env)"}`;
+  console.log(`AI server on http://127.0.0.1:${PORT} · building with ${using}`);
 });

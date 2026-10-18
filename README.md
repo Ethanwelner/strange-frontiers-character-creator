@@ -15,17 +15,17 @@ npm run validate
 npm test
 ```
 
-To build characters from a description, add an Anthropic API key:
+**Build it** uses a local model through [Ollama](https://ollama.com), so it's free and nothing leaves your machine:
 
-1. Copy `.env.example` to `.env`.
-2. Paste your key after `ANTHROPIC_API_KEY=`.
-3. Restart `npm run dev` if it's running.
+1. Install Ollama and open it.
+2. Pull the model: `ollama pull deepseek-r1:14b`.
+3. Optional: copy `.env.example` to `.env` to pick another model (`OLLAMA_MODEL`, any model `ollama list` shows with tool support) or switch to the paid Claude API (`SF_PROVIDER=anthropic` plus `ANTHROPIC_API_KEY`). Restart `npm run dev` after editing `.env`.
 
-`.env` is gitignored. The key is read only by the local AI server; it never reaches the browser and is never logged. Without a key the builder still works by hand, and **Build it** says to add the key.
+`.env` is gitignored. Settings are read only by the local AI server; the API key never reaches the browser and is never logged.
 
-## Building characters with Claude Code (no API credits)
+## Building characters with Claude Code
 
-Until the builder is ready for real playtesting, characters are built in a Claude Code session instead of through the API, which needs prepaid credits. The loop is the same one the app runs: Claude reads the description, picks only from `content/`, and the engine checks the build.
+Claude Code can also build characters in chat, without the app's AI layer. The loop is the same one the app runs: Claude reads the description, picks only from `content/`, and the engine checks the build.
 
 1. In Claude Code, describe the character and ask for a build, e.g. "Build a character: a goblin hedge witch from a farming village."
 2. Claude writes a `Build` JSON file to `characters/` and checks it:
@@ -42,18 +42,18 @@ Until the builder is ready for real playtesting, characters are built in a Claud
 
 ## Describe your character (AI)
 
-Type a description in plain words and press **Build it** (Phase 4). Claude reads the concept, looks up the real Kinds, packages and Traits with tools, proposes a full build, and checks it with the rules engine, repairing it until the engine accepts it or a turn limit is hit. The build fills the builder with a one-line reason per choice, and stays fully editable, with live validation, afterward.
+Type a description in plain words and press **Build it** (Phase 4). The model reads the concept, looks up the real Kinds, packages and Traits with tools, proposes a full build, and checks it with the rules engine, repairing it until the engine accepts it or a turn limit is hit. The build fills the builder with a one-line reason per choice, and stays fully editable, with live validation, afterward.
 
-- Claude never invents content or does the stat math. Every id it proposes is checked against `content/` in code, and every build goes through `validateBuild`.
-- Claude never names a Contact: who it is is up to you, and you write it on the Choices step. Until you do, the build is still legal and the panel shows a reminder. Dreftian-language choices pick from the Dreftian languages in content (Dreftan for now).
-- The model is `claude-opus-5-5`. The instructions and an index of all content form a cached prompt prefix, so repair turns are cheap.
+- The model never invents content or does the stat math. Every id it proposes is checked against `content/` in code, and every build goes through `validateBuild`, so even a small local model can't produce an illegal character. How well the character fits the description does depend on the model.
+- It never names a Contact: who it is is up to you, and you write it on the Choices step. Until you do, the build is still legal and the panel shows a reminder. Dreftian-language choices pick from the Dreftian languages in content (Dreftan for now).
+- Models: local Ollama by default (`deepseek-r1:14b`, 20 repair turns), or the Claude API (`claude-opus-5-5`, 12 turns), where the instructions and an index of all content form a cached prompt prefix. Both run the same loop and tools (`src/ai/ollama.ts`, `src/ai/anthropic.ts`).
 
 ```bash
 npm run dev      # builder on http://localhost:5173, AI server on 127.0.0.1:8787 (Vite proxies /api)
-npm run eval     # runs evals/prompts.md against the real API
+npm run eval     # runs evals/prompts.md through the same loop
 ```
 
-`npm run eval` sends each sample description in [evals/prompts.md](evals/prompts.md) to Claude, prints pass/fail on legality and a summary of each character, and writes a full report with Claude's reasons to `evals/results/` (gitignored) for judging theme by eye. `npm run eval -- goblin` runs only the prompts whose heading contains "goblin". It needs the key in `.env`, and each run costs API usage.
+`npm run eval` sends each sample description in [evals/prompts.md](evals/prompts.md) through the build loop, prints pass/fail on legality and a summary of each character, and writes a full report with the model's reasons to `evals/results/` (gitignored) for judging theme by eye. It uses the same model settings as the server. `npm run eval -- goblin` runs only the prompts whose heading contains "goblin"; `--model qwen3:30b-a3b` tries another Ollama model, and `--provider anthropic` the Claude API (which costs API usage).
 
 ## Manual builder
 
@@ -79,15 +79,15 @@ npm run build    # static site in dist/ (the AI server isn't part of it)
 | `npm test` | Runs the engine and builder tests |
 | `npm run typecheck` | Type-checks everything |
 | `npm run check-build -- <file.json>` | Checks a Build JSON file with the rules engine and the unknown-id check |
-| `npm run eval` | Runs the sample prompts against the real Claude API (needs a key in `.env`) |
+| `npm run eval` | Runs the sample prompts through the build loop with the configured model |
 
 ## Layout
 
 - `content/`: the game's mechanics as YAML, one file per entry. This is the source of truth.
 - `src/schema/`: Zod schemas that define what a valid entry looks like.
 - `src/engine/`: the rules engine. Parses content (`parse.ts`, no file system, so the browser can use it; `content.ts` loads from disk for Node), defines a character `Build`, and `validateBuild` checks a build against the creation rules.
-- `src/ai/`: the AI layer. `tools.ts` holds the tools Claude calls (backed by the engine and content) and the unknown-id check, `prompt.ts` the instructions and content index, `loop.ts` the describe → build → validate → repair loop.
-- `src/server/`: the local AI server that holds the API key and answers `POST /api/describe`.
+- `src/ai/`: the AI layer. `tools.ts` holds the tools the model calls (backed by the engine and content) and the unknown-id check, `prompt.ts` the instructions and content index, `loop.ts` the describe → build → validate → repair loop, and `ollama.ts` / `anthropic.ts` the model adapters.
+- `src/server/`: the local AI server that reads the model settings from `.env` and answers `POST /api/describe`.
 - `evals/`: sample player descriptions for `npm run eval`.
 - `characters/`: Build JSON files made in Claude Code; `npm run check-build` checks them.
 - `src/app/`: the manual builder (Vite + React). `content.ts` bundles `content/` with `import.meta.glob`; `check.ts` holds the helpers that ask the engine about picks.

@@ -68,7 +68,7 @@ export function App() {
     }
   };
 
-  // Claude's build replaces the draft, then stays editable like any other.
+  // The model's build replaces the draft, then stays editable like any other.
   const applyDescribed = (result: DescribeResult, description: string) => {
     const built = fromBuild(result.build);
     setSaved((s) => ({
@@ -77,6 +77,7 @@ export function App() {
       step: "sheet",
       ai: {
         description,
+        model: result.model,
         status: result.status,
         summary: result.summary,
         reasons: result.reasons,
