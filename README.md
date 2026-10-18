@@ -9,10 +9,12 @@ Early work in progress. See [docs/PLAN.md](docs/PLAN.md) for the roadmap and [do
 ```bash
 npm install
 npm run validate
+npm test
 ```
 
 ## Layout
 
 - `content/`: the game's mechanics as YAML, one file per entry. This is the source of truth.
 - `src/schema/`: Zod schemas that define what a valid entry looks like.
+- `src/engine/`: the rules engine. Loads content, defines a character `Build`, and `validateBuild` checks a build against the creation rules.
 - `scripts/validate-content.ts`: checks every content file against the schemas and the cross-file rules.

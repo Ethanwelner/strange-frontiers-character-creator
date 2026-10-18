@@ -17,7 +17,7 @@ export type StatId = z.infer<typeof StatId>;
 // Outer Ring stats can't be raised above 20 without Traits or equipment.
 export const STAT_CAP = 20;
 
-const Id = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "must be kebab-case");
+export const Id = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "must be kebab-case");
 
 export const Status = z.enum(["placeholder", "draft", "final"]);
 

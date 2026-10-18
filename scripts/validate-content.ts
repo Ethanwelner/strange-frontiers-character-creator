@@ -1,49 +1,15 @@
 // Checks every file under content/ against its schema and the cross-file rules
 // in docs/CONTENT.md. Exits non-zero on errors; warnings are reported only.
-import { readdirSync, readFileSync, existsSync } from "node:fs";
-import { basename, join, relative } from "node:path";
-import { parse } from "yaml";
-import type { ZodType } from "zod";
-import { BackgroundPackage, Kind, Trait, type StatBlock } from "../src/schema/index.js";
-
-const ROOT = join(import.meta.dirname, "..", "content");
+import { loadContent } from "../src/engine/content.js";
+import type { StatBlock } from "../src/schema/index.js";
 
 // Human's budget, which every Kind is balanced against.
 const START_TOTAL = 9;
 const MAX_TOTAL = 135;
 
-const errors: string[] = [];
+const { content, errors } = loadContent();
+const { kinds, packages, traits } = content;
 const warnings: string[] = [];
-
-function yamlFiles(dir: string): string[] {
-  if (!existsSync(dir)) return [];
-  return readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
-    const path = join(dir, e.name);
-    if (e.isDirectory()) return yamlFiles(path);
-    return e.name.endsWith(".yaml") ? [path] : [];
-  });
-}
-
-function load<T>(folder: string, schema: ZodType<T>): T[] {
-  const seen = new Map<string, string>();
-  const entries: T[] = [];
-  for (const file of yamlFiles(join(ROOT, folder))) {
-    const where = relative(ROOT, file);
-    const result = schema.safeParse(parse(readFileSync(file, "utf8")));
-    if (!result.success) {
-      for (const issue of result.error.issues) {
-        errors.push(`${where}: ${issue.path.join(".") || "(root)"}: ${issue.message}`);
-      }
-      continue;
-    }
-    const id = (result.data as { id: string }).id;
-    if (id !== basename(file, ".yaml")) errors.push(`${where}: id "${id}" doesn't match the file name`);
-    if (seen.has(id)) errors.push(`${where}: id "${id}" is also used by ${seen.get(id)}`);
-    seen.set(id, where);
-    entries.push(result.data);
-  }
-  return entries;
-}
 
 function checkBudget(label: string, stats: StatBlock) {
   const ranges = Object.values(stats);
@@ -52,10 +18,6 @@ function checkBudget(label: string, stats: StatBlock) {
   if (start !== START_TOTAL) warnings.push(`${label}: starting stats total ${start}, expected ${START_TOTAL}`);
   if (max !== MAX_TOTAL) warnings.push(`${label}: maximums total ${max}, expected ${MAX_TOTAL}`);
 }
-
-const kinds = load("kinds", Kind);
-const packages = ["origins", "professions", "pasts"].flatMap((f) => load(f, BackgroundPackage));
-const traits = load("traits", Trait);
 
 for (const kind of kinds) {
   if (kind.stats) checkBudget(`kinds/${kind.id}`, kind.stats);
