@@ -24,7 +24,7 @@ Content flow: write in Campfire → convert to data files here (Claude-assisted,
 |---|---|---|
 | **0. Foundation** | Repo, rules-data schema, validator, sample Kinds | Human and the Dreft Kinds validate |
 | **1. Content** | Dreft Origins, Professions, Pasts; the Traits they grant; Edwin Humble's backgrounds | Every grant resolves to a real Trait file, and Edwin Humble can be expressed as data |
-| **2. Rules engine** | Character model and `validateBuild(build)`, with tests | Illegal builds are rejected with readable reasons; Edwin passes |
+| **2. Rules engine** | Character model and `validateBuild(build)`, with tests | Illegal builds are rejected with readable reasons; a legal Dreft character per Kind passes |
 | **3. Manual builder** | Click-to-build UI, no AI | A full character can be built and exported by hand |
 | **4. AI layer** | Claude API with tools (`search_traits`, `get_package`, `validate_build`) and the describe → build → repair loop | A set of sample prompts each produce legal, on-theme characters |
 | **5. Playtest** | Private testing with your table; explanations and chat-based tweaks | Testers prefer it to building by hand |
@@ -36,11 +36,27 @@ Content flow: write in Campfire → convert to data files here (Claude-assisted,
 - Launch content: Human, Isek, Tatot, Guwain, and the Dreftian Origins, Professions and Pasts.
 - Public release waits until after playtesting.
 - Content is YAML (easy to write by hand), checked by Zod schemas in TypeScript.
+- Phase 2 tests skip Edwin Humble: the site's Human sample uses Earth packages that aren't in `content/` yet. He becomes a test once those packages are converted.
+
+### Character creation
+
+The rules `validateBuild` (in `src/engine/`) enforces:
+
+1. Level 0 stats come from the Kind, or the chosen form for a Kind with forms.
+2. Characters start at level 1 by default. The starting level is set per campaign (a GM may start at 2–3).
+3. Each level, including level 1 at creation, gives 1 Inner Ring point in one group (physical, social or mental) and 3 Outer Ring points to spread among that group's three stats.
+4. No Outer Ring stat may exceed its Kind max, and nothing may exceed 20. Traits and gear that push past that are out of scope for now.
+5. On each stat's bar, odd points (1st, 3rd, 5th…) are circles and grant a universal feat pick; even points are squares and grant a background feat pick. A stat at value v gives ceil(v/2) universal and floor(v/2) background picks, which is why a Human, with 1 in all nine stats, starts with 9 universal picks.
+6. Package grants are included automatically and don't use picks. Ranks granted by several packages don't stack. Each package `choices` entry must be answered with the right count. Answers are checked against the pool when the pool can be resolved; otherwise the engine warns instead (see Choice pools below).
+7. Background picks must come from the Background Trait list: the union of the packages' `backgroundTraits`, plus Traits tagged with one of the Kind's `featAccess` pools. Universal picks can be any Trait not marked `background`. Few Traits carry those tags yet; tagging waits for the content fill that starts once the manual builder (Phase 3) exists.
+8. Unspent picks are allowed and reported as banked, not as an error.
+9. At creation only, universal picks may be spent on knowledge Traits. Starter-only Traits are allowed because this is creation.
+   Background picks only take knowledge that's on the Background Trait list, even though the Traits page allows either pick. Fine for now. There's no cap on knowledge rank from creation picks beyond `rankStats`.
+10. Prerequisites must be held, from any source. Non-ranked Traits can't be taken twice or above rank 1. Each pick buys one rank, in order; to rank a Trait above 1, each of its `rankStats` must be at least 3 × the rank.
 
 ## Open questions
 
 - Trait categories and types: the full list (Knowledge, Skill, Contact, Starter, Condition, ...) needs pinning down as Traits are converted.
-- Universal feat picks at creation: how many, and which pools, per Kind and level.
-- Whether characters start at level 1 or 2–3, as the sample sheet suggests.
+- Alternating levels: the Traits page says universal and background Traits alternate by level (odd levels universal, even levels background). This may be the circles-and-squares rule (Character creation, rule 5) said another way, so the engine doesn't enforce it separately. Confirm, then reword one of the two.
 - Items: needs its own schema once equipment rules settle.
-- Choice pools: `choices.from` names a pool (`contact`, `language`, `dreftian-language`) that nothing defines yet. Contacts map to the `contact` category and languages to the `language` type, but no Dreftian languages exist yet, so the validator can't check these.
+- Choice pools: `choices.from` names a pool (`contact`, `language`, `dreftian-language`) that nothing defines yet. The engine maps `contact` to the `contact` category and `language` to the `language` type. No Contacts or Dreftian languages exist yet, so answers to those pools only warn.
