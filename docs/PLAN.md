@@ -48,17 +48,15 @@ The rules `validateBuild` (in `src/engine/`) enforces:
 4. No Outer Ring stat may exceed its Kind max, and nothing may exceed 20. Traits and gear that push past that are out of scope for now.
 5. On each stat's bar, odd points (1st, 3rd, 5th…) are circles and grant a universal feat pick; even points are squares and grant a background feat pick. A stat at value v gives ceil(v/2) universal and floor(v/2) background picks, which is why a Human, with 1 in all nine stats, starts with 9 universal picks.
 6. Package grants are included automatically and don't use picks. Ranks granted by several packages don't stack. Each package `choices` entry must be answered with the right count. Answers are checked against the pool when the pool can be resolved; otherwise the engine warns instead (see Choice pools below).
-7. Background picks must come from the Background Trait list: the union of the packages' `backgroundTraits`, plus Traits tagged with one of the Kind's `featAccess` pools. Universal picks can be any Trait not marked `background`.
+7. Background picks must come from the Background Trait list: the union of the packages' `backgroundTraits`, plus Traits tagged with one of the Kind's `featAccess` pools. Universal picks can be any Trait not marked `background`. Few Traits carry those tags yet; tagging waits for the content fill that starts once the manual builder (Phase 3) exists.
 8. Unspent picks are allowed and reported as banked, not as an error.
 9. At creation only, universal picks may be spent on knowledge Traits. Starter-only Traits are allowed because this is creation.
+   Background picks only take knowledge that's on the Background Trait list, even though the Traits page allows either pick. Fine for now. There's no cap on knowledge rank from creation picks beyond `rankStats`.
 10. Prerequisites must be held, from any source. Non-ranked Traits can't be taken twice or above rank 1. Each pick buys one rank, in order; to rank a Trait above 1, each of its `rankStats` must be at least 3 × the rank.
 
 ## Open questions
 
 - Trait categories and types: the full list (Knowledge, Skill, Contact, Starter, Condition, ...) needs pinning down as Traits are converted.
 - Alternating levels: the Traits page says universal and background Traits alternate by level (odd levels universal, even levels background). This may be the circles-and-squares rule (Character creation, rule 5) said another way, so the engine doesn't enforce it separately. Confirm, then reword one of the two.
-- Knowledge with background picks: the Traits page says players can spend universal *or* background picks on knowledge at creation. The engine only lets background picks take knowledge on the Background Trait list. Decide whether background picks get the same allowance.
-- How high a knowledge rank creation picks can reach is up to the GM on the site; the engine has no limit beyond `rankStats`.
-- `featAccess` matching: the engine matches a Kind's `featAccess` pools against Trait tags. No Trait is tagged `guild`, `trading-guild` or `merchant-clan` yet, so Isek and Tatot get little from it today.
 - Items: needs its own schema once equipment rules settle.
 - Choice pools: `choices.from` names a pool (`contact`, `language`, `dreftian-language`) that nothing defines yet. The engine maps `contact` to the `contact` category and `language` to the `language` type. No Contacts or Dreftian languages exist yet, so answers to those pools only warn.
