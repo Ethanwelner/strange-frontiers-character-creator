@@ -844,3 +844,76 @@ select {
     display: block;
   }
 }
+
+/* Describe your character (the AI layer) */
+
+.describe {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.9rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.describe h3 {
+  color: var(--accent);
+}
+
+.describe textarea {
+  width: 100%;
+  font: inherit;
+  color: inherit;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.55rem 0.7rem;
+  margin: 0.4rem 0 0.6rem;
+  resize: vertical;
+}
+
+.describe textarea:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.describe-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.describe .notice {
+  margin: 0.75rem 0 0;
+}
+
+.describe-result {
+  border-top: 1px solid var(--border);
+  margin-top: 0.9rem;
+  padding-top: 0.6rem;
+}
+
+.describe-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.describe-status {
+  margin: 0;
+  font-weight: 600;
+}
+
+.ai-reasons {
+  margin: 0.5rem 0 0;
+  padding-left: 1.1rem;
+}
+
+.ai-reasons li {
+  margin: 0.2rem 0;
+}
+
+.ai-reasons strong {
+  font-weight: 600;
+}
