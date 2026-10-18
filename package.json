@@ -15,7 +15,8 @@
     "dev:web": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "eval": "tsx scripts/eval.ts"
+    "eval": "tsx scripts/eval.ts",
+    "check-build": "tsx scripts/check-build.ts"
   },
   "devDependencies": {
     "@types/node": "^26.6.5",
