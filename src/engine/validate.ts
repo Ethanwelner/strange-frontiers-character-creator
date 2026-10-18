@@ -64,7 +64,7 @@ export interface BuildResult {
 
 const STATS = StatId.options;
 const PACKAGE_SLOTS = ["origin", "profession", "past"] as const;
-const OUTER_POINTS_PER_LEVEL = 3;
+export const OUTER_POINTS_PER_LEVEL = 3;
 
 // Choice pools the engine knows how to resolve. Others (and pools with no
 // Traits in them yet) can't be checked, so answers to them only warn.
@@ -72,6 +72,13 @@ const POOLS: Record<string, (t: Trait) => boolean> = {
   contact: (t) => t.category === "contact",
   language: (t) => t.types.includes("language"),
 };
+
+// The Traits a package choice pool can be answered from. Empty when the engine
+// can't resolve the pool, or nothing is in it yet.
+export function choicePool(from: string, content: Content): Trait[] {
+  const test = POOLS[from];
+  return test ? content.traits.filter(test) : [];
+}
 
 const label = (t: Trait) => `${t.name} (${t.id})`;
 const aOrAn = (word: string) => (/^[aeiou]/.test(word) ? `an ${word}` : `a ${word}`);
@@ -193,15 +200,14 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
       if (new Set(answer.traits).size !== answer.traits.length) {
         error("choice", `${pkg.name}'s "${from}" answer lists the same Trait twice`, path);
       }
-      const test = POOLS[from];
-      const pool = test ? content.traits.filter(test) : [];
+      const pool = choicePool(from, content);
       if (pool.length === 0) {
         warn("choice-pool", `Can't check ${pkg.name}'s "${from}" answer (${answer.traits.join(", ")}): no Traits are defined for that pool yet`, path);
       } else {
         for (const id of answer.traits) {
           const t = traits.get(id);
           if (!t) error("unknown-trait", `Trait "${id}" doesn't exist`, path);
-          else if (!test!(t)) error("choice", `${label(t)} isn't in the "${from}" pool for ${pkg.name}`, path);
+          else if (!pool.includes(t)) error("choice", `${label(t)} isn't in the "${from}" pool for ${pkg.name}`, path);
         }
       }
       for (const id of answer.traits) hold(id, 1, `${pkg.type} ${pkg.id} choice`);
