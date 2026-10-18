@@ -1,4 +1,4 @@
-import type { BuildResult } from "../../engine/validate.js";
+import { FREE_TEXT_POOLS, type BuildResult } from "../../engine/validate.js";
 import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { kindById, packageById, traitById } from "../content.js";
 import type { Draft } from "../draft.js";
@@ -19,6 +19,10 @@ export function Sheet({ draft, result }: { draft: Draft; result: BuildResult }) 
   const packages = [draft.origin, draft.profession, draft.past].map((id) => (id ? packageById.get(id) : undefined));
   const base = baseStats(draft);
   const summary = result.summary;
+  // Contacts and other free-text answers, as the player wrote them.
+  const records = draft.choices.flatMap((c) =>
+    FREE_TEXT_POOLS[c.from] ? c.traits.map((text) => ({ text, noun: FREE_TEXT_POOLS[c.from]!, from: packageById.get(c.package)?.name ?? c.package })) : [],
+  );
   const features = [
     ...(kind?.features ?? []).map((f) => ({ ...f, from: kind!.name })),
     ...(form?.features ?? []).map((f) => ({ ...f, from: form!.name })),
@@ -90,6 +94,19 @@ export function Sheet({ draft, result }: { draft: Draft; result: BuildResult }) 
         </ul>
       ) : (
         <p className="empty">No Traits yet.</p>
+      )}
+
+      {records.length > 0 && (
+        <>
+          <h3 className="subhead">Contacts</h3>
+          <ul className="features">
+            {records.map((r, i) => (
+              <li key={i}>
+                <strong>{r.text}</strong> <span className="muted">({r.noun} from {r.from})</span>
+              </li>
+            ))}
+          </ul>
+        </>
       )}
 
       {features.length > 0 && (

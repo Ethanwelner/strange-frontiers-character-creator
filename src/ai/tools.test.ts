@@ -72,6 +72,8 @@ describe("packages and Kinds", () => {
     expect(out.choices).toEqual([expect.objectContaining({ from: "contact", leftForPlayer: true })]);
     const merchant = runTool("get_package", { id: "merchant-dynasty" }, content) as { choices: { pool: { id: string }[] }[] };
     expect(merchant.choices[0]!.pool.map((t) => t.id)).toContain("english");
+    const herminst = runTool("get_package", { id: "port-herminst" }, content) as { choices: { pool: { id: string }[] }[] };
+    expect(herminst.choices[0]!.pool.map((t) => t.id)).toEqual(["dreftan"]);
   });
 
   it("gets a Kind with its forms", () => {
@@ -114,6 +116,7 @@ describe("validate_build", () => {
     };
     const ids = unknownIds(build, content);
     expect(ids.map((i) => i.path)).toEqual(["form", "traits[0]", "choices[0]"]);
+    expect(ids[2]!.message).toContain("The player decides who their Contact is");
     expect(checkBuild(build, content).accepted).toBe(false);
   });
 

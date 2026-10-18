@@ -28,7 +28,7 @@ To build characters from a description, add an Anthropic API key:
 Type a description in plain words and press **Build it** (Phase 4). Claude reads the concept, looks up the real Kinds, packages and Traits with tools, proposes a full build, and checks it with the rules engine, repairing it until the engine accepts it or a turn limit is hit. The build fills the builder with a one-line reason per choice, and stays fully editable, with live validation, afterward.
 
 - Claude never invents content or does the stat math. Every id it proposes is checked against `content/` in code, and every build goes through `validateBuild`.
-- Some package choices draw from pools with no Traits yet (Contacts, Dreftian languages). Claude leaves those for you on the Choices step.
+- Claude never names a Contact: who it is is up to you, and you write it on the Choices step. Dreftian-language choices pick from the Dreftian languages in content (Dreftan for now).
 - The model is `claude-opus-5-5`. The instructions and an index of all content form a cached prompt prefix, so repair turns are cheap.
 
 ```bash

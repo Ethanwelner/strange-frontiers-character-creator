@@ -3,7 +3,7 @@
 import type Anthropic from "@anthropic-ai/sdk";
 import { DEFAULT_CAMPAIGN, type Campaign } from "../engine/build.js";
 import type { Content } from "../engine/parse.js";
-import { choicePool, validateBuild } from "../engine/validate.js";
+import { choicePool, FREE_TEXT_POOLS, isFreeTextPool, validateBuild } from "../engine/validate.js";
 import { PackageType, TraitCategory, type Trait } from "../schema/index.js";
 import type { BuildCheck, IdIssue, OpenChoice } from "./types.js";
 
@@ -51,7 +51,7 @@ const BUILD_SCHEMA = {
     },
     choices: {
       type: "array",
-      description: "Answers to the packages' choices whose pools have Traits in them. Leave out choices whose pool is empty.",
+      description: "Answers to the packages' choices, from their pools. Leave out choices get_package marks leftForPlayer, such as Contacts.",
       items: {
         type: "object",
         properties: {
@@ -102,7 +102,7 @@ export const TOOLS: Tool[] = [
     name: "get_package",
     description:
       "Get one background package in full: the Traits it grants, the choices it asks for (and whether their pools have Traits yet), " +
-      "and the Traits it adds to the Background Trait list.",
+      "and the Traits it adds to the Background Trait list. Choices marked leftForPlayer (like Contacts) are for the player to fill in.",
     input_schema: {
       type: "object",
       properties: { id: { type: "string" } },
@@ -163,15 +163,18 @@ const obj = (v: unknown): Record<string, unknown> | undefined =>
   typeof v === "object" && v !== null && !Array.isArray(v) ? (v as Record<string, unknown>) : undefined;
 const list = (v: unknown): unknown[] => (Array.isArray(v) ? v : []);
 
-// Choices in the build's packages that the engine can't check because their
-// pool is empty. Claude leaves these for the player.
+// A choice Claude leaves to the player: a free-text pool like Contacts, where
+// the player decides who it is, or a pool with no Traits in content yet.
+const leftForPlayer = (from: string, content: Content) => isFreeTextPool(from) || choicePool(from, content).length === 0;
+
+// The choices in the build's packages that Claude leaves to the player.
 export function openChoices(build: unknown, content: Content): OpenChoice[] {
   const b = obj(build) ?? {};
   const out: OpenChoice[] = [];
   for (const slot of ["origin", "profession", "past"]) {
     const pkg = content.packages.find((p) => p.id === b[slot] && p.type === slot);
     for (const c of pkg?.choices ?? []) {
-      if (choicePool(c.from, content).length > 0) continue;
+      if (!leftForPlayer(c.from, content)) continue;
       const open = out.find((o) => o.package === pkg!.id && o.from === c.from);
       if (open) open.count += c.choose;
       else out.push({ package: pkg!.id, from: c.from, count: c.choose, note: c.note });
@@ -182,7 +185,7 @@ export function openChoices(build: unknown, content: Content): OpenChoice[] {
 
 // Every id in the build must exist in content. The engine already rejects
 // most unknown ids, but only warns about answers to pools it can't check, so
-// this catches those too.
+// this catches those too. Choices left to the player can't be answered.
 export function unknownIds(build: unknown, content: Content): IdIssue[] {
   const b = obj(build);
   if (!b) return [];
@@ -211,9 +214,12 @@ export function unknownIds(build: unknown, content: Content): IdIssue[] {
       issues.push({ path: `choices[${i}]`, message: `Package "${answer.package}" doesn't exist` });
     }
     if (open.some((o) => o.package === answer.package && o.from === answer.from)) {
+      const noun = FREE_TEXT_POOLS[String(answer.from)];
       issues.push({
         path: `choices[${i}]`,
-        message: `No Traits exist in the "${String(answer.from)}" pool yet, so this choice is left for the player. Remove this answer.`,
+        message: noun
+          ? `The player decides who their ${noun} is and records it, so leave this choice out. Remove this answer.`
+          : `No Traits exist in the "${String(answer.from)}" pool yet, so this choice is left for the player. Remove this answer.`,
       });
       return;
     }
@@ -321,12 +327,11 @@ function getPackage(input: Record<string, unknown>, content: Content) {
   return {
     ...pkg,
     grants: pkg.grants.map((g) => ({ ...g, name: name(g.trait) })),
-    choices: pkg.choices.map((c) => {
-      const pool = choicePool(c.from, content);
-      return pool.length
-        ? { ...c, pool: pool.map((t) => ({ id: t.id, name: t.name })) }
-        : { ...c, pool: [], leftForPlayer: true };
-    }),
+    choices: pkg.choices.map((c) =>
+      leftForPlayer(c.from, content)
+        ? { ...c, leftForPlayer: true }
+        : { ...c, pool: choicePool(c.from, content).map((t) => ({ id: t.id, name: t.name })) },
+    ),
     backgroundTraits: pkg.backgroundTraits.map((t) => ({ id: t, name: name(t) })),
   };
 }

@@ -25,10 +25,12 @@ export const TraitPick = z.object({
 export type TraitPick = z.infer<typeof TraitPick>;
 
 // The answer to one of a package's `choices`, matched by package and pool.
+// `traits` holds Trait ids, or for a free-text pool like `contact`, the names
+// the player wrote.
 export const ChoiceAnswer = z.object({
   package: Id,
   from: z.string().min(1),
-  traits: z.array(Id),
+  traits: z.array(z.string().trim().min(1)),
 });
 export type ChoiceAnswer = z.infer<typeof ChoiceAnswer>;
 

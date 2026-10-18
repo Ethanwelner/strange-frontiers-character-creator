@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { ChoiceAnswer } from "../../engine/build.js";
-import { choicePool } from "../../engine/validate.js";
+import { choicePool, FREE_TEXT_POOLS } from "../../engine/validate.js";
 import type { BackgroundPackage } from "../../schema/index.js";
 import { content, packageById } from "../content.js";
 import { slug, type Draft } from "../draft.js";
@@ -64,12 +64,25 @@ export function ChoicesStep({ draft, onChange }: { draft: Draft; onChange: (d: D
 
 function Answer({ q, answer, onAnswer }: { q: Question; answer: string[]; onAnswer: (traits: string[]) => void }) {
   const pool = choicePool(q.from, content);
+  const noun = FREE_TEXT_POOLS[q.from];
   const slots = Array.from({ length: q.count }, (_, i) => answer[i] ?? "");
   const set = (i: number, value: string) => {
     const next = slots.slice();
     next[i] = value;
     onAnswer(next.filter((v) => v !== ""));
   };
+
+  // A Contact is whoever the player says it is: the name is kept as written.
+  if (noun) {
+    return (
+      <div className="answer">
+        <p className="hint">Who is your {noun}? Write a name or a short note; it's yours to decide.</p>
+        {slots.map((v, i) => (
+          <FreeText key={i} value={v} label={`${q.pkg.name} ${noun} ${i + 1}`} onCommit={(text) => set(i, text)} />
+        ))}
+      </div>
+    );
+  }
 
   if (pool.length > 0) {
     return (
@@ -91,27 +104,28 @@ function Answer({ q, answer, onAnswer }: { q: Question; answer: string[]; onAnsw
     <div className="answer">
       <p className="hint">No Traits are in the “{q.from}” pool yet. Type a name: it's saved as an id, and the engine warns that it can't check it.</p>
       {slots.map((v, i) => (
-        <FreeText key={i} value={v} label={`${q.pkg.name} ${q.from} choice ${i + 1}`} onCommit={(id) => set(i, id)} />
+        <FreeText key={i} value={v} label={`${q.pkg.name} ${q.from} choice ${i + 1}`} asId onCommit={(id) => set(i, id)} />
       ))}
     </div>
   );
 }
 
 // Commits on blur or Enter, so typing a space doesn't leave a half-made id in the build.
-function FreeText({ value, label, onCommit }: { value: string; label: string; onCommit: (id: string) => void }) {
-  const [text, setText] = useState(value ? traitName(value) : "");
-  const commit = () => onCommit(slug(text));
+// With asId, the text is saved as an id; otherwise as written.
+function FreeText({ value, label, asId, onCommit }: { value: string; label: string; asId?: boolean; onCommit: (text: string) => void }) {
+  const [text, setText] = useState(value && asId ? traitName(value) : value);
+  const commit = () => onCommit(asId ? slug(text) : text.trim());
   return (
     <div className="free-text">
       <input
         value={text}
         aria-label={label}
-        placeholder="e.g. Harbor Master Oyl"
+        placeholder={asId ? "e.g. Old Herminstan" : "e.g. Harbor Master Oyl, who owes me a favor"}
         onChange={(e) => setText(e.target.value)}
         onBlur={commit}
         onKeyDown={(e) => e.key === "Enter" && commit()}
       />
-      {value && <code className="muted">{value}</code>}
+      {value && asId && <code className="muted">{value}</code>}
     </div>
   );
 }

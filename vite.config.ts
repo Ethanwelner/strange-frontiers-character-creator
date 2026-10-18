@@ -14,5 +14,8 @@ export default defineConfig({
   test: {
     // Session worktrees under .claude/ are full copies of the repo.
     exclude: [...configDefaults.exclude, ".claude/**"],
+    // The cached transform of src/app/content.ts doesn't notice new files in
+    // content/, so the bundled-content test would see stale content.
+    fsModuleCache: false,
   },
 });
