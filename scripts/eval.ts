@@ -5,8 +5,8 @@
 //
 //   npm run eval                          every prompt
 //   npm run eval -- goblin                only prompts whose heading contains "goblin"
-//   npm run eval -- --model qwen3:30b-a3b another Ollama model
-//   npm run eval -- --mode tools          native tool calling instead of JSON
+//   npm run eval -- --model deepseek-r1:14b another Ollama model
+//   npm run eval -- --mode json           JSON answers instead of tool calls
 //   npm run eval -- --provider anthropic  the Claude API (needs ANTHROPIC_API_KEY)
 //   npm run eval -- --trace               print each turn's tool calls
 //   npm run eval -- --turns 6             a different turn limit
@@ -40,7 +40,7 @@ if (trace) args.splice(args.indexOf("--trace"), 1);
 const modelFlag = flag("--model");
 if (modelFlag) settings.ollamaModel = modelFlag;
 const modeFlag = flag("--mode");
-if (modeFlag) settings.ollamaMode = modeFlag === "tools" ? "tools" : "json";
+if (modeFlag) settings.ollamaMode = modeFlag === "json" ? "json" : "tools";
 const provider = providerFor(settings);
 if (!provider) {
   console.error(MISSING_KEY_MESSAGE);

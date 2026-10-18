@@ -1,15 +1,17 @@
 // The local adapter: a model served by Ollama on this machine. Free and
 // private; the engine still checks everything it proposes.
 //
-// Two modes. "json" (the default) works with any model: each turn the model
-// answers with a full build in Ollama's structured-output format, and the
-// engine's verdict goes back as the next message. "tools" uses native tool
-// calling, for models that are good at it (qwen3 is; deepseek-r1 writes
-// prose instead of calling tools).
+// Two modes. "tools" (the default) uses native tool calling, like the Claude
+// adapter; qwen3:30b-a3b handles it well. "json" works with models that
+// don't call tools: each turn the model answers with a full build in
+// Ollama's structured-output format, and the engine's verdict goes back as
+// the next message. deepseek-r1:14b writes prose instead of calling tools,
+// and in JSON mode it resubmits the same build without fixing it, so it
+// isn't the default.
 import { DescribeFailure, type ChatSession, type Prompt, type Provider, type ToolCall, type ToolResult } from "./model.js";
 import { TOOLS } from "./tools.js";
 
-export const DEFAULT_OLLAMA_MODEL = "deepseek-r1:14b";
+export const DEFAULT_OLLAMA_MODEL = "qwen3:30b-a3b";
 export const DEFAULT_OLLAMA_HOST = "http://127.0.0.1:11434";
 
 // fetch, so tests can replace it.
@@ -59,7 +61,7 @@ const JSON_MODE_RETRY = "Answer with the full build as JSON in the requested for
 export function ollamaProvider(opts: OllamaOptions = {}): Provider {
   const model = opts.model || DEFAULT_OLLAMA_MODEL;
   const host = (opts.host || DEFAULT_OLLAMA_HOST).replace(/\/+$/, "");
-  const mode = opts.mode ?? "json";
+  const mode = opts.mode ?? "tools";
   const doFetch = opts.fetch ?? ((url, init) => fetch(url, init));
   return { model, maxTurns: opts.maxTurns ?? 20, start: (prompt) => new OllamaSession(model, host, mode, doFetch, prompt) };
 }

@@ -6,12 +6,18 @@ import { handleDescribe, MISSING_KEY_MESSAGE, providerFor, settingsFromEnv } fro
 const { content } = loadContent();
 
 describe("model settings", () => {
-  it("builds with local Ollama and DeepSeek unless told otherwise", () => {
+  it("builds with local Ollama and Qwen in tools mode unless told otherwise", () => {
     const settings = settingsFromEnv({});
     expect(settings.provider).toBe("ollama");
+    expect(settings.ollamaMode).toBeUndefined();
     expect(providerFor(settings)?.model).toBe(DEFAULT_OLLAMA_MODEL);
-    expect(DEFAULT_OLLAMA_MODEL).toBe("deepseek-r1:14b");
-    expect(providerFor(settingsFromEnv({ OLLAMA_MODEL: "qwen3:30b-a3b" }))?.model).toBe("qwen3:30b-a3b");
+    expect(DEFAULT_OLLAMA_MODEL).toBe("qwen3:30b-a3b");
+  });
+
+  it("keeps DeepSeek available through .env", () => {
+    const settings = settingsFromEnv({ OLLAMA_MODEL: "deepseek-r1:14b", OLLAMA_MODE: "json" });
+    expect(settings.ollamaMode).toBe("json");
+    expect(providerFor(settings)?.model).toBe("deepseek-r1:14b");
   });
 
   it("uses the Claude API only with SF_PROVIDER=anthropic and a key", () => {
@@ -53,11 +59,11 @@ describe("handleDescribe", () => {
   });
 
   it("says how to pull a missing model", async () => {
-    const fetch = vi.fn(async () => Response.json({ error: 'model "deepseek-r1:14b" not found, try pulling it first' }, { status: 404 }));
+    const fetch = vi.fn(async () => Response.json({ error: 'model "qwen3:30b-a3b" not found, try pulling it first' }, { status: 404 }));
     const reply = await handleDescribe(
       { description: "A goblin mage." },
       { settings: settingsFromEnv({}), content, makeProvider: () => ollamaProvider({ fetch }) },
     );
-    expect(reply.body).toEqual({ error: "unavailable", message: "Ollama doesn't have deepseek-r1:14b yet. Run: ollama pull deepseek-r1:14b" });
+    expect(reply.body).toEqual({ error: "unavailable", message: "Ollama doesn't have qwen3:30b-a3b yet. Run: ollama pull qwen3:30b-a3b" });
   });
 });

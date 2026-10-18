@@ -50,7 +50,7 @@ export interface DescribeResult {
   // "accepted": the model submitted a build the engine accepts. "turn-limit":
   // the loop stopped first, and `build` is the last one it proposed.
   status: "accepted" | "turn-limit";
-  // The model that built it, e.g. "deepseek-r1:14b".
+  // The model that built it, e.g. "qwen3:30b-a3b".
   model: string;
   build?: BuildInput;
   // One or two sentences on the character, in the model's words.

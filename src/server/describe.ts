@@ -37,7 +37,7 @@ export function settingsFromEnv(env: NodeJS.ProcessEnv): ModelSettings {
     provider: env.SF_PROVIDER?.trim().toLowerCase() === "anthropic" ? "anthropic" : "ollama",
     ollamaModel: env.OLLAMA_MODEL?.trim() || undefined,
     ollamaHost: env.OLLAMA_HOST?.trim() || undefined,
-    ollamaMode: env.OLLAMA_MODE?.trim().toLowerCase() === "tools" ? "tools" : undefined,
+    ollamaMode: env.OLLAMA_MODE?.trim().toLowerCase() === "json" ? "json" : undefined,
     apiKey: env.ANTHROPIC_API_KEY?.trim() || undefined,
   };
 }

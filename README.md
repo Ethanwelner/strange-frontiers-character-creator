@@ -18,8 +18,8 @@ npm test
 **Build it** uses a local model through [Ollama](https://ollama.com), so it's free and nothing leaves your machine:
 
 1. Install Ollama and open it.
-2. Pull the model: `ollama pull deepseek-r1:14b`.
-3. Optional: copy `.env.example` to `.env` to pick another model (`OLLAMA_MODEL`, any model `ollama list` shows with tool support) or switch to the paid Claude API (`SF_PROVIDER=anthropic` plus `ANTHROPIC_API_KEY`). Restart `npm run dev` after editing `.env`.
+2. Pull the model: `ollama pull qwen3:30b-a3b` (about 19 GB; it needs a Mac with plenty of memory).
+3. Optional: copy `.env.example` to `.env` to pick another model (`OLLAMA_MODEL`; `OLLAMA_MODE=json` for models that don't call tools well) or switch to the paid Claude API (`SF_PROVIDER=anthropic` plus `ANTHROPIC_API_KEY`). Restart `npm run dev` after editing `.env`.
 
 `.env` is gitignored. Settings are read only by the local AI server; the API key never reaches the browser and is never logged.
 
@@ -46,14 +46,14 @@ Type a description in plain words and press **Build it** (Phase 4). The model re
 
 - The model never invents content or does the stat math. Every id it proposes is checked against `content/` in code, and every build goes through `validateBuild`, so even a small local model can't produce an illegal character. How well the character fits the description does depend on the model.
 - It never names a Contact: who it is is up to you, and you write it on the Choices step. Until you do, the build is still legal and the panel shows a reminder. Dreftian-language choices pick from the Dreftian languages in content (Dreftan for now).
-- Models: local Ollama by default (`deepseek-r1:14b`, 20 repair turns), or the Claude API (`claude-opus-5-5`, 12 turns), where the instructions and an index of all content form a cached prompt prefix. Both run the same loop and tools (`src/ai/ollama.ts`, `src/ai/anthropic.ts`).
+- Models: local Ollama by default (`qwen3:30b-a3b` with tool calling, 20 repair turns; a build took about 3 minutes on an M4 Pro), or the Claude API (`claude-opus-5-5`, 12 turns), where the instructions and an index of all content form a cached prompt prefix. Both run the same loop and tools (`src/ai/ollama.ts`, `src/ai/anthropic.ts`).
 
 ```bash
 npm run dev      # builder on http://localhost:5173, AI server on 127.0.0.1:8787 (Vite proxies /api)
 npm run eval     # runs evals/prompts.md through the same loop
 ```
 
-`npm run eval` sends each sample description in [evals/prompts.md](evals/prompts.md) through the build loop, prints pass/fail on legality and a summary of each character, and writes a full report with the model's reasons to `evals/results/` (gitignored) for judging theme by eye. It uses the same model settings as the server. `npm run eval -- goblin` runs only the prompts whose heading contains "goblin"; `--model qwen3:30b-a3b` tries another Ollama model, and `--provider anthropic` the Claude API (which costs API usage).
+`npm run eval` sends each sample description in [evals/prompts.md](evals/prompts.md) through the build loop, prints pass/fail on legality and a summary of each character, and writes a full report with the model's reasons to `evals/results/` (gitignored) for judging theme by eye. It uses the same model settings as the server. `npm run eval -- goblin` runs only the prompts whose heading contains "goblin"; `--model deepseek-r1:14b --mode json` tries another Ollama model, and `--provider anthropic` the Claude API (which costs API usage).
 
 ## Manual builder
 

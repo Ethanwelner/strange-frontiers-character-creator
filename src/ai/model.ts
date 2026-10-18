@@ -37,7 +37,7 @@ export interface Prompt {
 }
 
 export interface Provider {
-  // Shown to the player, e.g. "deepseek-r1:14b".
+  // Shown to the player, e.g. "qwen3:30b-a3b".
   model: string;
   maxTurns: number;
   start(prompt: Prompt): ChatSession;

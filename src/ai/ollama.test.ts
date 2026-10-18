@@ -42,7 +42,7 @@ function script(...replies: Response[]) {
   return { fetch, bodies };
 }
 
-describe("ollamaProvider, tools mode", () => {
+describe("ollamaProvider, tools mode (the default)", () => {
   it("runs the loop with tool calls and returns an accepted build", async () => {
     const { fetch, bodies } = script(
       reply([{ name: "get_kind", arguments: { id: "tatot" } }]),
@@ -50,16 +50,16 @@ describe("ollamaProvider, tools mode", () => {
       reply([{ name: "validate_build", arguments: JSON.stringify({ build: goblinoid }) }]),
       reply([{ name: "submit_build", arguments: { build: goblinoid, summary: "A goblin mage.", reasons } }]),
     );
-    const result = await describeCharacter({ description: "A goblin mage.", content, provider: ollamaProvider({ fetch, mode: "tools", host: "http://ollama.test/" }) });
+    const result = await describeCharacter({ description: "A goblin mage.", content, provider: ollamaProvider({ fetch, host: "http://ollama.test/" }) });
 
     expect(result.status).toBe("accepted");
-    expect(result.model).toBe("deepseek-r1:14b");
+    expect(result.model).toBe("qwen3:30b-a3b");
     expect(result.build).toEqual(goblinoid);
     expect(result.usage.inputTokens).toBe(3000);
     expect(fetch.mock.calls[0]![0]).toBe("http://ollama.test/api/chat");
 
     const first = bodies[0]!;
-    expect(first.model).toBe("deepseek-r1:14b");
+    expect(first.model).toBe("qwen3:30b-a3b");
     expect(first.stream).toBe(false);
     const tools = first.tools as { function: { name: string } }[];
     expect(tools.map((t) => t.function.name)).toContain("search_traits");
@@ -101,7 +101,7 @@ describe("ollamaProvider, tools mode", () => {
 const answer = (content: string) =>
   Response.json({ message: { role: "assistant", content, thinking: "hmm" }, done_reason: "stop", prompt_eval_count: 1000, eval_count: 200 });
 
-describe("ollamaProvider, JSON mode (the default)", () => {
+describe("ollamaProvider, JSON mode", () => {
   it("asks for a whole build in the submit_build format and repairs from the engine's verdict", async () => {
     const broken = { ...goblinoid, levels: [{ group: "mental", points: { logic: 5 } }] };
     const { fetch, bodies } = script(
@@ -109,7 +109,7 @@ describe("ollamaProvider, JSON mode (the default)", () => {
       answer("Sorry, here it is in prose."),
       answer(JSON.stringify({ build: goblinoid, summary: "A goblin mage.", reasons })),
     );
-    const result = await describeCharacter({ description: "A goblin mage.", content, provider: ollamaProvider({ fetch }) });
+    const result = await describeCharacter({ description: "A goblin mage.", content, provider: ollamaProvider({ fetch, model: "deepseek-r1:14b", mode: "json" }) });
 
     expect(result.status).toBe("accepted");
     expect(result.build).toEqual(goblinoid);
