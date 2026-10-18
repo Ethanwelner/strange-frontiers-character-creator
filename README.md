@@ -6,7 +6,10 @@ Early work in progress. See [docs/PLAN.md](docs/PLAN.md) for the roadmap and [do
 
 ## Setup
 
+Needs Node 24 or newer (`.nvmrc` pins it, so `nvm use` picks it up).
+
 ```bash
+nvm use
 npm install
 npm run validate
 npm test
