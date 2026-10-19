@@ -4,14 +4,14 @@ import type Anthropic from "@anthropic-ai/sdk";
 import { DEFAULT_CAMPAIGN, type Campaign } from "../engine/build.js";
 import type { Content } from "../engine/parse.js";
 import { choicePool, FREE_TEXT_POOLS, isFreeTextPool, validateBuild } from "../engine/validate.js";
-import { PackageType, TraitCategory, type Trait } from "../schema/index.js";
+import { PackageType, StatId, TraitCategory, type Trait } from "../schema/index.js";
 import type { BuildCheck, IdIssue, OpenChoice } from "./types.js";
 
 type Tool = Anthropic.Beta.BetaTool;
 
-const BUILD_SCHEMA = {
+const CONCEPT_SCHEMA = {
   type: "object",
-  description: "A character build. Every id must come from the game's content.",
+  description: "Who the character is. The rules engine turns this into a full legal build. Every id must come from the game's content.",
   properties: {
     name: { type: "string", description: "The character's name, if the player gave one or one fits." },
     kind: { type: "string", description: "Kind id, e.g. isek." },
@@ -19,39 +19,21 @@ const BUILD_SCHEMA = {
     origin: { type: "string", description: "Origin package id." },
     profession: { type: "string", description: "Profession package id." },
     past: { type: "string", description: "Past package id." },
-    level: { type: "integer", description: "The campaign's starting level." },
-    levels: {
+    focus: {
       type: "array",
-      description: "One entry per level, starting with level 1.",
-      items: {
-        type: "object",
-        properties: {
-          group: { type: "string", enum: ["physical", "social", "mental"], description: "Where this level's Inner Ring point goes." },
-          points: {
-            type: "object",
-            description: "Exactly 3 Outer Ring points spread among the group's stats, e.g. {\"power\": 2, \"grace\": 1}.",
-            additionalProperties: { type: "integer", minimum: 0 },
-          },
-        },
-        required: ["group", "points"],
-      },
+      items: { type: "string", enum: StatId.options },
+      description: "The Outer Ring stats that matter most for this character, most important first (two to four). Stat points go to these.",
     },
     traits: {
       type: "array",
-      description: "Feat picks. Each entry buys one rank; a ranked Trait taken to rank 2 is two entries, ranks 1 and 2.",
-      items: {
-        type: "object",
-        properties: {
-          trait: { type: "string", description: "Trait id." },
-          rank: { type: "integer", minimum: 1 },
-          pick: { type: "string", enum: ["universal", "background"] },
-        },
-        required: ["trait", "rank", "pick"],
-      },
+      items: { type: "string" },
+      description:
+        "Trait ids that fit the character, best fit first. List more than the picks will cover (12 to 20): the engine buys them in order " +
+        "and skips any the build can't take. List a ranked Trait twice to ask for rank 2. Don't list Traits the packages already grant.",
     },
     choices: {
       type: "array",
-      description: "Answers to the packages' choices, from their pools. Leave out choices get_package marks leftForPlayer, such as Contacts.",
+      description: "Optional answers to package choices with a pool, like languages. Any you leave out are filled in. Never answer Contacts.",
       items: {
         type: "object",
         properties: {
@@ -63,7 +45,7 @@ const BUILD_SCHEMA = {
       },
     },
   },
-  required: ["kind", "origin", "profession", "past", "level", "levels", "traits", "choices"],
+  required: ["kind", "origin", "profession", "past", "focus", "traits"],
 } as const;
 
 export const TOOLS: Tool[] = [
@@ -119,32 +101,20 @@ export const TOOLS: Tool[] = [
     },
   },
   {
-    name: "validate_build",
-    description:
-      "Check a draft build with the rules engine. Returns unknown ids, errors, warnings, the resulting stats, how many universal and " +
-      "background picks the stats give and how many are spent, the Traits held, the Background Trait list, and choices left for the player. " +
-      "Call it as often as you like while drafting.",
-    input_schema: {
-      type: "object",
-      properties: { build: BUILD_SCHEMA },
-      required: ["build"],
-    },
-  },
-  {
     name: "submit_build",
     description:
-      "Submit the finished build with a one-line reason for each choice. The build is checked again: if the engine rejects it, " +
-      "the errors come back and you fix them and submit again. Call this once the build passes validate_build.",
+      "Submit the character concept with a one-line reason for each choice. The rules engine spreads the stat points, buys Traits from " +
+      "your list in order and checks the result. If it's legal you're done; if not, the problems come back and you submit again.",
     input_schema: {
       type: "object",
       properties: {
-        build: BUILD_SCHEMA,
+        concept: CONCEPT_SCHEMA,
         summary: { type: "string", description: "One or two sentences on who this character is, for the player." },
         reasons: {
           type: "array",
           description:
-            "One short line per choice. Targets: kind, form (for a Kind with forms), origin, profession, past, levels, " +
-            "each picked Trait's id, and choice:<package>/<pool> for each answered choice.",
+            "One short line per choice. Targets: kind, form (for a Kind with forms), origin, profession, past, levels (why the focus stats), " +
+            "and each listed Trait's id.",
           items: {
             type: "object",
             properties: { target: { type: "string" }, reason: { type: "string" } },
@@ -152,7 +122,7 @@ export const TOOLS: Tool[] = [
           },
         },
       },
-      required: ["build", "summary", "reasons"],
+      required: ["concept", "summary", "reasons"],
     },
   },
 ];
@@ -362,8 +332,6 @@ export function runTool(name: string, rawInput: unknown, content: Content, campa
       return getPackage(input, content);
     case "get_kind":
       return getKind(input, content);
-    case "validate_build":
-      return checkBuild(input.build, content, campaign);
     default:
       throw new ToolError(`Unknown tool "${name}"`);
   }

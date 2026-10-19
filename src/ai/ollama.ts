@@ -3,12 +3,12 @@
 //
 // Two modes. "tools" (the default) uses native tool calling, like the Claude
 // adapter; qwen3:30b-a3b handles it well. "json" works with models that
-// don't call tools: each turn the model answers with a full build in
+// don't call tools: each turn the model answers with a character concept in
 // Ollama's structured-output format, and the engine's verdict goes back as
 // the next message. deepseek-r1:14b writes prose instead of calling tools,
-// and in JSON mode it resubmits the same build without fixing it, so it
+// and in JSON mode it resubmitted the same build without fixing it, so it
 // isn't the default.
-import { DescribeFailure, type ChatSession, type Prompt, type Provider, type ToolCall, type ToolResult } from "./model.js";
+import { DescribeFailure, type ChatSession, type Prompt, type Provider, type SendOptions, type ToolCall, type ToolResult } from "./model.js";
 import { TOOLS } from "./tools.js";
 
 export const DEFAULT_OLLAMA_MODEL = "qwen3:30b-a3b";
@@ -51,11 +51,11 @@ const OLLAMA_TOOLS = TOOLS.map((t) => ({
 const SUBMIT_SCHEMA = TOOLS.find((t) => t.name === "submit_build")!.input_schema;
 
 const JSON_MODE_NOTE =
-  "You can't call tools here. Answer every time with the full build as JSON in the requested format: build, summary and reasons. " +
-  "The rules engine checks it and replies with any problems; fix all of them and answer with the whole corrected build. " +
-  "Use the content index below for ids. A build's choices only answer the choices its packages list.";
+  "You can't call tools here. Answer every time with the character as JSON in the requested format: concept, summary and reasons. " +
+  "The rules engine builds and checks it and replies with any problems; fix all of them and answer with the whole corrected concept. " +
+  "Use the content index below for ids.";
 
-const JSON_MODE_RETRY = "Answer with the full build as JSON in the requested format: build, summary and reasons.";
+const JSON_MODE_RETRY = "Answer with the character as JSON in the requested format: concept, summary and reasons.";
 
 // Local models are slower to converge, so they get more repair turns.
 export function ollamaProvider(opts: OllamaOptions = {}): Provider {
@@ -93,7 +93,7 @@ class OllamaSession implements ChatSession {
     ];
   }
 
-  async send(onThinking?: (text: string) => void) {
+  async send(onThinking?: (text: string) => void, options: SendOptions = {}) {
     this.turn++;
     let res: Response;
     try {
@@ -106,8 +106,9 @@ class OllamaSession implements ChatSession {
           ...(this.mode === "json" ? { format: SUBMIT_SCHEMA } : { tools: OLLAMA_TOOLS }),
           // Streamed, so the reasoning can show as it happens.
           stream: true,
-          // Reasoning models keep their thinking out of the reply.
-          think: true,
+          // Reasoning models keep their thinking out of the reply. The loop
+          // turns it off for repairs, which cuts most of each turn's tokens.
+          think: options.think ?? true,
           options: { num_ctx: 32768, num_predict: 8192 },
         }),
       });
@@ -175,7 +176,7 @@ class OllamaSession implements ChatSession {
     if (this.mode === "json") {
       // Only submit_build happens in JSON mode: its result is the engine's verdict.
       const verdict = results.map((r) => r.content).join("\n");
-      this.messages.push({ role: "user", content: `The rules engine rejected that build:\n${verdict}\n\nFix every problem and answer with the full corrected build.` });
+      this.messages.push({ role: "user", content: `The rules engine sent that back:\n${verdict}\n\nFix every problem and answer with the whole corrected concept.` });
       return;
     }
     for (const r of results) {

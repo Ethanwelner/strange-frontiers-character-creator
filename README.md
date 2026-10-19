@@ -42,11 +42,12 @@ Claude Code can also build characters in chat, without the app's AI layer. The l
 
 ## Describe your character (AI)
 
-Type a description in plain words and press **Build it** (Phase 4). The model reads the concept, looks up the real Kinds, packages and Traits with tools, proposes a full build, and checks it with the rules engine, repairing it until the engine accepts it or a turn limit is hit. The build fills the builder with a one-line reason per choice, and stays fully editable, with live validation, afterward.
+Type a description in plain words and press **Build it** (Phase 4). The model reads the description and submits a concept: the Kind, the three packages, the stats that matter most, and a list of fitting Traits, best first. The solver (`src/engine/solve.ts`) turns that into a full build: it spreads each level's stat points into the focus stats, answers language-style choices, buys Traits from the list in order and skips any the engine rejects, then spends leftover background picks on the Background Trait list. The engine checks the result in the same step; if something's wrong (a missing form, an unknown package), the problems go back to the model. Most builds take one or two turns. The build fills the builder with a one-line reason per choice, and stays fully editable, with live validation, afterward.
 
-- The model never invents content or does the stat math. Every id it proposes is checked against `content/` in code, and every build goes through `validateBuild`, so even a small local model can't produce an illegal character. How well the character fits the description does depend on the model.
+- The model never invents content or does the stat math. Unknown Kinds and packages are rejected in code, unknown Traits are skipped, and every build goes through `validateBuild`, so even a small local model can't produce an illegal character. How well the character fits the description does depend on the model.
+- If the Trait list runs out with more than two picks unspent, the model is asked once for more Traits. Local models reason before their first submit and skip reasoning on repairs, which keeps those turns short.
 - It never names a Contact: who it is is up to you, and you write it on the Choices step. Until you do, the build is still legal and the panel shows a reminder. Dreftian-language choices pick from the Dreftian languages in content (Dreftan for now).
-- Models: local Ollama by default (`qwen3:30b-a3b` with tool calling, 20 repair turns; a build took about 3 minutes on an M4 Pro), or the Claude API (`claude-opus-5-5`, 12 turns), where the instructions and an index of all content form a cached prompt prefix. Both run the same loop and tools (`src/ai/ollama.ts`, `src/ai/anthropic.ts`).
+- Models: local Ollama by default (`qwen3:30b-a3b` with tool calling, up to 20 turns; `qwen3:14b` fits a 16 GB GPU), or the Claude API (`claude-opus-5-5`, 12 turns), where the instructions and an index of all content form a cached prompt prefix. Both run the same loop and tools (`src/ai/ollama.ts`, `src/ai/anthropic.ts`).
 
 ```bash
 npm run dev      # builder on http://localhost:5173, AI server on 127.0.0.1:8787 (Vite proxies /api)
@@ -85,8 +86,8 @@ npm run build    # static site in dist/ (the AI server isn't part of it)
 
 - `content/`: the game's mechanics as YAML, one file per entry. This is the source of truth.
 - `src/schema/`: Zod schemas that define what a valid entry looks like.
-- `src/engine/`: the rules engine. Parses content (`parse.ts`, no file system, so the browser can use it; `content.ts` loads from disk for Node), defines a character `Build`, and `validateBuild` checks a build against the creation rules.
-- `src/ai/`: the AI layer. `tools.ts` holds the tools the model calls (backed by the engine and content) and the unknown-id check, `prompt.ts` the instructions and content index, `loop.ts` the describe → build → validate → repair loop, and `ollama.ts` / `anthropic.ts` the model adapters.
+- `src/engine/`: the rules engine. Parses content (`parse.ts`, no file system, so the browser can use it; `content.ts` loads from disk for Node), defines a character `Build`, `validateBuild` checks a build against the creation rules, and `solveConcept` turns a character concept into a legal build.
+- `src/ai/`: the AI layer. `tools.ts` holds the tools the model calls (backed by the engine and content) and the unknown-id check, `prompt.ts` the instructions and content index, `loop.ts` the describe → submit → solve and check → repair loop, and `ollama.ts` / `anthropic.ts` the model adapters.
 - `src/server/`: the local AI server that reads the model settings from `.env` and answers `POST /api/describe`.
 - `evals/`: sample player descriptions for `npm run eval`.
 - `characters/`: Build JSON files made in Claude Code; `npm run check-build` checks them.

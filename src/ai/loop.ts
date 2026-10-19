@@ -1,10 +1,11 @@
-// The describe → build → validate → repair loop. The model proposes builds
-// through tools; the engine checks every one, and the loop ends when a
-// submitted build is accepted or the turn limit is reached. Which model runs
+// The describe → build → repair loop. The model submits a character concept;
+// the solver turns it into a full build and the engine checks it in the same
+// step. The loop ends when a build is accepted or the turn limit is reached. Which model runs
 // it is up to the Provider (anthropic.ts, ollama.ts).
 import type { BuildInput, Campaign } from "../engine/build.js";
 import { DEFAULT_CAMPAIGN } from "../engine/build.js";
 import type { Content } from "../engine/parse.js";
+import { solveConcept, type SkippedTrait } from "../engine/solve.js";
 import type { Provider, ToolResult } from "./model.js";
 import { contentIndex, INSTRUCTIONS } from "./prompt.js";
 import { checkBuild, runTool, ToolError } from "./tools.js";
@@ -35,8 +36,6 @@ function describeCall(name: string, input: unknown, content: Content): string {
       return `Listing ${String(i.type ?? "package")}s`;
     case "search_traits":
       return typeof i.query === "string" && i.query.trim() ? `Searching Traits for "${i.query.trim()}"` : "Searching Traits";
-    case "validate_build":
-      return "Checking a draft build";
     case "submit_build":
       return "Submitting the build";
     default:
@@ -50,8 +49,6 @@ const thinkingTail = (text: string) => {
   return flat.length > 160 ? `…${flat.slice(-160)}` : flat;
 };
 
-const REASONLESS = new Set(["name", "level", "choices", "traits"]);
-
 // The reason targets a build needs: one per choice it makes.
 function reasonTargets(build: Record<string, unknown>): Set<string> {
   const targets = new Set<string>();
@@ -60,20 +57,6 @@ function reasonTargets(build: Record<string, unknown>): Set<string> {
   for (const p of Array.isArray(build.traits) ? build.traits : []) if (typeof p?.trait === "string") targets.add(p.trait);
   for (const a of Array.isArray(build.choices) ? build.choices : []) targets.add(`choice:${a?.package}/${a?.from}`);
   return targets;
-}
-
-// Every choice needs a reason, and every reason must point at something the
-// build actually contains.
-function reasonProblems(build: Record<string, unknown>, reasons: Reason[]): string[] {
-  const targets = reasonTargets(build);
-  const given = new Set(reasons.map((r) => r.target));
-  const missing = [...targets].filter((t) => !given.has(t));
-  const stray = [...given].filter((t) => !targets.has(t) && !REASONLESS.has(t));
-  const problems: string[] = [];
-  if (missing.length) problems.push(`Add a reason for: ${missing.join(", ")}.`);
-  if (stray.length) problems.push(`These reasons don't match anything in the build: ${stray.join(", ")}.`);
-  if (problems.length) problems.push(`The targets are exactly: ${[...targets].join(", ")}.`);
-  return problems;
 }
 
 // "6 of 9 universal picks are unspent" when more than two picks the build
@@ -104,6 +87,9 @@ function parseReasons(v: unknown): Reason[] {
     .filter((r) => typeof r?.target === "string" && typeof r?.reason === "string")
     .map((r) => ({ target: r.target as string, reason: (r.reason as string).trim() }));
 }
+
+// Skipped Traits for the model, without the "no picks left" tail.
+const compactSkipped = (skipped: SkippedTrait[]) => skipped.filter((s) => s.reason !== "no picks left");
 
 const asBuild = (v: unknown) => (typeof v === "object" && v !== null && !Array.isArray(v) ? (v as Record<string, unknown>) : undefined);
 
@@ -137,10 +123,11 @@ export async function describeCharacter(opts: DescribeOptions): Promise<Describe
 
   // The most recent build the model proposed, returned if the turn limit hits.
   let last: { build: Record<string, unknown>; check: BuildCheck; summary?: string; reasons: Reason[] } | undefined;
-  // Reasons and unspent picks each get one push back: a legal build isn't
-  // thrown away over them.
-  let reasonRetryUsed = false;
+  // Unspent picks get one push back: a legal build isn't thrown away over them.
   let picksPushUsed = false;
+  // Reasoning helps with the concept; fixing what the engine sends back
+  // doesn't need it, so models that can skip it stop after the first submit.
+  let submitted = false;
   const done = (status: DescribeResult["status"], turns: number): DescribeResult => ({
     status,
     model: provider.model,
@@ -155,7 +142,7 @@ export async function describeCharacter(opts: DescribeOptions): Promise<Describe
   for (let turn = 1; turn <= maxTurns; turn++) {
     turnNow = turn;
     progress("Thinking");
-    const { calls, usage: u } = await session.send(onThinking);
+    const { calls, usage: u } = await session.send(onThinking, { think: !submitted });
     opts.onTurn?.(turn, calls);
     if (calls.length) progress(calls.map((c) => describeCall(c.name, c.input, content)).join(" · "));
     usage.inputTokens += u.inputTokens ?? 0;
@@ -164,7 +151,7 @@ export async function describeCharacter(opts: DescribeOptions): Promise<Describe
     usage.cacheWriteTokens += u.cacheWriteTokens ?? 0;
 
     if (calls.length === 0) {
-      session.nudge("Call submit_build with the finished build, a summary and a reason for each choice.");
+      session.nudge("Call submit_build with the concept, a summary and a reason for each choice.");
       continue;
     }
 
@@ -172,58 +159,42 @@ export async function describeCharacter(opts: DescribeOptions): Promise<Describe
     for (const call of calls) {
       if (call.name === "submit_build") {
         const input = asBuild(call.input) ?? {};
-        const build = asBuild(input.build);
+        const concept = asBuild(input.concept);
         const reasons = parseReasons(input.reasons);
         const summary = typeof input.summary === "string" ? input.summary.trim() : undefined;
-        if (!build) {
-          results.push({ call, isError: true, content: "submit_build needs a build object." });
+        if (!concept) {
+          results.push({ call, isError: true, content: "submit_build needs a concept object." });
           continue;
         }
-        const check = checkBuild(build, content, campaign);
-        last = { build, check, summary, reasons };
-        const problems = reasonProblems(build, reasons);
+        submitted = true;
+        const solved = solveConcept(concept, content, campaign);
+        if ("error" in solved) {
+          results.push({ call, isError: true, content: `The concept doesn't match the format: ${solved.error}` });
+          continue;
+        }
+        const check = checkBuild(solved.build, content, campaign);
+        last = { build: solved.build, check, summary, reasons };
+        const report = { taken: solved.taken, skipped: compactSkipped(solved.skipped) };
         const unspent = check.accepted ? unspentPicks(check) : undefined;
-        if (check.accepted && problems.length && !reasonRetryUsed) {
-          reasonRetryUsed = true;
-          results.push({ call, isError: true, content: JSON.stringify({ rejected: true, reasonProblems: problems, ...check }) });
-          progress("Build is legal; filling in reasons");
-          continue;
-        }
         if (unspent && !picksPushUsed) {
-          progress("Build is legal; spending more picks");
+          progress("Build is legal; asking for more Traits");
           picksPushUsed = true;
-          results.push({ call, isError: true, content: JSON.stringify({ rejected: true, picks: `The engine accepts this build, but ${unspent}. Spend most of them on Traits that fit the concept, then submit again.`, ...check }) });
+          const picks = `The engine built a legal character, but ${unspent}: the Trait list ran out. Submit again with the same concept and more Traits that fit added to the list.`;
+          results.push({ call, isError: true, content: JSON.stringify({ rejected: true, picks, ...report }) });
           continue;
         }
         if (check.accepted) {
-          last.reasons = keepMatching(build, reasons);
+          last.reasons = keepMatching(solved.build, reasons);
           progress("Done");
           return done("accepted", turn);
         }
-        progress(`The engine sent the build back with ${check.errors.length + check.unknownIds.length} problems; fixing them`);
-        results.push({ call, isError: true, content: JSON.stringify({ rejected: true, reasonProblems: problems, ...check }) });
+        progress(`The engine sent the concept back with ${check.errors.length + check.unknownIds.length} problems; fixing them`);
+        results.push({ call, isError: true, content: JSON.stringify({ rejected: true, unknownIds: check.unknownIds, errors: check.errors, ...report }) });
         continue;
       }
       try {
         const out = runTool(call.name, call.input, content, campaign);
-        let next: string | undefined;
-        if (call.name === "validate_build") {
-          const build = asBuild(asBuild(call.input)?.build);
-          const check = out as BuildCheck;
-          if (build) last = { build, check, summary: last?.summary, reasons: last?.reasons ?? [] };
-          // Smaller models keep validating unless told the build is done.
-          if (build) {
-            const n = check.errors.length + check.unknownIds.length;
-            progress(check.accepted ? "Draft is legal" : `Draft has ${n} ${n === 1 ? "problem" : "problems"}; fixing`);
-          }
-          if (build && check.accepted) {
-            const unspent = unspentPicks(check);
-            next = unspent
-              ? `This build is legal, but ${unspent}. Add Traits that fit the concept, then validate again.`
-              : `This build is accepted. Call submit_build now with this build, a summary, and one reason for each of: ${[...reasonTargets(build)].join(", ")}.`;
-          }
-        }
-        results.push({ call, content: JSON.stringify(next ? { ...(out as object), next } : out) });
+        results.push({ call, content: JSON.stringify(out) });
       } catch (err) {
         if (!(err instanceof ToolError)) throw err;
         results.push({ call, isError: true, content: err.message });
