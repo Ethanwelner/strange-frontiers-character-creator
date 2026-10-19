@@ -14,7 +14,7 @@ const solve = (concept: ConceptInput, level = 1) => {
 
 const hunter: ConceptInput = {
   kind: "isek",
-  origin: "illinsdott",
+  origin: "dreft",
   profession: "guild-hunter",
   past: "noble-household",
   focus: ["grace", "power"],
@@ -74,8 +74,8 @@ describe("solveConcept", () => {
   });
 
   it("buys the next rank of a ranked Trait a package already grants", () => {
-    const s = solve({ ...hunter, traits: ["farming"] });
-    expect(s.build.traits.filter((t) => t.trait === "farming").map((t) => t.rank)).toEqual([2]);
+    const s = solve({ ...hunter, traits: ["dreft"] });
+    expect(s.build.traits.filter((t) => t.trait === "dreft").map((t) => t.rank)).toEqual([2]);
   });
 
   it("stops buying when the picks run out", () => {
@@ -87,11 +87,8 @@ describe("solveConcept", () => {
   });
 
   it("answers choices it can check, and keeps a valid answer from the concept", () => {
-    const s = solve({ ...hunter, origin: "port-herminst", past: "merchant-dynasty", choices: [{ package: "merchant-dynasty", from: "language", traits: ["english"] }] });
-    expect(s.build.choices).toEqual([
-      { package: "port-herminst", from: "dreftian-language", traits: ["dreftan"] },
-      { package: "merchant-dynasty", from: "language", traits: ["english"] },
-    ]);
+    const s = solve({ ...hunter, origin: "dreft", past: "merchant-dynasty", choices: [{ package: "merchant-dynasty", from: "language", traits: ["english"] }] });
+    expect(s.build.choices).toEqual([{ package: "merchant-dynasty", from: "language", traits: ["english"] }]);
     expect(s.result.ok).toBe(true);
   });
 

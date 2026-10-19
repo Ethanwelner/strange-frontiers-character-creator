@@ -6,7 +6,7 @@ import { baseStats, Chip, GROUPS, title, traitName } from "./ui.js";
 
 const SOURCE = /^(origin|profession|past) ([a-z0-9-]+)( choice)?$/;
 
-// "origin glintl" → "Glintl (origin)"; pick sources read as they are.
+// "origin dreft" → "Dreft (origin)"; pick sources read as they are.
 function source(s: string) {
   const m = SOURCE.exec(s);
   if (!m) return s;

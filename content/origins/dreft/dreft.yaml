@@ -1,0 +1,27 @@
+id: dreft
+name: Dreft
+status: placeholder
+plane: isekai
+region: dreft
+summary: "Born and raised in the Kingdom of Dreft, whether in Port Herminst, a coastal town, a farming village or the mountains."
+tags: [kingdom, dreft, isekai]
+lore: dreft
+type: origin
+grants:
+  - { trait: dreft, rank: 1 }
+  - { trait: dreftian-law, rank: 1 }
+  - { trait: dreftan }
+# Where in Dreft a character grew up isn't granted; it's bought with
+# background picks from this list.
+backgroundTraits:
+  - port-herminst
+  - glintl
+  - the-switch-port
+  - the-kings-woods
+  - the-corsine-pass
+  - seafaring
+  - coastal-trade
+  - farming
+  - mountaineering
+  - local-folklore
+  - karsef
