@@ -69,9 +69,15 @@ export const OUTER_POINTS_PER_LEVEL = 3;
 // Choice pools the engine knows how to resolve. Others (and pools with no
 // Traits in them yet) can't be checked, so answers to them only warn.
 const POOLS: Record<string, (t: Trait) => boolean> = {
-  contact: (t) => t.category === "contact",
   language: (t) => t.types.includes("language"),
+  "dreftian-language": (t) => t.types.includes("language") && t.region === "dreft",
 };
+
+// Pools the player answers in their own words instead of with Trait ids. A
+// Contact is whoever the player says it is, so any name counts.
+export const FREE_TEXT_POOLS: Record<string, string> = { contact: "Contact" };
+
+export const isFreeTextPool = (from: string) => Object.hasOwn(FREE_TEXT_POOLS, from);
 
 // The Traits a package choice pool can be answered from. Empty when the engine
 // can't resolve the pool, or nothing is in it yet.
@@ -186,20 +192,29 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     const pools = new Map<string, number>();
     for (const c of pkg.choices) pools.set(c.from, (pools.get(c.from) ?? 0) + c.choose);
     for (const [from, count] of pools) {
+      const noun = FREE_TEXT_POOLS[from];
       const i = build.choices.findIndex((a) => a.package === pkg.id && a.from === from);
+      const given = i < 0 ? 0 : build.choices[i]!.traits.length;
+      // A Contact the player hasn't recorded yet is a reminder, not an error.
+      if (noun && given < count) {
+        const left = count - given;
+        warn("choice", `${pkg.name} gives ${count} ${noun}${count > 1 ? "s" : ""}: record ${left > 1 ? `${left} more` : given ? "one more" : "who"} on the Choices step`, i < 0 ? "choices" : `choices[${i}]`);
+      }
       if (i < 0) {
-        error("choice", `${pkg.name} asks for ${count} from "${from}", but the build doesn't answer it`, "choices");
+        if (!noun) error("choice", `${pkg.name} asks for ${count} from "${from}", but the build doesn't answer it`, "choices");
         continue;
       }
       answered.add(i);
       const answer = build.choices[i]!;
       const path = `choices[${i}]`;
-      if (answer.traits.length !== count) {
-        error("choice", `${pkg.name} asks for ${count} from "${from}", but the build gives ${answer.traits.length}`, path);
+      if (noun ? given > count : given !== count) {
+        error("choice", `${pkg.name} asks for ${count} from "${from}", but the build gives ${given}`, path);
       }
       if (new Set(answer.traits).size !== answer.traits.length) {
-        error("choice", `${pkg.name}'s "${from}" answer lists the same Trait twice`, path);
+        error("choice", `${pkg.name}'s "${from}" answer lists the same ${noun ?? "Trait"} twice`, path);
       }
+      // Free-text answers are names, not Traits: nothing to look up or hold.
+      if (isFreeTextPool(from)) continue;
       const pool = choicePool(from, content);
       if (pool.length === 0) {
         warn("choice-pool", `Can't check ${pkg.name}'s "${from}" answer (${answer.traits.join(", ")}): no Traits are defined for that pool yet`, path);

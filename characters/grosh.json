@@ -1,0 +1,69 @@
+{
+  "name": "Grosh",
+  "kind": "tatot",
+  "form": "orcoid",
+  "origin": "tetra",
+  "profession": "caravaneer",
+  "past": "merchant-dynasty",
+  "level": 1,
+  "levels": [
+    {
+      "group": "physical",
+      "points": {
+        "power": 2,
+        "endurance": 1
+      }
+    }
+  ],
+  "traits": [
+    {
+      "trait": "shield-wall",
+      "rank": 1,
+      "pick": "universal"
+    },
+    {
+      "trait": "vigilance",
+      "rank": 1,
+      "pick": "universal"
+    },
+    {
+      "trait": "survivalist",
+      "rank": 1,
+      "pick": "universal"
+    },
+    {
+      "trait": "smooth-talker",
+      "rank": 1,
+      "pick": "universal"
+    },
+    {
+      "trait": "caravan-routes",
+      "rank": 1,
+      "pick": "universal"
+    },
+    {
+      "trait": "streetwise",
+      "rank": 1,
+      "pick": "universal"
+    },
+    {
+      "trait": "tracker",
+      "rank": 1,
+      "pick": "universal"
+    },
+    {
+      "trait": "the-kings-woods",
+      "rank": 1,
+      "pick": "universal"
+    }
+  ],
+  "choices": [
+    {
+      "package": "merchant-dynasty",
+      "from": "language",
+      "traits": [
+        "dreftan"
+      ]
+    }
+  ]
+}

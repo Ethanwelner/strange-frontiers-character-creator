@@ -43,15 +43,6 @@ const fixtures = [
     rankStats: ["power", "grace"],
     effect: "Test only.",
   }),
-  Trait.parse({
-    id: "fixture-old-friend",
-    name: "Old Friend",
-    status: "placeholder",
-    plane: "isekai",
-    summary: "Test fixture: a Contact.",
-    category: "contact",
-    effect: "Test only.",
-  }),
 ];
 const withFixtures: Content = { ...content, traits: [...content.traits, ...fixtures] };
 
@@ -98,16 +89,10 @@ const isek: BuildInput = {
     { trait: "tracker", pick: "universal" },
   ],
   choices: [
-    { package: "port-herminst", from: "dreftian-language", traits: ["old-herminstan"] },
-    { package: "caravaneer", from: "contact", traits: ["harbor-master-oyl"] },
+    { package: "port-herminst", from: "dreftian-language", traits: ["dreftan"] },
+    { package: "caravaneer", from: "contact", traits: ["Harbor Master Oyl"] },
     { package: "merchant-dynasty", from: "language", traits: ["english"] },
   ],
-};
-
-// Once a Contact exists, the Isek's contact answer has to be a real one.
-const isekWithFriend: BuildInput = {
-  ...isek,
-  choices: isek.choices!.map((c) => (c.from === "contact" ? { ...c, traits: ["fixture-old-friend"] } : c)),
 };
 
 const orcoid: BuildInput = {
@@ -173,8 +158,7 @@ describe("legal Dreft characters", () => {
   it("Isek", () => {
     const r = check(isek);
     expectLegal(r);
-    // Contact and Dreftian-language pools have no Traits yet.
-    expect(r.warnings.map((w) => w.code)).toEqual(["choice-pool", "choice-pool"]);
+    expect(r.warnings).toEqual([]);
     expect(r.summary!.picks.background).toEqual({ available: 3, spent: 3, banked: 0 });
     expect(r.summary!.backgroundList).toContain("shield-wall");
   });
@@ -335,16 +319,35 @@ describe("rule 6: package grants and choices", () => {
     expect(codes(check({ ...isek, choices }))).toEqual(["choice"]);
   });
 
-  it("checks contact answers once Contacts exist", () => {
-    const bad = check(isek, withFixtures);
-    expect(codes(bad)).toEqual(["unknown-trait"]);
-    const good = check(isekWithFriend, withFixtures);
-    expectLegal(good);
-    expect(good.warnings.map((w) => w.code)).toEqual(["choice-pool"]);
+  it("takes any name for a Contact, since the player decides who it is", () => {
+    const named = (traits: string[]) => isek.choices!.map((c) => (c.from === "contact" ? { ...c, traits } : c));
+    const r = check({ ...isek, choices: named(["my cousin in the harbor guard"]) });
+    expectLegal(r);
+    expect(r.warnings).toEqual([]);
+    // Contacts aren't Traits, so they don't show up as held Traits.
+    expect(r.summary!.traits.map((h) => h.trait)).not.toContain("my cousin in the harbor guard");
+    expect(codes(check({ ...isek, choices: named(["Oyl", "Wenna"]) }))).toEqual(["choice"]);
+    expect(codes(check({ ...isek, choices: named(["Oyl", "Oyl"]) }))).toEqual(["choice", "choice"]);
+  });
+
+  it("reminds the player to record a Contact, without making the build illegal", () => {
+    const reminder = expect.objectContaining({ code: "choice", message: "Caravaneer gives 1 Contact: record who on the Choices step" });
+    const missing = check({ ...isek, choices: isek.choices!.filter((c) => c.from !== "contact") });
+    expectLegal(missing);
+    expect(missing.warnings).toEqual([reminder]);
+    const empty = check({ ...isek, choices: isek.choices!.map((c) => (c.from === "contact" ? { ...c, traits: [] } : c)) });
+    expectLegal(empty);
+    expect(empty.warnings).toEqual([reminder]);
+  });
+
+  it("answers Dreftian-language choices from Dreftian languages only", () => {
+    const answer = (traits: string[]) => isek.choices!.map((c) => (c.from === "dreftian-language" ? { ...c, traits } : c));
+    expect(codes(check({ ...isek, choices: answer(["english"]) }))).toEqual(["choice"]);
+    expect(codes(check({ ...isek, choices: answer(["old-herminstan"]) }))).toEqual(["unknown-trait"]);
   });
 
   it("rejects an answer for a package the build doesn't have", () => {
-    const r = check({ ...human, choices: [{ package: "caravaneer", from: "contact", traits: ["fixture-old-friend"] }] });
+    const r = check({ ...human, choices: [{ package: "caravaneer", from: "contact", traits: ["Old Friend"] }] });
     expect(codes(r)).toEqual(["choice"]);
   });
 });
@@ -370,7 +373,7 @@ describe("rule 7: the Background Trait list", () => {
   });
 
   it("rejects a universal pick on a Background Trait", () => {
-    const r = check({ ...isekWithFriend, traits: [{ trait: "fixture-heirloom-blade", pick: "universal" }] }, withFixtures);
+    const r = check({ ...isek, traits: [{ trait: "fixture-heirloom-blade", pick: "universal" }] }, withFixtures);
     expect(codes(r)).toEqual(["pick-type"]);
   });
 
@@ -400,7 +403,7 @@ describe("rule 9: creation-only allowances", () => {
   });
 
   it("allows starter-only Traits", () => {
-    expectLegal(check({ ...isekWithFriend, traits: [{ trait: "fixture-heirloom-blade", pick: "background" }] }, withFixtures));
+    expectLegal(check({ ...isek, traits: [{ trait: "fixture-heirloom-blade", pick: "background" }] }, withFixtures));
   });
 
   it("still keeps starter-only Background Traits off universal picks", () => {
@@ -423,7 +426,7 @@ describe("rule 10: prerequisites and ranks", () => {
     // Guild Hunter grants Tracker.
     expectLegal(check(
       { ...orcoid, profession: "guild-hunter", traits: [{ trait: "fixture-master-tracker", pick: "universal" }],
-        choices: [{ package: "guild-hunter", from: "contact", traits: ["fixture-old-friend"] }] },
+        choices: [{ package: "guild-hunter", from: "contact", traits: ["Old Friend"] }] },
       withFixtures,
     ));
   });

@@ -2,6 +2,7 @@
 // may not be finished: the engine checks it as-is and says what's missing.
 import type { ChoiceAnswer, LevelAllocation, PickKind, TraitPick } from "../engine/build.js";
 import type { Campaign } from "../engine/build.js";
+import type { DescribeResult, OpenChoice, Reason } from "../ai/types.js";
 
 export interface Draft {
   name?: string;
@@ -19,10 +20,21 @@ export interface Draft {
 export const STEPS = ["kind", "background", "levels", "choices", "traits", "sheet"] as const;
 export type Step = (typeof STEPS)[number];
 
+// What the builder keeps from the last AI build, so the reasons survive a reload.
+export interface AiNotes {
+  description: string;
+  model?: string;
+  status: DescribeResult["status"];
+  summary?: string;
+  reasons: Reason[];
+  openChoices: OpenChoice[];
+}
+
 export interface Saved {
   draft: Draft;
   campaign: Campaign;
   step: Step;
+  ai?: AiNotes;
 }
 
 export const emptyLevel = (): LevelAllocation => ({ group: "physical", points: {} });
@@ -90,7 +102,8 @@ export function load(): Saved {
     const draft = fromBuild(saved.draft);
     const startingLevel = saved.campaign?.startingLevel ?? draft.level;
     const step = STEPS.includes(saved.step as Step) ? (saved.step as Step) : "kind";
-    return { draft, campaign: { startingLevel }, step };
+    const ai = saved.ai && Array.isArray(saved.ai.reasons) ? saved.ai : undefined;
+    return { draft, campaign: { startingLevel }, step, ai };
   } catch {
     return EMPTY;
   }

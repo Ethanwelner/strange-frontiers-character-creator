@@ -2,12 +2,14 @@ import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import { check, stepOf } from "./check.js";
 import { BackgroundStep } from "./components/BackgroundStep.js";
 import { ChoicesStep } from "./components/ChoicesStep.js";
+import { DescribeBox } from "./components/DescribeBox.js";
 import { KindStep } from "./components/KindStep.js";
 import { LevelsStep } from "./components/LevelsStep.js";
 import { Sheet } from "./components/Sheet.js";
 import { TraitsStep } from "./components/TraitsStep.js";
 import { ValidationPanel } from "./components/ValidationPanel.js";
 import { content, contentErrors } from "./content.js";
+import type { DescribeResult } from "../ai/types.js";
 import { clearSaved, EMPTY, fromBuild, load, save, slug, STEPS, toBuild, withLevel, type Draft, type Saved, type Step } from "./draft.js";
 
 const LABELS: Record<Step, string> = {
@@ -66,6 +68,25 @@ export function App() {
     }
   };
 
+  // The model's build replaces the draft, then stays editable like any other.
+  const applyDescribed = (result: DescribeResult, description: string) => {
+    const built = fromBuild(result.build);
+    setSaved((s) => ({
+      ...s,
+      draft: built,
+      step: "sheet",
+      ai: {
+        description,
+        model: result.model,
+        status: result.status,
+        summary: result.summary,
+        reasons: result.reasons,
+        openChoices: result.check?.openChoices ?? [],
+      },
+    }));
+    setNotice(undefined);
+  };
+
   const reset = () => {
     if (!window.confirm("Start a new character? The current build will be cleared.")) return;
     clearSaved();
@@ -110,6 +131,15 @@ export function App() {
           </button>
         </div>
       )}
+
+      <DescribeBox
+        draft={draft}
+        notes={saved.ai}
+        startingLevel={campaign.startingLevel}
+        hasBuild={Boolean(draft.kind || draft.origin || draft.profession || draft.past || draft.traits.length)}
+        onBuilt={applyDescribed}
+        onDismiss={() => setSaved((s) => ({ ...s, ai: undefined }))}
+      />
 
       <nav className="steps" aria-label="Steps">
         {STEPS.map((s, n) => (
