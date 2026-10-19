@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { loadContent } from "./content.js";
-import { allocateLevels, solveConcept, type ConceptInput, type Solution } from "./solve.js";
+import { allocateLevels, Concept, rankFocus, solveConcept, type ConceptInput, type Solution } from "./solve.js";
 import { validateBuild } from "./validate.js";
 
 const { content } = loadContent();
@@ -110,5 +110,38 @@ describe("solveConcept", () => {
 
   it("reports a concept that doesn't match the format", () => {
     expect(solveConcept({ kind: "isek" }, content)).toEqual({ error: expect.stringContaining("origin") });
+  });
+});
+
+// No ranked Trait in content has rankStats yet, so these tests give Farming
+// a Memory requirement and the Isek a Memory start that a level can raise to 6.
+describe("rank stats in focus", () => {
+  const ranked = {
+    ...content,
+    traits: content.traits.map((t) => (t.id === "farming" ? { ...t, rankStats: ["memory" as const] } : t)),
+    kinds: content.kinds.map((k) => (k.id === "isek" ? { ...k, stats: { ...k.stats!, memory: { start: 3, max: 15 } } } : k)),
+  };
+  // Illinsdott grants Farming (1), so listing it once asks for rank 2.
+  const farmer: ConceptInput = { ...hunter, traits: ["farming"] };
+  const focusOf = (c: ConceptInput) => rankFocus(Concept.parse(c), ranked);
+
+  it("adds the stats a requested rank above 1 needs, after the model's focus", () => {
+    expect(focusOf(farmer)).toEqual(["grace", "power", "memory"]);
+  });
+
+  it("counts a Trait listed twice as rank 2", () => {
+    expect(focusOf({ ...hunter, origin: "port-herminst", traits: ["farming", "farming"] })).toEqual(["grace", "power", "memory"]);
+  });
+
+  it("leaves focus alone for rank 1 and for stats already in focus", () => {
+    expect(focusOf({ ...hunter, origin: "port-herminst", traits: ["farming"] })).toEqual(["grace", "power"]);
+    expect(focusOf({ ...farmer, focus: ["memory", "grace"] })).toEqual(["memory", "grace"]);
+  });
+
+  it("raises the stat so the rank can be bought", () => {
+    const out = solveConcept(farmer, ranked, { startingLevel: 2 }) as Solution;
+    expect(out.build.levels.map((l) => l.group)).toEqual(["physical", "mental"]);
+    expect(out.taken).toContain("farming");
+    expect(out.build.traits).toContainEqual({ trait: "farming", rank: 2, pick: expect.any(String) });
   });
 });

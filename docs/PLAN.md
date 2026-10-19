@@ -58,5 +58,6 @@ The rules `validateBuild` (in `src/engine/`) enforces:
 
 - Trait categories and types: the full list (Knowledge, Skill, Contact, Starter, Condition, ...) needs pinning down as Traits are converted.
 - Alternating levels: the Traits page says universal and background Traits alternate by level (odd levels universal, even levels background). This may be the circles-and-squares rule (Character creation, rule 5) said another way, so the engine doesn't enforce it separately. Confirm, then reword one of the two.
+- Rank stats: no ranked Trait in content lists `rankStats` yet, so any Trait can be ranked up without a stat check. The site says, for example, that Pilot needs Grace and Memory. Each ranked Trait needs its stats filled in. The solver already adds those stats to a concept's focus when ranks above 1 are asked for.
 - Items: needs its own schema once equipment rules settle.
 - Choice pools: `choices.from` names a pool that nothing in content defines. The engine maps `language` to Traits of type `language` and `dreftian-language` to language Traits with region `dreft` (only Dreftan so far). `contact` is free text, answered with whatever the player writes. Any other pool can't be checked, so answers to it only warn.
