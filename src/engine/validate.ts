@@ -241,8 +241,8 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
   });
 
   // Rule 7: the Background Trait list is the packages' backgroundTraits plus
-  // Traits tagged with one of the Kind's featAccess pools.
-  const access = new Set(kind?.featAccess ?? []);
+  // Traits tagged with one of the Kind's traitAccess pools.
+  const access = new Set(kind?.traitAccess ?? []);
   const backgroundList = new Set(packages.flatMap((p) => p.backgroundTraits));
   for (const t of content.traits) if (t.tags.some((tag) => access.has(tag))) backgroundList.add(t.id);
 

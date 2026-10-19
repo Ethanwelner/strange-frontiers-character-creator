@@ -7,8 +7,8 @@ summary: The “High Orks.” A polyphenic Kind, every Tatot born either orcoid 
 tags: [ork, goblin, merchant]
 features:
   - name: Merchant Clans
-    description: Easier access to trading guild and merchant clan feats.
-featAccess: [trading-guild, merchant-clan]
+    description: Easier access to trading guild and merchant clan Traits.
+traitAccess: [trading-guild, merchant-clan]
 forms:
   - id: orcoid
     name: Orcoid
@@ -31,7 +31,7 @@ forms:
     description: Small, with plentiful mana.
     features:
       - name: Goblinoid
-        description: Higher Memory and Logic maximums, and access to magic feats.
+        description: Higher Memory and Logic maximums, and access to magic Traits.
     stats:
       endurance: { start: 1, max: 13 }
       power: { start: 0, max: 10 }

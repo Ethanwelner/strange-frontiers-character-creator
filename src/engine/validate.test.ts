@@ -366,7 +366,7 @@ describe("rule 7: the Background Trait list", () => {
     expectLegal(r);
   });
 
-  it("includes Traits matching the Kind's featAccess", () => {
+  it("includes Traits matching the Kind's traitAccess", () => {
     // Isek have military access; Shield Wall is tagged military.
     expectLegal(check({ ...isek, traits: [{ trait: "shield-wall", pick: "background" }] }));
     expect(codes(check({ ...orcoid, traits: [{ trait: "shield-wall", pick: "background" }] }))).toEqual(["pick-type"]);

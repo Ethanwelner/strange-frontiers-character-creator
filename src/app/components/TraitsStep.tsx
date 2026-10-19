@@ -79,7 +79,7 @@ export function TraitsStep({ draft, campaign, result, onChange }: Props) {
       </div>
 
       {options.length === 0 && pick === "background" && (
-        <p className="empty">This character's Background Trait list is empty. It grows from package background Traits and the Kind's feat access.</p>
+        <p className="empty">This character's Background Trait list is empty. It grows from package background Traits and the Kind's Trait access.</p>
       )}
       {options.length > 0 && shown.length === 0 && (
         <p className="empty">{hideRejected ? "No available Traits match. Turn off Hide unavailable to see why the rest are out." : "No Traits match."}</p>

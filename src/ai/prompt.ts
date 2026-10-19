@@ -32,7 +32,7 @@ const stats = (block: StatBlock) => STAT_ORDER.map((s) => `${s} ${block[s]?.star
 export function contentIndex(content: Content): string {
   const lines: string[] = ["# Content index", "", "Stats are listed as start/max.", "", "## Kinds"];
   for (const k of content.kinds) {
-    lines.push(`- ${k.id}: ${k.name}. ${k.summary} Tags: ${k.tags.join(", ") || "none"}. Feat access: ${k.featAccess.join(", ") || "none"}.`);
+    lines.push(`- ${k.id}: ${k.name}. ${k.summary} Tags: ${k.tags.join(", ") || "none"}. Trait access: ${k.traitAccess.join(", ") || "none"}.`);
     if (k.stats) lines.push(`  Stats: ${stats(k.stats)}`);
     for (const f of k.forms ?? []) lines.push(`  Form ${f.id} (${f.name}): ${f.description} Stats: ${stats(f.stats)}`);
   }

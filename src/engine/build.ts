@@ -15,7 +15,7 @@ export type LevelAllocation = z.infer<typeof LevelAllocation>;
 export const PickKind = z.enum(["universal", "background"]);
 export type PickKind = z.infer<typeof PickKind>;
 
-// One feat pick spent on a Trait. Each pick buys one rank, so a Trait taken
+// One Trait pick spent on a Trait. Each pick buys one rank, so a Trait taken
 // from nothing to rank 3 is three entries, with ranks 1, 2 and 3.
 export const TraitPick = z.object({
   trait: Id,
