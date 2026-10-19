@@ -26,7 +26,7 @@ Content flow: write in Campfire → convert to data files here (Claude-assisted,
 | **1. Content** | Dreft Origins, Professions, Pasts; the Traits they grant; Edwin Humble's backgrounds | Every grant resolves to a real Trait file, and Edwin Humble can be expressed as data |
 | **2. Rules engine** | Character model and `validateBuild(build)`, with tests | Illegal builds are rejected with readable reasons; a legal Dreft character per Kind passes |
 | **3. Manual builder** | Click-to-build UI, no AI | A full character can be built and exported by hand |
-| **4. AI layer** | Claude API with tools (`search_traits`, `get_package`, `validate_build`) and the describe → build → repair loop | A set of sample prompts each produce legal, on-theme characters |
+| **4. AI layer** | Model with tools (`search_traits`, `get_package`, `submit_build`); the model submits a concept and the solver and engine build and check it | A set of sample prompts each produce legal, on-theme characters |
 | **5. Playtest** | Private testing with your table; explanations and chat-based tweaks | Testers prefer it to building by hand |
 | **6. Public** | Hosted on the site with rate limiting and cost controls | Ready for strangers |
 

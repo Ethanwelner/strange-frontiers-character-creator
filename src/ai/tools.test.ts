@@ -89,9 +89,9 @@ describe("packages and Kinds", () => {
   });
 });
 
-describe("validate_build", () => {
+describe("checkBuild", () => {
   it("returns the engine's verdict and pick summary", () => {
-    const out = runTool("validate_build", { build: orcoid }, content) as ReturnType<typeof checkBuild>;
+    const out = checkBuild(orcoid, content);
     expect(out.accepted).toBe(true);
     expect(out.legal).toBe(true);
     expect(out.summary!.picks.universal.spent).toBe(2);
@@ -139,6 +139,6 @@ describe("prompt prefix", () => {
   });
 
   it("has a tool for every name the loop handles", () => {
-    expect(TOOLS.map((t) => t.name)).toEqual(["search_traits", "list_packages", "get_package", "get_kind", "validate_build", "submit_build"]);
+    expect(TOOLS.map((t) => t.name)).toEqual(["search_traits", "list_packages", "get_package", "get_kind", "submit_build"]);
   });
 });
