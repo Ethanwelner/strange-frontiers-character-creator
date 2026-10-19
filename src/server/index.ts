@@ -5,6 +5,7 @@
 import { createServer, type IncomingMessage } from "node:http";
 import { loadContent } from "../engine/content.js";
 import { DEFAULT_OLLAMA_HOST, DEFAULT_OLLAMA_MODEL } from "../ai/ollama.js";
+import type { DescribeEvent } from "../ai/types.js";
 import { handleDescribe, settingsFromEnv } from "./describe.js";
 
 try {
@@ -46,15 +47,31 @@ const server = createServer(async (req, res) => {
     return send(400, { error: "bad-request", message: "The request body must be JSON under 64 KB." });
   }
   const started = Date.now();
+  // Once the build starts, the reply is a stream of newline-delimited JSON:
+  // progress lines, then the result or error. Errors before that (a missing
+  // key, a bad request) are a plain JSON reply with an error status.
+  let streaming = false;
+  const line = (event: DescribeEvent) => {
+    if (!streaming) {
+      streaming = true;
+      res.writeHead(200, { "content-type": "application/x-ndjson", "cache-control": "no-cache" });
+    }
+    res.write(`${JSON.stringify(event)}\n`);
+  };
   try {
-    const reply = await handleDescribe(body, { settings, content });
+    const reply = await handleDescribe(body, { settings, content }, (p) => line({ type: "progress", ...p }));
     const b = reply.body;
     const detail = "status" in b ? `${b.status}, ${b.turns} turn(s)` : b.error;
     console.log(`describe → ${reply.status} (${detail}) in ${((Date.now() - started) / 1000).toFixed(1)}s`);
-    send(reply.status, b);
+    if (!streaming) return send(reply.status, b);
+    line("status" in b ? { type: "result", result: b } : { type: "error", error: b });
+    res.end();
   } catch (err) {
     console.error("describe failed:", err instanceof Error ? err.message : "unknown error");
-    send(500, { error: "server", message: "Something went wrong on the AI server. Check the terminal running npm run dev." });
+    const error = { error: "server" as const, message: "Something went wrong on the AI server. Check the terminal running npm run dev." };
+    if (!streaming) return send(500, error);
+    line({ type: "error", error });
+    res.end();
   }
 });
 

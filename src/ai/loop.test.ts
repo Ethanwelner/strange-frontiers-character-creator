@@ -54,6 +54,12 @@ const goblinoid: BuildInput = {
   traits: [
     { trait: "tinkerer", rank: 1, pick: "universal" },
     { trait: "herbalism", rank: 1, pick: "universal" },
+    { trait: "appraisal", rank: 1, pick: "universal" },
+    { trait: "smooth-talker", rank: 1, pick: "universal" },
+    { trait: "vigilance", rank: 1, pick: "universal" },
+    { trait: "tracker", rank: 1, pick: "universal" },
+    { trait: "survivalist", rank: 1, pick: "universal" },
+    { trait: "ambusher", rank: 1, pick: "universal" },
   ],
   choices: [],
 };
@@ -87,7 +93,7 @@ describe("describeCharacter", () => {
     expect(result.status).toBe("accepted");
     expect(result.build).toEqual(goblinoid);
     expect(result.check?.legal).toBe(true);
-    expect(result.reasons).toHaveLength(8);
+    expect(result.reasons).toHaveLength(14);
     expect(result.turns).toBe(3);
     expect(result.usage).toEqual({ inputTokens: 300, outputTokens: 150, cacheReadTokens: 9000, cacheWriteTokens: 0 });
 
@@ -161,7 +167,7 @@ describe("describeCharacter", () => {
     const body = JSON.parse(resultsOf(calls[1]!)[0]!.content as string);
     expect(body.reasonProblems).toEqual([
       "Add a reason for: kind.",
-      "The targets are exactly: kind, form, origin, profession, past, levels, tinkerer, herbalism.",
+      "The targets are exactly: kind, form, origin, profession, past, levels, tinkerer, herbalism, appraisal, smooth-talker, vigilance, tracker, survivalist, ambusher.",
     ]);
   });
 
@@ -173,6 +179,52 @@ describe("describeCharacter", () => {
     expect(result.turns).toBe(2);
     // Stray reasons are dropped.
     expect(result.reasons.map((r) => r.target)).not.toContain("nonsense");
+  });
+
+  it("sends a legal build back once when most of its picks are unspent", async () => {
+    const thin = { ...goblinoid, traits: goblinoid.traits!.slice(0, 2) };
+    const { create, calls } = script(message([submit(thin)]), message([submit(thin)]));
+    const result = await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create) });
+    const body = JSON.parse(resultsOf(calls[1]!)[0]!.content as string);
+    expect(body.picks).toBe(
+      "The engine accepts this build, but 8 of 10 universal picks are unspent. Spend most of them on Traits that fit the concept, then submit again.",
+    );
+    // Only once: the second submit is accepted as it is.
+    expect(result.status).toBe("accepted");
+    expect(result.build).toEqual(thin);
+  });
+
+  it("asks for more Traits when validate_build passes a thin build", async () => {
+    const thin = { ...goblinoid, traits: [] };
+    const { create, calls } = script(message([toolUse("validate_build", { build: thin })]), message([submit(goblinoid)]));
+    await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create) });
+    const body = JSON.parse(resultsOf(calls[1]!)[0]!.content as string);
+    expect(body.next).toBe("This build is legal, but 10 of 10 universal picks are unspent. Add Traits that fit the concept, then validate again.");
+  });
+
+  it("reports progress in plain words", async () => {
+    const broken = { ...goblinoid, levels: [{ group: "mental", points: { logic: 5 } }] };
+    const { create } = script(
+      message([toolUse("get_kind", { id: "tatot" }), toolUse("search_traits", { query: "magic" })]),
+      message([toolUse("validate_build", { build: broken })]),
+      message([toolUse("validate_build", { build: goblinoid })]),
+      message([submit(goblinoid)]),
+    );
+    const progress: string[] = [];
+    await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create), onProgress: (p) => progress.push(`${p.turn} ${p.status}`) });
+    expect(progress).toEqual([
+      "1 Thinking",
+      '1 Looking up the Tatot Kind · Searching Traits for "magic"',
+      "2 Thinking",
+      "2 Checking a draft build",
+      "2 Draft has 1 problem; fixing",
+      "3 Thinking",
+      "3 Checking a draft build",
+      "3 Draft is legal",
+      "4 Thinking",
+      "4 Submitting the build",
+      "4 Done",
+    ]);
   });
 
   it("tells the model to submit once validate_build accepts the build", async () => {

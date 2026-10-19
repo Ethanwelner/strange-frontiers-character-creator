@@ -16,15 +16,25 @@ const goblinoid: BuildInput = {
   past: "raised-in-the-caravan-town",
   level: 1,
   levels: [{ group: "mental", points: { logic: 1, memory: 2 } }],
-  traits: [{ trait: "tinkerer", rank: 1, pick: "universal" }],
+  traits: [
+    { trait: "tinkerer", rank: 1, pick: "universal" },
+    { trait: "herbalism", rank: 1, pick: "universal" },
+    { trait: "appraisal", rank: 1, pick: "universal" },
+    { trait: "smooth-talker", rank: 1, pick: "universal" },
+    { trait: "vigilance", rank: 1, pick: "universal" },
+    { trait: "tracker", rank: 1, pick: "universal" },
+    { trait: "survivalist", rank: 1, pick: "universal" },
+    { trait: "ambusher", rank: 1, pick: "universal" },
+  ],
   choices: [],
 };
 
-const reasons = ["kind", "form", "origin", "profession", "past", "levels", "tinkerer"].map((target) => ({ target, reason: "fits" }));
+const reasons = ["kind", "form", "origin", "profession", "past", "levels", ...goblinoid.traits!.map((t) => t.trait)].map((target) => ({ target, reason: "fits" }));
 
 const reply = (toolCalls: { name: string; arguments: unknown }[], extra: object = {}) =>
   Response.json({
     message: { role: "assistant", content: "", thinking: "hmm", tool_calls: toolCalls.map((f) => ({ function: f })) },
+    done: true,
     done_reason: "stop",
     prompt_eval_count: 1000,
     eval_count: 200,
@@ -60,7 +70,7 @@ describe("ollamaProvider, tools mode (the default)", () => {
 
     const first = bodies[0]!;
     expect(first.model).toBe("qwen3:30b-a3b");
-    expect(first.stream).toBe(false);
+    expect(first.stream).toBe(true);
     const tools = first.tools as { function: { name: string } }[];
     expect(tools.map((t) => t.function.name)).toContain("search_traits");
     const messages = first.messages as { role: string; content: string }[];
@@ -99,7 +109,7 @@ describe("ollamaProvider, tools mode (the default)", () => {
 });
 
 const answer = (content: string) =>
-  Response.json({ message: { role: "assistant", content, thinking: "hmm" }, done_reason: "stop", prompt_eval_count: 1000, eval_count: 200 });
+  Response.json({ message: { role: "assistant", content, thinking: "hmm" }, done: true, done_reason: "stop", prompt_eval_count: 1000, eval_count: 200 });
 
 describe("ollamaProvider, JSON mode", () => {
   it("asks for a whole build in the submit_build format and repairs from the engine's verdict", async () => {
@@ -128,5 +138,41 @@ describe("ollamaProvider, JSON mode", () => {
     // An answer that isn't JSON gets a reminder of the format.
     const third = bodies[2]!.messages as { role: string; content: string }[];
     expect(third.at(-1)!.content).toBe("Answer with the full build as JSON in the requested format: build, summary and reasons.");
+  });
+});
+
+describe("ollamaProvider streaming", () => {
+  it("assembles a streamed reply and reports progress, reasoning included", async () => {
+    const lines = [
+      { message: { role: "assistant", content: "", thinking: "The player wants a goblin. " } },
+      { message: { role: "assistant", content: "", thinking: "Tatot goblinoid fits." } },
+      { message: { role: "assistant", content: "", tool_calls: [{ function: { name: "submit_build", arguments: { build: goblinoid, summary: "A goblin mage.", reasons } } }] } },
+      { message: { role: "assistant", content: "" }, done: true, done_reason: "stop", prompt_eval_count: 1000, eval_count: 200 },
+    ];
+    const text = lines.map((l) => JSON.stringify(l)).join("\n") + "\n";
+    // Split mid-line, the way a network stream can.
+    const stream = new ReadableStream<Uint8Array>({
+      start(c) {
+        const bytes = new TextEncoder().encode(text);
+        c.enqueue(bytes.slice(0, 37));
+        c.enqueue(bytes.slice(37));
+        c.close();
+      },
+    });
+    const fetch = vi.fn<Fetch>(async () => new Response(stream));
+    const progress: string[] = [];
+    const result = await describeCharacter({
+      description: "A goblin mage.",
+      content,
+      provider: ollamaProvider({ fetch }),
+      onProgress: (p) => progress.push(`${p.turn}/${p.maxTurns} ${p.status}`),
+    });
+
+    expect(result.status).toBe("accepted");
+    expect(result.usage.outputTokens).toBe(200);
+    expect(progress[0]).toBe("1/20 Thinking");
+    expect(progress).toContain("1/20 Thinking: The player wants a goblin.");
+    expect(progress).toContain("1/20 Submitting the build");
+    expect(progress.at(-1)).toBe("1/20 Done");
   });
 });

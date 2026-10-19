@@ -61,6 +61,21 @@ export interface DescribeResult {
   usage: Usage;
 }
 
+// A live status line while a build runs, e.g. turn 3 of 20, "Checking a
+// draft build".
+export interface Progress {
+  turn: number;
+  maxTurns: number;
+  status: string;
+}
+
+// The describe endpoint streams newline-delimited JSON: progress lines, then
+// one result or error line.
+export type DescribeEvent =
+  | ({ type: "progress" } & Progress)
+  | { type: "result"; result: DescribeResult }
+  | { type: "error"; error: DescribeError };
+
 export interface DescribeRequest {
   description: string;
   startingLevel?: number;

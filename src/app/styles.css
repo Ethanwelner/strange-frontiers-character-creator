@@ -879,8 +879,16 @@ select {
 .describe-actions {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
   gap: 0.75rem;
+}
+
+.describe-progress {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.9rem;
 }
 
 .describe .notice {

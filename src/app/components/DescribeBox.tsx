@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import type { DescribeError, DescribeResult } from "../../ai/types.js";
+import type { DescribeError, DescribeEvent, DescribeResult, Progress } from "../../ai/types.js";
 import { kindById, packageById } from "../content.js";
 import type { AiNotes, Draft } from "../draft.js";
 import { title, traitName } from "./ui.js";
@@ -11,6 +11,33 @@ interface Props {
   hasBuild: boolean;
   onBuilt: (result: DescribeResult, description: string) => void;
   onDismiss: () => void;
+}
+
+// A build streams progress lines, then a result or error line. Errors before
+// the build starts come back as a single JSON reply.
+async function readReply(res: Response, onProgress: (p: Progress) => void): Promise<DescribeResult | DescribeError | undefined> {
+  if (!res.headers.get("content-type")?.includes("ndjson") || !res.body) {
+    return (await res.json().catch(() => undefined)) as DescribeResult | DescribeError | undefined;
+  }
+  const reader = res.body.pipeThrough(new TextDecoderStream()).getReader();
+  let buffer = "";
+  let final: DescribeResult | DescribeError | undefined;
+  const handle = (line: string) => {
+    if (!line.trim()) return;
+    const event = JSON.parse(line) as DescribeEvent;
+    if (event.type === "progress") onProgress(event);
+    else final = event.type === "result" ? event.result : event.error;
+  };
+  for (;;) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    buffer += value;
+    const lines = buffer.split("\n");
+    buffer = lines.pop() ?? "";
+    lines.forEach(handle);
+  }
+  handle(buffer);
+  return final;
 }
 
 function targetLabel(target: string, draft: Draft): string {
@@ -34,6 +61,7 @@ function targetLabel(target: string, draft: Draft): string {
 export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss, draft }: Props) {
   const [text, setText] = useState(notes?.description ?? "");
   const [busy, setBusy] = useState(false);
+  const [progress, setProgress] = useState<Progress>();
   const [error, setError] = useState<string>();
 
   const submit = async (e: FormEvent) => {
@@ -42,13 +70,14 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
     if (hasBuild && !window.confirm("Replace the current build with a new one from this description?")) return;
     setBusy(true);
     setError(undefined);
+    setProgress(undefined);
     try {
       const res = await fetch("api/describe", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ description: text, startingLevel }),
       });
-      const body = (await res.json().catch(() => undefined)) as DescribeResult | DescribeError | undefined;
+      const body = await readReply(res, setProgress);
       if (!body) throw new Error(`The AI server answered ${res.status} with no details. Is npm run dev running?`);
       if ("error" in body) throw new Error(body.message);
       if (!body.build) throw new Error("The model didn't propose a build. Try again, or describe the character differently.");
@@ -84,8 +113,8 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
             {busy ? "Building…" : "Build it"}
           </button>
           {busy && (
-            <span className="muted" role="status">
-              Choosing and checking. A local model can take a few minutes.
+            <span className="describe-progress muted" title={progress?.status}>
+              {progress ? `Turn ${progress.turn} of ${progress.maxTurns} · ${progress.status}` : "Starting…"}
             </span>
           )}
         </div>

@@ -93,7 +93,7 @@ class OllamaSession implements ChatSession {
     ];
   }
 
-  async send() {
+  async send(onThinking?: (text: string) => void) {
     this.turn++;
     let res: Response;
     try {
@@ -104,7 +104,8 @@ class OllamaSession implements ChatSession {
           model: this.model,
           messages: this.messages,
           ...(this.mode === "json" ? { format: SUBMIT_SCHEMA } : { tools: OLLAMA_TOOLS }),
-          stream: false,
+          // Streamed, so the reasoning can show as it happens.
+          stream: true,
           // Reasoning models keep their thinking out of the reply.
           think: true,
           options: { num_ctx: 32768, num_predict: 8192 },
@@ -113,18 +114,45 @@ class OllamaSession implements ChatSession {
     } catch {
       throw new DescribeFailure("unavailable", `Can't reach Ollama at ${this.host}. Open the Ollama app, then try again.`);
     }
-    const body = (await res.json().catch(() => ({}))) as OllamaReply;
-    if (!res.ok || body.error) {
-      const error = body.error ?? `HTTP ${res.status}`;
-      if (/not found/i.test(error)) {
-        throw new DescribeFailure("unavailable", `Ollama doesn't have ${this.model} yet. Run: ollama pull ${this.model}`);
-      }
-      throw new DescribeFailure("unavailable", `Ollama returned an error: ${error}`);
+    const unavailable = (error: string) =>
+      /not found/i.test(error)
+        ? new DescribeFailure("unavailable", `Ollama doesn't have ${this.model} yet. Run: ollama pull ${this.model}`)
+        : new DescribeFailure("unavailable", `Ollama returned an error: ${error}`);
+    if (!res.ok || !res.body) {
+      const error = ((await res.json().catch(() => ({}))) as OllamaReply).error ?? `HTTP ${res.status}`;
+      throw unavailable(error);
     }
+
+    // One JSON object per line: pieces of the reply, then a final one with the counts.
+    const message: OllamaMessage = { role: "assistant", content: "" };
+    let thinking = "";
+    let body: OllamaReply = {};
+    const handle = (line: string) => {
+      if (!line.trim()) return;
+      const chunk = JSON.parse(line) as OllamaReply & { done?: boolean };
+      if (chunk.error) throw unavailable(chunk.error);
+      const m = chunk.message;
+      if (m?.content) message.content += m.content;
+      if (m?.tool_calls?.length) message.tool_calls = [...(message.tool_calls ?? []), ...m.tool_calls];
+      if (m?.thinking) {
+        thinking += m.thinking;
+        onThinking?.(thinking);
+      }
+      if (chunk.done) body = chunk;
+    };
+    const decoder = new TextDecoder();
+    let buffer = "";
+    for await (const bytes of res.body as unknown as AsyncIterable<Uint8Array>) {
+      buffer += decoder.decode(bytes, { stream: true });
+      const lines = buffer.split("\n");
+      buffer = lines.pop() ?? "";
+      lines.forEach(handle);
+    }
+    handle(buffer + decoder.decode());
+
     if (body.done_reason === "length") {
       throw new DescribeFailure("truncated", `${this.model}'s response was cut off before it finished the build.`);
     }
-    const message = body.message ?? { role: "assistant", content: "" };
     const usage = { inputTokens: body.prompt_eval_count ?? 0, outputTokens: body.eval_count ?? 0 };
     if (this.mode === "json") {
       this.messages.push({ role: "assistant", content: message.content ?? "" });

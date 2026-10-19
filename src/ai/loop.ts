@@ -8,7 +8,7 @@ import type { Content } from "../engine/parse.js";
 import type { Provider, ToolResult } from "./model.js";
 import { contentIndex, INSTRUCTIONS } from "./prompt.js";
 import { checkBuild, runTool, ToolError } from "./tools.js";
-import type { BuildCheck, DescribeResult, Reason, Usage } from "./types.js";
+import type { BuildCheck, DescribeResult, Progress, Reason, Usage } from "./types.js";
 
 export interface DescribeOptions {
   description: string;
@@ -18,7 +18,37 @@ export interface DescribeOptions {
   maxTurns?: number;
   // Called with each turn's tool calls, for tracing (npm run eval -- --trace).
   onTurn?: (turn: number, calls: { name: string; input: unknown }[]) => void;
+  // A live status line for the UI.
+  onProgress?: (progress: Progress) => void;
 }
+
+// What a tool call is doing, in a few words for the status line.
+function describeCall(name: string, input: unknown, content: Content): string {
+  const i = asBuild(input) ?? {};
+  const id = typeof i.id === "string" ? i.id : "";
+  switch (name) {
+    case "get_kind":
+      return `Looking up the ${content.kinds.find((k) => k.id === id)?.name ?? id} Kind`;
+    case "get_package":
+      return `Reading ${content.packages.find((p) => p.id === id)?.name ?? id}`;
+    case "list_packages":
+      return `Listing ${String(i.type ?? "package")}s`;
+    case "search_traits":
+      return typeof i.query === "string" && i.query.trim() ? `Searching Traits for "${i.query.trim()}"` : "Searching Traits";
+    case "validate_build":
+      return "Checking a draft build";
+    case "submit_build":
+      return "Submitting the build";
+    default:
+      return name;
+  }
+}
+
+// The tail of the model's reasoning, flattened to one line.
+const thinkingTail = (text: string) => {
+  const flat = text.replace(/\s+/g, " ").trim();
+  return flat.length > 160 ? `…${flat.slice(-160)}` : flat;
+};
 
 const REASONLESS = new Set(["name", "level", "choices", "traits"]);
 
@@ -46,6 +76,22 @@ function reasonProblems(build: Record<string, unknown>, reasons: Reason[]): stri
   return problems;
 }
 
+// "6 of 9 universal picks are unspent" when more than two picks the build
+// could spend are banked. Background picks only count when the Background
+// Trait list has something on it.
+function unspentPicks(check: BuildCheck): string | undefined {
+  const picks = check.summary?.picks;
+  if (!picks) return undefined;
+  const parts: string[] = [];
+  let total = picks.universal.banked;
+  if (picks.universal.banked) parts.push(`${picks.universal.banked} of ${picks.universal.available} universal picks`);
+  if (picks.background.banked && check.summary!.backgroundList.length) {
+    total += picks.background.banked;
+    parts.push(`${picks.background.banked} of ${picks.background.available} background picks`);
+  }
+  return total > 2 ? `${parts.join(" and ")} are unspent` : undefined;
+}
+
 // Reasons that point at something in the build, for a build accepted with gaps.
 const keepMatching = (build: Record<string, unknown>, reasons: Reason[]) => {
   const targets = reasonTargets(build);
@@ -65,6 +111,18 @@ export async function describeCharacter(opts: DescribeOptions): Promise<Describe
   const { content, provider } = opts;
   const campaign = opts.campaign ?? DEFAULT_CAMPAIGN;
   const maxTurns = opts.maxTurns ?? provider.maxTurns;
+  let turnNow = 0;
+  const progress = (status: string) => opts.onProgress?.({ turn: turnNow, maxTurns, status });
+  // Reasoning streams token by token; the status line only needs a few updates a second.
+  let lastThought = 0;
+  const onThinking = opts.onProgress
+    ? (text: string) => {
+        const now = Date.now();
+        if (now - lastThought < 400) return;
+        lastThought = now;
+        progress(`Thinking: ${thinkingTail(text)}`);
+      }
+    : undefined;
   const usage: Usage = { inputTokens: 0, outputTokens: 0, cacheReadTokens: 0, cacheWriteTokens: 0 };
 
   // The fixed instructions and content index come first, so they can be
@@ -79,8 +137,10 @@ export async function describeCharacter(opts: DescribeOptions): Promise<Describe
 
   // The most recent build the model proposed, returned if the turn limit hits.
   let last: { build: Record<string, unknown>; check: BuildCheck; summary?: string; reasons: Reason[] } | undefined;
-  // Reasons get one retry: a legal build isn't thrown away over them.
+  // Reasons and unspent picks each get one push back: a legal build isn't
+  // thrown away over them.
   let reasonRetryUsed = false;
+  let picksPushUsed = false;
   const done = (status: DescribeResult["status"], turns: number): DescribeResult => ({
     status,
     model: provider.model,
@@ -93,8 +153,11 @@ export async function describeCharacter(opts: DescribeOptions): Promise<Describe
   });
 
   for (let turn = 1; turn <= maxTurns; turn++) {
-    const { calls, usage: u } = await session.send();
+    turnNow = turn;
+    progress("Thinking");
+    const { calls, usage: u } = await session.send(onThinking);
     opts.onTurn?.(turn, calls);
+    if (calls.length) progress(calls.map((c) => describeCall(c.name, c.input, content)).join(" · "));
     usage.inputTokens += u.inputTokens ?? 0;
     usage.outputTokens += u.outputTokens ?? 0;
     usage.cacheReadTokens += u.cacheReadTokens ?? 0;
@@ -119,11 +182,25 @@ export async function describeCharacter(opts: DescribeOptions): Promise<Describe
         const check = checkBuild(build, content, campaign);
         last = { build, check, summary, reasons };
         const problems = reasonProblems(build, reasons);
-        if (check.accepted && (problems.length === 0 || reasonRetryUsed)) {
+        const unspent = check.accepted ? unspentPicks(check) : undefined;
+        if (check.accepted && problems.length && !reasonRetryUsed) {
+          reasonRetryUsed = true;
+          results.push({ call, isError: true, content: JSON.stringify({ rejected: true, reasonProblems: problems, ...check }) });
+          progress("Build is legal; filling in reasons");
+          continue;
+        }
+        if (unspent && !picksPushUsed) {
+          progress("Build is legal; spending more picks");
+          picksPushUsed = true;
+          results.push({ call, isError: true, content: JSON.stringify({ rejected: true, picks: `The engine accepts this build, but ${unspent}. Spend most of them on Traits that fit the concept, then submit again.`, ...check }) });
+          continue;
+        }
+        if (check.accepted) {
           last.reasons = keepMatching(build, reasons);
+          progress("Done");
           return done("accepted", turn);
         }
-        if (check.accepted) reasonRetryUsed = true;
+        progress(`The engine sent the build back with ${check.errors.length + check.unknownIds.length} problems; fixing them`);
         results.push({ call, isError: true, content: JSON.stringify({ rejected: true, reasonProblems: problems, ...check }) });
         continue;
       }
@@ -135,8 +212,15 @@ export async function describeCharacter(opts: DescribeOptions): Promise<Describe
           const check = out as BuildCheck;
           if (build) last = { build, check, summary: last?.summary, reasons: last?.reasons ?? [] };
           // Smaller models keep validating unless told the build is done.
+          if (build) {
+            const n = check.errors.length + check.unknownIds.length;
+            progress(check.accepted ? "Draft is legal" : `Draft has ${n} ${n === 1 ? "problem" : "problems"}; fixing`);
+          }
           if (build && check.accepted) {
-            next = `This build is accepted. Call submit_build now with this build, a summary, and one reason for each of: ${[...reasonTargets(build)].join(", ")}.`;
+            const unspent = unspentPicks(check);
+            next = unspent
+              ? `This build is legal, but ${unspent}. Add Traits that fit the concept, then validate again.`
+              : `This build is accepted. Call submit_build now with this build, a summary, and one reason for each of: ${[...reasonTargets(build)].join(", ")}.`;
           }
         }
         results.push({ call, content: JSON.stringify(next ? { ...(out as object), next } : out) });

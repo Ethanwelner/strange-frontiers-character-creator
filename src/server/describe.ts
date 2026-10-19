@@ -6,7 +6,7 @@ import { anthropicProvider } from "../ai/anthropic.js";
 import { describeCharacter } from "../ai/loop.js";
 import { DescribeFailure, type Provider } from "../ai/model.js";
 import { ollamaProvider } from "../ai/ollama.js";
-import type { DescribeError, DescribeResult } from "../ai/types.js";
+import type { DescribeError, DescribeResult, Progress } from "../ai/types.js";
 import type { Content } from "../engine/parse.js";
 
 export const MISSING_KEY_MESSAGE =
@@ -60,7 +60,8 @@ export interface Deps {
 
 const fail = (status: number, error: DescribeError["error"], message: string): Reply => ({ status, body: { error, message } });
 
-export async function handleDescribe(body: unknown, deps: Deps): Promise<Reply> {
+// onProgress gets live status lines while the build runs.
+export async function handleDescribe(body: unknown, deps: Deps, onProgress?: (p: Progress) => void): Promise<Reply> {
   const provider = (deps.makeProvider ?? providerFor)(deps.settings);
   if (!provider) return fail(503, "missing-key", MISSING_KEY_MESSAGE);
 
@@ -73,6 +74,7 @@ export async function handleDescribe(body: unknown, deps: Deps): Promise<Reply> 
       content: deps.content,
       campaign: { startingLevel: parsed.data.startingLevel },
       provider,
+      onProgress,
     });
     return { status: 200, body: result };
   } catch (err) {

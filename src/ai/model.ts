@@ -21,7 +21,8 @@ export interface Turn {
 
 export interface ChatSession {
   // Sends the conversation so far and returns the model's tool calls.
-  send(): Promise<Turn>;
+  // onThinking, when the adapter can stream, gets the reasoning so far.
+  send(onThinking?: (text: string) => void): Promise<Turn>;
   // Every call from the last turn gets a result, in one batch.
   addResults(results: ToolResult[]): void;
   // A plain user message, for when the model answered without a tool.
