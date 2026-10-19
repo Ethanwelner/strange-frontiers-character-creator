@@ -113,35 +113,37 @@ describe("solveConcept", () => {
   });
 });
 
-// No ranked Trait in content has rankStats yet, so these tests give Farming
-// a Memory requirement and the Isek a Memory start that a level can raise to 6.
+// No ranked Trait in content has rankStats yet, so these tests give Dreftian
+// Law and Seafaring a Memory requirement, and the Isek a Memory start that a
+// level can raise to 6. Licensed Mage grants Dreftian Law (1); no package the
+// hunter uses grants Seafaring.
 describe("rank stats in focus", () => {
   const ranked = {
     ...content,
-    traits: content.traits.map((t) => (t.id === "farming" ? { ...t, rankStats: ["memory" as const] } : t)),
+    traits: content.traits.map((t) => (["dreftian-law", "seafaring"].includes(t.id) ? { ...t, rankStats: ["memory" as const] } : t)),
     kinds: content.kinds.map((k) => (k.id === "isek" ? { ...k, stats: { ...k.stats!, memory: { start: 3, max: 15 } } } : k)),
   };
-  // Illinsdott grants Farming (1), so listing it once asks for rank 2.
-  const farmer: ConceptInput = { ...hunter, traits: ["farming"] };
+  // Listing a granted Trait once asks for rank 2.
+  const mage: ConceptInput = { ...hunter, profession: "licensed-mage", traits: ["dreftian-law"] };
   const focusOf = (c: ConceptInput) => rankFocus(Concept.parse(c), ranked);
 
   it("adds the stats a requested rank above 1 needs, after the model's focus", () => {
-    expect(focusOf(farmer)).toEqual(["grace", "power", "memory"]);
+    expect(focusOf(mage)).toEqual(["grace", "power", "memory"]);
   });
 
   it("counts a Trait listed twice as rank 2", () => {
-    expect(focusOf({ ...hunter, origin: "port-herminst", traits: ["farming", "farming"] })).toEqual(["grace", "power", "memory"]);
+    expect(focusOf({ ...hunter, traits: ["seafaring", "seafaring"] })).toEqual(["grace", "power", "memory"]);
   });
 
   it("leaves focus alone for rank 1 and for stats already in focus", () => {
-    expect(focusOf({ ...hunter, origin: "port-herminst", traits: ["farming"] })).toEqual(["grace", "power"]);
-    expect(focusOf({ ...farmer, focus: ["memory", "grace"] })).toEqual(["memory", "grace"]);
+    expect(focusOf({ ...hunter, traits: ["seafaring"] })).toEqual(["grace", "power"]);
+    expect(focusOf({ ...mage, focus: ["memory", "grace"] })).toEqual(["memory", "grace"]);
   });
 
   it("raises the stat so the rank can be bought", () => {
-    const out = solveConcept(farmer, ranked, { startingLevel: 2 }) as Solution;
+    const out = solveConcept(mage, ranked, { startingLevel: 2 }) as Solution;
     expect(out.build.levels.map((l) => l.group)).toEqual(["physical", "mental"]);
-    expect(out.taken).toContain("farming");
-    expect(out.build.traits).toContainEqual({ trait: "farming", rank: 2, pick: expect.any(String) });
+    expect(out.taken).toContain("dreftian-law");
+    expect(out.build.traits).toContainEqual({ trait: "dreftian-law", rank: 2, pick: expect.any(String) });
   });
 });
