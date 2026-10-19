@@ -98,60 +98,66 @@ export function App() {
 
   return (
     <div className="app">
-      <header className="top">
-        <div className="brand">
-          <span className="brand-mark">Strange Frontiers</span>
-          <span className="brand-sub">Character Builder</span>
-        </div>
-        <input
-          className="name"
-          value={draft.name ?? ""}
-          placeholder="Character name"
-          aria-label="Character name"
-          onChange={(e) => setDraft({ ...draft, name: e.target.value || undefined })}
-        />
-        <div className="actions">
-          <button onClick={exportBuild}>Export</button>
-          <button onClick={() => fileInput.current?.click()}>Import</button>
-          <button onClick={reset}>New</button>
+      <header className="hero">
+        <div className="hero-bar">
+          <button className="hero-link" onClick={exportBuild}>Export</button>
+          <button className="hero-link" onClick={() => fileInput.current?.click()}>Import</button>
+          <button className="hero-link" onClick={reset}>New</button>
           <input ref={fileInput} type="file" accept="application/json,.json" hidden onChange={importBuild} />
         </div>
+        <div className="hero-statement">
+          <h1 className="hero-title">Strange Frontiers</h1>
+          <p className="hero-sub">Character Builder</p>
+        </div>
+
+        <DescribeBox
+          draft={draft}
+          notes={saved.ai}
+          startingLevel={campaign.startingLevel}
+          hasBuild={Boolean(draft.kind || draft.origin || draft.profession || draft.past || draft.traits.length)}
+          onBuilt={applyDescribed}
+          onDismiss={() => setSaved((s) => ({ ...s, ai: undefined }))}
+        />
+
+        <nav className="steps" aria-label="Steps">
+          {STEPS.map((s, n) => (
+            <button key={s} className={s === step ? "on" : ""} aria-current={s === step ? "step" : undefined} onClick={() => setStep(s)}>
+              <span className="step-n">{n + 1}</span> {LABELS[s]}
+              {counts[s] ? <span className="badge">{counts[s]}</span> : null}
+            </button>
+          ))}
+        </nav>
       </header>
-
-      {contentErrors.length > 0 && (
-        <div className="notice bad">
-          Content failed to load: {contentErrors.join("; ")}
-        </div>
-      )}
-      {notice && (
-        <div className="notice" role="status">
-          {notice}
-          <button className="link" onClick={() => setNotice(undefined)} aria-label="Dismiss">
-            ✕
-          </button>
-        </div>
-      )}
-
-      <DescribeBox
-        draft={draft}
-        notes={saved.ai}
-        startingLevel={campaign.startingLevel}
-        hasBuild={Boolean(draft.kind || draft.origin || draft.profession || draft.past || draft.traits.length)}
-        onBuilt={applyDescribed}
-        onDismiss={() => setSaved((s) => ({ ...s, ai: undefined }))}
-      />
-
-      <nav className="steps" aria-label="Steps">
-        {STEPS.map((s, n) => (
-          <button key={s} className={s === step ? "on" : ""} aria-current={s === step ? "step" : undefined} onClick={() => setStep(s)}>
-            <span className="step-n">{n + 1}</span> {LABELS[s]}
-            {counts[s] ? <span className="badge">{counts[s]}</span> : null}
-          </button>
-        ))}
-      </nav>
 
       <div className="layout">
         <main>
+          {contentErrors.length > 0 && (
+            <div className="notice bad">
+              Content failed to load: {contentErrors.join("; ")}
+            </div>
+          )}
+          {notice && (
+            <div className="notice" role="status">
+              {notice}
+              <button className="link" onClick={() => setNotice(undefined)} aria-label="Dismiss">
+                ✕
+              </button>
+            </div>
+          )}
+
+          {step !== "sheet" && (
+            <input
+              className="name"
+              value={draft.name ?? ""}
+              placeholder="Character name"
+              aria-label="Character name"
+              onChange={(e) => setDraft({ ...draft, name: e.target.value || undefined })}
+            />
+          )}
+          <div className="stinger">
+            Step {i + 1} of {STEPS.length}
+          </div>
+
           {step === "kind" && <KindStep draft={draft} onChange={setDraft} />}
           {step === "background" && <BackgroundStep draft={draft} onChange={setDraft} />}
           {step === "levels" && (

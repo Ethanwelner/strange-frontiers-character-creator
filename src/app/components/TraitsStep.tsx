@@ -89,15 +89,13 @@ export function TraitsStep({ draft, campaign, result, onChange }: Props) {
         {shown.map(({ trait: t, rank, reasons }) => {
           const rejected = reasons.length > 0;
           return (
-            <li key={t.id} className={`trait${rejected ? " rejected" : ""}`}>
+            <li key={t.id} className={`trait trait-box${rejected ? " rejected" : ""}`}>
+              <h3 className="trait-name">{t.name}</h3>
               <div className="trait-main">
-                <div className="card-head">
-                  <h3>{t.name}</h3>
-                  <div className="chips">
-                    <Chip tone="muted">{title(t.category)}</Chip>
-                    {t.ranked && <Chip>Ranked</Chip>}
-                    {t.background && <Chip>Background</Chip>}
-                  </div>
+                <div className="chips">
+                  <Chip>{title(t.category)}</Chip>
+                  {t.ranked && <Chip tone="muted">Ranked</Chip>}
+                  {t.background && <Chip tone="muted">Background</Chip>}
                 </div>
                 <p>{t.summary}</p>
                 <p className="effect">{t.effect}</p>
