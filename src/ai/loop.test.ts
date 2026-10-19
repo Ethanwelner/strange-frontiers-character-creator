@@ -159,7 +159,40 @@ describe("describeCharacter", () => {
     const result = await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create) });
     expect(result.status).toBe("accepted");
     const body = JSON.parse(resultsOf(calls[1]!)[0]!.content as string);
-    expect(body.reasonProblems).toEqual(["Add a reason for: kind."]);
+    expect(body.reasonProblems).toEqual([
+      "Add a reason for: kind.",
+      "The targets are exactly: kind, form, origin, profession, past, levels, tinkerer, herbalism.",
+    ]);
+  });
+
+  it("accepts a legal build on the second try even if reasons are still missing", async () => {
+    const partial = [...reasonsFor(goblinoid).slice(1), { target: "nonsense", reason: "stray" }];
+    const { create } = script(message([submit(goblinoid, partial)]), message([submit(goblinoid, partial)]));
+    const result = await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create) });
+    expect(result.status).toBe("accepted");
+    expect(result.turns).toBe(2);
+    // Stray reasons are dropped.
+    expect(result.reasons.map((r) => r.target)).not.toContain("nonsense");
+  });
+
+  it("tells the model to submit once validate_build accepts the build", async () => {
+    const { create, calls } = script(message([toolUse("validate_build", { build: goblinoid })]), message([submit(goblinoid)]));
+    await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create) });
+    const body = JSON.parse(resultsOf(calls[1]!)[0]!.content as string);
+    expect(body.accepted).toBe(true);
+    expect(body.next).toMatch(/^This build is accepted\. Call submit_build now/);
+    expect(body.next).toContain("tinkerer, herbalism");
+  });
+
+  it("keeps a legal build when the turn limit hits before it's submitted", async () => {
+    const { create } = script(
+      message([toolUse("validate_build", { build: goblinoid })]),
+      message([toolUse("search_traits", { query: "magic" })]),
+    );
+    const result = await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create), maxTurns: 2 });
+    expect(result.status).toBe("accepted");
+    expect(result.build).toEqual(goblinoid);
+    expect(result.check?.legal).toBe(true);
   });
 
   it("stops at the turn limit and returns the last proposal", async () => {

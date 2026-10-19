@@ -22,22 +22,35 @@ export interface DescribeOptions {
 
 const REASONLESS = new Set(["name", "level", "choices", "traits"]);
 
-// Every choice needs a reason, and every reason must point at something the
-// build actually contains.
-function reasonProblems(build: Record<string, unknown>, reasons: Reason[]): string[] {
+// The reason targets a build needs: one per choice it makes.
+function reasonTargets(build: Record<string, unknown>): Set<string> {
   const targets = new Set<string>();
   for (const key of ["kind", "form", "origin", "profession", "past"]) if (typeof build[key] === "string") targets.add(key);
   targets.add("levels");
   for (const p of Array.isArray(build.traits) ? build.traits : []) if (typeof p?.trait === "string") targets.add(p.trait);
   for (const a of Array.isArray(build.choices) ? build.choices : []) targets.add(`choice:${a?.package}/${a?.from}`);
+  return targets;
+}
+
+// Every choice needs a reason, and every reason must point at something the
+// build actually contains.
+function reasonProblems(build: Record<string, unknown>, reasons: Reason[]): string[] {
+  const targets = reasonTargets(build);
   const given = new Set(reasons.map((r) => r.target));
   const missing = [...targets].filter((t) => !given.has(t));
   const stray = [...given].filter((t) => !targets.has(t) && !REASONLESS.has(t));
   const problems: string[] = [];
   if (missing.length) problems.push(`Add a reason for: ${missing.join(", ")}.`);
   if (stray.length) problems.push(`These reasons don't match anything in the build: ${stray.join(", ")}.`);
+  if (problems.length) problems.push(`The targets are exactly: ${[...targets].join(", ")}.`);
   return problems;
 }
+
+// Reasons that point at something in the build, for a build accepted with gaps.
+const keepMatching = (build: Record<string, unknown>, reasons: Reason[]) => {
+  const targets = reasonTargets(build);
+  return reasons.filter((r) => targets.has(r.target));
+};
 
 function parseReasons(v: unknown): Reason[] {
   if (!Array.isArray(v)) return [];
@@ -66,6 +79,8 @@ export async function describeCharacter(opts: DescribeOptions): Promise<Describe
 
   // The most recent build the model proposed, returned if the turn limit hits.
   let last: { build: Record<string, unknown>; check: BuildCheck; summary?: string; reasons: Reason[] } | undefined;
+  // Reasons get one retry: a legal build isn't thrown away over them.
+  let reasonRetryUsed = false;
   const done = (status: DescribeResult["status"], turns: number): DescribeResult => ({
     status,
     model: provider.model,
@@ -104,17 +119,27 @@ export async function describeCharacter(opts: DescribeOptions): Promise<Describe
         const check = checkBuild(build, content, campaign);
         last = { build, check, summary, reasons };
         const problems = reasonProblems(build, reasons);
-        if (check.accepted && problems.length === 0) return done("accepted", turn);
+        if (check.accepted && (problems.length === 0 || reasonRetryUsed)) {
+          last.reasons = keepMatching(build, reasons);
+          return done("accepted", turn);
+        }
+        if (check.accepted) reasonRetryUsed = true;
         results.push({ call, isError: true, content: JSON.stringify({ rejected: true, reasonProblems: problems, ...check }) });
         continue;
       }
       try {
         const out = runTool(call.name, call.input, content, campaign);
+        let next: string | undefined;
         if (call.name === "validate_build") {
           const build = asBuild(asBuild(call.input)?.build);
-          if (build) last = { build, check: out as BuildCheck, summary: last?.summary, reasons: last?.reasons ?? [] };
+          const check = out as BuildCheck;
+          if (build) last = { build, check, summary: last?.summary, reasons: last?.reasons ?? [] };
+          // Smaller models keep validating unless told the build is done.
+          if (build && check.accepted) {
+            next = `This build is accepted. Call submit_build now with this build, a summary, and one reason for each of: ${[...reasonTargets(build)].join(", ")}.`;
+          }
         }
-        results.push({ call, content: JSON.stringify(out) });
+        results.push({ call, content: JSON.stringify(next ? { ...(out as object), next } : out) });
       } catch (err) {
         if (!(err instanceof ToolError)) throw err;
         results.push({ call, isError: true, content: err.message });
@@ -123,5 +148,10 @@ export async function describeCharacter(opts: DescribeOptions): Promise<Describe
     session.addResults(results);
   }
 
+  // Out of turns: a legal last build still counts, whatever its reasons.
+  if (last?.check.accepted) {
+    last.reasons = keepMatching(last.build, last.reasons);
+    return done("accepted", maxTurns);
+  }
   return done("turn-limit", maxTurns);
 }
