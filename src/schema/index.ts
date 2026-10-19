@@ -76,7 +76,7 @@ export const KindForm = z.object({
 export const Kind = BaseEntry.extend({
   features: z.array(Feature).default([]),
   // Trait pools this Kind gets easier access to.
-  featAccess: z.array(z.string()).default([]),
+  traitAccess: z.array(z.string()).default([]),
   stats: StatBlock.optional(),
   forms: z.array(KindForm).optional(),
 }).refine(
