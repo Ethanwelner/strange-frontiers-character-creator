@@ -22,6 +22,7 @@
   --gray: #525252;
   --medium-gray: #969696;
   --light-gray: #eaeaea;
+  --card-border: #d4d4d4;
   --radius: 8px;
 
   /* Strange Frontiers accents from css/rpg.css */
@@ -625,7 +626,7 @@ button.hero-link:hover:not(:disabled) {
 .choice {
   position: relative;
   background: var(--near-white);
-  border: 1px solid var(--light-gray);
+  border: 1px solid var(--card-border);
   border-radius: 12px;
   padding: 16px;
 }
