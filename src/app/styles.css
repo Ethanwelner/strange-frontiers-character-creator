@@ -547,7 +547,7 @@ button.hero-link:hover:not(:disabled) {
   margin: 0;
   padding: 0.5rem 1rem;
   border: 0;
-  border-radius: 0.25rem;
+  border-radius: 999px;
   background: var(--red);
   color: var(--white);
   font-size: 0.75rem;
@@ -606,14 +606,11 @@ button.hero-link:hover:not(:disabled) {
 
 /* Cards: .c-sheet-box */
 
+/* Kind and package cards, at least 360px wide */
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1rem;
-}
-
-.kind-cards {
   grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr));
+  gap: 1rem;
 }
 
 .card,
@@ -708,15 +705,16 @@ button.hero-link:hover:not(:disabled) {
   flex-wrap: wrap;
 }
 
+/* Each list's label (Grants, Choose, Background list) sits above its chips */
 .grants .label {
-  display: inline-block;
-  min-width: 7rem;
+  display: block;
+  margin-bottom: 0.15rem;
   font-size: 0.75rem;
   font-weight: 600;
 }
 
 .grants > div {
-  margin: 0.35rem 0;
+  margin: 0.75rem 0;
 }
 
 .stat-ranges {
