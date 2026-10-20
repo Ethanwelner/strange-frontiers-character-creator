@@ -28,6 +28,7 @@
   --frontiers: #2dfc64;
   --lore: #884ddc;
   --dreft: #1c372b;
+  --systems: #333333;
   --lore-on-black: #a67bf0;
   --rule: rgb(0 0 0 / 15%);
   --rule-on-black: rgb(255 255 255 / 25%);
@@ -669,7 +670,11 @@ button.hero-link:hover:not(:disabled) {
   border-color: var(--gray);
 }
 
-/* Dreft's Kinds sit on Dreft green */
+/* Each region's Kinds sit on its own color */
+.card.dark.region-systems {
+  background: var(--systems);
+}
+
 .card.dark.region-dreft {
   background: var(--dreft);
 }
