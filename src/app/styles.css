@@ -27,6 +27,7 @@
   /* Strange Frontiers accents from css/rpg.css */
   --frontiers: #2dfc64;
   --lore: #884ddc;
+  --dreft: #1c372b;
   --lore-on-black: #a67bf0;
   --rule: rgb(0 0 0 / 15%);
   --rule-on-black: rgb(255 255 255 / 25%);
@@ -666,6 +667,11 @@ button.hero-link:hover:not(:disabled) {
   background: var(--black);
   color: var(--white);
   border-color: var(--gray);
+}
+
+/* Dreft's Kinds sit on Dreft green */
+.card.dark.region-dreft {
+  background: var(--dreft);
 }
 
 .card.dark:hover {
