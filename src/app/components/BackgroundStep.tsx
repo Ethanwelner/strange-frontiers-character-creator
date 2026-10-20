@@ -51,11 +51,11 @@ export function PackageGrants({ pkg }: { pkg: BackgroundPackage }) {
 }
 
 export function BackgroundStep({ draft, onChange }: { draft: Draft; onChange: (d: Draft) => void }) {
+  // Clicking the chosen package again clears the slot.
   const choose = (slot: (typeof SLOTS)[number], id: string) => {
     const old = draft[slot];
-    if (old === id) return;
     // Answers to the old package's choices no longer apply.
-    onChange({ ...draft, [slot]: id, choices: draft.choices.filter((c) => c.package !== old) });
+    onChange({ ...draft, [slot]: old === id ? undefined : id, choices: draft.choices.filter((c) => c.package !== old) });
   };
   return (
     <section>
