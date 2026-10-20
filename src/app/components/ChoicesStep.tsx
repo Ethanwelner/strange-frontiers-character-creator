@@ -44,21 +44,23 @@ export function ChoicesStep({ draft, onChange }: { draft: Draft; onChange: (d: D
       <StepHeader step="choices" title="Package choices">
         Some packages let you pick a Trait from a pool, like a Contact or a language.
       </StepHeader>
-      {qs.length === 0 && <p className="empty">This build's packages have no choices to answer.</p>}
-      {qs.map((q) => (
-        <div key={`${q.pkg.id}/${q.from}`} className="choice">
-          <h3>
-            {q.pkg.name} <span className="muted">· {title(q.pkg.type)}</span>
-          </h3>
-          <p>
-            {q.notes.join("; ") || `Choose ${q.count} from ${q.from}`}{" "}
-            <span className="muted">
-              ({q.count} from <code>{q.from}</code>)
-            </span>
-          </p>
-          <Answer q={q} answer={answerOf(q)?.traits ?? []} onAnswer={(t) => setAnswer(q, t)} />
-        </div>
-      ))}
+      <div className="tech-fields tech-fields-light step-box">
+        {qs.length === 0 && <p className="empty">This build's packages have no choices to answer.</p>}
+        {qs.map((q) => (
+          <div key={`${q.pkg.id}/${q.from}`} className="choice">
+            <h3>
+              {q.pkg.name} <span className="muted">· {title(q.pkg.type)}</span>
+            </h3>
+            <p>
+              {q.notes.join("; ") || `Choose ${q.count} from ${q.from}`}{" "}
+              <span className="muted">
+                ({q.count} from <code>{q.from}</code>)
+              </span>
+            </p>
+            <Answer q={q} answer={answerOf(q)?.traits ?? []} onAnswer={(t) => setAnswer(q, t)} />
+          </div>
+        ))}
+      </div>
     </section>
   );
 }

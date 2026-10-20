@@ -39,80 +39,82 @@ export function StatsStep({ draft, startingLevel, result, onChange, onStartingLe
       <StepHeader step="stats" title="Stats">
         Each level gives 1 Inner Ring point in one group and {POINTS_PER_LEVEL} Outer Ring points to spread among that group's stats.
       </StepHeader>
-      <label className="field inline">
-        <span>Starting level</span>
-        <select value={startingLevel} onChange={(e) => onStartingLevel(Number(e.target.value))}>
-          {Array.from({ length: MAX_START }, (_, i) => i + 1).map((n) => (
-            <option key={n} value={n}>
-              {n}
-            </option>
-          ))}
-        </select>
-        <span className="muted">Your GM sets this; most campaigns start at 1.</span>
-      </label>
+      <div className="tech-fields tech-fields-light step-box">
+        <label className="field inline">
+          <span>Starting level</span>
+          <select value={startingLevel} onChange={(e) => onStartingLevel(Number(e.target.value))}>
+            {Array.from({ length: MAX_START }, (_, i) => i + 1).map((n) => (
+              <option key={n} value={n}>
+                {n}
+              </option>
+            ))}
+          </select>
+          <span className="muted">Your GM sets this; most campaigns start at 1.</span>
+        </label>
 
-      <div className="levels">
-        {draft.levels.map((lvl, i) => {
-          const spent = Object.values(lvl.points).reduce((n, p) => n + (p ?? 0), 0);
-          const active = spent > 0 ? lvl.group : undefined;
-          return (
-            <div key={i} className="level-card">
-              <div className="card-head">
-                <h3>Level {i + 1}</h3>
-                <span className={`num${spent === POINTS_PER_LEVEL ? " good" : spent > POINTS_PER_LEVEL ? " bad" : ""}`}>
-                  {spent}/{POINTS_PER_LEVEL} points
-                </span>
-              </div>
-              <p className="hint">
-                {active
-                  ? `${title(active)} gets this level's Inner Ring point. Take its points back out to use another group.`
-                  : "Add a point to any stat to give that group this level's Inner Ring point."}
-              </p>
-              {GROUPS.map((g) => {
-                const locked = active !== undefined && active !== g;
-                return (
-                  <div key={g} className={`stat-group${locked ? " locked" : ""}${active === g ? " active" : ""}`}>
-                    <h4 className="rule">
-                      {title(g)}
-                      {active === g && <span className="inner-ring">Inner Ring +1</span>}
-                    </h4>
-                    {STAT_GROUPS[g].map((s: StatId) => {
-                      const value = total(s);
-                      const max = base?.[s]?.max;
-                      const over = value !== undefined && max !== undefined && value > max;
-                      return (
-                        <div key={s} className="stepper-row">
-                          <span className="stepper-label">{title(s)}</span>
-                          <div className="stepper">
-                            <button
-                              aria-label={`Remove a point from ${s} at level ${i + 1}`}
-                              onClick={() => bump(i, g, s, -1)}
-                              disabled={locked || !lvl.points[s]}
-                            >
-                              −
-                            </button>
-                            <span className="num">{lvl.points[s] ?? 0}</span>
-                            <button
-                              aria-label={`Add a point to ${s} at level ${i + 1}`}
-                              onClick={() => bump(i, g, s, 1)}
-                              disabled={locked || spent >= POINTS_PER_LEVEL}
-                            >
-                              +
-                            </button>
+        <div className="levels">
+          {draft.levels.map((lvl, i) => {
+            const spent = Object.values(lvl.points).reduce((n, p) => n + (p ?? 0), 0);
+            const active = spent > 0 ? lvl.group : undefined;
+            return (
+              <div key={i} className="level-card">
+                <div className="card-head">
+                  <h3>Level {i + 1}</h3>
+                  <span className={`num${spent === POINTS_PER_LEVEL ? " good" : spent > POINTS_PER_LEVEL ? " bad" : ""}`}>
+                    {spent}/{POINTS_PER_LEVEL} points
+                  </span>
+                </div>
+                <p className="hint">
+                  {active
+                    ? `${title(active)} gets this level's Inner Ring point. Take its points back out to use another group.`
+                    : "Add a point to any stat to give that group this level's Inner Ring point."}
+                </p>
+                {GROUPS.map((g) => {
+                  const locked = active !== undefined && active !== g;
+                  return (
+                    <div key={g} className={`stat-group${locked ? " locked" : ""}${active === g ? " active" : ""}`}>
+                      <h4 className="rule">
+                        {title(g)}
+                        {active === g && <span className="inner-ring">Inner Ring +1</span>}
+                      </h4>
+                      {STAT_GROUPS[g].map((s: StatId) => {
+                        const value = total(s);
+                        const max = base?.[s]?.max;
+                        const over = value !== undefined && max !== undefined && value > max;
+                        return (
+                          <div key={s} className="stepper-row">
+                            <span className="stepper-label">{title(s)}</span>
+                            <div className="stepper">
+                              <button
+                                aria-label={`Remove a point from ${s} at level ${i + 1}`}
+                                onClick={() => bump(i, g, s, -1)}
+                                disabled={locked || !lvl.points[s]}
+                              >
+                                −
+                              </button>
+                              <span className="num">{lvl.points[s] ?? 0}</span>
+                              <button
+                                aria-label={`Add a point to ${s} at level ${i + 1}`}
+                                onClick={() => bump(i, g, s, 1)}
+                                disabled={locked || spent >= POINTS_PER_LEVEL}
+                              >
+                                +
+                              </button>
+                            </div>
+                            <span className={`stepper-total num${over ? " bad" : ""}`}>
+                              {value ?? "–"}
+                              <span className="muted">/{max ?? "–"}</span>
+                            </span>
                           </div>
-                          <span className={`stepper-total num${over ? " bad" : ""}`}>
-                            {value ?? "–"}
-                            <span className="muted">/{max ?? "–"}</span>
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                );
-              })}
-            </div>
-          );
-        })}
+                        );
+                      })}
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );

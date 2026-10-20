@@ -513,6 +513,49 @@ button.hero-link:hover:not(:disabled) {
   margin-top: 3rem;
 }
 
+/* Boxed step content: the site's .tech-fields box (css/rpg.css), which holds
+   the Setting tab's sub-tabs. The Traits step keeps its Universal/Background
+   sub-tabs along the top edge; the other steps have no tabs, so they get top
+   padding instead. */
+.tech-fields {
+  padding: 0 24px 36px;
+  border: 1px solid var(--white);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.tech-fields-light {
+  border-color: var(--black);
+}
+
+.tech-fields.step-box {
+  padding-top: 24px;
+}
+
+.tech-field-tab-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 0.5rem;
+  margin-bottom: 36px;
+}
+
+.tech-field-tab {
+  font-size: 1.25rem;
+  padding: 0.6rem 1.1rem;
+  border-radius: 0 0 4px 4px;
+}
+
+.tech-fields-light .tech-field-tab.is-active {
+  background: var(--black);
+  color: var(--white);
+}
+
+/* The first slot heading in a box sits at its top */
+.step-box > .slot:first-child > .subhead:first-child {
+  margin-top: 0;
+}
+
 /* Cards: .c-sheet-box */
 
 .cards {
@@ -688,20 +731,6 @@ button.hero-link:hover:not(:disabled) {
   color: var(--white);
   border-radius: 4px;
   padding: 0.2rem 0.5rem;
-}
-
-.segmented {
-  display: flex;
-  gap: 4px;
-  margin: 0.75rem 0;
-}
-
-.segmented button {
-  flex: 1;
-}
-
-.segmented button.on {
-  background: var(--black);
 }
 
 .stepper-row {
@@ -1294,6 +1323,14 @@ button.hero-link:hover:not(:disabled) {
 @media only screen and (max-width: 767px) {
   .builder-panel.section.unlimited {
     padding: 32px 0 120px;
+  }
+
+  .tech-fields {
+    padding: 0 16px 24px;
+  }
+
+  .tech-fields.step-box {
+    padding-top: 16px;
   }
 }
 

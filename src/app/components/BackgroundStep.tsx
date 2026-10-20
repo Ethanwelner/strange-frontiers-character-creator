@@ -62,24 +62,26 @@ export function BackgroundStep({ draft, onChange }: { draft: Draft; onChange: (d
       <StepHeader step="background" title="Background">
         Pick an Origin, a Profession and a Past. Their Traits come free and don't use picks.
       </StepHeader>
-      {SLOTS.map((slot) => (
-        <div key={slot} className="slot">
-          <h3 className="subhead">
-            {title(slot)} <span className="muted">{BLURB[slot]}</span>
-          </h3>
-          <div className="cards" role="radiogroup" aria-label={title(slot)}>
-            {content.packages
-              .filter((p) => p.type === slot)
-              .map((p) => (
-                <Card key={p.id} label={p.name} selected={draft[slot] === p.id} onSelect={() => choose(slot, p.id)}>
-                  <h3>{p.name}</h3>
-                  <p>{p.summary}</p>
-                  <PackageGrants pkg={p} />
-                </Card>
-              ))}
+      <div className="tech-fields tech-fields-light step-box">
+        {SLOTS.map((slot) => (
+          <div key={slot} className="slot">
+            <h3 className="subhead">
+              {title(slot)} <span className="muted">{BLURB[slot]}</span>
+            </h3>
+            <div className="cards" role="radiogroup" aria-label={title(slot)}>
+              {content.packages
+                .filter((p) => p.type === slot)
+                .map((p) => (
+                  <Card key={p.id} label={p.name} selected={draft[slot] === p.id} onSelect={() => choose(slot, p.id)}>
+                    <h3>{p.name}</h3>
+                    <p>{p.summary}</p>
+                    <PackageGrants pkg={p} />
+                  </Card>
+                ))}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </section>
   );
 }
