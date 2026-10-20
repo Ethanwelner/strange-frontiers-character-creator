@@ -965,12 +965,6 @@ button.hero-link:hover:not(:disabled) {
   padding: 1.25rem;
 }
 
-.panel-status {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
 /* Status as a stinger: green when legal, red with errors, yellow for warnings */
 .status {
   display: inline-block;
@@ -1314,10 +1308,6 @@ button.hero-link:hover:not(:disabled) {
 
   .panel-body {
     padding: 1rem 16px 1.5rem;
-  }
-
-  .panel-body .panel-status {
-    display: none;
   }
 
   .panel-stats {
