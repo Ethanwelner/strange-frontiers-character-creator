@@ -44,7 +44,7 @@ Content flow: write in Campfire → convert to data files here (Claude-assisted,
 The rules `validateBuild` (in `src/engine/`) enforces:
 
 1. Level 0 stats come from the Kind. A Kind can also give free level 0 points (`freePoints`, like the AI Core's 3) that the player places in any stats, within the Kind's maximums; the build records them as `startPoints`, and they count toward the 9-point starting budget.
-2. Characters start at level 1 by default. The starting level is set per campaign (a GM may start at 2–3).
+2. Characters start at level 3 by default. The starting level is set per campaign, and a GM may start lower or higher; level 1 is the lowest.
 3. Each level, including level 1 at creation, gives 1 Inner Ring point in one group (physical, social or mental) and 3 Outer Ring points to spread among that group's three stats.
 4. No Outer Ring stat may exceed its Kind max, and nothing may exceed 20. Traits and gear that push past that are out of scope for now.
 5. On each stat's bar, odd points (1st, 3rd, 5th…) are circles and grant a universal Trait pick; even points are squares and grant a background Trait pick. A stat at value v gives ceil(v/2) universal and floor(v/2) background picks, which is why a Human, with 1 in all nine stats, starts with 9 universal picks.

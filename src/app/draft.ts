@@ -42,8 +42,8 @@ export interface Saved {
 export const emptyLevel = (): LevelAllocation => ({ group: "physical", points: {} });
 
 export const EMPTY: Saved = {
-  draft: { level: 1, levels: [emptyLevel()], traits: [], choices: [] },
-  campaign: { startingLevel: 1 },
+  draft: { level: 3, levels: [emptyLevel(), emptyLevel(), emptyLevel()], traits: [], choices: [] },
+  campaign: { startingLevel: 3 },
   step: "character",
 };
 

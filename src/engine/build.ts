@@ -59,4 +59,4 @@ export interface Campaign {
   startingLevel: number;
 }
 
-export const DEFAULT_CAMPAIGN: Campaign = { startingLevel: 1 };
+export const DEFAULT_CAMPAIGN: Campaign = { startingLevel: 3 };

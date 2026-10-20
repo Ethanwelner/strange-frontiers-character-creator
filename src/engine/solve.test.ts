@@ -7,6 +7,9 @@ import { Trait } from "../schema/index.js";
 const { content } = loadContent();
 const isek = content.kinds.find((k) => k.id === "isek")!.stats!;
 
+// These fixtures are level 1 characters; the default campaign starts at 3.
+const L1 = { startingLevel: 1 };
+
 const solve = (concept: ConceptInput, level = 1) => {
   const out = solveConcept(concept, content, { startingLevel: level });
   if ("error" in out) throw new Error(out.error);
@@ -49,7 +52,7 @@ describe("solveConcept", () => {
   it("builds a legal character from the concept, buying Traits in order", () => {
     const s = solve(hunter);
     expect(s.result.ok).toBe(true);
-    expect(validateBuild(s.build, content).ok).toBe(true);
+    expect(validateBuild(s.build, content, L1).ok).toBe(true);
     expect(s.taken).toEqual(["survivalist", "vigilance", "streetwise", "haggler"]);
     expect(s.skipped).toEqual([
       { trait: "fireball", reason: 'Trait "fireball" doesn\'t exist' },
@@ -117,7 +120,7 @@ describe("solveConcept", () => {
     expect(languageOf(solve(asked(["dreftan"])))).toEqual(["dreftan-written"]);
     // With a third language in content, the concept's pick wins over pool order.
     const cant = Trait.parse({ id: "trade-cant", name: "Trade Cant", status: "placeholder", plane: "isekai", summary: "Test fixture.", category: "knowledge", types: ["language"], effect: "Test only." });
-    const s = solveConcept(asked(["trade-cant"]), { ...content, traits: [...content.traits, cant] }) as Solution;
+    const s = solveConcept(asked(["trade-cant"]), { ...content, traits: [...content.traits, cant] }, L1) as Solution;
     expect(languageOf(s)).toEqual(["trade-cant"]);
     expect(s.result.ok).toBe(true);
   });
@@ -144,7 +147,7 @@ describe("solveConcept", () => {
   });
 
   it("reports a concept that doesn't match the format", () => {
-    expect(solveConcept({ kind: "isek" }, content)).toEqual({ error: expect.stringContaining("origin") });
+    expect(solveConcept({ kind: "isek" }, content, L1)).toEqual({ error: expect.stringContaining("origin") });
   });
 });
 

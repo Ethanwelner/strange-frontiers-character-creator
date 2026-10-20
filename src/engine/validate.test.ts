@@ -57,7 +57,10 @@ const fixtures = [
 ];
 const withFixtures: Content = { ...content, traits: [...content.traits, ...fixtures] };
 
-function check(build: BuildInput, c: Content = content, campaign?: { startingLevel: number }) {
+// These fixtures are level 1 characters; the default campaign starts at 3.
+const L1 = { startingLevel: 1 };
+
+function check(build: BuildInput, c: Content = content, campaign: { startingLevel: number } = L1) {
   return validateBuild(build, c, campaign);
 }
 
@@ -196,7 +199,7 @@ describe("legal Dreft characters", () => {
 
 describe("schema", () => {
   it("rejects a build that isn't shaped like one", () => {
-    const r = validateBuild({ kind: "human" }, content);
+    const r = validateBuild({ kind: "human" }, content, L1);
     expect(r.ok).toBe(false);
     expect(new Set(codes(r))).toEqual(new Set(["schema"]));
     expect(r.summary).toBeUndefined();
@@ -227,6 +230,10 @@ describe("rule 2: starting level comes from the campaign", () => {
 
   it("allows a higher start when the campaign says so", () => {
     expectLegal(check(level3, content, { startingLevel: 3 }));
+  });
+
+  it("starts at level 3 when no campaign says otherwise", () => {
+    expectLegal(validateBuild(level3, content));
   });
 
   it("rejects a level that doesn't match the campaign", () => {
