@@ -519,7 +519,7 @@ button.hero-link:hover:not(:disabled) {
 .stinger-row {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.5rem 24px;
   margin-bottom: 1rem;
 }
@@ -533,16 +533,26 @@ button.hero-link:hover:not(:disabled) {
   margin-top: 0;
 }
 
-/* What's wrong on this step, side by side beside the stinger */
+/* What's wrong on this step, side by side beside the stinger, as red chips
+   shaped like the site's Trait badges (.trait-box .badge in css/rpg.css) */
 .step-issues {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 0.5rem;
   flex: 1 1 16rem;
 }
 
-.step-issues li {
-  margin-bottom: 0;
+.issues.step-issues li {
+  margin: 0;
+  padding: 0.5rem 1rem;
+  border: 0;
+  border-radius: 0.25rem;
+  background: var(--red);
+  color: var(--white);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.2;
 }
 
 .pager {
