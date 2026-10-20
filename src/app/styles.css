@@ -638,7 +638,8 @@ button.hero-link:hover:not(:disabled) {
 }
 
 /* A check in the site's black badge */
-.card.selected::after {
+.card.selected::after,
+.trait-box.selected::after {
   content: "✓";
   position: absolute;
   top: -12px;
@@ -875,6 +876,7 @@ button.hero-link:hover:not(:disabled) {
 }
 
 .trait-box {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -883,12 +885,15 @@ button.hero-link:hover:not(:disabled) {
   background-color: var(--light-gray);
   border: 1px solid var(--gray);
   border-radius: 4px;
-  overflow: hidden;
   font-size: 14px;
+  cursor: pointer;
+  transition: border-color 200ms;
 }
 
 .trait-name {
   margin: 0 -12px;
+  /* The box no longer clips, so the bar rounds its own top corners */
+  border-radius: 3px 3px 0 0;
   padding: 0.5rem 12px;
   background-color: var(--gray);
   color: var(--white);
@@ -900,12 +905,22 @@ button.hero-link:hover:not(:disabled) {
   min-width: 0;
 }
 
-.trait.rejected {
-  opacity: 0.6;
+.trait-box:hover {
+  border-color: var(--black);
 }
 
-.trait .take {
-  align-self: flex-start;
+.trait-box.selected {
+  border-color: var(--black);
+  box-shadow: 0 0 0 1px var(--black);
+}
+
+.trait.rejected {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.trait.rejected:hover {
+  border-color: var(--gray);
 }
 
 .tags {

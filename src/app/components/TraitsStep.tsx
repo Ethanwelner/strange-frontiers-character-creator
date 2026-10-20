@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, type KeyboardEvent } from "react";
 import type { Campaign, PickKind } from "../../engine/build.js";
 import type { BuildResult } from "../../engine/validate.js";
 import { TraitCategory } from "../../schema/index.js";
@@ -59,12 +59,19 @@ export function TraitsStep({ draft, campaign, result, onChange }: Props) {
   const groups = TraitCategory.options
     .map((c) => ({ category: c, options: shown.filter((o) => o.trait.category === c) }))
     .filter((g) => g.options.length > 0);
-  const toggle = (c: string) => {
+  const toggleCategory = (c: string) => {
     const next = new Set(hidden);
     if (!next.delete(c)) next.add(c);
     setHidden(next);
   };
   const remove = (index: number) => onChange({ ...draft, traits: draft.traits.filter((_, i) => i !== index) });
+  // A card is checked once a pick holds its Trait; clicking it again drops the latest of those picks.
+  const lastPick = (id: string) => draft.traits.map((p) => p.trait).lastIndexOf(id);
+  const toggle = (id: string, rank: number) => {
+    const i = lastPick(id);
+    if (i >= 0) remove(i);
+    else onChange(addPick(draft, id, rank, pick));
+  };
 
   return (
     <section>
@@ -95,7 +102,7 @@ export function TraitsStep({ draft, campaign, result, onChange }: Props) {
           <input type="search" placeholder="Search name or tag" value={query} onChange={(e) => setQuery(e.target.value)} aria-label="Search Traits" />
           {TraitCategory.options.map((c) => (
             <label key={c} className="check">
-              <input type="checkbox" checked={!hidden.has(c)} onChange={() => toggle(c)} /> {GROUP_TITLE[c]}
+              <input type="checkbox" checked={!hidden.has(c)} onChange={() => toggleCategory(c)} /> {GROUP_TITLE[c]}
             </label>
           ))}
           <label className="check">
@@ -115,9 +122,26 @@ export function TraitsStep({ draft, campaign, result, onChange }: Props) {
             <h3 className="subhead">{GROUP_TITLE[g.category]}</h3>
             <ul className="trait-list">
               {g.options.map(({ trait: t, rank, reasons }) => {
-                const rejected = reasons.length > 0;
+                const selected = lastPick(t.id) >= 0;
+                const rejected = !selected && reasons.length > 0;
+                const onKey = (e: KeyboardEvent) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    if (!rejected) toggle(t.id, rank);
+                  }
+                };
                 return (
-                  <li key={t.id} className={`trait trait-box${rejected ? " rejected" : ""}`}>
+                  <li
+                    key={t.id}
+                    role="checkbox"
+                    aria-checked={selected}
+                    aria-disabled={rejected}
+                    aria-label={selected ? `${t.name}, taken` : `Take ${t.name}${t.ranked || rank > 1 ? ` rank ${rank}` : ""} with a ${pick} pick`}
+                    tabIndex={0}
+                    className={`trait trait-box${selected ? " selected" : ""}${rejected ? " rejected" : ""}`}
+                    onClick={() => !rejected && toggle(t.id, rank)}
+                    onKeyDown={onKey}
+                  >
                     <h3 className="trait-name">{t.name}</h3>
                     <div className="trait-main">
                       <div className="chips">
@@ -136,14 +160,6 @@ export function TraitsStep({ draft, campaign, result, onChange }: Props) {
                         </ul>
                       )}
                     </div>
-                    <button
-                      className="take"
-                      disabled={rejected}
-                      aria-label={`Take ${t.name}${t.ranked || rank > 1 ? ` rank ${rank}` : ""} with a ${pick} pick`}
-                      onClick={() => onChange(addPick(draft, t.id, rank, pick))}
-                    >
-                      Take{t.ranked || rank > 1 ? ` rank ${rank}` : ""}
-                    </button>
                   </li>
                 );
               })}
