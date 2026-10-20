@@ -661,6 +661,34 @@ button.hero-link:hover:not(:disabled) {
   font-size: 0.9rem;
 }
 
+/* Dark cards, like the site's black sections: the Kind cards */
+.card.dark {
+  background: var(--black);
+  color: var(--white);
+  border-color: var(--gray);
+}
+
+.card.dark:hover {
+  border-color: var(--medium-gray);
+}
+
+.card.dark.selected {
+  border-color: var(--green);
+}
+
+.card.dark .muted {
+  color: var(--medium-gray);
+}
+
+.card.dark .chip-muted {
+  background: var(--gray);
+  color: var(--white);
+}
+
+.card.dark .stat-ranges {
+  border-top-color: var(--rule-on-black);
+}
+
 .card-head {
   display: flex;
   justify-content: space-between;

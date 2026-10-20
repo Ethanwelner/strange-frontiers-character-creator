@@ -23,7 +23,7 @@ export function KindStep({ draft, onChange }: { draft: Draft; onChange: (d: Draf
               <h3 className="subhead">{REGION_TITLE[region] ?? title(region)}</h3>
               <div className="cards">
                 {content.kinds.filter((k) => regionOf(k) === region).map((k) => (
-                  <Card key={k.id} label={k.name} selected={draft.kind === k.id} onSelect={() => onChange({ ...draft, kind: draft.kind === k.id ? undefined : k.id, startPoints: undefined })}>
+                  <Card key={k.id} className="dark" label={k.name} selected={draft.kind === k.id} onSelect={() => onChange({ ...draft, kind: draft.kind === k.id ? undefined : k.id, startPoints: undefined })}>
                     <div className="card-head">
                       <h3>{k.name}</h3>
                       <Chip tone="muted">{k.plane}</Chip>
