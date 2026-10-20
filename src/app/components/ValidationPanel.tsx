@@ -1,24 +1,18 @@
 import { useState } from "react";
 import type { BuildResult } from "../../engine/validate.js";
 import { STAT_GROUPS, type StatId } from "../../schema/index.js";
-import { stepOf } from "../check.js";
-import type { Draft, Step } from "../draft.js";
+import type { Draft } from "../draft.js";
 import { baseStats, GROUPS, title } from "./ui.js";
 
 interface Props {
   draft: Draft;
   result: BuildResult;
-  onJump: (step: Step) => void;
 }
 
-export function ValidationPanel({ draft, result, onJump }: Props) {
+export function ValidationPanel({ draft, result }: Props) {
   const [open, setOpen] = useState(false);
-  const { errors, warnings, summary } = result;
+  const { errors, summary } = result;
   const base = baseStats(draft);
-  const jump = (step: Step) => {
-    setOpen(false);
-    onJump(step);
-  };
   const status = result.ok ? "Legal" : `${errors.length} ${errors.length === 1 ? "error" : "errors"}`;
 
   return (
@@ -26,7 +20,6 @@ export function ValidationPanel({ draft, result, onJump }: Props) {
       <button className="panel-toggle" onClick={() => setOpen(!open)} aria-expanded={open}>
         <span className={`status ${result.ok ? "good" : "bad"}`}>
           {status}
-          {warnings.length > 0 && <span className="warn"> · {warnings.length} {warnings.length === 1 ? "warning" : "warnings"}</span>}
         </span>
         {summary && (
           <span className="num">
@@ -90,21 +83,7 @@ export function ValidationPanel({ draft, result, onJump }: Props) {
           </tbody>
         </table>
 
-        {warnings.length > 0 && (
-          <>
-            <h4>Warnings</h4>
-            <ul className="issues warn">
-              {warnings.map((w, i) => (
-                <li key={i}>
-                  <button className="link" onClick={() => jump(stepOf(w))}>
-                    {w.message}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </>
-        )}
-        {result.ok && warnings.length === 0 && <p className="good">Every rule checks out.</p>}
+        {result.ok && <p className="good">Every rule checks out.</p>}
       </div>
     </aside>
   );

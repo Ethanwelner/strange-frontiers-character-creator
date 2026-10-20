@@ -59,6 +59,9 @@ export interface ChoiceQuestion {
 export interface BuildSummary {
   stats: Record<StatId, number>;
   innerRing: Record<StatGroup, number>;
+  // HP is 10 plus the Physical Outer Ring stats; VP and SP are the Social and
+  // Mental Inner Rings. Traits can add to any of them.
+  resources: Record<"hp" | "vp" | "sp", number>;
   picks: Record<PickKind, PickCount>;
   traits: HeldTrait[];
   // Traits the build may spend background picks on.
@@ -78,6 +81,7 @@ export interface BuildResult {
 const STATS = StatId.options;
 const PACKAGE_SLOTS = ["origin", "profession", "past"] as const;
 export const OUTER_POINTS_PER_LEVEL = 3;
+export const BASE_HP = 10;
 
 // Choice pools the engine knows how to resolve. Others (and pools with no
 // Traits in them yet) can't be checked, so answers to them only warn.
@@ -407,6 +411,16 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     }
   }
 
+  const resources = {
+    hp: BASE_HP + STAT_GROUPS.physical.reduce((n, s) => n + stats[s], 0),
+    vp: innerRing.social,
+    sp: innerRing.mental,
+  };
+  for (const h of held.values()) {
+    const bonus = traits.get(h.trait)?.resources ?? {};
+    for (const r of ["hp", "vp", "sp"] as const) resources[r] += (bonus[r] ?? 0) * h.rank;
+  }
+
   return {
     ok: errors.length === 0,
     errors,
@@ -414,6 +428,7 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     summary: {
       stats,
       innerRing,
+      resources,
       picks,
       traits: [...held.values()],
       backgroundList: [...backgroundList].sort(),

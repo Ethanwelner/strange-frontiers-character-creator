@@ -118,5 +118,7 @@ export const Trait = BaseEntry.extend({
   // Asked when the Trait is held, e.g. which language an Additional Language
   // is. A ranked Trait asks again for each rank.
   choices: z.array(TraitChoice).default([]),
+  // Added to the character's HP, VP or SP for each rank held.
+  resources: z.object({ hp: z.number().int(), vp: z.number().int(), sp: z.number().int() }).partial().default({}),
 });
 export type Trait = z.infer<typeof Trait>;

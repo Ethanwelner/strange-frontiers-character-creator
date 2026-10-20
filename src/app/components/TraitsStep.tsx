@@ -35,7 +35,7 @@ export function TraitsStep({ draft, campaign, result, onChange }: Props) {
   const [query, setQuery] = useState("");
   // Categories whose boxes are unchecked; all of them show by default.
   const [hidden, setHidden] = useState<Set<string>>(new Set());
-  const [hideRejected, setHideRejected] = useState(false);
+  const [hideRejected, setHideRejected] = useState(true);
 
   const options = useMemo(() => traitOptions(draft, content, campaign, pick), [draft, campaign, pick]);
   const summary = result.summary;
@@ -50,10 +50,12 @@ export function TraitsStep({ draft, campaign, result, onChange }: Props) {
   }
 
   const q = query.trim().toLowerCase();
+  // Taken Traits stay in view even once the engine says they can't be taken again.
+  const taken = new Set(draft.traits.map((p) => p.trait));
   const shown = options.filter(
     (o) =>
       !hidden.has(o.trait.category) &&
-      (!hideRejected || o.reasons.length === 0) &&
+      (!hideRejected || o.reasons.length === 0 || taken.has(o.trait.id)) &&
       (!q || o.trait.name.toLowerCase().includes(q) || o.trait.tags.some((t) => t.toLowerCase().includes(q))),
   );
   const groups = TraitCategory.options

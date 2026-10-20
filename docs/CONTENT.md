@@ -37,6 +37,8 @@ Packages and Traits can both list `choices` (`choose`, `from`, optional `note`):
 
 A Trait marked `conveyed: true` (Explorers’ Lodge Membership, Imperial Service Record) can only come from a package's grants or from play, never from a pick, so it can't go on a package's `backgroundTraits` (the validator errors). Circumstance Traits use `category: circumstance`.
 
+A Trait that raises HP, VP or SP lists it under `resources` (for example `resources: { hp: 2 }`), counted once per rank held.
+
 ## Validator rules
 
 Errors stop a merge; warnings flag things to finish later.

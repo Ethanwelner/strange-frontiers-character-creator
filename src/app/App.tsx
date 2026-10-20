@@ -142,7 +142,7 @@ export function App() {
             </nav>
           </div>
           <div className="flex-3 builder-side">
-            <ValidationPanel draft={draft} result={result} onJump={setStep} />
+            <ValidationPanel draft={draft} result={result} />
           </div>
         </div>
       </header>
