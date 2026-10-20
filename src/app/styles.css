@@ -261,10 +261,23 @@ textarea:focus-visible {
   min-height: 100vh;
 }
 
-/* Content sits in the site's .container rows (layout.css). */
+/* Content sits in the site's .container rows (layout.css). The hero's row is
+   the title, describe box and step tabs (flex-11) beside the character box
+   (flex-3), 48px apart. */
 .builder-hero {
   color: var(--white);
   padding-top: 32px;
+}
+
+/* The tabs sit at the bottom of the left column, on the white panel, however
+   tall the character box makes the row. */
+.hero-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.builder-hero .builder-side {
+  padding-bottom: 32px;
 }
 
 .hero-bar {
@@ -309,7 +322,8 @@ button.hero-link:hover:not(:disabled) {
 /* Step tabs: the site's .rpg-tabs bar along the bottom of the hero, sitting
    on the white panel */
 .rpg-tabs {
-  margin-top: 48px;
+  margin-top: auto;
+  padding-top: 48px;
 }
 
 .rpg-tab-list {
@@ -886,11 +900,21 @@ button.hero-link:hover:not(:disabled) {
   min-width: 260px;
 }
 
-/* Validation panel: a small .c-sheet */
+/* Validation panel: a small .c-sheet, in the hero beside the title on
+   desktops */
+
+@media (min-width: 992px) {
+  .builder-hero .panel {
+    position: static;
+    max-height: none;
+    overflow: visible;
+  }
+}
 
 .panel {
   position: sticky;
   top: 1rem;
+  color: var(--black);
   background: var(--near-white);
   border: 1px solid var(--light-gray);
   border-radius: 24px;
@@ -1211,6 +1235,19 @@ button.hero-link:hover:not(:disabled) {
   font-size: 0.9rem;
 }
 
+/* Below 1300px the tabs share a narrower hero column with the character box,
+   so they tighten and drop their step numbers to stay on one row. */
+@media (min-width: 992px) and (max-width: 1299.98px) {
+  .rpg-tab {
+    font-size: 1.25rem;
+    padding: 0.6rem;
+  }
+
+  .rpg-tab .step-n {
+    display: none;
+  }
+}
+
 /* Below the site's lg breakpoint: one column, the panel docks to the bottom. */
 
 @media (max-width: 991px) {
@@ -1352,7 +1389,7 @@ button.hero-link:hover:not(:disabled) {
   }
 
   .rpg-tabs {
-    margin-top: 32px;
+    padding-top: 32px;
   }
 
   .rpg-tab-list {

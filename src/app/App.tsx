@@ -96,21 +96,17 @@ export function App() {
 
   const i = STEPS.indexOf(step);
 
-  // The hero rows use the site's 18-unit columns: flex-2 gutters (from 1200px) around the content.
-  const gutter = <div className="flex-2 d-none d-xl-inline-flex" />;
-
   return (
     <div className="app">
       <header className="section builder-hero">
-        <div className="container d-flex flex-wrap">
-          {gutter}
-          <div className="flex-14">
-            <div className="hero-bar">
-              <button className="hero-link" onClick={exportBuild}>Export</button>
-              <button className="hero-link" onClick={() => fileInput.current?.click()}>Import</button>
-              <button className="hero-link" onClick={reset}>New</button>
-              <input ref={fileInput} type="file" accept="application/json,.json" hidden onChange={importBuild} />
-            </div>
+        <div className="container hero-bar">
+          <button className="hero-link" onClick={exportBuild}>Export</button>
+          <button className="hero-link" onClick={() => fileInput.current?.click()}>Import</button>
+          <button className="hero-link" onClick={reset}>New</button>
+          <input ref={fileInput} type="file" accept="application/json,.json" hidden onChange={importBuild} />
+        </div>
+        <div className="container d-flex flex-gap-48 builder-row">
+          <div className="flex-11 builder-main hero-main">
             <div className="hero-statement">
               <h1 className="hero-title">Strange Frontiers</h1>
               <p className="hero-sub">Character Builder</p>
@@ -124,36 +120,30 @@ export function App() {
               onBuilt={applyDescribed}
               onDismiss={() => setSaved((s) => ({ ...s, ai: undefined }))}
             />
-          </div>
-          {gutter}
-        </div>
 
-        <div className="rpg-tabs">
-          <div className="container d-flex">
-            {gutter}
-            <div className="flex-14">
-              <nav className="rpg-tab-list" aria-label="Steps">
-                {STEPS.map((s, n) => (
-                  <button
-                    key={s}
-                    className={`rpg-tab${s === step ? " is-active" : ""}`}
-                    aria-current={s === step ? "step" : undefined}
-                    onClick={() => setStep(s)}
-                  >
-                    <span className="step-n">{n + 1}</span> {LABELS[s]}
-                    {counts[s] ? <span className="badge">{counts[s]}</span> : null}
-                  </button>
-                ))}
-              </nav>
-            </div>
-            {gutter}
+            <nav className="rpg-tabs rpg-tab-list" aria-label="Steps">
+              {STEPS.map((s, n) => (
+                <button
+                  key={s}
+                  className={`rpg-tab${s === step ? " is-active" : ""}`}
+                  aria-current={s === step ? "step" : undefined}
+                  onClick={() => setStep(s)}
+                >
+                  <span className="step-n">{n + 1}</span> {LABELS[s]}
+                  {counts[s] ? <span className="badge">{counts[s]}</span> : null}
+                </button>
+              ))}
+            </nav>
+          </div>
+          <div className="flex-3 builder-side">
+            <ValidationPanel draft={draft} result={result} onName={(name) => setDraft({ ...draft, name })} onJump={setStep} />
           </div>
         </div>
       </header>
 
       <div className="section unlimited white-bg builder-panel">
-        <div className="container d-flex flex-gap-48 builder-row">
-          <main className="flex-11 builder-main">
+        <div className="container">
+          <main>
             {contentErrors.length > 0 && (
               <div className="notice bad">
                 Content failed to load: {contentErrors.join("; ")}
@@ -186,9 +176,6 @@ export function App() {
               )}
             </div>
           </main>
-          <div className="flex-3 builder-side">
-            <ValidationPanel draft={draft} result={result} onName={(name) => setDraft({ ...draft, name })} onJump={setStep} />
-          </div>
         </div>
       </div>
     </div>
