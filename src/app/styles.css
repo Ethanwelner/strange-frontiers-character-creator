@@ -265,6 +265,8 @@ textarea:focus-visible {
    the title, describe box and step tabs (flex-11) beside the character box
    (flex-3), 48px apart. */
 .builder-hero {
+  display: grid;
+  gap: 24px;
   color: var(--white);
   padding-top: 32px;
 }
