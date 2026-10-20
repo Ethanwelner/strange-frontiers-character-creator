@@ -103,8 +103,8 @@ describe("solveConcept", () => {
     const s = solve({ ...hunter, traits: ["additional-language", "additional-contact", ...hunter.traits!] });
     expect(s.taken.slice(0, 2)).toEqual(["additional-language", "additional-contact"]);
     const answer = s.build.choices.find((c) => c.trait === "additional-language");
-    // Dreft grants Dreftan, so the first language the build doesn't hold is English.
-    expect(answer).toEqual({ trait: "additional-language", from: "language", traits: ["english"] });
+    // Dreft grants spoken Dreftan, so the first language the build doesn't hold is written Dreftan.
+    expect(answer).toEqual({ trait: "additional-language", from: "language", traits: ["dreftan-written"] });
     expect(s.build.choices.some((c) => c.trait === "additional-contact")).toBe(false);
     expect(s.result.ok).toBe(true);
     expect(s.result.warnings.map((w) => w.message)).toContain("Additional Contact gives 1 Contact: record who on the Choices step");
@@ -113,8 +113,8 @@ describe("solveConcept", () => {
   it("keeps the concept's answer to a Trait's choice, and skips languages the build holds", () => {
     const languageOf = (s: Solution) => s.build.choices.find((c) => c.trait === "additional-language")!.traits;
     const asked = (traits: string[]): ConceptInput => ({ ...hunter, traits: ["additional-language"], choices: [{ trait: "additional-language", from: "language", traits }] });
-    // Dreftan comes with the Dreft Origin, so the solver takes English instead.
-    expect(languageOf(solve(asked(["dreftan"])))).toEqual(["english"]);
+    // Spoken Dreftan comes with the Dreft Origin, so the solver takes the next language instead.
+    expect(languageOf(solve(asked(["dreftan"])))).toEqual(["dreftan-written"]);
     // With a third language in content, the concept's pick wins over pool order.
     const cant = Trait.parse({ id: "trade-cant", name: "Trade Cant", status: "placeholder", plane: "isekai", summary: "Test fixture.", category: "knowledge", types: ["language"], effect: "Test only." });
     const s = solveConcept(asked(["trade-cant"]), { ...content, traits: [...content.traits, cant] }) as Solution;

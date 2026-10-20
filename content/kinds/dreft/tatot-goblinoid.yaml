@@ -1,10 +1,10 @@
 id: tatot-goblinoid
-name: Goblinoid Tatot
+name: "Tatot, Goblinoid"
 status: placeholder
 plane: isekai
 region: dreft
-summary: The “High Orks.” Every Tatot is born either orcoid or goblinoid, and goblinoids are small, with plentiful mana. Neither decides a Tatot’s place in Dreft, though it does decide which jobs they’re built for.
-tags: [goblin, tatot, merchant, magic]
+summary: "The “High Orks.” A polyphenic Kind: every Tatot is born either orcoid or goblinoid. Goblinoids are small, with plentiful mana."
+tags: [tatot, goblinoid, merchant, magic]
 features:
   - name: Goblinoid
     description: Higher Memory and Logic maximums, and access to magic Traits.

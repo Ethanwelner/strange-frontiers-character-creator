@@ -8,12 +8,10 @@ tags: [dwarf, sea, diving, mountains]
 features:
   - name: Stout
     description: Higher Endurance and Power maximums, lower Grace maximum.
-  - name: Deep Walker
-    description: Can walk the sea floor, and with training hold their breath for hours.
-  - name: Thin Air
-    description: Unbothered by altitude and cold that would slow other Kinds.
+  - name: Prodigious Lungs
+    description: Can hold their breath for hours, and are unbothered by the thin air of high altitudes.
   - name: Beard Nets
-    description: A long enough beard doubles as a net. It’s more useful than it sounds.
+    description: Guwain beards grow in thick, tangled messes. Most Guwain braid theirs, often with tie-offs and a meshed pattern that lets them carry goods inside.
 stats:
   endurance: { start: 2, max: 20 }
   power: { start: 2, max: 17 }

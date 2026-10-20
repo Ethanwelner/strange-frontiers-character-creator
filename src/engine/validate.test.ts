@@ -251,6 +251,12 @@ describe("rule 3: each level is 1 Inner Ring point and 3 Outer Ring points", () 
 });
 
 describe("rule 4: stat maximums", () => {
+  it("keeps an AI Core out of Physical stats, which its chassis decides", () => {
+    const aiCore = { ...human, kind: "ai-core", traits: [] };
+    expectLegal(check({ ...aiCore, levels: [{ group: "mental", points: { logic: 3 } }] }));
+    expect(codes(check({ ...aiCore, levels: [{ group: "physical", points: { power: 3 } }] }))).toEqual(["stat-max"]);
+  });
+
   it("rejects a stat above its Kind max", () => {
     // Human grace: 1 + 3 × 5 = 16, above the Human max of 15.
     const levels = Array.from({ length: 5 }, () => ({ group: "physical" as const, points: { grace: 3 } }));

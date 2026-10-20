@@ -1,0 +1,25 @@
+id: ai-core
+name: AI Core
+status: placeholder
+plane: earth
+summary: "A sentient, self-contained machine mind, capable of inhabiting different forms and of lightning-fast computation."
+tags: [ai-core, artificial-intelligence, machine, earth, kashgar]
+features:
+  - name: Creatures of Logic
+    description: AI Cores start with 9 points in Mental.
+  - name: Bodiless
+    description: AI Cores can’t put points into Physical stats. An AI Core inhabits a chassis, which determines its physical stats.
+  - name: Armored Core
+    description: An AI Core’s central core is an item with 10 HP, and it must be destroyed separately from its chassis for the character to be killed.
+  - name: Machine Mind
+    description: An AI Core can interface directly with other machines through the cabled port interfaces on its core.
+stats:
+  endurance: { start: 0, max: 0 }
+  power: { start: 0, max: 0 }
+  grace: { start: 0, max: 0 }
+  empathy: { start: 0, max: 20 }
+  persuasion: { start: 0, max: 20 }
+  demeanor: { start: 0, max: 20 }
+  logic: { start: 2, max: 20 }
+  intuition: { start: 2, max: 20 }
+  memory: { start: 2, max: 20 }

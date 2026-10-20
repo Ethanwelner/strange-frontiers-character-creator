@@ -3,11 +3,11 @@ name: Royal Guard
 status: placeholder
 plane: isekai
 region: dreft
-summary: "Sworn to the crown, which currently has no one wearing it."
+summary: "Sworn to the crown of one of Isekai’s kingdoms, and as adept with a blade as with courtly manners."
 tags: [guard, military, crown, court]
 type: profession
 grants:
   - { trait: shield-wall }
   - { trait: vigilance }
   - { trait: court-etiquette }
-  - { trait: port-herminst }
+  - { trait: aristocracy }

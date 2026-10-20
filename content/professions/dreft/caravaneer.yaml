@@ -3,7 +3,7 @@ name: Caravaneer
 status: placeholder
 plane: isekai
 region: dreft
-summary: "Drives trade between the switch port and the rest of Dreft, and occasionally lives to retire."
+summary: "An itinerant merchant trader, always moving between ports, cities, and kingdoms."
 tags: [caravan, trade, travel, merchant]
 type: profession
 grants:

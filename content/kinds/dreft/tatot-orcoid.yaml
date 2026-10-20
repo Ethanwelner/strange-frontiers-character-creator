@@ -1,10 +1,10 @@
 id: tatot-orcoid
-name: Orcoid Tatot
+name: "Tatot, Orcoid"
 status: placeholder
 plane: isekai
 region: dreft
-summary: The “High Orks.” Every Tatot is born either orcoid or goblinoid, and orcoids are the larger and stronger of the two. Neither decides a Tatot’s place in Dreft, though it does decide which jobs they’re built for.
-tags: [ork, tatot, merchant]
+summary: "The “High Orks.” A polyphenic Kind: every Tatot is born either orcoid or goblinoid. Orcoids are larger and stronger, have no mana, and are largely immune to sunsickness."
+tags: [tatot, orcoid, merchant]
 features:
   - name: Orcoid
     description: Higher Power and Endurance maximums. No mana, and largely immune to sunsickness.

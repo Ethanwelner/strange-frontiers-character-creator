@@ -1,9 +1,9 @@
 id: english
-name: English
+name: "English (Spoken)"
 status: placeholder
 plane: earth
-summary: "The English language, as spoken in the systems."
-tags: [language, earth]
+summary: "One of the common languages of Earth Baseline."
+tags: [language, english, earth]
 category: knowledge
 types: [language]
-effect: Placeholder. Effect not yet written.
+effect: This character is conversational in the English language and can speak it.
