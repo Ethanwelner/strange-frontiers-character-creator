@@ -2,7 +2,7 @@ import { FREE_TEXT_POOLS, type BuildResult } from "../../engine/validate.js";
 import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { kindById, packageById, traitById } from "../content.js";
 import type { Draft } from "../draft.js";
-import { baseStats, Chip, GROUPS, StatLine, title, traitName } from "./ui.js";
+import { baseStats, Chip, GROUPS, StatLine, StepHeader, title, traitName } from "./ui.js";
 
 const SOURCE = /^(origin|profession|past) ([a-z0-9-]+)( choice)?$/;
 
@@ -36,6 +36,7 @@ export function Sheet({ draft, result }: { draft: Draft; result: BuildResult }) 
 
   return (
     <section className="sheet">
+      <StepHeader step="sheet" title="Sheet" />
       <div className="c-sheet">
         <div className="level-badge" aria-label={`Level ${draft.level}`}>
           {draft.level}

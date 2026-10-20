@@ -1,7 +1,7 @@
-import type { KeyboardEvent, ReactNode } from "react";
+import { createContext, useContext, type KeyboardEvent, type ReactNode } from "react";
 import { STAT_GROUPS, type StatBlock, type StatId } from "../../schema/index.js";
 import { kindById, traitById } from "../content.js";
-import type { Draft } from "../draft.js";
+import { STEPS, type Draft, type Step } from "../draft.js";
 
 export const GROUPS = Object.keys(STAT_GROUPS) as (keyof typeof STAT_GROUPS)[];
 
@@ -14,7 +14,33 @@ export function baseStats(draft: Draft): StatBlock | undefined {
   return draft.kind ? kindById.get(draft.kind)?.stats : undefined;
 }
 
-// A selectable card in a radio group, clickable and keyboard-operable.
+// The engine's errors for the step on screen, as the player should read them.
+export const StepErrors = createContext<string[]>([]);
+
+// A step's title, then the site's black stinger, then what the step is for,
+// then what's wrong on this step.
+export function StepHeader({ step, title, children }: { step: Step; title: string; children?: ReactNode }) {
+  const errors = useContext(StepErrors);
+  return (
+    <header className="step-head">
+      <h2>{title}</h2>
+      <div className="stinger">
+        Step {STEPS.indexOf(step) + 1} of {STEPS.length}
+      </div>
+      {children && <p className="lede">{children}</p>}
+      {errors.length > 0 && (
+        <ul className="issues bad step-issues">
+          {errors.map((e, i) => (
+            <li key={i}>{e}</li>
+          ))}
+        </ul>
+      )}
+    </header>
+  );
+}
+
+// A selectable card in a radio group, clickable and keyboard-operable. The
+// step decides what a second click does; the Kind and package cards clear.
 export function Card(props: { selected: boolean; onSelect: () => void; children: ReactNode; label: string }) {
   const onKey = (e: KeyboardEvent) => {
     if (e.key === "Enter" || e.key === " ") {

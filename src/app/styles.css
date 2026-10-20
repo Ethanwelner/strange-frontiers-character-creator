@@ -175,7 +175,7 @@ textarea:focus {
   outline-offset: 2px;
 }
 
-.layout :focus-visible {
+.builder-panel :focus-visible {
   outline-color: var(--black);
 }
 
@@ -261,16 +261,25 @@ textarea:focus-visible {
   min-height: 100vh;
 }
 
-.hero,
-.layout {
-  /* Centered content, full-width background */
-  padding-left: max(16px, calc((100% - 1240px) / 2));
-  padding-right: max(16px, calc((100% - 1240px) / 2));
+/* Content sits in the site's .container rows (layout.css). The hero's row is
+   the title, describe box and step tabs (flex-11) beside the character box
+   (flex-3), 48px apart. */
+.builder-hero {
+  display: grid;
+  gap: 24px;
+  color: var(--white);
+  padding-top: 32px;
 }
 
-.hero {
-  color: var(--white);
-  padding-top: 24px;
+/* The tabs sit at the bottom of the left column, on the white panel, however
+   tall the character box makes the row. */
+.hero-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.builder-hero .builder-side {
+  padding-bottom: 32px;
 }
 
 .hero-bar {
@@ -312,17 +321,22 @@ button.hero-link:hover:not(:disabled) {
   margin: 0;
 }
 
-/* Step tabs: .rpg-tab, sitting on the white panel */
-.steps {
+/* Step tabs: the site's .rpg-tabs bar along the bottom of the hero, sitting
+   on the white panel */
+.rpg-tabs {
+  margin-top: auto;
+  padding-top: 48px;
+}
+
+.rpg-tab-list {
   display: flex;
   align-items: stretch;
   gap: 0.5rem;
-  margin-top: 48px;
   overflow-x: auto;
   scrollbar-width: none;
 }
 
-.steps button {
+.rpg-tab {
   display: flex;
   align-items: center;
   gap: 0.4rem;
@@ -332,18 +346,18 @@ button.hero-link:hover:not(:disabled) {
   border-radius: 4px 4px 0 0;
 }
 
-.steps button:hover:not(:disabled) {
+.rpg-tab:hover:not(:disabled) {
   background-color: color-mix(in srgb, var(--gray) 66%, transparent);
 }
 
-.steps button.on {
+.rpg-tab.is-active {
   background: var(--white);
   color: var(--black);
   /* Cover the subpixel gap so the white tab meets the white panel */
   box-shadow: 0 1px 0 var(--white);
 }
 
-.steps button:focus-visible {
+.rpg-tab:focus-visible {
   outline-offset: -2px;
 }
 
@@ -471,14 +485,8 @@ button.hero-link:hover:not(:disabled) {
 
 /* White panel */
 
-.layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
-  gap: 48px;
-  align-items: start;
+.builder-panel {
   background: var(--white);
-  padding-top: 48px;
-  padding-bottom: 96px;
 }
 
 .notice {
@@ -502,22 +510,23 @@ button.hero-link:hover:not(:disabled) {
   color: var(--black);
 }
 
-/* Character name, written like the sheet's name */
-.name {
-  display: block;
-  width: 100%;
-  max-width: 32rem;
-  font-size: 1.75rem;
-  font-weight: 300;
-  border: 0;
-  border-bottom: 1px solid var(--rule);
-  border-radius: 0;
-  padding: 0.25rem 0;
-  margin-bottom: 1.5rem;
+/* Step title, then the stinger, then the step's description */
+.step-head h2 {
+  margin-bottom: 1rem;
 }
 
-.name::placeholder {
-  color: var(--medium-gray);
+.step-head .stinger {
+  margin-bottom: 1rem;
+}
+
+.step-head .lede {
+  margin-top: 0;
+}
+
+/* What's wrong on this step, between the description and the boxed content */
+.step-issues {
+  margin-bottom: 1.5rem;
+  max-width: 48rem;
 }
 
 .pager {
@@ -526,12 +535,59 @@ button.hero-link:hover:not(:disabled) {
   margin-top: 3rem;
 }
 
+/* Boxed step content: the site's .tech-fields box (css/rpg.css), which holds
+   the Setting tab's sub-tabs. The Traits step keeps its Universal/Background
+   sub-tabs along the top edge; the other steps have no tabs, so they get top
+   padding instead. */
+.tech-fields {
+  padding: 0 24px 36px;
+  border: 1px solid var(--white);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.tech-fields-light {
+  border-color: var(--black);
+}
+
+.tech-fields.step-box {
+  padding-top: 24px;
+}
+
+.tech-field-tab-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 0.5rem;
+  margin-bottom: 36px;
+}
+
+.tech-field-tab {
+  font-size: 1.25rem;
+  padding: 0.6rem 1.1rem;
+  border-radius: 0 0 4px 4px;
+}
+
+.tech-fields-light .tech-field-tab.is-active {
+  background: var(--black);
+  color: var(--white);
+}
+
+/* The first slot heading in a box sits at its top */
+.step-box > .slot:first-child > .subhead:first-child {
+  margin-top: 0;
+}
+
 /* Cards: .c-sheet-box */
 
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 1rem;
+}
+
+.kind-cards {
+  grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr));
 }
 
 .card,
@@ -676,22 +732,27 @@ button.hero-link:hover:not(:disabled) {
 
 .levels {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr));
   gap: 1rem;
 }
 
-.segmented {
-  display: flex;
-  gap: 4px;
-  margin: 0.75rem 0;
+/* Physical, Social and Mental stacked in each level card */
+.stat-group h4 {
+  font-size: 1.1rem;
+  margin: 1.25rem 0 0.25rem;
 }
 
-.segmented button {
-  flex: 1;
+.stat-group.locked {
+  opacity: 0.45;
 }
 
-.segmented button.on {
+.inner-ring {
+  font-size: 0.75rem;
+  font-weight: 600;
   background: var(--black);
+  color: var(--white);
+  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
 }
 
 .stepper-row {
@@ -841,11 +902,27 @@ button.hero-link:hover:not(:disabled) {
   border-bottom: 1px solid var(--rule);
 }
 
-/* Validation panel: a small .c-sheet */
+/* Validation panel: a small .c-sheet. Its flex-3 column keeps room for the
+   Picks table on narrower desktops. */
+.builder-side {
+  min-width: 260px;
+}
+
+/* Validation panel: a small .c-sheet, in the hero beside the title on
+   desktops */
+
+@media (min-width: 992px) {
+  .builder-hero .panel {
+    position: static;
+    max-height: none;
+    overflow: visible;
+  }
+}
 
 .panel {
   position: sticky;
   top: 1rem;
+  color: var(--black);
   background: var(--near-white);
   border: 1px solid var(--light-gray);
   border-radius: 24px;
@@ -872,14 +949,28 @@ button.hero-link:hover:not(:disabled) {
   display: none;
 }
 
-.panel-body {
-  padding: 1.5rem;
+/* Character name, a labeled form field at the top of the panel */
+.name-field {
+  margin-bottom: 1.5rem;
 }
 
-.panel-status {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+.field-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.name-field input {
+  width: 100%;
+  font-size: 1rem;
+  padding: 0.6rem 0.75rem;
+}
+
+.name-field input::placeholder {
+  color: var(--medium-gray);
+}
+
+.panel-body {
+  padding: 1.25rem;
 }
 
 /* Status as a stinger: green when legal, red with errors, yellow for warnings */
@@ -939,7 +1030,7 @@ button.hero-link:hover:not(:disabled) {
 .picks-table th,
 .picks-table td {
   text-align: right;
-  padding: 0.2rem 0.25rem;
+  padding: 0.2rem 0.15rem;
 }
 
 .picks-table th:first-child,
@@ -951,7 +1042,7 @@ button.hero-link:hover:not(:disabled) {
 .picks-table thead th {
   color: var(--gray);
   font-weight: 300;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
 }
 
 .issues li {
@@ -1146,12 +1237,37 @@ button.hero-link:hover:not(:disabled) {
   font-size: 0.9rem;
 }
 
-/* Phone and narrow tablet: one column, the panel docks to the bottom. */
+/* Below 1300px the tabs share a narrower hero column with the character box,
+   so they tighten and drop their step numbers to stay on one row. */
+@media (min-width: 992px) and (max-width: 1299.98px) {
+  .rpg-tab {
+    font-size: 1.25rem;
+    padding: 0.6rem;
+  }
 
-@media (max-width: 900px) {
-  .layout {
-    grid-template-columns: minmax(0, 1fr);
-    padding-top: 32px;
+  .rpg-tab .step-n {
+    display: none;
+  }
+}
+
+/* Below the site's lg breakpoint: one column, the panel docks to the bottom. */
+
+@media (max-width: 991px) {
+  .builder-row {
+    gap: 0;
+  }
+
+  .builder-main {
+    flex: 1 100%;
+  }
+
+  .builder-side {
+    flex: none;
+    min-width: 0;
+  }
+
+  .builder-panel {
+    padding-bottom: 120px;
   }
 
   .panel {
@@ -1202,10 +1318,6 @@ button.hero-link:hover:not(:disabled) {
     padding: 1rem 16px 1.5rem;
   }
 
-  .panel-body .panel-status {
-    display: none;
-  }
-
   .panel-stats {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0.5rem 0.75rem;
@@ -1229,6 +1341,34 @@ button.hero-link:hover:not(:disabled) {
   }
 }
 
+@media only screen and (max-width: 992px) {
+  .hero-title {
+    font-size: 3.8rem;
+  }
+
+  .hero-sub {
+    font-size: 2.5rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .builder-panel.section.unlimited {
+    padding: 32px 0 120px;
+  }
+
+  .tech-fields {
+    padding: 0 16px 24px;
+  }
+
+  .tech-fields.step-box {
+    padding-top: 16px;
+  }
+}
+
 @media (max-width: 575px) {
   .hero-statement {
     margin: 32px 0 28px;
@@ -1246,12 +1386,15 @@ button.hero-link:hover:not(:disabled) {
     font-size: 1.9rem;
   }
 
-  .steps {
-    margin-top: 32px;
+  .rpg-tabs {
+    padding-top: 32px;
+  }
+
+  .rpg-tab-list {
     gap: 0.35rem;
   }
 
-  .steps button {
+  .rpg-tab {
     font-size: 1.2rem;
     padding: 0.6rem 0.8rem;
   }
@@ -1272,12 +1415,11 @@ button.hero-link:hover:not(:disabled) {
 
 @media print {
   .rpg-night,
-  .hero,
-  .panel,
+  .builder-hero,
+  .builder-side,
   .pager,
   .notice,
-  .name,
-  .stinger,
+  .step-head,
   .sheet-actions button {
     display: none !important;
   }
@@ -1286,9 +1428,16 @@ button.hero-link:hover:not(:disabled) {
     background: var(--white);
   }
 
-  .layout {
-    display: block;
+  .builder-panel {
     padding: 0;
+  }
+
+  .builder-panel .container {
+    max-width: none;
+  }
+
+  .builder-panel .flex-2 {
+    display: none !important;
   }
 
   .c-sheet {

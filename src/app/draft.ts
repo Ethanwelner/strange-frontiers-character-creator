@@ -16,7 +16,7 @@ export interface Draft {
   choices: ChoiceAnswer[];
 }
 
-export const STEPS = ["kind", "background", "levels", "choices", "traits", "sheet"] as const;
+export const STEPS = ["kind", "background", "stats", "traits", "choices", "sheet"] as const;
 export type Step = (typeof STEPS)[number];
 
 // What the builder keeps from the last AI build, so the reasons survive a reload.
@@ -101,7 +101,9 @@ export function load(): Saved {
     const saved = JSON.parse(raw) as Partial<Saved>;
     const draft = fromBuild(saved.draft);
     const startingLevel = saved.campaign?.startingLevel ?? draft.level;
-    const step = STEPS.includes(saved.step as Step) ? (saved.step as Step) : "kind";
+    // The Stats step used to be called Levels.
+    const savedStep = (saved.step as string) === "levels" ? "stats" : saved.step;
+    const step = STEPS.includes(savedStep as Step) ? (savedStep as Step) : "kind";
     const ai = saved.ai && Array.isArray(saved.ai.reasons) ? saved.ai : undefined;
     return { draft, campaign: { startingLevel }, step, ai };
   } catch {

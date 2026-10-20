@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
-import { check, stepOf } from "./check.js";
+import { check, describe, stepOf } from "./check.js";
 import { BackgroundStep } from "./components/BackgroundStep.js";
 import { ChoicesStep } from "./components/ChoicesStep.js";
 import { DescribeBox } from "./components/DescribeBox.js";
 import { KindStep } from "./components/KindStep.js";
-import { LevelsStep } from "./components/LevelsStep.js";
+import { StatsStep } from "./components/StatsStep.js";
 import { Sheet } from "./components/Sheet.js";
 import { TraitsStep } from "./components/TraitsStep.js";
+import { StepErrors } from "./components/ui.js";
 import { ValidationPanel } from "./components/ValidationPanel.js";
 import { content, contentErrors } from "./content.js";
 import type { DescribeResult } from "../ai/types.js";
@@ -15,9 +16,9 @@ import { clearSaved, EMPTY, fromBuild, load, save, slug, STEPS, toBuild, withLev
 const LABELS: Record<Step, string> = {
   kind: "Kind",
   background: "Background",
-  levels: "Levels",
-  choices: "Choices",
+  stats: "Stats",
   traits: "Traits",
+  choices: "Choices",
   sheet: "Sheet",
 };
 
@@ -35,6 +36,9 @@ export function App() {
     for (const e of result.errors) n[stepOf(e)] = (n[stepOf(e)] ?? 0) + 1;
     return n;
   }, [result]);
+
+  // The current step's errors, shown under its header.
+  const stepErrors = useMemo(() => result.errors.filter((e) => stepOf(e) === step).map((e) => describe(e, draft)), [result, step, draft]);
 
   const setDraft = (d: Draft) => setSaved((s) => ({ ...s, draft: d }));
   const setStep = (st: Step) => {
@@ -98,85 +102,87 @@ export function App() {
 
   return (
     <div className="app">
-      <header className="hero">
-        <div className="hero-bar">
+      <header className="section builder-hero">
+        <div className="container hero-bar">
           <button className="hero-link" onClick={exportBuild}>Export</button>
           <button className="hero-link" onClick={() => fileInput.current?.click()}>Import</button>
           <button className="hero-link" onClick={reset}>New</button>
           <input ref={fileInput} type="file" accept="application/json,.json" hidden onChange={importBuild} />
         </div>
-        <div className="hero-statement">
-          <h1 className="hero-title">Strange Frontiers</h1>
-          <p className="hero-sub">Character Builder</p>
+        <div className="container d-flex flex-gap-48 builder-row">
+          <div className="flex-11 builder-main hero-main">
+            <div className="hero-statement">
+              <h1 className="hero-title">Strange Frontiers</h1>
+              <p className="hero-sub">Character Builder</p>
+            </div>
+
+            <DescribeBox
+              draft={draft}
+              notes={saved.ai}
+              startingLevel={campaign.startingLevel}
+              hasBuild={Boolean(draft.kind || draft.origin || draft.profession || draft.past || draft.traits.length)}
+              onBuilt={applyDescribed}
+              onDismiss={() => setSaved((s) => ({ ...s, ai: undefined }))}
+            />
+
+            <nav className="rpg-tabs rpg-tab-list" aria-label="Steps">
+              {STEPS.map((s, n) => (
+                <button
+                  key={s}
+                  className={`rpg-tab${s === step ? " is-active" : ""}`}
+                  aria-current={s === step ? "step" : undefined}
+                  onClick={() => setStep(s)}
+                >
+                  <span className="step-n">{n + 1}</span> {LABELS[s]}
+                  {counts[s] ? <span className="badge">{counts[s]}</span> : null}
+                </button>
+              ))}
+            </nav>
+          </div>
+          <div className="flex-3 builder-side">
+            <ValidationPanel draft={draft} result={result} onName={(name) => setDraft({ ...draft, name })} onJump={setStep} />
+          </div>
         </div>
-
-        <DescribeBox
-          draft={draft}
-          notes={saved.ai}
-          startingLevel={campaign.startingLevel}
-          hasBuild={Boolean(draft.kind || draft.origin || draft.profession || draft.past || draft.traits.length)}
-          onBuilt={applyDescribed}
-          onDismiss={() => setSaved((s) => ({ ...s, ai: undefined }))}
-        />
-
-        <nav className="steps" aria-label="Steps">
-          {STEPS.map((s, n) => (
-            <button key={s} className={s === step ? "on" : ""} aria-current={s === step ? "step" : undefined} onClick={() => setStep(s)}>
-              <span className="step-n">{n + 1}</span> {LABELS[s]}
-              {counts[s] ? <span className="badge">{counts[s]}</span> : null}
-            </button>
-          ))}
-        </nav>
       </header>
 
-      <div className="layout">
-        <main>
-          {contentErrors.length > 0 && (
-            <div className="notice bad">
-              Content failed to load: {contentErrors.join("; ")}
-            </div>
-          )}
-          {notice && (
-            <div className="notice" role="status">
-              {notice}
-              <button className="link" onClick={() => setNotice(undefined)} aria-label="Dismiss">
-                ✕
-              </button>
-            </div>
-          )}
+      <div className="section unlimited white-bg builder-panel">
+        <div className="container">
+          <main>
+            <StepErrors.Provider value={stepErrors}>
+              {contentErrors.length > 0 && (
+                <div className="notice bad">
+                  Content failed to load: {contentErrors.join("; ")}
+                </div>
+              )}
+              {notice && (
+                <div className="notice" role="status">
+                  {notice}
+                  <button className="link" onClick={() => setNotice(undefined)} aria-label="Dismiss">
+                    ✕
+                  </button>
+                </div>
+              )}
 
-          {step !== "sheet" && (
-            <input
-              className="name"
-              value={draft.name ?? ""}
-              placeholder="Character name"
-              aria-label="Character name"
-              onChange={(e) => setDraft({ ...draft, name: e.target.value || undefined })}
-            />
-          )}
-          <div className="stinger">
-            Step {i + 1} of {STEPS.length}
-          </div>
+              {step === "kind" && <KindStep draft={draft} onChange={setDraft} />}
+              {step === "background" && <BackgroundStep draft={draft} onChange={setDraft} />}
+              {step === "stats" && (
+                <StatsStep draft={draft} startingLevel={campaign.startingLevel} result={result} onChange={setDraft} onStartingLevel={setStartingLevel} />
+              )}
+              {step === "choices" && <ChoicesStep draft={draft} onChange={setDraft} />}
+              {step === "traits" && <TraitsStep draft={draft} campaign={campaign} result={result} onChange={setDraft} />}
+              {step === "sheet" && <Sheet draft={draft} result={result} />}
 
-          {step === "kind" && <KindStep draft={draft} onChange={setDraft} />}
-          {step === "background" && <BackgroundStep draft={draft} onChange={setDraft} />}
-          {step === "levels" && (
-            <LevelsStep draft={draft} startingLevel={campaign.startingLevel} result={result} onChange={setDraft} onStartingLevel={setStartingLevel} />
-          )}
-          {step === "choices" && <ChoicesStep draft={draft} onChange={setDraft} />}
-          {step === "traits" && <TraitsStep draft={draft} campaign={campaign} result={result} onChange={setDraft} />}
-          {step === "sheet" && <Sheet draft={draft} result={result} />}
-
-          <div className="pager">
-            {i > 0 ? <button onClick={() => setStep(STEPS[i - 1]!)}>← {LABELS[STEPS[i - 1]!]}</button> : <span />}
-            {i < STEPS.length - 1 && (
-              <button className="primary" onClick={() => setStep(STEPS[i + 1]!)}>
-                {LABELS[STEPS[i + 1]!]} →
-              </button>
-            )}
-          </div>
-        </main>
-        <ValidationPanel draft={draft} result={result} onJump={setStep} />
+              <div className="pager">
+                {i > 0 ? <button onClick={() => setStep(STEPS[i - 1]!)}>← {LABELS[STEPS[i - 1]!]}</button> : <span />}
+                {i < STEPS.length - 1 && (
+                  <button className="primary" onClick={() => setStep(STEPS[i + 1]!)}>
+                    {LABELS[STEPS[i + 1]!]} →
+                  </button>
+                )}
+              </div>
+            </StepErrors.Provider>
+          </main>
+        </div>
       </div>
     </div>
   );
