@@ -17,6 +17,8 @@
   --near-white: #fafafa;
   --black: #212121;
   --red: #eb0844;
+  /* A softer red for the step error chips, which carry black text */
+  --error-chip: #cf4a66;
   --yellow: #fcb10f;
   --green: #47b767;
   --gray: #525252;
@@ -548,7 +550,7 @@ button.hero-link:hover:not(:disabled) {
   padding: 0.5rem 1rem;
   border: 0;
   border-radius: 999px;
-  background: var(--red);
+  background: var(--error-chip);
   color: var(--black);
   font-size: 0.75rem;
   font-weight: 600;
