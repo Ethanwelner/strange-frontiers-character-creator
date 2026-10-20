@@ -870,6 +870,7 @@ button.hero-link:hover:not(:disabled) {
 
 .trait-list {
   display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(256px, 100%), 1fr));
   gap: 1rem;
 }
 

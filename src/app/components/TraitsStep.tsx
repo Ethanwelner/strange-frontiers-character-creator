@@ -14,6 +14,17 @@ interface Props {
   onChange: (d: Draft) => void;
 }
 
+// Group titles, in the schema's category order.
+const GROUP_TITLE: Record<(typeof TraitCategory.options)[number], string> = {
+  knowledge: "Knowledges",
+  skill: "Skills",
+  contact: "Contacts",
+  starter: "Starter Traits",
+  condition: "Conditions",
+  membership: "Memberships",
+  circumstance: "Circumstances",
+};
+
 const PICK_HELP: Record<PickKind, string> = {
   universal: "Universal picks take any Trait that isn't a Background Trait, knowledge included at creation.",
   background: "Background picks take only Traits on this character's Background Trait list.",
@@ -44,6 +55,9 @@ export function TraitsStep({ draft, campaign, result, onChange }: Props) {
       (!hideRejected || o.reasons.length === 0) &&
       (!q || o.trait.name.toLowerCase().includes(q) || o.trait.tags.some((t) => t.toLowerCase().includes(q))),
   );
+  const groups = TraitCategory.options
+    .map((c) => ({ category: c, options: shown.filter((o) => o.trait.category === c) }))
+    .filter((g) => g.options.length > 0);
   const remove = (index: number) => onChange({ ...draft, traits: draft.traits.filter((_, i) => i !== index) });
 
   return (
@@ -93,41 +107,46 @@ export function TraitsStep({ draft, campaign, result, onChange }: Props) {
           <p className="empty">{hideRejected ? "No available Traits match. Turn off Hide unavailable to see why the rest are out." : "No Traits match."}</p>
         )}
 
-        <ul className="trait-list">
-          {shown.map(({ trait: t, rank, reasons }) => {
-            const rejected = reasons.length > 0;
-            return (
-              <li key={t.id} className={`trait trait-box${rejected ? " rejected" : ""}`}>
-                <h3 className="trait-name">{t.name}</h3>
-                <div className="trait-main">
-                  <div className="chips">
-                    <Chip>{title(t.category)}</Chip>
-                    {t.ranked && <Chip tone="muted">Ranked</Chip>}
-                    {t.background && <Chip tone="muted">Background</Chip>}
-                  </div>
-                  <p>{t.summary}</p>
-                  <p className="effect">{t.effect}</p>
-                  {t.tags.length > 0 && <p className="tags">{t.tags.map((tag) => `#${tag}`).join(" ")}</p>}
-                  {rejected && (
-                    <ul className="reasons">
-                      {reasons.map((r) => (
-                        <li key={r}>{r}</li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-                <button
-                  className="take"
-                  disabled={rejected}
-                  aria-label={`Take ${t.name}${t.ranked || rank > 1 ? ` rank ${rank}` : ""} with a ${pick} pick`}
-                  onClick={() => onChange(addPick(draft, t.id, rank, pick))}
-                >
-                  Take{t.ranked || rank > 1 ? ` rank ${rank}` : ""}
-                </button>
-              </li>
-            );
-          })}
-        </ul>
+        {groups.map((g) => (
+          <div key={g.category} className="trait-group">
+            <h3 className="subhead">{GROUP_TITLE[g.category]}</h3>
+            <ul className="trait-list">
+              {g.options.map(({ trait: t, rank, reasons }) => {
+                const rejected = reasons.length > 0;
+                return (
+                  <li key={t.id} className={`trait trait-box${rejected ? " rejected" : ""}`}>
+                    <h3 className="trait-name">{t.name}</h3>
+                    <div className="trait-main">
+                      <div className="chips">
+                        <Chip>{title(t.category)}</Chip>
+                        {t.ranked && <Chip tone="muted">Ranked</Chip>}
+                        {t.background && <Chip tone="muted">Background</Chip>}
+                      </div>
+                      <p>{t.summary}</p>
+                      <p className="effect">{t.effect}</p>
+                      {t.tags.length > 0 && <p className="tags">{t.tags.map((tag) => `#${tag}`).join(" ")}</p>}
+                      {rejected && (
+                        <ul className="reasons">
+                          {reasons.map((r) => (
+                            <li key={r}>{r}</li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                    <button
+                      className="take"
+                      disabled={rejected}
+                      aria-label={`Take ${t.name}${t.ranked || rank > 1 ? ` rank ${rank}` : ""} with a ${pick} pick`}
+                      onClick={() => onChange(addPick(draft, t.id, rank, pick))}
+                    >
+                      Take{t.ranked || rank > 1 ? ` rank ${rank}` : ""}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ))}
 
         <h3 className="subhead">Picks spent</h3>
         {draft.traits.length === 0 ? (
