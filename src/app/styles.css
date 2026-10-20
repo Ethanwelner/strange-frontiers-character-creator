@@ -175,7 +175,7 @@ textarea:focus {
   outline-offset: 2px;
 }
 
-.layout :focus-visible {
+.builder-panel :focus-visible {
   outline-color: var(--black);
 }
 
@@ -261,16 +261,10 @@ textarea:focus-visible {
   min-height: 100vh;
 }
 
-.hero,
-.layout {
-  /* Centered content, full-width background */
-  padding-left: max(16px, calc((100% - 1240px) / 2));
-  padding-right: max(16px, calc((100% - 1240px) / 2));
-}
-
-.hero {
+/* Content sits in the site's .container rows (layout.css). */
+.builder-hero {
   color: var(--white);
-  padding-top: 24px;
+  padding-top: 32px;
 }
 
 .hero-bar {
@@ -312,17 +306,21 @@ button.hero-link:hover:not(:disabled) {
   margin: 0;
 }
 
-/* Step tabs: .rpg-tab, sitting on the white panel */
-.steps {
+/* Step tabs: the site's .rpg-tabs bar along the bottom of the hero, sitting
+   on the white panel */
+.rpg-tabs {
+  margin-top: 48px;
+}
+
+.rpg-tab-list {
   display: flex;
   align-items: stretch;
   gap: 0.5rem;
-  margin-top: 48px;
   overflow-x: auto;
   scrollbar-width: none;
 }
 
-.steps button {
+.rpg-tab {
   display: flex;
   align-items: center;
   gap: 0.4rem;
@@ -332,18 +330,18 @@ button.hero-link:hover:not(:disabled) {
   border-radius: 4px 4px 0 0;
 }
 
-.steps button:hover:not(:disabled) {
+.rpg-tab:hover:not(:disabled) {
   background-color: color-mix(in srgb, var(--gray) 66%, transparent);
 }
 
-.steps button.on {
+.rpg-tab.is-active {
   background: var(--white);
   color: var(--black);
   /* Cover the subpixel gap so the white tab meets the white panel */
   box-shadow: 0 1px 0 var(--white);
 }
 
-.steps button:focus-visible {
+.rpg-tab:focus-visible {
   outline-offset: -2px;
 }
 
@@ -471,14 +469,8 @@ button.hero-link:hover:not(:disabled) {
 
 /* White panel */
 
-.layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
-  gap: 48px;
-  align-items: start;
+.builder-panel {
   background: var(--white);
-  padding-top: 48px;
-  padding-bottom: 96px;
 }
 
 .notice {
@@ -1146,12 +1138,20 @@ button.hero-link:hover:not(:disabled) {
   font-size: 0.9rem;
 }
 
-/* Phone and narrow tablet: one column, the panel docks to the bottom. */
+/* Below the site's lg breakpoint: one column, the panel docks to the bottom. */
 
-@media (max-width: 900px) {
-  .layout {
-    grid-template-columns: minmax(0, 1fr);
-    padding-top: 32px;
+@media (max-width: 991px) {
+  .builder-main {
+    flex: 1 100%;
+  }
+
+  .builder-side {
+    flex: none;
+    min-width: 0;
+  }
+
+  .builder-panel {
+    padding-bottom: 120px;
   }
 
   .panel {
@@ -1229,6 +1229,26 @@ button.hero-link:hover:not(:disabled) {
   }
 }
 
+@media only screen and (max-width: 992px) {
+  .hero-title {
+    font-size: 3.8rem;
+  }
+
+  .hero-sub {
+    font-size: 2.5rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .builder-panel.section.unlimited {
+    padding: 32px 0 120px;
+  }
+}
+
 @media (max-width: 575px) {
   .hero-statement {
     margin: 32px 0 28px;
@@ -1246,12 +1266,15 @@ button.hero-link:hover:not(:disabled) {
     font-size: 1.9rem;
   }
 
-  .steps {
+  .rpg-tabs {
     margin-top: 32px;
+  }
+
+  .rpg-tab-list {
     gap: 0.35rem;
   }
 
-  .steps button {
+  .rpg-tab {
     font-size: 1.2rem;
     padding: 0.6rem 0.8rem;
   }
@@ -1272,8 +1295,8 @@ button.hero-link:hover:not(:disabled) {
 
 @media print {
   .rpg-night,
-  .hero,
-  .panel,
+  .builder-hero,
+  .builder-side,
   .pager,
   .notice,
   .name,
@@ -1286,9 +1309,16 @@ button.hero-link:hover:not(:disabled) {
     background: var(--white);
   }
 
-  .layout {
-    display: block;
+  .builder-panel {
     padding: 0;
+  }
+
+  .builder-panel .container {
+    max-width: none;
+  }
+
+  .builder-panel .flex-2 {
+    display: none !important;
   }
 
   .c-sheet {
