@@ -748,14 +748,27 @@ button.hero-link:hover:not(:disabled) {
 
 /* Each list's label (Grants, Choose, Background list) sits above its chips */
 .grants .label {
-  display: block;
-  margin-bottom: 0.15rem;
+  flex-basis: 100%;
   font-size: 0.75rem;
   font-weight: 600;
 }
 
+/* A package's lists sit in the card's 16px rhythm; within a list, the label
+   and chips are spaced by gaps alone */
+.grants {
+  display: grid;
+  gap: 16px;
+}
+
 .grants > div {
-  margin: 0.75rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.grants .chip,
+.grants > p {
+  margin: 0;
 }
 
 .stat-ranges {
