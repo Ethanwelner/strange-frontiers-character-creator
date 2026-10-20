@@ -33,7 +33,8 @@ Content flow: write in Campfire → convert to data files here (Claude-assisted,
 ## Decisions
 
 - Repo is public on GitHub.
-- Launch content: Human, Isek, Orcoid Tatot, Goblinoid Tatot, Guwain, and the Dreftian Origins, Professions and Pasts.
+- Launch content: Human, Isek, Orcoid Tatot, Goblinoid Tatot, Guwain, the Dreft Origin, and the Dreftian Professions and Pasts.
+- An Origin is a nation, not a hometown. Dreft grants Dreft (1), Dreftian Law (1) and Dreftan. Hometown knowledge (Port Herminst, Glintl, Seafaring, Farming and the rest) is on Dreft's Background Trait list, bought with picks.
 - Public release waits until after playtesting.
 - Content is YAML (easy to write by hand), checked by Zod schemas in TypeScript.
 - Phase 2 tests skip Edwin Humble: the site's Human sample uses Earth packages that aren't in `content/` yet. He becomes a test once those packages are converted.

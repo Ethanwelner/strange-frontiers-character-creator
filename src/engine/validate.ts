@@ -40,7 +40,7 @@ export interface PickCount {
 export interface HeldTrait {
   trait: string;
   rank: number;
-  // Where each rank came from, e.g. "origin glintl" or "universal pick".
+  // Where each rank came from, e.g. "origin dreft" or "universal pick".
   sources: string[];
 }
 

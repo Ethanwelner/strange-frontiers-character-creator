@@ -7,7 +7,7 @@ import { askerName, baseStats, Chip, GROUPS, StatLine, StepHeader, title, traitN
 const SOURCE = /^(origin|profession|past) ([a-z0-9-]+)( choice)?$/;
 const TRAIT_CHOICE = /^trait ([a-z0-9-]+) choice$/;
 
-// "origin glintl" → "Glintl (origin)", "trait additional-language choice" →
+// "origin dreft" → "Dreft (origin)", "trait additional-language choice" →
 // "Additional Language (choice)"; pick sources read as they are.
 function source(s: string) {
   const t = TRAIT_CHOICE.exec(s);

@@ -10,7 +10,7 @@ const { content } = loadContent();
 
 const goblinoid: ConceptInput = {
   kind: "tatot-goblinoid",
-  origin: "tetra",
+  origin: "dreft",
   profession: "licensed-mage",
   past: "raised-in-the-caravan-town",
   focus: ["logic", "memory"],

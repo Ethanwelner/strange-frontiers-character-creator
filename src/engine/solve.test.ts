@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { loadContent } from "./content.js";
 import { allocateLevels, Concept, rankFocus, solveConcept, type ConceptInput, type Solution } from "./solve.js";
 import { validateBuild } from "./validate.js";
+import { Trait } from "../schema/index.js";
 
 const { content } = loadContent();
 const isek = content.kinds.find((k) => k.id === "isek")!.stats!;
@@ -14,7 +15,7 @@ const solve = (concept: ConceptInput, level = 1) => {
 
 const hunter: ConceptInput = {
   kind: "isek",
-  origin: "illinsdott",
+  origin: "dreft",
   profession: "guild-hunter",
   past: "noble-household",
   focus: ["grace", "power"],
@@ -74,8 +75,8 @@ describe("solveConcept", () => {
   });
 
   it("buys the next rank of a ranked Trait a package already grants", () => {
-    const s = solve({ ...hunter, traits: ["farming"] });
-    expect(s.build.traits.filter((t) => t.trait === "farming").map((t) => t.rank)).toEqual([2]);
+    const s = solve({ ...hunter, traits: ["dreft"] });
+    expect(s.build.traits.filter((t) => t.trait === "dreft").map((t) => t.rank)).toEqual([2]);
   });
 
   it("stops buying when the picks run out", () => {
@@ -87,11 +88,8 @@ describe("solveConcept", () => {
   });
 
   it("answers choices it can check, and keeps a valid answer from the concept", () => {
-    const s = solve({ ...hunter, origin: "port-herminst", past: "merchant-dynasty", choices: [{ package: "merchant-dynasty", from: "language", traits: ["english"] }] });
-    expect(s.build.choices).toEqual([
-      { package: "port-herminst", from: "dreftian-language", traits: ["dreftan"] },
-      { package: "merchant-dynasty", from: "language", traits: ["english"] },
-    ]);
+    const s = solve({ ...hunter, origin: "dreft", past: "merchant-dynasty", choices: [{ package: "merchant-dynasty", from: "language", traits: ["english"] }] });
+    expect(s.build.choices).toEqual([{ package: "merchant-dynasty", from: "language", traits: ["english"] }]);
     expect(s.result.ok).toBe(true);
   });
 
@@ -105,23 +103,22 @@ describe("solveConcept", () => {
     const s = solve({ ...hunter, traits: ["additional-language", "additional-contact", ...hunter.traits!] });
     expect(s.taken.slice(0, 2)).toEqual(["additional-language", "additional-contact"]);
     const answer = s.build.choices.find((c) => c.trait === "additional-language");
-    // The first language in the pool the build doesn't hold yet.
-    expect(answer).toEqual({ trait: "additional-language", from: "language", traits: ["dreftan"] });
+    // Dreft grants Dreftan, so the first language the build doesn't hold is English.
+    expect(answer).toEqual({ trait: "additional-language", from: "language", traits: ["english"] });
     expect(s.build.choices.some((c) => c.trait === "additional-contact")).toBe(false);
     expect(s.result.ok).toBe(true);
     expect(s.result.warnings.map((w) => w.message)).toContain("Additional Contact gives 1 Contact: record who on the Choices step");
   });
 
   it("keeps the concept's answer to a Trait's choice, and skips languages the build holds", () => {
-    // Port Herminst gives Dreftan, so English is the only language left.
-    const held = solve({ ...hunter, origin: "port-herminst", traits: ["additional-language"] });
-    expect(held.build.choices.find((c) => c.trait === "additional-language")!.traits).toEqual(["english"]);
-    const s = solve({
-      ...hunter,
-      traits: ["additional-language"],
-      choices: [{ trait: "additional-language", from: "language", traits: ["english"] }],
-    });
-    expect(s.build.choices.find((c) => c.trait === "additional-language")!.traits).toEqual(["english"]);
+    const languageOf = (s: Solution) => s.build.choices.find((c) => c.trait === "additional-language")!.traits;
+    const asked = (traits: string[]): ConceptInput => ({ ...hunter, traits: ["additional-language"], choices: [{ trait: "additional-language", from: "language", traits }] });
+    // Dreftan comes with the Dreft Origin, so the solver takes English instead.
+    expect(languageOf(solve(asked(["dreftan"])))).toEqual(["english"]);
+    // With a third language in content, the concept's pick wins over pool order.
+    const cant = Trait.parse({ id: "trade-cant", name: "Trade Cant", status: "placeholder", plane: "isekai", summary: "Test fixture.", category: "knowledge", types: ["language"], effect: "Test only." });
+    const s = solveConcept(asked(["trade-cant"]), { ...content, traits: [...content.traits, cant] }) as Solution;
+    expect(languageOf(s)).toEqual(["trade-cant"]);
     expect(s.result.ok).toBe(true);
   });
 

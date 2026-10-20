@@ -45,7 +45,7 @@ function script(...responses: Anthropic.Beta.BetaMessage[]) {
 const goblinoid: ConceptInput = {
   name: "Pell",
   kind: "tatot-goblinoid",
-  origin: "tetra",
+  origin: "dreft",
   profession: "licensed-mage",
   past: "raised-in-the-caravan-town",
   focus: ["logic", "memory"],

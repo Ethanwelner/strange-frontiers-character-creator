@@ -10,7 +10,7 @@ const campaign = { startingLevel: 1 };
 const human: Draft = {
   name: "Harbor-born guard",
   kind: "human",
-  origin: "glintl",
+  origin: "dreft",
   profession: "royal-guard",
   past: "noble-household",
   level: 1,
@@ -70,8 +70,8 @@ describe("traitOptions", () => {
     expect(byId.get("vigilance")!.reasons.join()).toMatch(/already held/);
     expect(byId.get("tracker")!.reasons.join()).toMatch(/can't be taken twice/);
     expect(byId.get("survivalist")!.reasons).toEqual([]);
-    // Glintl grants Seafaring 1, so the next pick buys rank 2.
-    expect(byId.get("seafaring")!.rank).toBe(2);
+    // Dreft grants Dreft 1, so the next pick buys rank 2.
+    expect(byId.get("dreft")!.rank).toBe(2);
   });
 
   it("offers a Trait with a choice, which is answered on the Choices step afterward", () => {

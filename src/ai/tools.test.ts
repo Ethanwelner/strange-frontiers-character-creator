@@ -10,7 +10,7 @@ const { content } = loadContent();
 // The engine accepts this build; its choices are all from resolvable pools.
 const orcoid: BuildInput = {
   kind: "tatot-orcoid",
-  origin: "corsine-mountains",
+  origin: "dreft",
   profession: "gate-hand",
   past: "sunrise-refugee",
   level: 1,
@@ -25,7 +25,7 @@ const orcoid: BuildInput = {
 // Caravaneer asks for a Contact, and no Contacts exist yet.
 const caravaneer: BuildInput = {
   kind: "isek",
-  origin: "illinsdott",
+  origin: "dreft",
   profession: "caravaneer",
   past: "noble-household",
   level: 1,
@@ -47,7 +47,7 @@ describe("search_traits", () => {
   });
 
   it("returns only Traits on the build's Background list for background picks", () => {
-    const build = { kind: "isek", origin: "port-herminst", profession: "caravaneer", past: "merchant-dynasty" };
+    const build = { kind: "isek", origin: "dreft", profession: "caravaneer", past: "merchant-dynasty" };
     const out = runTool("search_traits", { pick: "background", ...build, limit: 100 }, content) as { traits: { id: string }[] };
     const list = validateBuild({ ...build, levels: [] }, content).summary!.backgroundList;
     expect(out.traits.map((t) => t.id).sort()).toEqual(list);
@@ -71,8 +71,9 @@ describe("packages and Kinds", () => {
     expect(out.choices).toEqual([expect.objectContaining({ from: "contact", leftForPlayer: true })]);
     const merchant = runTool("get_package", { id: "merchant-dynasty" }, content) as { choices: { pool: { id: string }[] }[] };
     expect(merchant.choices[0]!.pool.map((t) => t.id)).toContain("english");
-    const herminst = runTool("get_package", { id: "port-herminst" }, content) as { choices: { pool: { id: string }[] }[] };
-    expect(herminst.choices[0]!.pool.map((t) => t.id)).toEqual(["dreftan"]);
+    const dreft = runTool("get_package", { id: "dreft" }, content) as { choices: unknown[]; backgroundTraits: { id: string }[] };
+    expect(dreft.choices).toEqual([]);
+    expect(dreft.backgroundTraits.map((t) => t.id)).toContain("glintl");
   });
 
   it("gets a Kind with its stats", () => {

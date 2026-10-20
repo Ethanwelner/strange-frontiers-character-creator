@@ -8,7 +8,8 @@ const loaded = loadContent();
 const content = loaded.content;
 
 // The real content has no Background, starter-only, prerequisite or
-// rank-stat Traits yet, so the rules that need them are tested with these.
+// rank-stat Traits yet, and only two languages, so the rules that need them
+// are tested with these.
 const fixtures = [
   Trait.parse({
     id: "fixture-heirloom-blade",
@@ -43,6 +44,16 @@ const fixtures = [
     rankStats: ["power", "grace"],
     effect: "Test only.",
   }),
+  Trait.parse({
+    id: "fixture-trade-cant",
+    name: "Trade Cant",
+    status: "placeholder",
+    plane: "isekai",
+    summary: "Test fixture: a third language.",
+    category: "knowledge",
+    types: ["language"],
+    effect: "Test only.",
+  }),
 ];
 const withFixtures: Content = { ...content, traits: [...content.traits, ...fixtures] };
 
@@ -63,7 +74,7 @@ function expectLegal(result: ReturnType<typeof check>) {
 const human: BuildInput = {
   name: "Harbor-born guard",
   kind: "human",
-  origin: "glintl",
+  origin: "dreft",
   profession: "royal-guard",
   past: "noble-household",
   levels: [{ group: "physical", points: { power: 1, grace: 2 } }],
@@ -71,14 +82,14 @@ const human: BuildInput = {
     { trait: "survivalist", pick: "universal" },
     { trait: "tracker", pick: "universal" },
     { trait: "farming", pick: "universal" },
-    { trait: "seafaring", rank: 2, pick: "universal" },
+    { trait: "dreft", rank: 2, pick: "universal" },
   ],
 };
 
 const isek: BuildInput = {
   name: "Isek caravan rider",
   kind: "isek",
-  origin: "port-herminst",
+  origin: "dreft",
   profession: "caravaneer",
   past: "merchant-dynasty",
   levels: [{ group: "physical", points: { power: 1, grace: 2 } }],
@@ -89,7 +100,6 @@ const isek: BuildInput = {
     { trait: "tracker", pick: "universal" },
   ],
   choices: [
-    { package: "port-herminst", from: "dreftian-language", traits: ["dreftan"] },
     { package: "caravaneer", from: "contact", traits: ["Harbor Master Oyl"] },
     { package: "merchant-dynasty", from: "language", traits: ["english"] },
   ],
@@ -98,7 +108,7 @@ const isek: BuildInput = {
 const orcoid: BuildInput = {
   name: "Orcoid gate hand",
   kind: "tatot-orcoid",
-  origin: "corsine-mountains",
+  origin: "dreft",
   profession: "gate-hand",
   past: "sunrise-refugee",
   levels: [{ group: "social", points: { persuasion: 2, demeanor: 1 } }],
@@ -111,13 +121,13 @@ const orcoid: BuildInput = {
 const goblinoid: BuildInput = {
   name: "Goblinoid licensed mage",
   kind: "tatot-goblinoid",
-  origin: "tetra",
+  origin: "dreft",
   profession: "licensed-mage",
   past: "raised-in-the-caravan-town",
   levels: [{ group: "mental", points: { logic: 1, memory: 2 } }],
   traits: [
     { trait: "tinkerer", pick: "universal" },
-    { trait: "the-switch-port", rank: 2, pick: "universal" },
+    { trait: "dreft", rank: 2, pick: "universal" },
     { trait: "herbalism", pick: "universal" },
   ],
 };
@@ -125,13 +135,13 @@ const goblinoid: BuildInput = {
 const guwain: BuildInput = {
   name: "Guwain hedge witch",
   kind: "guwain",
-  origin: "glintl",
+  origin: "dreft",
   profession: "hedge-witch",
   past: "raised-in-the-caravan-town",
   levels: [{ group: "physical", points: { endurance: 2, power: 1 } }],
   traits: [
     { trait: "survivalist", pick: "universal" },
-    { trait: "seafaring", rank: 2, pick: "universal" },
+    { trait: "dreft", rank: 2, pick: "universal" },
   ],
 };
 
@@ -173,7 +183,7 @@ describe("legal Dreft characters", () => {
     expectLegal(r);
     expect(r.warnings).toEqual([]);
     expect(r.summary!.stats).toMatchObject({ power: 0, logic: 3, memory: 3 });
-    expect(r.summary!.traits.find((t) => t.trait === "the-switch-port")!.rank).toBe(2);
+    expect(r.summary!.traits.find((t) => t.trait === "dreft")!.rank).toBe(2);
   });
 
   it("Guwain", () => {
@@ -288,7 +298,7 @@ describe("rule 6: package grants and choices", () => {
     expectLegal(r);
     expect(r.summary!.picks.universal.spent).toBe(0);
     const held = r.summary!.traits.map((t) => t.trait);
-    expect(held).toEqual(expect.arrayContaining(["mountaineering", "smooth-talker", "survivalist"]));
+    expect(held).toEqual(expect.arrayContaining(["dreft", "dreftian-law", "dreftan", "smooth-talker", "survivalist"]));
   });
 
   it("rejects a package in the wrong slot", () => {
@@ -296,16 +306,16 @@ describe("rule 6: package grants and choices", () => {
   });
 
   it("rejects a missing choice answer", () => {
-    expect(codes(check({ ...isek, choices: isek.choices!.slice(0, 2) }))).toEqual(["choice"]);
+    expect(codes(check({ ...isek, choices: isek.choices!.slice(0, 1) }))).toEqual(["choice"]);
   });
 
   it("rejects the wrong number of choices", () => {
-    const choices = [...isek.choices!.slice(0, 2), { package: "merchant-dynasty", from: "language", traits: [] }];
+    const choices = [...isek.choices!.slice(0, 1), { package: "merchant-dynasty", from: "language", traits: [] }];
     expect(codes(check({ ...isek, choices }))).toEqual(["choice"]);
   });
 
   it("rejects an answer outside a resolvable pool", () => {
-    const choices = [...isek.choices!.slice(0, 2), { package: "merchant-dynasty", from: "language", traits: ["haggler"] }];
+    const choices = [...isek.choices!.slice(0, 1), { package: "merchant-dynasty", from: "language", traits: ["haggler"] }];
     expect(codes(check({ ...isek, choices }))).toEqual(["choice"]);
   });
 
@@ -331,9 +341,18 @@ describe("rule 6: package grants and choices", () => {
   });
 
   it("answers Dreftian-language choices from Dreftian languages only", () => {
-    const answer = (traits: string[]) => isek.choices!.map((c) => (c.from === "dreftian-language" ? { ...c, traits } : c));
-    expect(codes(check({ ...isek, choices: answer(["english"]) }))).toEqual(["choice"]);
-    expect(codes(check({ ...isek, choices: answer(["old-herminstan"]) }))).toEqual(["unknown-trait"]);
+    // No package offers this choice now that Dreft grants Dreftan, so a copy
+    // of the Dreft Origin offers one here.
+    const withChoice: Content = {
+      ...content,
+      packages: content.packages.map((p) =>
+        p.id === "dreft" ? { ...p, grants: p.grants.filter((g) => g.trait !== "dreftan"), choices: [{ choose: 1, from: "dreftian-language" }] } : p,
+      ),
+    };
+    const answer = (traits: string[]) => [...isek.choices!, { package: "dreft", from: "dreftian-language", traits }];
+    expectLegal(check({ ...isek, choices: answer(["dreftan"]) }, withChoice));
+    expect(codes(check({ ...isek, choices: answer(["english"]) }, withChoice))).toEqual(["choice"]);
+    expect(codes(check({ ...isek, choices: answer(["old-herminstan"]) }, withChoice))).toEqual(["unknown-trait"]);
   });
 
   it("rejects an answer for a package the build doesn't have", () => {
@@ -361,9 +380,11 @@ describe("rule 6: Trait choices", () => {
   });
 
   it("asks again for each rank of a ranked Trait", () => {
+    // Dreft grants Dreftan, so the second language is a fixture.
     const build = withTraits(language, { ...language, rank: 2 });
-    expect(codes(check({ ...build, choices: [{ trait: "additional-language", from: "language", traits: ["english"] }] }))).toEqual(["choice"]);
-    expectLegal(check({ ...build, choices: [{ trait: "additional-language", from: "language", traits: ["english", "dreftan"] }] }));
+    const answer = (traits: string[]) => check({ ...build, choices: [{ trait: "additional-language", from: "language", traits }] }, withFixtures);
+    expect(codes(answer(["english"]))).toEqual(["choice"]);
+    expectLegal(answer(["english", "fixture-trade-cant"]));
   });
 
   it("only reminds the player to record a Contact from a Trait", () => {
@@ -390,7 +411,7 @@ describe("rule 6: Trait choices", () => {
   });
 
   it("rejects an answer that names both a package and a Trait", () => {
-    const both = { package: "glintl", trait: "additional-language", from: "language", traits: ["english"] };
+    const both = { package: "dreft", trait: "additional-language", from: "language", traits: ["english"] };
     expect(codes(check({ ...withTraits(language), choices: [both] }))).toEqual(["schema"]);
   });
 });
@@ -497,7 +518,7 @@ describe("rule 10: prerequisites and ranks", () => {
   });
 
   it("rejects buying a rank already granted", () => {
-    const r = check({ ...human, traits: [{ trait: "seafaring", rank: 1, pick: "universal" }] });
+    const r = check({ ...human, traits: [{ trait: "dreft", rank: 1, pick: "universal" }] });
     expect(codes(r)).toEqual(["rank"]);
   });
 
