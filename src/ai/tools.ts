@@ -258,6 +258,7 @@ const traitInfo = (t: Trait) => ({
   prerequisites: t.prerequisites,
   background: t.background,
   starterOnly: t.starterOnly,
+  conveyed: t.conveyed,
   choices: t.choices,
 });
 
@@ -273,6 +274,7 @@ function searchTraits(input: Record<string, unknown>, content: Content, campaign
   if (tags.length) traits = traits.filter((t) => t.tags.some((tag) => tags.includes(tag)));
 
   const pick = text(input.pick);
+  if (pick) traits = traits.filter((t) => !t.conveyed);
   if (pick === "universal") traits = traits.filter((t) => !t.background);
   if (pick === "background") {
     const probe = {

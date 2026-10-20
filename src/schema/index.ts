@@ -95,6 +95,7 @@ export const TraitCategory = z.enum([
   "starter",
   "condition",
   "membership",
+  "circumstance",
 ]);
 
 export const Trait = BaseEntry.extend({
@@ -107,6 +108,8 @@ export const Trait = BaseEntry.extend({
   prerequisites: z.array(Id).default([]),
   background: z.boolean().default(false),
   starterOnly: z.boolean().default(false),
+  // Conveyed Traits come from packages, choices or play, never from a level-up pick.
+  conveyed: z.boolean().default(false),
   rpRequirement: z.string().optional(),
   effect: z.string().min(1),
   // For a language Trait, which language it's a form of: Dreftan (Spoken) and

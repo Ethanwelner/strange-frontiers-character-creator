@@ -1,0 +1,18 @@
+id: chinese-empire-earth
+name: "The Chinese Empire: Earth"
+status: placeholder
+plane: earth
+region: chinese-empire
+summary: "You were born in the Empire of China’s Earth territories, from Wuhan to the old nations of Southeast Asia, during a golden age the corporate syndicates are starting to suspect is ending."
+tags: [chinese-empire, earth, empire, corporate]
+lore: chinese-empire
+type: origin
+grants:
+  - { trait: the-chinese-empire, rank: 1 }
+  - { trait: chinese-imperial-law, rank: 1 }
+  - { trait: mandarin }
+  - { trait: mandarin-written }
+backgroundTraits:
+  - the-corporate-syndicates
+  - southeast-asia
+  - earth-baseline-technology

@@ -53,6 +53,7 @@ export function contentIndex(content: Content): string {
       t.ranked ? `ranked by ${t.rankStats.join("+") || "nothing"}` : "",
       t.background ? "background" : "",
       t.starterOnly ? "starter only" : "",
+      t.conveyed ? "conveyed, packages only" : "",
       t.prerequisites.length ? `needs ${t.prerequisites.join(", ")}` : "",
       t.types.length ? `types ${t.types.join(", ")}` : "",
       t.choices.length ? `choices ${t.choices.map((c) => `${c.choose} from ${c.from}`).join(", ")}${t.ranked ? " per rank" : ""}` : "",

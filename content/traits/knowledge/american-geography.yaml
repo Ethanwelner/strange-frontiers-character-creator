@@ -1,0 +1,10 @@
+id: american-geography
+name: "American Geography"
+status: placeholder
+plane: earth
+region: american-empire
+summary: "The Empire’s Earth territories, from the Californias to Nueva Mexico."
+tags: [geography, american-empire, earth]
+category: knowledge
+ranked: true
+effect: Placeholder. Effect not yet written.

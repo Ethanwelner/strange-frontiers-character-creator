@@ -1,0 +1,22 @@
+id: american-empire-colonies
+name: "The American Empire: Colonies"
+status: placeholder
+plane: earth
+region: american-empire
+summary: "You grew up in the Empire’s stellar territories, in New Columbia on Luna or aboard the capital Ark, New York, a long way from the Earth the Empire still calls home."
+tags: [american-empire, colonies, luna, ark, space]
+lore: american-empire
+type: origin
+grants:
+  - { trait: american-history, rank: 1 }
+  - { trait: imperial-law, rank: 1 }
+  - { trait: english }
+  - { trait: english-written }
+backgroundTraits:
+  - new-columbia
+  - ark-new-york
+  - ark-life
+  - the-imperial-military
+  - imperial-politics
+  - earth-baseline-technology
+  - spanish

@@ -30,6 +30,10 @@ for (const pkg of packages) {
   for (const ref of refs) {
     if (!traitIds.has(ref)) warnings.push(`${pkg.type} ${pkg.id}: Trait "${ref}" has no file yet`);
   }
+  // A Background Trait list is for picks, which can't buy Conveyed Traits.
+  for (const ref of pkg.backgroundTraits) {
+    if (traits.find((t) => t.id === ref)?.conveyed) errors.push(`${pkg.type} ${pkg.id}: Background Trait "${ref}" is Conveyed, so no pick could buy it`);
+  }
 }
 for (const trait of traits) {
   for (const ref of trait.prerequisites) {

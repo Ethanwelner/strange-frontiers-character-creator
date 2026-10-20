@@ -1,0 +1,9 @@
+id: wielder-rifle
+name: "Wielder: Rifle"
+status: placeholder
+plane: earth
+summary: "Fighting with, and maintaining, a modern rifle."
+tags: [combat, firearms, military]
+category: skill
+ranked: true
+effect: Placeholder. Effect not yet written.

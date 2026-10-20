@@ -36,7 +36,8 @@ export function traitOptions(draft: Draft, content: Content, campaign: Campaign,
     const trial = check(addPick(draft, trait.id, rank, pick), content, campaign);
     const ownChoice = `${trait.name} asks for `;
     const added = trial.errors.filter((e) => !before.has(e.message) && !(e.code === "choice" && e.message.startsWith(ownChoice)));
-    if (added.some((e) => e.code === "pick-type")) continue;
+    // A Conveyed Trait can't be picked at all, and the wrong kind of pick is the other tab's.
+    if (added.some((e) => e.code === "pick-type" || e.code === "conveyed")) continue;
     options.push({ trait, rank, reasons: added.map((e) => e.message) });
   }
   return options;

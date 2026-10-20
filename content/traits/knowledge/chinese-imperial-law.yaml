@@ -1,0 +1,10 @@
+id: chinese-imperial-law
+name: "Chinese Imperial Law"
+status: placeholder
+plane: earth
+region: chinese-empire
+summary: "The laws of the Chinese Empire, written and as the syndicates actually apply them."
+tags: [law, chinese-empire]
+category: knowledge
+ranked: true
+effect: Placeholder. Effect not yet written.

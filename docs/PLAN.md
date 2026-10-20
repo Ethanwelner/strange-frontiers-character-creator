@@ -53,7 +53,7 @@ The rules `validateBuild` (in `src/engine/`) enforces:
 8. Unspent picks are allowed and reported as banked, not as an error.
 9. At creation only, universal picks may be spent on knowledge Traits. Starter-only Traits are allowed because this is creation.
    Background picks only take knowledge that's on the Background Trait list, even though the Traits page allows either pick. Fine for now. There's no cap on knowledge rank from creation picks beyond `rankStats`.
-10. Prerequisites must be held, from any source. Non-ranked Traits can't be taken twice or above rank 1. Each pick buys one rank, in order; to rank a Trait above 1, each of its `rankStats` must be at least 3 × the rank.
+10. Conveyed Traits (`conveyed: true`, like Imperial Service Record) come only from packages, choices or play: no pick can buy one, and they never go on a Background Trait list, even through a Kind's Trait access. Prerequisites must be held, from any source. Non-ranked Traits can't be taken twice or above rank 1. Each pick buys one rank, in order; to rank a Trait above 1, each of its `rankStats` must be at least 3 × the rank.
 
 ## Open questions
 

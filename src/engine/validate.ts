@@ -17,6 +17,7 @@ export type IssueCode =
   | "choice-pool"
   | "unknown-trait"
   | "pick-type"
+  | "conveyed"
   | "picks-overspent"
   | "duplicate-trait"
   | "rank"
@@ -295,7 +296,8 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
   // Traits tagged with one of the Kind's traitAccess pools.
   const access = new Set(kind?.traitAccess ?? []);
   const backgroundList = new Set(packages.flatMap((p) => p.backgroundTraits));
-  for (const t of content.traits) if (t.tags.some((tag) => access.has(tag))) backgroundList.add(t.id);
+  // Conveyed Traits never go on it: no pick can buy them.
+  for (const t of content.traits) if (!t.conveyed && t.tags.some((tag) => access.has(tag))) backgroundList.add(t.id);
 
   // Group picks by Trait, keeping their positions for error paths.
   const byTrait = new Map<string, { rank: number; index: number }[]>();
@@ -307,6 +309,10 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
       return;
     }
     picks[p.pick].spent++;
+    // Conveyed Traits come from packages, choices or play, never from a pick.
+    if (t.conveyed) {
+      error("conveyed", `${label(t)} is Conveyed: it comes from a package or from play, not from a pick`, path);
+    }
     // Rules 7 and 9: universal picks take any non-background Trait (knowledge
     // included, at creation); background picks come from the Background list.
     if (p.pick === "universal" && t.background) {

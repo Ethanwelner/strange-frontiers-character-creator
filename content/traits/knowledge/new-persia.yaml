@@ -1,0 +1,11 @@
+id: new-persia
+name: "New Persia"
+status: placeholder
+plane: earth
+region: sdu
+summary: "The SDU’s planar territory on Pairidaeza."
+tags: [planes, colony, sdu]
+lore: pairidaeza
+category: knowledge
+ranked: true
+effect: Placeholder. Effect not yet written.

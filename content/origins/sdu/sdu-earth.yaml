@@ -1,0 +1,22 @@
+id: sdu-earth
+name: "The Stellar Democratic Union: Earth"
+status: placeholder
+plane: earth
+region: sdu
+summary: "You were born in the Union’s Earth territories, anywhere from core Europe to Japan, Brazil or Canada, in the largest and richest nation in the systems."
+tags: [sdu, earth, union]
+lore: stellar-democratic-union
+type: origin
+grants:
+  - { trait: the-stellar-democratic-union, rank: 1 }
+  - { trait: sdu-law, rank: 1 }
+choices:
+  - choose: 1
+    from: spoken-and-written-language
+    note: 1 language, spoken and written
+backgroundTraits:
+  - union-politics
+  - tetra
+  - the-diplomatic-wing
+  - the-united-nations
+  - earth-baseline-technology

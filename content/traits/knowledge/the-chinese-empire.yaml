@@ -1,0 +1,11 @@
+id: the-chinese-empire
+name: "The Chinese Empire"
+status: placeholder
+plane: earth
+region: chinese-empire
+summary: "The Empire of China: the Wuhan Dynasty, its territories and its corporate syndicates."
+tags: [chinese-empire, politics]
+lore: chinese-empire
+category: knowledge
+ranked: true
+effect: Placeholder. Effect not yet written.

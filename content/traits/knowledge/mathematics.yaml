@@ -1,0 +1,9 @@
+id: mathematics
+name: "Mathematics"
+status: placeholder
+plane: earth
+summary: "Mathematics and its fields of study."
+tags: [mathematics, science]
+category: knowledge
+ranked: true
+effect: Placeholder. Effect not yet written.

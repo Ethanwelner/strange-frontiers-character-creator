@@ -402,6 +402,49 @@ describe("rule 6: the Tetra Origin's language", () => {
   });
 });
 
+describe("Conveyed Traits", () => {
+  const soldier = {
+    ...human,
+    origin: "american-empire-earth",
+    profession: "american-empire-soldier",
+    traits: [],
+  };
+
+  it("come with a package, and an Earth soldier is legal", () => {
+    const r = check(soldier);
+    expectLegal(r);
+    const held = r.summary!.traits.map((h) => h.trait);
+    expect(held).toEqual(expect.arrayContaining(["imperial-service-record", "american-history", "imperial-law", "english", "english-written", "wielder-rifle"]));
+  });
+
+  it("can't be bought with a pick", () => {
+    const r = check({ ...human, traits: [{ trait: "explorers-lodge-membership", pick: "universal" }] });
+    expect(codes(r)).toEqual(["conveyed"]);
+  });
+
+  it("stay off the Background Trait list, even when a Kind's Trait access matches their tags", () => {
+    // Isek get military Traits; the Conveyed Imperial Service Record is tagged military.
+    const r = check({ ...isek, traits: [] });
+    expect(r.summary!.backgroundList).not.toContain("imperial-service-record");
+  });
+});
+
+describe("the Systems Origins", () => {
+  it("lets the SDU take any one language, spoken and written", () => {
+    const sdu = { ...human, origin: "sdu-colonies", traits: [], choices: [{ package: "sdu-colonies", from: "spoken-and-written-language", traits: ["mandarin"] }] };
+    const r = check(sdu);
+    expectLegal(r);
+    expect(r.summary!.traits.map((h) => h.trait)).toEqual(expect.arrayContaining(["the-stellar-democratic-union", "sdu-law", "mandarin", "mandarin-written"]));
+  });
+
+  it("gives Kashgar, the Chinese Empire and the American colonies their own Background lists", () => {
+    const list = (origin: string, choices: BuildInput["choices"] = []) => check({ ...human, origin, traits: [], choices }).summary!.backgroundList;
+    expect(list("kashgar", [{ package: "kashgar", from: "spoken-and-written-language", traits: ["english"] }])).toEqual(expect.arrayContaining(["kashgar-mindworks", "robotics"]));
+    expect(list("chinese-empire-colonies")).toEqual(expect.arrayContaining(["yutu", "zhulong"]));
+    expect(list("american-empire-colonies")).toEqual(expect.arrayContaining(["new-columbia", "ark-new-york"]));
+  });
+});
+
 describe("rule 6: Trait choices", () => {
   const language = { trait: "additional-language", pick: "universal" as const };
   const contact = { trait: "additional-contact", pick: "universal" as const };

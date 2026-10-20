@@ -1,0 +1,11 @@
+id: ark-new-york
+name: "Ark New York"
+status: placeholder
+plane: earth
+region: american-empire
+summary: "The Empire’s capital Ark and the absentee Emperor’s court aboard it."
+tags: [ark, new-york, american-empire]
+lore: new-york
+category: knowledge
+ranked: true
+effect: Placeholder. Effect not yet written.

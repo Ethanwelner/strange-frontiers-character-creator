@@ -1,0 +1,11 @@
+id: boneyard
+name: "Boneyard"
+status: placeholder
+plane: earth
+region: sdu
+summary: "Boneyard, one of the Union’s Arks."
+tags: [ark, sdu]
+lore: boneyard
+category: knowledge
+ranked: true
+effect: Placeholder. Effect not yet written.

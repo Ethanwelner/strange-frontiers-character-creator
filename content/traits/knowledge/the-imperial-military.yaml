@@ -1,0 +1,10 @@
+id: the-imperial-military
+name: "The Imperial Military"
+status: placeholder
+plane: earth
+region: american-empire
+summary: "The Empire’s armed forces: their branches, ranks, bases and habits."
+tags: [military, american-empire]
+category: knowledge
+ranked: true
+effect: Placeholder. Effect not yet written.

@@ -1,0 +1,10 @@
+id: antiluna
+name: "Antiluna"
+status: placeholder
+plane: earth
+region: sdu
+summary: "The SDU’s colony in high Earth orbit."
+tags: [colony, orbit, sdu]
+category: knowledge
+ranked: true
+effect: Placeholder. Effect not yet written.

@@ -1,0 +1,10 @@
+id: union-politics
+name: "Union Politics"
+status: placeholder
+plane: earth
+region: sdu
+summary: "The parties, presidents and member-state rivalries of the SDU."
+tags: [sdu, politics]
+category: knowledge
+ranked: true
+effect: Placeholder. Effect not yet written.

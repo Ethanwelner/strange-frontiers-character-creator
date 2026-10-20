@@ -1,0 +1,10 @@
+id: imperial-law
+name: "Imperial Law"
+status: placeholder
+plane: earth
+region: american-empire
+summary: "The American Empire’s legal code, its courts and how they’re enforced."
+tags: [law, american-empire]
+category: knowledge
+ranked: true
+effect: Placeholder. Effect not yet written.

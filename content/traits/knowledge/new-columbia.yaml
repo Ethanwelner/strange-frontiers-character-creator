@@ -1,0 +1,10 @@
+id: new-columbia
+name: "New Columbia"
+status: placeholder
+plane: earth
+region: american-empire
+summary: "The Empire’s colony on Luna."
+tags: [luna, colony, american-empire]
+category: knowledge
+ranked: true
+effect: Placeholder. Effect not yet written.

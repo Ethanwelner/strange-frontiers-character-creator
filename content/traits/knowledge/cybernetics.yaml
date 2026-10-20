@@ -1,0 +1,9 @@
+id: cybernetics
+name: "Cybernetics"
+status: placeholder
+plane: earth
+summary: "Implants, prosthetics and the medicine of joining people to machines."
+tags: [cybernetics, technology, medicine]
+category: knowledge
+ranked: true
+effect: Placeholder. Effect not yet written.
