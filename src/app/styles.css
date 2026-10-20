@@ -914,6 +914,37 @@ button.hero-link:hover:not(:disabled) {
   box-shadow: 0 0 0 1px var(--black);
 }
 
+/* Rank stepper on a checked ranked Trait */
+.rank-step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 0.5rem;
+  cursor: default;
+}
+
+.rank-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.rank-step button {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  font-family: var(--body);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.rank-step .num {
+  min-width: 1.25em;
+  text-align: center;
+  font-weight: 600;
+}
+
 .trait.rejected {
   opacity: 0.6;
   cursor: not-allowed;

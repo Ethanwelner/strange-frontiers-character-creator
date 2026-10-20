@@ -67,6 +67,7 @@ export function TraitsStep({ draft, campaign, result, onChange }: Props) {
   const remove = (index: number) => onChange({ ...draft, traits: draft.traits.filter((_, i) => i !== index) });
   // A card is checked once a pick holds its Trait; clicking it again drops the latest of those picks.
   const lastPick = (id: string) => draft.traits.map((p) => p.trait).lastIndexOf(id);
+  const heldRank = new Map(summary.traits.map((h) => [h.trait, h.rank]));
   const toggle = (id: string, rank: number) => {
     const i = lastPick(id);
     if (i >= 0) remove(i);
@@ -152,6 +153,25 @@ export function TraitsStep({ draft, campaign, result, onChange }: Props) {
                       <p>{t.summary}</p>
                       <p className="effect">{t.effect}</p>
                       {t.tags.length > 0 && <p className="tags">{t.tags.map((tag) => `#${tag}`).join(" ")}</p>}
+                      {selected && t.ranked && (
+                        // The card's own click and keys toggle it, so the stepper keeps its events to itself.
+                        <div className="rank-step" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
+                          <span className="rank-label">Rank</span>
+                          <button type="button" aria-label={`Drop a rank of ${t.name}`} onClick={() => remove(lastPick(t.id))}>
+                            −
+                          </button>
+                          <span className="num">{heldRank.get(t.id) ?? 0}</span>
+                          <button
+                            type="button"
+                            disabled={reasons.length > 0}
+                            title={reasons.join(" ") || undefined}
+                            aria-label={`Take ${t.name} rank ${rank} with a ${pick} pick`}
+                            onClick={() => onChange(addPick(draft, t.id, rank, pick))}
+                          >
+                            +
+                          </button>
+                        </div>
+                      )}
                       {rejected && (
                         <ul className="reasons">
                           {reasons.map((r) => (
