@@ -39,7 +39,8 @@ export function StepHeader({ step, title, children }: { step: Step; title: strin
   );
 }
 
-// A selectable card in a radio group, clickable and keyboard-operable.
+// A selectable card in a radio group, clickable and keyboard-operable. The
+// step decides what a second click does; the Kind and package cards clear.
 export function Card(props: { selected: boolean; onSelect: () => void; children: ReactNode; label: string }) {
   const onKey = (e: KeyboardEvent) => {
     if (e.key === "Enter" || e.key === " ") {
