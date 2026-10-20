@@ -96,7 +96,7 @@ export function App() {
 
   const i = STEPS.indexOf(step);
 
-  // Rows use the site's 18-unit columns: flex-2 gutters (from 1200px) around the content.
+  // The hero rows use the site's 18-unit columns: flex-2 gutters (from 1200px) around the content.
   const gutter = <div className="flex-2 d-none d-xl-inline-flex" />;
 
   return (
@@ -152,47 +152,43 @@ export function App() {
       </header>
 
       <div className="section unlimited white-bg builder-panel">
-        <div className="container d-flex flex-wrap">
-          {gutter}
-          <div className="flex-14 d-flex flex-gap-48 builder-row">
-            <main className="flex-9 builder-main">
-              {contentErrors.length > 0 && (
-                <div className="notice bad">
-                  Content failed to load: {contentErrors.join("; ")}
-                </div>
-              )}
-              {notice && (
-                <div className="notice" role="status">
-                  {notice}
-                  <button className="link" onClick={() => setNotice(undefined)} aria-label="Dismiss">
-                    ✕
-                  </button>
-                </div>
-              )}
-
-              {step === "kind" && <KindStep draft={draft} onChange={setDraft} />}
-              {step === "background" && <BackgroundStep draft={draft} onChange={setDraft} />}
-              {step === "levels" && (
-                <LevelsStep draft={draft} startingLevel={campaign.startingLevel} result={result} onChange={setDraft} onStartingLevel={setStartingLevel} />
-              )}
-              {step === "choices" && <ChoicesStep draft={draft} onChange={setDraft} />}
-              {step === "traits" && <TraitsStep draft={draft} campaign={campaign} result={result} onChange={setDraft} />}
-              {step === "sheet" && <Sheet draft={draft} result={result} />}
-
-              <div className="pager">
-                {i > 0 ? <button onClick={() => setStep(STEPS[i - 1]!)}>← {LABELS[STEPS[i - 1]!]}</button> : <span />}
-                {i < STEPS.length - 1 && (
-                  <button className="primary" onClick={() => setStep(STEPS[i + 1]!)}>
-                    {LABELS[STEPS[i + 1]!]} →
-                  </button>
-                )}
+        <div className="container d-flex flex-gap-48 builder-row">
+          <main className="flex-11 builder-main">
+            {contentErrors.length > 0 && (
+              <div className="notice bad">
+                Content failed to load: {contentErrors.join("; ")}
               </div>
-            </main>
-            <div className="flex-4 builder-side">
-              <ValidationPanel draft={draft} result={result} onName={(name) => setDraft({ ...draft, name })} onJump={setStep} />
+            )}
+            {notice && (
+              <div className="notice" role="status">
+                {notice}
+                <button className="link" onClick={() => setNotice(undefined)} aria-label="Dismiss">
+                  ✕
+                </button>
+              </div>
+            )}
+
+            {step === "kind" && <KindStep draft={draft} onChange={setDraft} />}
+            {step === "background" && <BackgroundStep draft={draft} onChange={setDraft} />}
+            {step === "levels" && (
+              <LevelsStep draft={draft} startingLevel={campaign.startingLevel} result={result} onChange={setDraft} onStartingLevel={setStartingLevel} />
+            )}
+            {step === "choices" && <ChoicesStep draft={draft} onChange={setDraft} />}
+            {step === "traits" && <TraitsStep draft={draft} campaign={campaign} result={result} onChange={setDraft} />}
+            {step === "sheet" && <Sheet draft={draft} result={result} />}
+
+            <div className="pager">
+              {i > 0 ? <button onClick={() => setStep(STEPS[i - 1]!)}>← {LABELS[STEPS[i - 1]!]}</button> : <span />}
+              {i < STEPS.length - 1 && (
+                <button className="primary" onClick={() => setStep(STEPS[i + 1]!)}>
+                  {LABELS[STEPS[i + 1]!]} →
+                </button>
+              )}
             </div>
+          </main>
+          <div className="flex-3 builder-side">
+            <ValidationPanel draft={draft} result={result} onName={(name) => setDraft({ ...draft, name })} onJump={setStep} />
           </div>
-          {gutter}
         </div>
       </div>
     </div>

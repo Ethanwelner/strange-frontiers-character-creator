@@ -8,7 +8,7 @@ export function KindStep({ draft, onChange }: { draft: Draft; onChange: (d: Draf
       <StepHeader step="kind" title="Kind">
         Your Kind sets your level 0 stats and how far each can go. Numbers show start/max.
       </StepHeader>
-      <div className="cards" role="radiogroup" aria-label="Kind">
+      <div className="cards kind-cards" role="radiogroup" aria-label="Kind">
         {content.kinds.map((k) => (
           <Card key={k.id} label={k.name} selected={draft.kind === k.id} onSelect={() => onChange({ ...draft, kind: k.id })}>
             <div className="card-head">

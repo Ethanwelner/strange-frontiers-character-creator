@@ -521,6 +521,10 @@ button.hero-link:hover:not(:disabled) {
   gap: 1rem;
 }
 
+.kind-cards {
+  grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr));
+}
+
 .card,
 .level-card,
 .choice {
@@ -828,6 +832,12 @@ button.hero-link:hover:not(:disabled) {
   border-bottom: 1px solid var(--rule);
 }
 
+/* Validation panel: a small .c-sheet. Its flex-3 column keeps room for the
+   Picks table on narrower desktops. */
+.builder-side {
+  min-width: 260px;
+}
+
 /* Validation panel: a small .c-sheet */
 
 .panel {
@@ -880,7 +890,7 @@ button.hero-link:hover:not(:disabled) {
 }
 
 .panel-body {
-  padding: 1.5rem;
+  padding: 1.25rem;
 }
 
 .panel-status {
@@ -946,7 +956,7 @@ button.hero-link:hover:not(:disabled) {
 .picks-table th,
 .picks-table td {
   text-align: right;
-  padding: 0.2rem 0.25rem;
+  padding: 0.2rem 0.15rem;
 }
 
 .picks-table th:first-child,
@@ -958,7 +968,7 @@ button.hero-link:hover:not(:disabled) {
 .picks-table thead th {
   color: var(--gray);
   font-weight: 300;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
 }
 
 .issues li {
