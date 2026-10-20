@@ -21,6 +21,8 @@ export interface TraitOption {
 // The Traits a pick of this type could go on, each tried against the engine.
 // A Trait is left out when the engine says it needs the other kind of pick;
 // it's kept but given reasons when the engine rejects it for anything else.
+// A Trait's own choices, like which language an Additional Language is, are
+// answered on the Choices step afterward, so they don't count against it.
 // Undefined until the build is complete enough for the engine to check.
 export function traitOptions(draft: Draft, content: Content, campaign: Campaign, pick: PickKind): TraitOption[] | undefined {
   const base = check(draft, content, campaign);
@@ -32,7 +34,8 @@ export function traitOptions(draft: Draft, content: Content, campaign: Campaign,
     // Non-ranked Traits are only ever bought at rank 1; the engine explains a duplicate.
     const rank = trait.ranked ? (held.get(trait.id) ?? 0) + 1 : 1;
     const trial = check(addPick(draft, trait.id, rank, pick), content, campaign);
-    const added = trial.errors.filter((e) => !before.has(e.message));
+    const ownChoice = `${trait.name} asks for `;
+    const added = trial.errors.filter((e) => !before.has(e.message) && !(e.code === "choice" && e.message.startsWith(ownChoice)));
     if (added.some((e) => e.code === "pick-type")) continue;
     options.push({ trait, rank, reasons: added.map((e) => e.message) });
   }
@@ -43,7 +46,6 @@ export function traitOptions(draft: Draft, content: Content, campaign: Campaign,
 export function stepOf(issue: Issue): Step {
   switch (issue.code) {
     case "kind":
-    case "form":
       return "kind";
     case "package":
       return "background";
@@ -51,15 +53,15 @@ export function stepOf(issue: Issue): Step {
     case "allocation":
     case "stat-max":
     case "stat-cap":
-      return "levels";
+      return "stats";
     case "choice":
     case "choice-pool":
       return "choices";
     case "schema": {
       const field = issue.path?.split(".")[0];
-      if (field === "kind" || field === "form") return "kind";
+      if (field === "kind") return "kind";
       if (field === "origin" || field === "profession" || field === "past") return "background";
-      if (field === "level" || field === "levels") return "levels";
+      if (field === "level" || field === "levels") return "stats";
       if (field === "choices") return "choices";
       return "traits";
     }

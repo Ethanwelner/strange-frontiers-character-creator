@@ -57,32 +57,20 @@ export const TraitGrant = z.object({
 });
 
 // "Pick N from a pool", e.g. one additional Contact or one Dreftian language.
+// Packages and Traits both ask them.
 export const TraitChoice = z.object({
   choose: z.number().int().min(1),
   from: z.string().min(1),
   note: z.string().optional(),
 });
-
-// A Kind with several fixed forms, like the Tatot's orcoid and goblinoid
-// births. The player picks one at character creation.
-export const KindForm = z.object({
-  id: Id,
-  name: z.string().min(1),
-  description: z.string().min(1),
-  stats: StatBlock,
-  features: z.array(Feature).default([]),
-});
+export type TraitChoice = z.infer<typeof TraitChoice>;
 
 export const Kind = BaseEntry.extend({
   features: z.array(Feature).default([]),
   // Trait pools this Kind gets easier access to.
-  featAccess: z.array(z.string()).default([]),
-  stats: StatBlock.optional(),
-  forms: z.array(KindForm).optional(),
-}).refine(
-  (k) => (k.stats === undefined) !== (k.forms === undefined),
-  "a Kind has either stats or forms, not both",
-);
+  traitAccess: z.array(z.string()).default([]),
+  stats: StatBlock,
+});
 export type Kind = z.infer<typeof Kind>;
 
 export const PackageType = z.enum(["origin", "profession", "past"]);
@@ -118,5 +106,8 @@ export const Trait = BaseEntry.extend({
   starterOnly: z.boolean().default(false),
   rpRequirement: z.string().optional(),
   effect: z.string().min(1),
+  // Asked when the Trait is held, e.g. which language an Additional Language
+  // is. A ranked Trait asks again for each rank.
+  choices: z.array(TraitChoice).default([]),
 });
 export type Trait = z.infer<typeof Trait>;

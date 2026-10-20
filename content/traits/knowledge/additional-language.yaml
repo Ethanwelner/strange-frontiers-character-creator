@@ -1,0 +1,13 @@
+id: additional-language
+name: Additional Language
+status: placeholder
+plane: any
+summary: "One more language the character speaks."
+tags: [language]
+category: knowledge
+ranked: true
+effect: Placeholder. Effect not yet written.
+choices:
+  - choose: 1
+    from: language
+    note: 1 language per rank

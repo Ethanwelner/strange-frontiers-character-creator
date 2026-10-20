@@ -1,0 +1,23 @@
+id: tatot-orcoid
+name: Orcoid Tatot
+status: placeholder
+plane: isekai
+region: dreft
+summary: The “High Orks.” Every Tatot is born either orcoid or goblinoid, and orcoids are the larger and stronger of the two. Neither decides a Tatot’s place in Dreft, though it does decide which jobs they’re built for.
+tags: [ork, tatot, merchant]
+features:
+  - name: Orcoid
+    description: Higher Power and Endurance maximums. No mana, and largely immune to sunsickness.
+  - name: Merchant Clans
+    description: Easier access to trading guild and merchant clan Traits.
+traitAccess: [trading-guild, merchant-clan]
+stats:
+  endurance: { start: 2, max: 18 }
+  power: { start: 2, max: 18 }
+  grace: { start: 1, max: 13 }
+  empathy: { start: 1, max: 14 }
+  persuasion: { start: 1, max: 15 }
+  demeanor: { start: 1, max: 15 }
+  logic: { start: 0, max: 13 }
+  intuition: { start: 1, max: 15 }
+  memory: { start: 0, max: 14 }

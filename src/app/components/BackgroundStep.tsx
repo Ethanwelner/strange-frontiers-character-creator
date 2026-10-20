@@ -1,7 +1,7 @@
 import type { BackgroundPackage } from "../../schema/index.js";
 import { content } from "../content.js";
 import type { Draft } from "../draft.js";
-import { Card, Chip, title, traitName } from "./ui.js";
+import { Card, Chip, StepHeader, title, traitName } from "./ui.js";
 
 const SLOTS = ["origin", "profession", "past"] as const;
 
@@ -51,34 +51,37 @@ export function PackageGrants({ pkg }: { pkg: BackgroundPackage }) {
 }
 
 export function BackgroundStep({ draft, onChange }: { draft: Draft; onChange: (d: Draft) => void }) {
+  // Clicking the chosen package again clears the slot.
   const choose = (slot: (typeof SLOTS)[number], id: string) => {
     const old = draft[slot];
-    if (old === id) return;
     // Answers to the old package's choices no longer apply.
-    onChange({ ...draft, [slot]: id, choices: draft.choices.filter((c) => c.package !== old) });
+    onChange({ ...draft, [slot]: old === id ? undefined : id, choices: draft.choices.filter((c) => c.package !== old) });
   };
   return (
     <section>
-      <h2>Background</h2>
-      <p className="lede">Pick an Origin, a Profession and a Past. Their Traits come free and don't use picks.</p>
-      {SLOTS.map((slot) => (
-        <div key={slot} className="slot">
-          <h3 className="subhead">
-            {title(slot)} <span className="muted">{BLURB[slot]}</span>
-          </h3>
-          <div className="cards" role="radiogroup" aria-label={title(slot)}>
-            {content.packages
-              .filter((p) => p.type === slot)
-              .map((p) => (
-                <Card key={p.id} label={p.name} selected={draft[slot] === p.id} onSelect={() => choose(slot, p.id)}>
-                  <h3>{p.name}</h3>
-                  <p>{p.summary}</p>
-                  <PackageGrants pkg={p} />
-                </Card>
-              ))}
+      <StepHeader step="background" title="Background">
+        Pick an Origin, a Profession and a Past. Their Traits come free and don't use picks.
+      </StepHeader>
+      <div className="tech-fields tech-fields-light step-box">
+        {SLOTS.map((slot) => (
+          <div key={slot} className="slot">
+            <h3 className="subhead">
+              {title(slot)} <span className="muted">{BLURB[slot]}</span>
+            </h3>
+            <div className="cards" role="radiogroup" aria-label={title(slot)}>
+              {content.packages
+                .filter((p) => p.type === slot)
+                .map((p) => (
+                  <Card key={p.id} label={p.name} selected={draft[slot] === p.id} onSelect={() => choose(slot, p.id)}>
+                    <h3>{p.name}</h3>
+                    <p>{p.summary}</p>
+                    <PackageGrants pkg={p} />
+                  </Card>
+                ))}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </section>
   );
 }

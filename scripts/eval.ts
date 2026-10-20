@@ -50,7 +50,7 @@ if (!provider) {
 interface Prompt {
   title: string;
   description: string;
-  expect?: { kind: string; form?: string };
+  expect?: { kind: string };
 }
 
 function parsePrompts(md: string): Prompt[] {
@@ -60,12 +60,12 @@ function parsePrompts(md: string): Prompt[] {
     .map((chunk) => {
       const [title = "", ...rest] = chunk.split("\n");
       const expectLine = rest.find((l) => /^Expect:/i.test(l.trim()));
-      const [kind, form] = expectLine ? expectLine.replace(/^\s*Expect:/i, "").trim().split(/\s+/) : [];
+      const kind = expectLine ? expectLine.replace(/^\s*Expect:/i, "").trim().split(/\s+/)[0] : undefined;
       const description = rest
         .filter((l) => l !== expectLine)
         .join("\n")
         .trim();
-      return { title: title.trim(), description, expect: kind ? { kind, form } : undefined };
+      return { title: title.trim(), description, expect: kind ? { kind } : undefined };
     })
     .filter((p) => p.description);
 }
@@ -110,21 +110,21 @@ for (const [i, p] of prompts.entries()) {
   const ok = result.status === "accepted" && check?.accepted === true;
   if (ok) passed++;
   const b = (result.build ?? {}) as Record<string, unknown>;
-  const kindMatches = !p.expect || (b.kind === p.expect.kind && (!p.expect.form || b.form === p.expect.form));
+  const kindMatches = !p.expect || b.kind === p.expect.kind;
   const open = check?.openChoices.map((c) => `${c.count} ${c.from} (${c.package})`).join(", ");
   const verdict = ok ? `PASS${open ? `, player records: ${open}` : ""}` : `FAIL (${result.status})`;
   const u = result.usage;
   const stats = `${result.turns} turns, ${seconds}s, ${u.inputTokens} in / ${u.cacheReadTokens} cached / ${u.outputTokens} out`;
   console.log(`${verdict}${kindMatches ? "" : " · KIND MISMATCH"} · ${stats}`);
 
-  const kind = result.build ? `${name(b.kind, content.kinds)}${b.form ? ` (${String(b.form)})` : ""}` : "no build proposed";
+  const kind = result.build ? name(b.kind, content.kinds) : "no build proposed";
   const packages = result.build ? ["origin", "profession", "past"].map((s) => name(b[s], content.packages)).join(" · ") : "";
   const traits = (Array.isArray(b.traits) ? b.traits : []).map((t) => `${name(t.trait, content.traits)}${t.rank > 1 ? ` ${t.rank}` : ""}`);
   console.log(`  ${b.name ? `${String(b.name)}: ` : ""}${kind} · ${packages}`);
   if (result.summary) console.log(`  ${result.summary}`);
 
   report.push(`## ${verdict} · ${p.title}`, "", `> ${p.description.replace(/\n/g, "\n> ")}`, "");
-  if (!kindMatches) report.push(`**Kind mismatch:** expected ${p.expect!.kind}${p.expect!.form ? ` ${p.expect!.form}` : ""}, got ${kind}.`, "");
+  if (!kindMatches) report.push(`**Kind mismatch:** expected ${p.expect!.kind}, got ${kind}.`, "");
   report.push(`**${b.name ? `${String(b.name)}, ` : ""}${kind}** · ${packages}`, "");
   if (result.summary) report.push(result.summary, "");
   report.push(`Traits: ${traits.join(", ") || "none"}`, "");

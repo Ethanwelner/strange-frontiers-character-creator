@@ -1,7 +1,6 @@
 {
   "name": "Grosh",
-  "kind": "tatot",
-  "form": "orcoid",
+  "kind": "tatot-orcoid",
   "origin": "dreft",
   "profession": "caravaneer",
   "past": "merchant-dynasty",
