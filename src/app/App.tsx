@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
-import { check, stepOf } from "./check.js";
+import { check, describe, stepOf } from "./check.js";
 import { BackgroundStep } from "./components/BackgroundStep.js";
 import { ChoicesStep } from "./components/ChoicesStep.js";
 import { DescribeBox } from "./components/DescribeBox.js";
@@ -7,6 +7,7 @@ import { KindStep } from "./components/KindStep.js";
 import { StatsStep } from "./components/StatsStep.js";
 import { Sheet } from "./components/Sheet.js";
 import { TraitsStep } from "./components/TraitsStep.js";
+import { StepErrors } from "./components/ui.js";
 import { ValidationPanel } from "./components/ValidationPanel.js";
 import { content, contentErrors } from "./content.js";
 import type { DescribeResult } from "../ai/types.js";
@@ -35,6 +36,9 @@ export function App() {
     for (const e of result.errors) n[stepOf(e)] = (n[stepOf(e)] ?? 0) + 1;
     return n;
   }, [result]);
+
+  // The current step's errors, shown under its header.
+  const stepErrors = useMemo(() => result.errors.filter((e) => stepOf(e) === step).map((e) => describe(e, draft)), [result, step, draft]);
 
   const setDraft = (d: Draft) => setSaved((s) => ({ ...s, draft: d }));
   const setStep = (st: Step) => {
@@ -144,37 +148,39 @@ export function App() {
       <div className="section unlimited white-bg builder-panel">
         <div className="container">
           <main>
-            {contentErrors.length > 0 && (
-              <div className="notice bad">
-                Content failed to load: {contentErrors.join("; ")}
-              </div>
-            )}
-            {notice && (
-              <div className="notice" role="status">
-                {notice}
-                <button className="link" onClick={() => setNotice(undefined)} aria-label="Dismiss">
-                  ✕
-                </button>
-              </div>
-            )}
-
-            {step === "kind" && <KindStep draft={draft} onChange={setDraft} />}
-            {step === "background" && <BackgroundStep draft={draft} onChange={setDraft} />}
-            {step === "stats" && (
-              <StatsStep draft={draft} startingLevel={campaign.startingLevel} result={result} onChange={setDraft} onStartingLevel={setStartingLevel} />
-            )}
-            {step === "choices" && <ChoicesStep draft={draft} result={result} onChange={setDraft} />}
-            {step === "traits" && <TraitsStep draft={draft} campaign={campaign} result={result} onChange={setDraft} />}
-            {step === "sheet" && <Sheet draft={draft} result={result} />}
-
-            <div className="pager">
-              {i > 0 ? <button onClick={() => setStep(STEPS[i - 1]!)}>← {LABELS[STEPS[i - 1]!]}</button> : <span />}
-              {i < STEPS.length - 1 && (
-                <button className="primary" onClick={() => setStep(STEPS[i + 1]!)}>
-                  {LABELS[STEPS[i + 1]!]} →
-                </button>
+            <StepErrors.Provider value={stepErrors}>
+              {contentErrors.length > 0 && (
+                <div className="notice bad">
+                  Content failed to load: {contentErrors.join("; ")}
+                </div>
               )}
-            </div>
+              {notice && (
+                <div className="notice" role="status">
+                  {notice}
+                  <button className="link" onClick={() => setNotice(undefined)} aria-label="Dismiss">
+                    ✕
+                  </button>
+                </div>
+              )}
+
+              {step === "kind" && <KindStep draft={draft} onChange={setDraft} />}
+              {step === "background" && <BackgroundStep draft={draft} onChange={setDraft} />}
+              {step === "stats" && (
+                <StatsStep draft={draft} startingLevel={campaign.startingLevel} result={result} onChange={setDraft} onStartingLevel={setStartingLevel} />
+              )}
+              {step === "choices" && <ChoicesStep draft={draft} result={result} onChange={setDraft} />}
+              {step === "traits" && <TraitsStep draft={draft} campaign={campaign} result={result} onChange={setDraft} />}
+              {step === "sheet" && <Sheet draft={draft} result={result} />}
+
+              <div className="pager">
+                {i > 0 ? <button onClick={() => setStep(STEPS[i - 1]!)}>← {LABELS[STEPS[i - 1]!]}</button> : <span />}
+                {i < STEPS.length - 1 && (
+                  <button className="primary" onClick={() => setStep(STEPS[i + 1]!)}>
+                    {LABELS[STEPS[i + 1]!]} →
+                  </button>
+                )}
+              </div>
+            </StepErrors.Provider>
           </main>
         </div>
       </div>
