@@ -606,14 +606,11 @@ button.hero-link:hover:not(:disabled) {
 
 /* Cards: .c-sheet-box */
 
+/* Kind and package cards, at least 360px wide */
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1rem;
-}
-
-.kind-cards {
   grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr));
+  gap: 1rem;
 }
 
 .card,
