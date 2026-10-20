@@ -1141,6 +1141,10 @@ button.hero-link:hover:not(:disabled) {
 /* Below the site's lg breakpoint: one column, the panel docks to the bottom. */
 
 @media (max-width: 991px) {
+  .builder-row {
+    gap: 0;
+  }
+
   .builder-main {
     flex: 1 100%;
   }
