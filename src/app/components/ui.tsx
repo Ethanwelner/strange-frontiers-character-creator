@@ -1,6 +1,6 @@
 import { createContext, useContext, type KeyboardEvent, type ReactNode } from "react";
 import { STAT_GROUPS, type StatBlock, type StatId } from "../../schema/index.js";
-import { kindById, traitById } from "../content.js";
+import { kindById, packageById, traitById } from "../content.js";
 import { STEPS, type Draft, type Step } from "../draft.js";
 
 export const GROUPS = Object.keys(STAT_GROUPS) as (keyof typeof STAT_GROUPS)[];
@@ -8,6 +8,10 @@ export const GROUPS = Object.keys(STAT_GROUPS) as (keyof typeof STAT_GROUPS)[];
 export const title = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 export const traitName = (id: string) => traitById.get(id)?.name ?? id;
+
+// The package or Trait a choice answer belongs to, by name.
+export const askerName = (a: { package?: string; trait?: string }) =>
+  a.package !== undefined ? (packageById.get(a.package)?.name ?? a.package) : traitName(a.trait ?? "");
 
 // The Kind's level 0 stats and maximums, straight from content.
 export function baseStats(draft: Draft): StatBlock | undefined {

@@ -5,16 +5,18 @@ import type { BuildSummary, Issue } from "../engine/validate.js";
 
 // One line on why the model made a choice. `target` names the part of the build:
 // "kind", "origin", "profession", "past", "levels", a Trait id from
-// the build's picks, or "choice:<package>/<pool>".
+// the build's picks, or "choice:<package or Trait>/<pool>".
 export interface Reason {
   target: string;
   reason: string;
 }
 
-// A package choice the model leaves for the player: a Contact, which the
-// player decides, or a pool with no Traits in content yet.
+// A package or Trait choice the model leaves for the player: a Contact, which
+// the player decides, or a pool with no Traits in content yet. It names
+// either the package or the Trait that asks.
 export interface OpenChoice {
-  package: string;
+  package?: string;
+  trait?: string;
   from: string;
   count: number;
   note?: string;

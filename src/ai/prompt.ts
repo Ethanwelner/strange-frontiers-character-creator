@@ -15,7 +15,7 @@ The concept:
 - One Kind, one origin, one profession and one past.
 - focus: the two to four Outer Ring stats that matter most for this character, most important first. The engine puts each level's stat points into these.
 - traits: Trait ids that fit the character, best fit first. List 12 to 20, more than the picks will cover; the engine buys them in order and skips any the build can't take, so put the ones that matter most at the top. Don't list Traits the packages already grant (their Grants in the index). List a ranked Trait twice only if rank 2 matters.
-- choices: optional. Package choices with a pool, like languages, are filled in for you; answer one only to pick a specific Trait from its pool. A Contact is whoever the player decides it is, so never answer a Contact choice.
+- choices: optional. Package and Trait choices with a pool, like languages (an Additional Language asks which one), are filled in for you; answer one only to pick a specific Trait from its pool, naming the package or the Trait that asks. A Contact is whoever the player decides it is, so never answer a Contact choice.
 
 Rules you must follow:
 - Use only ids that exist in the content. Never invent a Kind, package or Trait. Unknown ids are rejected in code.
@@ -55,6 +55,7 @@ export function contentIndex(content: Content): string {
       t.starterOnly ? "starter only" : "",
       t.prerequisites.length ? `needs ${t.prerequisites.join(", ")}` : "",
       t.types.length ? `types ${t.types.join(", ")}` : "",
+      t.choices.length ? `choices ${t.choices.map((c) => `${c.choose} from ${c.from}`).join(", ")}${t.ranked ? " per rank" : ""}` : "",
     ].filter(Boolean);
     lines.push(`- ${t.id}: ${t.name} [${[t.category, ...flags].join("; ")}] ${t.summary} Tags: ${t.tags.join(", ") || "none"}.`);
   }

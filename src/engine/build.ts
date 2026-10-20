@@ -24,14 +24,17 @@ export const TraitPick = z.object({
 });
 export type TraitPick = z.infer<typeof TraitPick>;
 
-// The answer to one of a package's `choices`, matched by package and pool.
-// `traits` holds Trait ids, or for a free-text pool like `contact`, the names
-// the player wrote.
-export const ChoiceAnswer = z.object({
-  package: Id,
-  from: z.string().min(1),
-  traits: z.array(z.string().trim().min(1)),
-});
+// The answer to one of a package's or a held Trait's `choices`, matched by
+// whichever asked (`package` or `trait`) and the pool. `traits` holds Trait
+// ids, or for a free-text pool like `contact`, the names the player wrote.
+export const ChoiceAnswer = z
+  .object({
+    package: Id.optional(),
+    trait: Id.optional(),
+    from: z.string().min(1),
+    traits: z.array(z.string().trim().min(1)),
+  })
+  .refine((a) => (a.package === undefined) !== (a.trait === undefined), "an answer names either a package or a Trait");
 export type ChoiceAnswer = z.infer<typeof ChoiceAnswer>;
 
 export const Build = z.object({

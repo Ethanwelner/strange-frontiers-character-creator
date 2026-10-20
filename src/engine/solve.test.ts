@@ -101,6 +101,30 @@ describe("solveConcept", () => {
     expect(s.result.ok).toBe(true);
   });
 
+  it("answers a bought Trait's language choice, and leaves its Contact for the player", () => {
+    const s = solve({ ...hunter, traits: ["additional-language", "additional-contact", ...hunter.traits!] });
+    expect(s.taken.slice(0, 2)).toEqual(["additional-language", "additional-contact"]);
+    const answer = s.build.choices.find((c) => c.trait === "additional-language");
+    // The first language in the pool the build doesn't hold yet.
+    expect(answer).toEqual({ trait: "additional-language", from: "language", traits: ["dreftan"] });
+    expect(s.build.choices.some((c) => c.trait === "additional-contact")).toBe(false);
+    expect(s.result.ok).toBe(true);
+    expect(s.result.warnings.map((w) => w.message)).toContain("Additional Contact gives 1 Contact: record who on the Choices step");
+  });
+
+  it("keeps the concept's answer to a Trait's choice, and skips languages the build holds", () => {
+    // Port Herminst gives Dreftan, so English is the only language left.
+    const held = solve({ ...hunter, origin: "port-herminst", traits: ["additional-language"] });
+    expect(held.build.choices.find((c) => c.trait === "additional-language")!.traits).toEqual(["english"]);
+    const s = solve({
+      ...hunter,
+      traits: ["additional-language"],
+      choices: [{ trait: "additional-language", from: "language", traits: ["english"] }],
+    });
+    expect(s.build.choices.find((c) => c.trait === "additional-language")!.traits).toEqual(["english"]);
+    expect(s.result.ok).toBe(true);
+  });
+
   it("buys nothing when the Kind or a package is wrong", () => {
     const s = solve({ ...hunter, kind: "dragon" });
     expect(s.result.ok).toBe(false);

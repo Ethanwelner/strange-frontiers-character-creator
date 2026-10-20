@@ -342,6 +342,59 @@ describe("rule 6: package grants and choices", () => {
   });
 });
 
+describe("rule 6: Trait choices", () => {
+  const language = { trait: "additional-language", pick: "universal" as const };
+  const contact = { trait: "additional-contact", pick: "universal" as const };
+  const withTraits = (...picks: BuildInput["traits"] & object) => ({ ...human, traits: [...human.traits!, ...picks] });
+
+  it("asks a held Trait's choice, and holds the answer", () => {
+    const unanswered = check(withTraits(language));
+    expect(unanswered.errors).toEqual([
+      expect.objectContaining({ code: "choice", message: `Additional Language asks for 1 from "language", but the build doesn't answer it` }),
+    ]);
+    expect(unanswered.summary!.questions).toEqual([
+      { by: "trait", id: "additional-language", name: "Additional Language", from: "language", count: 1, notes: ["1 language per rank"] },
+    ]);
+    const r = check({ ...withTraits(language), choices: [{ trait: "additional-language", from: "language", traits: ["english"] }] });
+    expectLegal(r);
+    expect(r.summary!.traits.find((h) => h.trait === "english")!.sources).toEqual(["trait additional-language choice"]);
+  });
+
+  it("asks again for each rank of a ranked Trait", () => {
+    const build = withTraits(language, { ...language, rank: 2 });
+    expect(codes(check({ ...build, choices: [{ trait: "additional-language", from: "language", traits: ["english"] }] }))).toEqual(["choice"]);
+    expectLegal(check({ ...build, choices: [{ trait: "additional-language", from: "language", traits: ["english", "dreftan"] }] }));
+  });
+
+  it("only reminds the player to record a Contact from a Trait", () => {
+    const r = check(withTraits(contact));
+    expectLegal(r);
+    expect(r.warnings).toEqual([
+      expect.objectContaining({ code: "choice", message: "Additional Contact gives 1 Contact: record who on the Choices step" }),
+    ]);
+    const named = check({ ...withTraits(contact), choices: [{ trait: "additional-contact", from: "contact", traits: ["Wenna the fence"] }] });
+    expectLegal(named);
+    expect(named.warnings).toEqual([]);
+  });
+
+  it("rejects a language the build already holds", () => {
+    const r = check({ ...isek, traits: [...isek.traits!, language], choices: [...isek.choices!, { trait: "additional-language", from: "language", traits: ["dreftan"] }] });
+    expect(codes(r)).toEqual(["duplicate-trait"]);
+  });
+
+  it("rejects an answer for a Trait the build doesn't hold", () => {
+    const r = check({ ...human, choices: [{ trait: "additional-language", from: "language", traits: ["english"] }] });
+    expect(r.errors).toEqual([
+      expect.objectContaining({ code: "choice", message: "The build answers a choice for Additional Language, which it doesn't hold" }),
+    ]);
+  });
+
+  it("rejects an answer that names both a package and a Trait", () => {
+    const both = { package: "glintl", trait: "additional-language", from: "language", traits: ["english"] };
+    expect(codes(check({ ...withTraits(language), choices: [both] }))).toEqual(["schema"]);
+  });
+});
+
 describe("rule 7: the Background Trait list", () => {
   it("rejects a background pick on a Trait that isn't on the list", () => {
     const r = check({ ...human, traits: [{ trait: "tracker", pick: "background" }] });
