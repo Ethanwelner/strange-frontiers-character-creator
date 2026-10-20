@@ -633,7 +633,7 @@ button.hero-link:hover:not(:disabled) {
 .card {
   display: grid;
   align-content: start;
-  gap: 12px;
+  gap: 16px;
   cursor: pointer;
   transition: border-color 200ms;
 }
@@ -699,7 +699,7 @@ button.hero-link:hover:not(:disabled) {
   color: var(--white);
 }
 
-.card.dark .stat-ranges {
+.card.dark .card-rule {
   border-top-color: var(--rule-on-black);
 }
 
@@ -769,9 +769,6 @@ button.hero-link:hover:not(:disabled) {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
   gap: 0.75rem;
-  margin-top: 1rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid var(--rule);
   font-size: 0.8rem;
 }
 
@@ -784,6 +781,14 @@ button.hero-link:hover:not(:disabled) {
   display: flex;
   justify-content: space-between;
   gap: 0.25rem;
+}
+
+/* A plain rule between a card's rows, like the line above a Kind's stats */
+.card-rule {
+  width: 100%;
+  border: 0;
+  border-top: 1px solid var(--rule);
+  opacity: 1;
 }
 
 /* The grid gap does the spacing between a card's rows */

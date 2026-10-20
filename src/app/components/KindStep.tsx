@@ -36,6 +36,7 @@ export function KindStep({ draft, onChange }: { draft: Draft; onChange: (d: Draf
                         </li>
                       ))}
                     </ul>
+                    <hr className="card-rule" />
                     <StatRanges stats={k.stats} />
                   </Card>
                 ))}
