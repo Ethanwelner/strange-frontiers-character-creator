@@ -4,7 +4,7 @@ import { BackgroundStep } from "./components/BackgroundStep.js";
 import { ChoicesStep } from "./components/ChoicesStep.js";
 import { DescribeBox } from "./components/DescribeBox.js";
 import { KindStep } from "./components/KindStep.js";
-import { LevelsStep } from "./components/LevelsStep.js";
+import { StatsStep } from "./components/StatsStep.js";
 import { Sheet } from "./components/Sheet.js";
 import { TraitsStep } from "./components/TraitsStep.js";
 import { ValidationPanel } from "./components/ValidationPanel.js";
@@ -15,7 +15,7 @@ import { clearSaved, EMPTY, fromBuild, load, save, slug, STEPS, toBuild, withLev
 const LABELS: Record<Step, string> = {
   kind: "Kind",
   background: "Background",
-  levels: "Levels",
+  stats: "Stats",
   choices: "Choices",
   traits: "Traits",
   sheet: "Sheet",
@@ -170,8 +170,8 @@ export function App() {
 
             {step === "kind" && <KindStep draft={draft} onChange={setDraft} />}
             {step === "background" && <BackgroundStep draft={draft} onChange={setDraft} />}
-            {step === "levels" && (
-              <LevelsStep draft={draft} startingLevel={campaign.startingLevel} result={result} onChange={setDraft} onStartingLevel={setStartingLevel} />
+            {step === "stats" && (
+              <StatsStep draft={draft} startingLevel={campaign.startingLevel} result={result} onChange={setDraft} onStartingLevel={setStartingLevel} />
             )}
             {step === "choices" && <ChoicesStep draft={draft} onChange={setDraft} />}
             {step === "traits" && <TraitsStep draft={draft} campaign={campaign} result={result} onChange={setDraft} />}

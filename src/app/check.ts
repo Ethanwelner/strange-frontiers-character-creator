@@ -50,7 +50,7 @@ export function stepOf(issue: Issue): Step {
     case "allocation":
     case "stat-max":
     case "stat-cap":
-      return "levels";
+      return "stats";
     case "choice":
     case "choice-pool":
       return "choices";
@@ -58,7 +58,7 @@ export function stepOf(issue: Issue): Step {
       const field = issue.path?.split(".")[0];
       if (field === "kind") return "kind";
       if (field === "origin" || field === "profession" || field === "past") return "background";
-      if (field === "level" || field === "levels") return "levels";
+      if (field === "level" || field === "levels") return "stats";
       if (field === "choices") return "choices";
       return "traits";
     }
