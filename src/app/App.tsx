@@ -16,8 +16,8 @@ const LABELS: Record<Step, string> = {
   kind: "Kind",
   background: "Background",
   stats: "Stats",
-  choices: "Choices",
   traits: "Traits",
+  choices: "Choices",
   sheet: "Sheet",
 };
 

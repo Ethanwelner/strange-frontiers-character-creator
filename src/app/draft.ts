@@ -16,7 +16,7 @@ export interface Draft {
   choices: ChoiceAnswer[];
 }
 
-export const STEPS = ["kind", "background", "stats", "choices", "traits", "sheet"] as const;
+export const STEPS = ["kind", "background", "stats", "traits", "choices", "sheet"] as const;
 export type Step = (typeof STEPS)[number];
 
 // What the builder keeps from the last AI build, so the reasons survive a reload.
