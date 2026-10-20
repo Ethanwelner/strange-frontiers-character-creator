@@ -515,18 +515,32 @@ button.hero-link:hover:not(:disabled) {
   margin-bottom: 1rem;
 }
 
-.step-head .stinger {
+/* The stinger, with the step's errors to its right */
+.stinger-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.5rem 24px;
   margin-bottom: 1rem;
+}
+
+.stinger-row .stinger {
+  flex-shrink: 0;
+  margin-bottom: 0;
 }
 
 .step-head .lede {
   margin-top: 0;
 }
 
-/* What's wrong on this step, between the description and the boxed content */
+/* What's wrong on this step, beside the stinger */
 .step-issues {
-  margin-bottom: 1.5rem;
-  max-width: 48rem;
+  flex: 1 1 16rem;
+  max-width: 40rem;
+}
+
+.step-issues li:last-child {
+  margin-bottom: 0;
 }
 
 .pager {
