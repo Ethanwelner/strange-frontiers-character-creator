@@ -668,6 +668,11 @@ button.hero-link:hover:not(:disabled) {
   font-size: 0.9rem;
 }
 
+/* Kind cards run wider than the other steps' cards */
+.kind-group .cards {
+  grid-template-columns: repeat(auto-fill, minmax(min(400px, 100%), 1fr));
+}
+
 /* Kind cards: a header bar in the Kind's region color, like a Trait's name bar */
 .kind-card > .card-head {
   margin: -16px -16px 0;
