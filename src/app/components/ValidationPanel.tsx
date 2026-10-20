@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { BuildResult } from "../../engine/validate.js";
 import { STAT_GROUPS, type StatId } from "../../schema/index.js";
-import { describe, stepOf } from "../check.js";
+import { stepOf } from "../check.js";
 import type { Draft, Step } from "../draft.js";
 import { baseStats, GROUPS, title } from "./ui.js";
 
@@ -96,20 +96,6 @@ export function ValidationPanel({ draft, result, onName, onJump }: Props) {
           </tbody>
         </table>
 
-        {errors.length > 0 && (
-          <>
-            <h4>Errors</h4>
-            <ul className="issues bad">
-              {errors.map((e, i) => (
-                <li key={i}>
-                  <button className="link" onClick={() => jump(stepOf(e))}>
-                    {describe(e, draft)}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </>
-        )}
         {warnings.length > 0 && (
           <>
             <h4>Warnings</h4>

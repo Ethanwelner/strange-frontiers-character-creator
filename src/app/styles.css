@@ -521,6 +521,12 @@ button.hero-link:hover:not(:disabled) {
   margin-top: 0;
 }
 
+/* What's wrong on this step, between the description and the boxed content */
+.step-issues {
+  margin-bottom: 1.5rem;
+  max-width: 48rem;
+}
+
 .pager {
   display: flex;
   justify-content: space-between;
