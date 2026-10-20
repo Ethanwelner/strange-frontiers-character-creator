@@ -34,7 +34,7 @@ Claude Code can also build characters in chat, without the app's AI layer. The l
    npm run check-build -- characters/grosh.json
    ```
 
-   This runs the same checks as the AI layer: unknown ids first, then `validateBuild`. It prints errors, warnings, stats, picks and held Traits, and exits non-zero unless the build is legal. Add `--level 2` for a campaign that starts above level 1.
+   This runs the same checks as the AI layer: unknown ids first, then `validateBuild`. It prints errors, warnings, stats, picks and held Traits, and exits non-zero unless the build is legal. It checks against the build's own level; add `--level N` to check against a campaign's starting level instead.
 3. Claude fixes anything the check reports and runs it again until the build is legal.
 4. In the builder, **Import** the file. From there it's editable like any build, and Contacts get recorded on the Choices step.
 
@@ -58,7 +58,7 @@ npm run eval     # runs evals/prompts.md through the same loop
 
 ## Manual builder
 
-A click-to-build character builder (Phase 3); the describe box above it is optional. It walks through Kind, Origin, Profession and Past, the starting level and each level's stat points, Trait picks, and choices (who a Contact is, which language). A panel shows the rules engine's errors, warnings, stats and picks as you go, and the Sheet step is a printable character sheet.
+A click-to-build character builder (Phase 3); the describe box above it is optional. It walks through the name and starting level, Kind, Origin, Profession and Past, each level's stat points, Trait picks, and choices (who a Contact is, which language). A panel shows the rules engine's errors, warnings, stats and picks as you go, and the Sheet step is a printable character sheet.
 
 ```bash
 npm run dev      # http://localhost:5173

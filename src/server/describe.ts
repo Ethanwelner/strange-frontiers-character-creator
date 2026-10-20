@@ -14,7 +14,7 @@ export const MISSING_KEY_MESSAGE =
 
 const Request = z.object({
   description: z.string().trim().min(1, "Describe the character first.").max(4000, "Keep the description under 4,000 characters."),
-  startingLevel: z.number().int().min(1).max(20).default(1),
+  startingLevel: z.number().int().min(1).max(20).default(3),
 });
 
 export interface Reply {

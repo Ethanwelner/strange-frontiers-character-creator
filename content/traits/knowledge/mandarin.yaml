@@ -1,0 +1,10 @@
+id: mandarin
+name: "Mandarin (Spoken)"
+status: placeholder
+plane: earth
+summary: "The language of the Chinese Empire."
+tags: [language, mandarin, earth]
+category: knowledge
+types: [language]
+language: mandarin
+effect: This character is conversational in the Mandarin language and can speak it.

@@ -1,0 +1,15 @@
+id: american-empire-soldier
+name: "American Empire Soldier"
+status: placeholder
+plane: earth
+region: american-empire
+summary: "A soldier of the Imperial armed forces, trained for an Empire that is rarely short of a frontier to hold or a rival to stare down."
+tags: [military, soldier, american-empire, combat]
+lore: american-empire
+type: profession
+grants:
+  - { trait: wielder-rifle }
+  - { trait: military-drill }
+  - { trait: vigilance }
+  - { trait: the-imperial-military }
+  - { trait: imperial-service-record }

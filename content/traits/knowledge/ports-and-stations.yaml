@@ -1,0 +1,9 @@
+id: ports-and-stations
+name: "Ports and Stations"
+status: placeholder
+plane: earth
+summary: "How docks, customs and station traffic control work, and how to get through them."
+tags: [ports, stations, space]
+category: knowledge
+ranked: true
+effect: Placeholder. Effect not yet written.

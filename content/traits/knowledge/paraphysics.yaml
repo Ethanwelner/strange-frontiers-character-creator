@@ -1,0 +1,9 @@
+id: paraphysics
+name: "Paraphysics"
+status: placeholder
+plane: earth
+summary: "The science The Gift opened up: the theories that skirt the old limits of nature."
+tags: [paraphysics, science]
+category: knowledge
+ranked: true
+effect: Placeholder. Effect not yet written.

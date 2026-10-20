@@ -1,0 +1,10 @@
+id: american-history
+name: "American History"
+status: placeholder
+plane: earth
+region: american-empire
+summary: "The history of the United States and the American Empire that replaced it."
+tags: [history, american-empire]
+category: knowledge
+ranked: true
+effect: Placeholder. Effect not yet written.

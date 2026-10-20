@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import { check, describe, stepOf } from "./check.js";
 import { BackgroundStep } from "./components/BackgroundStep.js";
+import { CharacterStep } from "./components/CharacterStep.js";
 import { ChoicesStep } from "./components/ChoicesStep.js";
 import { DescribeBox } from "./components/DescribeBox.js";
 import { KindStep } from "./components/KindStep.js";
@@ -14,6 +15,7 @@ import type { DescribeResult } from "../ai/types.js";
 import { clearSaved, EMPTY, fromBuild, load, save, slug, STEPS, toBuild, withLevel, type Draft, type Saved, type Step } from "./draft.js";
 
 const LABELS: Record<Step, string> = {
+  character: "Character",
   kind: "Kind",
   background: "Background",
   stats: "Stats",
@@ -140,7 +142,7 @@ export function App() {
             </nav>
           </div>
           <div className="flex-3 builder-side">
-            <ValidationPanel draft={draft} result={result} onName={(name) => setDraft({ ...draft, name })} onJump={setStep} />
+            <ValidationPanel draft={draft} result={result} />
           </div>
         </div>
       </header>
@@ -163,10 +165,13 @@ export function App() {
                 </div>
               )}
 
+              {step === "character" && (
+                <CharacterStep draft={draft} startingLevel={campaign.startingLevel} onChange={setDraft} onStartingLevel={setStartingLevel} />
+              )}
               {step === "kind" && <KindStep draft={draft} onChange={setDraft} />}
               {step === "background" && <BackgroundStep draft={draft} onChange={setDraft} />}
               {step === "stats" && (
-                <StatsStep draft={draft} startingLevel={campaign.startingLevel} result={result} onChange={setDraft} onStartingLevel={setStartingLevel} />
+                <StatsStep draft={draft} result={result} onChange={setDraft} />
               )}
               {step === "choices" && <ChoicesStep draft={draft} result={result} onChange={setDraft} />}
               {step === "traits" && <TraitsStep draft={draft} campaign={campaign} result={result} onChange={setDraft} />}

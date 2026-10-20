@@ -10,6 +10,8 @@ import { DescribeFailure } from "./model.js";
 import type { Reason } from "./types.js";
 
 const { content } = loadContent();
+// These fixtures are level 1 characters; the default campaign starts at 3.
+const L1 = { startingLevel: 1 };
 
 type Params = Anthropic.Beta.MessageCreateParamsNonStreaming;
 type Block = Anthropic.Beta.BetaContentBlock;
@@ -77,7 +79,7 @@ describe("describeCharacter", () => {
       message([{ type: "thinking", thinking: "", signature: "sig" } as Block, toolUse("get_kind", { id: "tatot-goblinoid" })]),
       message([submit(goblinoid)]),
     );
-    const result = await describeCharacter({ description: "A small goblin who studied magic at Tetra.", content, provider: anthropicProvider(create) });
+    const result = await describeCharacter({ description: "A small goblin who studied magic at Tetra.", content, provider: anthropicProvider(create), campaign: L1 });
 
     expect(result.status).toBe("accepted");
     expect(result.turns).toBe(2);
@@ -113,7 +115,7 @@ describe("describeCharacter", () => {
 
   it("sends engine errors back and accepts the repaired concept", async () => {
     const { create, calls } = script(message([submit(misslotted)]), message([submit(goblinoid)]));
-    const result = await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create) });
+    const result = await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create), campaign: L1 });
 
     expect(result.status).toBe("accepted");
     expect(result.turns).toBe(2);
@@ -127,7 +129,7 @@ describe("describeCharacter", () => {
     const invented = { ...goblinoid, profession: "pirate-king" };
     const fixed = { ...goblinoid, traits: ["fireball", ...goblinoid.traits!] };
     const { create, calls } = script(message([submit(invented)]), message([submit(fixed)]));
-    const result = await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create) });
+    const result = await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create), campaign: L1 });
 
     expect(bodyOf(calls[1]!).unknownIds).toEqual([expect.objectContaining({ path: "profession" })]);
     expect(result.status).toBe("accepted");
@@ -137,7 +139,7 @@ describe("describeCharacter", () => {
   it("sends a legal build back once when the Trait list runs out", async () => {
     const thin = { ...goblinoid, traits: ["tinkerer", "fireball"] };
     const { create, calls } = script(message([submit(thin)]), message([submit(thin)]));
-    const result = await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create) });
+    const result = await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create), campaign: L1 });
     const body = bodyOf(calls[1]!);
     expect(body.picks).toMatch(/^The engine built a legal character, but \d+ of \d+ universal picks are unspent: the Trait list ran out\./);
     expect(body.taken).toEqual(["tinkerer"]);
@@ -154,7 +156,7 @@ describe("describeCharacter", () => {
       message([submit(goblinoid)]),
     );
     const progress: string[] = [];
-    await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create), onProgress: (p) => progress.push(`${p.turn} ${p.status}`) });
+    await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create), campaign: L1, onProgress: (p) => progress.push(`${p.turn} ${p.status}`) });
     expect(progress).toEqual([
       "1 Thinking",
       '1 Looking up the Tatot, Goblinoid Kind · Searching Traits for "magic"',
@@ -169,14 +171,14 @@ describe("describeCharacter", () => {
 
   it("keeps a legal build when the turn limit hits before it's accepted", async () => {
     const { create } = script(message([submit({ ...goblinoid, traits: [] })]));
-    const result = await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create), maxTurns: 1 });
+    const result = await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create), campaign: L1, maxTurns: 1 });
     expect(result.status).toBe("accepted");
     expect(result.check?.legal).toBe(true);
   });
 
   it("stops at the turn limit and returns the last proposal", async () => {
     const { create } = script(message([submit({ ...goblinoid, kind: "dragon" })]), message([toolUse("search_traits", { query: "magic" })]));
-    const result = await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create), maxTurns: 2 });
+    const result = await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create), campaign: L1, maxTurns: 2 });
 
     expect(create).toHaveBeenCalledTimes(2);
     expect(result.status).toBe("turn-limit");
@@ -186,25 +188,25 @@ describe("describeCharacter", () => {
 
   it("explains a concept that doesn't match the format", async () => {
     const { create, calls } = script(message([submit({ kind: "tatot-goblinoid" })]), message([submit(goblinoid)]));
-    await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create) });
+    await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create), campaign: L1 });
     expect(resultsOf(calls[1]!)[0]!.content).toMatch(/^The concept doesn't match the format: .*origin/);
   });
 
   it("nudges the model to submit when it answers without a tool", async () => {
     const { create, calls } = script(message([{ type: "text", text: "Here's my idea…", citations: null } as Block], "end_turn"), message([submit(goblinoid)]));
-    const result = await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create) });
+    const result = await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create), campaign: L1 });
     expect(result.status).toBe("accepted");
     expect(calls[1]!.messages.at(-1)!.content).toContain("submit_build");
   });
 
   it("returns tool errors to the model instead of failing", async () => {
     const { create, calls } = script(message([toolUse("get_package", { id: "pirate-king" })]), message([submit(goblinoid)]));
-    await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create) });
+    await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create), campaign: L1 });
     expect(resultsOf(calls[1]!)[0]).toEqual(expect.objectContaining({ is_error: true }));
   });
 
   it("fails clearly on a refusal", async () => {
     const { create } = script(message([], "refusal"));
-    await expect(describeCharacter({ description: "x", content, provider: anthropicProvider(create) })).rejects.toBeInstanceOf(DescribeFailure);
+    await expect(describeCharacter({ description: "x", content, provider: anthropicProvider(create), campaign: L1 })).rejects.toBeInstanceOf(DescribeFailure);
   });
 });

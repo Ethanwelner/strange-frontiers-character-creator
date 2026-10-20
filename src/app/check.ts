@@ -36,7 +36,8 @@ export function traitOptions(draft: Draft, content: Content, campaign: Campaign,
     const trial = check(addPick(draft, trait.id, rank, pick), content, campaign);
     const ownChoice = `${trait.name} asks for `;
     const added = trial.errors.filter((e) => !before.has(e.message) && !(e.code === "choice" && e.message.startsWith(ownChoice)));
-    if (added.some((e) => e.code === "pick-type")) continue;
+    // A Conveyed Trait can't be picked at all, and the wrong kind of pick is the other tab's.
+    if (added.some((e) => e.code === "pick-type" || e.code === "conveyed")) continue;
     options.push({ trait, rank, reasons: added.map((e) => e.message) });
   }
   return options;
@@ -50,6 +51,8 @@ export function stepOf(issue: Issue): Step {
     case "package":
       return "background";
     case "level":
+      // The starting level is set on the Character step; the allocations are Stats'.
+      return issue.path === "level" ? "character" : "stats";
     case "allocation":
     case "stat-max":
     case "stat-cap":
@@ -59,9 +62,10 @@ export function stepOf(issue: Issue): Step {
       return "choices";
     case "schema": {
       const field = issue.path?.split(".")[0];
+      if (field === "name" || field === "level") return "character";
       if (field === "kind") return "kind";
       if (field === "origin" || field === "profession" || field === "past") return "background";
-      if (field === "level" || field === "levels" || field === "startPoints") return "stats";
+      if (field === "levels" || field === "startPoints") return "stats";
       if (field === "choices") return "choices";
       return "traits";
     }

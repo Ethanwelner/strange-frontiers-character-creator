@@ -1,0 +1,10 @@
+id: spanish-written
+name: "Spanish (Written)"
+status: placeholder
+plane: earth
+summary: "One of the common languages of Earth Baseline."
+tags: [language, spanish, earth, writing]
+category: knowledge
+types: [language]
+language: spanish
+effect: This character can read and write the Spanish language.

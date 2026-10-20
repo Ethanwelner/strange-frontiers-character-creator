@@ -1,0 +1,10 @@
+id: explorers-lodge-membership
+name: "Explorers’ Lodge Membership"
+status: placeholder
+plane: earth
+summary: "This character is a member in good standing of the Explorers’ Lodge."
+tags: [lodge, exploration, membership]
+lore: explorers-lodge
+category: circumstance
+conveyed: true
+effect: Placeholder. Effect not yet written.

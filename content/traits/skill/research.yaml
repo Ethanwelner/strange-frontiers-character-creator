@@ -1,0 +1,9 @@
+id: research
+name: "Research"
+status: placeholder
+plane: earth
+summary: "Designing experiments, reading the literature and getting results."
+tags: [science, research]
+category: skill
+ranked: true
+effect: Placeholder. Effect not yet written.

@@ -1,0 +1,24 @@
+id: sdu-colonies
+name: "The Stellar Democratic Union: Colonies"
+status: placeholder
+plane: earth
+region: sdu
+summary: "You grew up in the Union’s stellar or planar territories: the Martian Association, the Antiluna colony, New Persia on Pairidaeza, or aboard one of the Union’s Arks."
+tags: [sdu, colonies, mars, ark, space]
+lore: stellar-democratic-union
+type: origin
+grants:
+  - { trait: the-stellar-democratic-union, rank: 1 }
+  - { trait: sdu-law, rank: 1 }
+choices:
+  - choose: 1
+    from: spoken-and-written-language
+    note: 1 language, spoken and written
+backgroundTraits:
+  - the-martian-association
+  - antiluna
+  - new-persia
+  - boneyard
+  - ark-life
+  - union-politics
+  - earth-baseline-technology

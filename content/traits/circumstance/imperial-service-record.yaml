@@ -1,0 +1,10 @@
+id: imperial-service-record
+name: "Imperial Service Record"
+status: placeholder
+plane: earth
+region: american-empire
+summary: "This character serves, or has served, in the American Empire’s armed forces."
+tags: [military, american-empire, service]
+category: circumstance
+conveyed: true
+effect: Placeholder. Effect not yet written.

@@ -1,0 +1,10 @@
+id: spanish
+name: "Spanish (Spoken)"
+status: placeholder
+plane: earth
+summary: "One of the common languages of Earth Baseline."
+tags: [language, spanish, earth]
+category: knowledge
+types: [language]
+language: spanish
+effect: This character is conversational in the Spanish language and can speak it.

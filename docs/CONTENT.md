@@ -35,6 +35,10 @@ content/
 
 Packages and Traits can both list `choices` (`choose`, `from`, optional `note`): a pool the player picks from, like `contact` or `language`. A Trait's choices are asked once the character holds it, once per rank if it's ranked, as with Additional Contact and Additional Language.
 
+A Trait marked `conveyed: true` (Explorers’ Lodge Membership, Imperial Service Record) can only come from a package's grants or from play, never from a pick, so it can't go on a package's `backgroundTraits` (the validator errors). Circumstance Traits use `category: circumstance`.
+
+A Trait that raises HP, VP or SP lists it under `resources` (for example `resources: { hp: 2 }`), counted once per rank held.
+
 ## Validator rules
 
 Errors stop a merge; warnings flag things to finish later.

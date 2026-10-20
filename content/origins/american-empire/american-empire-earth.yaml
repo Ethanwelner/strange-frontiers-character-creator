@@ -1,0 +1,22 @@
+id: american-empire-earth
+name: "The American Empire: Earth"
+status: placeholder
+plane: earth
+region: american-empire
+summary: "You were born in the Empire’s Earth territories, anywhere from the Californias and the Great Lakes to Nueva Mexico, in a country that calls itself the new Rome and is rarely short of a war to prove it."
+tags: [american-empire, earth, empire]
+lore: american-empire
+type: origin
+grants:
+  - { trait: american-history, rank: 1 }
+  - { trait: american-geography, rank: 1 }
+  - { trait: imperial-law, rank: 1 }
+  - { trait: english }
+  - { trait: english-written }
+backgroundTraits:
+  - the-imperial-military
+  - imperial-politics
+  - the-union-of-texas
+  - earth-baseline-technology
+  - spanish
+  - spanish-written

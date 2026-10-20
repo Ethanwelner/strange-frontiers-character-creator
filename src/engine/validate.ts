@@ -17,6 +17,7 @@ export type IssueCode =
   | "choice-pool"
   | "unknown-trait"
   | "pick-type"
+  | "conveyed"
   | "picks-overspent"
   | "duplicate-trait"
   | "rank"
@@ -58,6 +59,9 @@ export interface ChoiceQuestion {
 export interface BuildSummary {
   stats: Record<StatId, number>;
   innerRing: Record<StatGroup, number>;
+  // HP is 10 plus the Physical Outer Ring stats; VP and SP are the Social and
+  // Mental Inner Rings. Traits can add to any of them.
+  resources: Record<"hp" | "vp" | "sp", number>;
   picks: Record<PickKind, PickCount>;
   traits: HeldTrait[];
   // Traits the build may spend background picks on.
@@ -77,6 +81,7 @@ export interface BuildResult {
 const STATS = StatId.options;
 const PACKAGE_SLOTS = ["origin", "profession", "past"] as const;
 export const OUTER_POINTS_PER_LEVEL = 3;
+export const BASE_HP = 10;
 
 // Choice pools the engine knows how to resolve. Others (and pools with no
 // Traits in them yet) can't be checked, so answers to them only warn.
@@ -295,7 +300,8 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
   // Traits tagged with one of the Kind's traitAccess pools.
   const access = new Set(kind?.traitAccess ?? []);
   const backgroundList = new Set(packages.flatMap((p) => p.backgroundTraits));
-  for (const t of content.traits) if (t.tags.some((tag) => access.has(tag))) backgroundList.add(t.id);
+  // Conveyed Traits never go on it: no pick can buy them.
+  for (const t of content.traits) if (!t.conveyed && t.tags.some((tag) => access.has(tag))) backgroundList.add(t.id);
 
   // Group picks by Trait, keeping their positions for error paths.
   const byTrait = new Map<string, { rank: number; index: number }[]>();
@@ -307,6 +313,10 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
       return;
     }
     picks[p.pick].spent++;
+    // Conveyed Traits come from packages, choices or play, never from a pick.
+    if (t.conveyed) {
+      error("conveyed", `${label(t)} is Conveyed: it comes from a package or from play, not from a pick`, path);
+    }
     // Rules 7 and 9: universal picks take any non-background Trait (knowledge
     // included, at creation); background picks come from the Background list.
     if (p.pick === "universal" && t.background) {
@@ -401,6 +411,16 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     }
   }
 
+  const resources = {
+    hp: BASE_HP + STAT_GROUPS.physical.reduce((n, s) => n + stats[s], 0),
+    vp: innerRing.social,
+    sp: innerRing.mental,
+  };
+  for (const h of held.values()) {
+    const bonus = traits.get(h.trait)?.resources ?? {};
+    for (const r of ["hp", "vp", "sp"] as const) resources[r] += (bonus[r] ?? 0) * h.rank;
+  }
+
   return {
     ok: errors.length === 0,
     errors,
@@ -408,6 +428,7 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     summary: {
       stats,
       innerRing,
+      resources,
       picks,
       traits: [...held.values()],
       backgroundList: [...backgroundList].sort(),

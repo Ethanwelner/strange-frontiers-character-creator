@@ -47,7 +47,7 @@ export function StepHeader({ step, title, children }: { step: Step; title: strin
 
 // A selectable card in a radio group, clickable and keyboard-operable. The
 // step decides what a second click does; the Kind and package cards clear.
-export function Card(props: { selected: boolean; onSelect: () => void; children: ReactNode; label: string }) {
+export function Card(props: { selected: boolean; onSelect: () => void; children: ReactNode; label: string; className?: string }) {
   const onKey = (e: KeyboardEvent) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
@@ -60,7 +60,7 @@ export function Card(props: { selected: boolean; onSelect: () => void; children:
       aria-checked={props.selected}
       aria-label={props.label}
       tabIndex={0}
-      className={`card${props.selected ? " selected" : ""}`}
+      className={`card${props.className ? ` ${props.className}` : ""}${props.selected ? " selected" : ""}`}
       onClick={props.onSelect}
       onKeyDown={onKey}
     >

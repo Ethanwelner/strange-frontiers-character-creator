@@ -1,0 +1,23 @@
+id: kashgar
+name: "Kashgar"
+status: placeholder
+plane: earth
+region: kashgar
+summary: "You grew up on Kashgar, the largest Ark in the systems and the heart of the AI diaspora. Your neighbors were as likely to be AI Cores as people, Kashgari security watched every deck, and home never stayed anywhere for long."
+tags: [ark, kashgar, ai, space, urban]
+lore: kashgar
+type: origin
+grants:
+  - { trait: kashgar, rank: 1 }
+  - { trait: ai-culture, rank: 1 }
+choices:
+  - choose: 1
+    from: spoken-and-written-language
+    note: 1 language, spoken and written
+backgroundTraits:
+  - ark-life
+  - kashgar-mindworks
+  - artificial-intelligence
+  - cybernetics
+  - robotics
+  - earth-baseline-technology

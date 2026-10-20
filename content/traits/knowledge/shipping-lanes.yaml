@@ -1,0 +1,9 @@
+id: shipping-lanes
+name: "Shipping Lanes"
+status: placeholder
+plane: earth
+summary: "The routes, schedules and checkpoints of cargo traffic between stations, ships and surfaces."
+tags: [shipping, trade, space]
+category: knowledge
+ranked: true
+effect: Placeholder. Effect not yet written.

@@ -5,14 +5,10 @@ import { kindById } from "../content.js";
 import type { Draft } from "../draft.js";
 import { baseStats, GROUPS, StepHeader, title } from "./ui.js";
 
-const MAX_START = 10;
-
 interface Props {
   draft: Draft;
-  startingLevel: number;
   result: BuildResult;
   onChange: (d: Draft) => void;
-  onStartingLevel: (level: number) => void;
 }
 
 // Each level's points, with Physical, Social and Mental stacked. A level's
@@ -20,7 +16,7 @@ interface Props {
 // groups lock until that level's points are taken back out. A Kind with free
 // level 0 points, like the AI Core, gets a Level 0 card first, where the
 // points can go to any stat with room.
-export function StatsStep({ draft, startingLevel, result, onChange, onStartingLevel }: Props) {
+export function StatsStep({ draft, result, onChange }: Props) {
   const base = baseStats(draft);
   const free = (draft.kind ? kindById.get(draft.kind)?.freePoints : 0) ?? 0;
   const start = draft.startPoints ?? {};
@@ -54,18 +50,6 @@ export function StatsStep({ draft, startingLevel, result, onChange, onStartingLe
         Each level gives 1 Inner Ring point in one group and {POINTS_PER_LEVEL} Outer Ring points to spread among that group's stats.
       </StepHeader>
       <div className="tech-fields tech-fields-light step-box">
-        <label className="field inline">
-          <span>Starting level</span>
-          <select value={startingLevel} onChange={(e) => onStartingLevel(Number(e.target.value))}>
-            {Array.from({ length: MAX_START }, (_, i) => i + 1).map((n) => (
-              <option key={n} value={n}>
-                {n}
-              </option>
-            ))}
-          </select>
-          <span className="muted">Your GM sets this; most campaigns start at 1.</span>
-        </label>
-
         <div className="levels">
           {free > 0 && (
             <div className="level-card">

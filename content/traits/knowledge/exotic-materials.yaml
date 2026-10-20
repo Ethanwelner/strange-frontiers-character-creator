@@ -1,0 +1,9 @@
+id: exotic-materials
+name: "Exotic Materials"
+status: placeholder
+plane: earth
+summary: "The exotic materials paraphysics depends on: what they are, where they come from and what they do."
+tags: [exotic-materials, science]
+category: knowledge
+ranked: true
+effect: Placeholder. Effect not yet written.

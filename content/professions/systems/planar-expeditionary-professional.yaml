@@ -1,0 +1,14 @@
+id: planar-expeditionary-professional
+name: "Planar Expeditionary Professional"
+status: placeholder
+plane: earth
+summary: "A member of the expedition teams that open new planes for the Explorers’ Lodge: surveying, raising the first gate platforms, and surviving whatever is waiting on the other side."
+tags: [planes, exploration, lodge, survey, wilderness]
+lore: explorers-lodge
+type: profession
+grants:
+  - { trait: survivalist }
+  - { trait: planar-surveying }
+  - { trait: planar-exploration }
+  - { trait: the-explorers-lodge }
+  - { trait: explorers-lodge-membership }

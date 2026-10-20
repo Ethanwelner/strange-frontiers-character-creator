@@ -83,6 +83,20 @@ describe("traitOptions", () => {
     expect(stepOf(result.errors.find((e) => e.message.startsWith("Additional Language"))!)).toBe("choices");
   });
 
+  it("puts a starting level mismatch on the Character step and missing allocations on Stats", () => {
+    const result = check({ ...human, level: 2 }, bundled, campaign);
+    const steps = result.errors.filter((e) => e.code === "level").map((e) => stepOf(e));
+    expect(steps).toEqual(["character", "stats"]);
+  });
+
+  it("never offers a Conveyed Trait", () => {
+    for (const pick of ["universal", "background"] as const) {
+      const ids = traitOptions(human, bundled, campaign, pick)!.map((o) => o.trait.id);
+      expect(ids).not.toContain("imperial-service-record");
+      expect(ids).not.toContain("explorers-lodge-membership");
+    }
+  });
+
   it("rejects everything once the picks run out", () => {
     // Isek power 3 and grace 4 give 3 background picks.
     const isek: Draft = { ...human, kind: "isek", traits: [] };

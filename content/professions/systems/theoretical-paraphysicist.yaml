@@ -1,0 +1,12 @@
+id: theoretical-paraphysicist
+name: "Theoretical Paraphysicist"
+status: placeholder
+plane: earth
+summary: "A scientist working at the edge of paraphysics, the field The Gift opened up, where new discoveries are made every day and most of them are wrong."
+tags: [science, paraphysics, research, scholar]
+type: profession
+grants:
+  - { trait: research }
+  - { trait: paraphysics }
+  - { trait: exotic-materials }
+  - { trait: mathematics }

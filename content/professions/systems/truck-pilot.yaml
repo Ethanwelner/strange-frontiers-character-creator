@@ -1,0 +1,17 @@
+id: truck-pilot
+name: "Truck Pilot"
+status: placeholder
+plane: earth
+summary: "Hauls cargo in a truck between stations, ships and planetary surfaces, and rarely knows what’s inside the containers."
+tags: [pilot, trucks, shipping, cargo, space]
+lore: trucks
+type: profession
+grants:
+  - { trait: pilot-truck }
+  - { trait: cargo-handling }
+  - { trait: shipping-lanes }
+  - { trait: ports-and-stations }
+choices:
+  - choose: 1
+    from: contact
+    note: 1 additional Contact

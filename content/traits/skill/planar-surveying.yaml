@@ -1,0 +1,9 @@
+id: planar-surveying
+name: "Planar Surveying"
+status: placeholder
+plane: earth
+summary: "Mapping and assessing a newly opened plane in the field."
+tags: [planes, exploration, survey]
+category: skill
+ranked: true
+effect: Placeholder. Effect not yet written.

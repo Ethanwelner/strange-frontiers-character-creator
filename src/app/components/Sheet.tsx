@@ -52,9 +52,16 @@ export function Sheet({ draft, result }: { draft: Draft; result: BuildResult }) 
             <p className="lede">
               Level {draft.level} {kind?.name ?? "—"} · {packages.map((p) => p?.name ?? "—").join(" · ")}
             </p>
+            <p className="sheet-resources">
+              {(["hp", "vp", "sp"] as const).map((r) => (
+                <span key={r}>
+                  <i>{summary?.resources[r] ?? "–"}</i> <strong>{r.toUpperCase()}</strong>
+                </span>
+              ))}
+            </p>
           </div>
           <div className="sheet-actions">
-            <span className={`status ${result.ok ? "good" : "bad"}`}>{result.ok ? "Legal" : `${result.errors.length} errors`}</span>
+            <span className={`status ${result.ok ? "good" : "bad"}`}>{result.ok ? "Legal" : `${result.errors.length} ${result.errors.length === 1 ? "error" : "errors"}`}</span>
             <button onClick={() => window.print()}>Print</button>
           </div>
         </div>

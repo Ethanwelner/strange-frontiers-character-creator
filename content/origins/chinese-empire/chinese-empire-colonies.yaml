@@ -1,0 +1,20 @@
+id: chinese-empire-colonies
+name: "The Chinese Empire: Colonies"
+status: placeholder
+plane: earth
+region: chinese-empire
+summary: "You grew up in the Empire’s stellar territories, in Yùtù, the Jade Rabbit colony on Luna, or aboard the Ark Zhulong."
+tags: [chinese-empire, colonies, luna, ark, space]
+lore: chinese-empire
+type: origin
+grants:
+  - { trait: the-chinese-empire, rank: 1 }
+  - { trait: chinese-imperial-law, rank: 1 }
+  - { trait: mandarin }
+  - { trait: mandarin-written }
+backgroundTraits:
+  - yutu
+  - zhulong
+  - ark-life
+  - the-corporate-syndicates
+  - earth-baseline-technology

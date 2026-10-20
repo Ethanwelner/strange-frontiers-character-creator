@@ -1,0 +1,10 @@
+id: pilot-truck
+name: "Pilot: Truck"
+status: placeholder
+plane: earth
+summary: "Flying cargo trucks between stations, ships and planetary surfaces."
+tags: [pilot, trucks, shipping]
+lore: trucks
+category: skill
+ranked: true
+effect: Placeholder. Effect not yet written.
