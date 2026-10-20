@@ -494,22 +494,17 @@ button.hero-link:hover:not(:disabled) {
   color: var(--black);
 }
 
-/* Character name, written like the sheet's name */
-.name {
-  display: block;
-  width: 100%;
-  max-width: 32rem;
-  font-size: 1.75rem;
-  font-weight: 300;
-  border: 0;
-  border-bottom: 1px solid var(--rule);
-  border-radius: 0;
-  padding: 0.25rem 0;
-  margin-bottom: 1.5rem;
+/* Step title, then the stinger, then the step's description */
+.step-head h2 {
+  margin-bottom: 1rem;
 }
 
-.name::placeholder {
-  color: var(--medium-gray);
+.step-head .stinger {
+  margin-bottom: 1rem;
+}
+
+.step-head .lede {
+  margin-top: 0;
 }
 
 .pager {
@@ -862,6 +857,26 @@ button.hero-link:hover:not(:disabled) {
 
 .panel-toggle {
   display: none;
+}
+
+/* Character name, a labeled form field at the top of the panel */
+.name-field {
+  margin-bottom: 1.5rem;
+}
+
+.field-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.name-field input {
+  width: 100%;
+  font-size: 1rem;
+  padding: 0.6rem 0.75rem;
+}
+
+.name-field input::placeholder {
+  color: var(--medium-gray);
 }
 
 .panel-body {
@@ -1303,8 +1318,7 @@ button.hero-link:hover:not(:disabled) {
   .builder-side,
   .pager,
   .notice,
-  .name,
-  .stinger,
+  .step-head,
   .sheet-actions button {
     display: none !important;
   }

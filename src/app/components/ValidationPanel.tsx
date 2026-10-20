@@ -8,10 +8,11 @@ import { baseStats, GROUPS, title } from "./ui.js";
 interface Props {
   draft: Draft;
   result: BuildResult;
+  onName: (name: string | undefined) => void;
   onJump: (step: Step) => void;
 }
 
-export function ValidationPanel({ draft, result, onJump }: Props) {
+export function ValidationPanel({ draft, result, onName, onJump }: Props) {
   const [open, setOpen] = useState(false);
   const { errors, warnings, summary } = result;
   const base = baseStats(draft);
@@ -38,6 +39,11 @@ export function ValidationPanel({ draft, result, onJump }: Props) {
       </button>
 
       <div className="panel-body">
+        <label className="field name-field">
+          <span className="field-label">Character Name</span>
+          <input value={draft.name ?? ""} placeholder="Unnamed character" onChange={(e) => onName(e.target.value || undefined)} />
+        </label>
+
         <div className="panel-status">
           <span className={`status ${result.ok ? "good" : "bad"}`}>{status}</span>
           {warnings.length > 0 && <span className="status warn">{warnings.length} {warnings.length === 1 ? "warning" : "warnings"}</span>}

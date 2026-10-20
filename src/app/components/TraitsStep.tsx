@@ -5,7 +5,7 @@ import { TraitCategory } from "../../schema/index.js";
 import { traitOptions } from "../check.js";
 import { content, traitById } from "../content.js";
 import { addPick, type Draft } from "../draft.js";
-import { Chip, title, traitName } from "./ui.js";
+import { Chip, StepHeader, title, traitName } from "./ui.js";
 
 interface Props {
   draft: Draft;
@@ -31,7 +31,7 @@ export function TraitsStep({ draft, campaign, result, onChange }: Props) {
   if (!options || !summary) {
     return (
       <section>
-        <h2>Traits</h2>
+        <StepHeader step="traits" title="Traits" />
         <p className="empty">Finish the Kind and Background steps first; the engine needs a complete build to check picks against.</p>
       </section>
     );
@@ -48,8 +48,9 @@ export function TraitsStep({ draft, campaign, result, onChange }: Props) {
 
   return (
     <section>
-      <h2>Traits</h2>
-      <p className="lede">Spend picks on Traits. Unspent picks are banked for later.</p>
+      <StepHeader step="traits" title="Traits">
+        Spend picks on Traits. Unspent picks are banked for later.
+      </StepHeader>
 
       <div className="segmented" role="tablist" aria-label="Pick type">
         {(["universal", "background"] as const).map((k) => {

@@ -170,19 +170,6 @@ export function App() {
                 </div>
               )}
 
-              {step !== "sheet" && (
-                <input
-                  className="name"
-                  value={draft.name ?? ""}
-                  placeholder="Character name"
-                  aria-label="Character name"
-                  onChange={(e) => setDraft({ ...draft, name: e.target.value || undefined })}
-                />
-              )}
-              <div className="stinger">
-                Step {i + 1} of {STEPS.length}
-              </div>
-
               {step === "kind" && <KindStep draft={draft} onChange={setDraft} />}
               {step === "background" && <BackgroundStep draft={draft} onChange={setDraft} />}
               {step === "levels" && (
@@ -202,7 +189,7 @@ export function App() {
               </div>
             </main>
             <div className="flex-4 builder-side">
-              <ValidationPanel draft={draft} result={result} onJump={setStep} />
+              <ValidationPanel draft={draft} result={result} onName={(name) => setDraft({ ...draft, name })} onJump={setStep} />
             </div>
           </div>
           {gutter}

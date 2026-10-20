@@ -1,7 +1,7 @@
 import type { BackgroundPackage } from "../../schema/index.js";
 import { content } from "../content.js";
 import type { Draft } from "../draft.js";
-import { Card, Chip, title, traitName } from "./ui.js";
+import { Card, Chip, StepHeader, title, traitName } from "./ui.js";
 
 const SLOTS = ["origin", "profession", "past"] as const;
 
@@ -59,8 +59,9 @@ export function BackgroundStep({ draft, onChange }: { draft: Draft; onChange: (d
   };
   return (
     <section>
-      <h2>Background</h2>
-      <p className="lede">Pick an Origin, a Profession and a Past. Their Traits come free and don't use picks.</p>
+      <StepHeader step="background" title="Background">
+        Pick an Origin, a Profession and a Past. Their Traits come free and don't use picks.
+      </StepHeader>
       {SLOTS.map((slot) => (
         <div key={slot} className="slot">
           <h3 className="subhead">

@@ -4,7 +4,7 @@ import { choicePool, FREE_TEXT_POOLS } from "../../engine/validate.js";
 import type { BackgroundPackage } from "../../schema/index.js";
 import { content, packageById } from "../content.js";
 import { slug, type Draft } from "../draft.js";
-import { title, traitName } from "./ui.js";
+import { StepHeader, title, traitName } from "./ui.js";
 
 // One question per package and pool, the way the engine matches answers.
 interface Question {
@@ -41,8 +41,9 @@ export function ChoicesStep({ draft, onChange }: { draft: Draft; onChange: (d: D
 
   return (
     <section>
-      <h2>Package choices</h2>
-      <p className="lede">Some packages let you pick a Trait from a pool, like a Contact or a language.</p>
+      <StepHeader step="choices" title="Package choices">
+        Some packages let you pick a Trait from a pool, like a Contact or a language.
+      </StepHeader>
       {qs.length === 0 && <p className="empty">This build's packages have no choices to answer.</p>}
       {qs.map((q) => (
         <div key={`${q.pkg.id}/${q.from}`} className="choice">

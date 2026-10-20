@@ -2,7 +2,7 @@ import type { LevelAllocation, StatGroup } from "../../engine/build.js";
 import { OUTER_POINTS_PER_LEVEL as POINTS_PER_LEVEL, type BuildResult } from "../../engine/validate.js";
 import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import type { Draft } from "../draft.js";
-import { baseStats, GROUPS, title } from "./ui.js";
+import { baseStats, GROUPS, StepHeader, title } from "./ui.js";
 
 const MAX_START = 10;
 
@@ -33,10 +33,9 @@ export function LevelsStep({ draft, startingLevel, result, onChange, onStartingL
 
   return (
     <section>
-      <h2>Levels</h2>
-      <p className="lede">
+      <StepHeader step="levels" title="Levels">
         Each level gives 1 Inner Ring point in one group and {POINTS_PER_LEVEL} Outer Ring points to spread among that group's stats.
-      </p>
+      </StepHeader>
       <label className="field inline">
         <span>Starting level</span>
         <select value={startingLevel} onChange={(e) => onStartingLevel(Number(e.target.value))}>

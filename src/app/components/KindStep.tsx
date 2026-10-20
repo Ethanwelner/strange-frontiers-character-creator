@@ -1,12 +1,13 @@
 import { content } from "../content.js";
 import type { Draft } from "../draft.js";
-import { Card, Chip, StatRanges } from "./ui.js";
+import { Card, Chip, StatRanges, StepHeader } from "./ui.js";
 
 export function KindStep({ draft, onChange }: { draft: Draft; onChange: (d: Draft) => void }) {
   return (
     <section>
-      <h2>Kind</h2>
-      <p className="lede">Your Kind sets your level 0 stats and how far each can go. Numbers show start/max.</p>
+      <StepHeader step="kind" title="Kind">
+        Your Kind sets your level 0 stats and how far each can go. Numbers show start/max.
+      </StepHeader>
       <div className="cards" role="radiogroup" aria-label="Kind">
         {content.kinds.map((k) => (
           <Card key={k.id} label={k.name} selected={draft.kind === k.id} onSelect={() => onChange({ ...draft, kind: k.id })}>

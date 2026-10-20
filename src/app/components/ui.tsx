@@ -1,7 +1,7 @@
 import type { KeyboardEvent, ReactNode } from "react";
 import { STAT_GROUPS, type StatBlock, type StatId } from "../../schema/index.js";
 import { kindById, traitById } from "../content.js";
-import type { Draft } from "../draft.js";
+import { STEPS, type Draft, type Step } from "../draft.js";
 
 export const GROUPS = Object.keys(STAT_GROUPS) as (keyof typeof STAT_GROUPS)[];
 
@@ -12,6 +12,19 @@ export const traitName = (id: string) => traitById.get(id)?.name ?? id;
 // The Kind's level 0 stats and maximums, straight from content.
 export function baseStats(draft: Draft): StatBlock | undefined {
   return draft.kind ? kindById.get(draft.kind)?.stats : undefined;
+}
+
+// A step's title, then the site's black stinger, then what the step is for.
+export function StepHeader({ step, title, children }: { step: Step; title: string; children?: ReactNode }) {
+  return (
+    <header className="step-head">
+      <h2>{title}</h2>
+      <div className="stinger">
+        Step {STEPS.indexOf(step) + 1} of {STEPS.length}
+      </div>
+      {children && <p className="lede">{children}</p>}
+    </header>
+  );
 }
 
 // A selectable card in a radio group, clickable and keyboard-operable.
