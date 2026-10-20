@@ -33,7 +33,7 @@ export function contentIndex(content: Content): string {
   const lines: string[] = ["# Content index", "", "Stats are listed as start/max.", "", "## Kinds"];
   for (const k of content.kinds) {
     lines.push(`- ${k.id}: ${k.name}. ${k.summary} Tags: ${k.tags.join(", ") || "none"}. Trait access: ${k.traitAccess.join(", ") || "none"}.`);
-    lines.push(`  Stats: ${stats(k.stats)}`);
+    lines.push(`  Stats: ${stats(k.stats)}${k.freePoints ? `. Plus ${k.freePoints} free level 0 points, placed by the engine` : ""}`);
   }
   for (const type of ["origin", "profession", "past"] as const) {
     lines.push("", `## ${type[0]!.toUpperCase()}${type.slice(1)}s`);

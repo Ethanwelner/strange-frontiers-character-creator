@@ -70,6 +70,9 @@ export const Kind = BaseEntry.extend({
   // Trait pools this Kind gets easier access to.
   traitAccess: z.array(z.string()).default([]),
   stats: StatBlock,
+  // Level 0 points the player places in any stats, on top of the starting
+  // stats, like an AI Core's 3. Maximums still apply.
+  freePoints: z.number().int().min(0).default(0),
 });
 export type Kind = z.infer<typeof Kind>;
 

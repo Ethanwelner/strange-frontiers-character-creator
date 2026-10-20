@@ -55,6 +55,23 @@ function baseStats(concept: Concept, content: Content): StatBlock | undefined {
   return content.kinds.find((k) => k.id === concept.kind)?.stats;
 }
 
+// Places a Kind's free level 0 points: into the focus stats in turn, then into
+// whichever stat has the most room. Stats with a max of 0 never get one.
+export function allocateStart(focusIn: string[], base: StatBlock | undefined, free: number): Partial<Record<StatId, number>> {
+  const focus = [...new Set(focusIn.filter(isStat))];
+  const current = Object.fromEntries(StatId.options.map((s) => [s, base?.[s]?.start ?? 0])) as Record<StatId, number>;
+  const room = (s: StatId) => Math.min(base?.[s]?.max ?? STAT_CAP, STAT_CAP) - current[s];
+  const points: Partial<Record<StatId, number>> = {};
+  for (let p = 0; p < free; p++) {
+    const candidates = focus.filter((s) => room(s) > 0);
+    const stat = candidates.length ? candidates[p % candidates.length]! : [...StatId.options].sort((a, b) => room(b) - room(a))[0]!;
+    if (room(stat) <= 0) break;
+    points[stat] = (points[stat] ?? 0) + 1;
+    current[stat]++;
+  }
+  return points;
+}
+
 // One allocation per level. Each level goes to the next group in focus order,
 // and its points go to that group's focus stats in turn, then to whichever of
 // its stats has the most room. A group with no room left is passed over.
@@ -170,6 +187,14 @@ export function solveConcept(input: unknown, content: Content, campaign: Campaig
   const concept = parsed.data;
   const traits = new Map<string, Trait>(content.traits.map((t) => [t.id, t]));
 
+  // The Kind's free level 0 points go to the focus first; the levels build on them.
+  const focus = rankFocus(concept, content);
+  const base = baseStats(concept, content);
+  const startPoints = allocateStart(focus, base, content.kinds.find((k) => k.id === concept.kind)?.freePoints ?? 0);
+  const afterStart = base && (Object.fromEntries(
+    Object.entries(base).map(([s, r]) => [s, { ...r, start: r.start + (startPoints[s as StatId] ?? 0) }]),
+  ) as StatBlock);
+
   let build: Build = Build.parse({
     ...(concept.name ? { name: concept.name } : {}),
     kind: concept.kind,
@@ -177,7 +202,8 @@ export function solveConcept(input: unknown, content: Content, campaign: Campaig
     profession: concept.profession,
     past: concept.past,
     level: campaign.startingLevel,
-    levels: allocateLevels(rankFocus(concept, content), baseStats(concept, content), campaign.startingLevel),
+    startPoints,
+    levels: allocateLevels(focus, afterStart, campaign.startingLevel),
     traits: [],
     choices: answerChoices(concept, content),
   });

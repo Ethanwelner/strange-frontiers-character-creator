@@ -122,6 +122,13 @@ describe("solveConcept", () => {
     expect(s.result.ok).toBe(true);
   });
 
+  it("places a Kind's free level 0 points in the focus stats", () => {
+    const s = solve({ ...hunter, kind: "ai-core", focus: ["logic", "persuasion", "power"], traits: [] });
+    // Power has a max of 0 for an AI Core, so it's skipped.
+    expect(s.build.startPoints).toEqual({ logic: 2, persuasion: 1 });
+    expect(s.result.ok).toBe(true);
+  });
+
   it("buys nothing when the Kind or a package is wrong", () => {
     const s = solve({ ...hunter, kind: "dragon" });
     expect(s.result.ok).toBe(false);

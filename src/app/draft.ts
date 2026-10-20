@@ -3,6 +3,7 @@
 import type { ChoiceAnswer, LevelAllocation, PickKind, TraitPick } from "../engine/build.js";
 import type { Campaign } from "../engine/build.js";
 import type { DescribeResult, OpenChoice, Reason } from "../ai/types.js";
+import type { StatId } from "../schema/index.js";
 
 export interface Draft {
   name?: string;
@@ -10,6 +11,8 @@ export interface Draft {
   origin?: string;
   profession?: string;
   past?: string;
+  // Where the Kind's free level 0 points go, if it has any.
+  startPoints?: Partial<Record<StatId, number>>;
   level: number;
   levels: LevelAllocation[];
   traits: TraitPick[];
@@ -74,6 +77,9 @@ export function fromBuild(input: unknown): Draft {
     origin: text(b.origin),
     profession: text(b.profession),
     past: text(b.past),
+    ...(b.startPoints && typeof b.startPoints === "object" && Object.keys(b.startPoints).length
+      ? { startPoints: b.startPoints as Partial<Record<StatId, number>> }
+      : {}),
     level,
     levels,
     traits: array<TraitPick>(b.traits).map((t) => ({ ...t, rank: t.rank ?? 1 })),

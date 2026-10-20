@@ -1,6 +1,7 @@
 import type { StatGroup } from "../../engine/build.js";
 import { OUTER_POINTS_PER_LEVEL as POINTS_PER_LEVEL, type BuildResult } from "../../engine/validate.js";
 import { STAT_GROUPS, type StatId } from "../../schema/index.js";
+import { kindById } from "../content.js";
 import type { Draft } from "../draft.js";
 import { baseStats, GROUPS, StepHeader, title } from "./ui.js";
 
@@ -16,13 +17,26 @@ interface Props {
 
 // Each level's points, with Physical, Social and Mental stacked. A level's
 // points all go to one group, so the first point picks the group and the other
-// groups lock until that level's points are taken back out.
+// groups lock until that level's points are taken back out. A Kind with free
+// level 0 points, like the AI Core, gets a Level 0 card first, where the
+// points can go to any stat with room.
 export function StatsStep({ draft, startingLevel, result, onChange, onStartingLevel }: Props) {
   const base = baseStats(draft);
+  const free = (draft.kind ? kindById.get(draft.kind)?.freePoints : 0) ?? 0;
+  const start = draft.startPoints ?? {};
+  const placed = Object.values(start).reduce((n, p) => n + (p ?? 0), 0);
   // The engine's totals once the build is complete enough to check; before
   // that, the Kind's level 0 stats plus the points spent here.
   const total = (s: StatId) =>
-    result.summary?.stats[s] ?? (base ? (base[s]?.start ?? 0) + draft.levels.reduce((n, l) => n + (l.points[s] ?? 0), 0) : undefined);
+    result.summary?.stats[s] ??
+    (base ? (base[s]?.start ?? 0) + (start[s] ?? 0) + draft.levels.reduce((n, l) => n + (l.points[s] ?? 0), 0) : undefined);
+
+  const bumpStart = (stat: StatId, by: number) => {
+    const next = Math.max(0, (start[stat] ?? 0) + by);
+    const startPoints = { ...start, [stat]: next };
+    if (next === 0) delete startPoints[stat];
+    onChange({ ...draft, startPoints });
+  };
 
   const bump = (i: number, group: StatGroup, stat: StatId, by: number) => {
     const lvl = draft.levels[i]!;
@@ -53,6 +67,45 @@ export function StatsStep({ draft, startingLevel, result, onChange, onStartingLe
         </label>
 
         <div className="levels">
+          {free > 0 && (
+            <div className="level-card">
+              <div className="card-head">
+                <h3>Level 0</h3>
+                <span className={`num${placed === free ? " good" : ""}`}>
+                  {placed}/{free} points
+                </span>
+              </div>
+              <p className="hint">Your Kind gives {free} points to place in any stats it allows, before level 1.</p>
+              {GROUPS.map((g) => (
+                <div key={g} className="stat-group">
+                  <h4 className="rule">{title(g)}</h4>
+                  {STAT_GROUPS[g].map((s: StatId) => {
+                    const value = total(s);
+                    const max = base?.[s]?.max;
+                    const full = value !== undefined && max !== undefined && value >= max;
+                    return (
+                      <div key={s} className="stepper-row">
+                        <span className="stepper-label">{title(s)}</span>
+                        <div className="stepper">
+                          <button aria-label={`Remove a level 0 point from ${s}`} onClick={() => bumpStart(s, -1)} disabled={!start[s]}>
+                            −
+                          </button>
+                          <span className="num">{start[s] ?? 0}</span>
+                          <button aria-label={`Add a level 0 point to ${s}`} onClick={() => bumpStart(s, 1)} disabled={placed >= free || full}>
+                            +
+                          </button>
+                        </div>
+                        <span className="stepper-total num">
+                          {value ?? "–"}
+                          <span className="muted">/{max ?? "–"}</span>
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+          )}
           {draft.levels.map((lvl, i) => {
             const spent = Object.values(lvl.points).reduce((n, p) => n + (p ?? 0), 0);
             const active = spent > 0 ? lvl.group : undefined;
