@@ -547,9 +547,9 @@ button.hero-link:hover:not(:disabled) {
   margin: 0;
   padding: 0.5rem 1rem;
   border: 0;
-  border-radius: 0.25rem;
+  border-radius: 999px;
   background: var(--red);
-  color: var(--white);
+  color: var(--black);
   font-size: 0.75rem;
   font-weight: 600;
   line-height: 1.2;
@@ -705,15 +705,16 @@ button.hero-link:hover:not(:disabled) {
   flex-wrap: wrap;
 }
 
+/* Each list's label (Grants, Choose, Background list) sits above its chips */
 .grants .label {
-  display: inline-block;
-  min-width: 7rem;
+  display: block;
+  margin-bottom: 0.15rem;
   font-size: 0.75rem;
   font-weight: 600;
 }
 
 .grants > div {
-  margin: 0.35rem 0;
+  margin: 0.75rem 0;
 }
 
 .stat-ranges {
