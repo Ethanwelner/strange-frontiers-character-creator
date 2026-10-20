@@ -83,6 +83,8 @@ export const OUTER_POINTS_PER_LEVEL = 3;
 const POOLS: Record<string, (t: Trait) => boolean> = {
   language: (t) => t.types.includes("language"),
   "dreftian-language": (t) => t.types.includes("language") && t.region === "dreft",
+  "spoken-language": (t) => t.types.includes("language") && !t.tags.includes("writing"),
+  "written-language": (t) => t.types.includes("language") && t.tags.includes("writing"),
 };
 
 // Pools the player answers in their own words instead of with Trait ids. A

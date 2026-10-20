@@ -122,6 +122,15 @@ describe("solveConcept", () => {
     expect(s.result.ok).toBe(true);
   });
 
+  it("answers the Tetra Origin's spoken and written language choices", () => {
+    const s = solve({ ...hunter, origin: "tetra", traits: [] });
+    expect(s.build.choices).toEqual([
+      { package: "tetra", from: "spoken-language", traits: ["dreftan"] },
+      { package: "tetra", from: "written-language", traits: ["dreftan-written"] },
+    ]);
+    expect(s.result.ok).toBe(true);
+  });
+
   it("places a Kind's free level 0 points in the focus stats", () => {
     const s = solve({ ...hunter, kind: "ai-core", focus: ["logic", "persuasion", "power"], traits: [] });
     // Power has a max of 0 for an AI Core, so it's skipped.

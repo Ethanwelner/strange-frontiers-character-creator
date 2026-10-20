@@ -381,6 +381,29 @@ describe("rule 6: package grants and choices", () => {
   });
 });
 
+describe("rule 6: the Tetra Origin's language", () => {
+  const tetra = { ...human, origin: "tetra", traits: [] };
+  const answer = (spoken: string[], written: string[]) => ({
+    ...tetra,
+    choices: [
+      { package: "tetra", from: "spoken-language", traits: spoken },
+      { package: "tetra", from: "written-language", traits: written },
+    ],
+  });
+
+  it("grants Tetra and SDU law, and asks for one language spoken and written", () => {
+    const r = check(answer(["english"], ["english-written"]));
+    expectLegal(r);
+    expect(r.summary!.traits.map((h) => h.trait)).toEqual(expect.arrayContaining(["tetra", "sdu-law", "english", "english-written"]));
+    expect(r.summary!.backgroundList).toEqual(expect.arrayContaining(["the-diplomatic-wing", "planar-exploration", "ark-life"]));
+  });
+
+  it("keeps spoken and written languages in their own pools", () => {
+    expect(codes(check(answer(["english-written"], ["english-written"])))).toContain("choice");
+    expect(codes(check(answer(["english"], ["english"])))).toContain("choice");
+  });
+});
+
 describe("rule 6: Trait choices", () => {
   const language = { trait: "additional-language", pick: "universal" as const };
   const contact = { trait: "additional-contact", pick: "universal" as const };

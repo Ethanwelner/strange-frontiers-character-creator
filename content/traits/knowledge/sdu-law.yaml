@@ -1,0 +1,11 @@
+id: sdu-law
+name: "Stellar Democratic Union Law"
+status: placeholder
+plane: earth
+region: tetra
+summary: "The laws of the Stellar Democratic Union and how they’re enforced."
+tags: [law, sdu, tetra]
+lore: stellar-democratic-union
+category: knowledge
+ranked: true
+effect: Placeholder. Effect not yet written.
