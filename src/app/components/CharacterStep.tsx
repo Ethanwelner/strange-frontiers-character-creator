@@ -31,7 +31,7 @@ export function CharacterStep({ draft, startingLevel, onChange, onStartingLevel 
               </option>
             ))}
           </select>
-          <span className="muted">Your GM sets this; most campaigns start at 1.</span>
+          <span className="muted">Your GM sets this; most campaigns start at 3.</span>
         </label>
       </div>
     </section>
