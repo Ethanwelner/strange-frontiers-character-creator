@@ -8,7 +8,6 @@ import type { Content } from "./content.js";
 export type IssueCode =
   | "schema"
   | "kind"
-  | "form"
   | "package"
   | "level"
   | "allocation"
@@ -105,21 +104,10 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
   const build = parsed.data;
   const traits = new Map(content.traits.map((t) => [t.id, t]));
 
-  // Rule 1: level 0 stats come from the Kind, or the chosen form.
-  let base: StatBlock | undefined;
+  // Rule 1: level 0 stats come from the Kind.
   const kind = content.kinds.find((k) => k.id === build.kind);
-  if (!kind) {
-    error("kind", `Kind "${build.kind}" doesn't exist`, "kind");
-  } else if (kind.forms) {
-    const form = kind.forms.find((f) => f.id === build.form);
-    const options = kind.forms.map((f) => f.id).join(", ");
-    if (build.form === undefined) error("form", `${kind.name} needs a form: ${options}`, "form");
-    else if (!form) error("form", `${kind.name} has no form "${build.form}" (options: ${options})`, "form");
-    base = form?.stats;
-  } else {
-    if (build.form !== undefined) error("form", `${kind.name} has no forms, but the build picks "${build.form}"`, "form");
-    base = kind.stats;
-  }
+  if (!kind) error("kind", `Kind "${build.kind}" doesn't exist`, "kind");
+  const base: StatBlock | undefined = kind?.stats;
 
   const packages: BackgroundPackage[] = [];
   for (const slot of PACKAGE_SLOTS) {

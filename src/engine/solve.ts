@@ -13,7 +13,6 @@ import { choicePool, isFreeTextPool, OUTER_POINTS_PER_LEVEL, validateBuild, type
 export const Concept = z.object({
   name: z.string().optional(),
   kind: z.string(),
-  form: z.string().optional(),
   origin: z.string(),
   profession: z.string(),
   past: z.string(),
@@ -52,8 +51,7 @@ const GROUP_OF = Object.fromEntries(
 const isStat = (s: string): s is StatId => StatId.safeParse(s).success;
 
 function baseStats(concept: Concept, content: Content): StatBlock | undefined {
-  const kind = content.kinds.find((k) => k.id === concept.kind);
-  return kind?.forms ? kind.forms.find((f) => f.id === concept.form)?.stats : kind?.stats;
+  return content.kinds.find((k) => k.id === concept.kind)?.stats;
 }
 
 // One allocation per level. Each level goes to the next group in focus order,
@@ -150,7 +148,6 @@ export function solveConcept(input: unknown, content: Content, campaign: Campaig
   let build: Build = Build.parse({
     ...(concept.name ? { name: concept.name } : {}),
     kind: concept.kind,
-    ...(concept.form ? { form: concept.form } : {}),
     origin: concept.origin,
     profession: concept.profession,
     past: concept.past,
@@ -164,7 +161,7 @@ export function solveConcept(input: unknown, content: Content, campaign: Campaig
   let result = check(build);
   const taken: string[] = [];
   const skipped: SkippedTrait[] = [];
-  // Kind, form, packages or stats are wrong: there's nothing to buy Traits for.
+  // Kind, packages or stats are wrong: there's nothing to buy Traits for.
   if (!result.ok) return { build, taken, filled: [], skipped, result };
 
   // Buys the next rank of a Trait if the engine allows it, or says why not.

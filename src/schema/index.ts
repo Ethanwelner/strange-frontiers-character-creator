@@ -63,26 +63,12 @@ export const TraitChoice = z.object({
   note: z.string().optional(),
 });
 
-// A Kind with several fixed forms, like the Tatot's orcoid and goblinoid
-// births. The player picks one at character creation.
-export const KindForm = z.object({
-  id: Id,
-  name: z.string().min(1),
-  description: z.string().min(1),
-  stats: StatBlock,
-  features: z.array(Feature).default([]),
-});
-
 export const Kind = BaseEntry.extend({
   features: z.array(Feature).default([]),
   // Trait pools this Kind gets easier access to.
   traitAccess: z.array(z.string()).default([]),
-  stats: StatBlock.optional(),
-  forms: z.array(KindForm).optional(),
-}).refine(
-  (k) => (k.stats === undefined) !== (k.forms === undefined),
-  "a Kind has either stats or forms, not both",
-);
+  stats: StatBlock,
+});
 export type Kind = z.infer<typeof Kind>;
 
 export const PackageType = z.enum(["origin", "profession", "past"]);

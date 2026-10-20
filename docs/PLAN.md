@@ -33,7 +33,7 @@ Content flow: write in Campfire → convert to data files here (Claude-assisted,
 ## Decisions
 
 - Repo is public on GitHub.
-- Launch content: Human, Isek, Tatot, Guwain, and the Dreftian Origins, Professions and Pasts.
+- Launch content: Human, Isek, Orcoid Tatot, Goblinoid Tatot, Guwain, and the Dreftian Origins, Professions and Pasts.
 - Public release waits until after playtesting.
 - Content is YAML (easy to write by hand), checked by Zod schemas in TypeScript.
 - Phase 2 tests skip Edwin Humble: the site's Human sample uses Earth packages that aren't in `content/` yet. He becomes a test once those packages are converted.
@@ -42,7 +42,7 @@ Content flow: write in Campfire → convert to data files here (Claude-assisted,
 
 The rules `validateBuild` (in `src/engine/`) enforces:
 
-1. Level 0 stats come from the Kind, or the chosen form for a Kind with forms.
+1. Level 0 stats come from the Kind.
 2. Characters start at level 1 by default. The starting level is set per campaign (a GM may start at 2–3).
 3. Each level, including level 1 at creation, gives 1 Inner Ring point in one group (physical, social or mental) and 3 Outer Ring points to spread among that group's three stats.
 4. No Outer Ring stat may exceed its Kind max, and nothing may exceed 20. Traits and gear that push past that are out of scope for now.

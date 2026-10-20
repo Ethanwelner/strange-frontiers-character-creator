@@ -639,7 +639,7 @@ button.hero-link:hover:not(:disabled) {
 
 .stat-ranges {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
   gap: 0.75rem;
   margin-top: 1rem;
   padding-top: 0.75rem;

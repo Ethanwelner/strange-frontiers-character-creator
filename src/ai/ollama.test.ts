@@ -9,8 +9,7 @@ import { ollamaProvider, type Fetch } from "./ollama.js";
 const { content } = loadContent();
 
 const goblinoid: ConceptInput = {
-  kind: "tatot",
-  form: "goblinoid",
+  kind: "tatot-goblinoid",
   origin: "tetra",
   profession: "licensed-mage",
   past: "raised-in-the-caravan-town",
@@ -21,7 +20,7 @@ const goblinoid: ConceptInput = {
   ],
 };
 
-const reasons = ["kind", "form", "origin", "profession", "past", "levels", ...goblinoid.traits!].map((target) => ({ target, reason: "fits" }));
+const reasons = ["kind", "origin", "profession", "past", "levels", ...goblinoid.traits!].map((target) => ({ target, reason: "fits" }));
 
 const reply = (toolCalls: { name: string; arguments: unknown }[], extra: object = {}) =>
   Response.json({
@@ -47,7 +46,7 @@ function script(...replies: Response[]) {
 describe("ollamaProvider, tools mode (the default)", () => {
   it("runs the loop with tool calls and returns an accepted build", async () => {
     const { fetch, bodies } = script(
-      reply([{ name: "get_kind", arguments: { id: "tatot" } }]),
+      reply([{ name: "get_kind", arguments: { id: "tatot-goblinoid" } }]),
       // Some models send arguments as a JSON string.
       reply([{ name: "submit_build", arguments: JSON.stringify({ concept: goblinoid, summary: "A goblin mage.", reasons }) }]),
     );
@@ -55,7 +54,7 @@ describe("ollamaProvider, tools mode (the default)", () => {
 
     expect(result.status).toBe("accepted");
     expect(result.model).toBe("qwen3:30b-a3b");
-    expect(result.build).toEqual(expect.objectContaining({ kind: "tatot", form: "goblinoid" }));
+    expect(result.build).toEqual(expect.objectContaining({ kind: "tatot-goblinoid" }));
     expect(result.check?.legal).toBe(true);
     expect(result.usage.inputTokens).toBe(2000);
     expect(fetch.mock.calls[0]![0]).toBe("http://ollama.test/api/chat");
@@ -73,7 +72,7 @@ describe("ollamaProvider, tools mode (the default)", () => {
     // Tool results go back as role "tool" messages, named for their tool.
     const second = bodies[1]!.messages as { role: string; tool_name?: string; content: string }[];
     expect(second.at(-1)).toEqual(expect.objectContaining({ role: "tool", tool_name: "get_kind" }));
-    expect(JSON.parse(second.at(-1)!.content).id).toBe("tatot");
+    expect(JSON.parse(second.at(-1)!.content).id).toBe("tatot-goblinoid");
   });
 
   it("flags tool errors in the result text", async () => {
@@ -87,10 +86,10 @@ describe("ollamaProvider, tools mode (the default)", () => {
   });
 
   it("thinks until the first submit, then repairs without reasoning", async () => {
-    const { form: _form, ...formless } = goblinoid;
+    const misslotted = { ...goblinoid, past: "licensed-mage" };
     const { fetch, bodies } = script(
-      reply([{ name: "get_kind", arguments: { id: "tatot" } }]),
-      reply([{ name: "submit_build", arguments: { concept: formless, summary: "A goblin mage.", reasons } }]),
+      reply([{ name: "get_kind", arguments: { id: "tatot-goblinoid" } }]),
+      reply([{ name: "submit_build", arguments: { concept: misslotted, summary: "A goblin mage.", reasons } }]),
       reply([{ name: "submit_build", arguments: { concept: goblinoid, summary: "A goblin mage.", reasons } }]),
     );
     const result = await describeCharacter({ description: "A goblin mage.", content, provider: ollamaProvider({ fetch }) });
@@ -117,7 +116,7 @@ const answer = (content: string) =>
 
 describe("ollamaProvider, JSON mode", () => {
   it("asks for a concept in the submit_build format and repairs from the engine's verdict", async () => {
-    const { form: _form, ...broken } = goblinoid;
+    const broken = { ...goblinoid, past: "licensed-mage" };
     const { fetch, bodies } = script(
       answer(JSON.stringify({ concept: broken, summary: "A goblin mage.", reasons })),
       answer("Sorry, here it is in prose."),
@@ -126,7 +125,7 @@ describe("ollamaProvider, JSON mode", () => {
     const result = await describeCharacter({ description: "A goblin mage.", content, provider: ollamaProvider({ fetch, model: "deepseek-r1:14b", mode: "json" }) });
 
     expect(result.status).toBe("accepted");
-    expect(result.build).toEqual(expect.objectContaining({ kind: "tatot", form: "goblinoid" }));
+    expect(result.build).toEqual(expect.objectContaining({ kind: "tatot-goblinoid" }));
     expect(result.turns).toBe(3);
 
     const first = bodies[0]!;
@@ -138,7 +137,7 @@ describe("ollamaProvider, JSON mode", () => {
     const second = bodies[1]!.messages as { role: string; content: string }[];
     expect(second.at(-1)!.role).toBe("user");
     expect(second.at(-1)!.content).toContain("The rules engine sent that back");
-    expect(second.at(-1)!.content).toContain("Tatot needs a form");
+    expect(second.at(-1)!.content).toContain("Licensed Mage is a profession, not a past");
     // An answer that isn't JSON gets a reminder of the format.
     const third = bodies[2]!.messages as { role: string; content: string }[];
     expect(third.at(-1)!.content).toBe("Answer with the character as JSON in the requested format: concept, summary and reasons.");

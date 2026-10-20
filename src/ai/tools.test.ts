@@ -9,8 +9,7 @@ const { content } = loadContent();
 
 // The engine accepts this build; its choices are all from resolvable pools.
 const orcoid: BuildInput = {
-  kind: "tatot",
-  form: "orcoid",
+  kind: "tatot-orcoid",
   origin: "corsine-mountains",
   profession: "gate-hand",
   past: "sunrise-refugee",
@@ -76,9 +75,10 @@ describe("packages and Kinds", () => {
     expect(herminst.choices[0]!.pool.map((t) => t.id)).toEqual(["dreftan"]);
   });
 
-  it("gets a Kind with its forms", () => {
-    const out = runTool("get_kind", { id: "tatot" }, content) as { forms: { id: string }[] };
-    expect(out.forms.map((f) => f.id)).toEqual(["orcoid", "goblinoid"]);
+  it("gets a Kind with its stats", () => {
+    const out = runTool("get_kind", { id: "tatot-goblinoid" }, content) as { name: string; stats: { logic: { start: number; max: number } } };
+    expect(out.name).toBe("Goblinoid Tatot");
+    expect(out.stats.logic).toEqual({ start: 2, max: 18 });
   });
 
   it("errors on unknown ids and bad input", () => {
@@ -109,13 +109,12 @@ describe("checkBuild", () => {
     const build = {
       ...orcoid,
       kind: "tatot",
-      form: "half-orc",
       traits: [{ trait: "dragon-riding", rank: 1, pick: "universal" }],
       choices: [{ package: "caravaneer", from: "contact", traits: ["harbor-master-oyl"] }],
       profession: "caravaneer",
     };
     const ids = unknownIds(build, content);
-    expect(ids.map((i) => i.path)).toEqual(["form", "traits[0]", "choices[0]"]);
+    expect(ids.map((i) => i.path)).toEqual(["kind", "traits[0]", "choices[0]"]);
     expect(ids[2]!.message).toContain("The player decides who their Contact is");
     expect(checkBuild(build, content).accepted).toBe(false);
   });
