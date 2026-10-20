@@ -2,7 +2,7 @@ import { useState, type FormEvent } from "react";
 import type { DescribeError, DescribeEvent, DescribeResult, Progress } from "../../ai/types.js";
 import { kindById, packageById } from "../content.js";
 import type { AiNotes, Draft } from "../draft.js";
-import { title, traitName } from "./ui.js";
+import { askerName, title, traitName } from "./ui.js";
 
 interface Props {
   draft: Draft;
@@ -48,8 +48,9 @@ function targetLabel(target: string, draft: Draft): string {
   }
   if (target === "levels") return "Stats";
   if (target.startsWith("choice:")) {
-    const [pkg, from] = target.slice("choice:".length).split("/");
-    return `${packageById.get(pkg ?? "")?.name ?? pkg} choice (${from})`;
+    const [asker, from] = target.slice("choice:".length).split("/");
+    const name = packageById.get(asker ?? "")?.name ?? traitName(asker ?? "");
+    return `${name} choice (${from})`;
   }
   return traitName(target);
 }
@@ -141,7 +142,7 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
           {notes.openChoices.length > 0 && (
             <p className="hint">
               Left for you on the Choices step:{" "}
-              {notes.openChoices.map((c) => `${c.note ?? `${c.count} from ${c.from}`} (${packageById.get(c.package)?.name ?? c.package})`).join("; ")}.
+              {notes.openChoices.map((c) => `${c.note ?? `${c.count} from ${c.from}`} (${askerName(c)})`).join("; ")}.
             </p>
           )}
           <ul className="ai-reasons">

@@ -32,15 +32,18 @@ const CONCEPT_SCHEMA = {
     },
     choices: {
       type: "array",
-      description: "Optional answers to package choices with a pool, like languages. Any you leave out are filled in. Never answer Contacts.",
+      description:
+        "Optional answers to package or Trait choices with a pool, like languages (an Additional Language Trait asks which one). " +
+        "Any you leave out are filled in. Never answer Contacts.",
       items: {
         type: "object",
         properties: {
-          package: { type: "string" },
-          from: { type: "string", description: "The pool name, as the package lists it." },
+          package: { type: "string", description: "The package that asks. Give this or trait, not both." },
+          trait: { type: "string", description: "The Trait that asks, for a Trait's choice." },
+          from: { type: "string", description: "The pool name, as the package or Trait lists it." },
           traits: { type: "array", items: { type: "string" } },
         },
-        required: ["package", "from", "traits"],
+        required: ["from", "traits"],
       },
     },
   },
@@ -135,9 +138,21 @@ const list = (v: unknown): unknown[] => (Array.isArray(v) ? v : []);
 // the player decides who it is, or a pool with no Traits in content yet.
 const leftForPlayer = (from: string, content: Content) => isFreeTextPool(from) || choicePool(from, content).length === 0;
 
-// The choices in the build's packages that Claude leaves to the player.
+// Whether a choice answer and an open choice belong to the same package or Trait.
+const sameAsker = (a: Record<string, unknown> | undefined, o: OpenChoice) =>
+  !!a && a.from === o.from && (o.package !== undefined ? a.package === o.package : a.trait === o.trait);
+
+// The choices in the build's packages and held Traits that Claude leaves to
+// the player.
 export function openChoices(build: unknown, content: Content): OpenChoice[] {
   const b = obj(build) ?? {};
+  const summary = validateBuild(b, content).summary;
+  if (summary) {
+    return summary.questions
+      .filter((q) => leftForPlayer(q.from, content))
+      .map((q) => ({ [q.by]: q.id, from: q.from, count: q.count, ...(q.notes.length ? { note: q.notes.join("; ") } : {}) }));
+  }
+  // A build that isn't shaped like one yet: its packages' choices only.
   const out: OpenChoice[] = [];
   for (const slot of ["origin", "profession", "past"]) {
     const pkg = content.packages.find((p) => p.id === b[slot] && p.type === slot);
@@ -178,7 +193,10 @@ export function unknownIds(build: unknown, content: Content): IdIssue[] {
     if (isText(answer.package) && !packageIds.has(answer.package)) {
       issues.push({ path: `choices[${i}]`, message: `Package "${answer.package}" doesn't exist` });
     }
-    if (open.some((o) => o.package === answer.package && o.from === answer.from)) {
+    if (isText(answer.trait) && !traitIds.has(answer.trait)) {
+      issues.push({ path: `choices[${i}]`, message: `Trait "${answer.trait}" doesn't exist` });
+    }
+    if (open.some((o) => sameAsker(answer, o))) {
       const noun = FREE_TEXT_POOLS[String(answer.from)];
       issues.push({
         path: `choices[${i}]`,
@@ -208,9 +226,9 @@ export function checkBuild(build: unknown, content: Content, campaign: Campaign 
   let placeholderPaths = new Set<string>();
   if (b && open.some((o) => !isFreeTextPool(o.from))) {
     const choices = list(b.choices);
-    const answered = (o: OpenChoice) => choices.some((a) => obj(a)?.package === o.package && obj(a)?.from === o.from);
+    const answered = (o: OpenChoice) => choices.some((a) => sameAsker(obj(a), o));
     const filled = open.filter((o) => !answered(o) && !isFreeTextPool(o.from)).map((o) => ({
-      package: o.package,
+      ...(o.package !== undefined ? { package: o.package } : { trait: o.trait }),
       from: o.from,
       traits: Array.from({ length: o.count }, (_, i) => `${PLACEHOLDER}-${i + 1}`),
     }));
@@ -240,6 +258,7 @@ const traitInfo = (t: Trait) => ({
   prerequisites: t.prerequisites,
   background: t.background,
   starterOnly: t.starterOnly,
+  choices: t.choices,
 });
 
 export class ToolError extends Error {}

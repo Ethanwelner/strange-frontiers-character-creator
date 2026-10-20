@@ -27,11 +27,13 @@ content/
 | `id` | Unique, kebab-case, matches the file name |
 | `name` | Display name |
 | `status` | `placeholder`, `draft` or `final` |
-| `plane` | Plane it comes from, e.g. `earth`, `isekai` |
+| `plane` | Plane it comes from, e.g. `earth`, `isekai`, or `any` for a Trait from anywhere |
 | `region` | Optional, e.g. `dreft` |
 | `summary` | One or two reader-facing sentences |
 | `tags` | Free-form words the AI searches on, e.g. `seafaring`, `magic` |
 | `lore` | Optional lore slug on the Strange Frontiers site, for linking |
+
+Packages and Traits can both list `choices` (`choose`, `from`, optional `note`): a pool the player picks from, like `contact` or `language`. A Trait's choices are asked once the character holds it, once per rank if it's ranked, as with Additional Contact and Additional Language.
 
 ## Validator rules
 

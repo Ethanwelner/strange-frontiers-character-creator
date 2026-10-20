@@ -1,7 +1,7 @@
 // Checks a character build against the creation rules in docs/PLAN.md
 // (Decisions → Character creation). Deterministic: same build and content,
 // same result.
-import { STAT_CAP, STAT_GROUPS, StatId, type BackgroundPackage, type StatBlock, type Trait } from "../schema/index.js";
+import { STAT_CAP, STAT_GROUPS, StatId, type BackgroundPackage, type StatBlock, type Trait, type TraitChoice } from "../schema/index.js";
 import { Build, DEFAULT_CAMPAIGN, type Campaign, type PickKind, type StatGroup } from "./build.js";
 import type { Content } from "./content.js";
 
@@ -44,6 +44,17 @@ export interface HeldTrait {
   sources: string[];
 }
 
+// A choice the build has to answer: one asked by a background package, or by
+// a Trait the build holds (once per rank, for a ranked Trait).
+export interface ChoiceQuestion {
+  by: "package" | "trait";
+  id: string;
+  name: string;
+  from: string;
+  count: number;
+  notes: string[];
+}
+
 export interface BuildSummary {
   stats: Record<StatId, number>;
   innerRing: Record<StatGroup, number>;
@@ -51,6 +62,8 @@ export interface BuildSummary {
   traits: HeldTrait[];
   // Traits the build may spend background picks on.
   backgroundList: string[];
+  // Every choice the build asks, packages first, answered or not.
+  questions: ChoiceQuestion[];
 }
 
 export interface BuildResult {
@@ -83,6 +96,23 @@ export const isFreeTextPool = (from: string) => Object.hasOwn(FREE_TEXT_POOLS, f
 export function choicePool(from: string, content: Content): Trait[] {
   const test = POOLS[from];
   return test ? content.traits.filter(test) : [];
+}
+
+// Whether an answer is to this question.
+export const answers = (a: { package?: string; trait?: string; from: string }, q: ChoiceQuestion) => a[q.by] === q.id && a.from === q.from;
+
+// A package's or Trait's choices, one question per pool. `times` repeats them
+// for each rank of a ranked Trait.
+function questionsOf(by: ChoiceQuestion["by"], owner: { id: string; name: string; choices: TraitChoice[] }, times = 1): ChoiceQuestion[] {
+  const out: ChoiceQuestion[] = [];
+  for (const c of owner.choices) {
+    const q = out.find((o) => o.from === c.from);
+    if (q) {
+      q.count += c.choose * times;
+      if (c.note) q.notes.push(c.note);
+    } else out.push({ by, id: owner.id, name: owner.name, from: c.from, count: c.choose * times, notes: c.note ? [c.note] : [] });
+  }
+  return out;
 }
 
 const label = (t: Trait) => `${t.name} (${t.id})`;
@@ -174,59 +204,54 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     for (const g of pkg.grants) hold(g.trait, g.rank ?? 1, `${pkg.type} ${pkg.id}`);
   }
 
-  // Rule 6: every package choice answered with the right count, from its pool.
+  // Rule 6: every choice answered with the right count, from its pool. Package
+  // choices are checked here; a held Trait's choices once the picks are in.
   const answered = new Set<number>();
-  for (const pkg of packages) {
-    const pools = new Map<string, number>();
-    for (const c of pkg.choices) pools.set(c.from, (pools.get(c.from) ?? 0) + c.choose);
-    for (const [from, count] of pools) {
-      const noun = FREE_TEXT_POOLS[from];
-      const i = build.choices.findIndex((a) => a.package === pkg.id && a.from === from);
-      const given = i < 0 ? 0 : build.choices[i]!.traits.length;
-      // A Contact the player hasn't recorded yet is a reminder, not an error.
-      if (noun && given < count) {
-        const left = count - given;
-        warn("choice", `${pkg.name} gives ${count} ${noun}${count > 1 ? "s" : ""}: record ${left > 1 ? `${left} more` : given ? "one more" : "who"} on the Choices step`, i < 0 ? "choices" : `choices[${i}]`);
-      }
-      if (i < 0) {
-        if (!noun) error("choice", `${pkg.name} asks for ${count} from "${from}", but the build doesn't answer it`, "choices");
-        continue;
-      }
-      answered.add(i);
-      const answer = build.choices[i]!;
-      const path = `choices[${i}]`;
-      if (noun ? given > count : given !== count) {
-        error("choice", `${pkg.name} asks for ${count} from "${from}", but the build gives ${given}`, path);
-      }
-      if (new Set(answer.traits).size !== answer.traits.length) {
-        error("choice", `${pkg.name}'s "${from}" answer lists the same ${noun ?? "Trait"} twice`, path);
-      }
-      // Free-text answers are names, not Traits: nothing to look up or hold.
-      if (isFreeTextPool(from)) continue;
-      const pool = choicePool(from, content);
-      if (pool.length === 0) {
-        warn("choice-pool", `Can't check ${pkg.name}'s "${from}" answer (${answer.traits.join(", ")}): no Traits are defined for that pool yet`, path);
-      } else {
-        for (const id of answer.traits) {
-          const t = traits.get(id);
-          if (!t) error("unknown-trait", `Trait "${id}" doesn't exist`, path);
-          else if (!pool.includes(t)) error("choice", `${label(t)} isn't in the "${from}" pool for ${pkg.name}`, path);
-        }
-      }
-      for (const id of answer.traits) hold(id, 1, `${pkg.type} ${pkg.id} choice`);
+  const questions: ChoiceQuestion[] = [];
+  const answer = (q: ChoiceQuestion, source: string, afterPicks: boolean) => {
+    questions.push(q);
+    const { name, from, count } = q;
+    const noun = FREE_TEXT_POOLS[from];
+    const i = build.choices.findIndex((a) => !answered.has(build.choices.indexOf(a)) && answers(a, q));
+    const given = i < 0 ? 0 : build.choices[i]!.traits.length;
+    // A Contact the player hasn't recorded yet is a reminder, not an error.
+    if (noun && given < count) {
+      const left = count - given;
+      warn("choice", `${name} gives ${count} ${noun}${count > 1 ? "s" : ""}: record ${left > 1 ? `${left} more` : given ? "one more" : "who"} on the Choices step`, i < 0 ? "choices" : `choices[${i}]`);
     }
+    if (i < 0) {
+      if (!noun) error("choice", `${name} asks for ${count} from "${from}", but the build doesn't answer it`, "choices");
+      return;
+    }
+    answered.add(i);
+    const a = build.choices[i]!;
+    const path = `choices[${i}]`;
+    if (noun ? given > count : given !== count) {
+      error("choice", `${name} asks for ${count} from "${from}", but the build gives ${given}`, path);
+    }
+    if (new Set(a.traits).size !== a.traits.length) {
+      error("choice", `${name}'s "${from}" answer lists the same ${noun ?? "Trait"} twice`, path);
+    }
+    // Free-text answers are names, not Traits: nothing to look up or hold.
+    if (isFreeTextPool(from)) return;
+    const pool = choicePool(from, content);
+    if (pool.length === 0) {
+      warn("choice-pool", `Can't check ${name}'s "${from}" answer (${a.traits.join(", ")}): no Traits are defined for that pool yet`, path);
+    } else {
+      for (const id of a.traits) {
+        const t = traits.get(id);
+        if (!t) error("unknown-trait", `Trait "${id}" doesn't exist`, path);
+        else if (!pool.includes(t)) error("choice", `${label(t)} isn't in the "${from}" pool for ${name}`, path);
+        // Package answers are in before the picks, which catch doubles; a
+        // Trait's answers come after, so they check for themselves.
+        else if (afterPicks && held.has(id)) error("duplicate-trait", `${label(t)} is already held (from ${held.get(id)!.sources.join(", ")}), so ${name} can't give it again`, path);
+      }
+    }
+    for (const id of a.traits) hold(id, 1, `${source} choice`);
+  };
+  for (const pkg of packages) {
+    for (const q of questionsOf("package", pkg)) answer(q, `${pkg.type} ${pkg.id}`, false);
   }
-  build.choices.forEach((a, i) => {
-    if (answered.has(i)) return;
-    const inBuild = packages.some((p) => p.id === a.package);
-    error(
-      "choice",
-      inBuild
-        ? `${a.package} has no "${a.from}" choice, or it's answered twice`
-        : `The build answers a choice for "${a.package}", which isn't one of its packages`,
-      `choices[${i}]`,
-    );
-  });
 
   // Rule 7: the Background Trait list is the packages' backgroundTraits plus
   // Traits tagged with one of the Kind's traitAccess pools.
@@ -292,6 +317,32 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     }
   }
 
+  // Rule 6: the choices of the Traits the build holds, by rank.
+  for (const h of [...held.values()]) {
+    const t = traits.get(h.trait);
+    if (!t?.choices.length) continue;
+    for (const q of questionsOf("trait", t, t.ranked ? h.rank : 1)) answer(q, `trait ${t.id}`, true);
+  }
+  build.choices.forEach((a, i) => {
+    if (answered.has(i)) return;
+    const path = `choices[${i}]`;
+    if (a.package !== undefined) {
+      const inBuild = packages.some((p) => p.id === a.package);
+      error(
+        "choice",
+        inBuild ? `${a.package} has no "${a.from}" choice, or it's answered twice` : `The build answers a choice for "${a.package}", which isn't one of its packages`,
+        path,
+      );
+    } else {
+      const name = traits.get(a.trait!)?.name ?? a.trait;
+      error(
+        "choice",
+        held.has(a.trait!) ? `${name} has no "${a.from}" choice, or it's answered twice` : `The build answers a choice for ${name}, which it doesn't hold`,
+        path,
+      );
+    }
+  });
+
   // Rule 10: prerequisites must be held, from any source.
   build.traits.forEach((p, index) => {
     const t = traits.get(p.trait);
@@ -322,6 +373,7 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
       picks,
       traits: [...held.values()],
       backgroundList: [...backgroundList].sort(),
+      questions,
     },
   };
 }

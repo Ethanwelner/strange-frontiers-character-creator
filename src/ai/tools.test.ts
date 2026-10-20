@@ -128,6 +128,42 @@ describe("checkBuild", () => {
   });
 });
 
+describe("Trait choices", () => {
+  const withContact = { ...caravaneer, traits: [...caravaneer.traits!, { trait: "additional-contact", rank: 1, pick: "universal" as const }] };
+
+  it("leaves a held Trait's Contact to the player too", () => {
+    expect(openChoices(withContact, content)).toEqual([
+      { package: "caravaneer", from: "contact", count: 1, note: "1 additional Contact" },
+      { trait: "additional-contact", from: "contact", count: 1, note: "1 Contact per rank" },
+    ]);
+    const out = checkBuild(withContact, content);
+    expect(out.accepted).toBe(true);
+    expect(out.legal).toBe(true);
+  });
+
+  it("rejects an answer to a Trait's Contact, and an answer for a Trait that doesn't exist", () => {
+    const build = {
+      ...withContact,
+      choices: [
+        { trait: "additional-contact", from: "contact", traits: ["Wenna"] },
+        { trait: "extra-language", from: "language", traits: ["english"] },
+      ],
+    };
+    const ids = unknownIds(build, content);
+    expect(ids.map((i) => i.path)).toEqual(["choices[0]", "choices[1]"]);
+    expect(ids[0]!.message).toContain("The player decides who their Contact is");
+    expect(ids[1]!.message).toBe(`Trait "extra-language" doesn't exist`);
+  });
+
+  it("lists Trait choices in the Trait search results and the content index", () => {
+    const out = runTool("search_traits", { query: "additional language" }, content) as { traits: { id: string; choices: unknown[] }[] };
+    const hit = out.traits[0];
+    expect(hit!.id).toBe("additional-language");
+    expect(hit!.choices).toEqual([{ choose: 1, from: "language", note: "1 language per rank" }]);
+    expect(contentIndex(content)).toContain("choices 1 from language per rank");
+  });
+});
+
 describe("prompt prefix", () => {
   it("lists every id and doesn't change between calls", () => {
     const index = contentIndex(content);

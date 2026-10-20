@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { loadContent, type Content } from "../engine/content.js";
 import { Trait } from "../schema/index.js";
-import { traitOptions } from "./check.js";
+import { check, stepOf, traitOptions } from "./check.js";
 import { content as bundled, contentErrors } from "./content.js";
-import { fromBuild, toBuild, withLevel, type Draft } from "./draft.js";
+import { addPick, fromBuild, toBuild, withLevel, type Draft } from "./draft.js";
 
 const campaign = { startingLevel: 1 };
 
@@ -72,6 +72,15 @@ describe("traitOptions", () => {
     expect(byId.get("survivalist")!.reasons).toEqual([]);
     // Glintl grants Seafaring 1, so the next pick buys rank 2.
     expect(byId.get("seafaring")!.rank).toBe(2);
+  });
+
+  it("offers a Trait with a choice, which is answered on the Choices step afterward", () => {
+    const options = traitOptions(human, bundled, campaign, "universal")!;
+    expect(options.find((o) => o.trait.id === "additional-language")!.reasons).toEqual([]);
+    const taken = addPick(human, "additional-language", 1, "universal");
+    const result = check(taken, bundled, campaign);
+    expect(result.summary!.questions.at(-1)).toEqual(expect.objectContaining({ by: "trait", id: "additional-language", from: "language" }));
+    expect(stepOf(result.errors.find((e) => e.message.startsWith("Additional Language"))!)).toBe("choices");
   });
 
   it("rejects everything once the picks run out", () => {

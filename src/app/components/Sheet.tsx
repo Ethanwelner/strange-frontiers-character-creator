@@ -2,12 +2,16 @@ import { FREE_TEXT_POOLS, type BuildResult } from "../../engine/validate.js";
 import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { kindById, packageById, traitById } from "../content.js";
 import type { Draft } from "../draft.js";
-import { baseStats, Chip, GROUPS, StatLine, StepHeader, title, traitName } from "./ui.js";
+import { askerName, baseStats, Chip, GROUPS, StatLine, StepHeader, title, traitName } from "./ui.js";
 
 const SOURCE = /^(origin|profession|past) ([a-z0-9-]+)( choice)?$/;
+const TRAIT_CHOICE = /^trait ([a-z0-9-]+) choice$/;
 
-// "origin glintl" → "Glintl (origin)"; pick sources read as they are.
+// "origin glintl" → "Glintl (origin)", "trait additional-language choice" →
+// "Additional Language (choice)"; pick sources read as they are.
 function source(s: string) {
+  const t = TRAIT_CHOICE.exec(s);
+  if (t) return `${traitName(t[1]!)} (choice)`;
   const m = SOURCE.exec(s);
   if (!m) return s;
   return `${packageById.get(m[2]!)?.name ?? m[2]} (${m[1]}${m[3] ?? ""})`;
@@ -21,7 +25,7 @@ export function Sheet({ draft, result }: { draft: Draft; result: BuildResult }) 
   const summary = result.summary;
   // Contacts and other free-text answers, as the player wrote them.
   const records = draft.choices.flatMap((c) =>
-    FREE_TEXT_POOLS[c.from] ? c.traits.map((text) => ({ text, noun: FREE_TEXT_POOLS[c.from]!, from: packageById.get(c.package)?.name ?? c.package })) : [],
+    FREE_TEXT_POOLS[c.from] ? c.traits.map((text) => ({ text, noun: FREE_TEXT_POOLS[c.from]!, from: askerName(c) })) : [],
   );
   const features = [
     ...(kind?.features ?? []).map((f) => ({ ...f, from: kind!.name })),

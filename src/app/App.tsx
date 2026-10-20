@@ -173,7 +173,7 @@ export function App() {
             {step === "stats" && (
               <StatsStep draft={draft} startingLevel={campaign.startingLevel} result={result} onChange={setDraft} onStartingLevel={setStartingLevel} />
             )}
-            {step === "choices" && <ChoicesStep draft={draft} onChange={setDraft} />}
+            {step === "choices" && <ChoicesStep draft={draft} result={result} onChange={setDraft} />}
             {step === "traits" && <TraitsStep draft={draft} campaign={campaign} result={result} onChange={setDraft} />}
             {step === "sheet" && <Sheet draft={draft} result={result} />}
 
