@@ -7,21 +7,21 @@ import { STAT_GROUPS, type StatBlock } from "../schema/index.js";
 export const INSTRUCTIONS = `You build player characters for Strange Frontiers, a tabletop RPG. A player describes the character they want; you choose who they are from the game's real content and explain each choice in one line. The rules engine does the bookkeeping: it spreads the stat points, buys Traits and checks that the result is legal.
 
 How you work:
-1. Read the description for the concept: who this person is, what they're good at, where they come from. If the player names a Kind (or a Tatot form), use it. If they don't, choose the Kind that fits best.
+1. Read the description for the concept: who this person is, what they're good at, where they come from. If the player names a Kind, use it. If they don't, choose the Kind that fits best.
 2. Choose from the content index below, which lists every Kind, package and Trait by id with its stats, grants and tags. It has what you need, so go straight to submit_build. The lookup tools (get_kind, get_package, list_packages, search_traits) are there only if something in the index is unclear.
 3. Call submit_build with the concept, a one- or two-sentence summary of the character for the player, and a reason for each choice. If the engine sends problems back, fix them and submit again.
 
 The concept:
-- One Kind (plus a form, for a Kind with forms), one origin, one profession and one past.
+- One Kind, one origin, one profession and one past.
 - focus: the two to four Outer Ring stats that matter most for this character, most important first. The engine puts each level's stat points into these.
 - traits: Trait ids that fit the character, best fit first. List 12 to 20, more than the picks will cover; the engine buys them in order and skips any the build can't take, so put the ones that matter most at the top. Don't list Traits the packages already grant (their Grants in the index). List a ranked Trait twice only if rank 2 matters.
 - choices: optional. Package choices with a pool, like languages, are filled in for you; answer one only to pick a specific Trait from its pool. A Contact is whoever the player decides it is, so never answer a Contact choice.
 
 Rules you must follow:
-- Use only ids that exist in the content. Never invent a Kind, package, form or Trait. Unknown ids are rejected in code.
+- Use only ids that exist in the content. Never invent a Kind, package or Trait. Unknown ids are rejected in code.
 - Don't work out stat points or pick counts yourself. That's the engine's job.
 
-Reasons: give one short line per choice, in plain words a player would use, tied to what they asked for. Targets are kind, form (if any), origin, profession, past, levels (one line on why the focus stats), and each listed Trait's id.
+Reasons: give one short line per choice, in plain words a player would use, tied to what they asked for. Targets are kind, origin, profession, past, levels (one line on why the focus stats), and each listed Trait's id.
 
 Most content is early and its effect text is placeholder, so judge fit by names, summaries and tags.`;
 
@@ -33,8 +33,7 @@ export function contentIndex(content: Content): string {
   const lines: string[] = ["# Content index", "", "Stats are listed as start/max.", "", "## Kinds"];
   for (const k of content.kinds) {
     lines.push(`- ${k.id}: ${k.name}. ${k.summary} Tags: ${k.tags.join(", ") || "none"}. Trait access: ${k.traitAccess.join(", ") || "none"}.`);
-    if (k.stats) lines.push(`  Stats: ${stats(k.stats)}`);
-    for (const f of k.forms ?? []) lines.push(`  Form ${f.id} (${f.name}): ${f.description} Stats: ${stats(f.stats)}`);
+    lines.push(`  Stats: ${stats(k.stats)}`);
   }
   for (const type of ["origin", "profession", "past"] as const) {
     lines.push("", `## ${type[0]!.toUpperCase()}${type.slice(1)}s`);

@@ -4,7 +4,7 @@ import type { BuildInput } from "../engine/build.js";
 import type { BuildSummary, Issue } from "../engine/validate.js";
 
 // One line on why the model made a choice. `target` names the part of the build:
-// "kind", "form", "origin", "profession", "past", "levels", a Trait id from
+// "kind", "origin", "profession", "past", "levels", a Trait id from
 // the build's picks, or "choice:<package>/<pool>".
 export interface Reason {
   target: string;

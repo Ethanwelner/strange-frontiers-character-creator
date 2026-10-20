@@ -16,7 +16,6 @@ function source(s: string) {
 // Laid out like the sample character sheet on the site's Mechanics tab.
 export function Sheet({ draft, result }: { draft: Draft; result: BuildResult }) {
   const kind = draft.kind ? kindById.get(draft.kind) : undefined;
-  const form = kind?.forms?.find((f) => f.id === draft.form);
   const packages = [draft.origin, draft.profession, draft.past].map((id) => (id ? packageById.get(id) : undefined));
   const base = baseStats(draft);
   const summary = result.summary;
@@ -26,11 +25,10 @@ export function Sheet({ draft, result }: { draft: Draft; result: BuildResult }) 
   );
   const features = [
     ...(kind?.features ?? []).map((f) => ({ ...f, from: kind!.name })),
-    ...(form?.features ?? []).map((f) => ({ ...f, from: form!.name })),
     ...packages.flatMap((p) => (p?.features ?? []).map((f) => ({ ...f, from: p!.name }))),
   ];
   const background: [string, string | undefined][] = [
-    ["Kind", form ? `${form.name} ${kind?.name}` : kind?.name],
+    ["Kind", kind?.name],
     ["Origin", packages[0]?.name],
     ["Profession", packages[1]?.name],
     ["Past", packages[2]?.name],
@@ -47,8 +45,7 @@ export function Sheet({ draft, result }: { draft: Draft; result: BuildResult }) 
           <div>
             <h2>{draft.name || "Unnamed character"}</h2>
             <p className="lede">
-              Level {draft.level} {form ? `${form.name} ` : ""}
-              {kind?.name ?? "—"} · {packages.map((p) => p?.name ?? "—").join(" · ")}
+              Level {draft.level} {kind?.name ?? "—"} · {packages.map((p) => p?.name ?? "—").join(" · ")}
             </p>
           </div>
           <div className="sheet-actions">

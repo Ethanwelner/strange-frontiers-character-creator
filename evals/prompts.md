@@ -1,6 +1,6 @@
 # Sample prompts
 
-> **DRAFTS for Ethan to edit.** Claude wrote these to cover every Dreft Kind and both Tatot forms. Rewrite them in your players' real voice, add your own, and delete any that don't sound like your table.
+> **DRAFTS for Ethan to edit.** Claude wrote these to cover every Dreft Kind, including both Tatot Kinds. Rewrite them in your players' real voice, add your own, and delete any that don't sound like your table.
 
 `npm run eval` sends each prompt below to Claude and checks the build it comes back with. Each prompt is a `##` heading followed by the player's description. An optional `Expect:` line names the Kind (and form) the description points to, so the eval can flag a mismatch; leave it out when any Kind would do.
 
@@ -34,25 +34,25 @@ Expect: guwain
 
 Big orcoid Tatot who drives caravans between the switch port and the rest of Dreft. Haggles hard, hits harder, and has buried more guards than he'd like to admit.
 
-Expect: tatot orcoid
+Expect: tatot-orcoid
 
 ## Orcoid gate hand
 
 An orcoid who works the switch port for Tetra Frontiers Co. Spends all day hauling crates and keeping foreigners out of trouble. Picked up English from the travelers and likes to show it off.
 
-Expect: tatot orcoid
+Expect: tatot-orcoid
 
 ## Goblinoid licensed mage
 
 A goblin girl from a merchant dynasty in Port Herminst who got into the licensed mage school on her family's money and is determined to prove she'd have made it anyway.
 
-Expect: tatot goblinoid
+Expect: tatot-goblinoid
 
 ## Goblinoid hedge witch
 
 Small goblinoid from a farming village by the King's Woods. Never had the money for the mage schools, so she learned magic from her grandmother: herbs, charms and things the licensed mages say are dangerous.
 
-Expect: tatot goblinoid
+Expect: tatot-goblinoid
 
 ## Human returned from the systems
 

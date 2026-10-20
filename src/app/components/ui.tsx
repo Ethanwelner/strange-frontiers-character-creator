@@ -9,12 +9,9 @@ export const title = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 export const traitName = (id: string) => traitById.get(id)?.name ?? id;
 
-// The Kind's (or form's) level 0 stats and maximums, straight from content.
+// The Kind's level 0 stats and maximums, straight from content.
 export function baseStats(draft: Draft): StatBlock | undefined {
-  const kind = draft.kind ? kindById.get(draft.kind) : undefined;
-  if (!kind) return undefined;
-  if (kind.forms) return kind.forms.find((f) => f.id === draft.form)?.stats;
-  return kind.stats;
+  return draft.kind ? kindById.get(draft.kind)?.stats : undefined;
 }
 
 // A selectable card in a radio group, clickable and keyboard-operable.

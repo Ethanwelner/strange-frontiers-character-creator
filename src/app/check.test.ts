@@ -100,4 +100,10 @@ describe("drafts", () => {
     expect(three.levels[0]).toEqual(human.levels[0]);
     expect(withLevel(three, 1).levels).toEqual(human.levels);
   });
+
+  it("loads an old Tatot build, from before the forms became Kinds, as the matching Kind", () => {
+    const old = fromBuild({ ...toBuild(human), kind: "tatot", form: "goblinoid" });
+    expect(old.kind).toBe("tatot-goblinoid");
+    expect(old).not.toHaveProperty("form");
+  });
 });

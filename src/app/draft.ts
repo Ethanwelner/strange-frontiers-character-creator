@@ -7,7 +7,6 @@ import type { DescribeResult, OpenChoice, Reason } from "../ai/types.js";
 export interface Draft {
   name?: string;
   kind?: string;
-  form?: string;
   origin?: string;
   profession?: string;
   past?: string;
@@ -67,10 +66,11 @@ export function fromBuild(input: unknown): Draft {
   const b = input as Record<string, unknown>;
   const levels = array<LevelAllocation>(b.levels);
   const level = typeof b.level === "number" ? b.level : Math.max(1, levels.length);
+  // The Tatot used to be one Kind with an orcoid or goblinoid form; it's two Kinds now.
+  const kind = b.kind === "tatot" && (b.form === "orcoid" || b.form === "goblinoid") ? `tatot-${b.form}` : text(b.kind);
   return {
     name: text(b.name),
-    kind: text(b.kind),
-    form: text(b.form),
+    kind,
     origin: text(b.origin),
     profession: text(b.profession),
     past: text(b.past),

@@ -37,8 +37,6 @@ export type ChoiceAnswer = z.infer<typeof ChoiceAnswer>;
 export const Build = z.object({
   name: z.string().optional(),
   kind: Id,
-  // Required when the Kind has forms, like the Tatot.
-  form: Id.optional(),
   origin: Id,
   profession: Id,
   past: Id,

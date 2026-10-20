@@ -59,7 +59,7 @@ function expectLegal(result: ReturnType<typeof check>) {
   expect(result.ok).toBe(true);
 }
 
-// Legal sample characters, one per Kind (and per Tatot form).
+// Legal sample characters, one per Kind.
 const human: BuildInput = {
   name: "Harbor-born guard",
   kind: "human",
@@ -97,8 +97,7 @@ const isek: BuildInput = {
 
 const orcoid: BuildInput = {
   name: "Orcoid gate hand",
-  kind: "tatot",
-  form: "orcoid",
+  kind: "tatot-orcoid",
   origin: "corsine-mountains",
   profession: "gate-hand",
   past: "sunrise-refugee",
@@ -111,8 +110,7 @@ const orcoid: BuildInput = {
 
 const goblinoid: BuildInput = {
   name: "Goblinoid licensed mage",
-  kind: "tatot",
-  form: "goblinoid",
+  kind: "tatot-goblinoid",
   origin: "tetra",
   profession: "licensed-mage",
   past: "raised-in-the-caravan-town",
@@ -163,14 +161,14 @@ describe("legal Dreft characters", () => {
     expect(r.summary!.backgroundList).toContain("shield-wall");
   });
 
-  it("Tatot, orcoid", () => {
+  it("Orcoid Tatot", () => {
     const r = check(orcoid);
     expectLegal(r);
     expect(r.warnings).toEqual([]);
     expect(r.summary!.stats).toMatchObject({ power: 2, persuasion: 3, demeanor: 2 });
   });
 
-  it("Tatot, goblinoid", () => {
+  it("Goblinoid Tatot", () => {
     const r = check(goblinoid);
     expectLegal(r);
     expect(r.warnings).toEqual([]);
@@ -195,18 +193,10 @@ describe("schema", () => {
   });
 });
 
-describe("rule 1: level 0 stats come from the Kind or form", () => {
-  it("requires a form for a Kind with forms", () => {
-    const { form: _, ...noForm } = orcoid;
-    expect(codes(check(noForm))).toContain("form");
-  });
-
-  it("rejects an unknown form", () => {
-    expect(codes(check({ ...orcoid, form: "hobgoblinoid" }))).toContain("form");
-  });
-
-  it("rejects a form for a Kind without forms", () => {
-    expect(codes(check({ ...human, form: "orcoid" }))).toContain("form");
+describe("rule 1: level 0 stats come from the Kind", () => {
+  it("takes each Tatot Kind's own stats", () => {
+    expect(check(orcoid).summary!.stats).toMatchObject({ endurance: 2, logic: 0 });
+    expect(check(goblinoid).summary!.stats).toMatchObject({ endurance: 1, logic: 3 });
   });
 
   it("rejects an unknown Kind", () => {

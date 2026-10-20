@@ -42,10 +42,6 @@ async function readReply(res: Response, onProgress: (p: Progress) => void): Prom
 
 function targetLabel(target: string, draft: Draft): string {
   if (target === "kind") return `Kind: ${kindById.get(draft.kind ?? "")?.name ?? draft.kind}`;
-  if (target === "form") {
-    const form = kindById.get(draft.kind ?? "")?.forms?.find((f) => f.id === draft.form);
-    return `Form: ${form?.name ?? draft.form}`;
-  }
   if (target === "origin" || target === "profession" || target === "past") {
     const id = draft[target];
     return `${title(target)}: ${packageById.get(id ?? "")?.name ?? id}`;
