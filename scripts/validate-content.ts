@@ -20,8 +20,7 @@ function checkBudget(label: string, stats: StatBlock) {
 }
 
 for (const kind of kinds) {
-  if (kind.stats) checkBudget(`kinds/${kind.id}`, kind.stats);
-  for (const form of kind.forms ?? []) checkBudget(`kinds/${kind.id} (${form.name})`, form.stats);
+  checkBudget(`kinds/${kind.id}`, kind.stats);
 }
 
 const traitIds = new Set(traits.map((t) => t.id));

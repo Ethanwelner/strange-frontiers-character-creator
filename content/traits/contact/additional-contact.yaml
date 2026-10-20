@@ -1,0 +1,13 @@
+id: additional-contact
+name: Additional Contact
+status: placeholder
+plane: any
+summary: "Someone the character can call on. Who it is is up to the player."
+tags: [contact, people, network]
+category: contact
+ranked: true
+effect: Placeholder. Effect not yet written.
+choices:
+  - choose: 1
+    from: contact
+    note: 1 Contact per rank

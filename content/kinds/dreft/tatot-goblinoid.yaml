@@ -1,0 +1,23 @@
+id: tatot-goblinoid
+name: Goblinoid Tatot
+status: placeholder
+plane: isekai
+region: dreft
+summary: The “High Orks.” Every Tatot is born either orcoid or goblinoid, and goblinoids are small, with plentiful mana. Neither decides a Tatot’s place in Dreft, though it does decide which jobs they’re built for.
+tags: [goblin, tatot, merchant, magic]
+features:
+  - name: Goblinoid
+    description: Higher Memory and Logic maximums, and access to magic Traits.
+  - name: Merchant Clans
+    description: Easier access to trading guild and merchant clan Traits.
+traitAccess: [trading-guild, merchant-clan]
+stats:
+  endurance: { start: 1, max: 13 }
+  power: { start: 0, max: 10 }
+  grace: { start: 1, max: 16 }
+  empathy: { start: 1, max: 15 }
+  persuasion: { start: 1, max: 15 }
+  demeanor: { start: 1, max: 14 }
+  logic: { start: 2, max: 18 }
+  intuition: { start: 1, max: 16 }
+  memory: { start: 1, max: 18 }

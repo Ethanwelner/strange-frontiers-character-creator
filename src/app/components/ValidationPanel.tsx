@@ -1,17 +1,18 @@
 import { useState } from "react";
 import type { BuildResult } from "../../engine/validate.js";
 import { STAT_GROUPS, type StatId } from "../../schema/index.js";
-import { describe, stepOf } from "../check.js";
+import { stepOf } from "../check.js";
 import type { Draft, Step } from "../draft.js";
 import { baseStats, GROUPS, title } from "./ui.js";
 
 interface Props {
   draft: Draft;
   result: BuildResult;
+  onName: (name: string | undefined) => void;
   onJump: (step: Step) => void;
 }
 
-export function ValidationPanel({ draft, result, onJump }: Props) {
+export function ValidationPanel({ draft, result, onName, onJump }: Props) {
   const [open, setOpen] = useState(false);
   const { errors, warnings, summary } = result;
   const base = baseStats(draft);
@@ -38,10 +39,11 @@ export function ValidationPanel({ draft, result, onJump }: Props) {
       </button>
 
       <div className="panel-body">
-        <div className="panel-status">
-          <span className={`status ${result.ok ? "good" : "bad"}`}>{status}</span>
-          {warnings.length > 0 && <span className="status warn">{warnings.length} {warnings.length === 1 ? "warning" : "warnings"}</span>}
-        </div>
+        <label className="field name-field">
+          <span className="field-label">Character Name</span>
+          <input value={draft.name ?? ""} placeholder="Unnamed character" onChange={(e) => onName(e.target.value || undefined)} />
+        </label>
+
 
         <h4>Stats</h4>
         <div className="panel-stats">
@@ -94,20 +96,6 @@ export function ValidationPanel({ draft, result, onJump }: Props) {
           </tbody>
         </table>
 
-        {errors.length > 0 && (
-          <>
-            <h4>Errors</h4>
-            <ul className="issues bad">
-              {errors.map((e, i) => (
-                <li key={i}>
-                  <button className="link" onClick={() => jump(stepOf(e))}>
-                    {describe(e, draft)}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </>
-        )}
         {warnings.length > 0 && (
           <>
             <h4>Warnings</h4>

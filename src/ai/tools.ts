@@ -15,7 +15,6 @@ const CONCEPT_SCHEMA = {
   properties: {
     name: { type: "string", description: "The character's name, if the player gave one or one fits." },
     kind: { type: "string", description: "Kind id, e.g. isek." },
-    form: { type: "string", description: "Form id. Required for a Kind with forms (the Tatot: orcoid or goblinoid); leave out otherwise." },
     origin: { type: "string", description: "Origin package id." },
     profession: { type: "string", description: "Profession package id." },
     past: { type: "string", description: "Past package id." },
@@ -33,15 +32,18 @@ const CONCEPT_SCHEMA = {
     },
     choices: {
       type: "array",
-      description: "Optional answers to package choices with a pool, like languages. Any you leave out are filled in. Never answer Contacts.",
+      description:
+        "Optional answers to package or Trait choices with a pool, like languages (an Additional Language Trait asks which one). " +
+        "Any you leave out are filled in. Never answer Contacts.",
       items: {
         type: "object",
         properties: {
-          package: { type: "string" },
-          from: { type: "string", description: "The pool name, as the package lists it." },
+          package: { type: "string", description: "The package that asks. Give this or trait, not both." },
+          trait: { type: "string", description: "The Trait that asks, for a Trait's choice." },
+          from: { type: "string", description: "The pool name, as the package or Trait lists it." },
           traits: { type: "array", items: { type: "string" } },
         },
-        required: ["package", "from", "traits"],
+        required: ["from", "traits"],
       },
     },
   },
@@ -54,7 +56,7 @@ export const TOOLS: Tool[] = [
     description:
       "Search the game's Traits by words in their name, summary or tags, and filter by category, tag and pick type. " +
       "Call this to find Traits that fit the concept before picking them. For background picks, pass pick: \"background\" " +
-      "with the build's kind (and form), origin, profession and past: only Traits on that build's Background Trait list come back.",
+      "with the build's kind, origin, profession and past: only Traits on that build's Background Trait list come back.",
     input_schema: {
       type: "object",
       properties: {
@@ -63,7 +65,6 @@ export const TOOLS: Tool[] = [
         tags: { type: "array", items: { type: "string" }, description: "Only Traits with at least one of these tags." },
         pick: { type: "string", enum: ["universal", "background"], description: "Only Traits this kind of pick can buy." },
         kind: { type: "string" },
-        form: { type: "string" },
         origin: { type: "string" },
         profession: { type: "string" },
         past: { type: "string" },
@@ -93,7 +94,7 @@ export const TOOLS: Tool[] = [
   },
   {
     name: "get_kind",
-    description: "Get one Kind in full: its features, feat access, and starting stats and maximums (per form, for a Kind with forms).",
+    description: "Get one Kind in full: its features, Trait access, and starting stats and maximums.",
     input_schema: {
       type: "object",
       properties: { id: { type: "string" } },
@@ -113,7 +114,7 @@ export const TOOLS: Tool[] = [
         reasons: {
           type: "array",
           description:
-            "One short line per choice. Targets: kind, form (for a Kind with forms), origin, profession, past, levels (why the focus stats), " +
+            "One short line per choice. Targets: kind, origin, profession, past, levels (why the focus stats), " +
             "and each listed Trait's id.",
           items: {
             type: "object",
@@ -137,9 +138,21 @@ const list = (v: unknown): unknown[] => (Array.isArray(v) ? v : []);
 // the player decides who it is, or a pool with no Traits in content yet.
 const leftForPlayer = (from: string, content: Content) => isFreeTextPool(from) || choicePool(from, content).length === 0;
 
-// The choices in the build's packages that Claude leaves to the player.
+// Whether a choice answer and an open choice belong to the same package or Trait.
+const sameAsker = (a: Record<string, unknown> | undefined, o: OpenChoice) =>
+  !!a && a.from === o.from && (o.package !== undefined ? a.package === o.package : a.trait === o.trait);
+
+// The choices in the build's packages and held Traits that Claude leaves to
+// the player.
 export function openChoices(build: unknown, content: Content): OpenChoice[] {
   const b = obj(build) ?? {};
+  const summary = validateBuild(b, content).summary;
+  if (summary) {
+    return summary.questions
+      .filter((q) => leftForPlayer(q.from, content))
+      .map((q) => ({ [q.by]: q.id, from: q.from, count: q.count, ...(q.notes.length ? { note: q.notes.join("; ") } : {}) }));
+  }
+  // A build that isn't shaped like one yet: its packages' choices only.
   const out: OpenChoice[] = [];
   for (const slot of ["origin", "profession", "past"]) {
     const pkg = content.packages.find((p) => p.id === b[slot] && p.type === slot);
@@ -166,9 +179,6 @@ export function unknownIds(build: unknown, content: Content): IdIssue[] {
 
   const kind = isText(b.kind) ? content.kinds.find((k) => k.id === b.kind) : undefined;
   if (isText(b.kind) && !kind) issues.push({ path: "kind", message: `Kind "${b.kind}" doesn't exist` });
-  if (kind && isText(b.form) && !kind.forms?.some((f) => f.id === b.form)) {
-    issues.push({ path: "form", message: `${kind.name} has no form "${b.form}"` });
-  }
   for (const slot of ["origin", "profession", "past"]) {
     if (isText(b[slot]) && !packageIds.has(b[slot])) issues.push({ path: slot, message: `Package "${b[slot]}" doesn't exist` });
   }
@@ -183,7 +193,10 @@ export function unknownIds(build: unknown, content: Content): IdIssue[] {
     if (isText(answer.package) && !packageIds.has(answer.package)) {
       issues.push({ path: `choices[${i}]`, message: `Package "${answer.package}" doesn't exist` });
     }
-    if (open.some((o) => o.package === answer.package && o.from === answer.from)) {
+    if (isText(answer.trait) && !traitIds.has(answer.trait)) {
+      issues.push({ path: `choices[${i}]`, message: `Trait "${answer.trait}" doesn't exist` });
+    }
+    if (open.some((o) => sameAsker(answer, o))) {
       const noun = FREE_TEXT_POOLS[String(answer.from)];
       issues.push({
         path: `choices[${i}]`,
@@ -213,9 +226,9 @@ export function checkBuild(build: unknown, content: Content, campaign: Campaign 
   let placeholderPaths = new Set<string>();
   if (b && open.some((o) => !isFreeTextPool(o.from))) {
     const choices = list(b.choices);
-    const answered = (o: OpenChoice) => choices.some((a) => obj(a)?.package === o.package && obj(a)?.from === o.from);
+    const answered = (o: OpenChoice) => choices.some((a) => sameAsker(obj(a), o));
     const filled = open.filter((o) => !answered(o) && !isFreeTextPool(o.from)).map((o) => ({
-      package: o.package,
+      ...(o.package !== undefined ? { package: o.package } : { trait: o.trait }),
       from: o.from,
       traits: Array.from({ length: o.count }, (_, i) => `${PLACEHOLDER}-${i + 1}`),
     }));
@@ -245,6 +258,7 @@ const traitInfo = (t: Trait) => ({
   prerequisites: t.prerequisites,
   background: t.background,
   starterOnly: t.starterOnly,
+  choices: t.choices,
 });
 
 export class ToolError extends Error {}
@@ -263,7 +277,6 @@ function searchTraits(input: Record<string, unknown>, content: Content, campaign
   if (pick === "background") {
     const probe = {
       kind: input.kind,
-      form: input.form,
       origin: input.origin,
       profession: input.profession,
       past: input.past,
@@ -273,7 +286,7 @@ function searchTraits(input: Record<string, unknown>, content: Content, campaign
     const ids = unknownIds(probe, content);
     if (ids.length) throw new ToolError(ids.map((i) => i.message).join("; "));
     const list = validateBuild(probe, content, campaign).summary?.backgroundList;
-    if (!list) throw new ToolError("For background picks, pass the build's kind (and form), origin, profession and past.");
+    if (!list) throw new ToolError("For background picks, pass the build's kind, origin, profession and past.");
     traits = traits.filter((t) => list.includes(t.id));
   }
 

@@ -52,10 +52,10 @@ const thinkingTail = (text: string) => {
 // The reason targets a build needs: one per choice it makes.
 function reasonTargets(build: Record<string, unknown>): Set<string> {
   const targets = new Set<string>();
-  for (const key of ["kind", "form", "origin", "profession", "past"]) if (typeof build[key] === "string") targets.add(key);
+  for (const key of ["kind", "origin", "profession", "past"]) if (typeof build[key] === "string") targets.add(key);
   targets.add("levels");
   for (const p of Array.isArray(build.traits) ? build.traits : []) if (typeof p?.trait === "string") targets.add(p.trait);
-  for (const a of Array.isArray(build.choices) ? build.choices : []) targets.add(`choice:${a?.package}/${a?.from}`);
+  for (const a of Array.isArray(build.choices) ? build.choices : []) targets.add(`choice:${a?.package ?? a?.trait}/${a?.from}`);
   return targets;
 }
 

@@ -2,19 +2,18 @@
 // character is: Kind, packages, which stats matter most, and the Traits that
 // fit, best first. The solver does the bookkeeping the model shouldn't: it
 // spreads each level's stat points (adding any stats the requested ranks
-// need to the focus), answers package choices it can resolve,
-// and buys Traits from the list in order, asking validateBuild about each one
+// need to the focus), answers package and Trait choices it can resolve, and
+// buys Traits from the list in order, asking validateBuild about each one
 // and skipping any the engine rejects. Deterministic and browser-safe.
 import { z } from "zod";
 import { STAT_CAP, STAT_GROUPS, StatId, type StatBlock, type Trait } from "../schema/index.js";
 import { Build, ChoiceAnswer, DEFAULT_CAMPAIGN, type Campaign, type LevelAllocation, type PickKind, type StatGroup } from "./build.js";
 import type { Content } from "./content.js";
-import { choicePool, isFreeTextPool, OUTER_POINTS_PER_LEVEL, validateBuild, type BuildResult } from "./validate.js";
+import { answers, choicePool, isFreeTextPool, OUTER_POINTS_PER_LEVEL, validateBuild, type BuildResult } from "./validate.js";
 
 export const Concept = z.object({
   name: z.string().optional(),
   kind: z.string(),
-  form: z.string().optional(),
   origin: z.string(),
   profession: z.string(),
   past: z.string(),
@@ -23,7 +22,7 @@ export const Concept = z.object({
   focus: z.array(z.string()).default([]),
   // Trait ids, best fit first. Listing a ranked Trait twice asks for rank 2.
   traits: z.array(z.string()).default([]),
-  // Answers to package choices the engine can check, like languages.
+  // Answers to package or Trait choices the engine can check, like languages.
   choices: z.array(ChoiceAnswer).default([]),
 });
 export type Concept = z.infer<typeof Concept>;
@@ -53,8 +52,7 @@ const GROUP_OF = Object.fromEntries(
 const isStat = (s: string): s is StatId => StatId.safeParse(s).success;
 
 function baseStats(concept: Concept, content: Content): StatBlock | undefined {
-  const kind = content.kinds.find((k) => k.id === concept.kind);
-  return kind?.forms ? kind.forms.find((f) => f.id === concept.form)?.stats : kind?.stats;
+  return content.kinds.find((k) => k.id === concept.kind)?.stats;
 }
 
 // One allocation per level. Each level goes to the next group in focus order,
@@ -175,7 +173,6 @@ export function solveConcept(input: unknown, content: Content, campaign: Campaig
   let build: Build = Build.parse({
     ...(concept.name ? { name: concept.name } : {}),
     kind: concept.kind,
-    ...(concept.form ? { form: concept.form } : {}),
     origin: concept.origin,
     profession: concept.profession,
     past: concept.past,
@@ -184,12 +181,41 @@ export function solveConcept(input: unknown, content: Content, campaign: Campaig
     traits: [],
     choices: answerChoices(concept, content),
   });
-  const open = openPlaceholders(build, content);
+  let open = openPlaceholders(build, content);
   const check = (b: Build) => validateBuild({ ...b, choices: [...b.choices, ...open] }, content, campaign);
+
+  // Answers the choices of the Traits a build holds, like the language an
+  // Additional Language gives: the concept's valid answers first, then the
+  // first Traits in the pool that aren't held. Contacts stay with the player,
+  // and pools with nothing in them get placeholders while checking.
+  const answerTraitChoices = (b: Build): Build => {
+    const r = check(b);
+    const held = new Set(r.summary?.traits.map((h) => h.trait) ?? []);
+    let choices = b.choices;
+    for (const q of r.summary?.questions ?? []) {
+      if (q.by !== "trait" || isFreeTextPool(q.from)) continue;
+      const pool = choicePool(q.from, content);
+      if (pool.length === 0) {
+        open = [...open.filter((a) => !answers(a, q)), { trait: q.id, from: q.from, traits: Array.from({ length: q.count }, (_, i) => `player-choice-${i + 1}`) }];
+        continue;
+      }
+      const have = choices.find((a) => answers(a, q))?.traits ?? [];
+      if (have.length >= q.count) continue;
+      const ids = new Set(pool.map((t) => t.id));
+      const wanted = concept.choices.find((a) => answers(a, q))?.traits ?? [];
+      const picked = [...have];
+      for (const id of [...wanted, ...pool.map((t) => t.id)]) {
+        if (picked.length >= q.count) break;
+        if (ids.has(id) && !picked.includes(id) && !held.has(id)) picked.push(id);
+      }
+      choices = [...choices.filter((a) => !answers(a, q)), { trait: q.id, from: q.from, traits: picked }];
+    }
+    return { ...b, choices };
+  };
   let result = check(build);
   const taken: string[] = [];
   const skipped: SkippedTrait[] = [];
-  // Kind, form, packages or stats are wrong: there's nothing to buy Traits for.
+  // Kind, packages or stats are wrong: there's nothing to buy Traits for.
   if (!result.ok) return { build, taken, filled: [], skipped, result };
 
   // Buys the next rank of a Trait if the engine allows it, or says why not.
@@ -206,9 +232,13 @@ export function solveConcept(input: unknown, content: Content, campaign: Campaig
     const pick: PickKind | undefined =
       onList && background > 0 ? "background" : !t.background && universal > 0 ? "universal" : undefined;
     if (!pick) return t.background ? `${t.name} needs a background pick, and none fit` : "no universal picks left";
-    const next: Build = { ...build, traits: [...build.traits, { trait: id, rank: (held?.rank ?? 0) + 1, pick }] };
+    const before = open;
+    const next = answerTraitChoices({ ...build, traits: [...build.traits, { trait: id, rank: (held?.rank ?? 0) + 1, pick }] });
     const verdict = check(next);
-    if (!verdict.ok) return verdict.errors[0]!.message;
+    if (!verdict.ok) {
+      open = before;
+      return verdict.errors[0]!.message;
+    }
     build = next;
     result = verdict;
     return undefined;

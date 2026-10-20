@@ -59,7 +59,7 @@ function expectLegal(result: ReturnType<typeof check>) {
   expect(result.ok).toBe(true);
 }
 
-// Legal sample characters, one per Kind (and per Tatot form).
+// Legal sample characters, one per Kind.
 const human: BuildInput = {
   name: "Harbor-born guard",
   kind: "human",
@@ -97,8 +97,7 @@ const isek: BuildInput = {
 
 const orcoid: BuildInput = {
   name: "Orcoid gate hand",
-  kind: "tatot",
-  form: "orcoid",
+  kind: "tatot-orcoid",
   origin: "corsine-mountains",
   profession: "gate-hand",
   past: "sunrise-refugee",
@@ -111,8 +110,7 @@ const orcoid: BuildInput = {
 
 const goblinoid: BuildInput = {
   name: "Goblinoid licensed mage",
-  kind: "tatot",
-  form: "goblinoid",
+  kind: "tatot-goblinoid",
   origin: "tetra",
   profession: "licensed-mage",
   past: "raised-in-the-caravan-town",
@@ -163,14 +161,14 @@ describe("legal Dreft characters", () => {
     expect(r.summary!.backgroundList).toContain("shield-wall");
   });
 
-  it("Tatot, orcoid", () => {
+  it("Orcoid Tatot", () => {
     const r = check(orcoid);
     expectLegal(r);
     expect(r.warnings).toEqual([]);
     expect(r.summary!.stats).toMatchObject({ power: 2, persuasion: 3, demeanor: 2 });
   });
 
-  it("Tatot, goblinoid", () => {
+  it("Goblinoid Tatot", () => {
     const r = check(goblinoid);
     expectLegal(r);
     expect(r.warnings).toEqual([]);
@@ -195,18 +193,10 @@ describe("schema", () => {
   });
 });
 
-describe("rule 1: level 0 stats come from the Kind or form", () => {
-  it("requires a form for a Kind with forms", () => {
-    const { form: _, ...noForm } = orcoid;
-    expect(codes(check(noForm))).toContain("form");
-  });
-
-  it("rejects an unknown form", () => {
-    expect(codes(check({ ...orcoid, form: "hobgoblinoid" }))).toContain("form");
-  });
-
-  it("rejects a form for a Kind without forms", () => {
-    expect(codes(check({ ...human, form: "orcoid" }))).toContain("form");
+describe("rule 1: level 0 stats come from the Kind", () => {
+  it("takes each Tatot Kind's own stats", () => {
+    expect(check(orcoid).summary!.stats).toMatchObject({ endurance: 2, logic: 0 });
+    expect(check(goblinoid).summary!.stats).toMatchObject({ endurance: 1, logic: 3 });
   });
 
   it("rejects an unknown Kind", () => {
@@ -352,6 +342,59 @@ describe("rule 6: package grants and choices", () => {
   });
 });
 
+describe("rule 6: Trait choices", () => {
+  const language = { trait: "additional-language", pick: "universal" as const };
+  const contact = { trait: "additional-contact", pick: "universal" as const };
+  const withTraits = (...picks: BuildInput["traits"] & object) => ({ ...human, traits: [...human.traits!, ...picks] });
+
+  it("asks a held Trait's choice, and holds the answer", () => {
+    const unanswered = check(withTraits(language));
+    expect(unanswered.errors).toEqual([
+      expect.objectContaining({ code: "choice", message: `Additional Language asks for 1 from "language", but the build doesn't answer it` }),
+    ]);
+    expect(unanswered.summary!.questions).toEqual([
+      { by: "trait", id: "additional-language", name: "Additional Language", from: "language", count: 1, notes: ["1 language per rank"] },
+    ]);
+    const r = check({ ...withTraits(language), choices: [{ trait: "additional-language", from: "language", traits: ["english"] }] });
+    expectLegal(r);
+    expect(r.summary!.traits.find((h) => h.trait === "english")!.sources).toEqual(["trait additional-language choice"]);
+  });
+
+  it("asks again for each rank of a ranked Trait", () => {
+    const build = withTraits(language, { ...language, rank: 2 });
+    expect(codes(check({ ...build, choices: [{ trait: "additional-language", from: "language", traits: ["english"] }] }))).toEqual(["choice"]);
+    expectLegal(check({ ...build, choices: [{ trait: "additional-language", from: "language", traits: ["english", "dreftan"] }] }));
+  });
+
+  it("only reminds the player to record a Contact from a Trait", () => {
+    const r = check(withTraits(contact));
+    expectLegal(r);
+    expect(r.warnings).toEqual([
+      expect.objectContaining({ code: "choice", message: "Additional Contact gives 1 Contact: record who on the Choices step" }),
+    ]);
+    const named = check({ ...withTraits(contact), choices: [{ trait: "additional-contact", from: "contact", traits: ["Wenna the fence"] }] });
+    expectLegal(named);
+    expect(named.warnings).toEqual([]);
+  });
+
+  it("rejects a language the build already holds", () => {
+    const r = check({ ...isek, traits: [...isek.traits!, language], choices: [...isek.choices!, { trait: "additional-language", from: "language", traits: ["dreftan"] }] });
+    expect(codes(r)).toEqual(["duplicate-trait"]);
+  });
+
+  it("rejects an answer for a Trait the build doesn't hold", () => {
+    const r = check({ ...human, choices: [{ trait: "additional-language", from: "language", traits: ["english"] }] });
+    expect(r.errors).toEqual([
+      expect.objectContaining({ code: "choice", message: "The build answers a choice for Additional Language, which it doesn't hold" }),
+    ]);
+  });
+
+  it("rejects an answer that names both a package and a Trait", () => {
+    const both = { package: "glintl", trait: "additional-language", from: "language", traits: ["english"] };
+    expect(codes(check({ ...withTraits(language), choices: [both] }))).toEqual(["schema"]);
+  });
+});
+
 describe("rule 7: the Background Trait list", () => {
   it("rejects a background pick on a Trait that isn't on the list", () => {
     const r = check({ ...human, traits: [{ trait: "tracker", pick: "background" }] });
@@ -366,7 +409,7 @@ describe("rule 7: the Background Trait list", () => {
     expectLegal(r);
   });
 
-  it("includes Traits matching the Kind's featAccess", () => {
+  it("includes Traits matching the Kind's traitAccess", () => {
     // Isek have military access; Shield Wall is tagged military.
     expectLegal(check({ ...isek, traits: [{ trait: "shield-wall", pick: "background" }] }));
     expect(codes(check({ ...orcoid, traits: [{ trait: "shield-wall", pick: "background" }] }))).toEqual(["pick-type"]);

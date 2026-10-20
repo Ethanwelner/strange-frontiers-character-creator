@@ -44,8 +44,7 @@ function script(...responses: Anthropic.Beta.BetaMessage[]) {
 
 const goblinoid: ConceptInput = {
   name: "Pell",
-  kind: "tatot",
-  form: "goblinoid",
+  kind: "tatot-goblinoid",
   origin: "tetra",
   profession: "licensed-mage",
   past: "raised-in-the-caravan-town",
@@ -56,10 +55,11 @@ const goblinoid: ConceptInput = {
   ],
 };
 
-const { form: _form, ...formless } = goblinoid;
+// Known ids, but a profession in the past slot: the engine sends it back.
+const misslotted: ConceptInput = { ...goblinoid, past: "licensed-mage" };
 
 const reasonsFor = (c: ConceptInput): Reason[] =>
-  ["kind", "form", "origin", "profession", "past", "levels", ...(c.traits ?? [])].map((target) => ({ target, reason: `fits: ${target}` }));
+  ["kind", "origin", "profession", "past", "levels", ...(c.traits ?? [])].map((target) => ({ target, reason: `fits: ${target}` }));
 
 const submit = (concept: unknown, reasons: Reason[] = reasonsFor(concept as ConceptInput)) =>
   toolUse("submit_build", { concept, summary: "A goblinoid mage from the caravan town.", reasons });
@@ -74,7 +74,7 @@ const bodyOf = (p: Params) => JSON.parse(resultsOf(p)[0]!.content as string);
 describe("describeCharacter", () => {
   it("builds the submitted concept and returns an accepted build with reasons", async () => {
     const { create, calls } = script(
-      message([{ type: "thinking", thinking: "", signature: "sig" } as Block, toolUse("get_kind", { id: "tatot" })]),
+      message([{ type: "thinking", thinking: "", signature: "sig" } as Block, toolUse("get_kind", { id: "tatot-goblinoid" })]),
       message([submit(goblinoid)]),
     );
     const result = await describeCharacter({ description: "A small goblin who studied magic at Tetra.", content, provider: anthropicProvider(create) });
@@ -82,11 +82,11 @@ describe("describeCharacter", () => {
     expect(result.status).toBe("accepted");
     expect(result.turns).toBe(2);
     expect(result.check?.legal).toBe(true);
-    expect(result.build).toEqual(expect.objectContaining({ kind: "tatot", form: "goblinoid", name: "Pell", level: 1 }));
+    expect(result.build).toEqual(expect.objectContaining({ kind: "tatot-goblinoid", name: "Pell", level: 1 }));
     expect(result.build!.levels).toEqual([{ group: "mental", points: { logic: 2, memory: 1 } }]);
     // Reasons are kept for what the build holds, and dropped for Traits it didn't take.
     const picked = new Set(result.build!.traits!.map((t) => t.trait));
-    const fixed = ["kind", "form", "origin", "profession", "past", "levels"];
+    const fixed = ["kind", "origin", "profession", "past", "levels"];
     for (const r of result.reasons) expect(fixed.includes(r.target) || picked.has(r.target)).toBe(true);
     expect(result.reasons.map((r) => r.target)).toEqual(expect.arrayContaining(fixed));
     expect(result.usage).toEqual({ inputTokens: 200, outputTokens: 100, cacheReadTokens: 6000, cacheWriteTokens: 0 });
@@ -108,11 +108,11 @@ describe("describeCharacter", () => {
     // Tool results go back with the matching ids, and the thinking block is replayed unchanged.
     const second = calls[1]!;
     expect(second.messages[1]!.content).toEqual(expect.arrayContaining([expect.objectContaining({ type: "thinking", signature: "sig" })]));
-    expect(bodyOf(second).forms).toHaveLength(2);
+    expect(bodyOf(second).id).toBe("tatot-goblinoid");
   });
 
   it("sends engine errors back and accepts the repaired concept", async () => {
-    const { create, calls } = script(message([submit(formless)]), message([submit(goblinoid)]));
+    const { create, calls } = script(message([submit(misslotted)]), message([submit(goblinoid)]));
     const result = await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create) });
 
     expect(result.status).toBe("accepted");
@@ -120,7 +120,7 @@ describe("describeCharacter", () => {
     expect(resultsOf(calls[1]!)[0]!.is_error).toBe(true);
     const body = bodyOf(calls[1]!);
     expect(body.rejected).toBe(true);
-    expect(body.errors.map((e: { code: string }) => e.code)).toContain("form");
+    expect(body.errors.map((e: { code: string }) => e.code)).toContain("package");
   });
 
   it("rejects unknown packages in code, and skips unknown Traits", async () => {
@@ -149,15 +149,15 @@ describe("describeCharacter", () => {
 
   it("reports progress in plain words", async () => {
     const { create } = script(
-      message([toolUse("get_kind", { id: "tatot" }), toolUse("search_traits", { query: "magic" })]),
-      message([submit(formless)]),
+      message([toolUse("get_kind", { id: "tatot-goblinoid" }), toolUse("search_traits", { query: "magic" })]),
+      message([submit(misslotted)]),
       message([submit(goblinoid)]),
     );
     const progress: string[] = [];
     await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create), onProgress: (p) => progress.push(`${p.turn} ${p.status}`) });
     expect(progress).toEqual([
       "1 Thinking",
-      '1 Looking up the Tatot Kind · Searching Traits for "magic"',
+      '1 Looking up the Goblinoid Tatot Kind · Searching Traits for "magic"',
       "2 Thinking",
       "2 Submitting the build",
       "2 The engine sent the concept back with 1 problems; fixing them",
@@ -185,7 +185,7 @@ describe("describeCharacter", () => {
   });
 
   it("explains a concept that doesn't match the format", async () => {
-    const { create, calls } = script(message([submit({ kind: "tatot" })]), message([submit(goblinoid)]));
+    const { create, calls } = script(message([submit({ kind: "tatot-goblinoid" })]), message([submit(goblinoid)]));
     await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create) });
     expect(resultsOf(calls[1]!)[0]!.content).toMatch(/^The concept doesn't match the format: .*origin/);
   });

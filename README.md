@@ -42,7 +42,7 @@ Claude Code can also build characters in chat, without the app's AI layer. The l
 
 ## Describe your character (AI)
 
-Type a description in plain words and press **Build it** (Phase 4). The model reads the description and submits a concept: the Kind, the three packages, the stats that matter most, and a list of fitting Traits, best first. The solver (`src/engine/solve.ts`) turns that into a full build: it spreads each level's stat points into the focus stats, answers language-style choices, buys Traits from the list in order and skips any the engine rejects, then spends leftover background picks on the Background Trait list. The engine checks the result in the same step; if something's wrong (a missing form, an unknown package), the problems go back to the model. Most builds take one or two turns. The build fills the builder with a one-line reason per choice, and stays fully editable, with live validation, afterward.
+Type a description in plain words and press **Build it** (Phase 4). The model reads the description and submits a concept: the Kind, the three packages, the stats that matter most, and a list of fitting Traits, best first. The solver (`src/engine/solve.ts`) turns that into a full build: it spreads each level's stat points into the focus stats, answers language-style choices, buys Traits from the list in order and skips any the engine rejects, then spends leftover background picks on the Background Trait list. The engine checks the result in the same step; if something's wrong (an unknown Kind or package), the problems go back to the model. Most builds take one or two turns. The build fills the builder with a one-line reason per choice, and stays fully editable, with live validation, afterward.
 
 - The model never invents content or does the stat math. Unknown Kinds and packages are rejected in code, unknown Traits are skipped, and every build goes through `validateBuild`, so even a small local model can't produce an illegal character. How well the character fits the description does depend on the model.
 - If the Trait list runs out with more than two picks unspent, the model is asked once for more Traits. Local models reason before their first submit and skip reasoning on repairs, which keeps those turns short.
@@ -58,7 +58,7 @@ npm run eval     # runs evals/prompts.md through the same loop
 
 ## Manual builder
 
-A click-to-build character builder (Phase 3); the describe box above it is optional. It walks through Kind (and form), Origin, Profession and Past, the starting level and each level's stat points, package choices, and Trait picks. A panel shows the rules engine's errors, warnings, stats and picks as you go, and the Sheet step is a printable character sheet.
+A click-to-build character builder (Phase 3); the describe box above it is optional. It walks through Kind, Origin, Profession and Past, the starting level and each level's stat points, Trait picks, and choices (who a Contact is, which language). A panel shows the rules engine's errors, warnings, stats and picks as you go, and the Sheet step is a printable character sheet.
 
 ```bash
 npm run dev      # http://localhost:5173
