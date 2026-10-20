@@ -33,7 +33,8 @@ const PICK_HELP: Record<PickKind, string> = {
 export function TraitsStep({ draft, campaign, result, onChange }: Props) {
   const [pick, setPick] = useState<PickKind>("universal");
   const [query, setQuery] = useState("");
-  const [category, setCategory] = useState("");
+  // Categories whose boxes are unchecked; all of them show by default.
+  const [hidden, setHidden] = useState<Set<string>>(new Set());
   const [hideRejected, setHideRejected] = useState(false);
 
   const options = useMemo(() => traitOptions(draft, content, campaign, pick), [draft, campaign, pick]);
@@ -51,13 +52,18 @@ export function TraitsStep({ draft, campaign, result, onChange }: Props) {
   const q = query.trim().toLowerCase();
   const shown = options.filter(
     (o) =>
-      (!category || o.trait.category === category) &&
+      !hidden.has(o.trait.category) &&
       (!hideRejected || o.reasons.length === 0) &&
       (!q || o.trait.name.toLowerCase().includes(q) || o.trait.tags.some((t) => t.toLowerCase().includes(q))),
   );
   const groups = TraitCategory.options
     .map((c) => ({ category: c, options: shown.filter((o) => o.trait.category === c) }))
     .filter((g) => g.options.length > 0);
+  const toggle = (c: string) => {
+    const next = new Set(hidden);
+    if (!next.delete(c)) next.add(c);
+    setHidden(next);
+  };
   const remove = (index: number) => onChange({ ...draft, traits: draft.traits.filter((_, i) => i !== index) });
 
   return (
@@ -87,14 +93,11 @@ export function TraitsStep({ draft, campaign, result, onChange }: Props) {
 
         <div className="filters">
           <input type="search" placeholder="Search name or tag" value={query} onChange={(e) => setQuery(e.target.value)} aria-label="Search Traits" />
-          <select value={category} onChange={(e) => setCategory(e.target.value)} aria-label="Category">
-            <option value="">All categories</option>
-            {TraitCategory.options.map((c) => (
-              <option key={c} value={c}>
-                {title(c)}
-              </option>
-            ))}
-          </select>
+          {TraitCategory.options.map((c) => (
+            <label key={c} className="check">
+              <input type="checkbox" checked={!hidden.has(c)} onChange={() => toggle(c)} /> {GROUP_TITLE[c]}
+            </label>
+          ))}
           <label className="check">
             <input type="checkbox" checked={hideRejected} onChange={(e) => setHideRejected(e.target.checked)} /> Hide unavailable
           </label>
