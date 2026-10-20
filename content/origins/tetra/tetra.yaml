@@ -10,15 +10,12 @@ type: origin
 grants:
   - { trait: tetra, rank: 1 }
   - { trait: sdu-law, rank: 1 }
-# One language of the player's choice, both spoken and written. The engine
-# checks each half from its pool, but not that they're the same language.
+# One language of the player's choice, both spoken and written: the answer
+# is the spoken form, and the engine adds its written form.
 choices:
   - choose: 1
-    from: spoken-language
-    note: 1 language, spoken
-  - choose: 1
-    from: written-language
-    note: The same language, written
+    from: spoken-and-written-language
+    note: 1 language, spoken and written
 backgroundTraits:
   - the-diplomatic-wing
   - the-united-nations

@@ -383,24 +383,22 @@ describe("rule 6: package grants and choices", () => {
 
 describe("rule 6: the Tetra Origin's language", () => {
   const tetra = { ...human, origin: "tetra", traits: [] };
-  const answer = (spoken: string[], written: string[]) => ({
-    ...tetra,
-    choices: [
-      { package: "tetra", from: "spoken-language", traits: spoken },
-      { package: "tetra", from: "written-language", traits: written },
-    ],
-  });
+  const answer = (traits: string[]) => ({ ...tetra, choices: [{ package: "tetra", from: "spoken-and-written-language", traits }] });
 
-  it("grants Tetra and SDU law, and asks for one language spoken and written", () => {
-    const r = check(answer(["english"], ["english-written"]));
+  it("grants Tetra and SDU law, and one language both spoken and written", () => {
+    const r = check(answer(["english"]));
     expectLegal(r);
-    expect(r.summary!.traits.map((h) => h.trait)).toEqual(expect.arrayContaining(["tetra", "sdu-law", "english", "english-written"]));
+    const held = r.summary!.traits.map((h) => h.trait);
+    expect(held).toEqual(expect.arrayContaining(["tetra", "sdu-law", "english", "english-written"]));
+    expect(held).not.toContain("dreftan-written");
+    expect(r.summary!.traits.find((h) => h.trait === "english-written")!.sources).toEqual(["origin tetra choice"]);
     expect(r.summary!.backgroundList).toEqual(expect.arrayContaining(["the-diplomatic-wing", "planar-exploration", "ark-life"]));
   });
 
-  it("keeps spoken and written languages in their own pools", () => {
-    expect(codes(check(answer(["english-written"], ["english-written"])))).toContain("choice");
-    expect(codes(check(answer(["english"], ["english"])))).toContain("choice");
+  it("is answered with the spoken form only", () => {
+    expect(codes(check(answer(["english-written"])))).toEqual(["choice"]);
+    expect(codes(check(answer(["english", "dreftan"])))).toEqual(["choice"]);
+    expect(codes(check(answer([])))).toEqual(["choice"]);
   });
 });
 

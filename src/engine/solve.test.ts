@@ -122,12 +122,10 @@ describe("solveConcept", () => {
     expect(s.result.ok).toBe(true);
   });
 
-  it("answers the Tetra Origin's spoken and written language choices", () => {
-    const s = solve({ ...hunter, origin: "tetra", traits: [] });
-    expect(s.build.choices).toEqual([
-      { package: "tetra", from: "spoken-language", traits: ["dreftan"] },
-      { package: "tetra", from: "written-language", traits: ["dreftan-written"] },
-    ]);
+  it("answers the Tetra Origin's language with one language, spoken and written", () => {
+    const s = solve({ ...hunter, origin: "tetra", traits: [], choices: [{ package: "tetra", from: "spoken-and-written-language", traits: ["english"] }] });
+    expect(s.build.choices).toEqual([{ package: "tetra", from: "spoken-and-written-language", traits: ["english"] }]);
+    expect(s.result.summary!.traits.map((h) => h.trait)).toEqual(expect.arrayContaining(["english", "english-written"]));
     expect(s.result.ok).toBe(true);
   });
 
