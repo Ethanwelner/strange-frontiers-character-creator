@@ -44,6 +44,24 @@ export function Chip(props: { children: ReactNode; tone?: "accent" | "muted" | "
   return <span className={`chip${props.tone ? ` chip-${props.tone}` : ""}`}>{props.children}</span>;
 }
 
+const STAT_SLOTS = 20;
+
+// The site's stat bar: circles on odd points, squares on even. Level 0 points
+// are gray, points added since are black, room up to the max is open, and
+// slots past the max are red.
+export function StatLine({ start, value, max }: { start: number; value: number; max: number }) {
+  return (
+    <div className="stat-line" aria-hidden="true">
+      {Array.from({ length: STAT_SLOTS }, (_, n) => {
+        const point = n + 1;
+        const fill =
+          point <= value ? (point > max ? "over" : point <= start ? "default" : "filled") : point <= max ? "empty" : "unavailable";
+        return <span key={point} className={`stat ${point % 2 ? "dot" : "square"} ${fill}`} />;
+      })}
+    </div>
+  );
+}
+
 // Start and max for every stat, grouped Physical / Social / Mental.
 export function StatRanges({ stats }: { stats: StatBlock }) {
   return (
