@@ -44,10 +44,6 @@ export function ValidationPanel({ draft, result, onName, onJump }: Props) {
           <input value={draft.name ?? ""} placeholder="Unnamed character" onChange={(e) => onName(e.target.value || undefined)} />
         </label>
 
-        <div className="panel-status">
-          <span className={`status ${result.ok ? "good" : "bad"}`}>{status}</span>
-          {warnings.length > 0 && <span className="status warn">{warnings.length} {warnings.length === 1 ? "warning" : "warnings"}</span>}
-        </div>
 
         <h4>Stats</h4>
         <div className="panel-stats">
