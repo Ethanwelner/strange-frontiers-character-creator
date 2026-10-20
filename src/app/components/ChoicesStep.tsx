@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { ChoiceAnswer } from "../../engine/build.js";
-import { answers, choicePool, FREE_TEXT_POOLS, type BuildResult, type ChoiceQuestion } from "../../engine/validate.js";
+import { answers, choicePool, FREE_TEXT_POOLS, SPOKEN_AND_WRITTEN, type BuildResult, type ChoiceQuestion } from "../../engine/validate.js";
 import { content, packageById } from "../content.js";
 import { slug, type Draft } from "../draft.js";
 import { StepHeader, title, traitName } from "./ui.js";
@@ -91,7 +91,8 @@ function Answer({ q, answer, onAnswer }: { q: ChoiceQuestion; answer: string[]; 
             <option value="">Choose…</option>
             {pool.map((t) => (
               <option key={t.id} value={t.id}>
-                {t.name}
+                {/* The answer brings both forms, so name the language itself. */}
+                {q.from === SPOKEN_AND_WRITTEN ? t.name.replace(/ \(Spoken\)$/, "") : t.name}
               </option>
             ))}
           </select>

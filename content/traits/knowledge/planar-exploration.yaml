@@ -1,0 +1,10 @@
+id: planar-exploration
+name: "Planar Exploration"
+status: placeholder
+plane: earth
+region: tetra
+summary: "How new planes are found, locked and opened, and who does the work."
+tags: [planes, exploration, tetra]
+category: knowledge
+ranked: true
+effect: Placeholder. Effect not yet written.

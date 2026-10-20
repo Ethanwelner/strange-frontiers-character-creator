@@ -83,7 +83,17 @@ export const OUTER_POINTS_PER_LEVEL = 3;
 const POOLS: Record<string, (t: Trait) => boolean> = {
   language: (t) => t.types.includes("language"),
   "dreftian-language": (t) => t.types.includes("language") && t.region === "dreft",
+  "spoken-language": (t) => t.types.includes("language") && !t.tags.includes("writing"),
 };
+
+// A pool answered with a spoken language that brings its written form too.
+export const SPOKEN_AND_WRITTEN = "spoken-and-written-language";
+
+// The written form of a spoken language Trait, matched by `language`.
+export function writtenForm(spoken: Trait, content: Content): Trait | undefined {
+  if (!spoken.language) return undefined;
+  return content.traits.find((t) => t.language === spoken.language && t.types.includes("language") && t.tags.includes("writing"));
+}
 
 // Pools the player answers in their own words instead of with Trait ids. A
 // Contact is whoever the player says it is, so any name counts.
@@ -94,6 +104,7 @@ export const isFreeTextPool = (from: string) => Object.hasOwn(FREE_TEXT_POOLS, f
 // The Traits a package choice pool can be answered from. Empty when the engine
 // can't resolve the pool, or nothing is in it yet.
 export function choicePool(from: string, content: Content): Trait[] {
+  if (from === SPOKEN_AND_WRITTEN) return content.traits.filter((t) => POOLS["spoken-language"]!(t) && writtenForm(t, content));
   const test = POOLS[from];
   return test ? content.traits.filter(test) : [];
 }
@@ -264,6 +275,17 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
       }
     }
     for (const id of a.traits) hold(id, 1, `${source} choice`);
+    // A spoken-and-written answer brings the language's written form as well.
+    if (from === SPOKEN_AND_WRITTEN) {
+      for (const id of a.traits) {
+        const written = traits.has(id) ? writtenForm(traits.get(id)!, content) : undefined;
+        if (!written) continue;
+        if (afterPicks && held.has(written.id)) {
+          error("duplicate-trait", `${label(written)} is already held (from ${held.get(written.id)!.sources.join(", ")}), so ${name} can't give it again`, path);
+        }
+        hold(written.id, 1, `${source} choice`);
+      }
+    }
   };
   for (const pkg of packages) {
     for (const q of questionsOf("package", pkg)) answer(q, `${pkg.type} ${pkg.id}`, false);

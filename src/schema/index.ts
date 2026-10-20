@@ -109,6 +109,9 @@ export const Trait = BaseEntry.extend({
   starterOnly: z.boolean().default(false),
   rpRequirement: z.string().optional(),
   effect: z.string().min(1),
+  // For a language Trait, which language it's a form of: Dreftan (Spoken) and
+  // Dreftan (Written) are both `dreftan`.
+  language: z.string().optional(),
   // Asked when the Trait is held, e.g. which language an Additional Language
   // is. A ranked Trait asks again for each rank.
   choices: z.array(TraitChoice).default([]),

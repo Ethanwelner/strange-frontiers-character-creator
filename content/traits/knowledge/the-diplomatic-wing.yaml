@@ -1,0 +1,11 @@
+id: the-diplomatic-wing
+name: "The Diplomatic Wing"
+status: placeholder
+plane: earth
+region: tetra
+summary: "Ark Tetra’s Diplomatic Wing, its embassies and its envoys."
+tags: [tetra, diplomacy, politics]
+lore: diplomatic-wing
+category: knowledge
+ranked: true
+effect: Placeholder. Effect not yet written.

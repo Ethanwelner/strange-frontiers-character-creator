@@ -1,0 +1,11 @@
+id: the-explorers-lodge
+name: "The Explorers’ Lodge"
+status: placeholder
+plane: earth
+region: tetra
+summary: "The Explorers’ Lodge: its members, its rules and how expeditions get handed out."
+tags: [lodge, exploration, tetra]
+lore: explorers-lodge
+category: knowledge
+ranked: true
+effect: Placeholder. Effect not yet written.

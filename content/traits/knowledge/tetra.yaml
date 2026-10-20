@@ -1,0 +1,11 @@
+id: tetra
+name: "Tetra"
+status: placeholder
+plane: earth
+region: tetra
+summary: "Ark Tetra: its wings, its people and how the station runs."
+tags: [tetra, ark, sdu]
+lore: tetra
+category: knowledge
+ranked: true
+effect: Placeholder. Effect not yet written.
