@@ -251,6 +251,11 @@ textarea:focus-visible {
   margin: 2.5rem 0 1.25rem;
 }
 
+/* A step box's first group title sits at the top of the box */
+.kind-group:first-child .subhead {
+  margin-top: 0;
+}
+
 .subhead .muted {
   font-size: 0.9rem;
 }
