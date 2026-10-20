@@ -155,8 +155,24 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     error("level", `A level ${build.level} character needs ${build.level} level allocations, but the build has ${build.levels.length}`, "levels");
   }
 
-  // Rule 3: each level is 1 Inner Ring point and 3 Outer Ring points in that group.
   const stats = Object.fromEntries(STATS.map((s) => [s, base?.[s]?.start ?? 0])) as Record<StatId, number>;
+
+  // Rule 1: a Kind's free level 0 points are all placed, by the player.
+  const free = kind?.freePoints ?? 0;
+  let placed = 0;
+  for (const [stat, points = 0] of Object.entries(build.startPoints)) {
+    stats[stat as StatId] += points;
+    placed += points;
+  }
+  if (kind && placed !== free) {
+    error(
+      "allocation",
+      free ? `${kind.name} gives ${free} level 0 points to place, but the build places ${placed}` : `${kind.name} has no level 0 points to place, but the build places ${placed}`,
+      "startPoints",
+    );
+  }
+
+  // Rule 3: each level is 1 Inner Ring point and 3 Outer Ring points in that group.
   const innerRing = { physical: 0, social: 0, mental: 0 } as Record<StatGroup, number>;
   build.levels.forEach((lvl, i) => {
     const path = `levels[${i}].points`;

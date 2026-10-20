@@ -3,8 +3,8 @@ name: Guild Hunter
 status: placeholder
 plane: isekai
 region: dreft
-summary: "Hunts monsters for bounty and hide. Hunting guilds keep the King’s Woods passable, more or less."
-tags: [hunter, monsters, guild, wilderness]
+summary: "Hunts monsters for pay and glory. Hunting guilds keep posts and track the monster bounties put up by the kingdom or locals."
+tags: [hunter, monsters, guild, wilderness, combat]
 type: profession
 grants:
   - { trait: tracker }

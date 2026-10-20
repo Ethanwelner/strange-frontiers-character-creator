@@ -1,0 +1,10 @@
+id: dreftan-written
+name: "Dreftan (Written)"
+status: placeholder
+plane: isekai
+region: dreft
+summary: "The common language of Dreft."
+tags: [language, dreft, writing]
+category: knowledge
+types: [language]
+effect: This character can read and write the Dreftan language.

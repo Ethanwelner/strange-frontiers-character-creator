@@ -11,7 +11,7 @@ export function KindStep({ draft, onChange }: { draft: Draft; onChange: (d: Draf
       <div className="tech-fields tech-fields-light step-box">
         <div className="cards kind-cards" role="radiogroup" aria-label="Kind">
           {content.kinds.map((k) => (
-            <Card key={k.id} label={k.name} selected={draft.kind === k.id} onSelect={() => onChange({ ...draft, kind: draft.kind === k.id ? undefined : k.id })}>
+            <Card key={k.id} label={k.name} selected={draft.kind === k.id} onSelect={() => onChange({ ...draft, kind: draft.kind === k.id ? undefined : k.id, startPoints: undefined })}>
               <div className="card-head">
                 <h3>{k.name}</h3>
                 <Chip tone="muted">{k.plane}</Chip>

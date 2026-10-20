@@ -3,8 +3,8 @@ name: Gate Hand
 status: placeholder
 plane: isekai
 region: dreft
-summary: "Works the switch port for Tetra Frontiers Co.: hauling, translating, and keeping foreigners out of trouble."
-tags: [switch-port, company, translator, foreigners]
+summary: "Works the switch port for Tetra Frontiers Co.: hauling, translating, and generally being useful."
+tags: [switch-port, company, translator, foreigners, isekai, dreft]
 type: profession
 grants:
   - { trait: smooth-talker }

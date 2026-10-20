@@ -2,7 +2,7 @@ id: human
 name: Human
 status: draft
 plane: earth
-summary: Generalists who start with a little of everything and can't push any stat as far as other Kinds.
+summary: "The humanity of Earth Baseline."
 tags: [generalist, earth]
 features:
   - name: Generalists

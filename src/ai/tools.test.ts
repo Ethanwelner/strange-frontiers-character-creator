@@ -78,7 +78,7 @@ describe("packages and Kinds", () => {
 
   it("gets a Kind with its stats", () => {
     const out = runTool("get_kind", { id: "tatot-goblinoid" }, content) as { name: string; stats: { logic: { start: number; max: number } } };
-    expect(out.name).toBe("Goblinoid Tatot");
+    expect(out.name).toBe("Tatot, Goblinoid");
     expect(out.stats.logic).toEqual({ start: 2, max: 18 });
   });
 

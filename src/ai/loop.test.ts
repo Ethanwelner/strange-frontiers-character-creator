@@ -157,7 +157,7 @@ describe("describeCharacter", () => {
     await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create), onProgress: (p) => progress.push(`${p.turn} ${p.status}`) });
     expect(progress).toEqual([
       "1 Thinking",
-      '1 Looking up the Goblinoid Tatot Kind · Searching Traits for "magic"',
+      '1 Looking up the Tatot, Goblinoid Kind · Searching Traits for "magic"',
       "2 Thinking",
       "2 Submitting the build",
       "2 The engine sent the concept back with 1 problems; fixing them",

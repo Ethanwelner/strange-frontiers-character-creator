@@ -251,6 +251,26 @@ describe("rule 3: each level is 1 Inner Ring point and 3 Outer Ring points", () 
 });
 
 describe("rule 4: stat maximums", () => {
+  it("keeps an AI Core out of Physical stats, which its chassis decides", () => {
+    const aiCore = { ...human, kind: "ai-core", startPoints: { empathy: 3 }, traits: [] };
+    expectLegal(check({ ...aiCore, levels: [{ group: "mental", points: { logic: 3 } }] }));
+    expect(codes(check({ ...aiCore, levels: [{ group: "physical", points: { power: 3 } }] }))).toEqual(["stat-max"]);
+    expect(codes(check({ ...aiCore, startPoints: { power: 3 }, levels: [{ group: "mental", points: { logic: 3 } }] }))).toEqual(["stat-max"]);
+  });
+
+  it("needs a Kind's free level 0 points placed, and only a Kind that has them", () => {
+    const aiCore = { ...human, kind: "ai-core", traits: [], levels: [{ group: "mental" as const, points: { logic: 3 } }] };
+    const r = check({ ...aiCore, startPoints: { empathy: 2, logic: 1 } });
+    expectLegal(r);
+    expect(r.summary!.stats).toMatchObject({ empathy: 2, logic: 6, memory: 2 });
+    expect(check({ ...aiCore, startPoints: { empathy: 2 } }).errors).toEqual([
+      expect.objectContaining({ code: "allocation", message: "AI Core gives 3 level 0 points to place, but the build places 2", path: "startPoints" }),
+    ]);
+    expect(check({ ...human, startPoints: { grace: 1 } }).errors).toEqual([
+      expect.objectContaining({ code: "allocation", message: "Human has no level 0 points to place, but the build places 1" }),
+    ]);
+  });
+
   it("rejects a stat above its Kind max", () => {
     // Human grace: 1 + 3 × 5 = 16, above the Human max of 15.
     const levels = Array.from({ length: 5 }, () => ({ group: "physical" as const, points: { grace: 3 } }));

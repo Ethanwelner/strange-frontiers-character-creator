@@ -61,7 +61,7 @@ export function stepOf(issue: Issue): Step {
       const field = issue.path?.split(".")[0];
       if (field === "kind") return "kind";
       if (field === "origin" || field === "profession" || field === "past") return "background";
-      if (field === "level" || field === "levels") return "stats";
+      if (field === "level" || field === "levels" || field === "startPoints") return "stats";
       if (field === "choices") return "choices";
       return "traits";
     }

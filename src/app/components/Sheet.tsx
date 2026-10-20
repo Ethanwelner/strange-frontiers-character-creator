@@ -71,7 +71,8 @@ export function Sheet({ draft, result }: { draft: Draft; result: BuildResult }) 
                 </div>
                 {STAT_GROUPS[g].map((s: StatId) => {
                   const value = summary?.stats[s];
-                  const start = base?.[s]?.start ?? 0;
+                  // Level 0 points, including any the player placed, show gray.
+                  const start = (base?.[s]?.start ?? 0) + (draft.startPoints?.[s] ?? 0);
                   const max = base?.[s]?.max ?? 0;
                   return (
                     <div key={s} className="sheet-stat">
