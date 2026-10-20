@@ -341,7 +341,7 @@ button.hero-link:hover:not(:disabled) {
   align-items: center;
   gap: 0.4rem;
   white-space: nowrap;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   padding: 0.75rem 1.5rem;
   border-radius: 4px 4px 0 0;
 }
@@ -1025,12 +1025,30 @@ button.hero-link:hover:not(:disabled) {
   margin-bottom: 1.5rem;
 }
 
+.panel-name {
+  margin: 0 0 1.25rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+/* Character step: name beside starting level */
+.character-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 0 24px;
+}
+
+.character-fields .name-field {
+  margin-bottom: 0;
+}
+
 .field-label {
   font-size: 0.75rem;
   font-weight: 600;
 }
 
-.name-field input {
+.name-field input,
+.name-field select {
   width: 100%;
   font-size: 1rem;
   padding: 0.6rem 0.75rem;

@@ -51,6 +51,8 @@ export function stepOf(issue: Issue): Step {
     case "package":
       return "background";
     case "level":
+      // The starting level is set on the Character step; the allocations are Stats'.
+      return issue.path === "level" ? "character" : "stats";
     case "allocation":
     case "stat-max":
     case "stat-cap":
@@ -60,9 +62,10 @@ export function stepOf(issue: Issue): Step {
       return "choices";
     case "schema": {
       const field = issue.path?.split(".")[0];
+      if (field === "name" || field === "level") return "character";
       if (field === "kind") return "kind";
       if (field === "origin" || field === "profession" || field === "past") return "background";
-      if (field === "level" || field === "levels" || field === "startPoints") return "stats";
+      if (field === "levels" || field === "startPoints") return "stats";
       if (field === "choices") return "choices";
       return "traits";
     }

@@ -19,7 +19,7 @@ export interface Draft {
   choices: ChoiceAnswer[];
 }
 
-export const STEPS = ["kind", "background", "stats", "traits", "choices", "sheet"] as const;
+export const STEPS = ["character", "kind", "background", "stats", "traits", "choices", "sheet"] as const;
 export type Step = (typeof STEPS)[number];
 
 // What the builder keeps from the last AI build, so the reasons survive a reload.
@@ -44,7 +44,7 @@ export const emptyLevel = (): LevelAllocation => ({ group: "physical", points: {
 export const EMPTY: Saved = {
   draft: { level: 1, levels: [emptyLevel()], traits: [], choices: [] },
   campaign: { startingLevel: 1 },
-  step: "kind",
+  step: "character",
 };
 
 // The Build as it's exported: no undefined or empty optional fields.
@@ -109,7 +109,7 @@ export function load(): Saved {
     const startingLevel = saved.campaign?.startingLevel ?? draft.level;
     // The Stats step used to be called Levels.
     const savedStep = (saved.step as string) === "levels" ? "stats" : saved.step;
-    const step = STEPS.includes(savedStep as Step) ? (savedStep as Step) : "kind";
+    const step = STEPS.includes(savedStep as Step) ? (savedStep as Step) : "character";
     const ai = saved.ai && Array.isArray(saved.ai.reasons) ? saved.ai : undefined;
     return { draft, campaign: { startingLevel }, step, ai };
   } catch {

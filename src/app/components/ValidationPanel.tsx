@@ -8,11 +8,10 @@ import { baseStats, GROUPS, title } from "./ui.js";
 interface Props {
   draft: Draft;
   result: BuildResult;
-  onName: (name: string | undefined) => void;
   onJump: (step: Step) => void;
 }
 
-export function ValidationPanel({ draft, result, onName, onJump }: Props) {
+export function ValidationPanel({ draft, result, onJump }: Props) {
   const [open, setOpen] = useState(false);
   const { errors, warnings, summary } = result;
   const base = baseStats(draft);
@@ -39,12 +38,7 @@ export function ValidationPanel({ draft, result, onName, onJump }: Props) {
       </button>
 
       <div className="panel-body">
-        <label className="field name-field">
-          <span className="field-label">Character Name</span>
-          <input value={draft.name ?? ""} placeholder="Unnamed character" onChange={(e) => onName(e.target.value || undefined)} />
-        </label>
-
-
+        <h3 className={`panel-name${draft.name ? "" : " muted"}`}>{draft.name ?? "Unnamed character"}</h3>
         <h4>Stats</h4>
         <div className="panel-stats">
           {GROUPS.map((g) => (
