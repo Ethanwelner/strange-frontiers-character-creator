@@ -1,8 +1,9 @@
 // Turns a character concept into a full build. The concept says who the
 // character is: Kind, packages, which stats matter most, and the Traits that
 // fit, best first. The solver does the bookkeeping the model shouldn't: it
-// spreads each level's stat points, answers package and Trait choices it can
-// resolve, and buys Traits from the list in order, asking validateBuild about each one
+// spreads each level's stat points (adding any stats the requested ranks
+// need to the focus), answers package and Trait choices it can resolve, and
+// buys Traits from the list in order, asking validateBuild about each one
 // and skipping any the engine rejects. Deterministic and browser-safe.
 import { z } from "zod";
 import { STAT_CAP, STAT_GROUPS, StatId, type StatBlock, type Trait } from "../schema/index.js";
@@ -135,6 +136,30 @@ function openPlaceholders(build: Build, content: Content): ChoiceAnswer[] {
   return out;
 }
 
+// The concept's focus, plus the stats any rank above 1 it asks for will need.
+// Ranking a Trait past 1 needs each of its rankStats at 3 × the rank, so a
+// stat the model left out of focus would get no points and the rank would be
+// skipped. The model's own focus keeps its priority; these follow it.
+export function rankFocus(concept: Concept, content: Content): string[] {
+  const traits = new Map<string, Trait>(content.traits.map((t) => [t.id, t]));
+  // Ranks granted by several packages don't stack, so take the highest.
+  const granted = new Map<string, number>();
+  for (const slot of ["origin", "profession", "past"] as const) {
+    const pkg = content.packages.find((p) => p.id === concept[slot] && p.type === slot);
+    for (const g of pkg?.grants ?? []) granted.set(g.trait, Math.max(granted.get(g.trait) ?? 0, g.rank ?? 1));
+  }
+  const listed = new Map<string, number>();
+  for (const id of concept.traits) listed.set(id, (listed.get(id) ?? 0) + 1);
+
+  const focus = [...concept.focus];
+  for (const [id, count] of listed) {
+    const t = traits.get(id);
+    if (!t?.ranked || (granted.get(id) ?? 0) + count < 2) continue;
+    for (const s of t.rankStats) if (!focus.includes(s)) focus.push(s);
+  }
+  return focus;
+}
+
 const remaining = (r: BuildResult, kind: PickKind) => r.summary?.picks[kind].banked ?? 0;
 
 export function solveConcept(input: unknown, content: Content, campaign: Campaign = DEFAULT_CAMPAIGN): Solution | { error: string } {
@@ -152,7 +177,7 @@ export function solveConcept(input: unknown, content: Content, campaign: Campaig
     profession: concept.profession,
     past: concept.past,
     level: campaign.startingLevel,
-    levels: allocateLevels(concept.focus, baseStats(concept, content), campaign.startingLevel),
+    levels: allocateLevels(rankFocus(concept, content), baseStats(concept, content), campaign.startingLevel),
     traits: [],
     choices: answerChoices(concept, content),
   });
