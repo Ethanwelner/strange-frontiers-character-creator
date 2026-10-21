@@ -1,0 +1,13 @@
+id: paraecologist
+name: "Paraecologist"
+status: placeholder
+plane: earth
+summary: "Catalogues whole new kingdoms of life, many of them reliant on exotic physics, out in the field and often alongside the Explorers’ Lodge."
+tags: [science, parabiology, fieldwork, ecology, lodge]
+lore: explorers-lodge
+type: profession
+grants:
+  - { trait: survivalist }
+  - { trait: field-sampling }
+  - { trait: parabiology }
+  - { trait: the-explorers-lodge }

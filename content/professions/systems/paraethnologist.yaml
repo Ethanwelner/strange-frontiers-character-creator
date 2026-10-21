@@ -1,0 +1,15 @@
+id: paraethnologist
+name: "Paraethnologist"
+status: placeholder
+plane: earth
+summary: "Studies the cultures of parasapient peoples, usually by living among them for as long as they’ll allow it."
+tags: [science, parasapients, cultures, fieldwork]
+type: profession
+grants:
+  - { trait: research }
+  - { trait: parasapients }
+  - { trait: smooth-talker }
+choices:
+  - choose: 1
+    from: language
+    note: 1 additional Language

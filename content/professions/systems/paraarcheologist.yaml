@@ -1,0 +1,12 @@
+id: paraarcheologist
+name: "Paraarcheologist"
+status: placeholder
+plane: earth
+summary: "Digs up what parasapient civilizations left behind on other planes, before someone else sells it."
+tags: [science, archeology, ruins, fieldwork]
+type: profession
+grants:
+  - { trait: research }
+  - { trait: excavation }
+  - { trait: paraarcheology }
+  - { trait: appraisal }

@@ -1,0 +1,18 @@
+id: interplanar-diplomat
+name: "Interplanar Diplomat"
+status: placeholder
+plane: earth
+summary: "Represents a nation to peoples and powers from other planes, where the first job is working out what an insult looks like."
+tags: [diplomacy, politics, parasapients]
+type: profession
+grants:
+  - { trait: smooth-talker }
+  - { trait: interplanar-relations }
+  - { trait: parasapients }
+choices:
+  - choose: 1
+    from: language
+    note: 1 additional Language
+  - choose: 1
+    from: contact
+    note: 1 additional Contact
