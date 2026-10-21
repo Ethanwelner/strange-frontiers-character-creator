@@ -637,11 +637,11 @@ describe("rule 10: prerequisites and ranks", () => {
 });
 
 describe("rule 11: HP, VP and SP", () => {
-  it("takes HP from the Physical stats and VP and SP from the Inner Rings", () => {
-    // Endurance 1, Power 2 and Grace 3 after a physical level 1.
-    expect(check(human).summary!.resources).toEqual({ hp: 16, vp: 0, sp: 0 });
+  it("takes HP, VP and SP from the Physical, Social and Mental Outer Ring stats", () => {
+    // Endurance 1, Power 2 and Grace 3 after a physical level 1; 1 in each other stat.
+    expect(check(human).summary!.resources).toEqual({ hp: 16, vp: 3, sp: 3 });
     const r = check({ ...human, levels: [{ group: "mental", points: { logic: 3 } }] }).summary!;
-    expect(r.resources).toEqual({ hp: 13, vp: 0, sp: 1 });
+    expect(r.resources).toEqual({ hp: 13, vp: 3, sp: 6 });
   });
 
   it("adds a Trait's resources once per rank held", () => {
@@ -651,6 +651,6 @@ describe("rule 11: HP, VP and SP", () => {
         t.id === "survivalist" ? { ...t, resources: { hp: 2 } } : t.id === "dreft" ? { ...t, resources: { sp: 1 } } : t,
       ),
     };
-    expect(check(human, boosted).summary!.resources).toEqual({ hp: 18, vp: 0, sp: 2 });
+    expect(check(human, boosted).summary!.resources).toEqual({ hp: 18, vp: 3, sp: 5 });
   });
 });
