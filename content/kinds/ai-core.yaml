@@ -15,6 +15,8 @@ features:
     description: An AI Core can interface directly with other machines through the cabled port interfaces on its core.
 # The 3 level 0 points the player places; Bodiless keeps them out of Physical.
 freePoints: 3
+# Bodiless keeps Physical at 0, so the maximums total 120, not Human's 135.
+maxTotal: 120
 stats:
   endurance: { start: 0, max: 0 }
   power: { start: 0, max: 0 }
