@@ -62,8 +62,9 @@ export function StatsStep({ draft, onChange }: Props) {
   return (
     <section>
       <StepHeader step="stats" title="Stats">
-        Each level gives an Inner Ring point. Level a group's Inner Ring with + to unlock {POINTS_PER_LEVEL} Outer Ring points for its stats, then spend them
-        with each stat's +. Your Kind's level 0 stats are already filled in, in gray.
+        Each level gives an Inner Ring point. Level a group's Inner Ring with the + under its number to unlock {POINTS_PER_LEVEL} Outer Ring points for its
+        stats, then spend them with each stat's +. A group's stats can't take points until its Inner Ring is leveled. Your Kind's level 0 stats are already
+        filled in, in gray.
       </StepHeader>
       <div className="tech-fields tech-fields-light step-box">
         <p className="pool-summary">
@@ -104,31 +105,30 @@ export function StatsStep({ draft, onChange }: Props) {
                     <span className="stat-badge" title="Inner Ring">
                       {inner}
                     </span>
-                    <button
-                      aria-label={`Take an Inner Ring point from ${g}`}
-                      title={inner > 0 && stranded ? `Take ${spent - (inner - 1) * POINTS_PER_LEVEL} Outer Ring points out first` : undefined}
-                      onClick={() => onChange(withInner(draft, g, inner - 1))}
-                      disabled={inner === 0 || stranded}
-                    >
-                      −
-                    </button>
-                    <button
-                      aria-label={`Put an Inner Ring point in ${g}`}
-                      title={innerLeft > 0 && !canLevel ? `${title(g)}'s stats have no room for ${POINTS_PER_LEVEL} more points` : undefined}
-                      onClick={() => onChange(withInner(draft, g, inner + 1))}
-                      disabled={!canLevel}
-                    >
-                      +
-                    </button>
+                    <div className="inner-buttons">
+                      <button
+                        aria-label={`Take an Inner Ring point from ${g}`}
+                        title={inner > 0 && stranded ? `Take ${spent - (inner - 1) * POINTS_PER_LEVEL} Outer Ring points out first` : undefined}
+                        onClick={() => onChange(withInner(draft, g, inner - 1))}
+                        disabled={inner === 0 || stranded}
+                      >
+                        −
+                      </button>
+                      <button
+                        aria-label={`Put an Inner Ring point in ${g}`}
+                        title={innerLeft > 0 && !canLevel ? `${title(g)}'s stats have no room for ${POINTS_PER_LEVEL} more points` : undefined}
+                        onClick={() => onChange(withInner(draft, g, inner + 1))}
+                        disabled={!canLevel}
+                      >
+                        +
+                      </button>
+                    </div>
                   </div>
                   <h4 className="rule">{title(g)}</h4>
                   <span className={`num${inner === 0 ? " muted" : spent === room ? " good" : spent > room ? " bad" : ""}`}>
                     {spent}/{room}
                   </span>
                 </div>
-                {inner === 0 && innerLeft > 0 && canLevel && (
-                  <p className="hint">Level the Inner Ring with + to unlock {POINTS_PER_LEVEL} points for these stats.</p>
-                )}
                 {inner === 0 && !canLevel && headroom < POINTS_PER_LEVEL && <p className="hint">These stats have no room for points.</p>}
                 {STAT_GROUPS[g].map((s: StatId) => {
                   const value = valueOf(s);
