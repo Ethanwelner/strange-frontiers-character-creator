@@ -840,13 +840,94 @@ button.hero-link:hover:not(:disabled) {
   margin: 0 0 1rem;
 }
 
-.inner-row {
-  padding-bottom: 0.5rem;
+/* The groups side by side, each drawn like the sheet's stat block */
+.pool-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr));
+  gap: 24px 48px;
+}
+
+.pool-stats .sheet-group.locked .sheet-stat {
+  opacity: 0.45;
+}
+
+.pool-level0 {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
   border-bottom: 1px solid var(--rule);
 }
 
-.pool-card.locked .stat-group {
-  opacity: 0.45;
+.pool-level0 .sheet-group-head {
+  margin-bottom: 0.5rem;
+}
+
+.pool-group-name {
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* Inner Ring: the sheet's round badge between − and + */
+.inner-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.inner-control button {
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border-radius: 50%;
+  font-family: var(--body);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* The stat bar as buttons: same shapes, plus hover on the slots in reach */
+.stat-line-input .stat {
+  padding: 0;
+  min-width: 0;
+  height: auto;
+  border-radius: 0;
+  background: transparent;
+  font: inherit;
+  letter-spacing: 0;
+  line-height: 0;
+}
+
+.stat-line-input .stat.dot {
+  border-radius: 50%;
+}
+
+.stat-line-input .stat.square {
+  border-radius: 4px;
+}
+
+.stat-line-input .stat.default {
+  background-color: var(--medium-gray);
+}
+
+.stat-line-input .stat.filled {
+  background-color: var(--black);
+}
+
+.stat-line-input .stat.over {
+  background-color: var(--red);
+}
+
+.stat-line-input .stat:disabled {
+  opacity: 1;
+  cursor: default;
+}
+
+.stat-line-input .stat.reachable:hover,
+.stat-line-input .stat.reachable:focus-visible {
+  background-color: var(--green);
+  border-color: var(--green);
+}
+
+.stat-line-input .stat.filled:not(:disabled):hover {
+  background-color: var(--gray);
 }
 
 .inner-ring {

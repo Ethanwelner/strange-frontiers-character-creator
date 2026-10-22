@@ -91,6 +91,34 @@ export function StatLine({ start, value, max }: { start: number; value: number; 
   );
 }
 
+// The stat bar as a control. Clicking an open slot fills the stat up to it, as
+// far as `reach` allows; clicking the last black slot takes a point back.
+// Gray level 0 slots and slots past the max can't be clicked.
+export function StatLineInput(props: { label: string; start: number; value: number; max: number; reach: number; onSet: (value: number) => void }) {
+  const { label, start, value, max, reach, onSet } = props;
+  return (
+    <div className="stat-line stat-line-input" role="group" aria-label={`${label}: ${value} of ${max}`}>
+      {Array.from({ length: STAT_SLOTS }, (_, n) => {
+        const point = n + 1;
+        const fill =
+          point <= value ? (point > max ? "over" : point <= start ? "default" : "filled") : point <= max ? "empty" : "unavailable";
+        const target = point === value && point > start ? point - 1 : point;
+        const enabled = point > start && point <= max && (point <= value || point <= reach);
+        return (
+          <button
+            key={point}
+            type="button"
+            className={`stat ${point % 2 ? "dot" : "square"} ${fill}${enabled && point > value ? " reachable" : ""}`}
+            aria-label={point === value && point > start ? `Take ${label} back to ${target}` : `Set ${label} to ${point}`}
+            disabled={!enabled}
+            onClick={() => onSet(target)}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
 // Start and max for every stat, grouped Physical / Social / Mental.
 export function StatRanges({ stats }: { stats: StatBlock }) {
   return (
