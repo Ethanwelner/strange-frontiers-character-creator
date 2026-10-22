@@ -28,7 +28,7 @@ Every tab's Description is `summary`, Tags is `tags`, and Notes is for anything 
 
 | Sheet column | YAML |
 |---|---|
-| Kinds and packages: Plane, Region, Lore | `plane`, `region`, `lore`. The Trait tabs have no Plane column, so a Trait's `plane` is set here: `earth` or `isekai` only when the Trait names that setting's places, peoples, institutions, languages, technology or magic, and `any` otherwise |
+| Plane, Region, Lore | `plane`, `region`, `lore`. Plane is Earth, Isekai or Any (lowercase in YAML). Every Trait tab has a Plane column after Name: a Trait is Earth or Isekai only when it names that setting's places, peoples, institutions, languages, technology or magic, and Any otherwise |
 | Kinds: Features | `features`, one `name: description` per line |
 | Kinds: Trait Access, Free Points, Max Total | `traitAccess`, `freePoints`, `maxTotal` |
 | Kinds: Physical / Social / Mental (start/max) | `stats`, from lines like "Endurance 1/15" |
