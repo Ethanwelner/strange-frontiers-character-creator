@@ -58,7 +58,7 @@ npm run eval     # runs evals/prompts.md through the same loop
 
 ## Manual builder
 
-A click-to-build character builder (Phase 3); the describe box above it is optional. It walks through the name and starting level, Kind, Origin, Profession and Past, each level's stat points, Trait picks, and choices (who a Contact is, which language). A panel shows the rules engine's errors, warnings, stats and picks as you go, and the Sheet step is a printable character sheet.
+A click-to-build character builder (Phase 3); the describe box above it is optional. It walks through the name and starting level, Kind, Origin, Profession and Past, the stats (a pool of Inner Ring points, one per level, each unlocking 3 Outer Ring points for its group), Trait picks, and choices (who a Contact is, which language). A panel shows the rules engine's errors, warnings, stats and picks as you go, and the Sheet step is a printable character sheet.
 
 ```bash
 npm run dev      # http://localhost:5173

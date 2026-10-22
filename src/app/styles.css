@@ -835,6 +835,20 @@ button.hero-link:hover:not(:disabled) {
   opacity: 0.45;
 }
 
+/* Stats pool: Inner Ring points placed, then one card per group */
+.pool-summary {
+  margin: 0 0 1rem;
+}
+
+.inner-row {
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.pool-card.locked .stat-group {
+  opacity: 0.45;
+}
+
 .inner-ring {
   font-size: 0.75rem;
   font-weight: 600;
