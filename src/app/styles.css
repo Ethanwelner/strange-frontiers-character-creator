@@ -30,7 +30,9 @@
   --frontiers: #2dfc64;
   --lore: #884ddc;
   --dreft: #1c372b;
-  --systems: #333333;
+  --systems: #212121;
+  /* Card bodies: a touch darker than near-white, so they sit softer on the dark panel */
+  --card-bg: #efefef;
   --lore-on-black: #a67bf0;
   --rule: rgb(0 0 0 / 15%);
   --rule-on-black: rgb(255 255 255 / 25%);
@@ -697,7 +699,7 @@ button.hero-link:hover:not(:disabled) {
 .level-card,
 .choice {
   position: relative;
-  background: var(--near-white);
+  background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: 12px;
   padding: 16px;
@@ -1069,7 +1071,7 @@ button.hero-link:hover:not(:disabled) {
   padding: 0 16px 16px;
   color: var(--black);
   /* Light like the Kind cards, so the dark name bar reads as their header */
-  background-color: var(--near-white);
+  background-color: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: 12px;
   font-size: 14px;
