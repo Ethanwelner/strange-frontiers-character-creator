@@ -508,6 +508,8 @@ button.hero-link:hover:not(:disabled) {
 
 .builder-panel {
   --rule: rgb(255 255 255 / 18%);
+  /* Card edges fade into the dark box instead of outlining it in light gray */
+  --card-border: #5e5e5e;
   background: var(--panel);
   color: var(--panel-text);
 }
@@ -518,6 +520,10 @@ button.hero-link:hover:not(:disabled) {
 
 .builder-panel .good {
   color: var(--panel-good);
+}
+
+.builder-panel :is(.notice, .c-sheet) {
+  border-color: var(--card-border);
 }
 
 /* Cards, notices and the sheet stay light, with their own dark text */
