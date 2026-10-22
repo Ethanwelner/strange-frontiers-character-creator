@@ -673,8 +673,10 @@ button.hero-link:hover:not(:disabled) {
   grid-template-columns: repeat(auto-fill, minmax(min(400px, 100%), 1fr));
 }
 
-/* Kind cards: a header bar in the Kind's region color, like a Trait's name bar */
-.kind-card > .card-head {
+/* Every character card (Kind, package, choice; Trait cards have their own
+   .trait-name) opens with a header bar in its region color: Dreft's green
+   for Isekai, Systems gray for the rest */
+.headed > .card-head {
   margin: -16px -16px 0;
   padding: 10px 16px;
   align-items: center;
@@ -683,17 +685,27 @@ button.hero-link:hover:not(:disabled) {
   color: var(--white);
 }
 
-.kind-card.region-systems > .card-head {
+.headed.region-systems > .card-head {
   background: var(--systems);
 }
 
-.kind-card.region-dreft > .card-head {
+.headed.region-dreft > .card-head {
   background: var(--dreft);
 }
 
-.kind-card > .card-head .chip-muted {
+.headed > .card-head h3 {
+  margin: 0;
+}
+
+.headed > .card-head .chip-muted,
+.headed > .card-head .muted {
   background: rgb(255 255 255 / 15%);
   color: var(--white);
+}
+
+.headed > .card-head .muted {
+  background: none;
+  opacity: 0.75;
 }
 
 .card-head {

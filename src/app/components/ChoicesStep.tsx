@@ -1,9 +1,9 @@
 import { useState } from "react";
 import type { ChoiceAnswer } from "../../engine/build.js";
 import { answers, choicePool, FREE_TEXT_POOLS, SPOKEN_AND_WRITTEN, type BuildResult, type ChoiceQuestion } from "../../engine/validate.js";
-import { content, packageById } from "../content.js";
+import { content, packageById, traitById } from "../content.js";
 import { slug, type Draft } from "../draft.js";
-import { StepHeader, title, traitName } from "./ui.js";
+import { Chip, regionClass, StepHeader, title, traitName } from "./ui.js";
 
 // Before the build is complete enough for the engine, its packages' choices.
 function packageQuestions(draft: Draft): ChoiceQuestion[] {
@@ -25,6 +25,9 @@ function packageQuestions(draft: Draft): ChoiceQuestion[] {
 // What asked, under each question's name: the package's slot, or "Trait".
 const askedBy = (q: ChoiceQuestion) => (q.by === "trait" ? "Trait" : title(packageById.get(q.id)?.type ?? "package"));
 
+// The plane of whatever asked, for the card's header color.
+const askerPlane = (q: ChoiceQuestion) => (q.by === "trait" ? traitById.get(q.id)?.plane : packageById.get(q.id)?.plane);
+
 export function ChoicesStep({ draft, result, onChange }: { draft: Draft; result: BuildResult; onChange: (d: Draft) => void }) {
   // The engine's questions: the packages' choices, then the held Traits'.
   const qs = result.summary?.questions ?? packageQuestions(draft);
@@ -43,10 +46,11 @@ export function ChoicesStep({ draft, result, onChange }: { draft: Draft; result:
       <div className="tech-fields tech-fields-light step-box">
         {qs.length === 0 && <p className="empty">This build's packages and Traits have no choices to answer.</p>}
         {qs.map((q) => (
-          <div key={`${q.by}/${q.id}/${q.from}`} className="choice">
-            <h3>
-              {q.name} <span className="muted">· {askedBy(q)}</span>
-            </h3>
+          <div key={`${q.by}/${q.id}/${q.from}`} className={`choice headed ${regionClass(askerPlane(q))}`}>
+            <div className="card-head">
+              <h3>{q.name}</h3>
+              <Chip tone="muted">{askedBy(q)}</Chip>
+            </div>
             <p>
               {q.notes.join("; ") || `Choose ${q.count} from ${q.from}`}{" "}
               <span className="muted">
