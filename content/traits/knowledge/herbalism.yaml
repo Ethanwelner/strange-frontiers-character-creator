@@ -1,7 +1,7 @@
 id: herbalism
 name: Herbalism
 status: placeholder
-plane: isekai
+plane: any
 summary: "Plants and what they do for, and to, people."
 tags: [herbs, healing, plants]
 category: knowledge

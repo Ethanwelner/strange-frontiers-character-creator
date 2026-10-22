@@ -1,7 +1,7 @@
 id: mountaineering
 name: Mountaineering
 status: placeholder
-plane: isekai
+plane: any
 summary: "Climbing, and surviving, in high mountains."
 tags: [mountains, climbing, survival]
 category: knowledge

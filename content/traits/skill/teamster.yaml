@@ -1,7 +1,7 @@
 id: teamster
 name: Teamster
 status: placeholder
-plane: isekai
+plane: any
 summary: Driving and caring for draft animals and wagons.
 tags: [caravan, animals, driving]
 category: skill

@@ -1,6 +1,6 @@
 import { content } from "../content.js";
 import type { Draft } from "../draft.js";
-import { Card, Chip, regionClass, StatRanges, StepHeader, title } from "./ui.js";
+import { Card, Chip, regionClass, SettingIcon, StatRanges, StepHeader, title } from "./ui.js";
 
 // Kinds are listed by where they come from: Earth's Kinds are The Systems',
 // and the rest go under their region. The Systems come first, then Dreft.
@@ -25,7 +25,10 @@ export function KindStep({ draft, onChange }: { draft: Draft; onChange: (d: Draf
                 {content.kinds.filter((k) => regionOf(k) === region).map((k) => (
                   <Card key={k.id} className={`kind-card headed ${regionClass(k.plane)}`} label={k.name} selected={draft.kind === k.id} onSelect={() => onChange({ ...draft, kind: draft.kind === k.id ? undefined : k.id, startPoints: undefined })}>
                     <div className="card-head">
-                      <h3>{k.name}</h3>
+                      <h3>
+                        <SettingIcon plane={k.plane} />
+                        {k.name}
+                      </h3>
                       <Chip tone="muted">{k.plane}</Chip>
                     </div>
                     <p>{k.summary}</p>

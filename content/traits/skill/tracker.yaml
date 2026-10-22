@@ -1,7 +1,7 @@
 id: tracker
 name: Tracker
 status: placeholder
-plane: isekai
+plane: any
 summary: Following trails and reading signs.
 tags: [tracking, hunting, wilderness]
 category: skill

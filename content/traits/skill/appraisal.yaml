@@ -1,7 +1,7 @@
 id: appraisal
 name: Appraisal
 status: placeholder
-plane: isekai
+plane: any
 summary: Judging what something is worth.
 tags: [trade, valuation, merchant]
 category: skill

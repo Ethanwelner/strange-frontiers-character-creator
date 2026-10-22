@@ -1025,6 +1025,26 @@ button.hero-link:hover:not(:disabled) {
   min-width: 0;
 }
 
+/* The setting mark before a card's name, in the header's text color */
+.setting-icon {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 1.15em;
+  height: 1.15em;
+  margin-right: 0.45em;
+  vertical-align: -0.2em;
+  background-color: currentColor;
+  mask: center / contain no-repeat;
+}
+
+.setting-isekai {
+  mask-image: url("./img/isekai.svg");
+}
+
+.setting-systems {
+  mask-image: url("./img/the_systems.svg");
+}
+
 .trait-box:hover {
   border-color: var(--medium-gray);
 }

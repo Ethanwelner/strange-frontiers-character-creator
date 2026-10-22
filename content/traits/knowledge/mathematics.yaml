@@ -1,7 +1,7 @@
 id: mathematics
 name: "Mathematics"
 status: placeholder
-plane: earth
+plane: any
 summary: "Mathematics and its fields of study."
 tags: [mathematics, science]
 category: knowledge
