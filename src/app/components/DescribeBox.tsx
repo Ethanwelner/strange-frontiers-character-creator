@@ -2,7 +2,7 @@ import { useState, type FormEvent } from "react";
 import type { DescribeError, DescribeEvent, DescribeResult, Progress } from "../../ai/types.js";
 import { kindById, packageById } from "../content.js";
 import type { AiNotes, Draft } from "../draft.js";
-import { askerName, title, traitName } from "./ui.js";
+import { askerName, choiceLabel, title, traitName } from "./ui.js";
 
 interface Props {
   draft: Draft;
@@ -142,7 +142,7 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
           {notes.openChoices.length > 0 && (
             <p className="hint">
               Left for you on the Choices step:{" "}
-              {notes.openChoices.map((c) => `${c.note ?? `${c.count} from ${c.from}`} (${askerName(c)})`).join("; ")}.
+              {notes.openChoices.map((c) => `${c.note ?? choiceLabel(c.count, c.from)} (${askerName(c)})`).join("; ")}.
             </p>
           )}
           <ul className="ai-reasons">

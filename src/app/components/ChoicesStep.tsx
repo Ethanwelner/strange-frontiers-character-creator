@@ -3,7 +3,7 @@ import type { ChoiceAnswer } from "../../engine/build.js";
 import { answers, choicePool, FREE_TEXT_POOLS, SPOKEN_AND_WRITTEN, type BuildResult, type ChoiceQuestion } from "../../engine/validate.js";
 import { content, packageById, traitById } from "../content.js";
 import { slug, type Draft } from "../draft.js";
-import { Chip, regionClass, SettingIcon, StepHeader, title, traitName } from "./ui.js";
+import { Chip, choiceLabel, regionClass, SettingIcon, StepHeader, title, traitName } from "./ui.js";
 
 // Before the build is complete enough for the engine, its packages' choices.
 function packageQuestions(draft: Draft): ChoiceQuestion[] {
@@ -54,12 +54,7 @@ export function ChoicesStep({ draft, result, onChange }: { draft: Draft; result:
               </h3>
               <Chip tone="muted">{askedBy(q)}</Chip>
             </div>
-            <p>
-              {q.notes.join("; ") || `Choose ${q.count} from ${q.from}`}{" "}
-              <span className="muted">
-                ({q.count} from <code>{q.from}</code>)
-              </span>
-            </p>
+            <p>{q.notes.join("; ") || choiceLabel(q.count, q.from)}</p>
             <Answer q={q} answer={answerOf(q)?.traits ?? []} onAnswer={(t) => setAnswer(q, t)} />
           </div>
         ))}

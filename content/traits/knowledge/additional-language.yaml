@@ -10,4 +10,4 @@ effect: Placeholder. Effect not yet written.
 choices:
   - choose: 1
     from: language
-    note: 1 language per rank
+    note: "+1 Language per rank"

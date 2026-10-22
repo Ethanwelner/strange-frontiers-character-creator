@@ -123,7 +123,7 @@ describe("checkBuild", () => {
   });
 
   it("leaves Contacts to the player, and the build is still legal", () => {
-    expect(openChoices(caravaneer, content)).toEqual([{ package: "caravaneer", from: "contact", count: 1, note: "1 additional Contact" }]);
+    expect(openChoices(caravaneer, content)).toEqual([{ package: "caravaneer", from: "contact", count: 1, note: "+1 Contact" }]);
     const out = checkBuild(caravaneer, content, L1);
     expect(out.accepted).toBe(true);
     expect(out.legal).toBe(true);
@@ -136,8 +136,8 @@ describe("Trait choices", () => {
 
   it("leaves a held Trait's Contact to the player too", () => {
     expect(openChoices(withContact, content)).toEqual([
-      { package: "caravaneer", from: "contact", count: 1, note: "1 additional Contact" },
-      { trait: "additional-contact", from: "contact", count: 1, note: "1 Contact per rank" },
+      { package: "caravaneer", from: "contact", count: 1, note: "+1 Contact" },
+      { trait: "additional-contact", from: "contact", count: 1, note: "+1 Contact per rank" },
     ]);
     const out = checkBuild(withContact, content, L1);
     expect(out.accepted).toBe(true);
@@ -162,7 +162,7 @@ describe("Trait choices", () => {
     const out = runTool("search_traits", { query: "additional language" }, content, L1) as { traits: { id: string; choices: unknown[] }[] };
     const hit = out.traits[0];
     expect(hit!.id).toBe("additional-language");
-    expect(hit!.choices).toEqual([{ choose: 1, from: "language", note: "1 language per rank" }]);
+    expect(hit!.choices).toEqual([{ choose: 1, from: "language", note: "+1 Language per rank" }]);
     expect(contentIndex(content)).toContain("choices 1 from language per rank");
   });
 });

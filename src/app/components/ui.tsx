@@ -14,6 +14,10 @@ export const traitName = (id: string) => traitById.get(id)?.name ?? id;
 export const regionClass = (plane: string | undefined) => `region-${plane === "isekai" ? "dreft" : "systems"}`;
 export const traitRegionClass = (id: string) => regionClass(traitById.get(id)?.plane);
 
+// A choice with no note of its own, in the notes' shorthand: "+1 Spoken Language".
+export const choiceLabel = (count: number, pool: string) =>
+  `+${count} ${pool.split("-").map(title).join(" ")}`;
+
 // The setting mark at the start of a card's name: Isekai's for anything from
 // Isekai, The Systems' for anything from Earth. Generic cards (plane "any")
 // get none.
