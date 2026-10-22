@@ -1,0 +1,9 @@
+id: mechanical
+name: "Mechanical"
+status: draft
+plane: any
+summary: "A machine: harmed by EMP, and usually immune to Death damage."
+tags: [machine, emp, site-example]
+category: condition
+background: true
+effect: "This character or object is a machine. It can be harmed by EMP damage and is typically immune to Death damage."

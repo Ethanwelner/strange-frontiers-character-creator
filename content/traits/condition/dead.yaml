@@ -1,0 +1,11 @@
+id: dead
+name: "Dead"
+status: draft
+plane: any
+summary: "Dead."
+tags: [injury, death, site-example]
+category: condition
+types: [injury]
+conveyed: true
+temporary: "A character gains this trait if they are at 0 or less HP"
+effect: "This character is dead and cannot perform voluntary actions. This character cannot be healed by any means unless otherwise stated."

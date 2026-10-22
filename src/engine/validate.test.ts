@@ -567,6 +567,46 @@ describe("rule 9: creation-only allowances", () => {
   });
 });
 
+describe("rule 12: minimum stats and tag prerequisites", () => {
+  it("rejects a picked Trait the focus stats don't reach", () => {
+    // Trail Runner needs Power 3, Endurance 2 and Grace 2; this Human has Power 2, Endurance 1.
+    const r = check({ ...human, traits: [{ trait: "trail-runner", pick: "universal" }] });
+    expect(codes(r)).toEqual(["min-stats"]);
+    expect(r.errors[0]!.message).toContain("has endurance 1, power 2");
+  });
+
+  it("accepts it once the stats are there", () => {
+    // Capable Student needs Memory 3 and Logic 3: two Mental levels get there.
+    const scholar = {
+      ...human,
+      level: 2,
+      levels: [
+        { group: "mental" as const, points: { memory: 2, logic: 1 } },
+        { group: "mental" as const, points: { logic: 1, intuition: 2 } },
+      ],
+      traits: [{ trait: "capable-student", pick: "universal" as const }],
+    };
+    expectLegal(check(scholar, content, { startingLevel: 2 }));
+  });
+
+  it("checks core stats too", () => {
+    // Gladiator needs Physical 5; one level gives Physical 1.
+    const r = check({ ...human, traits: [{ trait: "gladiator", pick: "universal" }] });
+    expect(r.errors.find((e) => e.code === "min-stats")!.message).toContain("physical 1");
+  });
+
+  it("needs another held Trait carrying a prerequisite tag", () => {
+    // Expert Pilot needs any Pilot skill; Truck Pilot grants Pilot: Truck.
+    const noStats: Content = {
+      ...content,
+      traits: content.traits.map((t) => (t.id === "expert-pilot" ? { ...t, minStats: {} } : t)),
+    };
+    const expert = [{ trait: "expert-pilot", pick: "universal" as const }];
+    expect(codes(check({ ...human, traits: expert }, noStats))).toEqual(["prerequisite"]);
+    expectLegal(check({ ...human, profession: "truck-pilot", traits: expert, choices: [{ package: "truck-pilot", from: "contact", traits: ["Old Friend"] }] }, noStats));
+  });
+});
+
 describe("rule 10: prerequisites and ranks", () => {
   it("rejects a Trait whose prerequisite isn't held", () => {
     const r = check({ ...human, traits: [{ trait: "fixture-master-tracker", pick: "universal" }] }, withFixtures);

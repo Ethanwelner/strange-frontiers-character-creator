@@ -1,0 +1,11 @@
+id: natural-breath-weapon
+name: "Natural Breath Weapon"
+status: draft
+plane: any
+summary: "A biology that lets the character use their breath as a tool or weapon."
+tags: [breath, natural-weapon, combat, site-example]
+category: ability
+ranked: true
+background: true
+minStats: { endurance: 3 }
+effect: "This character's biology allows them to use their breath as a tool or weapon. For each rank of this ability add another d4 to the damage the breath weapon deals."

@@ -1,0 +1,11 @@
+id: knowledge-sponge
+name: "Knowledge Sponge"
+status: draft
+plane: any
+summary: "Learns new knowledge in a quarter of the time."
+tags: [learning, study, site-example]
+category: ability
+mastery: true
+minStats: { memory: 5, logic: 5, intuition: 5 }
+prerequisites: [capable-student]
+effect: "This character can learn a new (knowledge) Trait in a quarter the specified time."

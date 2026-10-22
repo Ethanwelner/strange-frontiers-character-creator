@@ -1,0 +1,10 @@
+id: rider-basic-animals
+name: "Rider: Basic Animals"
+status: draft
+plane: any
+summary: "Riding a simple animal as a mount."
+tags: [riding, animals, site-example]
+category: skill
+ranked: true
+minStats: { grace: 4, empathy: 4, persuasion: 3 }
+effect: "This character is capable of riding a basic animal as a mount in simple scenarios without a skill check. Rank *10 added to skill check rolls involving riding a simple animal."

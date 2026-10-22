@@ -1,0 +1,9 @@
+id: tugboat-captain
+name: "Tugboat Captain"
+status: draft
+plane: earth
+summary: "Licensed and trained to command a tugboat."
+tags: [tugboat, license, pilot, site-example]
+category: circumstance
+conveyed: true
+effect: "This character has all required legal training and licenses required to command a Tugboat."

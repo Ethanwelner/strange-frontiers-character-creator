@@ -1,0 +1,9 @@
+id: capable-student
+name: "Capable Student"
+status: draft
+plane: any
+summary: "Learns new knowledge in half the time."
+tags: [learning, study, site-example]
+category: ability
+minStats: { memory: 3, logic: 3 }
+effect: "This character can learn a new (knowledge) Trait in half the specified time."

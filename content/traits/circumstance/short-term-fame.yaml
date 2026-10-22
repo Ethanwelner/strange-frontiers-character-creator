@@ -1,0 +1,10 @@
+id: short-term-fame
+name: "Short Term Fame"
+status: draft
+plane: any
+summary: "Famous, for now, after recent events."
+tags: [fame, social, site-example]
+category: circumstance
+conveyed: true
+temporary: "30 days"
+effect: "Due to recent events this character is famous and can request advantage in social situations where the character's fame may aid them."

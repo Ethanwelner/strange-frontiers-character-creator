@@ -1,0 +1,10 @@
+id: orc-society
+name: "Orc Society"
+status: draft
+plane: isekai
+summary: "The customs, institutions and traditions of Orc societies."
+tags: [orcs, culture, site-example]
+category: knowledge
+ranked: true
+minStats: { memory: 3 }
+effect: "This character has knowledge of orc customs and can be assumed to be familiar with the institutions and traditions of Orc societies."

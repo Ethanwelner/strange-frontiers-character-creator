@@ -1,0 +1,11 @@
+id: expert-pilot
+name: "Expert Pilot"
+status: draft
+plane: any
+summary: "A pilot good enough to fly almost anything they have training in, and most things like it."
+tags: [pilot, expert, site-example]
+category: skill
+mastery: true
+minStats: { memory: 5, intuition: 10, grace: 5 }
+prerequisiteTags: [pilot]
+effect: "This character can request advantage on piloting any craft they have training in and may request competence in piloting any craft similar to one they have training in."

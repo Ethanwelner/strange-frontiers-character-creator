@@ -1,0 +1,10 @@
+id: pilot-helicopter
+name: "Pilot: Helicopter"
+status: draft
+plane: earth
+summary: "Flying helicopters."
+tags: [pilot, helicopters, site-example]
+category: skill
+ranked: true
+minStats: { memory: 5, intuition: 3, grace: 3 }
+effect: "This character is capable of piloting helicopters in simple scenarios without a skill check and is capable of describing the basic functions and controls of a helicopter. Rank *10 added to skill check rolls involving helicopter piloting."

@@ -96,10 +96,23 @@ export const TraitCategory = z.enum([
   "skill",
   "contact",
   "starter",
+  "ability",
   "condition",
   "membership",
   "circumstance",
+  "other",
 ]);
+
+// The lowest stats a character needs to take a Trait: focus stats by name
+// (power: 3) and core stats by group (physical: 5).
+export const MinStats = z
+  .object(
+    Object.fromEntries(
+      [...StatId.options, ...Object.keys(STAT_GROUPS)].map((k) => [k, z.number().int().min(0).optional()]),
+    ) as Record<StatId | keyof typeof STAT_GROUPS, z.ZodOptional<z.ZodNumber>>,
+  )
+  .strict();
+export type MinStats = z.infer<typeof MinStats>;
 
 export const Trait = BaseEntry.extend({
   category: TraitCategory,
@@ -108,9 +121,18 @@ export const Trait = BaseEntry.extend({
   ranked: z.boolean().default(false),
   // Each listed stat must be at least 3 × the new rank to rank up past 1.
   rankStats: z.array(StatId).default([]),
+  // Needed to take the Trait at all, before any rank.
+  minStats: MinStats.default({}),
   prerequisites: z.array(Id).default([]),
+  // Each tag needs at least one held Trait carrying it, e.g. Expert Pilot's
+  // "any Pilot skill" is `pilot`.
+  prerequisiteTags: z.array(z.string()).default([]),
   background: z.boolean().default(false),
   starterOnly: z.boolean().default(false),
+  // A Mastery Trait, like Expert Pilot: the top of a line of Traits.
+  mastery: z.boolean().default(false),
+  // For a temporary Trait, when it ends, e.g. "Lost when the bleeding is treated".
+  temporary: z.string().optional(),
   // Conveyed Traits come from packages, choices or play, never from a level-up pick.
   conveyed: z.boolean().default(false),
   rpRequirement: z.string().optional(),
