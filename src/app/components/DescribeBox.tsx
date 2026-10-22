@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import type { DescribeError, DescribeEvent, DescribeResult, Progress } from "../../ai/types.js";
 import { kindById, packageById } from "../content.js";
 import type { AiNotes, Draft } from "../draft.js";
@@ -9,7 +9,7 @@ interface Props {
   notes?: AiNotes;
   startingLevel: number;
   hasBuild: boolean;
-  onBuilt: (result: DescribeResult, description: string) => void;
+  onBuilt: (result: DescribeResult, description: string, seconds: number) => void;
   onDismiss: () => void;
 }
 
@@ -55,16 +55,31 @@ function targetLabel(target: string, draft: Draft): string {
   return traitName(target);
 }
 
+// 67 seconds as "1:07".
+export const clock = (seconds: number) => `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, "0")}`;
+
 export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss, draft }: Props) {
   const [text, setText] = useState(notes?.description ?? "");
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState<Progress>();
   const [error, setError] = useState<string>();
+  // The stopwatch on Build it: when the build started, and seconds since.
+  const started = useRef(0);
+  const [elapsed, setElapsed] = useState(0);
+  const secondsSince = () => Math.round((Date.now() - started.current) / 1000);
+
+  useEffect(() => {
+    if (!busy) return;
+    const tick = setInterval(() => setElapsed(secondsSince()), 1000);
+    return () => clearInterval(tick);
+  }, [busy]);
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     if (!text.trim() || busy) return;
     if (hasBuild && !window.confirm("Replace the current build with a new one from this description?")) return;
+    started.current = Date.now();
+    setElapsed(0);
     setBusy(true);
     setError(undefined);
     setProgress(undefined);
@@ -78,9 +93,10 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
       if (!body) throw new Error(`The AI server answered ${res.status} with no details. Is npm run dev running?`);
       if ("error" in body) throw new Error(body.message);
       if (!body.build) throw new Error("The model didn't propose a build. Try again, or describe the character differently.");
-      onBuilt(body, text);
+      onBuilt(body, text, secondsSince());
     } catch (err) {
-      setError(err instanceof TypeError ? "Couldn't reach the AI server. Start it with npm run dev." : err instanceof Error ? err.message : String(err));
+      const message = err instanceof TypeError ? "Couldn't reach the AI server. Start it with npm run dev." : err instanceof Error ? err.message : String(err);
+      setError(`${message} (after ${clock(secondsSince())})`);
     } finally {
       setBusy(false);
     }
@@ -106,8 +122,18 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
           disabled={busy}
         />
         <div className="describe-actions">
-          <button type="submit" className="primary" disabled={busy || !text.trim()} aria-busy={busy}>
-            {busy ? "Building…" : "Build it"}
+          <button type="submit" className="primary build-button" disabled={busy || !text.trim()} aria-busy={busy}>
+            {busy ? (
+              <>
+                Building
+                <span className="stopwatch-icon" aria-hidden="true" />
+                <span className="num" aria-label={`${elapsed} seconds`}>
+                  {clock(elapsed)}
+                </span>
+              </>
+            ) : (
+              "Build it"
+            )}
           </button>
           {busy && (
             <span className="describe-progress muted" title={progress?.status}>
@@ -130,6 +156,7 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
         <div className="describe-result">
           <div className="describe-head">
             <p className={`describe-status ${notes.status === "accepted" ? "good" : "bad"}`}>
+              {notes.seconds !== undefined && <strong>Build finished in {clock(notes.seconds)}. </strong>}
               {notes.status === "accepted"
                 ? `Built from your description${notes.model ? ` by ${notes.model}` : ""}. Edit anything below; the panel keeps checking.`
                 : `${notes.model ?? "The model"} ran out of turns before the build was legal. The panel shows what's left to fix.`}

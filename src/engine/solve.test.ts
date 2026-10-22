@@ -149,6 +149,12 @@ describe("solveConcept", () => {
   it("reports a concept that doesn't match the format", () => {
     expect(solveConcept({ kind: "isek" }, content, L1)).toEqual({ error: expect.stringContaining("origin") });
   });
+
+  it("sends back names given where ids belong, instead of failing to build", () => {
+    const out = solveConcept({ kind: "Isek", origin: "Dreft", profession: "guild-hunter", past: "Countryside Upbringing" }, content, L1);
+    expect(out).toEqual({ error: expect.stringContaining('origin: must be a package id like "dreft", not a name') });
+    expect((out as { error: string }).error).toMatch(/kind: .*past: /);
+  });
 });
 
 // No ranked Trait in content has rankStats yet, so these tests give Dreftian
