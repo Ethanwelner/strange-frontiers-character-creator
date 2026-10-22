@@ -1,7 +1,8 @@
+import { MAX_LEVEL } from "../../ai/level.js";
 import type { Draft } from "../draft.js";
 import { StepHeader } from "./ui.js";
 
-const MAX_START = 10;
+const MAX_START = MAX_LEVEL;
 
 interface Props {
   draft: Draft;
