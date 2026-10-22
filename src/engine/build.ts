@@ -4,7 +4,7 @@ import { Id, StatId, STAT_GROUPS } from "../schema/index.js";
 export const StatGroup = z.enum(Object.keys(STAT_GROUPS) as [keyof typeof STAT_GROUPS]);
 export type StatGroup = z.infer<typeof StatGroup>;
 
-// What one level adds: 1 Inner Ring point in `group`, and 3 Outer Ring points
+// What one level adds: 1 core point in `group`, and 3 focus points
 // spread among that group's stats.
 export const LevelAllocation = z.object({
   group: StatGroup,

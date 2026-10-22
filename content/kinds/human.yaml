@@ -6,9 +6,9 @@ summary: "The humanity of Earth Baseline."
 tags: [generalist, earth]
 features:
   - name: Generalists
-    description: Humans start with 1 point in every Outer Ring stat.
+    description: Humans start with 1 point in every focus stat.
   - name: Unexceptional
-    description: Humans can't exceed 15 in any Outer Ring stat unless otherwise modified.
+    description: Humans can't exceed 15 in any focus stat unless otherwise modified.
 stats:
   endurance: { start: 1, max: 15 }
   power: { start: 1, max: 15 }

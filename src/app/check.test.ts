@@ -3,7 +3,7 @@ import { loadContent, type Content } from "../engine/content.js";
 import { Trait } from "../schema/index.js";
 import { check, stepOf, traitOptions } from "./check.js";
 import { content as bundled, contentErrors } from "./content.js";
-import { addPick, fromBuild, levelsToPool, poolToLevels, toBuild, withInner, withLevel, type Draft } from "./draft.js";
+import { addPick, fromBuild, levelsToPool, poolToLevels, toBuild, withCore, withLevel, type Draft } from "./draft.js";
 
 const campaign = { startingLevel: 1 };
 
@@ -14,7 +14,7 @@ const human: Draft = {
   profession: "royal-guard",
   past: "noble-household",
   level: 1,
-  inner: { physical: 1, social: 0, mental: 0 },
+  core: { physical: 1, social: 0, mental: 0 },
   points: { power: 1, grace: 2 },
   traits: [{ trait: "tracker", rank: 1, pick: "universal" }],
   choices: [],
@@ -114,13 +114,13 @@ describe("traitOptions", () => {
 });
 
 describe("stat pool errors", () => {
-  it("asks for the Inner Ring points still to place", () => {
+  it("asks for the core points still to place", () => {
     const errors = check(withLevel(human, 3), bundled, { startingLevel: 3 }).errors;
-    expect(errors.map((e) => e.message)).toContain("Place 2 more Inner Ring points");
+    expect(errors.map((e) => e.message)).toContain("Place 2 more core points");
   });
 
-  it("says once per group how many Outer Ring points are left", () => {
-    const short: Draft = { ...withLevel(human, 2), inner: { physical: 2, social: 0, mental: 0 }, points: { power: 1 } };
+  it("says once per group how many focus points are left", () => {
+    const short: Draft = { ...withLevel(human, 2), core: { physical: 2, social: 0, mental: 0 }, points: { power: 1 } };
     const messages = check(short, bundled, { startingLevel: 2 }).errors.map((e) => e.message);
     expect(messages.filter((m) => m.includes("Physical"))).toEqual(["Place 5 more Physical points"]);
     expect(stepOf(check(short, bundled, { startingLevel: 2 }).errors.find((e) => e.message.includes("Physical"))!)).toBe("stats");
@@ -128,6 +128,10 @@ describe("stat pool errors", () => {
 });
 
 describe("drafts", () => {
+  it("reloads a saved draft's stat pool", () => {
+    expect(fromBuild(JSON.parse(JSON.stringify(human)))).toEqual(human);
+  });
+
   it("round-trips through an exported Build", () => {
     expect(fromBuild(JSON.parse(JSON.stringify(toBuild(human))))).toEqual(human);
   });
@@ -139,18 +143,18 @@ describe("drafts", () => {
       { group: "physical", points: { power: 1, grace: 2 } },
       { group: "mental", points: { logic: 3 } },
     ]);
-    expect(levelsToPool(levels)).toEqual({ inner: { physical: 2, social: 0, mental: 1 }, points: { power: 4, grace: 2, logic: 3 } });
+    expect(levelsToPool(levels)).toEqual({ core: { physical: 2, social: 0, mental: 1 }, points: { power: 4, grace: 2, logic: 3 } });
   });
 
-  it("keeps the pool when the level goes up, and takes Inner Ring points back from Mental first when it goes down", () => {
-    const three = withInner(withInner(withLevel(human, 3), "social", 1), "mental", 1);
-    expect(three.inner).toEqual({ physical: 1, social: 1, mental: 1 });
+  it("keeps the pool when the level goes up, and takes core points back from Mental first when it goes down", () => {
+    const three = withCore(withCore(withLevel(human, 3), "social", 1), "mental", 1);
+    expect(three.core).toEqual({ physical: 1, social: 1, mental: 1 });
     expect(three.points).toEqual(human.points);
     expect(withLevel(three, 1)).toEqual({ ...human, level: 1 });
   });
 
-  it("takes back the Outer Ring points an Inner Ring point unlocked", () => {
-    expect(withInner(human, "physical", 0).points).toEqual({});
+  it("takes back the focus points a core point unlocked", () => {
+    expect(withCore(human, "physical", 0).points).toEqual({});
   });
 
   it("loads an old Tatot build, from before the forms became Kinds, as the matching Kind", () => {

@@ -161,7 +161,7 @@ describe("legal Dreft characters", () => {
     expectLegal(r);
     expect(r.warnings).toEqual([]);
     expect(r.summary!.stats).toMatchObject({ power: 2, grace: 3, memory: 1 });
-    expect(r.summary!.innerRing).toEqual({ physical: 1, social: 0, mental: 0 });
+    expect(r.summary!.coreStats).toEqual({ physical: 1, social: 0, mental: 0 });
     expect(r.summary!.picks.universal).toEqual({ available: 10, spent: 4, banked: 6 });
     expect(r.summary!.picks.background).toEqual({ available: 2, spent: 0, banked: 2 });
   });
@@ -245,8 +245,8 @@ describe("rule 2: starting level comes from the campaign", () => {
   });
 });
 
-describe("rule 3: each level is 1 Inner Ring point and 3 Outer Ring points", () => {
-  it("rejects the wrong number of Outer Ring points", () => {
+describe("rule 3: each level is 1 core point and 3 focus points", () => {
+  it("rejects the wrong number of focus points", () => {
     const r = check({ ...human, levels: [{ group: "physical", points: { power: 2, grace: 2 } }] });
     expect(codes(r)).toContain("allocation");
   });
@@ -637,7 +637,7 @@ describe("rule 10: prerequisites and ranks", () => {
 });
 
 describe("rule 11: HP, VP and SP", () => {
-  it("takes HP, VP and SP from the Physical, Social and Mental Outer Ring stats", () => {
+  it("takes HP, VP and SP from the Physical, Social and Mental focus stats", () => {
     // Endurance 1, Power 2 and Grace 3 after a physical level 1; 1 in each other stat.
     expect(check(human).summary!.resources).toEqual({ hp: 16, vp: 3, sp: 3 });
     const r = check({ ...human, levels: [{ group: "mental", points: { logic: 3 } }] }).summary!;

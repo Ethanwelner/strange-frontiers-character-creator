@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-// Outer Ring stats, grouped under the Inner Ring stat they belong to.
+// Focus stats, grouped under the core stat they belong to.
 export const STAT_GROUPS = {
   physical: ["endurance", "power", "grace"],
   social: ["empathy", "persuasion", "demeanor"],
@@ -14,7 +14,7 @@ export const StatId = z.enum([
 ]);
 export type StatId = z.infer<typeof StatId>;
 
-// Outer Ring stats can't be raised above 20 without Traits or equipment.
+// Focus stats can't be raised above 20 without Traits or equipment.
 export const STAT_CAP = 20;
 
 export const Id = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "must be kebab-case");
@@ -39,7 +39,7 @@ export const StatRange = z
   })
   .refine((r) => r.start <= r.max, "start can't exceed max");
 
-// Every Outer Ring stat must be listed.
+// Every focus stat must be listed.
 export const StatBlock = z.record(StatId, StatRange);
 export type StatBlock = z.infer<typeof StatBlock>;
 

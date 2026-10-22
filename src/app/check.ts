@@ -2,7 +2,7 @@
 // helpers only ask it questions; none of them re-implement a rule.
 import type { Campaign, PickKind } from "../engine/build.js";
 import type { Content } from "../engine/parse.js";
-import { OUTER_POINTS_PER_LEVEL, validateBuild, type BuildResult, type Issue } from "../engine/validate.js";
+import { FOCUS_POINTS_PER_LEVEL, validateBuild, type BuildResult, type Issue } from "../engine/validate.js";
 import { STAT_GROUPS, type Trait } from "../schema/index.js";
 import { addPick, poolToLevels, toBuild, type Draft, type Step } from "./draft.js";
 
@@ -16,20 +16,20 @@ export function check(draft: Draft, content: Content, campaign: Campaign): Build
 // The engine checks one allocation per level; the builder spends stats as a
 // pool. Its level errors are said in pool terms instead, one per group.
 function poolErrors(errors: Issue[], draft: Draft): Issue[] {
-  const levels = poolToLevels(draft.inner, draft.points);
+  const levels = poolToLevels(draft.core, draft.points);
   const seen = new Set<string>();
   const out: Issue[] = [];
   for (const e of errors) {
     if (e.code === "level" && e.path === "levels") {
-      const placed = Object.values(draft.inner).reduce((n, k) => n + k, 0);
+      const placed = Object.values(draft.core).reduce((n, k) => n + k, 0);
       const left = draft.level - placed;
       const n = Math.abs(left);
       out.push({
         ...e,
         message:
           left > 0
-            ? `Place ${n} more Inner Ring ${n === 1 ? "point" : "points"}`
-            : `Take back ${n} Inner Ring ${n === 1 ? "point" : "points"}; a level ${draft.level} character has ${draft.level}`,
+            ? `Place ${n} more core ${n === 1 ? "point" : "points"}`
+            : `Take back ${n} core ${n === 1 ? "point" : "points"}; a level ${draft.level} character has ${draft.level}`,
       });
       continue;
     }
@@ -41,7 +41,7 @@ function poolErrors(errors: Issue[], draft: Draft): Issue[] {
     }
     if (seen.has(group)) continue;
     seen.add(group);
-    const room = draft.inner[group] * OUTER_POINTS_PER_LEVEL;
+    const room = draft.core[group] * FOCUS_POINTS_PER_LEVEL;
     const spent = STAT_GROUPS[group].reduce((n, s) => n + (draft.points[s] ?? 0), 0);
     const n = Math.abs(room - spent);
     const name = group.charAt(0).toUpperCase() + group.slice(1);
@@ -51,7 +51,7 @@ function poolErrors(errors: Issue[], draft: Draft): Issue[] {
       message:
         spent < room
           ? `Place ${n} more ${name} ${n === 1 ? "point" : "points"}`
-          : `${name} has ${n} more ${n === 1 ? "point" : "points"} than its Inner Ring unlocks`,
+          : `${name} has ${n} more ${n === 1 ? "point" : "points"} than its core stat unlocks`,
     });
   }
   return out;

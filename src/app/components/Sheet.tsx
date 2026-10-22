@@ -71,8 +71,8 @@ export function Sheet({ draft, result }: { draft: Draft; result: BuildResult }) 
             {GROUPS.map((g) => (
               <div key={g} className="sheet-group">
                 <div className="sheet-group-head">
-                  <span className="stat-badge" title="Inner Ring">
-                    {summary?.innerRing[g] ?? "–"}
+                  <span className="stat-badge" title="Core stat">
+                    {summary?.coreStats[g] ?? "–"}
                   </span>
                   <h4 className="rule">{title(g)}</h4>
                 </div>
