@@ -142,7 +142,6 @@ export function StatsStep({ draft, onChange }: Props) {
                         <span className="muted"> max {max}</span>
                       </div>
                       <div className="pool-stat-row">
-                        <StatLine start={level0(s)} value={value} max={max} />
                         <div className="stat-buttons">
                           <button aria-label={`Take a point from ${s}`} onClick={() => bump(s, -1)} disabled={value <= kindStart(s)}>
                             −
@@ -151,6 +150,7 @@ export function StatsStep({ draft, onChange }: Props) {
                             +
                           </button>
                         </div>
+                        <StatLine start={level0(s)} value={value} max={max} />
                       </div>
                     </div>
                   );
