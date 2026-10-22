@@ -75,11 +75,13 @@ export function App() {
   };
 
   // The model's build replaces the draft, then stays editable like any other.
+  // The build's level becomes the starting level, since the description can ask for one.
   const applyDescribed = (result: DescribeResult, description: string) => {
     const built = fromBuild(result.build);
     setSaved((s) => ({
       ...s,
       draft: built,
+      campaign: { startingLevel: built.level },
       step: "sheet",
       ai: {
         description,

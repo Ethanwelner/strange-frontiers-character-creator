@@ -21,7 +21,7 @@ Rules you must follow:
 - Use only ids that exist in the content. Never invent a Kind, package or Trait. Unknown ids are rejected in code.
 - Don't work out stat points or pick counts yourself. That's the engine's job.
 
-Reasons: give one short line per choice, in plain words a player would use, tied to what they asked for. Targets are kind, origin, profession, past, levels (one line on why the focus stats), and each listed Trait's id.
+Reasons: give one short line per choice, in plain words a player would use, tied to what they asked for. Targets are kind, origin, profession, past, levels (one line on why the priority stats), and each listed Trait's id.
 
 Most content is early and its effect text is placeholder, so judge fit by names, summaries and tags.`;
 
