@@ -3,7 +3,7 @@ import { OUTER_POINTS_PER_LEVEL as POINTS_PER_LEVEL } from "../../engine/validat
 import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { kindById } from "../content.js";
 import { withInner, type Draft } from "../draft.js";
-import { baseStats, GROUPS, StatLineInput, StepHeader, title } from "./ui.js";
+import { baseStats, GROUPS, StatLine, StepHeader, title } from "./ui.js";
 
 interface Props {
   draft: Draft;
@@ -12,13 +12,13 @@ interface Props {
 
 // Stats as a pool, drawn like the character sheet. Each Inner Ring point (one
 // per level) goes to a group and unlocks 3 Outer Ring points for that group's
-// stats, which the player fills in on the stats' circle and square bars. The
-// Kind's level 0 stats are already filled in, in gray.
+// stats, which the player adds with each stat's + and −. The stats' circle and
+// square bars show the result, with the Kind's level 0 stats in gray.
 //
 // A group's stats only take points its Inner Ring has unlocked, so the player
-// levels the Inner Ring first, with +. Clicking a bar spends the Kind's free
+// levels the Inner Ring first, with +. A stat's + spends the Kind's free
 // level 0 points first (the AI Core's 3, which need no Inner Ring), then the
-// group's unlocked points. Taking points back returns the group's points first,
+// group's unlocked points. Taking a point back returns the group's points first,
 // then the free ones; Inner Ring points stay put until the player takes them
 // back with −. A group can't take an Inner Ring point its stats have no room
 // for, like an AI Core's Physical, where every max is 0.
@@ -34,24 +34,17 @@ export function StatsStep({ draft, onChange }: Props) {
   const level0 = (s: StatId) => kindStart(s) + (start[s] ?? 0);
   const valueOf = (s: StatId) => level0(s) + (draft.points[s] ?? 0);
 
-  const setStat = (g: StatGroup, s: StatId, target: number) => {
+  // One point on or off a stat: on from the free level 0 points while any are
+  // left, otherwise from the group's unlocked points; off from the group's
+  // points first.
+  const bump = (s: StatId, by: 1 | -1) => {
     const startPoints = { ...start };
     const points = { ...draft.points };
-    const value = valueOf(s);
-    if (target > value) {
-      const need = target - value;
-      const fromFree = Math.min(need, Math.max(0, freeLeft));
-      const roomLeft = Math.max(0, draft.inner[g] * POINTS_PER_LEVEL - spentIn(g));
-      const fromGroup = Math.min(need - fromFree, roomLeft);
-      startPoints[s] = (startPoints[s] ?? 0) + fromFree;
-      points[s] = (points[s] ?? 0) + fromGroup;
-    } else {
-      let drop = value - target;
-      const fromGroup = Math.min(drop, points[s] ?? 0);
-      points[s] = (points[s] ?? 0) - fromGroup;
-      drop -= fromGroup;
-      startPoints[s] = (startPoints[s] ?? 0) - Math.min(drop, startPoints[s] ?? 0);
-    }
+    if (by > 0) {
+      if (freeLeft > 0) startPoints[s] = (startPoints[s] ?? 0) + 1;
+      else points[s] = (points[s] ?? 0) + 1;
+    } else if (points[s]) points[s] -= 1;
+    else if (startPoints[s]) startPoints[s] -= 1;
     if (!startPoints[s]) delete startPoints[s];
     if (!points[s]) delete points[s];
     onChange({ ...draft, startPoints, points });
@@ -69,8 +62,8 @@ export function StatsStep({ draft, onChange }: Props) {
   return (
     <section>
       <StepHeader step="stats" title="Stats">
-        Each level gives an Inner Ring point. Level a group's Inner Ring with + to unlock {POINTS_PER_LEVEL} Outer Ring points for its stats, then click a stat's
-        bar to fill them in. Your Kind's level 0 stats are already filled in, in gray.
+        Each level gives an Inner Ring point. Level a group's Inner Ring with + to unlock {POINTS_PER_LEVEL} Outer Ring points for its stats, then spend them
+        with each stat's +. Your Kind's level 0 stats are already filled in, in gray.
       </StepHeader>
       <div className="tech-fields tech-fields-light step-box">
         <p className="pool-summary">
@@ -139,23 +132,26 @@ export function StatsStep({ draft, onChange }: Props) {
                 {inner === 0 && !canLevel && headroom < POINTS_PER_LEVEL && <p className="hint">These stats have no room for points.</p>}
                 {STAT_GROUPS[g].map((s: StatId) => {
                   const value = valueOf(s);
+                  const max = base[s]?.max ?? 0;
                   return (
                     <div key={s} className="sheet-stat">
                       <div className="tiny-text">
                         <strong>
                           {title(s)} - {value}
                         </strong>
-                        <span className="muted"> max {base[s]?.max ?? 0}</span>
+                        <span className="muted"> max {max}</span>
                       </div>
-                      <StatLineInput
-                        label={title(s)}
-                        floor={kindStart(s)}
-                        gray={level0(s)}
-                        value={value}
-                        max={base[s]?.max ?? 0}
-                        reach={value + spare}
-                        onSet={(v) => setStat(g, s, v)}
-                      />
+                      <div className="pool-stat-row">
+                        <StatLine start={level0(s)} value={value} max={max} />
+                        <div className="stat-buttons">
+                          <button aria-label={`Take a point from ${s}`} onClick={() => bump(s, -1)} disabled={value <= kindStart(s)}>
+                            −
+                          </button>
+                          <button aria-label={`Add a point to ${s}`} onClick={() => bump(s, 1)} disabled={spare === 0 || value >= max}>
+                            +
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   );
                 })}

@@ -851,14 +851,17 @@ button.hero-link:hover:not(:disabled) {
   opacity: 0.45;
 }
 
-/* Inner Ring: the sheet's round badge between − and + */
-.inner-control {
+/* Inner Ring: the sheet's round badge between − and +. Each stat has its bar
+   with its own − and + beside it. */
+.inner-control,
+.stat-buttons {
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
-.inner-control button {
+.inner-control button,
+.stat-buttons button {
   width: 1.75rem;
   height: 1.75rem;
   padding: 0;
@@ -868,52 +871,14 @@ button.hero-link:hover:not(:disabled) {
   font-weight: 600;
 }
 
-/* The stat bar as buttons: same shapes, plus hover on the slots in reach */
-.stat-line-input .stat {
-  padding: 0;
-  min-width: 0;
-  height: auto;
-  border-radius: 0;
-  background: transparent;
-  font: inherit;
-  letter-spacing: 0;
-  line-height: 0;
+.pool-stat-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-.stat-line-input .stat.dot {
-  border-radius: 50%;
-}
-
-.stat-line-input .stat.square {
-  border-radius: 4px;
-}
-
-.stat-line-input .stat.default {
-  background-color: var(--medium-gray);
-}
-
-.stat-line-input .stat.filled {
-  background-color: var(--black);
-}
-
-.stat-line-input .stat.over {
-  background-color: var(--red);
-}
-
-.stat-line-input .stat:disabled {
-  opacity: 1;
-  cursor: default;
-}
-
-/* Hovering previews the fill in green; hovering the last point shows it going */
-.stat-line-input .stat.preview {
-  background-color: var(--green);
-  border-color: var(--green);
-}
-
-.stat-line-input .stat.dropping {
-  background-color: transparent;
-  border: 2px solid var(--black);
+.pool-stat-row .stat-line {
+  flex: 1;
 }
 
 .inner-ring {
