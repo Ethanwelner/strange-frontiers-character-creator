@@ -15,7 +15,7 @@ grants:
 choices:
   - choose: 1
     from: spoken-and-written-language
-    note: 1 language, spoken and written
+    note: "+1 Language (Spoken & Written)"
 backgroundTraits:
   - the-diplomatic-wing
   - the-united-nations

@@ -14,6 +14,10 @@ export const traitName = (id: string) => traitById.get(id)?.name ?? id;
 export const regionClass = (plane: string | undefined) => `region-${plane === "isekai" ? "dreft" : "systems"}`;
 export const traitRegionClass = (id: string) => regionClass(traitById.get(id)?.plane);
 
+// A choice with no note of its own, in the notes' shorthand: "+1 Spoken Language".
+export const choiceLabel = (count: number, pool: string) =>
+  `+${count} ${pool.split("-").map(title).join(" ")}`;
+
 // The package or Trait a choice answer belongs to, by name.
 export const askerName = (a: { package?: string; trait?: string }) =>
   a.package !== undefined ? (packageById.get(a.package)?.name ?? a.package) : traitName(a.trait ?? "");

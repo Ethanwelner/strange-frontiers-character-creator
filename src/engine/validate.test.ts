@@ -463,7 +463,7 @@ describe("rule 6: Trait choices", () => {
       expect.objectContaining({ code: "choice", message: `Additional Language asks for 1 from "language", but the build doesn't answer it` }),
     ]);
     expect(unanswered.summary!.questions).toEqual([
-      { by: "trait", id: "additional-language", name: "Additional Language", from: "language", count: 1, notes: ["1 language per rank"] },
+      { by: "trait", id: "additional-language", name: "Additional Language", from: "language", count: 1, notes: ["+1 Language per rank"] },
     ]);
     const r = check({ ...withTraits(language), choices: [{ trait: "additional-language", from: "language", traits: ["english"] }] });
     expectLegal(r);

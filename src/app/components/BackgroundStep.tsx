@@ -1,7 +1,7 @@
 import type { BackgroundPackage } from "../../schema/index.js";
 import { content } from "../content.js";
 import type { Draft } from "../draft.js";
-import { Card, Chip, regionClass, StepHeader, title, traitName } from "./ui.js";
+import { Card, Chip, choiceLabel, regionClass, StepHeader, title, traitName } from "./ui.js";
 
 const SLOTS = ["origin", "profession", "past"] as const;
 
@@ -11,16 +11,29 @@ const BLURB = {
   past: "What shaped you before the story starts.",
 };
 
+// A language's spoken and written forms as one chip, "English (Spoken & Written)",
+// in place of two. Everything else keeps its own chip, with its rank.
+function chipLabels(entries: { trait: string; rank?: number }[]): string[] {
+  const names = entries.map((e) => traitName(e.trait) + (e.rank ? ` ${e.rank}` : ""));
+  const labels: string[] = [];
+  for (const name of names) {
+    const base = name.match(/^(.*) \((Spoken|Written)\)$/)?.[1];
+    const both = base !== undefined && names.includes(`${base} (Spoken)`) && names.includes(`${base} (Written)`);
+    const label = both ? `${base} (Spoken & Written)` : name;
+    if (!labels.includes(label)) labels.push(label);
+  }
+  return labels;
+}
+
 export function PackageGrants({ pkg }: { pkg: BackgroundPackage }) {
   return (
     <div className="grants">
       {pkg.grants.length > 0 && (
         <div>
           <span className="label">Grants</span>
-          {pkg.grants.map((g) => (
-            <Chip key={g.trait} tone="accent">
-              {traitName(g.trait)}
-              {g.rank ? ` ${g.rank}` : ""}
+          {chipLabels(pkg.grants).map((label) => (
+            <Chip key={label} tone="accent">
+              {label}
             </Chip>
           ))}
         </div>
@@ -29,15 +42,15 @@ export function PackageGrants({ pkg }: { pkg: BackgroundPackage }) {
         <div>
           <span className="label">Choose</span>
           {pkg.choices.map((c, i) => (
-            <Chip key={i}>{c.note ?? `${c.choose} from ${c.from}`}</Chip>
+            <Chip key={i}>{c.note ?? choiceLabel(c.choose, c.from)}</Chip>
           ))}
         </div>
       )}
       {pkg.backgroundTraits.length > 0 && (
         <div>
           <span className="label">Background list</span>
-          {pkg.backgroundTraits.map((t) => (
-            <Chip key={t}>{traitName(t)}</Chip>
+          {chipLabels(pkg.backgroundTraits.map((trait) => ({ trait }))).map((label) => (
+            <Chip key={label}>{label}</Chip>
           ))}
         </div>
       )}

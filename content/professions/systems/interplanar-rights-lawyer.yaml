@@ -12,4 +12,4 @@ grants:
 choices:
   - choose: 1
     from: contact
-    note: 1 additional Contact
+    note: "+1 Contact"

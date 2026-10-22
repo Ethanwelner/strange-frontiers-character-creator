@@ -52,7 +52,7 @@ Every tab's Description is `summary`, Tags is `tags`, and Notes is for anything 
 | `tags` | Free-form words the AI searches on, e.g. `seafaring`, `magic` |
 | `lore` | Optional lore slug on the Strange Frontiers site, for linking |
 
-Packages and Traits can both list `choices` (`choose`, `from`, optional `note`): a pool the player picks from, like `contact` or `language`. A Trait's choices are asked once the character holds it, once per rank if it's ranked, as with Additional Contact and Additional Language.
+Packages and Traits can both list `choices` (`choose`, `from`, optional `note`): a pool the player picks from, like `contact` or `language`. Notes use the cards' shorthand: `"+1 Contact"`, `"+1 Language"`, `"+1 Language (Spoken & Written)"`, `"+1 Contact per rank"` (quoted, since YAML can't start a plain value with `+`). A Trait's choices are asked once the character holds it, once per rank if it's ranked, as with Additional Contact and Additional Language.
 
 A Trait marked `conveyed: true` (Explorers’ Lodge Membership, Imperial Service Record) can only come from a package's grants or from play, never from a pick, so it can't go on a package's `backgroundTraits` (the validator errors). Circumstance Traits use `category: circumstance`.
 

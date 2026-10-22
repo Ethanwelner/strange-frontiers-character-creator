@@ -14,4 +14,4 @@ grants:
 choices:
   - choose: 1
     from: language
-    note: 1 additional Language
+    note: "+1 Language"
