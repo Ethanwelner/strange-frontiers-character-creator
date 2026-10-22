@@ -14,11 +14,30 @@ content/
 
 ## Steps
 
-1. Draft it in Campfire.
+1. Draft it as a row on its tab of the "Strange frontiers traits" Google Sheet (Kinds, Origins, Professions, Pasts, or the Trait's category).
 2. Copy the closest existing file, rename it to the entry's `id` (`kebab-case.yaml`), and fill it in.
 3. Set `status`: `placeholder` (names and numbers will change), `draft` (mostly settled) or `final`.
 4. Run `npm run validate` and fix what it reports.
 5. Open a PR.
+
+## From the Sheet to YAML
+
+Every tab's Description is `summary`, Tags is `tags`, and Notes is for anything the columns don't cover.
+
+| Sheet column | YAML |
+|---|---|
+| Plane, Region, Lore | `plane`, `region`, `lore` |
+| Kinds: Features | `features`, one `name: description` per line |
+| Kinds: Trait Access, Free Points, Max Total | `traitAccess`, `freePoints`, `maxTotal` |
+| Kinds: Physical / Social / Mental (start/max) | `stats`, from lines like "Endurance 1/15" |
+| Packages: Grants | `grants`; "Knowledge: X (1)" is Trait `x` at rank 1 |
+| Packages: Choices | `choices`, as their `note` |
+| Packages: Background Traits | `backgroundTraits` |
+| Traits: Category | `category`; Language rows are `knowledge` with `types: [language]` |
+| Traits: Ranked, Conveyed | `ranked`, `conveyed` |
+| Traits: Effect | `effect` |
+| Traits: Stat Requirements | stats go in `minStats` (focus or core: "Power 3", "Physical 5"), a Trait's name in `prerequisites`, "Any Pilot skill" in `prerequisiteTags: [pilot]`, anything else in `rpRequirement` |
+| Traits: Notes | "Mastery" is `mastery`, "Background-only" is `background`, "Type: X" is `types`, "Temporary (…)" is `temporary` |
 
 ## Fields every entry has
 
