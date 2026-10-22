@@ -73,6 +73,9 @@ export const Kind = BaseEntry.extend({
   // Level 0 points the player places in any stats, on top of the starting
   // stats, like an AI Core's 3. Maximums still apply.
   freePoints: z.number().int().min(0).default(0),
+  // What this Kind's stat maximums add up to, when it's deliberately off
+  // Human's 135, like the AI Core's 120. The validator checks against it.
+  maxTotal: z.number().int().min(0).optional(),
 });
 export type Kind = z.infer<typeof Kind>;
 

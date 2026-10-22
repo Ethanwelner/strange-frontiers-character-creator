@@ -46,5 +46,5 @@ Errors stop a merge; warnings flag things to finish later.
 - Schema shape and allowed values (error).
 - `id` must match the file name and be unique (error).
 - Every stat a Kind gives has `start ≤ max ≤ 20` (error).
-- A Kind's starting points total 9 and its maximums total 135, matching Human (warning).
+- A Kind's starting points total 9 and its maximums total 135, matching Human (warning). A Kind that's deliberately off 135 sets `maxTotal` to its real total, like the AI Core's 120, and is checked against that instead.
 - Granted Traits that don't have a file yet (warning).

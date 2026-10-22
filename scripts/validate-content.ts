@@ -11,17 +11,18 @@ const { content, errors } = loadContent();
 const { kinds, packages, traits } = content;
 const warnings: string[] = [];
 
-// A Kind's free level 0 points count toward its starting total.
-function checkBudget(label: string, stats: StatBlock, freePoints = 0) {
+// A Kind's free level 0 points count toward its starting total. A Kind that's
+// deliberately off Human's maximums says so with maxTotal.
+function checkBudget(label: string, stats: StatBlock, freePoints = 0, maxTotal = MAX_TOTAL) {
   const ranges = Object.values(stats);
   const start = ranges.reduce((sum, r) => sum + r.start, 0) + freePoints;
   const max = ranges.reduce((sum, r) => sum + r.max, 0);
   if (start !== START_TOTAL) warnings.push(`${label}: starting stats total ${start}, expected ${START_TOTAL}`);
-  if (max !== MAX_TOTAL) warnings.push(`${label}: maximums total ${max}, expected ${MAX_TOTAL}`);
+  if (max !== maxTotal) warnings.push(`${label}: maximums total ${max}, expected ${maxTotal}`);
 }
 
 for (const kind of kinds) {
-  checkBudget(`kinds/${kind.id}`, kind.stats, kind.freePoints);
+  checkBudget(`kinds/${kind.id}`, kind.stats, kind.freePoints, kind.maxTotal);
 }
 
 const traitIds = new Set(traits.map((t) => t.id));
