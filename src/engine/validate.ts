@@ -60,7 +60,7 @@ export interface BuildSummary {
   stats: Record<StatId, number>;
   innerRing: Record<StatGroup, number>;
   // HP is 10 plus the Physical Outer Ring stats; VP and SP are the Social and
-  // Mental Inner Rings. Traits can add to any of them.
+  // Mental Outer Ring totals. Traits can add to any of them.
   resources: Record<"hp" | "vp" | "sp", number>;
   picks: Record<PickKind, PickCount>;
   traits: HeldTrait[];
@@ -411,11 +411,8 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     }
   }
 
-  const resources = {
-    hp: BASE_HP + STAT_GROUPS.physical.reduce((n, s) => n + stats[s], 0),
-    vp: innerRing.social,
-    sp: innerRing.mental,
-  };
+  const outer = (g: StatGroup) => STAT_GROUPS[g].reduce((n, s) => n + stats[s], 0);
+  const resources = { hp: BASE_HP + outer("physical"), vp: outer("social"), sp: outer("mental") };
   for (const h of held.values()) {
     const bonus = traits.get(h.trait)?.resources ?? {};
     for (const r of ["hp", "vp", "sp"] as const) resources[r] += (bonus[r] ?? 0) * h.rank;
