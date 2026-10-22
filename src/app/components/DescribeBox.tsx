@@ -125,8 +125,9 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
           <button type="submit" className="primary build-button" disabled={busy || !text.trim()} aria-busy={busy}>
             {busy ? (
               <>
+                Building
                 <span className="stopwatch-icon" aria-hidden="true" />
-                <span className="num" aria-label={`Building, ${elapsed} seconds`}>
+                <span className="num" aria-label={`${elapsed} seconds`}>
                   {clock(elapsed)}
                 </span>
               </>
