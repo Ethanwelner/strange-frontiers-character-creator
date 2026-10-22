@@ -1,7 +1,7 @@
 import type { BackgroundPackage } from "../../schema/index.js";
 import { content } from "../content.js";
 import type { Draft } from "../draft.js";
-import { Card, Chip, regionClass, StepHeader, title, traitName } from "./ui.js";
+import { Card, Chip, regionClass, SettingIcon, StepHeader, title, traitName } from "./ui.js";
 
 const SLOTS = ["origin", "profession", "past"] as const;
 
@@ -74,7 +74,10 @@ export function BackgroundStep({ draft, onChange }: { draft: Draft; onChange: (d
                 .map((p) => (
                   <Card key={p.id} className={`headed ${regionClass(p.plane)}`} label={p.name} selected={draft[slot] === p.id} onSelect={() => choose(slot, p.id)}>
                     <div className="card-head">
-                      <h3>{p.name}</h3>
+                      <h3>
+                        <SettingIcon plane={p.plane} />
+                        {p.name}
+                      </h3>
                       <Chip tone="muted">{p.plane}</Chip>
                     </div>
                     <p>{p.summary}</p>

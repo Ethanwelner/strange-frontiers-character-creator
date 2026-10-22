@@ -46,7 +46,7 @@ Every tab's Description is `summary`, Tags is `tags`, and Notes is for anything 
 | `id` | Unique, kebab-case, matches the file name |
 | `name` | Display name |
 | `status` | `placeholder`, `draft` or `final` |
-| `plane` | Plane it comes from, e.g. `earth`, `isekai`, or `any` for a Trait from anywhere |
+| `plane` | Plane it comes from, e.g. `earth`, `isekai`, or `any` for a Trait from anywhere. In the builder, `isekai` cards show the Isekai mark and `earth` cards The Systems mark; `any` cards show none. |
 | `region` | Optional, e.g. `dreft` |
 | `summary` | One or two reader-facing sentences |
 | `tags` | Free-form words the AI searches on, e.g. `seafaring`, `magic` |

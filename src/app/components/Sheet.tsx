@@ -2,7 +2,7 @@ import { FREE_TEXT_POOLS, type BuildResult } from "../../engine/validate.js";
 import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { kindById, packageById, traitById } from "../content.js";
 import type { Draft } from "../draft.js";
-import { askerName, baseStats, Chip, GROUPS, StatLine, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
+import { askerName, baseStats, Chip, GROUPS, SettingIcon, StatLine, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
 
 const SOURCE = /^(origin|profession|past) ([a-z0-9-]+)( choice)?$/;
 const TRAIT_CHOICE = /^trait ([a-z0-9-]+) choice$/;
@@ -127,6 +127,7 @@ export function Sheet({ draft, result }: { draft: Draft; result: BuildResult }) 
                 return (
                   <li key={h.trait} className={`trait-box ${traitRegionClass(h.trait)}`}>
                     <div className="trait-name">
+                      <SettingIcon plane={t?.plane} />
                       {traitName(h.trait)}
                       {t?.ranked || h.rank > 1 ? ` (${h.rank})` : ""}
                     </div>
