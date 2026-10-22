@@ -37,6 +37,8 @@ export interface AiNotes {
   summary?: string;
   reasons: Reason[];
   openChoices: OpenChoice[];
+  // How long the build took, in seconds.
+  seconds?: number;
 }
 
 export interface Saved {
