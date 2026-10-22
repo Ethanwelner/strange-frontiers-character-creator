@@ -1,0 +1,14 @@
+id: monster-raided-village
+name: "Monster-Raided Village"
+status: placeholder
+plane: isekai
+region: dreft
+summary: "Survived a monster raid on the home village, and learned to watch the tree line ever since."
+tags: [monsters, village, survivor, hunting]
+lore: isekai-monsters
+type: past
+grants:
+  - { trait: vigilance }
+  - { trait: tracker }
+  - { trait: monsters-of-isekai }
+  - { trait: the-kings-woods }

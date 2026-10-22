@@ -1,0 +1,17 @@
+id: delegation-child
+name: "Delegation Child"
+status: placeholder
+plane: earth
+region: tetra
+summary: "Grew up inside one of the sovereign territorial grounds that every UN member state keeps on Tetra, raised among diplomats and their staff."
+tags: [diplomacy, un, tetra, politics]
+lore: tetra
+type: past
+grants:
+  - { trait: the-united-nations }
+  - { trait: the-diplomatic-wing }
+  - { trait: smooth-talker }
+choices:
+  - choose: 1
+    from: language
+    note: 1 additional Language

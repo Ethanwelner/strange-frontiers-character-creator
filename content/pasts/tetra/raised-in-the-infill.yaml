@@ -1,0 +1,13 @@
+id: raised-in-the-infill
+name: "Raised in the Infill"
+status: placeholder
+plane: earth
+region: tetra
+summary: "Grew up in the Ark’s infill and maintenance spaces, in the latticework of supports, wiring and piping that holds Tetra together."
+tags: [ark, maintenance, tetra, urban, tech]
+lore: arks
+type: past
+grants:
+  - { trait: ark-life }
+  - { trait: tinkerer }
+  - { trait: concealment }

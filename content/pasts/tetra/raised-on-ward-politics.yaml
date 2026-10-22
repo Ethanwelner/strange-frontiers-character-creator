@@ -1,0 +1,13 @@
+id: raised-on-ward-politics
+name: "Raised on Ward Politics"
+status: placeholder
+plane: earth
+region: tetra
+summary: "Grew up in a family that trades in delegated votes, close to the ward representatives and maybe even the Council of 11."
+tags: [politics, liquid-democracy, tetra, votes]
+lore: tetra
+type: past
+grants:
+  - { trait: liquid-democracy }
+  - { trait: schemer }
+  - { trait: smooth-talker }

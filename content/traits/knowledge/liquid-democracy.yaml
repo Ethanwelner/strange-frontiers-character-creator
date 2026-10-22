@@ -1,0 +1,11 @@
+id: liquid-democracy
+name: "Liquid Democracy"
+status: placeholder
+plane: earth
+region: tetra
+summary: "Tetra’s Liquid Democracy: delegated votes, ward representatives and the Council of 11."
+tags: [tetra, politics, liquid-democracy, votes]
+lore: tetra
+category: knowledge
+ranked: true
+effect: Placeholder. Effect not yet written.

@@ -984,8 +984,9 @@ button.hero-link:hover:not(:disabled) {
   gap: 0.5rem;
   padding: 0 16px 16px;
   color: var(--black);
-  background-color: var(--light-gray);
-  border: 1px solid var(--gray);
+  /* Light like the Kind cards, so the dark name bar reads as their header */
+  background-color: var(--near-white);
+  border: 1px solid var(--card-border);
   border-radius: 12px;
   font-size: 14px;
   cursor: pointer;
@@ -996,11 +997,16 @@ button.hero-link:hover:not(:disabled) {
   margin: 0 -16px;
   /* The box no longer clips, so the bar rounds its own top corners */
   border-radius: 11px 11px 0 0;
-  padding: 0.5rem 16px;
-  background-color: var(--gray);
+  padding: 10px 16px;
+  background-color: var(--systems);
   color: var(--white);
   font-size: 1rem;
   font-weight: 600;
+}
+
+/* Isekai Traits get the Dreft Kind cards' green bar */
+.trait-box.region-dreft > .trait-name {
+  background-color: var(--dreft);
 }
 
 .trait-main {
@@ -1008,7 +1014,7 @@ button.hero-link:hover:not(:disabled) {
 }
 
 .trait-box:hover {
-  border-color: var(--black);
+  border-color: var(--medium-gray);
 }
 
 .trait-box.selected {
@@ -1053,7 +1059,7 @@ button.hero-link:hover:not(:disabled) {
 }
 
 .trait.rejected:hover {
-  border-color: var(--gray);
+  border-color: var(--card-border);
 }
 
 .tags {
