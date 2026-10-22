@@ -851,23 +851,16 @@ button.hero-link:hover:not(:disabled) {
   opacity: 0.45;
 }
 
-/* Inner Ring: the sheet's round badge over its own − and +. Each stat has its
-   bar with its own − and + beside it. */
-.inner-control {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-}
-
-.inner-buttons,
+/* Inner Ring: the sheet's round badge with − and + to its right. Each stat has
+   its bar with its own − and + beside it. */
+.inner-control,
 .stat-buttons {
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
-.inner-buttons button,
+.inner-control button,
 .stat-buttons button {
   width: 1.75rem;
   height: 1.75rem;

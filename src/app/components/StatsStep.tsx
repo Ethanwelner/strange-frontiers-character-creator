@@ -62,7 +62,7 @@ export function StatsStep({ draft, onChange }: Props) {
   return (
     <section>
       <StepHeader step="stats" title="Stats">
-        Each level gives an Inner Ring point. Level a group's Inner Ring with the + under its number to unlock {POINTS_PER_LEVEL} Outer Ring points for its
+        Each level gives an Inner Ring point. Level a group's Inner Ring with the + beside its number to unlock {POINTS_PER_LEVEL} Outer Ring points for its
         stats, then spend them with each stat's +. A group's stats can't take points until its Inner Ring is leveled. Your Kind's level 0 stats are already
         filled in, in gray.
       </StepHeader>
@@ -105,24 +105,22 @@ export function StatsStep({ draft, onChange }: Props) {
                     <span className="stat-badge" title="Inner Ring">
                       {inner}
                     </span>
-                    <div className="inner-buttons">
-                      <button
-                        aria-label={`Take an Inner Ring point from ${g}`}
-                        title={inner > 0 && stranded ? `Take ${spent - (inner - 1) * POINTS_PER_LEVEL} Outer Ring points out first` : undefined}
-                        onClick={() => onChange(withInner(draft, g, inner - 1))}
-                        disabled={inner === 0 || stranded}
-                      >
-                        −
-                      </button>
-                      <button
-                        aria-label={`Put an Inner Ring point in ${g}`}
-                        title={innerLeft > 0 && !canLevel ? `${title(g)}'s stats have no room for ${POINTS_PER_LEVEL} more points` : undefined}
-                        onClick={() => onChange(withInner(draft, g, inner + 1))}
-                        disabled={!canLevel}
-                      >
-                        +
-                      </button>
-                    </div>
+                    <button
+                      aria-label={`Take an Inner Ring point from ${g}`}
+                      title={inner > 0 && stranded ? `Take ${spent - (inner - 1) * POINTS_PER_LEVEL} Outer Ring points out first` : undefined}
+                      onClick={() => onChange(withInner(draft, g, inner - 1))}
+                      disabled={inner === 0 || stranded}
+                    >
+                      −
+                    </button>
+                    <button
+                      aria-label={`Put an Inner Ring point in ${g}`}
+                      title={innerLeft > 0 && !canLevel ? `${title(g)}'s stats have no room for ${POINTS_PER_LEVEL} more points` : undefined}
+                      onClick={() => onChange(withInner(draft, g, inner + 1))}
+                      disabled={!canLevel}
+                    >
+                      +
+                    </button>
                   </div>
                   <h4 className="rule">{title(g)}</h4>
                   <span className={`num${inner === 0 ? " muted" : spent === room ? " good" : spent > room ? " bad" : ""}`}>
