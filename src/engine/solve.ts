@@ -11,12 +11,17 @@ import { Build, ChoiceAnswer, DEFAULT_CAMPAIGN, type Campaign, type LevelAllocat
 import type { Content } from "./content.js";
 import { answers, choicePool, isFreeTextPool, FOCUS_POINTS_PER_LEVEL, validateBuild, type BuildResult } from "./validate.js";
 
+// The Kind and package fields take ids, as the Build does, so a name like
+// "Dreft" comes back to the model as a format problem it can fix.
+const ConceptId = (what: string, example: string) =>
+  z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, `must be a ${what} id like "${example}", not a name`);
+
 export const Concept = z.object({
   name: z.string().optional(),
-  kind: z.string(),
-  origin: z.string(),
-  profession: z.string(),
-  past: z.string(),
+  kind: ConceptId("Kind", "isek"),
+  origin: ConceptId("package", "dreft"),
+  profession: ConceptId("package", "guild-hunter"),
+  past: ConceptId("package", "countryside-upbringing"),
   // Priority stats, most important first. Levels go to the groups these
   // stats are in, in this order, and points go to these stats first.
   focus: z.array(z.string()).default([]),
