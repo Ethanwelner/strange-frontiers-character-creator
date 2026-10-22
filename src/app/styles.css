@@ -851,7 +851,7 @@ button.hero-link:hover:not(:disabled) {
   opacity: 0.45;
 }
 
-/* Inner Ring: the sheet's round badge between − and +. Each stat has its bar
+/* Inner Ring: the sheet's round badge with − and + to its right. Each stat has its bar
    with its own − and + beside it. */
 .inner-control,
 .stat-buttons {

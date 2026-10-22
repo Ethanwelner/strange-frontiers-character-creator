@@ -101,6 +101,9 @@ export function StatsStep({ draft, onChange }: Props) {
               <div key={g} className={`sheet-group${locked ? " locked" : ""}`}>
                 <div className="sheet-group-head">
                   <div className="inner-control">
+                    <span className="stat-badge" title="Inner Ring">
+                      {inner}
+                    </span>
                     <button
                       aria-label={`Take an Inner Ring point from ${g}`}
                       title={inner > 0 && stranded ? `Take ${spent - (inner - 1) * POINTS_PER_LEVEL} Outer Ring points out first` : undefined}
@@ -109,9 +112,6 @@ export function StatsStep({ draft, onChange }: Props) {
                     >
                       −
                     </button>
-                    <span className="stat-badge" title="Inner Ring">
-                      {inner}
-                    </span>
                     <button
                       aria-label={`Put an Inner Ring point in ${g}`}
                       title={innerLeft > 0 && !canLevel ? `${title(g)}'s stats have no room for ${POINTS_PER_LEVEL} more points` : undefined}
