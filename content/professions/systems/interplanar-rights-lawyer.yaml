@@ -1,0 +1,15 @@
+id: interplanar-rights-lawyer
+name: "Interplanar Rights Lawyer"
+status: placeholder
+plane: earth
+summary: "Practices the law of the treatment and rights of beings from beyond the stars, and tests what counts as a person in court."
+tags: [law, rights, parasapients, courts]
+type: profession
+grants:
+  - { trait: legal-advocacy }
+  - { trait: interplanar-law }
+  - { trait: parasapients }
+choices:
+  - choose: 1
+    from: contact
+    note: 1 additional Contact

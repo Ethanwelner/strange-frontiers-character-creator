@@ -1,0 +1,11 @@
+id: parazoological-keeper
+name: "Parazoological Keeper"
+status: placeholder
+plane: earth
+summary: "Keeps extraplanar animals alive and contained in a lab, zoo or pet shop, and knows which enclosures not to stand near."
+tags: [animals, parabiology, zoo, care]
+type: profession
+grants:
+  - { trait: specimen-handling }
+  - { trait: parazoology }
+  - { trait: vigilance }

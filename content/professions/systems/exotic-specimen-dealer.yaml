@@ -1,0 +1,16 @@
+id: exotic-specimen-dealer
+name: "Exotic Specimen Dealer"
+status: placeholder
+plane: earth
+summary: "Imports extraplanar specimens for labs, zoos and pet shops, with paperwork that’s usually in order."
+tags: [trade, animals, parabiology, merchant, smuggling]
+type: profession
+grants:
+  - { trait: haggler }
+  - { trait: appraisal }
+  - { trait: parazoology }
+  - { trait: cargo-handling }
+choices:
+  - choose: 1
+    from: contact
+    note: 1 additional Contact
