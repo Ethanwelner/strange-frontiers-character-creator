@@ -1,7 +1,7 @@
 id: tugboat-captain
 name: "Tugboat Captain"
 status: draft
-plane: earth
+plane: any
 summary: "Licensed and trained to command a tugboat."
 tags: [tugboat, license, pilot, site-example]
 category: circumstance

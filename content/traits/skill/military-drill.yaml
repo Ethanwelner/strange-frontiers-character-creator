@@ -1,7 +1,7 @@
 id: military-drill
 name: "Military Drill"
 status: placeholder
-plane: earth
+plane: any
 summary: "Moving, fighting and following orders as part of a unit."
 tags: [military, discipline]
 category: skill

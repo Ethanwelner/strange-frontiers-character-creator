@@ -1,7 +1,7 @@
 id: ambusher
 name: Ambusher
 status: placeholder
-plane: isekai
+plane: any
 summary: Setting and springing ambushes.
 tags: [ambush, hunting, combat]
 category: skill

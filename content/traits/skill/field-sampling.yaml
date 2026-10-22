@@ -1,7 +1,7 @@
 id: field-sampling
 name: "Field Sampling"
 status: placeholder
-plane: earth
+plane: any
 summary: "Collecting, labelling and preserving samples in the field, wherever the field happens to be."
 tags: [parabiology, science, fieldwork, survey]
 category: skill

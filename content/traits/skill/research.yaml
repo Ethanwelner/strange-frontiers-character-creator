@@ -1,7 +1,7 @@
 id: research
 name: "Research"
 status: placeholder
-plane: earth
+plane: any
 summary: "Designing experiments, reading the literature and getting results."
 tags: [science, research]
 category: skill

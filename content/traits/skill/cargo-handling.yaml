@@ -1,7 +1,7 @@
 id: cargo-handling
 name: "Cargo Handling"
 status: placeholder
-plane: earth
+plane: any
 summary: "Loading, securing and moving freight, in gravity or out of it."
 tags: [cargo, shipping, labor]
 category: skill
