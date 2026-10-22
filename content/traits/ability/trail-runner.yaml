@@ -1,0 +1,9 @@
+id: trail-runner
+name: "Trail Runner"
+status: draft
+plane: any
+summary: "Slow to tire when running, hiking or climbing."
+tags: [endurance, travel, site-example]
+category: ability
+minStats: { power: 3, endurance: 2, grace: 2 }
+effect: "This character takes twice as long to get winded by activities that involve running, hiking, or climbing."

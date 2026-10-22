@@ -1,0 +1,10 @@
+id: wanted-in-sol
+name: "Wanted in Sol"
+status: draft
+plane: earth
+summary: "Wanted by the nations of the Sol system for past crimes."
+tags: [wanted, crime, sol, site-example]
+category: circumstance
+conveyed: true
+temporary: "Lost when the character's innocence is proclaimed or they are caught"
+effect: "This character is wanted by the nations of the Sol system for past crimes. This character's wanted status is severe and law enforcement and bounty hunting entities are actively searching for them."

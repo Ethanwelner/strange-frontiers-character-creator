@@ -22,6 +22,7 @@ export type IssueCode =
   | "duplicate-trait"
   | "rank"
   | "rank-stats"
+  | "min-stats"
   | "prerequisite";
 
 export interface Issue {
@@ -400,7 +401,26 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
         error("prerequisite", `${label(t!)} needs ${name} (${req}) first`, `traits[${index}]`);
       }
     }
+    // "Any Pilot skill": some held Trait, other than this one, carries the tag.
+    for (const tag of t?.prerequisiteTags ?? []) {
+      const has = [...held.keys()].some((id) => id !== t!.id && traits.get(id)?.tags.includes(tag));
+      if (!has) error("prerequisite", `${label(t!)} needs a Trait tagged ${tag} first`, `traits[${index}]`);
+    }
   });
+
+  // Rule 12: a picked Trait's minimum stats, focus and core, once per Trait.
+  for (const id of byTrait.keys()) {
+    const t = traits.get(id)!;
+    const short = Object.entries(t.minStats).filter(([s, min]) => {
+      const have = s in coreStats ? coreStats[s as StatGroup] : stats[s as StatId];
+      return min !== undefined && have < min;
+    });
+    if (short.length) {
+      const need = Object.entries(t.minStats).map(([s, min]) => `${s} ${min}`).join(", ");
+      const have = short.map(([s]) => `${s} ${s in coreStats ? coreStats[s as StatGroup] : stats[s as StatId]}`).join(", ");
+      error("min-stats", `${label(t)} needs ${need} (has ${have})`, `traits[${byTrait.get(id)![0]!.index}]`);
+    }
+  }
 
   // Rule 8: unspent picks are banked; overspending is an error.
   for (const kindOfPick of ["universal", "background"] as const) {

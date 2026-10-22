@@ -1,0 +1,10 @@
+id: local-history
+name: "Local History"
+status: draft
+plane: any
+summary: "The history of one local region: its names, places and what happened there."
+tags: [history, local, site-example]
+category: knowledge
+ranked: true
+minStats: { memory: 3 }
+effect: "This character has knowledge of the history of a specific local region and can be assumed to be familiar with local facts like names, locations, and occurrences."

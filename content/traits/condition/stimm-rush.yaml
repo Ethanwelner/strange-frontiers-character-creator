@@ -1,0 +1,10 @@
+id: stimm-rush
+name: "Stimm Rush"
+status: draft
+plane: earth
+summary: "Riding the rush of a Stimm."
+tags: [stimm, drugs, physical, site-example]
+category: condition
+conveyed: true
+temporary: "This Trait lasts a number of minutes stated by the Stimm being used, or 1 minute if there is no stated duration"
+effect: "This character gains 5 to all physical focus stats."

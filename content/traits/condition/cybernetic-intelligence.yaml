@@ -1,0 +1,9 @@
+id: cybernetic-intelligence
+name: "Cybernetic Intelligence"
+status: draft
+plane: earth
+summary: "A machine-fast mind for mathematics."
+tags: [cybernetic, mathematics, ai, site-example]
+category: condition
+background: true
+effect: "This character is capable of extremely rapid feats of mathematical comprehension and has a +20 roll modifier for skill checks related to mathematics. This character is capable of performing significant numbers of mathematical calculations simultaneously; it is at the GM's discretion when and how this ability is limited."

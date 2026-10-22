@@ -1,0 +1,11 @@
+id: dwarvish-runes-written
+name: "Dwarvish Runes (Written)"
+status: draft
+plane: isekai
+summary: "The runes Dwarvish peoples write in."
+tags: [language, dwarvish, writing, site-example]
+category: knowledge
+types: [language]
+language: dwarvish-runes
+minStats: { memory: 3, intuition: 5 }
+effect: "This character can read and write Dwarvish Runes."

@@ -1,0 +1,9 @@
+id: eagle-eye
+name: "Eagle Eye"
+status: draft
+plane: any
+summary: "Sees unusually well at a distance."
+tags: [sight, perception, site-example]
+category: ability
+conveyed: true
+effect: "This character can request advantage in situations that involve seeing at distance."

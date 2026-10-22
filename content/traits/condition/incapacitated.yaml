@@ -1,0 +1,10 @@
+id: incapacitated
+name: "Incapacitated"
+status: draft
+plane: any
+summary: "Too badly hurt to act or perceive."
+tags: [health, injury, site-example, hit-points]
+category: condition
+conveyed: true
+temporary: "A character gains this trait while they are at less than a quarter of their HP total"
+effect: "This character has been incapacitated by their injuries and can no longer perform voluntary actions or perceive the world around them."

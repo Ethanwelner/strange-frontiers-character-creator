@@ -1,0 +1,9 @@
+id: thieves-guild-membership
+name: "Thieves Guild Membership"
+status: draft
+plane: any
+summary: "An official member of a local Thieves Guild."
+tags: [thieves-guild, membership, crime, site-example]
+category: circumstance
+conveyed: true
+effect: "This character is an official member of a Local Thieves Guild."

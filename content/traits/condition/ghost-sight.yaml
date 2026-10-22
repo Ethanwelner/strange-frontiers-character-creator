@@ -1,0 +1,10 @@
+id: ghost-sight
+name: "Ghost Sight"
+status: draft
+plane: any
+summary: "Perceives beyond the veil, seeing and hearing the supernatural."
+tags: [supernatural, sight, site-example]
+category: condition
+conveyed: true
+temporary: "Lost when the effect that granted this Trait ends"
+effect: "This character perceives beyond the veil. This character can see and hear the supernatural."

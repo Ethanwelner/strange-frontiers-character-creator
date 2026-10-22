@@ -1,0 +1,11 @@
+id: severe-bleeding
+name: "Severe Bleeding"
+status: draft
+plane: any
+summary: "Losing blood fast, until someone treats it."
+tags: [injury, bleeding, site-example]
+category: condition
+types: [injury]
+conveyed: true
+temporary: "This trait is lost when this Condition is Treated"
+effect: "This character loses 1 HP every combat round while in combat. This character loses 1 HP every minute while outside of combat."

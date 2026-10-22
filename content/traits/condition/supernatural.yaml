@@ -1,0 +1,9 @@
+id: supernatural
+name: "Supernatural"
+status: draft
+plane: any
+summary: "Gone beyond the real: able to take supernatural Traits and to put points into the Supernatural core stat."
+tags: [supernatural, site-example]
+category: condition
+background: true
+effect: "This character has gone beyond the realm of the real and can take supernatural-related traits and may spend stat points on the Supernatural core stat."

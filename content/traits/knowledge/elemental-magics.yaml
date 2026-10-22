@@ -1,0 +1,10 @@
+id: elemental-magics
+name: "Elemental Magics"
+status: draft
+plane: isekai
+summary: "The theory and history of Elemental Magics."
+tags: [magic, elemental, site-example]
+category: knowledge
+ranked: true
+minStats: { memory: 3, intuition: 5 }
+effect: "This character has knowledge of Elemental Magics, including the theoretical underpinnings of that magic as well as its history."

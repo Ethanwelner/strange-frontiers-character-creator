@@ -55,6 +55,7 @@ The rules `validateBuild` (in `src/engine/`) enforces:
    Background picks only take knowledge that's on the Background Trait list, even though the Traits page allows either pick. Fine for now. There's no cap on knowledge rank from creation picks beyond `rankStats`.
 10. Conveyed Traits (`conveyed: true`, like Imperial Service Record) come only from packages, choices or play: no pick can buy one, and they never go on a Background Trait list, even through a Kind's Trait access. Prerequisites must be held, from any source. Non-ranked Traits can't be taken twice or above rank 1. Each pick buys one rank, in order; to rank a Trait above 1, each of its `rankStats` must be at least 3 × the rank.
 11. HP is 10 plus each point in the Physical focus stats (Endurance, Power, Grace). VP is the total of the Social focus stats (Empathy, Persuasion, Demeanor) and SP the total of the Mental ones (Logic, Intuition, Memory). A Trait's `resources` add to them per rank held; gear is out of scope for now.
+12. A Trait bought with a pick needs its `minStats`: focus stats by name (Power 3) and core stats by group (Physical 5), as the Traits page's stat requirements say. Its `prerequisiteTags` each need some other held Trait carrying that tag, which is how Expert Pilot's "any Pilot skill" works. Granted Traits skip both checks.
 
 ## Open questions
 

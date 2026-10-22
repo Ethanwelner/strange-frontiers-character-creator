@@ -1,0 +1,9 @@
+id: sculpted
+name: "Sculpted"
+status: draft
+plane: any
+summary: "Looks every bit as athletic as they are."
+tags: [appearance, athletics, social, site-example]
+category: ability
+minStats: { power: 5, endurance: 5, demeanor: 3 }
+effect: "This character can request advantage in situations where the appearance of athleticism can affect the outcome of a roll or situation (useful for models, athletes with endorsements, or barbarians trying to intimidate)."

@@ -1,0 +1,11 @@
+id: long-toothed
+name: "Long Toothed"
+status: draft
+plane: isekai
+summary: "An Orc whose teeth have grown long with age, a mark of wisdom and prestige among Orcs."
+tags: [orcs, age, prestige, social, site-example]
+category: condition
+background: true
+minStats: { power: 10, endurance: 5, demeanor: 5 }
+rpRequirement: "Middle Aged or Older"
+effect: "An Orc's teeth grow continuously as they age, acting as both a sign of wisdom and prestige. An Orc that has managed to maintain their teeth throughout their life is seen as a highly capable individual or one of noble birth. A long-toothed Orc can request advantage in dealings with other Orcs, or with any other party that may hold this belief about Orcs."

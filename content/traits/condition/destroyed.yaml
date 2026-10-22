@@ -1,0 +1,10 @@
+id: destroyed
+name: "Destroyed"
+status: draft
+plane: any
+summary: "An object at 0 HP or less, no longer working."
+tags: [objects, damage, site-example, hit-points]
+category: condition
+conveyed: true
+temporary: "An object gains this trait if it is at 0 or less HP"
+effect: "This object has been destroyed and no longer functions in any intended capacity. This object cannot be repaired by any means unless otherwise stated."

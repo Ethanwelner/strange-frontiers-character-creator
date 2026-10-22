@@ -55,6 +55,9 @@ export function contentIndex(content: Content): string {
       t.starterOnly ? "starter only" : "",
       t.conveyed ? "conveyed, packages only" : "",
       t.prerequisites.length ? `needs ${t.prerequisites.join(", ")}` : "",
+      t.prerequisiteTags.length ? `needs a Trait tagged ${t.prerequisiteTags.join(", ")}` : "",
+      Object.keys(t.minStats).length ? `min ${Object.entries(t.minStats).map(([s, n]) => `${s} ${n}`).join(", ")}` : "",
+      t.temporary ? "temporary" : "",
       t.types.length ? `types ${t.types.join(", ")}` : "",
       t.choices.length ? `choices ${t.choices.map((c) => `${c.choose} from ${c.from}`).join(", ")}${t.ranked ? " per rank" : ""}` : "",
     ].filter(Boolean);

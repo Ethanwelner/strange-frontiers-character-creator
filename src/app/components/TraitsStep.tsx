@@ -1,7 +1,7 @@
 import { useMemo, useState, type KeyboardEvent } from "react";
 import type { Campaign, PickKind } from "../../engine/build.js";
 import type { BuildResult } from "../../engine/validate.js";
-import { TraitCategory } from "../../schema/index.js";
+import { TraitCategory, type Trait } from "../../schema/index.js";
 import { traitOptions } from "../check.js";
 import { content, traitById } from "../content.js";
 import { addPick, type Draft } from "../draft.js";
@@ -14,15 +14,27 @@ interface Props {
   onChange: (d: Draft) => void;
 }
 
+// What a Trait needs before it can be picked, as the site writes it:
+// "Power 3, Endurance 2, Capable Student, any Pilot Trait".
+const requirements = (t: Trait) =>
+  [
+    ...Object.entries(t.minStats).map(([s, n]) => `${title(s)} ${n}`),
+    ...t.prerequisites.map(traitName),
+    ...t.prerequisiteTags.map((tag) => `any ${title(tag)} Trait`),
+    ...(t.rpRequirement ? [t.rpRequirement] : []),
+  ].join(", ");
+
 // Group titles, in the schema's category order.
 const GROUP_TITLE: Record<(typeof TraitCategory.options)[number], string> = {
   knowledge: "Knowledges",
   skill: "Skills",
   contact: "Contacts",
   starter: "Starter Traits",
+  ability: "Abilities",
   condition: "Conditions",
   membership: "Memberships",
   circumstance: "Circumstances",
+  other: "Other",
 };
 
 const PICK_HELP: Record<PickKind, string> = {
@@ -151,9 +163,11 @@ export function TraitsStep({ draft, campaign, result, onChange }: Props) {
                         <Chip>{title(t.category)}</Chip>
                         {t.ranked && <Chip tone="muted">Ranked</Chip>}
                         {t.background && <Chip tone="muted">Background</Chip>}
+                        {t.mastery && <Chip tone="muted">Mastery</Chip>}
                       </div>
                       <p>{t.summary}</p>
                       <p className="effect">{t.effect}</p>
+                      {requirements(t) && <p className="muted small">Needs {requirements(t)}</p>}
                       {t.tags.length > 0 && <p className="tags">{t.tags.map((tag) => `#${tag}`).join(" ")}</p>}
                       {selected && t.ranked && (
                         // The card's own click and keys toggle it, so the stepper keeps its events to itself.

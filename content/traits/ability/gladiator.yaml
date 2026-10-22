@@ -1,0 +1,9 @@
+id: gladiator
+name: "Gladiator"
+status: draft
+plane: any
+summary: "Can fight passably with any close combat weapon."
+tags: [combat, melee, site-example]
+category: ability
+minStats: { physical: 5, grace: 5, demeanor: 5 }
+effect: "When in combat, this character can use any close combat weapon as if they had the Wielder Trait with a single rank for that weapon."

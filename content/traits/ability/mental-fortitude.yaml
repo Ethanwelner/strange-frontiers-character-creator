@@ -1,0 +1,9 @@
+id: mental-fortitude
+name: "Mental Fortitude"
+status: draft
+plane: any
+summary: "Holds together when the mind is badly taxed."
+tags: [will, resistance, site-example]
+category: ability
+minStats: { endurance: 8, logic: 5, demeanor: 5 }
+effect: "This character can request advantage in any scenario where their mental faculties are being severely taxed, be it resisting the mesmerizing effects of a vampire or pushing through a long march without becoming exhausted."
