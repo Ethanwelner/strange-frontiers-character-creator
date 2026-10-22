@@ -12,11 +12,12 @@ An AI-assisted character creator for Strange Frontiers. A player describes the c
 
 | Surface | Role |
 |---|---|
-| **Campfire** | Writing surface. Lore and first drafts of mechanics get written here. |
+| **"Strange frontiers traits" Google Sheet** | Writing surface for all character creator content: a tab each for Kinds, Origins, Professions and Pasts, and one per Trait category (Knowledges, Languages, Skills, Abilities, Conditions, Circumstances, Other). One row per entry, in filterable tables. |
+| **Campfire** | Writing surface for lore and the setting. It no longer holds character creator content (its Character Creator Content chapter was retired on 10/22/2026, after checking that everything in it was already here). |
 | **This repo (`content/`)** | Source of truth for mechanics. Structured, validated, versioned in git. |
 | **Strange Frontiers site (portfolio_site)** | Reader-facing front end for the rules. Over time its mechanics pages can be generated from this repo's data instead of hand-written HTML. |
 
-Content flow: write in Campfire → convert to data files here (Claude-assisted, reviewed in a PR) → `npm run validate` → the site and the creator both read the result.
+Content flow: write in the Sheet → convert the new or changed rows to data files here (Claude-assisted, reviewed in a PR) → `npm run validate` → the site and the creator both read the result. Nothing syncs on its own: a change made in the Sheet isn't in the creator until it's brought in, and a change made here should go back to the Sheet so the two don't drift.
 
 ## Phases
 
