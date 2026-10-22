@@ -67,7 +67,7 @@ npm run build    # static site in dist/ (the AI server isn't part of it)
 
 - Every legality check comes from `validateBuild`. The Trait picker tries each pick against the engine, greys out the ones it would reject, and shows the engine's reason.
 - The in-progress build is saved in the browser's localStorage. **Export** downloads it as a `Build` JSON file and **Import** loads one back; an imported build's level becomes the campaign's starting level.
-- Content is bundled at build time. `npm run dev` reloads when `content/` changes; run `npm run build` again to update `dist/`.
+- Content is bundled at build time. `npm run dev` reloads the builder and restarts the AI server when `content/` changes; run `npm run build` again to update `dist/`.
 
 ## Scripts
 
