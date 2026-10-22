@@ -1,0 +1,14 @@
+id: karsef-border-veteran
+name: "Karsef Border Veteran"
+status: placeholder
+plane: isekai
+region: dreft
+summary: "Served in the skirmishes over the Corsine Pass, where Dreft and Karsef have been testing each other for generations."
+tags: [military, border, mountains, karsef, veteran]
+lore: corsine-mountains
+type: past
+grants:
+  - { trait: shield-wall }
+  - { trait: mountaineering }
+  - { trait: the-corsine-pass }
+  - { trait: karsef }

@@ -1,0 +1,16 @@
+id: parasapient-quarter
+name: "Parasapient Quarter"
+status: placeholder
+plane: earth
+region: tetra
+summary: "Grew up among Tetra’s parasapient diasporas, the largest resident population of parasapients in the systems."
+tags: [parasapients, diaspora, tetra, urban]
+lore: tetra
+type: past
+grants:
+  - { trait: parasapients }
+  - { trait: streetwise }
+choices:
+  - choose: 1
+    from: language
+    note: 1 additional Language

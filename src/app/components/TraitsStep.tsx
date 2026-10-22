@@ -5,7 +5,7 @@ import { TraitCategory } from "../../schema/index.js";
 import { traitOptions } from "../check.js";
 import { content, traitById } from "../content.js";
 import { addPick, type Draft } from "../draft.js";
-import { Chip, StepHeader, title, traitName } from "./ui.js";
+import { Chip, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
 
 interface Props {
   draft: Draft;
@@ -141,7 +141,7 @@ export function TraitsStep({ draft, campaign, result, onChange }: Props) {
                     aria-disabled={rejected}
                     aria-label={selected ? `${t.name}, taken` : `Take ${t.name}${t.ranked || rank > 1 ? ` rank ${rank}` : ""} with a ${pick} pick`}
                     tabIndex={0}
-                    className={`trait trait-box${selected ? " selected" : ""}${rejected ? " rejected" : ""}`}
+                    className={`trait trait-box ${traitRegionClass(t.id)}${selected ? " selected" : ""}${rejected ? " rejected" : ""}`}
                     onClick={() => !rejected && toggle(t.id, rank)}
                     onKeyDown={onKey}
                   >

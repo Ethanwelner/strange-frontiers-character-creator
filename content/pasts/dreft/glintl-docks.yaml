@@ -1,0 +1,14 @@
+id: glintl-docks
+name: "Glintl Docks"
+status: placeholder
+plane: isekai
+region: dreft
+summary: "Grew up on the busy docks of Glintl, the other great trading port on Dreft’s western coast."
+tags: [port, docks, sea, trade, guwain]
+lore: glintl
+type: past
+grants:
+  - { trait: seafaring }
+  - { trait: coastal-trade }
+  - { trait: glintl }
+  - { trait: haggler }

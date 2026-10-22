@@ -1,0 +1,14 @@
+id: palace-servant
+name: "Palace Servant"
+status: placeholder
+plane: isekai
+region: dreft
+summary: "Served in the royal palace at Port Herminst, close enough to the crown to hear things, and there when the queen died under unusual circumstances."
+tags: [palace, court, servant, intrigue, herminst]
+lore: herminst
+type: past
+grants:
+  - { trait: court-etiquette }
+  - { trait: sleight-of-hand }
+  - { trait: noble-houses-of-dreft }
+  - { trait: port-herminst }

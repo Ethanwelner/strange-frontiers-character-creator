@@ -9,6 +9,10 @@ export const title = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 export const traitName = (id: string) => traitById.get(id)?.name ?? id;
 
+// A Trait card's header bar color, matching the Kind cards: Isekai Traits get
+// Dreft's green, and the rest (Earth and any plane) the Systems gray.
+export const traitRegionClass = (id: string) => `region-${traitById.get(id)?.plane === "isekai" ? "dreft" : "systems"}`;
+
 // The package or Trait a choice answer belongs to, by name.
 export const askerName = (a: { package?: string; trait?: string }) =>
   a.package !== undefined ? (packageById.get(a.package)?.name ?? a.package) : traitName(a.trait ?? "");

@@ -1,0 +1,13 @@
+id: holding-company-kid
+name: "Holding Company Kid"
+status: placeholder
+plane: earth
+region: tetra
+summary: "Child of a family working at one of the two dozen planar exploration and holding companies on Tetra, raised on talk of leases and attunements."
+tags: [corporate, planes, tetra, business]
+lore: tetra-frontiers-co
+type: past
+grants:
+  - { trait: tetra-frontiers-co }
+  - { trait: haggler }
+  - { trait: appraisal }
