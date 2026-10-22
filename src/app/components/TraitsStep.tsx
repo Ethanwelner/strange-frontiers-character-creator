@@ -5,7 +5,7 @@ import { TraitCategory, type Trait } from "../../schema/index.js";
 import { traitOptions } from "../check.js";
 import { content, traitById } from "../content.js";
 import { addPick, type Draft } from "../draft.js";
-import { Chip, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
+import { Chip, SettingIcon, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
 
 interface Props {
   draft: Draft;
@@ -157,7 +157,10 @@ export function TraitsStep({ draft, campaign, result, onChange }: Props) {
                     onClick={() => !rejected && toggle(t.id, rank)}
                     onKeyDown={onKey}
                   >
-                    <h3 className="trait-name">{t.name}</h3>
+                    <h3 className="trait-name">
+                      <SettingIcon plane={t.plane} />
+                      {t.name}
+                    </h3>
                     <div className="trait-main">
                       <div className="chips">
                         <Chip>{title(t.category)}</Chip>

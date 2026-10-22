@@ -1,7 +1,7 @@
 id: shield-wall
 name: Shield Wall
 status: placeholder
-plane: isekai
+plane: any
 summary: Fighting in formation behind a shield.
 tags: [combat, shield, military]
 category: skill

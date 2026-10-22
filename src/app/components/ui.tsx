@@ -18,6 +18,20 @@ export const traitRegionClass = (id: string) => regionClass(traitById.get(id)?.p
 export const choiceLabel = (count: number, pool: string) =>
   `+${count} ${pool.split("-").map(title).join(" ")}`;
 
+// The setting mark at the start of a card's name: Isekai's for anything from
+// Isekai, The Systems' for anything from Earth. Generic cards (plane "any")
+// get none.
+const SETTINGS: Record<string, { mark: string; name: string }> = {
+  isekai: { mark: "isekai", name: "Isekai" },
+  earth: { mark: "systems", name: "The Systems" },
+};
+
+export function SettingIcon({ plane }: { plane: string | undefined }) {
+  const setting = plane ? SETTINGS[plane] : undefined;
+  if (!setting) return null;
+  return <span className={`setting-icon setting-${setting.mark}`} role="img" aria-label={setting.name} title={setting.name} />;
+}
+
 // The package or Trait a choice answer belongs to, by name.
 export const askerName = (a: { package?: string; trait?: string }) =>
   a.package !== undefined ? (packageById.get(a.package)?.name ?? a.package) : traitName(a.trait ?? "");

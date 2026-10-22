@@ -1,7 +1,7 @@
 id: farming
 name: Farming
 status: placeholder
-plane: isekai
+plane: any
 summary: "Crops, livestock and the farming year."
 tags: [farming, rural]
 category: knowledge

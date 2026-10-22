@@ -1,7 +1,7 @@
 id: excavation
 name: "Excavation"
 status: placeholder
-plane: earth
+plane: any
 summary: "Digging up the past carefully enough that there’s something left to study."
 tags: [archeology, fieldwork, ruins]
 category: skill

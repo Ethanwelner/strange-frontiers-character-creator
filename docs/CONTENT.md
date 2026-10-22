@@ -22,11 +22,13 @@ content/
 
 ## From the Sheet to YAML
 
+The Sheet: https://docs.google.com/spreadsheets/d/1AP0TYovynUgseYa7s86-5OXWE1x8DoCvfkK39TqeUX8/edit
+
 Every tab's Description is `summary`, Tags is `tags`, and Notes is for anything the columns don't cover.
 
 | Sheet column | YAML |
 |---|---|
-| Plane, Region, Lore | `plane`, `region`, `lore` |
+| Plane, Region, Lore | `plane`, `region`, `lore`. Plane is Earth, Isekai or Any (lowercase in YAML). Every Trait tab has a Plane column after Name: a Trait is Earth or Isekai only when it names that setting's places, peoples, institutions, languages, technology or magic, and Any otherwise |
 | Kinds: Features | `features`, one `name: description` per line |
 | Kinds: Trait Access, Free Points, Max Total | `traitAccess`, `freePoints`, `maxTotal` |
 | Kinds: Physical / Social / Mental (start/max) | `stats`, from lines like "Endurance 1/15" |
@@ -46,7 +48,7 @@ Every tab's Description is `summary`, Tags is `tags`, and Notes is for anything 
 | `id` | Unique, kebab-case, matches the file name |
 | `name` | Display name |
 | `status` | `placeholder`, `draft` or `final` |
-| `plane` | Plane it comes from, e.g. `earth`, `isekai`, or `any` for a Trait from anywhere |
+| `plane` | Plane it comes from, e.g. `earth`, `isekai`, or `any` for a Trait from anywhere. In the builder, `isekai` cards show the Isekai mark and `earth` cards The Systems mark; `any` cards show none. |
 | `region` | Optional, e.g. `dreft` |
 | `summary` | One or two reader-facing sentences |
 | `tags` | Free-form words the AI searches on, e.g. `seafaring`, `magic` |

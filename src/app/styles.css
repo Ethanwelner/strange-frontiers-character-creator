@@ -1,6 +1,7 @@
 /* The Strange Frontiers site's look (portfolio_site css/tokens.css, css/rpg.css,
    css/portfolio-nested.css): a black hero over the night sky with the green
-   title and Bebas tabs, and white panels below, like the Mechanics tab. */
+   title and Bebas tabs. Below it the builder goes dark: a gray panel, a
+   lighter gray box for each step, and the light cards on top. */
 
 @font-face {
   font-family: "bebas_neueregular";
@@ -29,10 +30,19 @@
   --frontiers: #2dfc64;
   --lore: #884ddc;
   --dreft: #1c372b;
-  --systems: #333333;
+  --systems: #212121;
+  /* Card bodies: a touch darker than near-white, so they sit softer on the dark panel */
+  --card-bg: #efefef;
   --lore-on-black: #a67bf0;
   --rule: rgb(0 0 0 / 15%);
   --rule-on-black: rgb(255 255 255 / 25%);
+
+  /* The dark builder panel and the box each step sits in */
+  --panel: #2b2b2b;
+  --panel-box: #363636;
+  --panel-text: #e8e8e8;
+  --panel-soft: #b3b3b3;
+  --panel-good: #6fd18a;
 
   --title: "bebas_neueregular", Impact, "Arial Narrow", sans-serif;
   --body: "Open Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -160,6 +170,7 @@ button.link:hover:not(:disabled) {
 input,
 select {
   background: var(--white);
+  color: var(--black);
   border: 1px solid var(--rule);
   border-radius: 4px;
   padding: 0.45rem 0.6rem;
@@ -179,6 +190,10 @@ textarea:focus {
 }
 
 .builder-panel :focus-visible {
+  outline-color: var(--white);
+}
+
+.builder-panel :is(.card, .level-card, .choice, .trait-box, .c-sheet, .notice) :focus-visible {
   outline-color: var(--black);
 }
 
@@ -359,10 +374,10 @@ button.hero-link:hover:not(:disabled) {
 }
 
 .rpg-tab.is-active {
-  background: var(--white);
-  color: var(--black);
-  /* Cover the subpixel gap so the white tab meets the white panel */
-  box-shadow: 0 1px 0 var(--white);
+  background: var(--panel);
+  color: var(--white);
+  /* Cover the subpixel gap so the tab meets the panel below it */
+  box-shadow: 0 1px 0 var(--panel);
 }
 
 .rpg-tab:focus-visible {
@@ -491,10 +506,128 @@ button.hero-link:hover:not(:disabled) {
   margin: 0.2rem 0;
 }
 
-/* White panel */
+/* Dark panel: gray behind the steps, light text, light rules */
 
 .builder-panel {
-  background: var(--white);
+  --rule: rgb(255 255 255 / 18%);
+  /* Card edges fade into the dark box instead of outlining it in light gray */
+  --card-border: #5e5e5e;
+  background: var(--panel);
+  color: var(--panel-text);
+}
+
+.builder-panel :is(.muted, .hint, .empty, .tags) {
+  color: var(--panel-soft);
+}
+
+.builder-panel .good {
+  color: var(--panel-good);
+}
+
+.builder-panel :is(.notice, .c-sheet) {
+  border-color: var(--card-border);
+}
+
+/* Cards, notices and the sheet stay light, with their own dark text */
+.builder-panel :is(.card, .level-card, .choice, .trait-box, .c-sheet, .notice) {
+  --rule: rgb(0 0 0 / 15%);
+  color: var(--black);
+}
+
+.builder-panel :is(.card, .level-card, .choice, .trait-box, .c-sheet, .notice) :is(.muted, .hint, .empty, .tags) {
+  color: var(--gray);
+}
+
+.builder-panel :is(.card, .level-card, .choice, .trait-box, .c-sheet, .notice) .good {
+  color: #2e8a4a;
+}
+
+/* The Stats step's bars sit on the dark box, so they flip: placed points and
+   core badges light, level 0 points mid gray, open slots a lighter outline. */
+.builder-panel .pool-stats .stat-badge {
+  background-color: var(--near-white);
+  color: var(--black);
+}
+
+.builder-panel .pool-stats .stat.filled {
+  background-color: var(--near-white);
+}
+
+.builder-panel .pool-stats .stat.default {
+  background-color: #7d7d7d;
+}
+
+.builder-panel .pool-stats .stat.empty {
+  border-color: #8a8a8a;
+}
+
+.builder-panel :is(.core-control, .stat-buttons) button {
+  background: #6b6b6b;
+}
+
+.builder-panel :is(.core-control, .stat-buttons) button:hover:not(:disabled) {
+  background: #858585;
+}
+
+.panel :is(.muted, .hint, .empty) {
+  color: var(--panel-soft);
+}
+
+.panel .good {
+  color: var(--panel-good);
+}
+
+/* The sheet goes dark on screen too: the step box's gray around darker inner
+   boxes, light text, and the same flipped bars and badges as the Stats step.
+   Its Trait cards stay light like every card. Printing keeps the light sheet. */
+@media screen {
+  .builder-panel .c-sheet {
+    --rule: rgb(255 255 255 / 18%);
+    color: var(--panel-text);
+    background-color: var(--panel-box);
+  }
+
+  .builder-panel .c-sheet-box {
+    background-color: var(--panel);
+    border-color: rgb(255 255 255 / 12%);
+  }
+
+  .builder-panel .c-sheet :is(.muted, .hint, .empty, .tags) {
+    color: var(--panel-soft);
+  }
+
+  .builder-panel .c-sheet .good {
+    color: var(--panel-good);
+  }
+
+  .builder-panel .c-sheet :focus-visible {
+    outline-color: var(--white);
+  }
+
+  .builder-panel .c-sheet .trait-box {
+    --rule: rgb(0 0 0 / 15%);
+  }
+
+  .builder-panel .c-sheet .trait-box :is(.muted, .hint, .empty, .tags) {
+    color: var(--gray);
+  }
+
+  .builder-panel .c-sheet :is(.level-badge, .stat-badge) {
+    background-color: var(--near-white);
+    color: var(--black);
+  }
+
+  .builder-panel .c-sheet .stat.filled {
+    background-color: var(--near-white);
+  }
+
+  .builder-panel .c-sheet .stat.default {
+    background-color: #7d7d7d;
+  }
+
+  .builder-panel .c-sheet .stat.empty {
+    border-color: #8a8a8a;
+  }
 }
 
 .notice {
@@ -581,7 +714,8 @@ button.hero-link:hover:not(:disabled) {
 }
 
 .tech-fields-light {
-  border-color: var(--black);
+  background: var(--panel-box);
+  border-color: rgb(255 255 255 / 22%);
 }
 
 .tech-fields.step-box {
@@ -625,7 +759,7 @@ button.hero-link:hover:not(:disabled) {
 .level-card,
 .choice {
   position: relative;
-  background: var(--near-white);
+  background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: 12px;
   padding: 16px;
@@ -997,7 +1131,7 @@ button.hero-link:hover:not(:disabled) {
   padding: 0 16px 16px;
   color: var(--black);
   /* Light like the Kind cards, so the dark name bar reads as their header */
-  background-color: var(--near-white);
+  background-color: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: 12px;
   font-size: 14px;
@@ -1023,6 +1157,26 @@ button.hero-link:hover:not(:disabled) {
 
 .trait-main {
   min-width: 0;
+}
+
+/* The setting mark before a card's name, in the header's text color */
+.setting-icon {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 1.15em;
+  height: 1.15em;
+  margin-right: 0.45em;
+  vertical-align: -0.2em;
+  background-color: currentColor;
+  mask: center / contain no-repeat;
+}
+
+.setting-isekai {
+  mask-image: url("./img/isekai.svg");
+}
+
+.setting-systems {
+  mask-image: url("./img/the_systems.svg");
 }
 
 .trait-box:hover {
@@ -1111,11 +1265,12 @@ button.hero-link:hover:not(:disabled) {
 }
 
 .panel {
+  --rule: rgb(255 255 255 / 18%);
   position: sticky;
   top: 1rem;
-  color: var(--black);
-  background: var(--near-white);
-  border: 1px solid var(--light-gray);
+  color: var(--panel-text);
+  background: var(--panel);
+  border: 1px solid rgb(255 255 255 / 15%);
   border-radius: 24px;
   max-height: calc(100vh - 2rem);
   overflow-y: auto;
@@ -1249,7 +1404,7 @@ button.hero-link:hover:not(:disabled) {
 }
 
 .picks-table thead th {
-  color: var(--gray);
+  color: var(--panel-soft);
   font-weight: 300;
   font-size: 0.7rem;
 }
@@ -1516,16 +1671,16 @@ button.hero-link:hover:not(:disabled) {
     z-index: 1;
     padding: 0.6rem 16px;
     border-radius: 0;
-    background: var(--near-white);
-    color: var(--black);
+    background: var(--panel);
+    color: var(--panel-text);
     font-family: var(--body);
     font-size: 0.9rem;
     letter-spacing: 0;
-    border-bottom: 1px solid var(--light-gray);
+    border-bottom: 1px solid rgb(255 255 255 / 15%);
   }
 
   .panel-toggle:hover:not(:disabled) {
-    background: var(--near-white);
+    background: var(--panel-box);
   }
 
   .panel-toggle .status {
@@ -1652,6 +1807,9 @@ button.hero-link:hover:not(:disabled) {
 
   .builder-panel {
     padding: 0;
+    /* Printed sheets stay on white paper */
+    background: var(--white);
+    color: var(--black);
   }
 
   .builder-panel .container {
