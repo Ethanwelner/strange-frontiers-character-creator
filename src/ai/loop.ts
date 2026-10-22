@@ -2,6 +2,7 @@
 // the solver turns it into a full build and the engine checks it in the same
 // step. The loop ends when a build is accepted or the turn limit is reached. Which model runs
 // it is up to the Provider (anthropic.ts, ollama.ts).
+import { ZodError } from "zod";
 import type { BuildInput, Campaign } from "../engine/build.js";
 import { DEFAULT_CAMPAIGN } from "../engine/build.js";
 import type { Content } from "../engine/parse.js";
@@ -167,7 +168,14 @@ export async function describeCharacter(opts: DescribeOptions): Promise<Describe
           continue;
         }
         submitted = true;
-        const solved = solveConcept(concept, content, campaign);
+        // A concept the Build schema still can't take goes back to the model like any format problem.
+        let solved: ReturnType<typeof solveConcept>;
+        try {
+          solved = solveConcept(concept, content, campaign);
+        } catch (err) {
+          if (!(err instanceof ZodError)) throw err;
+          solved = { error: err.issues.map((i) => `${i.path.join(".") || "concept"}: ${i.message}`).join("; ") };
+        }
         if ("error" in solved) {
           results.push({ call, isError: true, content: `The concept doesn't match the format: ${solved.error}` });
           continue;
