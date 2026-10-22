@@ -15,11 +15,13 @@ interface Props {
 // stats, which the player fills in on the stats' circle and square bars. The
 // Kind's level 0 stats are already filled in, in gray.
 //
-// Clicking a bar spends what it can, in order: the Kind's free level 0 points
-// (the AI Core's 3), then the group's unlocked points, then new Inner Ring
-// points for the group while the level has some left. Taking points back
-// returns the group's points first, then the free ones; Inner Ring points stay
-// put until the player takes them back with −.
+// A group's stats only take points its Inner Ring has unlocked, so the player
+// levels the Inner Ring first, with +. Clicking a bar spends the Kind's free
+// level 0 points first (the AI Core's 3, which need no Inner Ring), then the
+// group's unlocked points. Taking points back returns the group's points first,
+// then the free ones; Inner Ring points stay put until the player takes them
+// back with −. A group can't take an Inner Ring point its stats have no room
+// for, like an AI Core's Physical, where every max is 0.
 export function StatsStep({ draft, onChange }: Props) {
   const base = baseStats(draft);
   const free = (draft.kind ? kindById.get(draft.kind)?.freePoints : 0) ?? 0;
@@ -35,16 +37,12 @@ export function StatsStep({ draft, onChange }: Props) {
   const setStat = (g: StatGroup, s: StatId, target: number) => {
     const startPoints = { ...start };
     const points = { ...draft.points };
-    let inner = draft.inner[g];
     const value = valueOf(s);
     if (target > value) {
-      let need = target - value;
+      const need = target - value;
       const fromFree = Math.min(need, Math.max(0, freeLeft));
-      need -= fromFree;
-      const roomLeft = Math.max(0, inner * POINTS_PER_LEVEL - spentIn(g));
-      const added = Math.min(Math.max(0, innerLeft), Math.ceil(Math.max(0, need - roomLeft) / POINTS_PER_LEVEL));
-      inner += added;
-      const fromGroup = Math.min(need, roomLeft + added * POINTS_PER_LEVEL);
+      const roomLeft = Math.max(0, draft.inner[g] * POINTS_PER_LEVEL - spentIn(g));
+      const fromGroup = Math.min(need - fromFree, roomLeft);
       startPoints[s] = (startPoints[s] ?? 0) + fromFree;
       points[s] = (points[s] ?? 0) + fromGroup;
     } else {
@@ -56,7 +54,7 @@ export function StatsStep({ draft, onChange }: Props) {
     }
     if (!startPoints[s]) delete startPoints[s];
     if (!points[s]) delete points[s];
-    onChange({ ...draft, startPoints, points, inner: { ...draft.inner, [g]: inner } });
+    onChange({ ...draft, startPoints, points });
   };
 
   if (!base) {
@@ -71,8 +69,8 @@ export function StatsStep({ draft, onChange }: Props) {
   return (
     <section>
       <StepHeader step="stats" title="Stats">
-        Each level gives an Inner Ring point, and each Inner Ring point unlocks {POINTS_PER_LEVEL} Outer Ring points for its group's stats. Click a stat's bar to
-        fill it in; a group without points to spare takes another Inner Ring point. Your Kind's level 0 stats are already filled in, in gray.
+        Each level gives an Inner Ring point. Level a group's Inner Ring with + to unlock {POINTS_PER_LEVEL} Outer Ring points for its stats, then click a stat's
+        bar to fill them in. Your Kind's level 0 stats are already filled in, in gray.
       </StepHeader>
       <div className="tech-fields tech-fields-light step-box">
         <p className="pool-summary">
@@ -99,8 +97,11 @@ export function StatsStep({ draft, onChange }: Props) {
             const room = inner * POINTS_PER_LEVEL;
             const spent = spentIn(g);
             // Points any of this group's stats could still take.
-            const spare = Math.max(0, freeLeft) + Math.max(0, room - spent) + Math.max(0, innerLeft) * POINTS_PER_LEVEL;
-            const locked = spare === 0 && spent === 0 && inner === 0;
+            const spare = Math.max(0, freeLeft) + Math.max(0, room - spent);
+            const locked = spare === 0 && spent === 0;
+            // Room left under the group's maxes, after the points already unlocked.
+            const headroom = STAT_GROUPS[g].reduce((n, s) => n + Math.max(0, (base[s]?.max ?? 0) - valueOf(s)), 0) - Math.max(0, room - spent);
+            const canLevel = innerLeft > 0 && headroom >= POINTS_PER_LEVEL;
             // Taking an Inner Ring point back would strand Outer Ring points.
             const stranded = spent > (inner - 1) * POINTS_PER_LEVEL;
             return (
@@ -118,7 +119,12 @@ export function StatsStep({ draft, onChange }: Props) {
                     <span className="stat-badge" title="Inner Ring">
                       {inner}
                     </span>
-                    <button aria-label={`Put an Inner Ring point in ${g}`} onClick={() => onChange(withInner(draft, g, inner + 1))} disabled={innerLeft <= 0}>
+                    <button
+                      aria-label={`Put an Inner Ring point in ${g}`}
+                      title={innerLeft > 0 && !canLevel ? `${title(g)}'s stats have no room for ${POINTS_PER_LEVEL} more points` : undefined}
+                      onClick={() => onChange(withInner(draft, g, inner + 1))}
+                      disabled={!canLevel}
+                    >
                       +
                     </button>
                   </div>
@@ -127,6 +133,10 @@ export function StatsStep({ draft, onChange }: Props) {
                     {spent}/{room}
                   </span>
                 </div>
+                {inner === 0 && innerLeft > 0 && canLevel && (
+                  <p className="hint">Level the Inner Ring with + to unlock {POINTS_PER_LEVEL} points for these stats.</p>
+                )}
+                {inner === 0 && !canLevel && headroom < POINTS_PER_LEVEL && <p className="hint">These stats have no room for points.</p>}
                 {STAT_GROUPS[g].map((s: StatId) => {
                   const value = valueOf(s);
                   return (
