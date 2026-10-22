@@ -13,29 +13,50 @@ interface Props {
 // Stats as a pool, drawn like the character sheet. Each Inner Ring point (one
 // per level) goes to a group and unlocks 3 Outer Ring points for that group's
 // stats, which the player fills in on the stats' circle and square bars. The
-// Kind's level 0 stats are already filled in, in gray. A Kind with free level 0
-// points, like the AI Core, places them first, on any stat with room.
+// Kind's level 0 stats are already filled in, in gray.
+//
+// Clicking a bar spends what it can, in order: the Kind's free level 0 points
+// (the AI Core's 3), then the group's unlocked points, then new Inner Ring
+// points for the group while the level has some left. Taking points back
+// returns the group's points first, then the free ones; Inner Ring points stay
+// put until the player takes them back with −.
 export function StatsStep({ draft, onChange }: Props) {
   const base = baseStats(draft);
   const free = (draft.kind ? kindById.get(draft.kind)?.freePoints : 0) ?? 0;
   const start = draft.startPoints ?? {};
-  const placed = Object.values(start).reduce((n, p) => n + (p ?? 0), 0);
+  const freeLeft = free - Object.values(start).reduce((n, p) => n + (p ?? 0), 0);
   const innerPlaced = GROUPS.reduce((n, g) => n + draft.inner[g], 0);
   const innerLeft = draft.level - innerPlaced;
   const spentIn = (g: StatGroup) => STAT_GROUPS[g].reduce((n, s) => n + (draft.points[s] ?? 0), 0);
   const kindStart = (s: StatId) => base?.[s]?.start ?? 0;
   const level0 = (s: StatId) => kindStart(s) + (start[s] ?? 0);
+  const valueOf = (s: StatId) => level0(s) + (draft.points[s] ?? 0);
 
-  const setStart = (stat: StatId, value: number) => {
-    const startPoints = { ...start, [stat]: value - kindStart(stat) };
-    if (!startPoints[stat]) delete startPoints[stat];
-    onChange({ ...draft, startPoints });
-  };
-
-  const setPoints = (stat: StatId, value: number) => {
-    const points = { ...draft.points, [stat]: value - level0(stat) };
-    if (!points[stat]) delete points[stat];
-    onChange({ ...draft, points });
+  const setStat = (g: StatGroup, s: StatId, target: number) => {
+    const startPoints = { ...start };
+    const points = { ...draft.points };
+    let inner = draft.inner[g];
+    const value = valueOf(s);
+    if (target > value) {
+      let need = target - value;
+      const fromFree = Math.min(need, Math.max(0, freeLeft));
+      need -= fromFree;
+      const roomLeft = Math.max(0, inner * POINTS_PER_LEVEL - spentIn(g));
+      const added = Math.min(Math.max(0, innerLeft), Math.ceil(Math.max(0, need - roomLeft) / POINTS_PER_LEVEL));
+      inner += added;
+      const fromGroup = Math.min(need, roomLeft + added * POINTS_PER_LEVEL);
+      startPoints[s] = (startPoints[s] ?? 0) + fromFree;
+      points[s] = (points[s] ?? 0) + fromGroup;
+    } else {
+      let drop = value - target;
+      const fromGroup = Math.min(drop, points[s] ?? 0);
+      points[s] = (points[s] ?? 0) - fromGroup;
+      drop -= fromGroup;
+      startPoints[s] = (startPoints[s] ?? 0) - Math.min(drop, startPoints[s] ?? 0);
+    }
+    if (!startPoints[s]) delete startPoints[s];
+    if (!points[s]) delete points[s];
+    onChange({ ...draft, startPoints, points, inner: { ...draft.inner, [g]: inner } });
   };
 
   if (!base) {
@@ -50,8 +71,8 @@ export function StatsStep({ draft, onChange }: Props) {
   return (
     <section>
       <StepHeader step="stats" title="Stats">
-        Each level gives an Inner Ring point. Put it in Physical, Social or Mental to unlock {POINTS_PER_LEVEL} Outer Ring points, then click a stat's bar to
-        fill it in. Your Kind's level 0 stats are already filled in, in gray.
+        Each level gives an Inner Ring point, and each Inner Ring point unlocks {POINTS_PER_LEVEL} Outer Ring points for its group's stats. Click a stat's bar to
+        fill it in; a group without points to spare takes another Inner Ring point. Your Kind's level 0 stats are already filled in, in gray.
       </StepHeader>
       <div className="tech-fields tech-fields-light step-box">
         <p className="pool-summary">
@@ -60,44 +81,26 @@ export function StatsStep({ draft, onChange }: Props) {
           </span>{" "}
           Inner Ring points placed
           {innerLeft > 0 && <span className="muted"> · {innerLeft} left</span>}
+          {free > 0 && (
+            <>
+              {" · "}
+              <span className={`num${freeLeft === 0 ? " good" : ""}`}>
+                {free - freeLeft}/{free}
+              </span>{" "}
+              free level 0 points placed
+              <span className="muted"> (spent first, on any stat)</span>
+            </>
+          )}
         </p>
-
-        {free > 0 && (
-          <div className="pool-level0">
-            <div className="sheet-group-head">
-              <h4 className="rule">Level 0 points</h4>
-              <span className={`num${placed === free ? " good" : ""}`}>
-                {placed}/{free}
-              </span>
-            </div>
-            <p className="hint">Your Kind gives {free} points to place in any stats it allows, before level 1.</p>
-            <div className="pool-stats">
-              {GROUPS.map((g) => (
-                <div key={g} className="sheet-group">
-                  <h5 className="pool-group-name">{title(g)}</h5>
-                  {STAT_GROUPS[g].map((s: StatId) => (
-                    <PoolStat
-                      key={s}
-                      stat={s}
-                      start={kindStart(s)}
-                      value={level0(s)}
-                      max={base[s]?.max ?? 0}
-                      reach={level0(s) + free - placed}
-                      onSet={(v) => setStart(s, v)}
-                    />
-                  ))}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
         <div className="pool-stats">
           {GROUPS.map((g) => {
             const inner = draft.inner[g];
             const room = inner * POINTS_PER_LEVEL;
             const spent = spentIn(g);
-            const locked = inner === 0;
+            // Points any of this group's stats could still take.
+            const spare = Math.max(0, freeLeft) + Math.max(0, room - spent) + Math.max(0, innerLeft) * POINTS_PER_LEVEL;
+            const locked = spare === 0 && spent === 0 && inner === 0;
             // Taking an Inner Ring point back would strand Outer Ring points.
             const stranded = spent > (inner - 1) * POINTS_PER_LEVEL;
             return (
@@ -120,23 +123,30 @@ export function StatsStep({ draft, onChange }: Props) {
                     </button>
                   </div>
                   <h4 className="rule">{title(g)}</h4>
-                  <span className={`num${locked ? " muted" : spent === room ? " good" : spent > room ? " bad" : ""}`}>
+                  <span className={`num${inner === 0 ? " muted" : spent === room ? " good" : spent > room ? " bad" : ""}`}>
                     {spent}/{room}
                   </span>
                 </div>
-                {locked && <p className="hint">Put an Inner Ring point here to unlock {POINTS_PER_LEVEL} points for these stats.</p>}
                 {STAT_GROUPS[g].map((s: StatId) => {
-                  const value = level0(s) + (draft.points[s] ?? 0);
+                  const value = valueOf(s);
                   return (
-                    <PoolStat
-                      key={s}
-                      stat={s}
-                      start={level0(s)}
-                      value={value}
-                      max={base[s]?.max ?? 0}
-                      reach={locked ? 0 : value + room - spent}
-                      onSet={(v) => setPoints(s, v)}
-                    />
+                    <div key={s} className="sheet-stat">
+                      <div className="tiny-text">
+                        <strong>
+                          {title(s)} - {value}
+                        </strong>
+                        <span className="muted"> max {base[s]?.max ?? 0}</span>
+                      </div>
+                      <StatLineInput
+                        label={title(s)}
+                        floor={kindStart(s)}
+                        gray={level0(s)}
+                        value={value}
+                        max={base[s]?.max ?? 0}
+                        reach={value + spare}
+                        onSet={(v) => setStat(g, s, v)}
+                      />
+                    </div>
                   );
                 })}
               </div>
@@ -145,21 +155,5 @@ export function StatsStep({ draft, onChange }: Props) {
         </div>
       </div>
     </section>
-  );
-}
-
-// One stat's name, value and max over its bar, as on the sheet.
-function PoolStat(props: { stat: StatId; start: number; value: number; max: number; reach: number; onSet: (value: number) => void }) {
-  const { stat, start, value, max, reach, onSet } = props;
-  return (
-    <div className="sheet-stat">
-      <div className="tiny-text">
-        <strong>
-          {title(stat)} - {value}
-        </strong>
-        <span className="muted"> max {max}</span>
-      </div>
-      <StatLineInput label={title(stat)} start={start} value={value} max={max} reach={reach} onSet={onSet} />
-    </div>
   );
 }

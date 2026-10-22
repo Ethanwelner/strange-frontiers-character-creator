@@ -851,21 +851,6 @@ button.hero-link:hover:not(:disabled) {
   opacity: 0.45;
 }
 
-.pool-level0 {
-  margin-bottom: 2rem;
-  padding-bottom: 2rem;
-  border-bottom: 1px solid var(--rule);
-}
-
-.pool-level0 .sheet-group-head {
-  margin-bottom: 0.5rem;
-}
-
-.pool-group-name {
-  margin: 0;
-  font-size: 1rem;
-}
-
 /* Inner Ring: the sheet's round badge between − and + */
 .inner-control {
   display: flex;
@@ -920,14 +905,15 @@ button.hero-link:hover:not(:disabled) {
   cursor: default;
 }
 
-.stat-line-input .stat.reachable:hover,
-.stat-line-input .stat.reachable:focus-visible {
+/* Hovering previews the fill in green; hovering the last point shows it going */
+.stat-line-input .stat.preview {
   background-color: var(--green);
   border-color: var(--green);
 }
 
-.stat-line-input .stat.filled:not(:disabled):hover {
-  background-color: var(--gray);
+.stat-line-input .stat.dropping {
+  background-color: transparent;
+  border: 2px solid var(--black);
 }
 
 .inner-ring {
