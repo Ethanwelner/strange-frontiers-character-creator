@@ -2,14 +2,14 @@
 // character is: Kind, packages, which stats matter most, and the Traits that
 // fit, best first. The solver does the bookkeeping the model shouldn't: it
 // spreads each level's stat points (adding any stats the requested ranks
-// need to the focus), answers package and Trait choices it can resolve, and
+// need to the priority stats), answers package and Trait choices it can resolve, and
 // buys Traits from the list in order, asking validateBuild about each one
 // and skipping any the engine rejects. Deterministic and browser-safe.
 import { z } from "zod";
 import { STAT_CAP, STAT_GROUPS, StatId, type StatBlock, type Trait } from "../schema/index.js";
 import { Build, ChoiceAnswer, DEFAULT_CAMPAIGN, type Campaign, type LevelAllocation, type PickKind, type StatGroup } from "./build.js";
 import type { Content } from "./content.js";
-import { answers, choicePool, isFreeTextPool, OUTER_POINTS_PER_LEVEL, validateBuild, type BuildResult } from "./validate.js";
+import { answers, choicePool, isFreeTextPool, FOCUS_POINTS_PER_LEVEL, validateBuild, type BuildResult } from "./validate.js";
 
 export const Concept = z.object({
   name: z.string().optional(),
@@ -17,7 +17,7 @@ export const Concept = z.object({
   origin: z.string(),
   profession: z.string(),
   past: z.string(),
-  // Outer Ring stats, most important first. Levels go to the groups these
+  // Priority stats, most important first. Levels go to the groups these
   // stats are in, in this order, and points go to these stats first.
   focus: z.array(z.string()).default([]),
   // Trait ids, best fit first. Listing a ranked Trait twice asks for rank 2.
@@ -55,7 +55,7 @@ function baseStats(concept: Concept, content: Content): StatBlock | undefined {
   return content.kinds.find((k) => k.id === concept.kind)?.stats;
 }
 
-// Places a Kind's free level 0 points: into the focus stats in turn, then into
+// Places a Kind's free level 0 points: into the priority stats in turn, then into
 // whichever stat has the most room. Stats with a max of 0 never get one.
 export function allocateStart(focusIn: string[], base: StatBlock | undefined, free: number): Partial<Record<StatId, number>> {
   const focus = [...new Set(focusIn.filter(isStat))];
@@ -72,8 +72,8 @@ export function allocateStart(focusIn: string[], base: StatBlock | undefined, fr
   return points;
 }
 
-// One allocation per level. Each level goes to the next group in focus order,
-// and its points go to that group's focus stats in turn, then to whichever of
+// One allocation per level. Each level goes to the next group in priority order,
+// and its points go to that group's priority stats in turn, then to whichever of
 // its stats has the most room. A group with no room left is passed over.
 export function allocateLevels(focusIn: string[], base: StatBlock | undefined, level: number): LevelAllocation[] {
   const focus = [...new Set(focusIn.filter(isStat))];
@@ -81,7 +81,7 @@ export function allocateLevels(focusIn: string[], base: StatBlock | undefined, l
   const max = (s: StatId) => Math.min(base?.[s]?.max ?? STAT_CAP, STAT_CAP);
   const room = (s: StatId) => max(s) - current[s];
 
-  // Groups in focus order, then the rest by how much room they have.
+  // Groups in priority order, then the rest by how much room they have.
   const unfocused = (Object.keys(STAT_GROUPS) as StatGroup[])
     .filter((g) => !focus.some((s) => GROUP_OF[s] === g))
     .sort((a, b) => STAT_GROUPS[b].reduce((n, s) => n + room(s), 0) - STAT_GROUPS[a].reduce((n, s) => n + room(s), 0));
@@ -92,11 +92,11 @@ export function allocateLevels(focusIn: string[], base: StatBlock | undefined, l
   const levels: LevelAllocation[] = [];
   for (let i = 0; i < level; i++) {
     const preferred = order[i % order.length]!;
-    const group = [preferred, ...order, ...unfocused].find((g) => groupRoom(g) >= OUTER_POINTS_PER_LEVEL) ?? preferred;
+    const group = [preferred, ...order, ...unfocused].find((g) => groupRoom(g) >= FOCUS_POINTS_PER_LEVEL) ?? preferred;
     const focused = focus.filter((s) => GROUP_OF[s] === group);
     const others = [...STAT_GROUPS[group]].filter((s) => !focus.includes(s));
     const points: Partial<Record<StatId, number>> = {};
-    for (let p = 0; p < OUTER_POINTS_PER_LEVEL; p++) {
+    for (let p = 0; p < FOCUS_POINTS_PER_LEVEL; p++) {
       // Focus stats take turns; the others only get what they can't hold.
       const candidates = focused.filter((s) => room(s) > 0);
       const fallback = others.filter((s) => room(s) > 0).sort((a, b) => room(b) - room(a));

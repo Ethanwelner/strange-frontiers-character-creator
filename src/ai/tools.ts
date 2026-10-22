@@ -21,7 +21,7 @@ const CONCEPT_SCHEMA = {
     focus: {
       type: "array",
       items: { type: "string", enum: StatId.options },
-      description: "The Outer Ring stats that matter most for this character, most important first (two to four). Stat points go to these.",
+      description: "The stats that matter most for this character, most important first (two to four). Stat points go to these.",
     },
     traits: {
       type: "array",
@@ -114,7 +114,7 @@ export const TOOLS: Tool[] = [
         reasons: {
           type: "array",
           description:
-            "One short line per choice. Targets: kind, origin, profession, past, levels (why the focus stats), " +
+            "One short line per choice. Targets: kind, origin, profession, past, levels (why the priority stats), " +
             "and each listed Trait's id.",
           items: {
             type: "object",

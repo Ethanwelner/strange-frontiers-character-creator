@@ -26,22 +26,22 @@ const hunter: ConceptInput = {
 };
 
 describe("allocateLevels", () => {
-  it("puts each level's points into the focus stats in turn", () => {
+  it("puts each level's points into the priority stats in turn", () => {
     expect(allocateLevels(["grace", "power"], isek, 1)).toEqual([{ group: "physical", points: { grace: 2, power: 1 } }]);
   });
 
-  it("rotates levels through the focus stats' groups, in focus order", () => {
+  it("rotates levels through the priority stats' groups, in priority order", () => {
     const levels = allocateLevels(["grace", "intuition"], isek, 3);
     expect(levels.map((l) => l.group)).toEqual(["physical", "mental", "physical"]);
     expect(levels[1]!.points).toEqual({ intuition: 3 });
   });
 
-  it("moves points to the group's other stats when a focus stat is at its max", () => {
+  it("moves points to the group's other stats when a priority stat is at its max", () => {
     const capped = { ...isek, grace: { start: 18, max: 18 } };
     expect(allocateLevels(["grace"], capped, 1)).toEqual([{ group: "physical", points: { power: 2, endurance: 1 } }]);
   });
 
-  it("still allocates every level with no focus", () => {
+  it("still allocates every level with no priority stats", () => {
     const levels = allocateLevels([], isek, 2);
     expect(levels).toHaveLength(2);
     for (const l of levels) expect(Object.values(l.points).reduce((a, b) => a + (b ?? 0), 0)).toBe(3);
@@ -132,7 +132,7 @@ describe("solveConcept", () => {
     expect(s.result.ok).toBe(true);
   });
 
-  it("places a Kind's free level 0 points in the focus stats", () => {
+  it("places a Kind's free level 0 points in the priority stats", () => {
     const s = solve({ ...hunter, kind: "ai-core", focus: ["logic", "persuasion", "power"], traits: [] });
     // Power has a max of 0 for an AI Core, so it's skipped.
     expect(s.build.startPoints).toEqual({ logic: 2, persuasion: 1 });
@@ -155,7 +155,7 @@ describe("solveConcept", () => {
 // Law and Seafaring a Memory requirement, and the Isek a Memory start that a
 // level can raise to 6. Licensed Mage grants Dreftian Law (1); no package the
 // hunter uses grants Seafaring.
-describe("rank stats in focus", () => {
+describe("rank stats among the priority stats", () => {
   const ranked = {
     ...content,
     traits: content.traits.map((t) => (["dreftian-law", "seafaring"].includes(t.id) ? { ...t, rankStats: ["memory" as const] } : t)),
@@ -165,7 +165,7 @@ describe("rank stats in focus", () => {
   const mage: ConceptInput = { ...hunter, profession: "licensed-mage", traits: ["dreftian-law"] };
   const focusOf = (c: ConceptInput) => rankFocus(Concept.parse(c), ranked);
 
-  it("adds the stats a requested rank above 1 needs, after the model's focus", () => {
+  it("adds the stats a requested rank above 1 needs, after the model's priority stats", () => {
     expect(focusOf(mage)).toEqual(["grace", "power", "memory"]);
   });
 
@@ -173,7 +173,7 @@ describe("rank stats in focus", () => {
     expect(focusOf({ ...hunter, traits: ["seafaring", "seafaring"] })).toEqual(["grace", "power", "memory"]);
   });
 
-  it("leaves focus alone for rank 1 and for stats already in focus", () => {
+  it("leaves the priority stats alone for rank 1 and for stats already among them", () => {
     expect(focusOf({ ...hunter, traits: ["seafaring"] })).toEqual(["grace", "power"]);
     expect(focusOf({ ...mage, focus: ["memory", "grace"] })).toEqual(["memory", "grace"]);
   });

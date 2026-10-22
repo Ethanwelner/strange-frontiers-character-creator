@@ -171,7 +171,7 @@ export function App() {
               {step === "kind" && <KindStep draft={draft} onChange={setDraft} />}
               {step === "background" && <BackgroundStep draft={draft} onChange={setDraft} />}
               {step === "stats" && (
-                <StatsStep draft={draft} result={result} onChange={setDraft} />
+                <StatsStep draft={draft} onChange={setDraft} />
               )}
               {step === "choices" && <ChoicesStep draft={draft} result={result} onChange={setDraft} />}
               {step === "traits" && <TraitsStep draft={draft} campaign={campaign} result={result} onChange={setDraft} />}

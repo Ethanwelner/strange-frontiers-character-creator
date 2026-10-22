@@ -48,7 +48,7 @@ for (const file of args) {
   if (s) {
     for (const [group, stats] of Object.entries(STAT_GROUPS)) {
       const g = group as keyof typeof STAT_GROUPS;
-      console.log(`  ${g.padEnd(9)} inner ${s.innerRing[g]} · ${stats.map((st) => `${st} ${s.stats[st]}`).join(", ")}`);
+      console.log(`  ${g.padEnd(9)} core ${s.coreStats[g]} · ${stats.map((st) => `${st} ${s.stats[st]}`).join(", ")}`);
     }
     const p = s.picks;
     console.log(`  picks     universal ${p.universal.spent}/${p.universal.available}, background ${p.background.spent}/${p.background.available}`);

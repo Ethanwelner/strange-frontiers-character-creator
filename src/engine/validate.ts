@@ -58,9 +58,9 @@ export interface ChoiceQuestion {
 
 export interface BuildSummary {
   stats: Record<StatId, number>;
-  innerRing: Record<StatGroup, number>;
-  // HP is 10 plus the Physical Outer Ring stats; VP and SP are the Social and
-  // Mental Outer Ring totals. Traits can add to any of them.
+  coreStats: Record<StatGroup, number>;
+  // HP is 10 plus the Physical focus stats; VP and SP are the Social and
+  // Mental focus stat totals. Traits can add to any of them.
   resources: Record<"hp" | "vp" | "sp", number>;
   picks: Record<PickKind, PickCount>;
   traits: HeldTrait[];
@@ -80,7 +80,7 @@ export interface BuildResult {
 
 const STATS = StatId.options;
 const PACKAGE_SLOTS = ["origin", "profession", "past"] as const;
-export const OUTER_POINTS_PER_LEVEL = 3;
+export const FOCUS_POINTS_PER_LEVEL = 3;
 export const BASE_HP = 10;
 
 // Choice pools the engine knows how to resolve. Others (and pools with no
@@ -188,11 +188,11 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     );
   }
 
-  // Rule 3: each level is 1 Inner Ring point and 3 Outer Ring points in that group.
-  const innerRing = { physical: 0, social: 0, mental: 0 } as Record<StatGroup, number>;
+  // Rule 3: each level is 1 core point and 3 focus points in that group.
+  const coreStats = { physical: 0, social: 0, mental: 0 } as Record<StatGroup, number>;
   build.levels.forEach((lvl, i) => {
     const path = `levels[${i}].points`;
-    innerRing[lvl.group]++;
+    coreStats[lvl.group]++;
     const groupStats: readonly string[] = STAT_GROUPS[lvl.group];
     let total = 0;
     for (const [stat, points = 0] of Object.entries(lvl.points)) {
@@ -202,8 +202,8 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
       stats[stat as StatId] += points;
       total += points;
     }
-    if (total !== OUTER_POINTS_PER_LEVEL) {
-      error("allocation", `Level ${i + 1} spends ${total} Outer Ring points; each level gives exactly ${OUTER_POINTS_PER_LEVEL}`, path);
+    if (total !== FOCUS_POINTS_PER_LEVEL) {
+      error("allocation", `Level ${i + 1} spends ${total} focus points; each level gives exactly ${FOCUS_POINTS_PER_LEVEL}`, path);
     }
   });
 
@@ -411,8 +411,8 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     }
   }
 
-  const outer = (g: StatGroup) => STAT_GROUPS[g].reduce((n, s) => n + stats[s], 0);
-  const resources = { hp: BASE_HP + outer("physical"), vp: outer("social"), sp: outer("mental") };
+  const focusTotal = (g: StatGroup) => STAT_GROUPS[g].reduce((n, s) => n + stats[s], 0);
+  const resources = { hp: BASE_HP + focusTotal("physical"), vp: focusTotal("social"), sp: focusTotal("mental") };
   for (const h of held.values()) {
     const bonus = traits.get(h.trait)?.resources ?? {};
     for (const r of ["hp", "vp", "sp"] as const) resources[r] += (bonus[r] ?? 0) * h.rank;
@@ -424,7 +424,7 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     warnings,
     summary: {
       stats,
-      innerRing,
+      coreStats,
       resources,
       picks,
       traits: [...held.values()],

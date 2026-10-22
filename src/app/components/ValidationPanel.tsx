@@ -38,7 +38,7 @@ export function ValidationPanel({ draft, result }: Props) {
             <div key={g} className="panel-group">
               <div className="panel-group-head">
                 <span>{title(g)}</span>
-                <span className="num">Inner Ring {summary ? summary.innerRing[g] : "–"}</span>
+                <span className="num">Core {summary ? summary.coreStats[g] : "–"}</span>
               </div>
               {STAT_GROUPS[g].map((s: StatId) => {
                 const v = summary?.stats[s];

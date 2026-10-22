@@ -835,14 +835,52 @@ button.hero-link:hover:not(:disabled) {
   opacity: 0.45;
 }
 
-.inner-ring {
-  font-size: 0.75rem;
-  font-weight: 600;
-  background: var(--black);
-  color: var(--white);
-  border-radius: 4px;
-  padding: 0.2rem 0.5rem;
+/* Stats pool: core points placed, then one card per group */
+.pool-summary {
+  margin: 0 0 1rem;
 }
+
+/* The groups side by side, each drawn like the sheet's stat block */
+.pool-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr));
+  gap: 24px 48px;
+}
+
+.pool-stats .sheet-group.locked .sheet-stat {
+  opacity: 0.45;
+}
+
+/* Core stat: the sheet's round badge with − and + to its right. Each stat has
+   its bar with its own − and + beside it. */
+.core-control,
+.stat-buttons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.core-control button,
+.stat-buttons button {
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border-radius: 50%;
+  font-family: var(--body);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.pool-stat-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pool-stat-row .stat-line {
+  flex: 1;
+}
+
 
 .stepper-row {
   display: grid;
