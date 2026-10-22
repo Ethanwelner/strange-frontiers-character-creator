@@ -22,11 +22,13 @@ content/
 
 ## From the Sheet to YAML
 
+The Sheet: https://docs.google.com/spreadsheets/d/1AP0TYovynUgseYa7s86-5OXWE1x8DoCvfkK39TqeUX8/edit
+
 Every tab's Description is `summary`, Tags is `tags`, and Notes is for anything the columns don't cover.
 
 | Sheet column | YAML |
 |---|---|
-| Plane, Region, Lore | `plane`, `region`, `lore` |
+| Kinds and packages: Plane, Region, Lore | `plane`, `region`, `lore`. The Trait tabs have no Plane column, so a Trait's `plane` is set here: `earth` or `isekai` only when the Trait names that setting's places, peoples, institutions, languages, technology or magic, and `any` otherwise |
 | Kinds: Features | `features`, one `name: description` per line |
 | Kinds: Trait Access, Free Points, Max Total | `traitAccess`, `freePoints`, `maxTotal` |
 | Kinds: Physical / Social / Mental (start/max) | `stats`, from lines like "Endurance 1/15" |
