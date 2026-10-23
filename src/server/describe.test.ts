@@ -20,6 +20,11 @@ describe("model settings", () => {
     expect(providerFor(settings)?.model).toBe("deepseek-r1:14b");
   });
 
+  it("picks the Claude model from ANTHROPIC_MODEL", () => {
+    const settings = settingsFromEnv({ SF_PROVIDER: "anthropic", ANTHROPIC_API_KEY: "test-key", ANTHROPIC_MODEL: "claude-haiku-5-5" });
+    expect(providerFor(settings)?.model).toBe("claude-haiku-5-5");
+  });
+
   it("uses the Claude API only with SF_PROVIDER=anthropic and a key", () => {
     expect(providerFor(settingsFromEnv({ SF_PROVIDER: "anthropic" }))).toBeUndefined();
     expect(providerFor(settingsFromEnv({ SF_PROVIDER: "anthropic", ANTHROPIC_API_KEY: "test-key" }))?.model).toBe("claude-opus-5-5");

@@ -19,7 +19,7 @@ npm test
 
 1. Install Ollama and open it.
 2. Pull the model: `ollama pull qwen3:30b-a3b` (about 19 GB; it needs a Mac with plenty of memory).
-3. Optional: copy `.env.example` to `.env` to pick another model (`OLLAMA_MODEL`; `OLLAMA_MODE=json` for models that don't call tools well) or switch to the paid Claude API (`SF_PROVIDER=anthropic` plus `ANTHROPIC_API_KEY`). Restart `npm run dev` after editing `.env`.
+3. Optional: copy `.env.example` to `.env` to pick another model (`OLLAMA_MODEL`; `OLLAMA_MODE=json` for models that don't call tools well) or switch to the paid Claude API (`SF_PROVIDER=anthropic` plus `ANTHROPIC_API_KEY`; `ANTHROPIC_MODEL` picks the model, Claude Opus 5.5 by default). Restart `npm run dev` after editing `.env`.
 
 `.env` is gitignored. Settings are read only by the local AI server; the API key never reaches the browser and is never logged.
 

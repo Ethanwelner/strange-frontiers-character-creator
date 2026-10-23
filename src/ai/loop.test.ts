@@ -74,6 +74,18 @@ const resultsOf = (p: Params) => {
 const bodyOf = (p: Params) => JSON.parse(resultsOf(p)[0]!.content as string);
 
 describe("describeCharacter", () => {
+  it("builds with another Claude model when told to, without a refusal fallback for Haiku", async () => {
+    const opus = script(message([submit(goblinoid)]));
+    await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(opus.create), campaign: L1 });
+    expect(opus.calls[0]).toEqual(expect.objectContaining({ model: "claude-opus-5-5", fallbacks: "default" }));
+
+    const haiku = script(message([submit(goblinoid)]));
+    await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(haiku.create, 12, "claude-haiku-5-5"), campaign: L1 });
+    expect(haiku.calls[0]!.model).toBe("claude-haiku-5-5");
+    expect(haiku.calls[0]).not.toHaveProperty("fallbacks");
+    expect(haiku.calls[0]).not.toHaveProperty("betas");
+  });
+
   it("builds the submitted concept and returns an accepted build with reasons", async () => {
     const { create, calls } = script(
       message([{ type: "thinking", thinking: "", signature: "sig" } as Block, toolUse("get_kind", { id: "tatot-goblinoid" })]),

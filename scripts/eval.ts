@@ -5,9 +5,10 @@
 //
 //   npm run eval                          every prompt
 //   npm run eval -- goblin                only prompts whose heading contains "goblin"
-//   npm run eval -- --model deepseek-r1:14b another Ollama model
+//   npm run eval -- --model deepseek-r1:14b another Ollama model (or Claude model, with --provider anthropic)
 //   npm run eval -- --mode json           JSON answers instead of tool calls
 //   npm run eval -- --provider anthropic  the Claude API (needs ANTHROPIC_API_KEY)
+//   npm run eval -- --provider anthropic --model claude-haiku-5-5
 //   npm run eval -- --trace               print each turn's tool calls
 //   npm run eval -- --turns 6             a different turn limit
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -38,7 +39,8 @@ const maxTurns = turnsFlag ? Number(turnsFlag) : undefined;
 const trace = args.includes("--trace");
 if (trace) args.splice(args.indexOf("--trace"), 1);
 const modelFlag = flag("--model");
-if (modelFlag) settings.ollamaModel = modelFlag;
+if (modelFlag && settings.provider === "anthropic") settings.anthropicModel = modelFlag;
+else if (modelFlag) settings.ollamaModel = modelFlag;
 const modeFlag = flag("--mode");
 if (modeFlag) settings.ollamaMode = modeFlag === "json" ? "json" : "tools";
 const provider = providerFor(settings);

@@ -31,6 +31,7 @@ export interface ModelSettings {
   ollamaHost?: string;
   ollamaMode?: "json" | "tools";
   apiKey?: string;
+  anthropicModel?: string;
 }
 
 export function settingsFromEnv(env: NodeJS.ProcessEnv): ModelSettings {
@@ -40,6 +41,7 @@ export function settingsFromEnv(env: NodeJS.ProcessEnv): ModelSettings {
     ollamaHost: env.OLLAMA_HOST?.trim() || undefined,
     ollamaMode: env.OLLAMA_MODE?.trim().toLowerCase() === "json" ? "json" : undefined,
     apiKey: env.ANTHROPIC_API_KEY?.trim() || undefined,
+    anthropicModel: env.ANTHROPIC_MODEL?.trim() || undefined,
   };
 }
 
@@ -49,7 +51,7 @@ export function providerFor(settings: ModelSettings): Provider | undefined {
   if (settings.provider === "ollama") return ollamaProvider({ model: settings.ollamaModel, host: settings.ollamaHost, mode: settings.ollamaMode });
   if (!settings.apiKey) return undefined;
   const client = new Anthropic({ apiKey: settings.apiKey });
-  return anthropicProvider((params) => client.beta.messages.create(params));
+  return anthropicProvider((params) => client.beta.messages.create(params), undefined, settings.anthropicModel);
 }
 
 export interface Deps {
