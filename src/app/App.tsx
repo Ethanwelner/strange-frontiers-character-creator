@@ -27,6 +27,8 @@ const LABELS: Record<Step, string> = {
 export function App() {
   const [saved, setSaved] = useState<Saved>(load);
   const [notice, setNotice] = useState<string>();
+  // New asks inline before clearing; native confirm() dialogs are blocked in some browsers.
+  const [confirmingNew, setConfirmingNew] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
   const { draft, campaign, step } = saved;
 
@@ -97,7 +99,7 @@ export function App() {
   };
 
   const reset = () => {
-    if (!window.confirm("Start a new character? The current build will be cleared.")) return;
+    setConfirmingNew(false);
     clearSaved();
     setSaved(EMPTY);
     setNotice(undefined);
@@ -111,7 +113,15 @@ export function App() {
         <div className="container hero-bar">
           <button className="hero-link" onClick={exportBuild}>Export</button>
           <button className="hero-link" onClick={() => fileInput.current?.click()}>Import</button>
-          <button className="hero-link" onClick={reset}>New</button>
+          {confirmingNew ? (
+            <span className="hero-confirm">
+              Clear this build?
+              <button className="hero-link" onClick={reset}>Yes</button>
+              <button className="hero-link" onClick={() => setConfirmingNew(false)}>Cancel</button>
+            </span>
+          ) : (
+            <button className="hero-link" onClick={() => setConfirmingNew(true)}>New</button>
+          )}
           <input ref={fileInput} type="file" accept="application/json,.json" hidden onChange={importBuild} />
         </div>
         <div className="container d-flex flex-gap-48 builder-row">

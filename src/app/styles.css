@@ -323,6 +323,14 @@ button.hero-link:hover:not(:disabled) {
   color: var(--frontiers);
 }
 
+/* New, once clicked: "Clear this build?" with Yes and Cancel */
+.hero-confirm {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 1rem;
+  color: var(--white);
+}
+
 .hero-statement {
   margin: 48px 0 40px;
 }
