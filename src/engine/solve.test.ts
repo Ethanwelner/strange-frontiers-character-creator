@@ -4,7 +4,11 @@ import { allocateLevels, Concept, rankFocus, solveConcept, type ConceptInput, ty
 import { validateBuild } from "./validate.js";
 import { Trait } from "../schema/index.js";
 
-const { content } = loadContent();
+// Knowledges need Memory 3 and up, out of reach for these level 1 fixtures,
+// so the rules are tested without Knowledge minimum stats. validate.test.ts
+// checks the real ones.
+const loaded = loadContent().content;
+const content = { ...loaded, traits: loaded.traits.map((t) => (t.category === "knowledge" ? { ...t, minStats: {} } : t)) };
 const isek = content.kinds.find((k) => k.id === "isek")!.stats!;
 
 // These fixtures are level 1 characters; the default campaign starts at 3.

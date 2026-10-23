@@ -6,4 +6,5 @@ region: dreft
 summary: The roads trade travels across Dreft.
 tags: [trade, roads, caravan]
 category: knowledge
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3 }
+effect: "This character has knowledge of the trade roads of Dreft and can be assumed to be familiar with their routes, products, and dangers."

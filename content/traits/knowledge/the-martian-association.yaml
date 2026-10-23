@@ -7,4 +7,5 @@ summary: "The SDU’s territory on Mars and the people who run it."
 tags: [mars, colony, sdu]
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3 }
+effect: "This character has knowledge of the Martian Association and can be assumed to be familiar with the peoples, places, and customs of the SDU’s territory on Mars."

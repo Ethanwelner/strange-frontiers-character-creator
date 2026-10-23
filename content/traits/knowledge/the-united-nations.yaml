@@ -7,4 +7,5 @@ summary: "The UN and its institutions aboard Tetra."
 tags: [un, politics, tetra]
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3 }
+effect: "This character has knowledge of the United Nations and can be assumed to be familiar with its institutions aboard Tetra."

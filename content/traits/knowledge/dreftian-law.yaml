@@ -7,4 +7,5 @@ summary: The laws of the Kingdom of Dreft and how they’re enforced.
 tags: [law, dreft]
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3 }
+effect: "This character has knowledge of Dreftian law and can be assumed to be familiar with the laws of the Kingdom of Dreft and how they’re enforced."

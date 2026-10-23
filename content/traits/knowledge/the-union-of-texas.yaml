@@ -6,4 +6,5 @@ summary: "The breakaway states the Empire still faces across a tense border."
 tags: [texas, foreign, politics]
 lore: union-of-texas
 category: knowledge
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3 }
+effect: "This character has knowledge of the Union of Texas and can be assumed to be familiar with its customs, politics, and territories."

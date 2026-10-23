@@ -7,4 +7,5 @@ summary: "The company that runs the switch port, and how it works."
 tags: [company, switch-port, tetra]
 lore: tetra-frontiers-co
 category: knowledge
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3 }
+effect: "This character has knowledge of Tetra Frontiers Co. and can be assumed to be familiar with its holdings, locations, employees, culture, and leadership."

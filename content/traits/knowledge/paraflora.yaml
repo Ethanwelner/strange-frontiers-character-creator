@@ -6,4 +6,5 @@ summary: "Extraplanar plants and the stranger things that fill a plant’s role,
 tags: [parabiology, plants, science]
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3, logic: 2, empathy: 2 }
+effect: "This character has knowledge of paraflora and can be assumed to be familiar with extraplanar plants, including their ecologies, growth patterns, and the rough paraphysical concepts by which they may operate."

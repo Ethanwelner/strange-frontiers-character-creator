@@ -5,4 +5,5 @@ plane: isekai
 summary: "The nobility of Isekai’s kingdoms: titles, ranks and who’s who."
 tags: [nobility, court]
 category: knowledge
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3, demeanor: 3 }
+effect: "This character has knowledge of the aristocracy and can be assumed to be familiar with the nobles, titles, and ranks of the kingdoms surrounding the switch port on Isekai."

@@ -8,4 +8,5 @@ tags: [sdu, politics]
 lore: stellar-democratic-union
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3 }
+effect: "This character has knowledge of the Stellar Democratic Union and can be assumed to be familiar with its customs, politics, and territories."

@@ -6,4 +6,5 @@ summary: "Crops, livestock and the farming year."
 tags: [farming, rural]
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 2, endurance: 2 }
+effect: "This character has knowledge of farming and can be assumed to be familiar with the technologies, techniques, and lifestyles associated with the practice."

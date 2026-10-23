@@ -6,4 +6,5 @@ summary: "The diplomatic and business ties linking nations separated by entire r
 tags: [diplomacy, politics, trade, parasapients]
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3, persuasion: 3 }
+effect: "This character has knowledge of interplanar relations and can be assumed to be familiar with the planes, societies, and laws involved with contact between parasapients and representatives of Earth baseline."

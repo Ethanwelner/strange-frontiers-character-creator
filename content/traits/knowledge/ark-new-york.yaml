@@ -8,4 +8,5 @@ tags: [ark, new-york, american-empire]
 lore: new-york
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3 }
+effect: "This character has knowledge of Ark New York and can be assumed to be familiar with the peoples, places, and customs aboard it."

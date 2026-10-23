@@ -6,4 +6,5 @@ summary: "Mathematics and its fields of study."
 tags: [mathematics, science]
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3, logic: 3 }
+effect: "This character has knowledge of mathematics and can be assumed to be familiar with mathematical fields of study."

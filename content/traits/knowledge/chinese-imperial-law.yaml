@@ -7,4 +7,5 @@ summary: "The laws of the Chinese Empire, written and as the syndicates actually
 tags: [law, chinese-empire]
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3 }
+effect: "This character has knowledge of Chinese Imperial Law and can be assumed to be familiar with the laws and courts of the Chinese Empire."

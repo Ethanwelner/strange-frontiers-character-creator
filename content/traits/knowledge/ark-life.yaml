@@ -7,4 +7,5 @@ summary: "Living and working aboard a drifting Ark, from the air recyclers to th
 tags: [ark, space, urban]
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 1, intuition: 2 }
+effect: "This character has knowledge of life aboard Arks and can be assumed to be familiar with navigating their corridors and cultures."

@@ -7,4 +7,5 @@ summary: The pass through the Corsine Mountains to Karsef.
 tags: [mountains, border, travel]
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 2, endurance: 2 }
+effect: "This character has knowledge of the Corsine Pass on Isekai and can be assumed to be familiar with its passes, peoples, and dangers."

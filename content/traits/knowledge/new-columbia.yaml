@@ -7,4 +7,5 @@ summary: "The Empire’s colony on Luna."
 tags: [luna, colony, american-empire]
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3 }
+effect: "This character has knowledge of New Columbia and can be assumed to be familiar with the peoples, places, and customs of the American Empire’s colony on Luna."

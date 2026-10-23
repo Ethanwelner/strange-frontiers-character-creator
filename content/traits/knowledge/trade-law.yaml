@@ -6,4 +6,5 @@ region: dreft
 summary: "The rules of trade in Dreft, and their loopholes."
 tags: [law, trade, merchant]
 category: knowledge
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3, persuasion: 2 }
+effect: "This character has knowledge of Dreftian trade law and can be assumed to be familiar with the rules of trade in Dreft and their loopholes."

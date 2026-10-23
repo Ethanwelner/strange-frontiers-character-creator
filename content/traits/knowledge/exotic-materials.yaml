@@ -6,4 +6,5 @@ summary: "The exotic materials paraphysics depends on: what they are, where they
 tags: [exotic-materials, science]
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3, logic: 3 }
+effect: "This character has knowledge of exotic materials and can be assumed to be familiar with their uses, prices, and the rough paraphysical concepts by which they operate."

@@ -8,4 +8,5 @@ tags: [tetra, diplomacy, politics]
 lore: diplomatic-wing
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3 }
+effect: "This character has knowledge of Tetra’s Diplomatic Wing and can be assumed to be familiar with its diplomats, embassies, businesses, and security."

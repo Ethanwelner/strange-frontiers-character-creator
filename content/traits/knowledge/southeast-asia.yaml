@@ -7,4 +7,5 @@ summary: "The Empire’s Southeast Asian territories, their peoples and their ol
 tags: [geography, chinese-empire, earth]
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3 }
+effect: "This character has knowledge of Southeast Asian geography and can be assumed to be familiar with the Chinese Empire’s Southeast Asian territories, their peoples, and their old borders."

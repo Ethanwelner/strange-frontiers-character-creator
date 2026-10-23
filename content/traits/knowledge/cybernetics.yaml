@@ -6,4 +6,5 @@ summary: "Implants, prosthetics and the medicine of joining people to machines."
 tags: [cybernetics, technology, medicine]
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3 }
+effect: "This character has knowledge of cybernetics and can be assumed to be familiar with the technologies, businesses, and laws pertaining to it."

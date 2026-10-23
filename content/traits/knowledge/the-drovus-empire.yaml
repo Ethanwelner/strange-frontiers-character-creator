@@ -6,4 +6,5 @@ summary: The empire that absorbed the Sunrise Princedoms.
 tags: [drovus, empire, foreign]
 lore: drovus-empire
 category: knowledge
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3 }
+effect: "This character has knowledge of the Drovus Empire and can be assumed to be familiar with its politics, regions, wildlife, and cultures."

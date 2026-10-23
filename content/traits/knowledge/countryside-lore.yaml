@@ -5,4 +5,10 @@ plane: any
 summary: "The ways of the countryside, away from the cities and trading posts."
 tags: [rural, folklore, folk]
 category: knowledge
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3 }
+effect: "This character has knowledge of the local countryside and can be assumed to be familiar with its people, places, and customs."
+choices:
+  - choose: 1
+    from: place
+    note: "Which countryside"
+    perRank: false

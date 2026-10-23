@@ -8,4 +8,5 @@ tags: [lodge, exploration, tetra]
 lore: explorers-lodge
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3 }
+effect: "This character has knowledge of the Explorers’ Lodge and can be assumed to be familiar with its members, its rules, and how expeditions are handed out."

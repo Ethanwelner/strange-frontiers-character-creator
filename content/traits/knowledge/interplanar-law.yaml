@@ -6,4 +6,5 @@ summary: "The law of extraplanar beings: the treatment of specimens, the legal s
 tags: [law, parasapients, rights, immigration]
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3, empathy: 3 }
+effect: "This character has knowledge of interplanar law and can be assumed to be familiar with the laws governing extraplanar beings, including the treatment of specimens and the legal status of parasapients."

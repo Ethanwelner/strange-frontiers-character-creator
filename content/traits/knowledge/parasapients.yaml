@@ -6,4 +6,5 @@ summary: "The sapient peoples of other planes: their bodies, their cultures, and
 tags: [parabiology, parasapients, cultures, people]
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3, empathy: 3 }
+effect: "This character has knowledge of parasapients and can be assumed to be familiar with extraplanar sapients, including their cultures, diplomatic relations, and the rough paraphysical concepts by which they may operate."

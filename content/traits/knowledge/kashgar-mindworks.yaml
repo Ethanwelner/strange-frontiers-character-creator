@@ -7,4 +7,5 @@ summary: "The company that builds AI Cores, and how it works."
 tags: [ai, company, kashgar]
 lore: kashgar-mindworks
 category: knowledge
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3 }
+effect: "This character has knowledge of Kashgar Mindworks and can be assumed to be familiar with its businesses, locations, employees, culture, and leadership."

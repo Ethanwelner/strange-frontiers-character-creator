@@ -6,4 +6,5 @@ summary: "The study of extraplanar life in all its forms, and why so many planes
 tags: [parabiology, science, life]
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3, logic: 2, empathy: 2 }
+effect: "This character has knowledge of parabiology and can be assumed to be familiar with the living organisms of other planes, and their vital processes, structures, functions, and growth."

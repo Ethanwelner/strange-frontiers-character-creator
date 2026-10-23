@@ -6,4 +6,5 @@ summary: "Extraplanar animals: how they live, what they eat, and which ones eat 
 tags: [parabiology, animals, creatures, science]
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3, logic: 2, intuition: 2 }
+effect: "This character has knowledge of parazoology and can be assumed to be familiar with extraplanar creatures, including their habitats, needs, and the rough paraphysical concepts by which they may operate."

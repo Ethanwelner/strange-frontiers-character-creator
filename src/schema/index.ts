@@ -57,11 +57,13 @@ export const TraitGrant = z.object({
 });
 
 // "Pick N from a pool", e.g. one additional Contact or one Dreftian language.
-// Packages and Traits both ask them.
+// Packages and Traits both ask them. A ranked Trait asks again at each rank
+// unless `perRank` is false, as with Seafaring's "Which seas".
 export const TraitChoice = z.object({
   choose: z.number().int().min(1),
   from: z.string().min(1),
   note: z.string().optional(),
+  perRank: z.boolean().optional(),
 });
 export type TraitChoice = z.infer<typeof TraitChoice>;
 
