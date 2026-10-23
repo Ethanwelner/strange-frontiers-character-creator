@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import type { DescribeError, DescribeEvent, DescribeResult, Progress } from "../../ai/types.js";
-import { kindById, packageById } from "../content.js";
+import { describeRemote } from "../../ai/remote.js";
+import { content, kindById, packageById } from "../content.js";
 import type { AiNotes, Draft } from "../draft.js";
 import { askerName, choiceLabel, title, traitName } from "./ui.js";
 
@@ -55,6 +56,30 @@ function targetLabel(target: string, draft: Draft): string {
   return traitName(target);
 }
 
+// Ollama builds run on the local AI server, which streams progress back.
+async function describeOnServer(description: string, startingLevel: number, onProgress: (p: Progress) => void) {
+  let res: Response;
+  try {
+    res = await fetch("api/describe", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ description, startingLevel }),
+    });
+  } catch {
+    throw new Error("Couldn't reach the AI server. Start it with npm run dev.");
+  }
+  const body = await readReply(res, onProgress);
+  if (!body) throw new Error(`The AI server answered ${res.status} with no details. Is npm run dev running?`);
+  return body;
+}
+
+// Claude builds run their loop here and send each turn to the endpoint that
+// holds the key; Ollama builds run on the local AI server (see vite.config.ts).
+const requestBuild = (description: string, startingLevel: number, onProgress: (p: Progress) => void) =>
+  __SF_AI__.route === "browser"
+    ? describeRemote({ description, startingLevel, content, endpoint: __SF_AI__.endpoint, model: __SF_AI__.model, onProgress })
+    : describeOnServer(description, startingLevel, onProgress);
+
 // 67 seconds as "1:07".
 export const clock = (seconds: number) => `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, "0")}`;
 
@@ -90,18 +115,12 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
     setError(undefined);
     setProgress(undefined);
     try {
-      const res = await fetch("api/describe", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ description: text, startingLevel }),
-      });
-      const body = await readReply(res, setProgress);
-      if (!body) throw new Error(`The AI server answered ${res.status} with no details. Is npm run dev running?`);
+      const body = await requestBuild(text, startingLevel, setProgress);
       if ("error" in body) throw new Error(body.message);
       if (!body.build) throw new Error("The model didn't propose a build. Try again, or describe the character differently.");
       onBuilt(body, text, secondsSince());
     } catch (err) {
-      const message = err instanceof TypeError ? "Couldn't reach the AI server. Start it with npm run dev." : err instanceof Error ? err.message : String(err);
+      const message = err instanceof Error ? err.message : String(err);
       setError(`${message} (after ${clock(secondsSince())})`);
     } finally {
       setBusy(false);
