@@ -131,7 +131,7 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
     <section className="describe" aria-label="Describe your character">
       <form onSubmit={submit}>
         <label htmlFor="describe-text">
-          <h3>Describe your character</h3>
+          <h3 className="copy-title">Describe your character</h3>
         </label>
         <p className="hint">
           Say who they are in your own words. The AI picks from the game's real Kinds, packages and Traits, the rules engine checks every
@@ -139,6 +139,7 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
         </p>
         <textarea
           id="describe-text"
+          className="rpg-search-input"
           value={text}
           rows={3}
           maxLength={4000}

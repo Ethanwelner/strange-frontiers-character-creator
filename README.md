@@ -6,7 +6,7 @@ Early work in progress. See [docs/PLAN.md](docs/PLAN.md) for the roadmap and [do
 
 ## Setup
 
-Needs Node 24 or newer (`.nvmrc` pins it, so `nvm use` picks it up).
+Needs Node 24 or newer (`.nvmrc` pins it, so `nvm use` picks it up), and the [portfolio_site](https://github.com/Ethanwelner/portfolio_site) repo checked out beside this one: the builder wears the Strange Frontiers site's CSS, and `npm run dev` serves it from there (set `SF_SITE_DIR` in `.env` if the site lives elsewhere).
 
 ```bash
 nvm use
@@ -92,5 +92,5 @@ npm run build    # static site in dist/; Build it calls creator-api.php next to 
 - `src/server/`: the local AI server that reads the model settings from `.env` and answers `POST /api/messages` (one Claude turn, key added) and `POST /api/describe` (a whole Ollama build).
 - `evals/`: sample player descriptions for `npm run eval`.
 - `characters/`: Build JSON files made in Claude Code; `npm run check-build` checks them.
-- `src/app/`: the manual builder (Vite + React). `content.ts` bundles `content/` with `import.meta.glob`; `check.ts` holds the helpers that ask the engine about picks.
+- `src/app/`: the manual builder (Vite + React). `content.ts` bundles `content/` with `import.meta.glob`; `check.ts` holds the helpers that ask the engine about picks. `styles.css` holds only the builder's own styles, scoped to `.sf-creator`; everything it shares with the site (colors, fonts, columns, tabs, Trait boxes, the character sheet, the night sky) comes from the site's CSS, which `creator.php` loads on the site and `vite.config.ts` links in development.
 - `scripts/validate-content.ts`: checks every content file against the schemas and the cross-file rules.

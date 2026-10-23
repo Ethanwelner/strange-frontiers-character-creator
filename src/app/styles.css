@@ -1,1866 +1,1659 @@
-/* The Strange Frontiers site's look (portfolio_site css/tokens.css, css/rpg.css,
-   css/portfolio-nested.css): a black hero over the night sky with the green
-   title and Bebas tabs. Below it the builder goes dark: a gray panel, a
-   lighter gray box for each step, and the light cards on top. */
+/* The creator's own styles. Everything it shares with the Strange Frontiers
+   site comes from the site's CSS (portfolio_site css/: bootstrap, tokens,
+   portfolio-nested, portfolio-media-queries, rpg, rpg-night), which creator.php
+   loads on the site and vite.config.ts links in development: the colors
+   (--portfolio-*, --frontiers-*), fonts, .container and flex columns, .title,
+   .hero-title, .section-title, .copy-title, the black .copy.stinger, the
+   .rpg-tab and .tech-field-tab tabs, .rpg-search-input, .trait-box,
+   .c-sheet, .stat-line and .stat. This file adds the builder on top and
+   only reaches inside .sf-creator.
 
-@font-face {
-  font-family: "bebas_neueregular";
-  src:
-    url("./fonts/bebasneue-webfont.woff2") format("woff2"),
-    url("./fonts/bebasneue-webfont.woff") format("woff");
-  font-weight: normal;
-  font-style: normal;
+   Element rules sit under :where(.sf-creator), as plain as the site's own,
+   so the site's classes still win over them. Class rules sit under
+   .sf-creator, so they win over the site's where they change something. The
+   page's black background behind the sky comes from css/rpg-night.css. */
+
+:where(.sf-creator) {
+  strong {
+    font-weight: 600;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    margin: 0;
+    font-weight: 300;
+    line-height: 1.2;
+  }
+
+  /* .sub-title */
+  h2 {
+    font-size: 2.25rem;
+    margin-bottom: 0.5rem;
+  }
+
+  h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+  }
+
+  h4 {
+    font-size: 1.25rem;
+    margin: 1.5rem 0 0.75rem;
+  }
+
+  p {
+    margin: 0.4rem 0;
+  }
+
+  code {
+    font-size: 0.85em;
+    color: inherit;
+  }
+
+  label {
+    margin-bottom: 0;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+    color: inherit;
+  }
+
+  /* Buttons take the tabs' Bebas and gray; primary is black. The site's own
+     tab buttons keep their rules. */
+  button:where(:not(.rpg-tab, .tech-field-tab)) {
+    font-family: var(--title);
+    font-size: 1.25rem;
+    letter-spacing: 1px;
+    line-height: 1;
+    background: var(--portfolio-gray);
+    color: var(--portfolio-white);
+    border: 0;
+    border-radius: 4px;
+    padding: 0.6rem 1rem 0.5rem;
+    cursor: pointer;
+    transition: background-color 200ms;
+
+    &:hover:not(:disabled) {
+      background-color: color-mix(in srgb, var(--portfolio-gray) 80%, var(--portfolio-white));
+    }
+  }
+
+  button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  input,
+  select {
+    background: var(--portfolio-white);
+    color: var(--portfolio-black);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 0.45rem 0.6rem;
+    min-width: 0;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--portfolio-black);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--frontiers-green);
+    outline-offset: 2px;
+  }
+
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: none;
+  }
 }
 
-:root {
-  /* portfolio_site css/tokens.css */
-  --white: #ffffff;
-  --near-white: #fafafa;
-  --black: #212121;
-  --red: #eb0844;
-  --yellow: #fcb10f;
-  --green: #47b767;
-  --gray: #525252;
-  --medium-gray: #969696;
-  --light-gray: #eaeaea;
-  --card-border: #d4d4d4;
-  --radius: 8px;
-
-  /* Strange Frontiers accents from css/rpg.css */
-  --frontiers: #2dfc64;
-  --lore: #884ddc;
-  --dreft: #1c372b;
-  --systems: #212121;
-  /* Card bodies: a touch darker than near-white, so they sit softer on the dark panel */
+.sf-creator {
+  /* Builder colors on top of css/tokens.css */
   --card-bg: #efefef;
-  --lore-on-black: #a67bf0;
+  --card-border: #d4d4d4;
+  --good-on-light: #2e8a4a;
   --rule: rgb(0 0 0 / 15%);
   --rule-on-black: rgb(255 255 255 / 25%);
-
   /* The dark builder panel and the box each step sits in */
   --panel: #2b2b2b;
   --panel-box: #363636;
   --panel-text: #e8e8e8;
   --panel-soft: #b3b3b3;
   --panel-good: #6fd18a;
-
   --title: "bebas_neueregular", Impact, "Arial Narrow", sans-serif;
   --body: "Open Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-}
 
-* {
-  box-sizing: border-box;
-}
-
-/* The sky sits behind everything (sky.css); the hero is a window onto it and
-   the white panel paints over it. */
-html {
-  background-color: var(--black);
-  scrollbar-color: var(--medium-gray) var(--gray);
-}
-
-body {
-  margin: 0;
-  background: transparent;
-  color: var(--black);
-  font-family: var(--body);
-  font-weight: 300;
+  min-height: 100vh;
   font-size: 14px;
   line-height: 1.25;
-}
 
-strong {
-  font-weight: 600;
-}
+  button.primary {
+    background: var(--portfolio-black);
 
-h1,
-h2,
-h3,
-h4 {
-  margin: 0;
-  font-weight: 300;
-  line-height: 1.2;
-}
-
-/* .sub-title */
-h2 {
-  font-size: 2.25rem;
-  margin-bottom: 0.5rem;
-}
-
-h3 {
-  font-size: 1.05rem;
-  font-weight: 600;
-}
-
-h4 {
-  font-size: 1.25rem;
-  margin: 1.5rem 0 0.75rem;
-}
-
-p {
-  margin: 0.4rem 0;
-}
-
-code {
-  font-size: 0.85em;
-}
-
-button,
-input,
-select,
-textarea {
-  font: inherit;
-  color: inherit;
-}
-
-/* Buttons take the tabs' Bebas and gray; primary is black. */
-button {
-  font-family: var(--title);
-  font-size: 1.25rem;
-  letter-spacing: 1px;
-  line-height: 1;
-  background: var(--gray);
-  color: var(--white);
-  border: 0;
-  border-radius: 4px;
-  padding: 0.6rem 1rem 0.5rem;
-  cursor: pointer;
-  transition: background-color 200ms;
-}
-
-button:hover:not(:disabled) {
-  background-color: color-mix(in srgb, var(--gray) 80%, var(--white));
-}
-
-button:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
-button.primary {
-  background: var(--black);
-}
-
-button.primary:hover:not(:disabled) {
-  background-color: color-mix(in srgb, var(--black) 66%, var(--white));
-}
-
-/* Text buttons look like the site's lore links. */
-button.link {
-  font-family: var(--body);
-  font-size: inherit;
-  letter-spacing: 0;
-  line-height: inherit;
-  background: none;
-  border: none;
-  padding: 0;
-  text-align: left;
-  color: var(--lore);
-  font-weight: 600;
-  text-decoration: underline dotted;
-  text-underline-offset: 3px;
-}
-
-button.link:hover:not(:disabled) {
-  background: none;
-  text-decoration-style: solid;
-}
-
-input,
-select {
-  background: var(--white);
-  color: var(--black);
-  border: 1px solid var(--rule);
-  border-radius: 4px;
-  padding: 0.45rem 0.6rem;
-  min-width: 0;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-  outline: none;
-  border-color: var(--black);
-}
-
-:focus-visible {
-  outline: 2px solid var(--frontiers);
-  outline-offset: 2px;
-}
-
-.builder-panel :focus-visible {
-  outline-color: var(--white);
-}
-
-.builder-panel :is(.card, .level-card, .choice, .trait-box, .c-sheet, .notice) :focus-visible {
-  outline-color: var(--black);
-}
-
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible {
-  outline: none;
-}
-
-.muted {
-  color: var(--gray);
-}
-
-.small,
-.tiny-text {
-  font-size: 0.75rem;
-}
-
-.good {
-  color: #2e8a4a;
-}
-
-.bad {
-  color: var(--red);
-}
-
-.num {
-  font-variant-numeric: tabular-nums;
-}
-
-.lede {
-  margin-bottom: 1.5rem;
-}
-
-.hint {
-  color: var(--gray);
-  font-size: 0.9rem;
-}
-
-.empty {
-  color: var(--gray);
-  font-style: italic;
-}
-
-/* .copy.stinger.black */
-.stinger {
-  display: inline-block;
-  background: var(--black);
-  color: var(--white);
-  padding: 12px;
-  margin-bottom: 1.5rem;
-}
-
-/* Heading with a rule running off to the right (.line-container + .line). */
-.rule,
-.subhead {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.rule::after,
-.subhead::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background-color: var(--rule);
-}
-
-.subhead {
-  font-size: 1.5rem;
-  font-weight: 300;
-  margin: 2.5rem 0 1.25rem;
-}
-
-/* A step box's first group title sits at the top of the box */
-.kind-group:first-child .subhead {
-  margin-top: 0;
-}
-
-.subhead .muted {
-  font-size: 0.9rem;
-}
-
-/* Hero: the site's black section with the green title */
-
-.app {
-  min-height: 100vh;
-}
-
-/* Content sits in the site's .container rows (layout.css). The hero's row is
-   the title, describe box and step tabs (flex-11) beside the character box
-   (flex-3), 48px apart. */
-.builder-hero {
-  display: grid;
-  gap: 24px;
-  color: var(--white);
-  padding-top: 32px;
-}
-
-/* The tabs sit at the bottom of the left column, on the white panel, however
-   tall the character box makes the row. */
-.hero-main {
-  display: flex;
-  flex-direction: column;
-}
-
-.builder-hero .builder-side {
-  padding-bottom: 32px;
-}
-
-.hero-bar {
-  display: flex;
-  justify-content: flex-start;
-  gap: 1.5rem;
-}
-
-button.hero-link {
-  background: none;
-  padding: 0;
-  font-size: 1.5rem;
-  color: var(--white);
-}
-
-button.hero-link:hover:not(:disabled) {
-  background: none;
-  color: var(--frontiers);
-}
-
-/* New, once clicked: "Clear this build?" with Yes and Cancel */
-.hero-confirm {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 1rem;
-  color: var(--white);
-}
-
-.hero-statement {
-  margin: 48px 0 40px;
-}
-
-/* .hero-title.frontiers-accent */
-.hero-title {
-  font-family: var(--title);
-  font-weight: normal;
-  font-size: 5rem;
-  line-height: 1;
-  color: var(--frontiers);
-}
-
-/* .section-title */
-.hero-sub {
-  font-family: var(--title);
-  font-size: 3rem;
-  line-height: 1;
-  margin: 0;
-}
-
-/* Step tabs: the site's .rpg-tabs bar along the bottom of the hero, sitting
-   on the white panel */
-.rpg-tabs {
-  margin-top: auto;
-  padding-top: 48px;
-}
-
-.rpg-tab-list {
-  display: flex;
-  align-items: stretch;
-  gap: 0.5rem;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.rpg-tab {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  white-space: nowrap;
-  font-size: 1.25rem;
-  padding: 0.75rem 1.5rem;
-  border-radius: 4px 4px 0 0;
-}
-
-.rpg-tab:hover:not(:disabled) {
-  background-color: color-mix(in srgb, var(--gray) 66%, transparent);
-}
-
-.rpg-tab.is-active {
-  background: var(--panel);
-  color: var(--white);
-  /* Cover the subpixel gap so the tab meets the panel below it */
-  box-shadow: 0 1px 0 var(--panel);
-}
-
-.rpg-tab:focus-visible {
-  outline-offset: -2px;
-}
-
-.step-n {
-  opacity: 0.6;
-}
-
-.badge {
-  font-family: var(--body);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0;
-  background: var(--red);
-  color: var(--white);
-  border-radius: 999px;
-  padding: 0.15rem 0.45rem;
-}
-
-/* Describe your character (the AI layer), in the hero */
-
-.describe {
-  max-width: 760px;
-}
-
-/* .copy-title */
-.describe h3 {
-  font-size: 1.5rem;
-  font-weight: 300;
-}
-
-.describe .hint {
-  color: #c9c9c9;
-}
-
-/* .rpg-search-input, grown into a text box */
-.describe textarea {
-  display: block;
-  width: 100%;
-  background: var(--black);
-  color: var(--white);
-  border: 1px solid rgb(255 255 255 / 35%);
-  border-radius: 18px;
-  padding: 0.7rem 1rem;
-  margin: 0.75rem 0;
-  resize: vertical;
-  transition: border-color 200ms;
-}
-
-.describe textarea::placeholder {
-  color: #9a9a9a;
-  opacity: 1;
-}
-
-.describe textarea:focus {
-  border-color: var(--frontiers);
-}
-
-.describe button.primary {
-  background: var(--frontiers);
-  color: var(--black);
-}
-
-.describe button.primary:hover:not(:disabled) {
-  background-color: color-mix(in srgb, var(--frontiers) 75%, var(--white));
-}
-
-.describe button.link {
-  color: var(--lore-on-black);
-}
-
-.describe-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-/* Build it, while building: the stopwatch and a running clock */
-.build-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4em;
-}
-
-.build-button:disabled[aria-busy="true"] {
-  opacity: 1;
-}
-
-.stopwatch-icon {
-  width: 1em;
-  height: 1em;
-  background-color: currentColor;
-  mask: url("./img/stopwatch.svg") center / contain no-repeat;
-}
-
-.describe-progress {
-  flex: 1;
-  min-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 0.9rem;
-  color: #c9c9c9;
-}
-
-.describe .notice {
-  margin: 0.75rem 0 0;
-}
-
-.describe-result {
-  border-top: 1px solid var(--rule-on-black);
-  margin-top: 1rem;
-  padding-top: 0.75rem;
-}
-
-.describe-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 1rem;
-}
-
-.describe-status {
-  margin: 0;
-  font-weight: 600;
-}
-
-.describe-status.good {
-  color: var(--frontiers);
-}
-
-.describe-status.bad {
-  color: #ff5c86;
-}
-
-.ai-reasons {
-  margin: 0.5rem 0 0;
-  padding-left: 1.1rem;
-}
-
-.ai-reasons li {
-  margin: 0.2rem 0;
-}
-
-/* Dark panel: gray behind the steps, light text, light rules */
-
-.builder-panel {
-  --rule: rgb(255 255 255 / 18%);
-  /* Card edges fade into the dark box instead of outlining it in light gray */
-  --card-border: #5e5e5e;
-  background: var(--panel);
-  color: var(--panel-text);
-}
-
-.builder-panel :is(.muted, .hint, .empty, .tags) {
-  color: var(--panel-soft);
-}
-
-.builder-panel .good {
-  color: var(--panel-good);
-}
-
-.builder-panel :is(.notice, .c-sheet) {
-  border-color: var(--card-border);
-}
-
-/* Cards, notices and the sheet stay light, with their own dark text */
-.builder-panel :is(.card, .level-card, .choice, .trait-box, .c-sheet, .notice) {
-  --rule: rgb(0 0 0 / 15%);
-  color: var(--black);
-}
-
-.builder-panel :is(.card, .level-card, .choice, .trait-box, .c-sheet, .notice) :is(.muted, .hint, .empty, .tags) {
-  color: var(--gray);
-}
-
-.builder-panel :is(.card, .level-card, .choice, .trait-box, .c-sheet, .notice) .good {
-  color: #2e8a4a;
-}
-
-/* The Stats step's bars sit on the dark box, so they flip: placed points and
-   core badges light, level 0 points mid gray, open slots a lighter outline. */
-.builder-panel .pool-stats .stat-badge {
-  background-color: var(--near-white);
-  color: var(--black);
-}
-
-.builder-panel .pool-stats .stat.filled {
-  background-color: var(--near-white);
-}
-
-.builder-panel .pool-stats .stat.default {
-  background-color: #7d7d7d;
-}
-
-.builder-panel .pool-stats .stat.empty {
-  border-color: #8a8a8a;
-}
-
-.builder-panel :is(.core-control, .stat-buttons) button {
-  background: #6b6b6b;
-}
-
-.builder-panel :is(.core-control, .stat-buttons) button:hover:not(:disabled) {
-  background: #858585;
-}
-
-.panel :is(.muted, .hint, .empty) {
-  color: var(--panel-soft);
-}
-
-.panel .good {
-  color: var(--panel-good);
-}
-
-/* The sheet goes dark on screen too: the step box's gray around darker inner
-   boxes, light text, and the same flipped bars and badges as the Stats step.
-   Its Trait cards stay light like every card. Printing keeps the light sheet. */
-@media screen {
-  .builder-panel .c-sheet {
-    --rule: rgb(255 255 255 / 18%);
-    color: var(--panel-text);
-    background-color: var(--panel-box);
+    &:hover:not(:disabled) {
+      background-color: color-mix(in srgb, var(--portfolio-black) 66%, var(--portfolio-white));
+    }
   }
 
-  .builder-panel .c-sheet-box {
-    background-color: var(--panel);
-    border-color: rgb(255 255 255 / 12%);
-  }
-
-  .builder-panel .c-sheet :is(.muted, .hint, .empty, .tags) {
-    color: var(--panel-soft);
-  }
-
-  .builder-panel .c-sheet .good {
-    color: var(--panel-good);
-  }
-
-  .builder-panel .c-sheet :focus-visible {
-    outline-color: var(--white);
-  }
-
-  .builder-panel .c-sheet .trait-box {
-    --rule: rgb(0 0 0 / 15%);
-  }
-
-  .builder-panel .c-sheet .trait-box :is(.muted, .hint, .empty, .tags) {
-    color: var(--gray);
-  }
-
-  .builder-panel .c-sheet :is(.level-badge, .stat-badge) {
-    background-color: var(--near-white);
-    color: var(--black);
-  }
-
-  .builder-panel .c-sheet .stat.filled {
-    background-color: var(--near-white);
-  }
-
-  .builder-panel .c-sheet .stat.default {
-    background-color: #7d7d7d;
-  }
-
-  .builder-panel .c-sheet .stat.empty {
-    border-color: #8a8a8a;
-  }
-}
-
-.notice {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  background: var(--near-white);
-  border: 1px solid var(--light-gray);
-  border-radius: 4px;
-  padding: 0.75rem 1rem;
-  margin-bottom: 1rem;
-}
-
-.notice.bad {
-  border-color: var(--red);
-  color: var(--black);
-  background: rgb(235 8 68 / 6%);
-}
-
-.describe .notice {
-  color: var(--black);
-}
-
-/* Step title, then the stinger, then the step's description */
-.step-head h2 {
-  margin-bottom: 1rem;
-}
-
-/* The stinger, with the step's errors to its right */
-.stinger-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem 24px;
-  margin-bottom: 1rem;
-}
-
-.stinger-row .stinger {
-  flex-shrink: 0;
-  margin-bottom: 0;
-}
-
-.step-head .lede {
-  margin-top: 0;
-}
-
-/* What's wrong on this step, side by side beside the stinger, as red chips
-   shaped like the site's Trait badges (.trait-box .badge in css/rpg.css) */
-.step-issues {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem;
-  flex: 1 1 16rem;
-}
-
-.issues.step-issues li {
-  margin: 0;
-  padding: 0.5rem 1rem;
-  border: 0;
-  border-radius: 999px;
-  background: var(--red);
-  color: var(--white);
-  font-size: 0.75rem;
-  font-weight: 600;
-  line-height: 1.2;
-}
-
-.pager {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 3rem;
-}
-
-/* Boxed step content: the site's .tech-fields box (css/rpg.css), which holds
-   the Setting tab's sub-tabs. The Traits step keeps its Universal/Background
-   sub-tabs along the top edge; the other steps have no tabs, so they get top
-   padding instead. */
-.tech-fields {
-  padding: 0 24px 36px;
-  border: 1px solid var(--white);
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.tech-fields-light {
-  background: var(--panel-box);
-  border-color: rgb(255 255 255 / 22%);
-}
-
-.tech-fields.step-box {
-  padding-top: 24px;
-}
-
-.tech-field-tab-list {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
-  gap: 0.5rem;
-  margin-bottom: 36px;
-}
-
-.tech-field-tab {
-  font-size: 1.25rem;
-  padding: 0.6rem 1.1rem;
-  border-radius: 0 0 4px 4px;
-}
-
-.tech-fields-light .tech-field-tab.is-active {
-  background: var(--black);
-  color: var(--white);
-}
-
-/* The first slot heading in a box sits at its top */
-.step-box > .slot:first-child > .subhead:first-child {
-  margin-top: 0;
-}
-
-/* Cards: .c-sheet-box */
-
-/* Kind and package cards, at least 360px wide */
-.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr));
-  gap: 1rem;
-}
-
-.card,
-.level-card,
-.choice {
-  position: relative;
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 12px;
-  padding: 16px;
-}
-
-.card {
-  display: grid;
-  align-content: start;
-  gap: 16px;
-  cursor: pointer;
-  transition: border-color 200ms;
-}
-
-.card:hover {
-  border-color: var(--medium-gray);
-}
-
-.card.selected {
-  border-color: var(--green);
-  /* Outside the border, so a card's header bar can't cover it */
-  box-shadow: 0 0 0 1px var(--green);
-}
-
-/* A check in a green badge, the stinger's green */
-.card.selected::after,
-.trait-box.selected::after {
-  content: "✓";
-  position: absolute;
-  top: -12px;
-  right: -12px;
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: var(--green);
-  color: var(--white);
-  font-weight: 600;
-  font-size: 0.9rem;
-}
-
-/* Kind cards run wider than the other steps' cards */
-.kind-group .cards {
-  grid-template-columns: repeat(auto-fill, minmax(min(400px, 100%), 1fr));
-}
-
-/* Every character card (Kind, package, choice; Trait cards have their own
-   .trait-name) opens with a header bar in its region color: Dreft's green
-   for Isekai, Systems gray for the rest */
-.headed > .card-head {
-  margin: -16px -16px 0;
-  padding: 10px 16px;
-  align-items: center;
-  border-radius: 11px 11px 0 0;
-  background: var(--black);
-  color: var(--white);
-}
-
-.headed.region-systems > .card-head {
-  background: var(--systems);
-}
-
-.headed.region-dreft > .card-head {
-  background: var(--dreft);
-}
-
-.headed > .card-head h3 {
-  margin: 0;
-}
-
-.headed > .card-head .chip-muted,
-.headed > .card-head .muted {
-  background: rgb(255 255 255 / 15%);
-  color: var(--white);
-}
-
-.headed > .card-head .muted {
-  background: none;
-  opacity: 0.75;
-}
-
-.card-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  margin-bottom: 0.5rem;
-}
-
-.features {
-  padding-left: 1.1rem;
-  margin: 0.5rem 0;
-  font-size: 0.9rem;
-}
-
-.features li {
-  margin: 0.25rem 0;
-}
-
-/* Chips: the side nav's black badges */
-.chip {
-  display: inline-block;
-  background: var(--black);
-  color: var(--white);
-  border-radius: 4px;
-  padding: 0.2rem 0.5rem;
-  margin: 0.15rem 0.25rem 0.15rem 0;
-  font-size: 0.75rem;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.chip-muted {
-  background: var(--light-gray);
-  color: var(--black);
-}
-
-.chip-accent {
-  background: var(--gray);
-}
-
-.chip-bad {
-  background: var(--red);
-}
-
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-/* Each list's label (Grants, Choose, Background list) sits above its chips */
-.grants .label {
-  flex-basis: 100%;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
-/* A package's lists sit in the card's 16px rhythm; within a list, the label
-   and chips are spaced by gaps alone */
-.grants {
-  display: grid;
-  gap: 16px;
-}
-
-.grants > div {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-}
-
-.grants .chip,
-.grants > p {
-  margin: 0;
-}
-
-.stat-ranges {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
-  gap: 0.75rem;
-  font-size: 0.8rem;
-}
-
-.stat-ranges-group {
-  font-weight: 600;
-  margin-bottom: 0.15rem;
-}
-
-.stat-range {
-  display: flex;
-  justify-content: space-between;
-  gap: 0.25rem;
-}
-
-/* A plain rule between a card's rows, like the line above a Kind's stats */
-.card-rule {
-  width: 100%;
-  border: 0;
-  border-top: 1px solid var(--rule);
-  opacity: 1;
-}
-
-/* The grid gap does the spacing between a card's rows */
-.card > * {
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-/* Levels */
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.field.inline {
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem 0.75rem;
-  margin-bottom: 1.5rem;
-}
-
-.levels {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr));
-  gap: 1rem;
-}
-
-/* Physical, Social and Mental stacked in each level card */
-.stat-group h4 {
-  font-size: 1.1rem;
-  margin: 1.25rem 0 0.25rem;
-}
-
-.stat-group.locked {
-  opacity: 0.45;
-}
-
-/* Stats pool: core points placed, then one card per group */
-.pool-summary {
-  margin: 0 0 1rem;
-}
-
-/* The groups side by side, each drawn like the sheet's stat block */
-.pool-stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr));
-  gap: 24px 48px;
-}
-
-.pool-stats .sheet-group.locked .sheet-stat {
-  opacity: 0.45;
-}
-
-/* Core stat: the sheet's round badge with − and + to its right. Each stat has
-   its bar with its own − and + beside it. */
-.core-control,
-.stat-buttons {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.core-control button,
-.stat-buttons button {
-  width: 1.75rem;
-  height: 1.75rem;
-  padding: 0;
-  border-radius: 50%;
-  font-family: var(--body);
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-.pool-stat-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.pool-stat-row .stat-line {
-  flex: 1;
-}
-
-
-.stepper-row {
-  display: grid;
-  grid-template-columns: 1fr auto 4.5rem;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.3rem 0;
-}
-
-.stepper {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-.stepper button {
-  width: 2.25rem;
-  height: 2.25rem;
-  padding: 0;
-  border-radius: 50%;
-  font-family: var(--body);
-  font-size: 1.15rem;
-  font-weight: 600;
-}
-
-.stepper .num {
-  min-width: 1ch;
-  text-align: center;
-}
-
-.stepper-total {
-  text-align: right;
-}
-
-/* Choices */
-
-.choice {
-  margin-bottom: 1rem;
-}
-
-.answer {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-  max-width: 28rem;
-}
-
-.free-text {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.25rem 0.75rem;
-}
-
-.free-text input {
-  flex: 1 1 12rem;
-}
-
-/* Traits: .trait-box */
-
-.filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 1rem;
-  align-items: center;
-  margin: 1rem 0;
-}
-
-.filters input[type="search"] {
-  flex: 1 1 14rem;
-}
-
-.check {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-size: 0.9rem;
-}
-
-.trait-list,
-.picks,
-.sheet-traits,
-.issues,
-.call-response {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.trait-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(256px, 100%), 1fr));
-  gap: 1rem;
-}
-
-.trait-box {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 0 16px 16px;
-  color: var(--black);
-  /* Light like the Kind cards, so the dark name bar reads as their header */
-  background-color: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 12px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: border-color 200ms;
-}
-
-.trait-name {
-  margin: 0 -16px;
-  /* The box no longer clips, so the bar rounds its own top corners */
-  border-radius: 11px 11px 0 0;
-  padding: 10px 16px;
-  background-color: var(--systems);
-  color: var(--white);
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-/* Isekai Traits get the Dreft Kind cards' green bar */
-.trait-box.region-dreft > .trait-name {
-  background-color: var(--dreft);
-}
-
-.trait-main {
-  min-width: 0;
-}
-
-/* The setting mark before a card's name, in the header's text color */
-.setting-icon {
-  display: inline-block;
-  flex-shrink: 0;
-  width: 1.15em;
-  height: 1.15em;
-  margin-right: 0.45em;
-  vertical-align: -0.2em;
-  background-color: currentColor;
-  mask: center / contain no-repeat;
-}
-
-.setting-isekai {
-  mask-image: url("./img/isekai.svg");
-}
-
-.setting-systems {
-  mask-image: url("./img/the_systems.svg");
-}
-
-.trait-box:hover {
-  border-color: var(--medium-gray);
-}
-
-.trait-box.selected {
-  border-color: var(--green);
-  box-shadow: 0 0 0 1px var(--green);
-}
-
-/* Rank stepper on a checked ranked Trait */
-.rank-step {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 0.5rem;
-  cursor: default;
-}
-
-.rank-label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.rank-step button {
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  font-family: var(--body);
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-.rank-step .num {
-  min-width: 1.25em;
-  text-align: center;
-  font-weight: 600;
-}
-
-.trait.rejected {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.trait.rejected:hover {
-  border-color: var(--card-border);
-}
-
-.tags {
-  color: var(--gray);
-}
-
-.reasons {
-  margin: 0.4rem 0 0;
-  padding-left: 1.1rem;
-  color: #b8063a;
-  font-weight: 600;
-}
-
-.picks li {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.6rem 0;
-  border-bottom: 1px solid var(--rule);
-}
-
-/* Validation panel: a small .c-sheet. Its flex-3 column keeps room for the
-   Picks table on narrower desktops. */
-.builder-side {
-  min-width: 260px;
-}
-
-/* Validation panel: a small .c-sheet, in the hero beside the title on
-   desktops */
-
-@media (min-width: 992px) {
-  .builder-hero .panel {
-    position: static;
-    max-height: none;
-    overflow: visible;
-  }
-}
-
-.panel {
-  --rule: rgb(255 255 255 / 18%);
-  position: sticky;
-  top: 1rem;
-  color: var(--panel-text);
-  background: var(--panel);
-  border: 1px solid rgb(255 255 255 / 15%);
-  border-radius: 24px;
-  max-height: calc(100vh - 2rem);
-  overflow-y: auto;
-}
-
-.panel h4 {
-  font-size: 1.1rem;
-  margin: 1.5rem 0 0.75rem;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.panel h4::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background-color: var(--rule);
-}
-
-.panel-toggle {
-  display: none;
-}
-
-/* Character name, a labeled form field at the top of the panel */
-.name-field {
-  margin-bottom: 1.5rem;
-}
-
-.panel-name {
-  margin: 0 0 1.25rem;
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-/* Character step: name beside starting level */
-.character-fields {
-  display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-  gap: 0 24px;
-}
-
-.character-fields .name-field {
-  margin-bottom: 0;
-}
-
-.field-label {
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
-.name-field input,
-.name-field select {
-  width: 100%;
-  font-size: 1rem;
-  padding: 0.6rem 0.75rem;
-}
-
-.name-field input::placeholder {
-  color: var(--medium-gray);
-}
-
-.panel-body {
-  padding: 1.25rem;
-}
-
-/* Status as a stinger: green when legal, red with errors, yellow for warnings */
-.status {
-  display: inline-block;
-  font-family: var(--title);
-  font-size: 1.5rem;
-  letter-spacing: 1px;
-  line-height: 1;
-  padding: 10px 12px 8px;
-}
-
-.status.good {
-  background: var(--green);
-  color: var(--black);
-}
-
-.status.bad {
-  background: var(--red);
-  color: var(--white);
-}
-
-.status.warn {
-  background: var(--yellow);
-  color: var(--black);
-}
-
-.status .warn {
-  color: inherit;
-}
-
-.panel-stats {
-  display: grid;
-  gap: 0.75rem;
-}
-
-.panel-group-head {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.75rem;
-  font-weight: 600;
-  margin-bottom: 0.15rem;
-}
-
-.panel-stat {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.92rem;
-}
-
-.picks-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.88rem;
-}
-
-.picks-table th,
-.picks-table td {
-  text-align: right;
-  padding: 0.2rem 0.15rem;
-}
-
-.picks-table th:first-child,
-.picks-table tbody th {
-  text-align: left;
-  font-weight: 600;
-}
-
-.picks-table thead th {
-  color: var(--panel-soft);
-  font-weight: 300;
-  font-size: 0.7rem;
-}
-
-.issues li {
-  font-size: 0.88rem;
-  padding: 0.4rem 0.6rem;
-  border-left: 3px solid var(--red);
-  background: var(--white);
-  margin-bottom: 0.4rem;
-}
-
-.issues.warn li {
-  border-left-color: var(--yellow);
-}
-
-.issues button.link {
-  color: var(--black);
-  font-weight: 300;
-}
-
-/* Sheet: the sample character sheet (.c-sheet, .c-sheet-box) */
-
-.c-sheet {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  margin-top: 2.5rem;
-  padding: 1rem;
-  background-color: var(--near-white);
-  border: 1px solid var(--light-gray);
-  border-radius: 24px;
-}
-
-.c-sheet-box {
-  padding: 2rem;
-  background-color: var(--white);
-  border: 1px solid var(--light-gray);
-  border-radius: 4px;
-}
-
-.c-sheet-box > .subhead:first-child {
-  margin-top: 0;
-}
-
-.level-badge {
-  position: absolute;
-  top: -35px;
-  left: -35px;
-  z-index: 1;
-  width: 72px;
-  height: 72px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background-color: var(--black);
-  color: var(--white);
-  font-size: 2.5rem;
-  font-weight: 600;
-}
-
-.sheet-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 0.75rem 2rem;
-}
-
-.sheet-head .lede {
-  margin-bottom: 0;
-}
-
-/* HP | VP | SP, like the site's sample sheet */
-.sheet-resources {
-  display: flex;
-  margin: 0.5rem 0 0;
-  font-size: 1.1rem;
-}
-
-.sheet-resources span + span {
-  margin-left: 0.75rem;
-  padding-left: 0.75rem;
-  border-left: 1px solid var(--rule);
-}
-
-.sheet-actions {
-  display: flex;
-  gap: 0.75rem;
-  align-items: center;
-}
-
-.sheet-body {
-  display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 3fr);
-  gap: 48px;
-}
-
-.sheet-stats {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.sheet-group {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.sheet-group-head {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.sheet-group-head .rule {
-  flex: 1;
-  margin: 0;
-}
-
-.sheet-side .rule {
-  margin-top: 0;
-}
-
-.sheet-side .rule + * + .rule {
-  margin-top: 1.5rem;
-}
-
-.stat-badge {
-  flex-shrink: 0;
-  width: 2.75rem;
-  height: 2.75rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background-color: var(--black);
-  color: var(--white);
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-.sheet-stat {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-/* The sheet's circles and squares hold a set size, shrinking only when the
-   column is too narrow for all 20. */
-.sheet-stat .stat-line {
-  grid-template-columns: repeat(20, minmax(0, 16px));
-  gap: 4px;
-}
-
-/* .stat-line and .stat: circles on odd points, squares on even */
-.stat-line {
-  display: grid;
-  width: 100%;
-  grid-template-columns: repeat(20, 1fr);
-  gap: 1.5%;
-}
-
-.stat {
-  aspect-ratio: 1 / 1;
-  width: 100%;
-}
-
-.stat.dot {
-  border-radius: 50%;
-}
-
-.stat.square {
-  border-radius: 4px;
-}
-
-.stat.default {
-  background-color: var(--medium-gray);
-}
-
-.stat.filled {
-  background-color: var(--black);
-}
-
-.stat.empty {
-  border: 2px solid var(--gray);
-}
-
-.stat.unavailable {
-  border: 2px solid var(--red);
-}
-
-.stat.over {
-  background-color: var(--red);
-}
-
-/* .empty-list.call-response */
-.call-response li {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 0.5rem;
-}
-
-.sheet-traits {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1rem;
-}
-
-.effect {
-  font-size: 0.9rem;
-}
-
-/* Below 1300px the tabs share a narrower hero column with the character box,
-   so they tighten and drop their step numbers to stay on one row. */
-@media (min-width: 992px) and (max-width: 1299.98px) {
-  .rpg-tab {
-    font-size: 1.25rem;
-    padding: 0.6rem;
-  }
-
-  .rpg-tab .step-n {
-    display: none;
-  }
-}
-
-/* Below the site's lg breakpoint: one column, the panel docks to the bottom. */
-
-@media (max-width: 991px) {
-  .builder-row {
-    gap: 0;
-  }
-
-  .builder-main {
-    flex: 1 100%;
-  }
-
-  .builder-side {
-    flex: none;
-    min-width: 0;
-  }
-
-  .builder-panel {
-    padding-bottom: 120px;
-  }
-
-  .panel {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    top: auto;
-    z-index: 10;
-    border-radius: 24px 24px 0 0;
-    border-bottom: none;
-    max-height: 75vh;
-    box-shadow: 0 -6px 24px rgb(0 0 0 / 25%);
-  }
-
-  .panel-toggle {
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    align-items: center;
-    gap: 0.75rem;
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    padding: 0.6rem 16px;
-    border-radius: 0;
-    background: var(--panel);
-    color: var(--panel-text);
+  /* Text buttons look like the site's lore links. */
+  button.link {
     font-family: var(--body);
-    font-size: 0.9rem;
+    font-size: inherit;
     letter-spacing: 0;
-    border-bottom: 1px solid rgb(255 255 255 / 15%);
-  }
-
-  .panel-toggle:hover:not(:disabled) {
-    background: var(--panel-box);
-  }
-
-  /* The toggle shows the name on mobile, styled like the desktop name. */
-  .panel-toggle-name {
-    font-size: 1.25rem;
+    line-height: inherit;
+    background: none;
+    border: none;
+    padding: 0;
+    text-align: left;
+    color: var(--frontiers-lore);
     font-weight: 600;
-    text-transform: none;
+    text-decoration: underline dotted;
+    text-underline-offset: 3px;
+
+    &:hover:not(:disabled) {
+      background: none;
+      text-decoration-style: solid;
+    }
   }
 
-  .panel-name {
-    display: none;
+  .builder-panel :focus-visible {
+    outline-color: var(--portfolio-white);
   }
 
-  .panel:not(.open) .panel-body {
-    display: none;
+  .builder-panel :is(.card, .level-card, .choice, .trait-box, .c-sheet, .notice) :focus-visible {
+    outline-color: var(--portfolio-black);
   }
 
-  .panel-body {
-    padding: 1rem 16px 1.5rem;
+  .muted {
+    color: var(--portfolio-gray);
   }
 
-  .panel-stats {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.5rem 0.75rem;
+  /* Bootstrap's .small, at the site's .tiny-text size */
+  .small {
+    font-size: 0.75rem;
+    font-weight: inherit;
   }
 
-  .panel-stat {
-    font-size: 0.8rem;
+  .good {
+    color: var(--good-on-light);
   }
 
-  .sheet-body {
+  .bad {
+    color: var(--portfolio-red);
+  }
+
+  .num {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .lede {
+    margin-bottom: 1.5rem;
+  }
+
+  .hint {
+    color: var(--portfolio-gray);
+    font-size: 0.9rem;
+  }
+
+  .empty {
+    color: var(--portfolio-gray);
+    font-style: italic;
+  }
+
+  /* Heading with a rule running off to the right, like the site's
+     .line-container + .line, but on any background */
+  .rule,
+  .subhead {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    &::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background-color: var(--rule);
+    }
+  }
+
+  .subhead {
+    font-size: 1.5rem;
+    font-weight: 300;
+    margin: 2.5rem 0 1.25rem;
+
+    .muted {
+      font-size: 0.9rem;
+    }
+  }
+
+  /* A step box's first group title sits at the top of the box */
+  .kind-group:first-child .subhead {
+    margin-top: 0;
+  }
+
+  /* Hero: the site's black section with the green title */
+
+  /* Content sits in the site's .container rows. The hero's row is the title,
+     describe box and step tabs (flex-11) beside the character box (flex-3),
+     48px apart. */
+  .builder-hero {
+    display: grid;
+    /* One column the step tabs can scroll inside, instead of widening it */
     grid-template-columns: minmax(0, 1fr);
-    gap: 32px;
-  }
-
-  .level-badge {
-    top: -24px;
-    left: -8px;
-    width: 56px;
-    height: 56px;
-    font-size: 1.75rem;
-  }
-}
-
-@media only screen and (max-width: 992px) {
-  .hero-title {
-    font-size: 3.8rem;
-  }
-
-  .hero-sub {
-    font-size: 2.5rem;
-  }
-
-  h2 {
-    font-size: 2rem;
-  }
-}
-
-@media only screen and (max-width: 767px) {
-  .builder-panel.section.unlimited {
-    padding: 32px 0 120px;
-  }
-
-  .tech-fields {
-    padding: 0 16px 24px;
-  }
-
-  .tech-fields.step-box {
-    padding-top: 16px;
-  }
-}
-
-@media (max-width: 575px) {
-  .hero-statement {
-    margin: 32px 0 28px;
-  }
-
-  .hero-title {
-    font-size: 3.25rem;
-  }
-
-  .hero-sub {
-    font-size: 2rem;
-  }
-
-  h2 {
-    font-size: 1.9rem;
-  }
-
-  .rpg-tabs {
+    gap: 24px;
+    color: var(--portfolio-white);
     padding-top: 32px;
   }
 
-  .rpg-tab-list {
-    gap: 0.35rem;
+  /* The tabs sit at the bottom of the left column, on the panel, however tall
+     the character box makes the row. */
+  .hero-main {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .builder-hero .builder-side {
+    padding-bottom: 32px;
+  }
+
+  .hero-bar {
+    display: flex;
+    justify-content: flex-start;
+    gap: 1.5rem;
+  }
+
+  button.hero-link {
+    background: none;
+    padding: 0;
+    font-size: 1.5rem;
+    color: var(--portfolio-white);
+
+    &:hover:not(:disabled) {
+      background: none;
+      color: var(--frontiers-green);
+    }
+  }
+
+  /* New, once clicked: "Clear this build?" with Yes and Cancel */
+  .hero-confirm {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 1rem;
+    color: var(--portfolio-white);
+  }
+
+  /* .title.hero-title.frontiers-accent over .title.section-title */
+  .builder-statement {
+    margin: 48px 0 40px;
+    line-height: 1;
+
+    > * {
+      margin: 0;
+      font-weight: normal;
+    }
+  }
+
+  /* Step tabs: the site's .rpg-tab bar along the bottom of the hero, sitting
+     on the panel */
+  .builder-tabs {
+    margin-top: auto;
+    padding-top: 48px;
+    overflow-x: auto;
+    scrollbar-width: none;
   }
 
   .rpg-tab {
-    font-size: 1.2rem;
-    padding: 0.6rem 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    white-space: nowrap;
+    font-size: 1.25rem;
   }
 
-  .c-sheet-box {
+  .rpg-tab.is-active {
+    background: var(--panel);
+    /* The site's active tab is black on white, with !important */
+    color: var(--portfolio-white) !important;
+    box-shadow: 0 1px 0 var(--panel);
+  }
+
+  .step-n {
+    opacity: 0.6;
+  }
+
+  /* Bootstrap's .badge, as a red count */
+  .badge {
+    font-family: var(--body);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 1;
+    background: var(--portfolio-red);
+    color: var(--portfolio-white);
+    border-radius: 999px;
+    padding: 0.15rem 0.45rem;
+  }
+
+  /* Describe your character (the AI layer), in the hero */
+
+  .describe {
+    max-width: 760px;
+
+    .hint {
+      color: #c9c9c9;
+    }
+
+    button.primary {
+      background: var(--frontiers-green);
+      color: var(--portfolio-black);
+
+      &:hover:not(:disabled) {
+        background-color: color-mix(in srgb, var(--frontiers-green) 75%, var(--portfolio-white));
+      }
+    }
+
+    button.link {
+      color: var(--frontiers-lore-on-black);
+    }
+
+    .notice {
+      margin: 0.75rem 0 0;
+      color: var(--portfolio-black);
+    }
+  }
+
+  /* The site's .rpg-search-input, grown into a text box */
+  .describe textarea.rpg-search-input {
+    height: auto;
+    padding: 0.7rem 1rem;
+    margin: 0.75rem 0;
+    font-size: inherit;
+    resize: vertical;
+  }
+
+  .describe-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  /* Build it, while building: the stopwatch and a running clock */
+  .build-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+  }
+
+  .build-button:disabled[aria-busy="true"] {
+    opacity: 1;
+  }
+
+  .stopwatch-icon {
+    width: 1em;
+    height: 1em;
+    background-color: currentColor;
+    mask: url("./img/stopwatch.svg") center / contain no-repeat;
+  }
+
+  .describe-progress {
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.9rem;
+    color: #c9c9c9;
+  }
+
+  .describe-result {
+    border-top: 1px solid var(--rule-on-black);
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+  }
+
+  .describe-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .describe-status {
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .describe-status.good {
+    color: var(--frontiers-green);
+  }
+
+  .describe-status.bad {
+    color: #ff5c86;
+  }
+
+  .ai-reasons {
+    margin: 0.5rem 0 0;
+    padding-left: 1.1rem;
+
+    li {
+      margin: 0.2rem 0;
+    }
+  }
+
+  /* Dark panel: gray behind the steps, light text, light rules */
+
+  .builder-panel {
+    --rule: rgb(255 255 255 / 18%);
+    /* Card edges fade into the dark box instead of outlining it in light gray */
+    --card-border: #5e5e5e;
+    background: var(--panel);
+    color: var(--panel-text);
+  }
+
+  /* The site's .section.unlimited:last-child drops the bottom padding */
+  .builder-panel.unlimited {
+    padding-bottom: 100px;
+  }
+
+  .builder-panel :is(.muted, .hint, .empty, .tags) {
+    color: var(--panel-soft);
+  }
+
+  /* Green text on the dark panel. Status stamps (.status.good) keep their own colors. */
+  .builder-panel .good:not(.status) {
+    color: var(--panel-good);
+  }
+
+  .builder-panel :is(.notice, .c-sheet) {
+    border-color: var(--card-border);
+  }
+
+  /* Cards, notices and the sheet stay light, with their own dark text */
+  .builder-panel :is(.card, .level-card, .choice, .trait-box, .c-sheet, .notice) {
+    --rule: rgb(0 0 0 / 15%);
+    color: var(--portfolio-black);
+
+    :is(.muted, .hint, .empty, .tags) {
+      color: var(--portfolio-gray);
+    }
+
+    .good:not(.status) {
+      color: var(--good-on-light);
+    }
+  }
+
+  /* The Stats step's bars sit on the dark box, so they flip: placed points and
+     core badges light, level 0 points mid gray, open slots a lighter outline. */
+  .builder-panel .pool-stats {
+    .stat-badge {
+      background-color: var(--portfolio-near-white);
+      color: var(--portfolio-black);
+    }
+
+    .stat.filled {
+      background-color: var(--portfolio-near-white);
+    }
+
+    .stat.default {
+      background-color: #7d7d7d;
+    }
+
+    .stat.empty {
+      border-color: #8a8a8a;
+    }
+  }
+
+  .builder-panel :is(.core-control, .stat-buttons) button {
+    background: #6b6b6b;
+
+    &:hover:not(:disabled) {
+      background: #858585;
+    }
+  }
+
+  .panel :is(.muted, .hint, .empty) {
+    color: var(--panel-soft);
+  }
+
+  .panel .good:not(.status) {
+    color: var(--panel-good);
+  }
+
+  /* The sheet goes dark on screen too: the step box's gray around darker inner
+     boxes, light text, and the same flipped bars and badges as the Stats step.
+     Its Trait cards stay light like every card. Printing keeps the light sheet. */
+  @media screen {
+    .builder-panel .c-sheet {
+      --rule: rgb(255 255 255 / 18%);
+      color: var(--panel-text);
+      background-color: var(--panel-box);
+
+      .c-sheet-box {
+        background-color: var(--panel);
+        border-color: rgb(255 255 255 / 12%);
+      }
+
+      :is(.muted, .hint, .empty, .tags) {
+        color: var(--panel-soft);
+      }
+
+      .good:not(.status) {
+        color: var(--panel-good);
+      }
+
+      :focus-visible {
+        outline-color: var(--portfolio-white);
+      }
+
+      .trait-box {
+        --rule: rgb(0 0 0 / 15%);
+
+        :is(.muted, .hint, .empty, .tags) {
+          color: var(--portfolio-gray);
+        }
+      }
+
+      :is(.level-badge, .stat-badge) {
+        background-color: var(--portfolio-near-white);
+        color: var(--portfolio-black);
+      }
+
+      .stat.filled {
+        background-color: var(--portfolio-near-white);
+      }
+
+      .stat.default {
+        background-color: #7d7d7d;
+      }
+
+      .stat.empty {
+        border-color: #8a8a8a;
+      }
+    }
+  }
+
+  .notice {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    background: var(--portfolio-near-white);
+    border: 1px solid var(--portfolio-light-gray);
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .notice.bad {
+    border-color: var(--portfolio-red);
+    color: var(--portfolio-black);
+    background: rgb(235 8 68 / 6%);
+  }
+
+  /* Step title, then the stinger, then the step's description */
+  .step-head h2 {
+    margin-bottom: 1rem;
+  }
+
+  /* The site's black .copy.stinger, with the step's errors to its right */
+  .stinger-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 24px;
+    margin-bottom: 1rem;
+
+    .stinger {
+      flex-shrink: 0;
+    }
+  }
+
+  .step-head .lede {
+    margin-top: 0;
+  }
+
+  /* What's wrong on this step, side by side beside the stinger, as red chips
+     shaped like the site's Trait badges (.trait-box .badge in css/rpg.css) */
+  .step-issues {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1 1 16rem;
+  }
+
+  .issues.step-issues li {
+    margin: 0;
+    padding: 0.5rem 1rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--portfolio-red);
+    color: var(--portfolio-white);
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .pager {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3rem;
+  }
+
+  /* Boxed step content: the site's .tech-fields box, which holds the Setting
+     tab's sub-tabs, in the panel's lighter gray. The Traits step keeps its
+     Universal/Background sub-tabs along the top edge; the other steps have no
+     tabs, so they get top padding instead. */
+  .tech-fields-light {
+    background: var(--panel-box);
+    border-color: rgb(255 255 255 / 22%);
+  }
+
+  .tech-fields.step-box {
+    padding-top: 24px;
+  }
+
+  /* The first slot heading in a box sits at its top */
+  .step-box > .slot:first-child > .subhead:first-child {
+    margin-top: 0;
+  }
+
+  /* Kind and package cards, at least 360px wide */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr));
+    gap: 1rem;
+  }
+
+  /* Bootstrap's .card, redrawn like the site's sheet boxes */
+  .card,
+  .level-card,
+  .choice {
+    position: relative;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 16px;
+  }
+
+  .card {
+    display: grid;
+    align-content: start;
+    gap: 16px;
+    cursor: pointer;
+    transition: border-color 200ms;
+
+    &:hover {
+      border-color: var(--portfolio-medium-gray);
+    }
+
+    /* The grid gap does the spacing between a card's rows */
+    > * {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+
+  .card.selected,
+  .trait-box.selected {
+    border-color: var(--portfolio-green);
+    /* Outside the border, so a card's header bar can't cover it */
+    box-shadow: 0 0 0 1px var(--portfolio-green);
+  }
+
+  /* A check in a green badge, the stinger's green */
+  .card.selected::after,
+  .trait-box.selected::after {
+    content: "✓";
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--portfolio-green);
+    color: var(--portfolio-white);
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  /* Kind cards run wider than the other steps' cards */
+  .kind-group .cards {
+    grid-template-columns: repeat(auto-fill, minmax(min(400px, 100%), 1fr));
+  }
+
+  .card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Every character card (Kind, package, choice; Trait cards have their own
+     .trait-name) opens with a header bar in its region color: Dreft's green
+     for Isekai, black for the rest */
+  .headed > .card-head {
+    margin: -16px -16px 0;
+    padding: 10px 16px;
+    align-items: center;
+    border-radius: 11px 11px 0 0;
+    background: var(--portfolio-black);
+    color: var(--portfolio-white);
+
+    h3 {
+      margin: 0;
+    }
+
+    .chip-muted,
+    .muted {
+      background: rgb(255 255 255 / 15%);
+      color: var(--portfolio-white);
+    }
+
+    .muted {
+      background: none;
+      opacity: 0.75;
+    }
+  }
+
+  .headed.region-dreft > .card-head {
+    background: var(--frontiers-dreft);
+  }
+
+  .features {
+    padding-left: 1.1rem;
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+
+    li {
+      margin: 0.25rem 0;
+    }
+  }
+
+  /* Chips: the side nav's black badges */
+  .chip {
+    display: inline-block;
+    background: var(--portfolio-black);
+    color: var(--portfolio-white);
+    border-radius: 4px;
+    padding: 0.2rem 0.5rem;
+    margin: 0.15rem 0.25rem 0.15rem 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .chip-muted {
+    background: var(--portfolio-light-gray);
+    color: var(--portfolio-black);
+  }
+
+  .chip-accent {
+    background: var(--portfolio-gray);
+  }
+
+  .chip-bad {
+    background: var(--portfolio-red);
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  /* A package's lists sit in the card's 16px rhythm; within a list, the label
+     (Grants, Choose, Background list) sits above chips spaced by gaps alone */
+  .grants {
+    display: grid;
+    gap: 16px;
+
+    > div {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .label {
+      flex-basis: 100%;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .chip,
+    > p {
+      margin: 0;
+    }
+  }
+
+  .stat-ranges {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
+    gap: 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  .stat-ranges-group {
+    font-weight: 600;
+    margin-bottom: 0.15rem;
+  }
+
+  .stat-range {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.25rem;
+  }
+
+  /* A plain rule between a card's rows, like the line above a Kind's stats */
+  .card-rule {
+    width: 100%;
+    border: 0;
+    border-top: 1px solid var(--rule);
+    opacity: 1;
+  }
+
+  /* Levels */
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .field.inline {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .levels {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr));
+    gap: 1rem;
+  }
+
+  /* Physical, Social and Mental stacked in each level card */
+  .stat-group h4 {
+    font-size: 1.1rem;
+    margin: 1.25rem 0 0.25rem;
+  }
+
+  .stat-group.locked {
+    opacity: 0.45;
+  }
+
+  /* Stats pool: core points placed, then one card per group */
+  .pool-summary {
+    margin: 0 0 1rem;
+  }
+
+  /* The groups side by side, each drawn like the sheet's stat block */
+  .pool-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr));
+    gap: 24px 48px;
+  }
+
+  .pool-stats .sheet-group.locked .sheet-stat {
+    opacity: 0.45;
+  }
+
+  /* Core stat: the sheet's round badge with − and + to its right. Each stat has
+     its bar with its own − and + beside it. */
+  .core-control,
+  .stat-buttons {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    button {
+      width: 1.75rem;
+      height: 1.75rem;
+      padding: 0;
+      border-radius: 50%;
+      font-family: var(--body);
+      font-size: 1rem;
+      font-weight: 600;
+    }
+  }
+
+  .pool-stat-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .stat-line {
+      flex: 1;
+    }
+  }
+
+  .stepper-row {
+    display: grid;
+    grid-template-columns: 1fr auto 4.5rem;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 0;
+  }
+
+  .stepper {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+
+    button {
+      width: 2.25rem;
+      height: 2.25rem;
+      padding: 0;
+      border-radius: 50%;
+      font-family: var(--body);
+      font-size: 1.15rem;
+      font-weight: 600;
+    }
+
+    .num {
+      min-width: 1ch;
+      text-align: center;
+    }
+  }
+
+  .stepper-total {
+    text-align: right;
+  }
+
+  /* Choices */
+
+  .choice {
+    margin-bottom: 1rem;
+  }
+
+  .answer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    max-width: 28rem;
+  }
+
+  .free-text {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 0.75rem;
+
+    input {
+      flex: 1 1 12rem;
+    }
+  }
+
+  /* Traits: the site's .trait-box */
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    align-items: center;
+    margin: 1rem 0;
+
+    input[type="search"] {
+      flex: 1 1 14rem;
+    }
+  }
+
+  .check {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.9rem;
+  }
+
+  .trait-list,
+  .picks,
+  .sheet-traits,
+  .issues,
+  .call-response {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .trait-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(256px, 100%), 1fr));
+    gap: 1rem;
+  }
+
+  /* Light like the Kind cards, so the dark name bar reads as their header. It
+     doesn't clip, so a selected card's check can sit over its corner. */
+  .trait-box {
+    position: relative;
+    background-color: var(--card-bg);
+    border-color: var(--card-border);
+    border-radius: 12px;
+    overflow: visible;
+    cursor: pointer;
+    transition: border-color 200ms;
+
+    &:hover {
+      border-color: var(--portfolio-medium-gray);
+    }
+
+    .trait-name {
+      /* The bar rounds its own top corners */
+      border-radius: 11px 11px 0 0;
+      padding: 10px 16px;
+      background-color: var(--portfolio-black);
+    }
+  }
+
+  /* Isekai Traits get the Dreft Kind cards' green bar */
+  .trait-box.region-dreft > .trait-name {
+    background-color: var(--frontiers-dreft);
+  }
+
+  .trait-main {
+    min-width: 0;
+  }
+
+  /* The setting mark before a card's name, in the header's text color */
+  .setting-icon {
+    display: inline-block;
+    flex-shrink: 0;
+    width: 1.15em;
+    height: 1.15em;
+    margin-right: 0.45em;
+    vertical-align: -0.2em;
+    background-color: currentColor;
+    mask: center / contain no-repeat;
+  }
+
+  .setting-isekai {
+    mask-image: url("./img/isekai.svg");
+  }
+
+  .setting-systems {
+    mask-image: url("./img/the_systems.svg");
+  }
+
+  /* Rank stepper on a checked ranked Trait */
+  .rank-step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 0.5rem;
+    cursor: default;
+
+    button {
+      width: 24px;
+      height: 24px;
+      padding: 0;
+      font-family: var(--body);
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .num {
+      min-width: 1.25em;
+      text-align: center;
+      font-weight: 600;
+    }
+  }
+
+  .rank-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .trait.rejected {
+    opacity: 0.6;
+    cursor: not-allowed;
+
+    &:hover {
+      border-color: var(--card-border);
+    }
+  }
+
+  .tags {
+    color: var(--portfolio-gray);
+  }
+
+  .reasons {
+    margin: 0.4rem 0 0;
+    padding-left: 1.1rem;
+    color: #b8063a;
+    font-weight: 600;
+  }
+
+  .picks li {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  /* Validation panel: a small .c-sheet, in the hero beside the title on
+     desktops. Its flex-3 column keeps room for the Picks table on narrower
+     desktops. */
+  .builder-side {
+    min-width: 260px;
+  }
+
+  .panel {
+    --rule: rgb(255 255 255 / 18%);
+    position: sticky;
+    top: 1rem;
+    color: var(--panel-text);
+    background: var(--panel);
+    border: 1px solid rgb(255 255 255 / 15%);
+    border-radius: 24px;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+
+    h4 {
+      font-size: 1.1rem;
+      margin: 1.5rem 0 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      &::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background-color: var(--rule);
+      }
+    }
+  }
+
+  @media (min-width: 992px) {
+    .builder-hero .panel {
+      position: static;
+      max-height: none;
+      overflow: visible;
+    }
+  }
+
+  .panel-toggle {
+    display: none;
+  }
+
+  /* Character name, a labeled form field at the top of the panel */
+  .name-field {
+    margin-bottom: 1.5rem;
+
+    input,
+    select {
+      width: 100%;
+      font-size: 1rem;
+      padding: 0.6rem 0.75rem;
+    }
+
+    input::placeholder {
+      color: var(--portfolio-medium-gray);
+    }
+  }
+
+  .panel-name {
+    margin: 0 0 1.25rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+  /* Character step: name beside starting level */
+  .character-fields {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    gap: 0 24px;
+
+    .name-field {
+      margin-bottom: 0;
+    }
+  }
+
+  .field-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .panel-body {
     padding: 1.25rem;
   }
 
-  .panel-stats {
-    grid-template-columns: minmax(0, 1fr);
+  /* Status as a stinger: green when legal, red with errors, yellow for warnings */
+  .status {
+    display: inline-block;
+    font-family: var(--title);
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+    line-height: 1;
+    padding: 10px 12px 8px;
+
+    .warn {
+      color: inherit;
+    }
   }
 
-  .cards,
-  .levels {
-    grid-template-columns: minmax(0, 1fr);
+  .status.good {
+    background: var(--portfolio-green);
+    color: var(--portfolio-black);
+  }
+
+  .status.bad {
+    background: var(--portfolio-red);
+    color: var(--portfolio-white);
+  }
+
+  .status.warn {
+    background: var(--portfolio-yellow);
+    color: var(--portfolio-black);
+  }
+
+  .panel-stats {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .panel-group-head {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-bottom: 0.15rem;
+  }
+
+  .panel-stat {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.92rem;
+  }
+
+  .picks-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+
+    th,
+    td {
+      text-align: right;
+      padding: 0.2rem 0.15rem;
+    }
+
+    th:first-child,
+    tbody th {
+      text-align: left;
+      font-weight: 600;
+    }
+
+    thead th {
+      color: var(--panel-soft);
+      font-weight: 300;
+      font-size: 0.7rem;
+    }
+  }
+
+  .issues li {
+    font-size: 0.88rem;
+    padding: 0.4rem 0.6rem;
+    border-left: 3px solid var(--portfolio-red);
+    background: var(--portfolio-white);
+    margin-bottom: 0.4rem;
+  }
+
+  .issues.warn li {
+    border-left-color: var(--portfolio-yellow);
+  }
+
+  .issues button.link {
+    color: var(--portfolio-black);
+    font-weight: 300;
+  }
+
+  /* Sheet: the site's sample character sheet (.c-sheet, .c-sheet-box) */
+
+  .c-sheet {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-top: 2.5rem;
+  }
+
+  .c-sheet-box > .subhead:first-child {
+    margin-top: 0;
+  }
+
+  /* The site's .level-badge and .stat-badge, at a fixed size */
+  .level-badge {
+    z-index: 1;
+    width: 72px;
+    height: 72px;
+    padding: 0;
+    line-height: 1;
+  }
+
+  .stat-badge {
+    flex-shrink: 0;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0;
+    line-height: 1;
+  }
+
+  .sheet-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 0.75rem 2rem;
+
+    .lede {
+      margin-bottom: 0;
+    }
+  }
+
+  /* HP | VP | SP, like the site's sample sheet */
+  .sheet-resources {
+    display: flex;
+    margin: 0.5rem 0 0;
+    font-size: 1.1rem;
+
+    span + span {
+      margin-left: 0.75rem;
+      padding-left: 0.75rem;
+      border-left: 1px solid var(--rule);
+    }
+  }
+
+  .sheet-actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  .sheet-body {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 3fr);
+    gap: 48px;
+  }
+
+  .sheet-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .sheet-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .sheet-group-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .rule {
+      flex: 1;
+      margin: 0;
+    }
+  }
+
+  .sheet-side .rule {
+    margin-top: 0;
+  }
+
+  .sheet-side .rule + * + .rule {
+    margin-top: 1.5rem;
+  }
+
+  .sheet-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  /* The sheet's circles and squares (the site's .stat-line) hold a set size,
+     shrinking only when the column is too narrow for all 20. */
+  .sheet-stat .stat-line {
+    grid-template-columns: repeat(20, minmax(0, 16px));
+    gap: 4px;
+  }
+
+  /* A point past the stat's maximum */
+  .stat.over {
+    background-color: var(--portfolio-red);
+  }
+
+  .call-response li {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.5rem;
+  }
+
+  .sheet-traits {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+
+  .effect {
+    font-size: 0.9rem;
+  }
+
+  /* Below 1300px the tabs share a narrower hero column with the character box,
+     so they tighten and drop their step numbers to stay on one row. */
+  @media (min-width: 992px) and (max-width: 1299.98px) {
+    .rpg-tab {
+      padding: 0.6rem;
+    }
+
+    .rpg-tab .step-n {
+      display: none;
+    }
+  }
+
+  /* Below the site's lg breakpoint: one column, the panel docks to the bottom. */
+  @media (max-width: 991px) {
+    .builder-row {
+      gap: 0;
+    }
+
+    .builder-main {
+      flex: 1 100%;
+    }
+
+    .builder-side {
+      flex: none;
+      min-width: 0;
+    }
+
+    .builder-panel.unlimited {
+      padding-bottom: 120px;
+    }
+
+    .panel {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      top: auto;
+      z-index: 10;
+      border-radius: 24px 24px 0 0;
+      border-bottom: none;
+      max-height: 75vh;
+      box-shadow: 0 -6px 24px rgb(0 0 0 / 25%);
+    }
+
+    .panel-toggle {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      padding: 0.6rem 16px;
+      border-radius: 0;
+      background: var(--panel);
+      color: var(--panel-text);
+      font-family: var(--body);
+      font-size: 0.9rem;
+      letter-spacing: 0;
+      border-bottom: 1px solid rgb(255 255 255 / 15%);
+
+      &:hover:not(:disabled) {
+        background: var(--panel-box);
+      }
+    }
+
+    /* The toggle shows the name on mobile, styled like the desktop name. */
+    .panel-toggle-name {
+      font-size: 1.25rem;
+      font-weight: 600;
+      text-transform: none;
+    }
+
+    .panel-name {
+      display: none;
+    }
+
+    .panel:not(.open) .panel-body {
+      display: none;
+    }
+
+    .panel-body {
+      padding: 1rem 16px 1.5rem;
+    }
+
+    .panel-stats {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.5rem 0.75rem;
+    }
+
+    .panel-stat {
+      font-size: 0.8rem;
+    }
+
+    .sheet-body {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 32px;
+    }
+
+    .level-badge {
+      top: -24px;
+      left: -8px;
+      width: 56px;
+      height: 56px;
+      font-size: 1.75rem;
+    }
+  }
+
+  @media only screen and (max-width: 992px) {
+    h2 {
+      font-size: 2rem;
+    }
+  }
+
+  @media only screen and (max-width: 767px) {
+    .builder-panel.unlimited {
+      padding: 32px 0 120px;
+    }
+
+    .tech-fields {
+      padding: 0 16px 24px;
+    }
+
+    .tech-fields.step-box {
+      padding-top: 16px;
+    }
+  }
+
+  @media (max-width: 575px) {
+    .builder-statement {
+      margin: 32px 0 28px;
+    }
+
+    h2 {
+      font-size: 1.9rem;
+    }
+
+    .builder-tabs {
+      padding-top: 32px;
+      gap: 0.35rem;
+    }
+
+    .rpg-tab {
+      font-size: 1.2rem;
+      padding: 0.6rem 0.8rem;
+    }
+
+    .c-sheet-box {
+      padding: 1.25rem;
+    }
+
+    .panel-stats {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .cards,
+    .levels {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media print {
+    .builder-hero,
+    .builder-side,
+    .pager,
+    .notice,
+    .step-head,
+    .sheet-actions button {
+      display: none !important;
+    }
+
+    .builder-panel.unlimited {
+      padding: 0;
+      /* Printed sheets stay on white paper */
+      background: var(--portfolio-white);
+      color: var(--portfolio-black);
+    }
+
+    .builder-panel .container {
+      max-width: none;
+    }
+
+    .builder-panel .flex-2 {
+      display: none !important;
+    }
+
+    .c-sheet {
+      margin-top: 40px;
+    }
   }
 }
 
 @media print {
-  .rpg-night,
-  .builder-hero,
-  .builder-side,
-  .pager,
-  .notice,
-  .step-head,
-  .sheet-actions button {
-    display: none !important;
-  }
-
-  html {
-    background: var(--white);
-  }
-
-  .builder-panel {
-    padding: 0;
-    /* Printed sheets stay on white paper */
-    background: var(--white);
-    color: var(--black);
-  }
-
-  .builder-panel .container {
-    max-width: none;
-  }
-
-  .builder-panel .flex-2 {
-    display: none !important;
-  }
-
-  .c-sheet {
-    margin-top: 40px;
+  html:has(.sf-creator) {
+    background: var(--portfolio-white);
   }
 }

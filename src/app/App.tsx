@@ -108,8 +108,8 @@ export function App() {
   const i = STEPS.indexOf(step);
 
   return (
-    <div className="app">
-      <header className="section builder-hero">
+    <div className="sf-creator">
+      <header className="builder-hero">
         <div className="container hero-bar">
           <button className="hero-link" onClick={exportBuild}>Export</button>
           <button className="hero-link" onClick={() => fileInput.current?.click()}>Import</button>
@@ -126,9 +126,9 @@ export function App() {
         </div>
         <div className="container d-flex flex-gap-48 builder-row">
           <div className="flex-11 builder-main hero-main">
-            <div className="hero-statement">
-              <h1 className="hero-title">Strange Frontiers</h1>
-              <p className="hero-sub">Character Builder</p>
+            <div className="builder-statement">
+              <h1 className="title hero-title frontiers-accent">Strange Frontiers</h1>
+              <p className="title section-title">Character Builder</p>
             </div>
 
             <DescribeBox
@@ -140,7 +140,7 @@ export function App() {
               onDismiss={() => setSaved((s) => ({ ...s, ai: undefined }))}
             />
 
-            <nav className="rpg-tabs rpg-tab-list" aria-label="Steps">
+            <nav className="builder-tabs rpg-tab-list" aria-label="Steps">
               {STEPS.map((s, n) => (
                 <button
                   key={s}
