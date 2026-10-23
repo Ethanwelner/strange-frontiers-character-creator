@@ -247,13 +247,19 @@
   /* Content sits in the site's .container rows. The hero's row is the title,
      describe box and step tabs (flex-11) beside the character box (flex-3),
      48px apart. */
+  /* At least as tall as the site's heroes (.short-section, 75vh), counting the
+     room the page leaves above it for the site's nav (--sf-creator-top, set by
+     creator.php's css/rpg.css). The toolbar sits at the top; the title, describe
+     box and character box are centered below it, and the tabs sit at the bottom. */
   .builder-hero {
     display: grid;
     /* One column the step tabs can scroll inside, instead of widening it */
     grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
     gap: 24px;
+    min-height: 75vh;
     color: var(--portfolio-white);
-    padding-top: 32px;
+    padding-top: var(--sf-creator-top, 32px);
   }
 
   /* The tabs sit at the bottom of the left column, on the panel, however tall
@@ -264,7 +270,8 @@
   }
 
   .builder-hero .builder-side {
-    padding-bottom: 32px;
+    align-self: center;
+    padding: 32px 0;
   }
 
   .hero-bar {
@@ -294,8 +301,10 @@
   }
 
   /* .title.hero-title.frontiers-accent over .title.section-title */
+  /* Auto margins above it and above the tabs center it and the describe box. */
   .builder-statement {
-    margin: 48px 0 40px;
+    margin: auto 0 40px;
+    padding-top: 48px;
     line-height: 1;
 
     > * {
@@ -1590,7 +1599,8 @@
 
   @media (max-width: 575px) {
     .builder-statement {
-      margin: 32px 0 28px;
+      margin-bottom: 28px;
+      padding-top: 32px;
     }
 
     h2 {
