@@ -1574,6 +1574,13 @@ button.hero-link:hover:not(:disabled) {
   gap: 6px;
 }
 
+/* The sheet's circles and squares hold a set size, shrinking only when the
+   column is too narrow for all 20. */
+.sheet-stat .stat-line {
+  grid-template-columns: repeat(20, minmax(0, 16px));
+  gap: 4px;
+}
+
 /* .stat-line and .stat: circles on odd points, squares on even */
 .stat-line {
   display: grid;
