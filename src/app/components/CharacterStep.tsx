@@ -16,7 +16,7 @@ export function CharacterStep({ draft, startingLevel, onChange, onStartingLevel 
   return (
     <section>
       <StepHeader step="character" title="Character">
-        Name your character and set the level your campaign starts at.
+        Name your character and set the level your campaign starts at. Your GM sets this; most campaigns start at 3.
       </StepHeader>
       <div className="tech-fields tech-fields-light step-box character-fields">
         <label className="field name-field">
@@ -32,7 +32,6 @@ export function CharacterStep({ draft, startingLevel, onChange, onStartingLevel 
               </option>
             ))}
           </select>
-          <span className="muted">Your GM sets this; most campaigns start at 3.</span>
         </label>
       </div>
     </section>
