@@ -1,8 +1,10 @@
-// Handles POST /api/describe. Kept apart from the HTTP server so it can be
-// tested without a network, a model or an API key.
+// Handles POST /api/describe (the whole build, for Ollama) and POST
+// /api/messages (one Claude turn for the builder running in the browser).
+// Kept apart from the HTTP server so it can be tested without a network, a
+// model or an API key.
 import Anthropic from "@anthropic-ai/sdk";
 import { z } from "zod";
-import { anthropicProvider } from "../ai/anthropic.js";
+import { anthropicProvider, type CreateMessage } from "../ai/anthropic.js";
 import { levelFromDescription, MAX_LEVEL } from "../ai/level.js";
 import { describeCharacter } from "../ai/loop.js";
 import { DescribeFailure, type Provider } from "../ai/model.js";
@@ -63,6 +65,33 @@ export interface Deps {
 
 const fail = (status: number, error: DescribeError["error"], message: string): Reply => ({ status, body: { error, message } });
 
+// A Claude API error as a reply, or undefined for anything else.
+function apiFailure(err: unknown): Reply | undefined {
+  if (err instanceof Anthropic.AuthenticationError) {
+    return fail(401, "auth", "The Anthropic API rejected the key in .env. Check ANTHROPIC_API_KEY, then restart npm run dev.");
+  }
+  if (err instanceof Anthropic.RateLimitError) return fail(429, "rate-limit", "The Anthropic API is rate limiting requests. Wait a minute and try again.");
+  if (err instanceof Anthropic.APIConnectionError) return fail(502, "api", "Couldn't reach the Anthropic API. Check your connection and try again.");
+  if (err instanceof Anthropic.APIError) return fail(502, "api", `The Anthropic API returned an error (${err.status ?? "no status"}): ${err.message}`);
+  return undefined;
+}
+
+// POST /api/messages: passes one turn of the browser's loop to the Claude API
+// with the key from .env. The website's PHP proxy does this in production.
+export async function handleMessages(body: unknown, settings: ModelSettings, create?: CreateMessage): Promise<{ status: number; body: unknown }> {
+  if (!settings.apiKey) return fail(503, "missing-key", MISSING_KEY_MESSAGE);
+  if (typeof body !== "object" || body === null || Array.isArray(body)) return fail(400, "bad-request", "Send the Messages API request as a JSON object.");
+  const client = create ? undefined : new Anthropic({ apiKey: settings.apiKey });
+  const send: CreateMessage = create ?? ((params) => client!.beta.messages.create(params));
+  try {
+    return { status: 200, body: await send(body as Parameters<CreateMessage>[0]) };
+  } catch (err) {
+    const reply = apiFailure(err);
+    if (reply) return reply;
+    throw err;
+  }
+}
+
 // onProgress gets live status lines while the build runs.
 export async function handleDescribe(body: unknown, deps: Deps, onProgress?: (p: Progress) => void): Promise<Reply> {
   const provider = (deps.makeProvider ?? providerFor)(deps.settings);
@@ -86,12 +115,8 @@ export async function handleDescribe(body: unknown, deps: Deps, onProgress?: (p:
       if (err.kind === "unavailable") return fail(503, "unavailable", err.message);
       return fail(502, err.kind === "refused" ? "refused" : "api", err.message);
     }
-    if (err instanceof Anthropic.AuthenticationError) {
-      return fail(401, "auth", "The Anthropic API rejected the key in .env. Check ANTHROPIC_API_KEY, then restart npm run dev.");
-    }
-    if (err instanceof Anthropic.RateLimitError) return fail(429, "rate-limit", "The Anthropic API is rate limiting requests. Wait a minute and try again.");
-    if (err instanceof Anthropic.APIConnectionError) return fail(502, "api", "Couldn't reach the Anthropic API. Check your connection and try again.");
-    if (err instanceof Anthropic.APIError) return fail(502, "api", `The Anthropic API returned an error (${err.status ?? "no status"}): ${err.message}`);
+    const reply = apiFailure(err);
+    if (reply) return reply;
     throw err;
   }
 }

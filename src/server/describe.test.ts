@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { DEFAULT_OLLAMA_MODEL, ollamaProvider } from "../ai/ollama.js";
 import { loadContent } from "../engine/content.js";
-import { handleDescribe, MISSING_KEY_MESSAGE, providerFor, settingsFromEnv } from "./describe.js";
+import { handleDescribe, handleMessages, MISSING_KEY_MESSAGE, providerFor, settingsFromEnv } from "./describe.js";
 
 const { content } = loadContent();
 
@@ -83,5 +83,25 @@ describe("handleDescribe", () => {
       { settings: settingsFromEnv({}), content, makeProvider: () => ollamaProvider({ fetch }) },
     );
     expect(reply.body).toEqual({ error: "unavailable", message: "Ollama doesn't have qwen3:30b-a3b yet. Run: ollama pull qwen3:30b-a3b" });
+  });
+});
+
+describe("handleMessages", () => {
+  const claude = settingsFromEnv({ ANTHROPIC_API_KEY: "test-key" });
+  const turn = { model: "claude-haiku-5-5", max_tokens: 10, messages: [{ role: "user", content: "Hi" }] };
+
+  it("asks for a key in .env when there isn't one", async () => {
+    expect(await handleMessages(turn, settingsFromEnv({}))).toEqual({ status: 503, body: { error: "missing-key", message: MISSING_KEY_MESSAGE } });
+  });
+
+  it("rejects a body that isn't a request", async () => {
+    expect((await handleMessages([], claude)).status).toBe(400);
+  });
+
+  it("passes the browser's turn to the Claude API as is", async () => {
+    const reply = { id: "msg_1", type: "message", content: [] };
+    const create = vi.fn(async () => reply as never);
+    expect(await handleMessages(turn, claude, create)).toEqual({ status: 200, body: reply });
+    expect(create).toHaveBeenCalledWith(turn);
   });
 });

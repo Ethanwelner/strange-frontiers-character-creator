@@ -19,9 +19,9 @@ npm test
 
 1. Install Ollama and open it.
 2. Pull the model: `ollama pull qwen3:30b-a3b` (about 19 GB; it needs a Mac with plenty of memory).
-3. Optional: copy `.env.example` to `.env` to pick another model (`OLLAMA_MODEL`; `OLLAMA_MODE=json` for models that don't call tools well) or switch to the paid Claude API (`SF_PROVIDER=anthropic` plus `ANTHROPIC_API_KEY`; `ANTHROPIC_MODEL` picks the model, Claude Opus 5.5 by default). Restart `npm run dev` after editing `.env`.
+3. Optional: copy `.env.example` to `.env` to pick another model (`OLLAMA_MODEL`; `OLLAMA_MODE=json` for models that don't call tools well) or switch to the paid Claude API (`SF_PROVIDER=anthropic` plus `ANTHROPIC_API_KEY`; `ANTHROPIC_MODEL` picks the model, Claude Haiku 5.5 by default). Restart `npm run dev` after editing `.env`.
 
-`.env` is gitignored. Settings are read only by the local AI server; the API key never reaches the browser and is never logged.
+`.env` is gitignored. The API key is read only by the local AI server; it never reaches the browser and is never logged.
 
 ## Building characters with Claude Code
 
@@ -47,7 +47,8 @@ Type a description in plain words and press **Build it** (Phase 4). The model re
 - The model never invents content or does the stat math. Unknown Kinds and packages are rejected in code, unknown Traits are skipped, and every build goes through `validateBuild`, so even a small local model can't produce an illegal character. How well the character fits the description does depend on the model.
 - If the Trait list runs out with more than two picks unspent, the model is asked once for more Traits. Local models reason before their first submit and skip reasoning on repairs, which keeps those turns short.
 - It never names a Contact: who it is is up to you, and you write it on the Choices step. Until you do, the build is still legal and the panel shows a reminder. Dreftian-language choices pick from the Dreftian languages in content (Dreftan for now).
-- Models: local Ollama by default (`qwen3:30b-a3b` with tool calling, up to 20 turns; `qwen3:14b` fits a 16 GB GPU), or the Claude API (`claude-opus-5-5`, 12 turns), where the instructions and an index of all content form a cached prompt prefix. Both run the same loop and tools (`src/ai/ollama.ts`, `src/ai/anthropic.ts`).
+- Models: local Ollama by default (`qwen3:30b-a3b` with tool calling, up to 20 turns; `qwen3:14b` fits a 16 GB GPU), or the Claude API (`claude-haiku-5-5`, 12 turns), where the instructions and an index of all content form a cached prompt prefix. Both run the same loop and tools (`src/ai/ollama.ts`, `src/ai/anthropic.ts`).
+- Where the loop runs: with Claude, in the browser (`src/ai/remote.ts`), sending each turn to an endpoint that adds the key: the local AI server's `/api/messages` in development, and the website's PHP proxy (`creator-api.php`) in a build. With Ollama, on the local AI server (`/api/describe`). `vite.config.ts` picks the route; `VITE_SF_ENDPOINT` and `VITE_SF_MODEL` override a build's endpoint and model.
 
 ```bash
 npm run dev      # builder on http://localhost:5173, AI server on 127.0.0.1:8787 (Vite proxies /api)
@@ -62,7 +63,7 @@ A click-to-build character builder (Phase 3); the describe box above it is optio
 
 ```bash
 npm run dev      # http://localhost:5173
-npm run build    # static site in dist/ (the AI server isn't part of it)
+npm run build    # static site in dist/; Build it calls creator-api.php next to the page
 ```
 
 - Every legality check comes from `validateBuild`. The Trait picker tries each pick against the engine, greys out the ones it would reject, and shows the engine's reason.
@@ -88,7 +89,7 @@ npm run build    # static site in dist/ (the AI server isn't part of it)
 - `src/schema/`: Zod schemas that define what a valid entry looks like.
 - `src/engine/`: the rules engine. Parses content (`parse.ts`, no file system, so the browser can use it; `content.ts` loads from disk for Node), defines a character `Build`, `validateBuild` checks a build against the creation rules, and `solveConcept` turns a character concept into a legal build.
 - `src/ai/`: the AI layer. `tools.ts` holds the tools the model calls (backed by the engine and content) and the unknown-id check, `prompt.ts` the instructions and content index, `loop.ts` the describe → submit → solve and check → repair loop, and `ollama.ts` / `anthropic.ts` the model adapters.
-- `src/server/`: the local AI server that reads the model settings from `.env` and answers `POST /api/describe`.
+- `src/server/`: the local AI server that reads the model settings from `.env` and answers `POST /api/messages` (one Claude turn, key added) and `POST /api/describe` (a whole Ollama build).
 - `evals/`: sample player descriptions for `npm run eval`.
 - `characters/`: Build JSON files made in Claude Code; `npm run check-build` checks them.
 - `src/app/`: the manual builder (Vite + React). `content.ts` bundles `content/` with `import.meta.glob`; `check.ts` holds the helpers that ask the engine about picks.
