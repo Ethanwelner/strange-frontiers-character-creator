@@ -14,7 +14,7 @@ How you work:
 The concept:
 - One Kind, one origin, one profession and one past.
 - focus: the two to four stats that matter most for this character (its priority stats), most important first. The engine puts each level's stat points into these.
-- traits: Trait ids that fit the character, best fit first. List 12 to 20, more than the picks will cover; the engine buys them in order and skips any the build can't take, so put the ones that matter most at the top. Don't list Traits the packages already grant (their Grants in the index). List a ranked Trait twice only if rank 2 matters.
+- traits: Trait ids that fit the character, best fit first. List 12 to 20, more than the picks will cover; the engine buys them in order and skips any the build can't take, so put the ones that matter most at the top. A Trait fits when it belongs in this character's life: what the description says or implies, and their Kind, home, work and past. Background picks only buy Traits from the packages' Background Traits (in the index), so include the ones there that fit. Picks left over are banked for later, so don't pad the list with Traits that don't belong. Don't list Traits the packages already grant (their Grants in the index). List a ranked Trait twice only if rank 2 matters.
 - choices: optional. Package and Trait choices with a pool, like languages (an Additional Language asks which one), are filled in for you; answer one only to pick a specific Trait from its pool, naming the package or the Trait that asks. A Contact is whoever the player decides it is, so never answer a Contact choice.
 
 Rules you must follow:

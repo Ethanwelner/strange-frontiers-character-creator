@@ -42,9 +42,6 @@ export interface Solution {
   build: Build;
   // Trait ids from the list the solver bought, in order (repeats are ranks).
   taken: string[];
-  // Background Trait list entries the solver added to spend leftover
-  // background picks.
-  filled: string[];
   skipped: SkippedTrait[];
   // validateBuild on the finished build, with open choices set aside.
   result: BuildResult;
@@ -247,7 +244,7 @@ export function solveConcept(input: unknown, content: Content, campaign: Campaig
   const taken: string[] = [];
   const skipped: SkippedTrait[] = [];
   // Kind, packages or stats are wrong: there's nothing to buy Traits for.
-  if (!result.ok) return { build, taken, filled: [], skipped, result };
+  if (!result.ok) return { build, taken, skipped, result };
 
   // Buys the next rank of a Trait if the engine allows it, or says why not.
   const buy = (id: string): string | undefined => {
@@ -280,13 +277,8 @@ export function solveConcept(input: unknown, content: Content, campaign: Campaig
     if (reason) skipped.push({ trait: id, reason });
     else taken.push(id);
   }
-  // Background picks left over go to the Background Trait list, which comes
-  // from the character's own packages and Kind, in list order.
-  const filled: string[] = [];
-  for (const id of result.summary!.backgroundList) {
-    if (remaining(result, "background") === 0) break;
-    if (result.summary!.traits.some((h) => h.trait === id)) continue;
-    if (!buy(id)) filled.push(id);
-  }
-  return { build, taken, filled, skipped, result };
+  // Picks the list didn't use stay banked, as the rules allow: filling them
+  // from the Background Trait list in order gave every character the same
+  // alphabetical Traits whatever they were described as.
+  return { build, taken, skipped, result };
 }

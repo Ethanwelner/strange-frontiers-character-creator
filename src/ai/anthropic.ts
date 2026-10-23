@@ -11,13 +11,17 @@ type Message = Anthropic.Beta.BetaMessage;
 // client.beta.messages.create; tests pass a fake.
 export type CreateMessage = (params: Params) => Promise<Message>;
 
+// The default; ANTHROPIC_MODEL in .env picks another, like claude-haiku-5-5.
 export const CLAUDE_MODEL = "claude-opus-5-5";
 // Server-side fallback: if a safety classifier declines, the API retries on
-// the model Anthropic recommends for that category.
+// the model Anthropic recommends for that category. Haiku has none.
 const FALLBACK_BETA = "server-side-fallback-2026-07-01";
+const hasFallback = (model: string) => !model.startsWith("claude-haiku");
+// Haiku answers fast enough to think harder for the same wait.
+const effortFor = (model: string) => (model.startsWith("claude-haiku") ? "high" : "medium");
 
-export function anthropicProvider(create: CreateMessage, maxTurns = 12): Provider {
-  return { model: CLAUDE_MODEL, maxTurns, start: (prompt) => new AnthropicSession(create, prompt) };
+export function anthropicProvider(create: CreateMessage, maxTurns = 12, model = CLAUDE_MODEL): Provider {
+  return { model, maxTurns, review: true, start: (prompt) => new AnthropicSession(create, prompt, model) };
 }
 
 class AnthropicSession implements ChatSession {
@@ -27,6 +31,7 @@ class AnthropicSession implements ChatSession {
   constructor(
     private create: CreateMessage,
     prompt: Prompt,
+    private model: string,
   ) {
     this.system = [
       { type: "text", text: prompt.instructions },
@@ -37,17 +42,16 @@ class AnthropicSession implements ChatSession {
 
   async send() {
     const response = await this.create({
-      model: CLAUDE_MODEL,
+      model: this.model,
       max_tokens: 16000,
       tools: TOOLS,
       system: this.system,
       messages: this.messages,
       thinking: { type: "adaptive" },
-      output_config: { effort: "medium" },
+      output_config: { effort: effortFor(this.model) },
       // Caches the conversation so far, so each repair turn rereads it cheaply.
       cache_control: { type: "ephemeral" },
-      betas: [FALLBACK_BETA],
-      fallbacks: "default",
+      ...(hasFallback(this.model) ? { betas: [FALLBACK_BETA], fallbacks: "default" as const } : {}),
     });
     const u = response.usage;
     const usage = {

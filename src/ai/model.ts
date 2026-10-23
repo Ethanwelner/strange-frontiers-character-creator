@@ -47,6 +47,10 @@ export interface Provider {
   // Shown to the player, e.g. "qwen3:30b-a3b".
   model: string;
   maxTurns: number;
+  // Gets one review turn after its first legal build, to drop Traits that
+  // don't fit and fill in missing reasons. For fast models (the Claude API);
+  // the others get one push to spend unspent picks instead.
+  review?: boolean;
   start(prompt: Prompt): ChatSession;
 }
 

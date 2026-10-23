@@ -60,20 +60,13 @@ function reasonTargets(build: Record<string, unknown>): Set<string> {
   return targets;
 }
 
-// "6 of 9 universal picks are unspent" when more than two picks the build
-// could spend are banked. Background picks only count when the Background
-// Trait list has something on it.
+// "6 of 9 universal picks are unspent" when more than two universal picks are
+// banked. Background picks can only buy Traits from the packages' short
+// Background lists, so leaving some banked is normal.
 function unspentPicks(check: BuildCheck): string | undefined {
-  const picks = check.summary?.picks;
-  if (!picks) return undefined;
-  const parts: string[] = [];
-  let total = picks.universal.banked;
-  if (picks.universal.banked) parts.push(`${picks.universal.banked} of ${picks.universal.available} universal picks`);
-  if (picks.background.banked && check.summary!.backgroundList.length) {
-    total += picks.background.banked;
-    parts.push(`${picks.background.banked} of ${picks.background.available} background picks`);
-  }
-  return total > 2 ? `${parts.join(" and ")} are unspent` : undefined;
+  const universal = check.summary?.picks.universal;
+  if (!universal || universal.banked <= 2) return undefined;
+  return `${universal.banked} of ${universal.available} universal picks are unspent`;
 }
 
 // Reasons that point at something in the build, for a build accepted with gaps.
@@ -125,7 +118,12 @@ export async function describeCharacter(opts: DescribeOptions): Promise<Describe
   // The most recent build the model proposed, returned if the turn limit hits.
   let last: { build: Record<string, unknown>; check: BuildCheck; summary?: string; reasons: Reason[] } | undefined;
   // Unspent picks get one push back: a legal build isn't thrown away over them.
+  // Providers with a review turn get that instead.
   let picksPushUsed = false;
+  let reviewed = false;
+  let reasonsAsked = false;
+  // Reasons by target, so a resubmission that skips some keeps the earlier ones.
+  const reasonsSoFar = new Map<string, Reason>();
   // Reasoning helps with the concept; fixing what the engine sends back
   // doesn't need it, so models that can skip it stop after the first submit.
   let submitted = false;
@@ -181,18 +179,40 @@ export async function describeCharacter(opts: DescribeOptions): Promise<Describe
           continue;
         }
         const check = checkBuild(solved.build, content, campaign);
-        last = { build: solved.build, check, summary, reasons };
+        for (const r of reasons) reasonsSoFar.set(r.target, r);
+        last = { build: solved.build, check, summary: summary ?? last?.summary, reasons: [...reasonsSoFar.values()] };
         const report = { taken: solved.taken, skipped: compactSkipped(solved.skipped) };
         const unspent = check.accepted ? unspentPicks(check) : undefined;
-        if (unspent && !picksPushUsed) {
+        if (check.accepted && provider.review && !reviewed) {
+          progress("Build is legal; reviewing it against the description");
+          reviewed = true;
+          const review =
+            "The engine built a legal character. Before it's final, check it against the player's description: drop any Trait that doesn't belong in this character's life, " +
+            "and spend unspent picks on Traits that do: skills of their trade, knowledge of their home and past, things the description implies. " +
+            "Leave a pick banked only when nothing else plausibly fits. Give every choice a reason. " +
+            "Then call submit_build with the final concept, summary and reasons.";
+          results.push({ call, isError: true, content: JSON.stringify({ rejected: true, review, ...(unspent ? { banked: unspent } : {}), ...report }) });
+          continue;
+        }
+        if (unspent && !picksPushUsed && !provider.review) {
           progress("Build is legal; asking for more Traits");
           picksPushUsed = true;
           const picks = `The engine built a legal character, but ${unspent}: the Trait list ran out. Submit again with the same concept and more Traits that fit added to the list.`;
           results.push({ call, isError: true, content: JSON.stringify({ rejected: true, picks, ...report }) });
           continue;
         }
+        // A legal build missing reasons gets asked once more, by name. Choices
+        // the solver answered itself aren't the model's to explain.
+        const unexplained = check.accepted ? [...reasonTargets(solved.build)].filter((t) => !t.startsWith("choice:") && !reasonsSoFar.has(t)) : [];
+        if (unexplained.length && !reasonsAsked) {
+          progress("Build is legal; asking for its reasons");
+          reasonsAsked = true;
+          const reasonsNeeded = `The build is legal, but these choices have no reason yet: ${unexplained.join(", ")}. Call submit_build again with the same concept, a summary, and a one-line reason for each of them.`;
+          results.push({ call, isError: true, content: JSON.stringify({ rejected: true, reasonsNeeded }) });
+          continue;
+        }
         if (check.accepted) {
-          last.reasons = keepMatching(solved.build, reasons);
+          last.reasons = keepMatching(solved.build, last.reasons);
           progress("Done");
           return done("accepted", turn);
         }
