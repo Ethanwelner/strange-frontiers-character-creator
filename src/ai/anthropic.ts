@@ -17,9 +17,11 @@ export const CLAUDE_MODEL = "claude-opus-5-5";
 // the model Anthropic recommends for that category. Haiku has none.
 const FALLBACK_BETA = "server-side-fallback-2026-07-01";
 const hasFallback = (model: string) => !model.startsWith("claude-haiku");
+// Haiku answers fast enough to think harder for the same wait.
+const effortFor = (model: string) => (model.startsWith("claude-haiku") ? "high" : "medium");
 
 export function anthropicProvider(create: CreateMessage, maxTurns = 12, model = CLAUDE_MODEL): Provider {
-  return { model, maxTurns, start: (prompt) => new AnthropicSession(create, prompt, model) };
+  return { model, maxTurns, review: true, start: (prompt) => new AnthropicSession(create, prompt, model) };
 }
 
 class AnthropicSession implements ChatSession {
@@ -46,7 +48,7 @@ class AnthropicSession implements ChatSession {
       system: this.system,
       messages: this.messages,
       thinking: { type: "adaptive" },
-      output_config: { effort: "medium" },
+      output_config: { effort: effortFor(this.model) },
       // Caches the conversation so far, so each repair turn rereads it cheaply.
       cache_control: { type: "ephemeral" },
       ...(hasFallback(this.model) ? { betas: [FALLBACK_BETA], fallbacks: "default" as const } : {}),

@@ -113,7 +113,7 @@ for (const [i, p] of prompts.entries()) {
   if (ok) passed++;
   const b = (result.build ?? {}) as Record<string, unknown>;
   const kindMatches = !p.expect || b.kind === p.expect.kind;
-  const open = check?.openChoices.map((c) => `${c.count} ${c.from} (${c.package})`).join(", ");
+  const open = check?.openChoices.map((c) => `${c.count} ${c.from} (${c.package ?? c.trait})`).join(", ");
   const verdict = ok ? `PASS${open ? `, player records: ${open}` : ""}` : `FAIL (${result.status})`;
   const u = result.usage;
   const stats = `${result.turns} turns, ${seconds}s, ${u.inputTokens} in / ${u.cacheReadTokens} cached / ${u.outputTokens} out`;

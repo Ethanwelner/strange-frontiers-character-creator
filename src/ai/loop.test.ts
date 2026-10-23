@@ -8,6 +8,10 @@ import { anthropicProvider, CLAUDE_MODEL as MODEL, type CreateMessage } from "./
 import { describeCharacter } from "./loop.js";
 import { DescribeFailure } from "./model.js";
 import type { Reason } from "./types.js";
+import type { Provider } from "./model.js";
+
+// Most tests are about other parts of the loop, so they skip the Claude review turn.
+const noReview = (p: Provider): Provider => ({ ...p, review: false });
 
 const { content } = loadContent();
 // These fixtures are level 1 characters; the default campaign starts at 3.
@@ -74,13 +78,36 @@ const resultsOf = (p: Params) => {
 const bodyOf = (p: Params) => JSON.parse(resultsOf(p)[0]!.content as string);
 
 describe("describeCharacter", () => {
+  it("asks once, by name, for the reasons a legal build is missing", async () => {
+    const { create, calls } = script(message([submit(goblinoid, [])]), message([submit(goblinoid, [])]), message([submit(goblinoid)]));
+    const result = await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create), campaign: L1 });
+    expect(bodyOf(calls[1]!).review).toBeDefined();
+    expect(bodyOf(calls[2]!).reasonsNeeded).toMatch(/^The build is legal, but these choices have no reason yet: kind, origin, profession, past, levels/);
+    expect(result.status).toBe("accepted");
+    expect(result.turns).toBe(3);
+    expect(result.reasons.find((r) => r.target === "kind")?.reason).toBe("fits: kind");
+  });
+
+  it("reviews a legal Claude build once, and keeps earlier reasons the final submit skips", async () => {
+    const reasons = reasonsFor(goblinoid);
+    const trimmed = { ...goblinoid, traits: (goblinoid.traits ?? []).slice(0, 2) };
+    const { create, calls } = script(message([submit(goblinoid, reasons)]), message([submit(trimmed, [{ target: "kind", reason: "small and clever" }])]));
+    const result = await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create), campaign: L1 });
+    expect(bodyOf(calls[1]!).review).toMatch(/^The engine built a legal character\. Before it's final, check it against the player's description/);
+    expect(result.status).toBe("accepted");
+    expect(result.turns).toBe(2);
+    // The final submit's reason replaces the earlier one; the rest carry over.
+    expect(result.reasons.find((r) => r.target === "kind")?.reason).toBe("small and clever");
+    expect(result.reasons.find((r) => r.target === "origin")?.reason).toBe("fits: origin");
+  });
+
   it("builds with another Claude model when told to, without a refusal fallback for Haiku", async () => {
     const opus = script(message([submit(goblinoid)]));
-    await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(opus.create), campaign: L1 });
+    await describeCharacter({ description: "A goblin mage.", content, provider: noReview(anthropicProvider(opus.create)), campaign: L1 });
     expect(opus.calls[0]).toEqual(expect.objectContaining({ model: "claude-opus-5-5", fallbacks: "default" }));
 
     const haiku = script(message([submit(goblinoid)]));
-    await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(haiku.create, 12, "claude-haiku-5-5"), campaign: L1 });
+    await describeCharacter({ description: "A goblin mage.", content, provider: noReview(anthropicProvider(haiku.create, 12, "claude-haiku-5-5")), campaign: L1 });
     expect(haiku.calls[0]!.model).toBe("claude-haiku-5-5");
     expect(haiku.calls[0]).not.toHaveProperty("fallbacks");
     expect(haiku.calls[0]).not.toHaveProperty("betas");
@@ -91,7 +118,7 @@ describe("describeCharacter", () => {
       message([{ type: "thinking", thinking: "", signature: "sig" } as Block, toolUse("get_kind", { id: "tatot-goblinoid" })]),
       message([submit(goblinoid)]),
     );
-    const result = await describeCharacter({ description: "A small goblin who studied magic at Tetra.", content, provider: anthropicProvider(create), campaign: L1 });
+    const result = await describeCharacter({ description: "A small goblin who studied magic at Tetra.", content, provider: noReview(anthropicProvider(create)), campaign: L1 });
 
     expect(result.status).toBe("accepted");
     expect(result.turns).toBe(2);
@@ -127,7 +154,7 @@ describe("describeCharacter", () => {
 
   it("sends engine errors back and accepts the repaired concept", async () => {
     const { create, calls } = script(message([submit(misslotted)]), message([submit(goblinoid)]));
-    const result = await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create), campaign: L1 });
+    const result = await describeCharacter({ description: "A goblin mage.", content, provider: noReview(anthropicProvider(create)), campaign: L1 });
 
     expect(result.status).toBe("accepted");
     expect(result.turns).toBe(2);
@@ -141,7 +168,7 @@ describe("describeCharacter", () => {
     const invented = { ...goblinoid, profession: "pirate-king" };
     const fixed = { ...goblinoid, traits: ["fireball", ...goblinoid.traits!] };
     const { create, calls } = script(message([submit(invented)]), message([submit(fixed)]));
-    const result = await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create), campaign: L1 });
+    const result = await describeCharacter({ description: "A goblin mage.", content, provider: noReview(anthropicProvider(create)), campaign: L1 });
 
     expect(bodyOf(calls[1]!).unknownIds).toEqual([expect.objectContaining({ path: "profession" })]);
     expect(result.status).toBe("accepted");
@@ -151,7 +178,7 @@ describe("describeCharacter", () => {
   it("sends a legal build back once when the Trait list runs out", async () => {
     const thin = { ...goblinoid, traits: ["tinkerer", "fireball"] };
     const { create, calls } = script(message([submit(thin)]), message([submit(thin)]));
-    const result = await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create), campaign: L1 });
+    const result = await describeCharacter({ description: "A goblin mage.", content, provider: noReview(anthropicProvider(create)), campaign: L1 });
     const body = bodyOf(calls[1]!);
     expect(body.picks).toMatch(/^The engine built a legal character, but \d+ of \d+ universal picks are unspent: the Trait list ran out\./);
     expect(body.taken).toEqual(["tinkerer"]);
@@ -168,7 +195,7 @@ describe("describeCharacter", () => {
       message([submit(goblinoid)]),
     );
     const progress: string[] = [];
-    await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create), campaign: L1, onProgress: (p) => progress.push(`${p.turn} ${p.status}`) });
+    await describeCharacter({ description: "A goblin mage.", content, provider: noReview(anthropicProvider(create)), campaign: L1, onProgress: (p) => progress.push(`${p.turn} ${p.status}`) });
     expect(progress).toEqual([
       "1 Thinking",
       '1 Looking up the Tatot, Goblinoid Kind · Searching Traits for "magic"',
@@ -183,14 +210,14 @@ describe("describeCharacter", () => {
 
   it("keeps a legal build when the turn limit hits before it's accepted", async () => {
     const { create } = script(message([submit({ ...goblinoid, traits: [] })]));
-    const result = await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create), campaign: L1, maxTurns: 1 });
+    const result = await describeCharacter({ description: "A goblin mage.", content, provider: noReview(anthropicProvider(create)), campaign: L1, maxTurns: 1 });
     expect(result.status).toBe("accepted");
     expect(result.check?.legal).toBe(true);
   });
 
   it("stops at the turn limit and returns the last proposal", async () => {
     const { create } = script(message([submit({ ...goblinoid, kind: "dragon" })]), message([toolUse("search_traits", { query: "magic" })]));
-    const result = await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create), campaign: L1, maxTurns: 2 });
+    const result = await describeCharacter({ description: "A goblin mage.", content, provider: noReview(anthropicProvider(create)), campaign: L1, maxTurns: 2 });
 
     expect(create).toHaveBeenCalledTimes(2);
     expect(result.status).toBe("turn-limit");
@@ -200,25 +227,25 @@ describe("describeCharacter", () => {
 
   it("explains a concept that doesn't match the format", async () => {
     const { create, calls } = script(message([submit({ kind: "tatot-goblinoid" })]), message([submit(goblinoid)]));
-    await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create), campaign: L1 });
+    await describeCharacter({ description: "A goblin mage.", content, provider: noReview(anthropicProvider(create)), campaign: L1 });
     expect(resultsOf(calls[1]!)[0]!.content).toMatch(/^The concept doesn't match the format: .*origin/);
   });
 
   it("nudges the model to submit when it answers without a tool", async () => {
     const { create, calls } = script(message([{ type: "text", text: "Here's my idea…", citations: null } as Block], "end_turn"), message([submit(goblinoid)]));
-    const result = await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create), campaign: L1 });
+    const result = await describeCharacter({ description: "A goblin mage.", content, provider: noReview(anthropicProvider(create)), campaign: L1 });
     expect(result.status).toBe("accepted");
     expect(calls[1]!.messages.at(-1)!.content).toContain("submit_build");
   });
 
   it("returns tool errors to the model instead of failing", async () => {
     const { create, calls } = script(message([toolUse("get_package", { id: "pirate-king" })]), message([submit(goblinoid)]));
-    await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create), campaign: L1 });
+    await describeCharacter({ description: "A goblin mage.", content, provider: noReview(anthropicProvider(create)), campaign: L1 });
     expect(resultsOf(calls[1]!)[0]).toEqual(expect.objectContaining({ is_error: true }));
   });
 
   it("fails clearly on a refusal", async () => {
     const { create } = script(message([], "refusal"));
-    await expect(describeCharacter({ description: "x", content, provider: anthropicProvider(create), campaign: L1 })).rejects.toBeInstanceOf(DescribeFailure);
+    await expect(describeCharacter({ description: "x", content, provider: noReview(anthropicProvider(create)), campaign: L1 })).rejects.toBeInstanceOf(DescribeFailure);
   });
 });

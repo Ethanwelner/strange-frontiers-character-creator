@@ -61,15 +61,11 @@ describe("solveConcept", () => {
     expect(s.build.traits.slice(0, 4).map((t) => t.trait)).toEqual(s.taken);
   });
 
-  it("spends leftover background picks on the Background Trait list", () => {
+  it("leaves picks the list didn't use banked, instead of filling them from the Background Trait list", () => {
     const s = solve(hunter);
-    const list = s.result.summary!.backgroundList;
-    expect(list.length).toBeGreaterThan(0);
-    expect(s.filled.length).toBeGreaterThan(0);
-    for (const id of s.filled) {
-      expect(list).toContain(id);
-      expect(s.build.traits).toContainEqual({ trait: id, rank: 1, pick: "background" });
-    }
+    expect(s.result.summary!.backgroundList.length).toBeGreaterThan(0);
+    expect(s.build.traits.map((t) => t.trait)).toEqual(s.taken);
+    expect(s.result.summary!.picks.background.banked).toBeGreaterThan(0);
   });
 
   it("buys a second rank when a ranked Trait is listed twice", () => {
