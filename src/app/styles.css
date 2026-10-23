@@ -1701,8 +1701,15 @@ button.hero-link:hover:not(:disabled) {
     background: var(--panel-box);
   }
 
-  .panel-toggle .status {
-    font-size: 1.2rem;
+  /* The toggle shows the name on mobile, styled like the desktop name. */
+  .panel-toggle-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    text-transform: none;
+  }
+
+  .panel-name {
+    display: none;
   }
 
   .panel:not(.open) .panel-body {
