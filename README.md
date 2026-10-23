@@ -66,6 +66,8 @@ npm run dev      # http://localhost:5173
 npm run build    # static site in dist/; Build it calls creator-api.php next to the page
 ```
 
+**Publishing to the site:** `npm run build:site` builds into `../portfolio_site/creator/` (or `SF_SITE_DIR`), replacing what's there. It writes just the script, the stylesheet and `.vite/manifest.json`, which `creator.php` reads. Commit `creator/` in the site's repo and merge, and the site's deploy publishes it. Content and code changes reach the site only this way.
+
 - Every legality check comes from `validateBuild`. The Trait picker tries each pick against the engine, greys out the ones it would reject, and shows the engine's reason.
 - The in-progress build is saved in the browser's localStorage. **Export** downloads it as a `Build` JSON file and **Import** loads one back; an imported build's level becomes the campaign's starting level.
 - Content is bundled at build time. `npm run dev` reloads the builder and restarts the AI server when `content/` changes; run `npm run build` again to update `dist/`.
@@ -76,6 +78,7 @@ npm run build    # static site in dist/; Build it calls creator-api.php next to 
 |---|---|
 | `npm run dev` | Runs the builder and the local AI server with hot reload |
 | `npm run build` | Builds the builder into `dist/` |
+| `npm run build:site` | Builds the builder into the site's `creator/` folder, for `creator.php` |
 | `npm run preview` | Serves the built `dist/` |
 | `npm run validate` | Checks every content file against the schemas and cross-file rules |
 | `npm test` | Runs the engine and builder tests |
