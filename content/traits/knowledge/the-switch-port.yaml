@@ -8,4 +8,5 @@ tags: [switch-port, tetra, caravan]
 lore: tetra-switch-port
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3 }
+effect: "This character has knowledge of the switch port at Castle Tetra and can be assumed to be familiar with its peoples, places, and customs."

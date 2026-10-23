@@ -6,4 +6,5 @@ region: dreft
 summary: How to behave at the royal court.
 tags: [court, nobility, etiquette]
 category: knowledge
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 2, demeanor: 3 }
+effect: "This character has knowledge of courtly etiquette and can be assumed to be familiar with the rules and manners expected in the royal halls of Isekai."

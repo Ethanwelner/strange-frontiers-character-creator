@@ -5,4 +5,5 @@ plane: isekai
 summary: "The princedoms Drovus absorbed, as they were."
 tags: [sunrise, princedoms, refugee]
 category: knowledge
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3 }
+effect: "This character has knowledge of the Sunrise Princedoms and can be assumed to be familiar with their politics, regions, wildlife, and cultures as they were before Drovus absorbed them."

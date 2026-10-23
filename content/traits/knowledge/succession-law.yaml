@@ -6,4 +6,5 @@ region: dreft
 summary: "Who inherits what, and who has a claim to the crown."
 tags: [law, succession, nobility]
 category: knowledge
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 6, persuasion: 2 }
+effect: "This character has knowledge of succession law and can be assumed to be familiar with who inherits what in Dreft and who has a claim to the crown."

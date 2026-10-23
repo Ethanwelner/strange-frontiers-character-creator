@@ -6,4 +6,5 @@ summary: "The science The Gift opened up: the theories that skirt the old limits
 tags: [paraphysics, science]
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3, logic: 2, intuition: 2 }
+effect: "This character has knowledge of paraphysics and can be assumed to be familiar with paraphysical concepts, paraphysical effects, and axiomatic sciences."

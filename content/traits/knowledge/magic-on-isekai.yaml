@@ -6,4 +6,5 @@ summary: How magic works on Isekai.
 tags: [magic]
 lore: isekai-magic
 category: knowledge
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3, intuition: 2 }
+effect: "This character has knowledge of the magic on Isekai and can be assumed to be familiar with the philosophies, cultures, methods, and laws related to its practice."

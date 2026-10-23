@@ -7,4 +7,5 @@ summary: "The Jade Rabbit, the Chinese Empire’s colony on Luna."
 tags: [luna, colony, chinese-empire]
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3 }
+effect: "This character has knowledge of Yùtù and can be assumed to be familiar with the peoples, places, and customs of the Chinese Empire’s colony on Luna."

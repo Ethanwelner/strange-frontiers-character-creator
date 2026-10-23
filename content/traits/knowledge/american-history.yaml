@@ -7,4 +7,5 @@ summary: "The history of the United States and the American Empire that replaced
 tags: [history, american-empire]
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3 }
+effect: "This character has knowledge of American history and can be assumed to be familiar with the history of the United States and the American Empire that replaced it."

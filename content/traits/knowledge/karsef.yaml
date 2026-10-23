@@ -6,4 +6,5 @@ summary: The land across the Corsine Mountains from Dreft.
 tags: [karsef, border, foreign]
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3 }
+effect: "This character has knowledge of the Kingdom of Karsef and can be assumed to be familiar with its politics, regions, wildlife, and cultures."

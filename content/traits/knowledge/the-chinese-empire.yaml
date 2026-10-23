@@ -8,4 +8,5 @@ tags: [chinese-empire, politics]
 lore: chinese-empire
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3 }
+effect: "This character has knowledge of the Chinese Empire and can be assumed to be familiar with its customs, politics, and territories."

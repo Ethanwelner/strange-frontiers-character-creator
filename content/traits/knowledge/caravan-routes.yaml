@@ -1,9 +1,9 @@
 id: caravan-routes
 name: Caravan Routes
 status: placeholder
-plane: isekai
-region: dreft
-summary: The routes caravans take to and from the switch port.
+plane: any
+summary: "The people, places, and routes caravans take to and from their destinations."
 tags: [caravan, trade, travel]
 category: knowledge
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3, intuition: 2 }
+effect: "This character has knowledge of the caravan trade and can be assumed to be familiar with the companies, routes, and oases it uses."

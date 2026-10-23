@@ -7,4 +7,5 @@ summary: "The Empire’s Earth territories, from the Californias to Nueva Mexico
 tags: [geography, american-empire, earth]
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3 }
+effect: "This character has knowledge of American geography and can be assumed to be familiar with the American Empire’s territories on Earth and in its colonies."

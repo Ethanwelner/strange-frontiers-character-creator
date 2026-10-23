@@ -7,4 +7,5 @@ summary: "The goods, routes and traders of Dreft’s western coast."
 tags: [trade, coast, merchant]
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3, intuition: 2 }
+effect: "This character has knowledge of coastal trade on Isekai and can be assumed to be familiar with its ports, products, and dangers."

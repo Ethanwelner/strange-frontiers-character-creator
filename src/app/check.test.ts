@@ -2,10 +2,18 @@ import { describe, expect, it } from "vitest";
 import { loadContent, type Content } from "../engine/content.js";
 import { Trait } from "../schema/index.js";
 import { check, stepOf, traitOptions } from "./check.js";
-import { content as bundled, contentErrors } from "./content.js";
+import { content as appContent, contentErrors } from "./content.js";
 import { addPick, fromBuild, levelsToPool, poolToLevels, toBuild, withCore, withLevel, type Draft } from "./draft.js";
 
 const campaign = { startingLevel: 1 };
+
+// Knowledges need Memory 3 and up, out of reach for these level 1 fixtures,
+// so the rules are tested without Knowledge minimum stats. validate.test.ts
+// checks the real ones.
+const bundled: Content = {
+  ...appContent,
+  traits: appContent.traits.map((t) => (t.category === "knowledge" ? { ...t, minStats: {} } : t)),
+};
 
 const human: Draft = {
   name: "Harbor-born guard",

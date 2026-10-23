@@ -6,4 +6,5 @@ summary: "Drones, chassis and the machines that do the systems’ work."
 tags: [robotics, technology, machines]
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3, logic: 3 }
+effect: "This character has knowledge of robotics and can be assumed to be familiar with the technologies, businesses, and laws pertaining to it."

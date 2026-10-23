@@ -6,4 +6,5 @@ summary: "How AI Cores and lesser machine minds are built, trained and kept runn
 tags: [ai, technology, science]
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3, logic: 3 }
+effect: "This character has knowledge of artificial intelligence and can be assumed to be familiar with the technologies, businesses, and laws pertaining to it."

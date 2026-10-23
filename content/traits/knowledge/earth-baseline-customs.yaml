@@ -6,4 +6,5 @@ summary: How people from Earth Baseline expect things to be done.
 tags: [earth, customs, foreigners]
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 1 }
+effect: "This character has knowledge of Earth baseline customs and can be assumed to be familiar with how people across the systems expect things to be done."

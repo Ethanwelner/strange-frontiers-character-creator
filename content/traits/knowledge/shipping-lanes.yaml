@@ -6,4 +6,5 @@ summary: "The routes, schedules and checkpoints of cargo traffic between station
 tags: [shipping, trade, space]
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3 }
+effect: "This character has knowledge of the shipping lanes between stations, ships, and surfaces and can be assumed to be familiar with their routes, schedules, and checkpoints."

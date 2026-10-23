@@ -8,4 +8,5 @@ tags: [forest, wilderness, monsters]
 lore: kings-woods
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3 }
+effect: "This character has knowledge of the King’s Woods and can be assumed to be familiar with its geography, ecology, and locations."

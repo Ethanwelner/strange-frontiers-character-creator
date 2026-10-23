@@ -5,7 +5,13 @@ import type { BuildInput } from "./build.js";
 import { validateBuild, type IssueCode } from "./validate.js";
 
 const loaded = loadContent();
-const content = loaded.content;
+// Knowledges need Memory 3 and up, out of reach for these level 1 fixtures,
+// so the rules are tested without Knowledge minimum stats. Rule 12's tests
+// check the real ones.
+const content: Content = {
+  ...loaded.content,
+  traits: loaded.content.traits.map((t) => (t.category === "knowledge" ? { ...t, minStats: {} } : t)),
+};
 
 // The real content has no Background, starter-only, prerequisite or
 // rank-stat Traits yet, and only two languages, so the rules that need them
@@ -587,6 +593,18 @@ describe("rule 12: minimum stats and tag prerequisites", () => {
       traits: [{ trait: "capable-student", pick: "universal" as const }],
     };
     expectLegal(check(scholar, content, { startingLevel: 2 }));
+  });
+
+  it("holds Knowledges bought with picks to their minimum stats", () => {
+    // Dreft needs Memory 3; the Dreft Origin grants rank 1, so this buys rank 2.
+    const r = check(human, loaded.content);
+    expect(r.errors.map((e) => e.message)).toContainEqual(expect.stringContaining("Dreft (dreft) needs memory 3"));
+  });
+
+  it("grants a package's Knowledges whatever their minimum stats", () => {
+    // The Dreft Origin grants Dreft and Dreftian Law; this Human has Memory 1.
+    const r = check({ ...human, traits: [{ trait: "survivalist", pick: "universal" }] }, loaded.content);
+    expect(codes(r)).not.toContain("min-stats");
   });
 
   it("checks core stats too", () => {

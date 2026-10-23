@@ -6,4 +6,5 @@ summary: "Climbing, and surviving, in high mountains."
 tags: [mountains, climbing, survival]
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3, endurance: 2 }
+effect: "This character has knowledge of mountaineering and can be assumed to be familiar with the preparation, dangers, and survival craft involved in trekking mountains."

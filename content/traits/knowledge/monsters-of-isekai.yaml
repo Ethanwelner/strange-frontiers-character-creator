@@ -6,4 +6,5 @@ summary: The monsters of Isekai and how to deal with them.
 tags: [monsters, hunting]
 lore: isekai-monsters
 category: knowledge
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3 }
+effect: "This character has knowledge of the monsters of Isekai and can be assumed to be familiar with their names, territories, the goods that they can provide, and their strengths and weaknesses."

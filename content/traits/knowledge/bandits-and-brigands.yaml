@@ -6,4 +6,5 @@ region: dreft
 summary: "Who robs the roads of Dreft, and how."
 tags: [bandits, crime, roads]
 category: knowledge
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 2, intuition: 2 }
+effect: "This character has knowledge of the criminal underworld of Isekai and can be assumed to be familiar with its groups and places."

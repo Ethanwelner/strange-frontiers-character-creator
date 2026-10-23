@@ -7,4 +7,5 @@ summary: "The Empire’s armed forces: their branches, ranks, bases and habits."
 tags: [military, american-empire]
 category: knowledge
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3 }
+effect: "This character has knowledge of the Imperial Military and can be assumed to be familiar with its branches, ranks, bases, and habits."
