@@ -52,7 +52,7 @@ export function StepHeader({ step, title, children }: { step: Step; title: strin
     <header className="step-head">
       <h2>{title}</h2>
       <div className="stinger-row">
-        <div className="stinger">
+        <div className="copy stinger black">
           Step {STEPS.indexOf(step) + 1} of {STEPS.length}
         </div>
         {errors.length > 0 && (

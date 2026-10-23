@@ -1,11 +1,48 @@
 /// <reference types="vitest/config" />
+import { createReadStream, existsSync, statSync } from "node:fs";
+import { extname, join, resolve, sep } from "node:path";
 import { configDefaults } from "vitest/config";
-import { defineConfig, loadEnv } from "vite";
+import { defineConfig, loadEnv, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
+
+// The site's stylesheets, in the order php/head-loads.php and creator.php load them.
+const SITE_CSS = ["bootstrap.min.css", "tokens.css", "portfolio-nested.css", "portfolio-media-queries.css", "rpg.css", "rpg-night.css"];
+const TYPES: Record<string, string> = {
+  ".css": "text/css",
+  ".woff2": "font/woff2",
+  ".woff": "font/woff",
+  ".svg": "image/svg+xml",
+  ".png": "image/png",
+  ".webp": "image/webp",
+  ".jpg": "image/jpeg",
+};
+
+// In development the creator wears the Strange Frontiers site's real CSS,
+// served as is from the portfolio_site repo beside this one, and linked ahead
+// of the creator's own styles, as on creator.php. A build leaves it out: the
+// site's page already loads it.
+function siteCss(siteDir: string): Plugin {
+  return {
+    name: "site-css",
+    apply: "serve",
+    configureServer(server) {
+      server.middlewares.use("/@site", (req, res, next) => {
+        const file = join(siteDir, decodeURIComponent((req.url ?? "").split("?")[0]!));
+        if (!file.startsWith(siteDir + sep) || !existsSync(file) || !statSync(file).isFile()) return next();
+        res.setHeader("content-type", TYPES[extname(file)] ?? "application/octet-stream");
+        createReadStream(file).pipe(res);
+      });
+    },
+    transformIndexHtml: () =>
+      SITE_CSS.map((name) => ({ tag: "link", attrs: { rel: "stylesheet", href: `/@site/css/${name}` }, injectTo: "head-prepend" as const })),
+  };
+}
 
 export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
   const dev = command === "serve";
+  // SF_SITE_DIR in .env points at the site's repo if it isn't beside this one.
+  const siteDir = resolve(env.SF_SITE_DIR || "../portfolio_site");
   // How Build it reaches a model, read in src/app/components/DescribeBox.tsx.
   // Claude runs the loop in the browser and sends each turn to `endpoint`:
   // the local AI server in development, the website's PHP proxy
@@ -19,7 +56,7 @@ export default defineConfig(({ command, mode }) => {
   };
 
   return {
-    plugins: [react()],
+    plugins: [react(), siteCss(siteDir)],
     define: { __SF_AI__: JSON.stringify(ai) },
     // Relative asset paths, so the build can be hosted under any folder.
     base: "./",
