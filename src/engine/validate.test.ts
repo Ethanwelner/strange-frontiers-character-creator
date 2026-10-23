@@ -104,7 +104,7 @@ const isek: BuildInput = {
   levels: [{ group: "physical", points: { power: 1, grace: 2 } }],
   traits: [
     { trait: "shield-wall", pick: "background" },
-    { trait: "caravan-routes", pick: "background" },
+    { trait: "glintl", pick: "background" },
     { trait: "the-switch-port", pick: "background" },
     { trait: "tracker", pick: "universal" },
   ],
@@ -139,6 +139,7 @@ const goblinoid: BuildInput = {
     { trait: "dreft", rank: 2, pick: "universal" },
     { trait: "herbalism", pick: "universal" },
   ],
+  choices: [{ trait: "caravan-routes", from: "place", traits: ["The Glintl road"] }],
 };
 
 const guwain: BuildInput = {
@@ -151,6 +152,10 @@ const guwain: BuildInput = {
   traits: [
     { trait: "survivalist", pick: "universal" },
     { trait: "dreft", rank: 2, pick: "universal" },
+  ],
+  choices: [
+    { trait: "caravan-routes", from: "place", traits: ["The Glintl road"] },
+    { trait: "countryside-lore", from: "place", traits: ["The King's Woods"] },
   ],
 };
 
@@ -462,6 +467,28 @@ describe("rule 6: Trait choices", () => {
   const language = { trait: "additional-language", pick: "universal" as const };
   const contact = { trait: "additional-contact", pick: "universal" as const };
   const withTraits = (...picks: BuildInput["traits"] & object) => ({ ...human, traits: [...human.traits!, ...picks] });
+
+  // Seafaring asks which seas once, however many ranks are held.
+  const sailor: BuildInput = {
+    ...isek,
+    traits: [
+      { trait: "seafaring", rank: 1, pick: "background" },
+      { trait: "seafaring", rank: 2, pick: "background" },
+      { trait: "tracker", pick: "universal" },
+    ],
+  };
+
+  it("reminds the player to name a Place, without making the build illegal", () => {
+    const r = check(sailor);
+    expectLegal(r);
+    expect(r.warnings.map((w) => w.message)).toContain("Seafaring gives 1 Place: record which on the Choices step");
+  });
+
+  it("asks a Place once, not once per rank", () => {
+    const r = check({ ...sailor, choices: [...isek.choices!, { trait: "seafaring", from: "place", traits: ["The Mende delta"] }] });
+    expectLegal(r);
+    expect(r.warnings.filter((w) => w.message.startsWith("Seafaring"))).toEqual([]);
+  });
 
   it("asks a held Trait's choice, and holds the answer", () => {
     const unanswered = check(withTraits(language));

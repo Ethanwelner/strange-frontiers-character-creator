@@ -134,8 +134,8 @@ const obj = (v: unknown): Record<string, unknown> | undefined =>
   typeof v === "object" && v !== null && !Array.isArray(v) ? (v as Record<string, unknown>) : undefined;
 const list = (v: unknown): unknown[] => (Array.isArray(v) ? v : []);
 
-// A choice Claude leaves to the player: a free-text pool like Contacts, where
-// the player decides who it is, or a pool with no Traits in content yet.
+// A choice Claude leaves to the player: a free-text pool like Contacts or
+// Places, which the player writes in, or a pool with no Traits in content yet.
 const leftForPlayer = (from: string, content: Content) => isFreeTextPool(from) || choicePool(from, content).length === 0;
 
 // Whether a choice answer and an open choice belong to the same package or Trait.
@@ -201,7 +201,7 @@ export function unknownIds(build: unknown, content: Content): IdIssue[] {
       issues.push({
         path: `choices[${i}]`,
         message: noun
-          ? `The player decides who their ${noun} is and records it, so leave this choice out. Remove this answer.`
+          ? `The player writes in their own ${noun} on the Choices step, so leave this choice out. Remove this answer.`
           : `No Traits exist in the "${String(answer.from)}" pool yet, so this choice is left for the player. Remove this answer.`,
       });
       return;

@@ -118,7 +118,7 @@ describe("checkBuild", () => {
     };
     const ids = unknownIds(build, content);
     expect(ids.map((i) => i.path)).toEqual(["kind", "traits[0]", "choices[0]"]);
-    expect(ids[2]!.message).toContain("The player decides who their Contact is");
+    expect(ids[2]!.message).toContain("The player writes in their own Contact");
     expect(checkBuild(build, content, L1).accepted).toBe(false);
   });
 
@@ -154,7 +154,7 @@ describe("Trait choices", () => {
     };
     const ids = unknownIds(build, content);
     expect(ids.map((i) => i.path)).toEqual(["choices[0]", "choices[1]"]);
-    expect(ids[0]!.message).toContain("The player decides who their Contact is");
+    expect(ids[0]!.message).toContain("The player writes in their own Contact");
     expect(ids[1]!.message).toBe(`Trait "extra-language" doesn't exist`);
   });
 

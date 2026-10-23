@@ -8,3 +8,8 @@ category: knowledge
 ranked: true
 minStats: { memory: 3, intuition: 3 }
 effect: "This character has knowledge of seafaring and can be assumed to be familiar with the crew and operations of ships on the sea as well as the winds, currents, and seas of a given world."
+choices:
+  - choose: 1
+    from: place
+    note: "Which seas"
+    perRank: false

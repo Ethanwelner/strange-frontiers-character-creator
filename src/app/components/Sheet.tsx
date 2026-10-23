@@ -23,10 +23,12 @@ export function Sheet({ draft, result }: { draft: Draft; result: BuildResult }) 
   const packages = [draft.origin, draft.profession, draft.past].map((id) => (id ? packageById.get(id) : undefined));
   const base = baseStats(draft);
   const summary = result.summary;
-  // Contacts and other free-text answers, as the player wrote them.
+  // Contacts, as the player wrote them.
   const records = draft.choices.flatMap((c) =>
-    FREE_TEXT_POOLS[c.from] ? c.traits.map((text) => ({ text, noun: FREE_TEXT_POOLS[c.from]!, from: askerName(c) })) : [],
+    c.from === "contact" ? c.traits.map((text) => ({ text, noun: FREE_TEXT_POOLS[c.from]!, from: askerName(c) })) : [],
   );
+  // Places go on their Trait's box, like "Which seas: the Mende coast".
+  const places = (trait: string) => draft.choices.filter((c) => c.trait === trait && c.from === "place").flatMap((c) => c.traits);
   const features = [
     ...(kind?.features ?? []).map((f) => ({ ...f, from: kind!.name })),
     ...packages.flatMap((p) => (p?.features ?? []).map((f) => ({ ...f, from: p!.name }))),
@@ -133,6 +135,11 @@ export function Sheet({ draft, result }: { draft: Draft; result: BuildResult }) 
                     </div>
                     <div className="chips">{t ? <Chip>{title(t.category)}</Chip> : <Chip tone="bad">not in content yet</Chip>}</div>
                     {t && <p className="effect">{t.effect}</p>}
+                    {places(h.trait).length > 0 && (
+                      <p className="small">
+                        <strong>{t?.choices.find((c) => c.from === "place")?.note ?? "Place"}:</strong> {places(h.trait).join(", ")}
+                      </p>
+                    )}
                     <p className="muted small">From {h.sources.map(source).join(", ")}</p>
                   </li>
                 );

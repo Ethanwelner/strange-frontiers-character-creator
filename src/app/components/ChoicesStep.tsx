@@ -41,7 +41,7 @@ export function ChoicesStep({ draft, result, onChange }: { draft: Draft; result:
   return (
     <section>
       <StepHeader step="choices" title="Choices">
-        Packages and some Traits ask you to choose, like who a Contact is or which language you speak.
+        Packages and some Traits ask you to choose, like who a Contact is, which language you speak, or which seas you've sailed.
       </StepHeader>
       <div className="tech-fields tech-fields-light step-box">
         {qs.length === 0 && <p className="empty">This build's packages and Traits have no choices to answer.</p>}
@@ -73,13 +73,20 @@ function Answer({ q, answer, onAnswer }: { q: ChoiceQuestion; answer: string[]; 
     onAnswer(next.filter((v) => v !== ""));
   };
 
-  // A Contact is whoever the player says it is: the name is kept as written.
+  // A Contact or Place is whatever the player says it is: kept as written.
   if (noun) {
+    const contact = q.from === "contact";
     return (
       <div className="answer">
-        <p className="hint">Who is your {noun}? Write a name or a short note; it's yours to decide.</p>
+        <p className="hint">{contact ? `Who is your ${noun}? Write a name or a short note; it's yours to decide.` : "Write it in your own words; it's yours to decide."}</p>
         {slots.map((v, i) => (
-          <FreeText key={i} value={v} label={`${q.name} ${noun} ${i + 1}`} onCommit={(text) => set(i, text)} />
+          <FreeText
+            key={i}
+            value={v}
+            label={`${q.name} ${noun} ${i + 1}`}
+            placeholder={contact ? undefined : "e.g. The Mende river and its delta"}
+            onCommit={(text) => set(i, text)}
+          />
         ))}
       </div>
     );
@@ -114,7 +121,19 @@ function Answer({ q, answer, onAnswer }: { q: ChoiceQuestion; answer: string[]; 
 
 // Commits on blur or Enter, so typing a space doesn't leave a half-made id in the build.
 // With asId, the text is saved as an id; otherwise as written.
-function FreeText({ value, label, asId, onCommit }: { value: string; label: string; asId?: boolean; onCommit: (text: string) => void }) {
+function FreeText({
+  value,
+  label,
+  asId,
+  placeholder,
+  onCommit,
+}: {
+  value: string;
+  label: string;
+  asId?: boolean;
+  placeholder?: string;
+  onCommit: (text: string) => void;
+}) {
   const [text, setText] = useState(value && asId ? traitName(value) : value);
   const commit = () => onCommit(asId ? slug(text) : text.trim());
   return (
@@ -122,7 +141,7 @@ function FreeText({ value, label, asId, onCommit }: { value: string; label: stri
       <input
         value={text}
         aria-label={label}
-        placeholder={asId ? "e.g. Old Herminstan" : "e.g. Harbor Master Oyl, who owes me a favor"}
+        placeholder={placeholder ?? (asId ? "e.g. Old Herminstan" : "e.g. Harbor Master Oyl, who owes me a favor")}
         onChange={(e) => setText(e.target.value)}
         onBlur={commit}
         onKeyDown={(e) => e.key === "Enter" && commit()}

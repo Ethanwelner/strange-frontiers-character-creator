@@ -102,8 +102,9 @@ export function writtenForm(spoken: Trait, content: Content): Trait | undefined 
 }
 
 // Pools the player answers in their own words instead of with Trait ids. A
-// Contact is whoever the player says it is, so any name counts.
-export const FREE_TEXT_POOLS: Record<string, string> = { contact: "Contact" };
+// Contact is whoever the player says it is, so any name counts; a Place is
+// whichever seas, region or road a Knowledge covers, like Seafaring's.
+export const FREE_TEXT_POOLS: Record<string, string> = { contact: "Contact", place: "Place" };
 
 export const isFreeTextPool = (from: string) => Object.hasOwn(FREE_TEXT_POOLS, from);
 
@@ -125,9 +126,9 @@ function questionsOf(by: ChoiceQuestion["by"], owner: { id: string; name: string
   for (const c of owner.choices) {
     const q = out.find((o) => o.from === c.from);
     if (q) {
-      q.count += c.choose * times;
+      q.count += c.choose * (c.perRank === false ? 1 : times);
       if (c.note) q.notes.push(c.note);
-    } else out.push({ by, id: owner.id, name: owner.name, from: c.from, count: c.choose * times, notes: c.note ? [c.note] : [] });
+    } else out.push({ by, id: owner.id, name: owner.name, from: c.from, count: c.choose * (c.perRank === false ? 1 : times), notes: c.note ? [c.note] : [] });
   }
   return out;
 }
@@ -247,10 +248,11 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     const noun = FREE_TEXT_POOLS[from];
     const i = build.choices.findIndex((a) => !answered.has(build.choices.indexOf(a)) && answers(a, q));
     const given = i < 0 ? 0 : build.choices[i]!.traits.length;
-    // A Contact the player hasn't recorded yet is a reminder, not an error.
+    // A Contact or Place the player hasn't recorded yet is a reminder, not an error.
     if (noun && given < count) {
       const left = count - given;
-      warn("choice", `${name} gives ${count} ${noun}${count > 1 ? "s" : ""}: record ${left > 1 ? `${left} more` : given ? "one more" : "who"} on the Choices step`, i < 0 ? "choices" : `choices[${i}]`);
+      const which = from === "contact" ? "who" : "which";
+      warn("choice", `${name} gives ${count} ${noun}${count > 1 ? "s" : ""}: record ${left > 1 ? `${left} more` : given ? "one more" : which} on the Choices step`, i < 0 ? "choices" : `choices[${i}]`);
     }
     if (i < 0) {
       if (!noun) error("choice", `${name} asks for ${count} from "${from}", but the build doesn't answer it`, "choices");

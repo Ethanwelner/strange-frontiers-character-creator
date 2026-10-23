@@ -7,3 +7,8 @@ tags: [caravan, trade, travel]
 category: knowledge
 minStats: { memory: 3, intuition: 2 }
 effect: "This character has knowledge of the caravan trade and can be assumed to be familiar with the companies, routes, and oases it uses."
+choices:
+  - choose: 1
+    from: place
+    note: "Where the caravan routes run"
+    perRank: false

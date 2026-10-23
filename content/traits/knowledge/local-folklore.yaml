@@ -8,3 +8,8 @@ category: knowledge
 ranked: true
 minStats: { memory: 3 }
 effect: "This character has knowledge of the local folklore and can be assumed to be familiar with its history, places, rumors, and taboos."
+choices:
+  - choose: 1
+    from: place
+    note: "Which region's folklore"
+    perRank: false
