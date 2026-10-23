@@ -11,16 +11,13 @@ interface Props {
 
 export function ValidationPanel({ draft, result }: Props) {
   const [open, setOpen] = useState(false);
-  const { errors, summary } = result;
+  const { summary } = result;
   const base = baseStats(draft);
-  const status = result.ok ? "Legal" : `${errors.length} ${errors.length === 1 ? "error" : "errors"}`;
 
   return (
     <aside className={`panel${open ? " open" : ""}`} aria-label="Validation">
       <button className="panel-toggle" onClick={() => setOpen(!open)} aria-expanded={open}>
-        <span className={`status ${result.ok ? "good" : "bad"}`}>
-          {status}
-        </span>
+        <span className={`panel-toggle-name${draft.name ? "" : " muted"}`}>{draft.name ?? "Unnamed character"}</span>
         {summary && (
           <span className="num">
             U {summary.picks.universal.spent}/{summary.picks.universal.available} · B {summary.picks.background.spent}/

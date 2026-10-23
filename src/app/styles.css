@@ -323,6 +323,14 @@ button.hero-link:hover:not(:disabled) {
   color: var(--frontiers);
 }
 
+/* New, once clicked: "Clear this build?" with Yes and Cancel */
+.hero-confirm {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 1rem;
+  color: var(--white);
+}
+
 .hero-statement {
   margin: 48px 0 40px;
 }
@@ -1574,6 +1582,13 @@ button.hero-link:hover:not(:disabled) {
   gap: 6px;
 }
 
+/* The sheet's circles and squares hold a set size, shrinking only when the
+   column is too narrow for all 20. */
+.sheet-stat .stat-line {
+  grid-template-columns: repeat(20, minmax(0, 16px));
+  gap: 4px;
+}
+
 /* .stat-line and .stat: circles on odd points, squares on even */
 .stat-line {
   display: grid;
@@ -1701,8 +1716,15 @@ button.hero-link:hover:not(:disabled) {
     background: var(--panel-box);
   }
 
-  .panel-toggle .status {
-    font-size: 1.2rem;
+  /* The toggle shows the name on mobile, styled like the desktop name. */
+  .panel-toggle-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    text-transform: none;
+  }
+
+  .panel-name {
+    display: none;
   }
 
   .panel:not(.open) .panel-body {

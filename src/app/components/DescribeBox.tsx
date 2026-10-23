@@ -63,6 +63,8 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState<Progress>();
   const [error, setError] = useState<string>();
+  // Replacing a build asks inline; native confirm() dialogs are blocked in some browsers.
+  const [confirming, setConfirming] = useState(false);
   // The stopwatch on Build it: when the build started, and seconds since.
   const started = useRef(0);
   const [elapsed, setElapsed] = useState(0);
@@ -77,7 +79,11 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     if (!text.trim() || busy) return;
-    if (hasBuild && !window.confirm("Replace the current build with a new one from this description?")) return;
+    if (hasBuild && !confirming) {
+      setConfirming(true);
+      return;
+    }
+    setConfirming(false);
     started.current = Date.now();
     setElapsed(0);
     setBusy(true);
@@ -131,10 +137,20 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
                   {clock(elapsed)}
                 </span>
               </>
+            ) : confirming ? (
+              "Replace it"
             ) : (
               "Build it"
             )}
           </button>
+          {confirming && (
+            <>
+              <span className="hint">This replaces the current build.</span>
+              <button type="button" className="link" onClick={() => setConfirming(false)}>
+                Cancel
+              </button>
+            </>
+          )}
           {busy && (
             <span className="describe-progress muted" title={progress?.status}>
               {progress ? `Turn ${progress.turn} of ${progress.maxTurns} · ${progress.status}` : "Starting…"}
