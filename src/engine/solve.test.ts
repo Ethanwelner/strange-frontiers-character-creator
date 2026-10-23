@@ -45,6 +45,33 @@ describe("allocateLevels", () => {
     expect(allocateLevels(["grace"], capped, 1)).toEqual([{ group: "physical", points: { power: 2, endurance: 1 } }]);
   });
 
+  // Points per stat across a list of levels
+  const totals = (levels: ReturnType<typeof allocateLevels>) => {
+    const out: Record<string, number> = {};
+    for (const l of levels) for (const [s, n] of Object.entries(l.points)) out[s] = (out[s] ?? 0) + (n ?? 0);
+    return out;
+  };
+
+  it("keeps the first two levels entirely on the priority stats", () => {
+    expect(totals(allocateLevels(["persuasion"], isek, 2))).toEqual({ persuasion: 6 });
+  });
+
+  it("spreads a little more as the level rises", () => {
+    const levels = allocateLevels(["persuasion", "memory"], isek, 10);
+    const t = totals(levels);
+    // Level 6 goes to the group with the fewest levels: Physical, outside the priorities.
+    expect(levels[5]!.group).toBe("physical");
+    expect(levels.filter((l) => l.group === "physical")).toHaveLength(1);
+    // The breadth level builds Physical's weakest stats, not just one.
+    expect(Object.keys(levels[5]!.points).length).toBeGreaterThan(1);
+    // Every other Social and Mental level gives a point to the group's weakest stat.
+    expect(t.empathy! + t.demeanor!).toBeGreaterThan(0);
+    expect(t.logic! + t.intuition!).toBeGreaterThan(0);
+    // The specialty still comes first.
+    expect(t.persuasion).toBeGreaterThan(Math.max(t.empathy ?? 0, t.demeanor ?? 0));
+    expect(t.memory).toBeGreaterThan(Math.max(t.logic ?? 0, t.intuition ?? 0));
+  });
+
   it("still allocates every level with no priority stats", () => {
     const levels = allocateLevels([], isek, 2);
     expect(levels).toHaveLength(2);

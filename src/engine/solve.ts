@@ -74,9 +74,20 @@ export function allocateStart(focusIn: string[], base: StatBlock | undefined, fr
   return points;
 }
 
+// From the third level on, every other level in a group gives its last point
+// to that group's weakest stat, so a lawyer's Social levels still build some
+// Demeanor while Persuasion stays well ahead.
+const SPREAD_FROM_LEVEL = 3;
+// From the sixth level on, every fifth level (6, 11, 16) goes to the group
+// with the fewest levels so far, so the character isn't helpless outside their
+// specialty.
+const BREADTH_FROM_LEVEL = 6;
+const BREADTH_EVERY = 5;
+
 // One allocation per level. Each level goes to the next group in priority order,
 // and its points go to that group's priority stats in turn, then to whichever of
-// its stats has the most room. A group with no room left is passed over.
+// its stats has the most room. A group with no room left is passed over. As the
+// level rises, some points spread out (SPREAD_FROM_LEVEL, BREADTH_FROM_LEVEL).
 export function allocateLevels(focusIn: string[], base: StatBlock | undefined, level: number): LevelAllocation[] {
   const focus = [...new Set(focusIn.filter(isStat))];
   const current = Object.fromEntries(StatId.options.map((s) => [s, base?.[s]?.start ?? 0])) as Record<StatId, number>;
@@ -92,18 +103,33 @@ export function allocateLevels(focusIn: string[], base: StatBlock | undefined, l
   const groupRoom = (g: StatGroup) => STAT_GROUPS[g].reduce((n, s) => n + room(s), 0);
 
   const levels: LevelAllocation[] = [];
+  const levelsIn = (g: StatGroup) => levels.filter((l) => l.group === g).length;
+  let focusLevels = 0;
   for (let i = 0; i < level; i++) {
-    const preferred = order[i % order.length]!;
+    const n = i + 1;
+    const breadth = n >= BREADTH_FROM_LEVEL && (n - BREADTH_FROM_LEVEL) % BREADTH_EVERY === 0;
+    // The least-built group with room, the most room breaking a tie.
+    const least = (Object.keys(STAT_GROUPS) as StatGroup[])
+      .filter((g) => groupRoom(g) >= FOCUS_POINTS_PER_LEVEL)
+      .sort((a, b) => levelsIn(a) - levelsIn(b) || groupRoom(b) - groupRoom(a))[0];
+    const preferred = breadth && least ? least : order[focusLevels++ % order.length]!;
     const group = [preferred, ...order, ...unfocused].find((g) => groupRoom(g) >= FOCUS_POINTS_PER_LEVEL) ?? preferred;
+    // This group's 2nd, 4th, 6th... level spreads, once the character is level 3.
+    const spreads = n >= SPREAD_FROM_LEVEL && levelsIn(group) % 2 === 1;
     const focused = focus.filter((s) => GROUP_OF[s] === group);
     const others = [...STAT_GROUPS[group]].filter((s) => !focus.includes(s));
     const points: Partial<Record<StatId, number>> = {};
     for (let p = 0; p < FOCUS_POINTS_PER_LEVEL; p++) {
+      // The group's weakest stat with room, the most room breaking a tie.
+      const weakest = [...STAT_GROUPS[group]].filter((s) => room(s) > 0).sort((a, b) => current[a] - current[b] || room(b) - room(a))[0];
+      const spread = spreads && p === FOCUS_POINTS_PER_LEVEL - 1 && weakest;
       // Focus stats take turns; the others only get what they can't hold.
       const candidates = focused.filter((s) => room(s) > 0);
       const fallback = others.filter((s) => room(s) > 0).sort((a, b) => room(b) - room(a));
-      // No room anywhere in the group: the engine will report it.
-      const stat = candidates.length ? candidates[p % candidates.length]! : (fallback[0] ?? focused[0] ?? others[0]!);
+      // A group with no priority stats, like a breadth level's, builds its weakest
+      // stats. No room anywhere in the group: the engine will report it.
+      const stat =
+        spread || (!focused.length && weakest) ? weakest! : candidates.length ? candidates[p % candidates.length]! : (fallback[0] ?? focused[0] ?? others[0]!);
       points[stat] = (points[stat] ?? 0) + 1;
       current[stat]++;
     }
