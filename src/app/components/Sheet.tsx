@@ -104,8 +104,8 @@ export function Sheet({ draft, result }: { draft: Draft; result: BuildResult }) 
   const [open, setOpen] = useState<string>();
   const closeModal = useCallback(() => setOpen(undefined), []);
   const opened = held.find((h) => h.trait === open);
+  // The Kind's features sit at the top, under HP, VP and SP; the packages' at the bottom.
   const features = [
-    ...(kind?.features ?? []).map((f) => ({ ...f, from: kind!.name })),
     ...packages.flatMap((p) => (p?.features ?? []).map((f) => ({ ...f, from: p!.name }))),
   ];
   const background: [string, string | undefined][] = [
@@ -124,7 +124,7 @@ export function Sheet({ draft, result }: { draft: Draft; result: BuildResult }) 
         </div>
 
         <div className="c-sheet-box sheet-head">
-          <div>
+          <div className="sheet-head-main">
             <h2>{draft.name || "Unnamed character"}</h2>
             <p className="lede">
               Level {draft.level} {kind?.name ?? "—"} · {packages.map((p) => p?.name ?? "—").join(" · ")}
@@ -136,6 +136,15 @@ export function Sheet({ draft, result }: { draft: Draft; result: BuildResult }) 
                 </span>
               ))}
             </p>
+            {kind && kind.features.length > 0 && (
+              <ul className="features kind-features">
+                {kind.features.map((f) => (
+                  <li key={f.name}>
+                    <strong>{f.name}.</strong> {f.description}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
           <div className="sheet-actions">
             <span className={`status ${result.ok ? "good" : "bad"}`}>{result.ok ? "Legal" : `${result.errors.length} ${result.errors.length === 1 ? "error" : "errors"}`}</span>

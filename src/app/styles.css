@@ -1382,6 +1382,15 @@
     }
   }
 
+  .sheet-head-main {
+    flex: 1 1 24rem;
+  }
+
+  /* The Kind's features, under HP | VP | SP */
+  .kind-features {
+    margin: 1rem 0 0;
+  }
+
   /* HP | VP | SP, like the site's sample sheet */
   .sheet-resources {
     display: flex;
