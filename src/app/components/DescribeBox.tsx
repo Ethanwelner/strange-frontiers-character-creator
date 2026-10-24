@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import type { DescribeError, DescribeEvent, DescribeResult, Progress } from "../../ai/types.js";
+import { levelFromDescription, MAX_LEVEL } from "../../ai/level.js";
 import { describeRemote } from "../../ai/remote.js";
 import { content, kindById, packageById } from "../content.js";
 import type { AiNotes, Draft } from "../draft.js";
@@ -10,7 +11,7 @@ interface Props {
   notes?: AiNotes;
   startingLevel: number;
   hasBuild: boolean;
-  onBuilt: (result: DescribeResult, description: string, seconds: number) => void;
+  onBuilt: (result: DescribeResult, description: string, seconds: number, name?: string) => void;
   onDismiss: () => void;
 }
 
@@ -56,14 +57,21 @@ function targetLabel(target: string, draft: Draft): string {
   return traitName(target);
 }
 
+interface BuildRequest {
+  description: string;
+  // The level the player set; a level in the description doesn't override it.
+  level: number;
+  name?: string;
+}
+
 // Ollama builds run on the local AI server, which streams progress back.
-async function describeOnServer(description: string, startingLevel: number, onProgress: (p: Progress) => void) {
+async function describeOnServer({ description, level, name }: BuildRequest, onProgress: (p: Progress) => void) {
   let res: Response;
   try {
     res = await fetch("api/describe", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ description, startingLevel }),
+      body: JSON.stringify({ description, startingLevel: level, exactLevel: true, name }),
     });
   } catch {
     throw new Error("Couldn't reach the AI server. Start it with npm run dev.");
@@ -75,16 +83,35 @@ async function describeOnServer(description: string, startingLevel: number, onPr
 
 // Claude builds run their loop here and send each turn to the endpoint that
 // holds the key; Ollama builds run on the local AI server (see vite.config.ts).
-const requestBuild = (description: string, startingLevel: number, onProgress: (p: Progress) => void) =>
+const requestBuild = (request: BuildRequest, onProgress: (p: Progress) => void) =>
   __SF_AI__.route === "browser"
-    ? describeRemote({ description, startingLevel, content, endpoint: __SF_AI__.endpoint, model: __SF_AI__.model, onProgress })
-    : describeOnServer(description, startingLevel, onProgress);
+    ? describeRemote({
+        description: request.description,
+        startingLevel: request.level,
+        levelFromText: false,
+        name: request.name,
+        content,
+        endpoint: __SF_AI__.endpoint,
+        model: __SF_AI__.model,
+        onProgress,
+      })
+    : describeOnServer(request, onProgress);
 
 // 67 seconds as "1:07".
 export const clock = (seconds: number) => `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, "0")}`;
 
 export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss, draft }: Props) {
   const [text, setText] = useState(notes?.description ?? "");
+  // A name for the builder to use, and the level to build at. Writing a level
+  // in the description ("level 10") sets the stepper; the stepper has the last word.
+  const [name, setName] = useState(notes?.name ?? "");
+  const [level, setLevel] = useState(startingLevel);
+  useEffect(() => setLevel(startingLevel), [startingLevel]);
+  const describe = (value: string) => {
+    setText(value);
+    const asked = levelFromDescription(value);
+    if (asked) setLevel(asked);
+  };
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState<Progress>();
   const [error, setError] = useState<string>();
@@ -115,10 +142,12 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
     setError(undefined);
     setProgress(undefined);
     try {
-      const body = await requestBuild(text, startingLevel, setProgress);
+      const named = name.trim() || undefined;
+      const body = await requestBuild({ description: text, level, name: named }, setProgress);
       if ("error" in body) throw new Error(body.message);
       if (!body.build) throw new Error("The model didn't propose a build. Try again, or describe the character differently.");
-      onBuilt(body, text, secondsSince());
+      // The player's name stands, whatever the model wrote.
+      onBuilt(named ? { ...body, build: { ...body.build, name: named } } : body, text, secondsSince(), named);
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       setError(`${message} (after ${clock(secondsSince())})`);
@@ -137,16 +166,48 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
           Say who they are in your own words. The AI picks from the game's real Kinds, packages and Traits, the rules engine checks every
           choice, and you can change anything afterward.
         </p>
-        <textarea
-          id="describe-text"
-          className="rpg-search-input"
-          value={text}
-          rows={3}
-          maxLength={4000}
-          placeholder="e.g. A goblin who failed out of the mage schools and now patches up caravan guards with whatever grows by the road."
-          onChange={(e) => setText(e.target.value)}
-          disabled={busy}
-        />
+        <label className="describe-name">
+          <span className="field-label">Character Name</span>
+          <input
+            className="rpg-search-input"
+            value={name}
+            maxLength={80}
+            placeholder="Leave blank to let the builder name them"
+            onChange={(e) => setName(e.target.value)}
+            disabled={busy}
+          />
+        </label>
+        <div className="describe-row">
+          <div className="describe-level">
+            <span className="field-label">Level</span>
+            <div className="stepper">
+              <button type="button" onClick={() => setLevel((n) => Math.max(1, n - 1))} disabled={busy || level <= 1} aria-label="Lower level">
+                −
+              </button>
+              <span className="num" aria-live="polite">
+                {level}
+              </span>
+              <button
+                type="button"
+                onClick={() => setLevel((n) => Math.min(MAX_LEVEL, n + 1))}
+                disabled={busy || level >= MAX_LEVEL}
+                aria-label="Raise level"
+              >
+                +
+              </button>
+            </div>
+          </div>
+          <textarea
+            id="describe-text"
+            className="rpg-search-input"
+            value={text}
+            rows={3}
+            maxLength={4000}
+            placeholder="e.g. A goblin who failed out of the mage schools and now patches up caravan guards with whatever grows by the road."
+            onChange={(e) => describe(e.target.value)}
+            disabled={busy}
+          />
+        </div>
         <div className="describe-actions">
           <button type="submit" className="primary build-button" disabled={busy || !text.trim()} aria-busy={busy}>
             {busy ? (
