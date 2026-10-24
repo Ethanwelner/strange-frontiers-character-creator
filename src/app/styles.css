@@ -1409,13 +1409,23 @@
     }
   }
 
-  /* Above the sheet, clear of the level badge that hangs 35px over its corner.
-     This margin and the sheet's 2.5rem top margin collapse into the larger. */
+  /* Above the sheet, on the right, clear of the level badge on its left corner */
   .sheet-actions {
     display: flex;
+    justify-content: flex-end;
     gap: 0.75rem;
     align-items: center;
-    margin-bottom: 4rem;
+
+    /* The status as a small badge, shaped like the step's error chips */
+    .status {
+      font-family: var(--body);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0;
+      line-height: 1.2;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+    }
   }
 
   .sheet-body {
