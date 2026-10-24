@@ -66,7 +66,7 @@
 
   /* Buttons take the tabs' Bebas and gray; primary is black. The site's own
      tab buttons keep their rules. */
-  button:where(:not(.rpg-tab, .tech-field-tab)) {
+  button:where(:not(.rpg-tab, .tech-field-tab, .lore-modal-close)) {
     font-family: var(--title);
     font-size: 1.25rem;
     letter-spacing: 1px;
@@ -588,6 +588,10 @@
 
       .stat.empty {
         border-color: #8a8a8a;
+      }
+
+      button.link {
+        color: var(--frontiers-lore-on-black);
       }
     }
   }
@@ -1434,6 +1438,26 @@
     margin-top: 1.5rem;
   }
 
+  /* Knowledges and Languages, one per line like the site's sample sheet, each
+     a link to its card */
+  .knowledge-list {
+    display: grid;
+    gap: 6px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* The card opened in the site's lore popup (.lore-modal), on its white panel,
+     below the popup's close button */
+  .lore-modal :focus-visible {
+    outline-color: var(--portfolio-black);
+  }
+
+  .lore-modal-panel > .trait-box {
+    margin-top: 36px;
+  }
+
   .sheet-stat {
     display: flex;
     flex-direction: column;
@@ -1632,6 +1656,7 @@
   }
 
   @media print {
+    .lore-modal,
     .builder-hero,
     .builder-side,
     .pager,
