@@ -262,14 +262,65 @@
     padding-top: var(--sf-creator-top, 32px);
   }
 
-  /* The tabs sit at the bottom of the left column, on the panel, however tall
-     the character box makes the row. */
-  .hero-main {
-    display: flex;
-    flex-direction: column;
+  /* The hero's row: the title and describe box, the last build's notes when
+     there are some, and the character box, each centered in the row's height;
+     the step tabs run along the bottom, on the panel. Between 992 and 1199px
+     the notes drop under the describe box, and phones stack everything. */
+  .builder-row {
+    display: grid;
+    grid-template-columns: minmax(0, 11fr) minmax(260px, 3fr);
+    grid-template-rows: 1fr auto;
+    grid-template-areas:
+      "main side"
+      "tabs side";
+    column-gap: 48px;
+  }
+
+  .builder-row.has-notes {
+    grid-template-rows: 1fr auto auto;
+    grid-template-areas:
+      "main side"
+      "notes side"
+      "tabs side";
+  }
+
+  @media (min-width: 1200px) {
+    .builder-row.has-notes {
+      grid-template-columns: minmax(0, 6fr) minmax(0, 5fr) minmax(260px, 3fr);
+      grid-template-rows: 1fr auto;
+      grid-template-areas:
+        "main notes side"
+        "tabs tabs side";
+    }
+
+    /* A long list of reasons scrolls inside its column instead of stretching
+       the hero */
+    .builder-notes {
+      align-self: center;
+      max-height: 75vh;
+      overflow-y: auto;
+      padding-right: 8px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--portfolio-gray) transparent;
+    }
+  }
+
+  .builder-main {
+    grid-area: main;
+    align-self: center;
+  }
+
+  .builder-notes {
+    grid-area: notes;
+    padding-top: 24px;
+  }
+
+  .builder-tabs {
+    grid-area: tabs;
   }
 
   .builder-hero .builder-side {
+    grid-area: side;
     align-self: center;
     padding: 32px 0;
   }
@@ -301,9 +352,8 @@
   }
 
   /* .title.hero-title.frontiers-accent over .title.section-title */
-  /* Auto margins above it and above the tabs center it and the describe box. */
   .builder-statement {
-    margin: auto 0 40px;
+    margin: 0 0 40px;
     padding-top: 48px;
     line-height: 1;
 
@@ -316,7 +366,6 @@
   /* Step tabs: the site's .rpg-tab bar along the bottom of the hero, sitting
      on the panel */
   .builder-tabs {
-    margin-top: auto;
     padding-top: 48px;
     overflow-x: auto;
     scrollbar-width: none;
@@ -358,10 +407,13 @@
 
   .describe {
     max-width: 760px;
+  }
 
-    .hint {
-      color: #c9c9c9;
-    }
+  :is(.describe, .builder-notes) .hint {
+    color: #c9c9c9;
+  }
+
+  .describe {
 
     button.primary {
       background: var(--frontiers-green);
@@ -370,10 +422,6 @@
       &:hover:not(:disabled) {
         background-color: color-mix(in srgb, var(--frontiers-green) 75%, var(--portfolio-white));
       }
-    }
-
-    button.link {
-      color: var(--frontiers-lore-on-black);
     }
 
     .notice {
@@ -425,9 +473,13 @@
     color: #c9c9c9;
   }
 
+  :is(.describe, .builder-notes) button.link {
+    color: var(--frontiers-lore-on-black);
+  }
+
+  /* The last build's notes, under a rule like the describe box's heading */
   .describe-result {
     border-top: 1px solid var(--rule-on-black);
-    margin-top: 1rem;
     padding-top: 0.75rem;
   }
 
@@ -1163,11 +1215,7 @@
   }
 
   /* Validation panel: a small .c-sheet, in the hero beside the title on
-     desktops. Its flex-3 column keeps room for the Picks table on narrower
-     desktops. */
-  .builder-side {
-    min-width: 260px;
-  }
+     desktops. Its column keeps at least 260px for the Picks table. */
 
   .panel {
     --rule: rgb(255 255 255 / 18%);
@@ -1533,17 +1581,21 @@
 
   /* Below the site's lg breakpoint: one column, the panel docks to the bottom. */
   @media (max-width: 991px) {
-    .builder-row {
-      gap: 0;
+    .builder-row,
+    .builder-row.has-notes {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto;
+      grid-template-areas:
+        "main"
+        "notes"
+        "tabs";
     }
 
-    .builder-main {
-      flex: 1 100%;
-    }
-
-    .builder-side {
-      flex: none;
-      min-width: 0;
+    /* The character box docks to the bottom of the screen; its column is
+       auto-placed, since the phone grid has no side area */
+    .builder-hero .builder-side {
+      grid-area: auto;
+      padding: 0;
     }
 
     .builder-panel.unlimited {

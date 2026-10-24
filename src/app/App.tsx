@@ -3,7 +3,7 @@ import { check, describe, stepOf } from "./check.js";
 import { BackgroundStep } from "./components/BackgroundStep.js";
 import { CharacterStep } from "./components/CharacterStep.js";
 import { ChoicesStep } from "./components/ChoicesStep.js";
-import { DescribeBox } from "./components/DescribeBox.js";
+import { AiNotesColumn, DescribeBox } from "./components/DescribeBox.js";
 import { KindStep } from "./components/KindStep.js";
 import { StatsStep } from "./components/StatsStep.js";
 import { Sheet } from "./components/Sheet.js";
@@ -26,6 +26,8 @@ const LABELS: Record<Step, string> = {
 
 export function App() {
   const [saved, setSaved] = useState<Saved>(load);
+  // While Build it runs, the last build's notes step aside.
+  const [building, setBuilding] = useState(false);
   const [notice, setNotice] = useState<string>();
   // New asks inline before clearing; native confirm() dialogs are blocked in some browsers.
   const [confirmingNew, setConfirmingNew] = useState(false);
@@ -124,8 +126,10 @@ export function App() {
           )}
           <input ref={fileInput} type="file" accept="application/json,.json" hidden onChange={importBuild} />
         </div>
-        <div className="container d-flex flex-gap-48 builder-row">
-          <div className="flex-11 builder-main hero-main">
+        {/* Title and describe box, the last build's notes, then the character box;
+            the step tabs along the bottom */}
+        <div className={`container builder-row${saved.ai && !building ? " has-notes" : ""}`}>
+          <div className="builder-main">
             <div className="builder-statement">
               <h1 className="title hero-title frontiers-accent">Strange Frontiers</h1>
               <p className="title section-title">Character Builder</p>
@@ -137,24 +141,30 @@ export function App() {
               startingLevel={campaign.startingLevel}
               hasBuild={Boolean(draft.kind || draft.origin || draft.profession || draft.past || draft.traits.length)}
               onBuilt={applyDescribed}
-              onDismiss={() => setSaved((s) => ({ ...s, ai: undefined }))}
+              onBusyChange={setBuilding}
             />
-
-            <nav className="builder-tabs rpg-tab-list" aria-label="Steps">
-              {STEPS.map((s, n) => (
-                <button
-                  key={s}
-                  className={`rpg-tab${s === step ? " is-active" : ""}`}
-                  aria-current={s === step ? "step" : undefined}
-                  onClick={() => setStep(s)}
-                >
-                  <span className="step-n">{n + 1}</span> {LABELS[s]}
-                  {counts[s] ? <span className="badge">{counts[s]}</span> : null}
-                </button>
-              ))}
-            </nav>
           </div>
-          <div className="flex-3 builder-side">
+
+          {saved.ai && !building && (
+            <div className="builder-notes">
+              <AiNotesColumn notes={saved.ai} draft={draft} onDismiss={() => setSaved((s) => ({ ...s, ai: undefined }))} />
+            </div>
+          )}
+
+          <nav className="builder-tabs rpg-tab-list" aria-label="Steps">
+            {STEPS.map((s, n) => (
+              <button
+                key={s}
+                className={`rpg-tab${s === step ? " is-active" : ""}`}
+                aria-current={s === step ? "step" : undefined}
+                onClick={() => setStep(s)}
+              >
+                <span className="step-n">{n + 1}</span> {LABELS[s]}
+                {counts[s] ? <span className="badge">{counts[s]}</span> : null}
+              </button>
+            ))}
+          </nav>
+          <div className="builder-side">
             <ValidationPanel draft={draft} result={result} />
           </div>
         </div>

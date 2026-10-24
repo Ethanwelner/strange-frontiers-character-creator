@@ -11,7 +11,8 @@ interface Props {
   startingLevel: number;
   hasBuild: boolean;
   onBuilt: (result: DescribeResult, description: string, seconds: number) => void;
-  onDismiss: () => void;
+  // While a build runs, so the last build's notes can step aside.
+  onBusyChange?: (busy: boolean) => void;
 }
 
 // A build streams progress lines, then a result or error line. Errors before
@@ -83,7 +84,7 @@ const requestBuild = (description: string, startingLevel: number, onProgress: (p
 // 67 seconds as "1:07".
 export const clock = (seconds: number) => `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, "0")}`;
 
-export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss, draft }: Props) {
+export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onBusyChange }: Props) {
   const [text, setText] = useState(notes?.description ?? "");
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState<Progress>();
@@ -94,6 +95,8 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
   const started = useRef(0);
   const [elapsed, setElapsed] = useState(0);
   const secondsSince = () => Math.round((Date.now() - started.current) / 1000);
+
+  useEffect(() => onBusyChange?.(busy), [busy, onBusyChange]);
 
   useEffect(() => {
     if (!busy) return;
@@ -187,36 +190,41 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
           </button>
         </div>
       )}
-
-      {notes && !busy && (
-        <div className="describe-result">
-          <div className="describe-head">
-            <p className={`describe-status ${notes.status === "accepted" ? "good" : "bad"}`}>
-              {notes.seconds !== undefined && <strong>Build finished in {clock(notes.seconds)}. </strong>}
-              {notes.status === "accepted"
-                ? `Built from your description${notes.model ? ` by ${notes.model}` : ""}. Edit anything below; the panel keeps checking.`
-                : `${notes.model ?? "The model"} ran out of turns before the build was legal. The panel shows what's left to fix.`}
-            </p>
-            <button className="link" onClick={onDismiss} aria-label="Hide the reasons">
-              ✕
-            </button>
-          </div>
-          {notes.summary && <p>{notes.summary}</p>}
-          {notes.openChoices.length > 0 && (
-            <p className="hint">
-              Left for you on the Choices step:{" "}
-              {notes.openChoices.map((c) => `${c.note ?? choiceLabel(c.count, c.from)} (${askerName(c)})`).join("; ")}.
-            </p>
-          )}
-          <ul className="ai-reasons">
-            {notes.reasons.map((r, i) => (
-              <li key={i}>
-                <strong>{targetLabel(r.target, draft)}</strong> {r.reason}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
     </section>
+  );
+}
+
+// What the last build from a description says: how it went, the character in
+// a sentence or two, what's left for the player, and a reason for each choice.
+// A column of its own in the hero, beside the describe box.
+export function AiNotesColumn({ notes, draft, onDismiss }: { notes: AiNotes; draft: Draft; onDismiss: () => void }) {
+  return (
+    <div className="describe-result">
+      <div className="describe-head">
+        <p className={`describe-status ${notes.status === "accepted" ? "good" : "bad"}`}>
+          {notes.seconds !== undefined && <strong>Build finished in {clock(notes.seconds)}. </strong>}
+          {notes.status === "accepted"
+            ? `Built from your description${notes.model ? ` by ${notes.model}` : ""}. Edit anything below; the panel keeps checking.`
+            : `${notes.model ?? "The model"} ran out of turns before the build was legal. The panel shows what's left to fix.`}
+        </p>
+        <button className="link" onClick={onDismiss} aria-label="Hide the reasons">
+          ✕
+        </button>
+      </div>
+      {notes.summary && <p>{notes.summary}</p>}
+      {notes.openChoices.length > 0 && (
+        <p className="hint">
+          Left for you on the Choices step:{" "}
+          {notes.openChoices.map((c) => `${c.note ?? choiceLabel(c.count, c.from)} (${askerName(c)})`).join("; ")}.
+        </p>
+      )}
+      <ul className="ai-reasons">
+        {notes.reasons.map((r, i) => (
+          <li key={i}>
+            <strong>{targetLabel(r.target, draft)}</strong> {r.reason}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
