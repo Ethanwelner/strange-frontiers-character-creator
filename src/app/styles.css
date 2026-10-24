@@ -1404,10 +1404,13 @@
     }
   }
 
+  /* Above the sheet, clear of the level badge that hangs 35px over its corner.
+     This margin and the sheet's 2.5rem top margin collapse into the larger. */
   .sheet-actions {
     display: flex;
     gap: 0.75rem;
     align-items: center;
+    margin-bottom: 4rem;
   }
 
   .sheet-body {

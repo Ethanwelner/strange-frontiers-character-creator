@@ -118,6 +118,11 @@ export function Sheet({ draft, result }: { draft: Draft; result: BuildResult }) 
   return (
     <section className="sheet">
       <StepHeader step="sheet" title="Sheet" />
+      {/* Whether the build is legal, and Print, above the sheet */}
+      <div className="sheet-actions">
+        <span className={`status ${result.ok ? "good" : "bad"}`}>{result.ok ? "Legal" : `${result.errors.length} ${result.errors.length === 1 ? "error" : "errors"}`}</span>
+        <button onClick={() => window.print()}>Print</button>
+      </div>
       <div className="c-sheet">
         <div className="level-badge" aria-label={`Level ${draft.level}`}>
           {draft.level}
@@ -145,10 +150,6 @@ export function Sheet({ draft, result }: { draft: Draft; result: BuildResult }) 
                 ))}
               </ul>
             )}
-          </div>
-          <div className="sheet-actions">
-            <span className={`status ${result.ok ? "good" : "bad"}`}>{result.ok ? "Legal" : `${result.errors.length} ${result.errors.length === 1 ? "error" : "errors"}`}</span>
-            <button onClick={() => window.print()}>Print</button>
           </div>
         </div>
 
