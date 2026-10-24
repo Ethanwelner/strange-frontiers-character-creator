@@ -111,20 +111,6 @@ export function App() {
   return (
     <div className="sf-creator">
       <header className="builder-hero">
-        <div className="container hero-bar">
-          <button className="hero-link" onClick={exportBuild}>Export</button>
-          <button className="hero-link" onClick={() => fileInput.current?.click()}>Import</button>
-          {confirmingNew ? (
-            <span className="hero-confirm">
-              Clear this build?
-              <button className="hero-link" onClick={reset}>Yes</button>
-              <button className="hero-link" onClick={() => setConfirmingNew(false)}>Cancel</button>
-            </span>
-          ) : (
-            <button className="hero-link" onClick={() => setConfirmingNew(true)}>New</button>
-          )}
-          <input ref={fileInput} type="file" accept="application/json,.json" hidden onChange={importBuild} />
-        </div>
         <div className="container d-flex flex-gap-48 builder-row">
           <div className="flex-11 builder-main hero-main">
             <div className="builder-statement">
@@ -139,6 +125,32 @@ export function App() {
               hasBuild={Boolean(draft.kind || draft.origin || draft.profession || draft.past || draft.traits.length)}
               onBuilt={applyDescribed}
               onDismiss={() => setSaved((s) => ({ ...s, ai: undefined }))}
+              actions={
+                <div className="hero-bar">
+                  <button type="button" className="hero-link" onClick={exportBuild}>
+                    Export
+                  </button>
+                  <button type="button" className="hero-link" onClick={() => fileInput.current?.click()}>
+                    Import
+                  </button>
+                  {confirmingNew ? (
+                    <span className="hero-confirm">
+                      Clear this build?
+                      <button type="button" className="hero-link" onClick={reset}>
+                        Yes
+                      </button>
+                      <button type="button" className="hero-link" onClick={() => setConfirmingNew(false)}>
+                        Cancel
+                      </button>
+                    </span>
+                  ) : (
+                    <button type="button" className="hero-link" onClick={() => setConfirmingNew(true)}>
+                      New
+                    </button>
+                  )}
+                  <input ref={fileInput} type="file" accept="application/json,.json" hidden onChange={importBuild} />
+                </div>
+              }
             />
 
             <nav className="builder-tabs rpg-tab-list" aria-label="Steps">

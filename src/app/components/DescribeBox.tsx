@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import type { DescribeError, DescribeEvent, DescribeResult, Progress } from "../../ai/types.js";
 import { levelFromDescription, MAX_LEVEL } from "../../ai/level.js";
 import { describeRemote } from "../../ai/remote.js";
@@ -13,6 +13,8 @@ interface Props {
   hasBuild: boolean;
   onBuilt: (result: DescribeResult, description: string, seconds: number, name?: string) => void;
   onDismiss: () => void;
+  // Export, Import and New, to the right of Build it
+  actions?: ReactNode;
 }
 
 // A build streams progress lines, then a result or error line. Errors before
@@ -100,7 +102,7 @@ const requestBuild = (request: BuildRequest, onProgress: (p: Progress) => void) 
 // 67 seconds as "1:07".
 export const clock = (seconds: number) => `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, "0")}`;
 
-export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss, draft }: Props) {
+export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss, draft, actions }: Props) {
   const [text, setText] = useState(notes?.description ?? "");
   // A name for the builder to use, and the level to build at. Writing a level
   // in the description ("level 10") sets the stepper; the stepper has the last word.
@@ -225,6 +227,7 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
               "Build it"
             )}
           </button>
+          {actions}
           {confirming && (
             <>
               <span className="hint">This replaces the current build.</span>
