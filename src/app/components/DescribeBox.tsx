@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import type { DescribeError, DescribeEvent, DescribeResult, Progress } from "../../ai/types.js";
-import { levelFromDescription, MAX_LEVEL } from "../../ai/level.js";
+import { levelFromDescription } from "../../ai/level.js";
 import { describeRemote } from "../../ai/remote.js";
 import { content, kindById, packageById } from "../content.js";
 import type { AiNotes, Draft } from "../draft.js";
-import { askerName, choiceLabel, title, traitName } from "./ui.js";
+import { askerName, choiceLabel, LevelStepper, title, traitName } from "./ui.js";
 
 interface Props {
   draft: Draft;
@@ -185,25 +185,7 @@ export function DescribeBox({ notes, showNotes, startingLevel, hasBuild, onBuilt
                 disabled={busy}
               />
             </label>
-            <div className="describe-field describe-level">
-              <span className="field-label">Level</span>
-              <div className="stepper">
-                <button type="button" onClick={() => setLevel((n) => Math.max(1, n - 1))} disabled={busy || level <= 1} aria-label="Lower level">
-                  −
-                </button>
-                <span className="num" aria-live="polite">
-                  {level}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setLevel((n) => Math.min(MAX_LEVEL, n + 1))}
-                  disabled={busy || level >= MAX_LEVEL}
-                  aria-label="Raise level"
-                >
-                  +
-                </button>
-              </div>
-            </div>
+            <LevelStepper className="describe-level" label="Level" level={level} onChange={setLevel} disabled={busy} />
             <label className="describe-field describe-text">
               <span className="field-label">Description</span>
               <textarea

@@ -1,9 +1,6 @@
-import { MAX_LEVEL } from "../../ai/level.js";
 import type { Draft } from "../draft.js";
 import { KindCards } from "./KindCards.js";
-import { StepHeader } from "./ui.js";
-
-const MAX_START = MAX_LEVEL;
+import { LevelStepper, StepHeader } from "./ui.js";
 
 interface Props {
   draft: Draft;
@@ -25,16 +22,8 @@ export function CharacterStep({ draft, startingLevel, onChange, onStartingLevel 
           <span className="field-label">Character Name</span>
           <input value={draft.name ?? ""} placeholder="Unnamed character" onChange={(e) => onChange({ ...draft, name: e.target.value || undefined })} />
         </label>
-        <label className="field name-field level-field">
-          <span className="field-label">Starting Level</span>
-          <select value={startingLevel} onChange={(e) => onStartingLevel(Number(e.target.value))}>
-            {Array.from({ length: MAX_START }, (_, i) => i + 1).map((n) => (
-              <option key={n} value={n}>
-                {n}
-              </option>
-            ))}
-          </select>
-        </label>
+        {/* The describe box's Level control */}
+        <LevelStepper label="Starting Level" level={startingLevel} onChange={onStartingLevel} />
       </div>
       <KindCards draft={draft} onChange={onChange} />
     </section>

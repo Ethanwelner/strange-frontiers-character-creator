@@ -428,7 +428,8 @@
   }
 
   /* A label 6px above its input */
-  .describe-field {
+  .describe-field,
+  .level-stepper {
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -954,14 +955,6 @@
     gap: 0.25rem;
   }
 
-  /* A plain rule between a card's rows, like the line above a Kind's stats */
-  .card-rule {
-    width: 100%;
-    border: 0;
-    border-top: 1px solid var(--rule);
-    opacity: 1;
-  }
-
   /* Levels */
 
   .field {
@@ -1313,10 +1306,11 @@
     font-weight: 600;
   }
 
-  /* Character step: name beside starting level */
+  /* Character step: name beside starting level, with their controls level */
   .character-fields {
     display: grid;
-    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
     gap: 0 24px;
 
     .name-field {

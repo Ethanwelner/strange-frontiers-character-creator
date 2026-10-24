@@ -36,7 +36,6 @@ export function KindCards({ draft, onChange }: { draft: Draft; onChange: (d: Dra
                       </li>
                     ))}
                   </ul>
-                  <hr className="card-rule" />
                   <StatRanges stats={k.stats} />
                 </Card>
               ))}
