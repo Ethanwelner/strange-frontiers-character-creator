@@ -79,8 +79,6 @@ export function ValidationPanel({ draft, result }: Props) {
             })}
           </tbody>
         </table>
-
-        {result.ok && <p className="good">Every rule checks out.</p>}
       </div>
     </aside>
   );
