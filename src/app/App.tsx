@@ -78,7 +78,7 @@ export function App() {
 
   // The model's build replaces the draft, then stays editable like any other.
   // The build's level becomes the starting level, since the description can ask for one.
-  const applyDescribed = (result: DescribeResult, description: string, seconds: number) => {
+  const applyDescribed = (result: DescribeResult, description: string, seconds: number, name?: string) => {
     const built = fromBuild(result.build);
     setSaved((s) => ({
       ...s,
@@ -87,6 +87,7 @@ export function App() {
       step: "sheet",
       ai: {
         description,
+        name,
         model: result.model,
         status: result.status,
         summary: result.summary,
@@ -110,20 +111,6 @@ export function App() {
   return (
     <div className="sf-creator">
       <header className="builder-hero">
-        <div className="container hero-bar">
-          <button className="hero-link" onClick={exportBuild}>Export</button>
-          <button className="hero-link" onClick={() => fileInput.current?.click()}>Import</button>
-          {confirmingNew ? (
-            <span className="hero-confirm">
-              Clear this build?
-              <button className="hero-link" onClick={reset}>Yes</button>
-              <button className="hero-link" onClick={() => setConfirmingNew(false)}>Cancel</button>
-            </span>
-          ) : (
-            <button className="hero-link" onClick={() => setConfirmingNew(true)}>New</button>
-          )}
-          <input ref={fileInput} type="file" accept="application/json,.json" hidden onChange={importBuild} />
-        </div>
         <div className="container d-flex flex-gap-48 builder-row">
           <div className="flex-11 builder-main hero-main">
             <div className="builder-statement">
@@ -138,6 +125,26 @@ export function App() {
               hasBuild={Boolean(draft.kind || draft.origin || draft.profession || draft.past || draft.traits.length)}
               onBuilt={applyDescribed}
               onDismiss={() => setSaved((s) => ({ ...s, ai: undefined }))}
+              actions={
+                <div className="hero-bar">
+                  {confirmingNew ? (
+                    <span className="hero-confirm">
+                      Clear this build?
+                      <button type="button" className="hero-link" onClick={reset}>
+                        Yes
+                      </button>
+                      <button type="button" className="hero-link" onClick={() => setConfirmingNew(false)}>
+                        Cancel
+                      </button>
+                    </span>
+                  ) : (
+                    <button type="button" className="hero-link" onClick={() => setConfirmingNew(true)}>
+                      New
+                    </button>
+                  )}
+                  <input ref={fileInput} type="file" accept="application/json,.json" hidden onChange={importBuild} />
+                </div>
+              }
             />
 
             <nav className="builder-tabs rpg-tab-list" aria-label="Steps">
@@ -188,7 +195,7 @@ export function App() {
               )}
               {step === "choices" && <ChoicesStep draft={draft} result={result} onChange={setDraft} />}
               {step === "traits" && <TraitsStep draft={draft} campaign={campaign} result={result} onChange={setDraft} />}
-              {step === "sheet" && <Sheet draft={draft} result={result} />}
+              {step === "sheet" && <Sheet draft={draft} result={result} onExport={exportBuild} onImport={() => fileInput.current?.click()} />}
 
               <div className="pager">
                 {i > 0 ? <button onClick={() => setStep(STEPS[i - 1]!)}>← {LABELS[STEPS[i - 1]!]}</button> : <span />}

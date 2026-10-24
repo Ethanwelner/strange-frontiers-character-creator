@@ -64,6 +64,19 @@ describe("handleDescribe", () => {
     expect(sent[1]).toContain("starts characters at level 3");
   });
 
+  it("keeps a level the player set by hand, and tells the model the player's name", async () => {
+    const sent: string[] = [];
+    const fetch = vi.fn(async (_url: unknown, init?: { body?: unknown }) => {
+      sent.push(String(init?.body ?? ""));
+      throw new TypeError("fetch failed");
+    });
+    const makeProvider = () => ollamaProvider({ fetch });
+    const body = { description: "A level 5 Isek scout.", startingLevel: 7, exactLevel: true, name: "Vessa Thorn" };
+    await handleDescribe(body, { settings: settingsFromEnv({}), content, makeProvider });
+    expect(sent[0]).toContain("starts characters at level 7");
+    expect(sent[0]).toContain('named this character \\"Vessa Thorn\\". Use that name.');
+  });
+
   it("says to open Ollama when it isn't running", async () => {
     const fetch = vi.fn(async () => {
       throw new TypeError("fetch failed");

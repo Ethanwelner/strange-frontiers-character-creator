@@ -51,4 +51,12 @@ describe("describeRemote", () => {
     expect(reply).toEqual({ error: "missing-key", message: "No key." });
     expect(requests[0]!.body.model).toBe("claude-haiku-5-5");
   });
+
+  it("builds at the level set by hand when told to, and passes the name on", async () => {
+    const { fetcher, requests } = fakeFetch(503, { error: "missing-key", message: "No key." });
+    await describeRemote({ description: "A level 5 goblin mage.", startingLevel: 8, levelFromText: false, name: "Pell", content, endpoint: "api/messages", model: "claude-haiku-5-5", fetcher });
+    const first = JSON.stringify(requests[0]!.body.messages);
+    expect(first).toContain("starts characters at level 8");
+    expect(first).toContain('named this character \\"Pell\\". Use that name.');
+  });
 });

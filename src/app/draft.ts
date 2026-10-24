@@ -32,6 +32,8 @@ export type Step = (typeof STEPS)[number];
 // What the builder keeps from the last AI build, so the reasons survive a reload.
 export interface AiNotes {
   description: string;
+  // The name the player gave the builder, if any
+  name?: string;
   model?: string;
   status: DescribeResult["status"];
   summary?: string;

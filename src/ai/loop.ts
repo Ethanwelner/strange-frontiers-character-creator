@@ -14,6 +14,8 @@ import type { BuildCheck, DescribeResult, Progress, Reason, Usage } from "./type
 
 export interface DescribeOptions {
   description: string;
+  // A name the player chose; the model is told to use it.
+  name?: string;
   content: Content;
   provider: Provider;
   campaign?: Campaign;
@@ -112,6 +114,7 @@ export async function describeCharacter(opts: DescribeOptions): Promise<Describe
     index: contentIndex(content),
     user:
       `The campaign starts characters at level ${campaign.startingLevel}.\n\n` +
+      (opts.name?.trim() ? `The player has named this character "${opts.name.trim()}". Use that name.\n\n` : "") +
       `<player_description>\n${opts.description.trim()}\n</player_description>`,
   });
 

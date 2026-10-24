@@ -249,14 +249,13 @@
      48px apart. */
   /* At least as tall as the site's heroes (.short-section, 75vh), counting the
      room the page leaves above it for the site's nav (--sf-creator-top, set by
-     creator.php's css/rpg.css). The toolbar sits at the top; the title, describe
-     box and character box are centered below it, and the tabs sit at the bottom. */
+     creator.php's css/rpg.css). The title, describe box (with New beside Build
+     it) and character box are centered, and the tabs sit at the bottom. */
   .builder-hero {
     display: grid;
     /* One column the step tabs can scroll inside, instead of widening it */
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto 1fr;
-    gap: 24px;
+    grid-template-rows: 1fr;
     min-height: 75vh;
     color: var(--portfolio-white);
     padding-top: var(--sf-creator-top, 32px);
@@ -274,10 +273,12 @@
     padding: 32px 0;
   }
 
+  /* New, beside Build it */
   .hero-bar {
     display: flex;
-    justify-content: flex-start;
+    align-items: center;
     gap: 1.5rem;
+    margin-left: 0.75rem;
   }
 
   button.hero-link {
@@ -359,6 +360,31 @@
   .describe {
     max-width: 760px;
 
+    /* The heading and hint (12px apart), then 24px down, the fields and
+       Build it (16px apart) */
+    form,
+    .describe-intro,
+    .describe-controls {
+      display: flex;
+      flex-direction: column;
+    }
+
+    form {
+      gap: 24px;
+    }
+
+    .describe-intro {
+      gap: 12px;
+    }
+
+    .describe-controls {
+      gap: 16px;
+    }
+
+    :is(.describe-intro, .describe-controls) > * {
+      margin: 0;
+    }
+
     .hint {
       color: #c9c9c9;
     }
@@ -389,6 +415,50 @@
     margin: 0.75rem 0;
     font-size: inherit;
     resize: vertical;
+  }
+
+  /* Character Name with Level to its right, then Description across the full
+     width under both */
+  .describe-fields {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "name level"
+      "text text";
+    align-items: end;
+    gap: 16px 24px;
+  }
+
+  /* A label 6px above its input */
+  .describe-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    input::placeholder {
+      color: #9a9a9a;
+    }
+  }
+
+  .describe-name {
+    grid-area: name;
+
+    input.rpg-search-input {
+      padding: 0 16px;
+      font-size: inherit;
+    }
+  }
+
+  .describe-level {
+    grid-area: level;
+  }
+
+  .describe-text {
+    grid-area: text;
+
+    textarea.rpg-search-input {
+      margin: 0;
+    }
   }
 
   .describe-actions {
@@ -425,10 +495,20 @@
     color: #c9c9c9;
   }
 
+  /* The last build's status and summary, 48px below Build it, then its
+     reasons in the site's Details box (.lore-details), drawn for the dark hero */
   .describe-result {
-    border-top: 1px solid var(--rule-on-black);
-    margin-top: 1rem;
-    padding-top: 0.75rem;
+    margin-top: 48px;
+
+    .lore-details {
+      margin-top: 1rem;
+      border-color: var(--rule-on-black);
+    }
+
+    .lore-details > summary h5 {
+      background: none;
+      color: inherit;
+    }
   }
 
   .describe-head {

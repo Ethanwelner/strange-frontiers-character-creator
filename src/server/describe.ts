@@ -18,6 +18,9 @@ export const MISSING_KEY_MESSAGE =
 const Request = z.object({
   description: z.string().trim().min(1, "Describe the character first.").max(4000, "Keep the description under 4,000 characters."),
   startingLevel: z.number().int().min(1).max(MAX_LEVEL).default(3),
+  // The player set the level by hand, so a level in the description doesn't override it.
+  exactLevel: z.boolean().default(false),
+  name: z.string().trim().max(80).optional(),
 });
 
 export interface Reply {
@@ -103,9 +106,12 @@ export async function handleDescribe(body: unknown, deps: Deps, onProgress?: (p:
   try {
     const result = await describeCharacter({
       description: parsed.data.description,
+      name: parsed.data.name,
       content: deps.content,
       // A level the description asks for wins over the campaign's starting level.
-      campaign: { startingLevel: levelFromDescription(parsed.data.description) ?? parsed.data.startingLevel },
+      campaign: {
+        startingLevel: (parsed.data.exactLevel ? undefined : levelFromDescription(parsed.data.description)) ?? parsed.data.startingLevel,
+      },
       provider,
       onProgress,
     });

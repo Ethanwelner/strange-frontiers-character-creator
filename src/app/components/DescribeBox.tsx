@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import type { DescribeError, DescribeEvent, DescribeResult, Progress } from "../../ai/types.js";
+import { levelFromDescription, MAX_LEVEL } from "../../ai/level.js";
 import { describeRemote } from "../../ai/remote.js";
 import { content, kindById, packageById } from "../content.js";
 import type { AiNotes, Draft } from "../draft.js";
@@ -10,8 +11,10 @@ interface Props {
   notes?: AiNotes;
   startingLevel: number;
   hasBuild: boolean;
-  onBuilt: (result: DescribeResult, description: string, seconds: number) => void;
+  onBuilt: (result: DescribeResult, description: string, seconds: number, name?: string) => void;
   onDismiss: () => void;
+  // New, to the right of Build it
+  actions?: ReactNode;
 }
 
 // A build streams progress lines, then a result or error line. Errors before
@@ -56,14 +59,21 @@ function targetLabel(target: string, draft: Draft): string {
   return traitName(target);
 }
 
+interface BuildRequest {
+  description: string;
+  // The level the player set; a level in the description doesn't override it.
+  level: number;
+  name?: string;
+}
+
 // Ollama builds run on the local AI server, which streams progress back.
-async function describeOnServer(description: string, startingLevel: number, onProgress: (p: Progress) => void) {
+async function describeOnServer({ description, level, name }: BuildRequest, onProgress: (p: Progress) => void) {
   let res: Response;
   try {
     res = await fetch("api/describe", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ description, startingLevel }),
+      body: JSON.stringify({ description, startingLevel: level, exactLevel: true, name }),
     });
   } catch {
     throw new Error("Couldn't reach the AI server. Start it with npm run dev.");
@@ -75,16 +85,35 @@ async function describeOnServer(description: string, startingLevel: number, onPr
 
 // Claude builds run their loop here and send each turn to the endpoint that
 // holds the key; Ollama builds run on the local AI server (see vite.config.ts).
-const requestBuild = (description: string, startingLevel: number, onProgress: (p: Progress) => void) =>
+const requestBuild = (request: BuildRequest, onProgress: (p: Progress) => void) =>
   __SF_AI__.route === "browser"
-    ? describeRemote({ description, startingLevel, content, endpoint: __SF_AI__.endpoint, model: __SF_AI__.model, onProgress })
-    : describeOnServer(description, startingLevel, onProgress);
+    ? describeRemote({
+        description: request.description,
+        startingLevel: request.level,
+        levelFromText: false,
+        name: request.name,
+        content,
+        endpoint: __SF_AI__.endpoint,
+        model: __SF_AI__.model,
+        onProgress,
+      })
+    : describeOnServer(request, onProgress);
 
 // 67 seconds as "1:07".
 export const clock = (seconds: number) => `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, "0")}`;
 
-export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss, draft }: Props) {
+export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss, draft, actions }: Props) {
   const [text, setText] = useState(notes?.description ?? "");
+  // A name for the builder to use, and the level to build at. Writing a level
+  // in the description ("level 10") sets the stepper; the stepper has the last word.
+  const [name, setName] = useState(notes?.name ?? "");
+  const [level, setLevel] = useState(startingLevel);
+  useEffect(() => setLevel(startingLevel), [startingLevel]);
+  const describe = (value: string) => {
+    setText(value);
+    const asked = levelFromDescription(value);
+    if (asked) setLevel(asked);
+  };
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState<Progress>();
   const [error, setError] = useState<string>();
@@ -115,10 +144,12 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
     setError(undefined);
     setProgress(undefined);
     try {
-      const body = await requestBuild(text, startingLevel, setProgress);
+      const named = name.trim() || undefined;
+      const body = await requestBuild({ description: text, level, name: named }, setProgress);
       if ("error" in body) throw new Error(body.message);
       if (!body.build) throw new Error("The model didn't propose a build. Try again, or describe the character differently.");
-      onBuilt(body, text, secondsSince());
+      // The player's name stands, whatever the model wrote.
+      onBuilt(named ? { ...body, build: { ...body.build, name: named } } : body, text, secondsSince(), named);
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       setError(`${message} (after ${clock(secondsSince())})`);
@@ -130,52 +161,91 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
   return (
     <section className="describe" aria-label="Describe your character">
       <form onSubmit={submit}>
-        <label htmlFor="describe-text">
+        {/* The heading and what it's for, then the fields and Build it */}
+        <div className="describe-intro">
           <h3 className="copy-title">Describe your character</h3>
-        </label>
-        <p className="hint">
-          Say who they are in your own words. The AI picks from the game's real Kinds, packages and Traits, the rules engine checks every
-          choice, and you can change anything afterward.
-        </p>
-        <textarea
-          id="describe-text"
-          className="rpg-search-input"
-          value={text}
-          rows={3}
-          maxLength={4000}
-          placeholder="e.g. A goblin who failed out of the mage schools and now patches up caravan guards with whatever grows by the road."
-          onChange={(e) => setText(e.target.value)}
-          disabled={busy}
-        />
-        <div className="describe-actions">
-          <button type="submit" className="primary build-button" disabled={busy || !text.trim()} aria-busy={busy}>
-            {busy ? (
-              <>
-                Building
-                <span className="stopwatch-icon" aria-hidden="true" />
-                <span className="num" aria-label={`${elapsed} seconds`}>
-                  {clock(elapsed)}
+          <p className="hint">
+            Say who they are in your own words. The AI picks from the game's real Kinds, packages and Traits, the rules engine checks every
+            choice, and you can change anything afterward.
+          </p>
+        </div>
+        <div className="describe-controls">
+          {/* Name with Level to its right, then Description under both */}
+          <div className="describe-fields">
+            <label className="describe-field describe-name">
+              <span className="field-label">Character Name</span>
+              <input
+                className="rpg-search-input"
+                value={name}
+                maxLength={80}
+                placeholder="Leave blank to let the builder name them"
+                onChange={(e) => setName(e.target.value)}
+                disabled={busy}
+              />
+            </label>
+            <div className="describe-field describe-level">
+              <span className="field-label">Level</span>
+              <div className="stepper">
+                <button type="button" onClick={() => setLevel((n) => Math.max(1, n - 1))} disabled={busy || level <= 1} aria-label="Lower level">
+                  −
+                </button>
+                <span className="num" aria-live="polite">
+                  {level}
                 </span>
+                <button
+                  type="button"
+                  onClick={() => setLevel((n) => Math.min(MAX_LEVEL, n + 1))}
+                  disabled={busy || level >= MAX_LEVEL}
+                  aria-label="Raise level"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+            <label className="describe-field describe-text">
+              <span className="field-label">Description</span>
+              <textarea
+                className="rpg-search-input"
+                value={text}
+                rows={3}
+                maxLength={4000}
+                placeholder="e.g. A goblin who failed out of the mage schools and now patches up caravan guards with whatever grows by the road."
+                onChange={(e) => describe(e.target.value)}
+                disabled={busy}
+              />
+            </label>
+          </div>
+          <div className="describe-actions">
+            <button type="submit" className="primary build-button" disabled={busy || !text.trim()} aria-busy={busy}>
+              {busy ? (
+                <>
+                  Building
+                  <span className="stopwatch-icon" aria-hidden="true" />
+                  <span className="num" aria-label={`${elapsed} seconds`}>
+                    {clock(elapsed)}
+                  </span>
+                </>
+              ) : confirming ? (
+                "Replace it"
+              ) : (
+                "Build it"
+              )}
+            </button>
+            {actions}
+            {confirming && (
+              <>
+                <span className="hint">This replaces the current build.</span>
+                <button type="button" className="link" onClick={() => setConfirming(false)}>
+                  Cancel
+                </button>
               </>
-            ) : confirming ? (
-              "Replace it"
-            ) : (
-              "Build it"
             )}
-          </button>
-          {confirming && (
-            <>
-              <span className="hint">This replaces the current build.</span>
-              <button type="button" className="link" onClick={() => setConfirming(false)}>
-                Cancel
-              </button>
-            </>
-          )}
-          {busy && (
-            <span className="describe-progress muted" title={progress?.status}>
-              {progress ? `Turn ${progress.turn} of ${progress.maxTurns} · ${progress.status}` : "Starting…"}
-            </span>
-          )}
+            {busy && (
+              <span className="describe-progress muted" title={progress?.status}>
+                {progress ? `Turn ${progress.turn} of ${progress.maxTurns} · ${progress.status}` : "Starting…"}
+              </span>
+            )}
+          </div>
         </div>
       </form>
 
@@ -194,27 +264,36 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
             <p className={`describe-status ${notes.status === "accepted" ? "good" : "bad"}`}>
               {notes.seconds !== undefined && <strong>Build finished in {clock(notes.seconds)}. </strong>}
               {notes.status === "accepted"
-                ? `Built from your description${notes.model ? ` by ${notes.model}` : ""}. Edit anything below; the panel keeps checking.`
-                : `${notes.model ?? "The model"} ran out of turns before the build was legal. The panel shows what's left to fix.`}
+                ? "Built from your description. Edit anything below; the panel keeps checking."
+                : "The builder ran out of turns before the build was legal. The panel shows what's left to fix."}
             </p>
             <button className="link" onClick={onDismiss} aria-label="Hide the reasons">
               ✕
             </button>
           </div>
           {notes.summary && <p>{notes.summary}</p>}
-          {notes.openChoices.length > 0 && (
-            <p className="hint">
-              Left for you on the Choices step:{" "}
-              {notes.openChoices.map((c) => `${c.note ?? choiceLabel(c.count, c.from)} (${askerName(c)})`).join("; ")}.
-            </p>
-          )}
-          <ul className="ai-reasons">
-            {notes.reasons.map((r, i) => (
-              <li key={i}>
-                <strong>{targetLabel(r.target, draft)}</strong> {r.reason}
-              </li>
-            ))}
-          </ul>
+          {/* The reasons for each choice, folded away in the site's Details box */}
+          <details className="lore-details">
+            <summary className="line-container">
+              <h5>
+                <strong>Details</strong>
+              </h5>
+              <div className="line"></div>
+            </summary>
+            {notes.openChoices.length > 0 && (
+              <p className="hint">
+                Left for you on the Choices step:{" "}
+                {notes.openChoices.map((c) => `${c.note ?? choiceLabel(c.count, c.from)} (${askerName(c)})`).join("; ")}.
+              </p>
+            )}
+            <ul className="ai-reasons">
+              {notes.reasons.map((r, i) => (
+                <li key={i}>
+                  <strong>{targetLabel(r.target, draft)}</strong> {r.reason}
+                </li>
+              ))}
+            </ul>
+          </details>
         </div>
       )}
     </section>

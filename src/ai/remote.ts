@@ -43,6 +43,10 @@ export function endpointCreate(endpoint: string, fetcher: Fetcher = (url, init) 
 export interface RemoteOptions {
   description: string;
   startingLevel: number;
+  // A level written in the description ("level 10") wins over startingLevel,
+  // unless this is false, as when the player set the level by hand.
+  levelFromText?: boolean;
+  name?: string;
   content: Content;
   endpoint: string;
   model: string;
@@ -55,9 +59,10 @@ export async function describeRemote(opts: RemoteOptions): Promise<DescribeResul
   try {
     return await describeCharacter({
       description: opts.description,
+      name: opts.name,
       content: opts.content,
       // A level the description asks for wins over the campaign's starting level.
-      campaign: { startingLevel: levelFromDescription(opts.description) ?? opts.startingLevel },
+      campaign: { startingLevel: (opts.levelFromText === false ? undefined : levelFromDescription(opts.description)) ?? opts.startingLevel },
       provider,
       onProgress: opts.onProgress,
     });
