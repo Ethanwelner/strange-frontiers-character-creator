@@ -392,13 +392,13 @@
   }
 
   /* Character Name over Description, their left edges lined up; Level in its
-     own column beside Description */
+     own column to the right of Description */
   .describe-fields {
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas:
-      ". name"
-      "level text";
+      "name ."
+      "text level";
     gap: 0.75rem 16px;
     margin: 0.75rem 0;
   }

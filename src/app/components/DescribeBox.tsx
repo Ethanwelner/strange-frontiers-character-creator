@@ -164,7 +164,7 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
           Say who they are in your own words. The AI picks from the game's real Kinds, packages and Traits, the rules engine checks every
           choice, and you can change anything afterward.
         </p>
-        {/* Name above Description, lined up on the left; Level beside Description */}
+        {/* Name above Description, lined up on the left; Level to the right of Description */}
         <div className="describe-fields">
           <label className="describe-field describe-name">
             <span className="field-label">Character Name</span>
