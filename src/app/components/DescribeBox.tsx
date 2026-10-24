@@ -194,8 +194,8 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
             <p className={`describe-status ${notes.status === "accepted" ? "good" : "bad"}`}>
               {notes.seconds !== undefined && <strong>Build finished in {clock(notes.seconds)}. </strong>}
               {notes.status === "accepted"
-                ? `Built from your description${notes.model ? ` by ${notes.model}` : ""}. Edit anything below; the panel keeps checking.`
-                : `${notes.model ?? "The model"} ran out of turns before the build was legal. The panel shows what's left to fix.`}
+                ? "Built from your description. Edit anything below; the panel keeps checking."
+                : "The builder ran out of turns before the build was legal. The panel shows what's left to fix."}
             </p>
             <button className="link" onClick={onDismiss} aria-label="Hide the reasons">
               ✕
