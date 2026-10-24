@@ -1,4 +1,5 @@
 import { createContext, useContext, type KeyboardEvent, type ReactNode } from "react";
+import { MAX_LEVEL } from "../../ai/level.js";
 import { STAT_GROUPS, type StatBlock, type StatId } from "../../schema/index.js";
 import { kindById, packageById, traitById } from "../content.js";
 import { STEPS, type Draft, type Step } from "../draft.js";
@@ -132,6 +133,39 @@ export function StatRanges({ stats }: { stats: StatBlock }) {
           ))}
         </div>
       ))}
+    </div>
+  );
+}
+
+// A level from 1 to MAX_LEVEL: its label over − and + around the number. The
+// describe box and the Character step both use it.
+export function LevelStepper({
+  label,
+  level,
+  onChange,
+  disabled,
+  className = "",
+}: {
+  label: string;
+  level: number;
+  onChange: (level: number) => void;
+  disabled?: boolean;
+  className?: string;
+}) {
+  return (
+    <div className={`level-stepper ${className}`}>
+      <span className="field-label">{label}</span>
+      <div className="stepper">
+        <button type="button" onClick={() => onChange(Math.max(1, level - 1))} disabled={disabled || level <= 1} aria-label="Lower level">
+          −
+        </button>
+        <span className="num" aria-live="polite">
+          {level}
+        </span>
+        <button type="button" onClick={() => onChange(Math.min(MAX_LEVEL, level + 1))} disabled={disabled || level >= MAX_LEVEL} aria-label="Raise level">
+          +
+        </button>
+      </div>
     </div>
   );
 }
