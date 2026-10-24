@@ -391,40 +391,47 @@
     resize: vertical;
   }
 
-  /* The name to build under, then the level beside the description */
-  .describe-name {
+  /* Character Name over Description, their left edges lined up; Level in its
+     own column beside Description */
+  .describe-fields {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      ". name"
+      "level text";
+    gap: 0.75rem 16px;
+    margin: 0.75rem 0;
+  }
+
+  .describe-field {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
-    margin-top: 0.75rem;
-
-    input.rpg-search-input {
-      padding: 0 16px;
-      font-size: inherit;
-    }
 
     input::placeholder {
       color: #9a9a9a;
     }
   }
 
-  .describe-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 16px;
-    margin: 0.75rem 0;
+  .describe-name {
+    grid-area: name;
 
-    textarea.rpg-search-input {
-      flex: 1;
-      min-width: 0;
-      margin: 0;
+    input.rpg-search-input {
+      padding: 0 16px;
+      font-size: inherit;
     }
   }
 
   .describe-level {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
+    grid-area: level;
+  }
+
+  .describe-text {
+    grid-area: text;
+
+    textarea.rpg-search-input {
+      margin: 0;
+    }
   }
 
   .describe-actions {

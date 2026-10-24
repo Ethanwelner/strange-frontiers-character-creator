@@ -159,26 +159,25 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
   return (
     <section className="describe" aria-label="Describe your character">
       <form onSubmit={submit}>
-        <label htmlFor="describe-text">
-          <h3 className="copy-title">Describe your character</h3>
-        </label>
+        <h3 className="copy-title">Describe your character</h3>
         <p className="hint">
           Say who they are in your own words. The AI picks from the game's real Kinds, packages and Traits, the rules engine checks every
           choice, and you can change anything afterward.
         </p>
-        <label className="describe-name">
-          <span className="field-label">Character Name</span>
-          <input
-            className="rpg-search-input"
-            value={name}
-            maxLength={80}
-            placeholder="Leave blank to let the builder name them"
-            onChange={(e) => setName(e.target.value)}
-            disabled={busy}
-          />
-        </label>
-        <div className="describe-row">
-          <div className="describe-level">
+        {/* Name above Description, lined up on the left; Level beside Description */}
+        <div className="describe-fields">
+          <label className="describe-field describe-name">
+            <span className="field-label">Character Name</span>
+            <input
+              className="rpg-search-input"
+              value={name}
+              maxLength={80}
+              placeholder="Leave blank to let the builder name them"
+              onChange={(e) => setName(e.target.value)}
+              disabled={busy}
+            />
+          </label>
+          <div className="describe-field describe-level">
             <span className="field-label">Level</span>
             <div className="stepper">
               <button type="button" onClick={() => setLevel((n) => Math.max(1, n - 1))} disabled={busy || level <= 1} aria-label="Lower level">
@@ -197,16 +196,18 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
               </button>
             </div>
           </div>
-          <textarea
-            id="describe-text"
-            className="rpg-search-input"
-            value={text}
-            rows={3}
-            maxLength={4000}
-            placeholder="e.g. A goblin who failed out of the mage schools and now patches up caravan guards with whatever grows by the road."
-            onChange={(e) => describe(e.target.value)}
-            disabled={busy}
-          />
+          <label className="describe-field describe-text">
+            <span className="field-label">Description</span>
+            <textarea
+              className="rpg-search-input"
+              value={text}
+              rows={3}
+              maxLength={4000}
+              placeholder="e.g. A goblin who failed out of the mage schools and now patches up caravan guards with whatever grows by the road."
+              onChange={(e) => describe(e.target.value)}
+              disabled={busy}
+            />
+          </label>
         </div>
         <div className="describe-actions">
           <button type="submit" className="primary build-button" disabled={busy || !text.trim()} aria-busy={busy}>
