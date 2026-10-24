@@ -249,9 +249,8 @@
      48px apart. */
   /* At least as tall as the site's heroes (.short-section, 75vh), counting the
      room the page leaves above it for the site's nav (--sf-creator-top, set by
-     creator.php's css/rpg.css). The title, describe box (with Export, Import and
-     New beside Build it) and character box are centered, and the tabs sit at the
-     bottom. */
+     creator.php's css/rpg.css). The title, describe box (with New beside Build
+     it) and character box are centered, and the tabs sit at the bottom. */
   .builder-hero {
     display: grid;
     /* One column the step tabs can scroll inside, instead of widening it */
@@ -274,7 +273,7 @@
     padding: 32px 0;
   }
 
-  /* Export, Import and New, beside Build it */
+  /* New, beside Build it */
   .hero-bar {
     display: flex;
     align-items: center;

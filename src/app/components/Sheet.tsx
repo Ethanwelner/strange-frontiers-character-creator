@@ -84,7 +84,7 @@ function TraitModal({ held, places, onClose }: { held: Held; places: string[]; o
 // Laid out like the sample character sheet on the site's Mechanics tab.
 // Knowledges and Languages are a list of links, as on that sheet, each opening
 // its card; the other Traits are cards.
-export function Sheet({ draft, result }: { draft: Draft; result: BuildResult }) {
+export function Sheet({ draft, result, onExport, onImport }: { draft: Draft; result: BuildResult; onExport: () => void; onImport: () => void }) {
   const kind = draft.kind ? kindById.get(draft.kind) : undefined;
   const packages = [draft.origin, draft.profession, draft.past].map((id) => (id ? packageById.get(id) : undefined));
   const base = baseStats(draft);
@@ -118,9 +118,11 @@ export function Sheet({ draft, result }: { draft: Draft; result: BuildResult }) 
   return (
     <section className="sheet">
       <StepHeader step="sheet" title="Sheet" />
-      {/* Whether the build is legal, and Print, above the sheet */}
+      {/* Whether the build is legal, then Export, Import and Print, above the sheet */}
       <div className="sheet-actions">
         <span className={`status ${result.ok ? "good" : "bad"}`}>{result.ok ? "Legal" : `${result.errors.length} ${result.errors.length === 1 ? "error" : "errors"}`}</span>
+        <button onClick={onExport}>Export</button>
+        <button onClick={onImport}>Import</button>
         <button onClick={() => window.print()}>Print</button>
       </div>
       <div className="c-sheet">

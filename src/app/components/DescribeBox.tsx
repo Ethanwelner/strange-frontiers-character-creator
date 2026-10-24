@@ -13,7 +13,7 @@ interface Props {
   hasBuild: boolean;
   onBuilt: (result: DescribeResult, description: string, seconds: number, name?: string) => void;
   onDismiss: () => void;
-  // Export, Import and New, to the right of Build it
+  // New, to the right of Build it
   actions?: ReactNode;
 }
 

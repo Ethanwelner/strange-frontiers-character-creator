@@ -127,12 +127,6 @@ export function App() {
               onDismiss={() => setSaved((s) => ({ ...s, ai: undefined }))}
               actions={
                 <div className="hero-bar">
-                  <button type="button" className="hero-link" onClick={exportBuild}>
-                    Export
-                  </button>
-                  <button type="button" className="hero-link" onClick={() => fileInput.current?.click()}>
-                    Import
-                  </button>
                   {confirmingNew ? (
                     <span className="hero-confirm">
                       Clear this build?
@@ -201,7 +195,7 @@ export function App() {
               )}
               {step === "choices" && <ChoicesStep draft={draft} result={result} onChange={setDraft} />}
               {step === "traits" && <TraitsStep draft={draft} campaign={campaign} result={result} onChange={setDraft} />}
-              {step === "sheet" && <Sheet draft={draft} result={result} />}
+              {step === "sheet" && <Sheet draft={draft} result={result} onExport={exportBuild} onImport={() => fileInput.current?.click()} />}
 
               <div className="pager">
                 {i > 0 ? <button onClick={() => setStep(STEPS[i - 1]!)}>← {LABELS[STEPS[i - 1]!]}</button> : <span />}
