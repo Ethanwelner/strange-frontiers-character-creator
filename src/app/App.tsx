@@ -4,7 +4,6 @@ import { BackgroundStep } from "./components/BackgroundStep.js";
 import { CharacterStep } from "./components/CharacterStep.js";
 import { ChoicesStep } from "./components/ChoicesStep.js";
 import { DescribeBox } from "./components/DescribeBox.js";
-import { KindStep } from "./components/KindStep.js";
 import { StatsStep } from "./components/StatsStep.js";
 import { Sheet } from "./components/Sheet.js";
 import { TraitsStep } from "./components/TraitsStep.js";
@@ -16,7 +15,6 @@ import { clearSaved, EMPTY, fromBuild, load, save, slug, STEPS, toBuild, withLev
 
 const LABELS: Record<Step, string> = {
   character: "Character",
-  kind: "Kind",
   background: "Background",
   stats: "Stats",
   traits: "Traits",
@@ -196,7 +194,6 @@ export function App() {
               {step === "character" && (
                 <CharacterStep draft={draft} startingLevel={campaign.startingLevel} onChange={setDraft} onStartingLevel={setStartingLevel} />
               )}
-              {step === "kind" && <KindStep draft={draft} onChange={setDraft} />}
               {step === "background" && <BackgroundStep draft={draft} onChange={setDraft} />}
               {step === "stats" && (
                 <StatsStep draft={draft} onChange={setDraft} />

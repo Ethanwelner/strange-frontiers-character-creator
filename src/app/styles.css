@@ -754,6 +754,11 @@
     padding-top: 24px;
   }
 
+  /* Stacked boxes on one step, like Character's name and level over its Kinds */
+  .step-box + .step-box {
+    margin-top: 24px;
+  }
+
   /* The first slot heading in a box sits at its top */
   .step-box > .slot:first-child > .subhead:first-child {
     margin-top: 0;

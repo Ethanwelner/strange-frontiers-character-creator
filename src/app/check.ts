@@ -94,7 +94,7 @@ export function traitOptions(draft: Draft, content: Content, campaign: Campaign,
 export function stepOf(issue: Issue): Step {
   switch (issue.code) {
     case "kind":
-      return "kind";
+      return "character";
     case "package":
       return "background";
     case "level":
@@ -109,8 +109,7 @@ export function stepOf(issue: Issue): Step {
       return "choices";
     case "schema": {
       const field = issue.path?.split(".")[0];
-      if (field === "name" || field === "level") return "character";
-      if (field === "kind") return "kind";
+      if (field === "name" || field === "level" || field === "kind") return "character";
       if (field === "origin" || field === "profession" || field === "past") return "background";
       if (field === "levels" || field === "startPoints") return "stats";
       if (field === "choices") return "choices";

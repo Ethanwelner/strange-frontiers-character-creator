@@ -98,6 +98,11 @@ describe("traitOptions", () => {
     expect(steps).toEqual(["character", "stats"]);
   });
 
+  it("puts a missing Kind on the Character step, which now holds the Kind cards", () => {
+    const result = check({ ...human, kind: undefined }, bundled, campaign);
+    expect(result.errors.some((e) => stepOf(e) === "character")).toBe(true);
+  });
+
   it("never offers a Conveyed Trait", () => {
     for (const pick of ["universal", "background"] as const) {
       const ids = traitOptions(human, bundled, campaign, pick)!.map((o) => o.trait.id);

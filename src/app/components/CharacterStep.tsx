@@ -1,5 +1,6 @@
 import { MAX_LEVEL } from "../../ai/level.js";
 import type { Draft } from "../draft.js";
+import { KindCards } from "./KindCards.js";
 import { StepHeader } from "./ui.js";
 
 const MAX_START = MAX_LEVEL;
@@ -11,12 +12,13 @@ interface Props {
   onStartingLevel: (level: number) => void;
 }
 
-// The character's name and the level the campaign starts it at.
+// The character's name, the level the campaign starts it at, and its Kind.
 export function CharacterStep({ draft, startingLevel, onChange, onStartingLevel }: Props) {
   return (
     <section>
       <StepHeader step="character" title="Character">
-        Name your character and set the level your campaign starts at. Your GM sets this; most campaigns start at 3.
+        Name your character, set the level your campaign starts at, and choose a Kind. Your GM sets the level; most campaigns start at 3.
+        A Kind sets your level 0 stats and how far each can go; numbers show start/max.
       </StepHeader>
       <div className="tech-fields tech-fields-light step-box character-fields">
         <label className="field name-field">
@@ -34,6 +36,7 @@ export function CharacterStep({ draft, startingLevel, onChange, onStartingLevel 
           </select>
         </label>
       </div>
+      <KindCards draft={draft} onChange={onChange} />
     </section>
   );
 }
