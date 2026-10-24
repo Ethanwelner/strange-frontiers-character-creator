@@ -1306,10 +1306,12 @@
     font-weight: 600;
   }
 
-  /* Character step: name beside starting level, with their controls level */
+  /* Character step: the name (up to 640px wide) with the starting level right
+     beside it, their controls level */
   .character-fields {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 640px) auto;
+    justify-content: start;
     align-items: end;
     gap: 0 24px;
 
