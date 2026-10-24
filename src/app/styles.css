@@ -360,15 +360,29 @@
   .describe {
     max-width: 760px;
 
-    /* Heading, hint, fields and Build it, 12px apart */
-    form {
+    /* The heading and hint (12px apart), then 24px down, the fields and
+       Build it (16px apart) */
+    form,
+    .describe-intro,
+    .describe-controls {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+    }
 
-      > * {
-        margin: 0;
-      }
+    form {
+      gap: 24px;
+    }
+
+    .describe-intro {
+      gap: 12px;
+    }
+
+    .describe-controls {
+      gap: 16px;
+    }
+
+    :is(.describe-intro, .describe-controls) > * {
+      margin: 0;
     }
 
     .hint {
@@ -412,14 +426,14 @@
       "name level"
       "text text";
     align-items: end;
-    gap: 12px 16px;
+    gap: 16px 24px;
   }
 
-  /* A label 4px above its input */
+  /* A label 6px above its input */
   .describe-field {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px;
 
     input::placeholder {
       color: #9a9a9a;

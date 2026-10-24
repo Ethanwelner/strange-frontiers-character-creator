@@ -161,86 +161,91 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
   return (
     <section className="describe" aria-label="Describe your character">
       <form onSubmit={submit}>
-        <h3 className="copy-title">Describe your character</h3>
-        <p className="hint">
-          Say who they are in your own words. The AI picks from the game's real Kinds, packages and Traits, the rules engine checks every
-          choice, and you can change anything afterward.
-        </p>
-        {/* Name with Level to its right, then Description under both */}
-        <div className="describe-fields">
-          <label className="describe-field describe-name">
-            <span className="field-label">Character Name</span>
-            <input
-              className="rpg-search-input"
-              value={name}
-              maxLength={80}
-              placeholder="Leave blank to let the builder name them"
-              onChange={(e) => setName(e.target.value)}
-              disabled={busy}
-            />
-          </label>
-          <div className="describe-field describe-level">
-            <span className="field-label">Level</span>
-            <div className="stepper">
-              <button type="button" onClick={() => setLevel((n) => Math.max(1, n - 1))} disabled={busy || level <= 1} aria-label="Lower level">
-                −
-              </button>
-              <span className="num" aria-live="polite">
-                {level}
-              </span>
-              <button
-                type="button"
-                onClick={() => setLevel((n) => Math.min(MAX_LEVEL, n + 1))}
-                disabled={busy || level >= MAX_LEVEL}
-                aria-label="Raise level"
-              >
-                +
-              </button>
-            </div>
-          </div>
-          <label className="describe-field describe-text">
-            <span className="field-label">Description</span>
-            <textarea
-              className="rpg-search-input"
-              value={text}
-              rows={3}
-              maxLength={4000}
-              placeholder="e.g. A goblin who failed out of the mage schools and now patches up caravan guards with whatever grows by the road."
-              onChange={(e) => describe(e.target.value)}
-              disabled={busy}
-            />
-          </label>
+        {/* The heading and what it's for, then the fields and Build it */}
+        <div className="describe-intro">
+          <h3 className="copy-title">Describe your character</h3>
+          <p className="hint">
+            Say who they are in your own words. The AI picks from the game's real Kinds, packages and Traits, the rules engine checks every
+            choice, and you can change anything afterward.
+          </p>
         </div>
-        <div className="describe-actions">
-          <button type="submit" className="primary build-button" disabled={busy || !text.trim()} aria-busy={busy}>
-            {busy ? (
-              <>
-                Building
-                <span className="stopwatch-icon" aria-hidden="true" />
-                <span className="num" aria-label={`${elapsed} seconds`}>
-                  {clock(elapsed)}
+        <div className="describe-controls">
+          {/* Name with Level to its right, then Description under both */}
+          <div className="describe-fields">
+            <label className="describe-field describe-name">
+              <span className="field-label">Character Name</span>
+              <input
+                className="rpg-search-input"
+                value={name}
+                maxLength={80}
+                placeholder="Leave blank to let the builder name them"
+                onChange={(e) => setName(e.target.value)}
+                disabled={busy}
+              />
+            </label>
+            <div className="describe-field describe-level">
+              <span className="field-label">Level</span>
+              <div className="stepper">
+                <button type="button" onClick={() => setLevel((n) => Math.max(1, n - 1))} disabled={busy || level <= 1} aria-label="Lower level">
+                  −
+                </button>
+                <span className="num" aria-live="polite">
+                  {level}
                 </span>
+                <button
+                  type="button"
+                  onClick={() => setLevel((n) => Math.min(MAX_LEVEL, n + 1))}
+                  disabled={busy || level >= MAX_LEVEL}
+                  aria-label="Raise level"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+            <label className="describe-field describe-text">
+              <span className="field-label">Description</span>
+              <textarea
+                className="rpg-search-input"
+                value={text}
+                rows={3}
+                maxLength={4000}
+                placeholder="e.g. A goblin who failed out of the mage schools and now patches up caravan guards with whatever grows by the road."
+                onChange={(e) => describe(e.target.value)}
+                disabled={busy}
+              />
+            </label>
+          </div>
+          <div className="describe-actions">
+            <button type="submit" className="primary build-button" disabled={busy || !text.trim()} aria-busy={busy}>
+              {busy ? (
+                <>
+                  Building
+                  <span className="stopwatch-icon" aria-hidden="true" />
+                  <span className="num" aria-label={`${elapsed} seconds`}>
+                    {clock(elapsed)}
+                  </span>
+                </>
+              ) : confirming ? (
+                "Replace it"
+              ) : (
+                "Build it"
+              )}
+            </button>
+            {actions}
+            {confirming && (
+              <>
+                <span className="hint">This replaces the current build.</span>
+                <button type="button" className="link" onClick={() => setConfirming(false)}>
+                  Cancel
+                </button>
               </>
-            ) : confirming ? (
-              "Replace it"
-            ) : (
-              "Build it"
             )}
-          </button>
-          {actions}
-          {confirming && (
-            <>
-              <span className="hint">This replaces the current build.</span>
-              <button type="button" className="link" onClick={() => setConfirming(false)}>
-                Cancel
-              </button>
-            </>
-          )}
-          {busy && (
-            <span className="describe-progress muted" title={progress?.status}>
-              {progress ? `Turn ${progress.turn} of ${progress.maxTurns} · ${progress.status}` : "Starting…"}
-            </span>
-          )}
+            {busy && (
+              <span className="describe-progress muted" title={progress?.status}>
+                {progress ? `Turn ${progress.turn} of ${progress.maxTurns} · ${progress.status}` : "Starting…"}
+              </span>
+            )}
+          </div>
         </div>
       </form>
 
