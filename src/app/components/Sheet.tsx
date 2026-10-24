@@ -151,6 +151,15 @@ export function Sheet({ draft, result }: { draft: Draft; result: BuildResult }) 
               </ul>
             )}
           </div>
+          {/* Kind, Origin, Profession and Past, beside the name */}
+          <ul className="call-response sheet-background">
+            {background.map(([label, value]) => (
+              <li key={label}>
+                <span>{label}</span>
+                <strong>{value ?? "—"}</strong>
+              </li>
+            ))}
+          </ul>
         </div>
 
         <div className="c-sheet-box sheet-body">
@@ -185,15 +194,6 @@ export function Sheet({ draft, result }: { draft: Draft; result: BuildResult }) 
           </div>
 
           <div className="sheet-side">
-            <h4 className="rule">Background</h4>
-            <ul className="call-response">
-              {background.map(([label, value]) => (
-                <li key={label}>
-                  <span>{label}</span>
-                  <strong>{value ?? "—"}</strong>
-                </li>
-              ))}
-            </ul>
             <h4 className="rule">Knowledges</h4>
             {knowledges.length > 0 ? (
               <ul className="knowledge-list">
