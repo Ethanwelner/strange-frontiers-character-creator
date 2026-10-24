@@ -26,6 +26,9 @@ const LABELS: Record<Step, string> = {
 
 export function App() {
   const [saved, setSaved] = useState<Saved>(load);
+  // The last build's notes show only right after it finishes, not after a reload
+  // or an import. The saved notes still fill in the description and name.
+  const [justBuilt, setJustBuilt] = useState(false);
   const [notice, setNotice] = useState<string>();
   // New asks inline before clearing; native confirm() dialogs are blocked in some browsers.
   const [confirmingNew, setConfirmingNew] = useState(false);
@@ -69,7 +72,9 @@ export function App() {
     try {
       const imported = fromBuild(JSON.parse(await file.text()));
       // The imported level is taken as the campaign's starting level.
-      setSaved((s) => ({ ...s, draft: imported, campaign: { startingLevel: imported.level } }));
+      // The last build's notes don't describe an imported sheet.
+      setSaved((s) => ({ ...s, draft: imported, campaign: { startingLevel: imported.level }, ai: undefined }));
+      setJustBuilt(false);
       setNotice(`Imported ${file.name}.`);
     } catch (err) {
       setNotice(`Couldn't import ${file.name}: ${err instanceof Error ? err.message : String(err)}`);
@@ -80,6 +85,7 @@ export function App() {
   // The build's level becomes the starting level, since the description can ask for one.
   const applyDescribed = (result: DescribeResult, description: string, seconds: number, name?: string) => {
     const built = fromBuild(result.build);
+    setJustBuilt(true);
     setSaved((s) => ({
       ...s,
       draft: built,
@@ -101,6 +107,7 @@ export function App() {
 
   const reset = () => {
     setConfirmingNew(false);
+    setJustBuilt(false);
     clearSaved();
     setSaved(EMPTY);
     setNotice(undefined);
@@ -121,6 +128,7 @@ export function App() {
             <DescribeBox
               draft={draft}
               notes={saved.ai}
+              showNotes={justBuilt}
               startingLevel={campaign.startingLevel}
               hasBuild={Boolean(draft.kind || draft.origin || draft.profession || draft.past || draft.traits.length)}
               onBuilt={applyDescribed}
