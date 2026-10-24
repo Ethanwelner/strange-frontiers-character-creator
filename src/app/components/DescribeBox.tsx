@@ -9,6 +9,8 @@ import { askerName, choiceLabel, title, traitName } from "./ui.js";
 interface Props {
   draft: Draft;
   notes?: AiNotes;
+  // Whether a build just finished, so its notes show
+  showNotes: boolean;
   startingLevel: number;
   hasBuild: boolean;
   onBuilt: (result: DescribeResult, description: string, seconds: number, name?: string) => void;
@@ -102,7 +104,7 @@ const requestBuild = (request: BuildRequest, onProgress: (p: Progress) => void) 
 // 67 seconds as "1:07".
 export const clock = (seconds: number) => `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, "0")}`;
 
-export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss, draft, actions }: Props) {
+export function DescribeBox({ notes, showNotes, startingLevel, hasBuild, onBuilt, onDismiss, draft, actions }: Props) {
   const [text, setText] = useState(notes?.description ?? "");
   // A name for the builder to use, and the level to build at. Writing a level
   // in the description ("level 10") sets the stepper; the stepper has the last word.
@@ -258,7 +260,7 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
         </div>
       )}
 
-      {notes && !busy && (
+      {notes && showNotes && !busy && (
         <div className="describe-result">
           <div className="describe-head">
             <p className={`describe-status ${notes.status === "accepted" ? "good" : "bad"}`}>
