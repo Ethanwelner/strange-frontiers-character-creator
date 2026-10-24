@@ -202,19 +202,28 @@ export function DescribeBox({ notes, startingLevel, hasBuild, onBuilt, onDismiss
             </button>
           </div>
           {notes.summary && <p>{notes.summary}</p>}
-          {notes.openChoices.length > 0 && (
-            <p className="hint">
-              Left for you on the Choices step:{" "}
-              {notes.openChoices.map((c) => `${c.note ?? choiceLabel(c.count, c.from)} (${askerName(c)})`).join("; ")}.
-            </p>
-          )}
-          <ul className="ai-reasons">
-            {notes.reasons.map((r, i) => (
-              <li key={i}>
-                <strong>{targetLabel(r.target, draft)}</strong> {r.reason}
-              </li>
-            ))}
-          </ul>
+          {/* The reasons for each choice, folded away in the site's Details box */}
+          <details className="lore-details">
+            <summary className="line-container">
+              <h5>
+                <strong>Details</strong>
+              </h5>
+              <div className="line"></div>
+            </summary>
+            {notes.openChoices.length > 0 && (
+              <p className="hint">
+                Left for you on the Choices step:{" "}
+                {notes.openChoices.map((c) => `${c.note ?? choiceLabel(c.count, c.from)} (${askerName(c)})`).join("; ")}.
+              </p>
+            )}
+            <ul className="ai-reasons">
+              {notes.reasons.map((r, i) => (
+                <li key={i}>
+                  <strong>{targetLabel(r.target, draft)}</strong> {r.reason}
+                </li>
+              ))}
+            </ul>
+          </details>
         </div>
       )}
     </section>

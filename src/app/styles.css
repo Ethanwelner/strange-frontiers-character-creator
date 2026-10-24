@@ -425,10 +425,20 @@
     color: #c9c9c9;
   }
 
+  /* The last build's status and summary, 48px below Build it, then its
+     reasons in the site's Details box (.lore-details), drawn for the dark hero */
   .describe-result {
-    border-top: 1px solid var(--rule-on-black);
-    margin-top: 1rem;
-    padding-top: 0.75rem;
+    margin-top: 48px;
+
+    .lore-details {
+      margin-top: 1rem;
+      border-color: var(--rule-on-black);
+    }
+
+    .lore-details > summary h5 {
+      background: none;
+      color: inherit;
+    }
   }
 
   .describe-head {
