@@ -391,14 +391,15 @@
     resize: vertical;
   }
 
-  /* Character Name over Description, their left edges lined up; Level in its
-     own column to the right of Description */
+  /* Character Name with Level to its right, then Description across the full
+     width under both */
   .describe-fields {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas:
-      "name ."
-      "text level";
+      "name level"
+      "text text";
+    align-items: end;
     gap: 0.75rem 16px;
     margin: 0.75rem 0;
   }
