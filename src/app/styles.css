@@ -1609,8 +1609,19 @@
     }
   }
 
+  /* On the Sheet the pen follows the name, 16px after it; the field takes the
+     line while it's open */
   .sheet-name {
     margin-bottom: 0.5rem;
+    gap: 16px;
+
+    h2 {
+      flex: 0 1 auto;
+    }
+
+    &:has(.name-input) h2 {
+      flex: 1;
+    }
   }
 
   .name-text {
