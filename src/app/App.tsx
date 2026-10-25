@@ -174,9 +174,10 @@ export function App() {
         </div>
       </header>
 
-      {/* The step on the left, the character box beside it */}
+      {/* The step on the left, the character box beside it. The Sheet already
+          shows everything the box does, so it gets the full width. */}
       <div className="section unlimited white-bg builder-panel">
-        <div className="container builder-body">
+        <div className={`container builder-body${step === "sheet" ? " no-side" : ""}`}>
           <main>
             <StepErrors.Provider value={stepErrors}>
               {contentErrors.length > 0 && (
@@ -214,9 +215,11 @@ export function App() {
               </div>
             </StepErrors.Provider>
           </main>
-          <aside className="builder-side">
-            <ValidationPanel draft={draft} result={result} />
-          </aside>
+          {step !== "sheet" && (
+            <aside className="builder-side">
+              <ValidationPanel draft={draft} result={result} />
+            </aside>
+          )}
         </div>
       </div>
     </div>

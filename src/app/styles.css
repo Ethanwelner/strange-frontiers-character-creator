@@ -267,8 +267,12 @@
     flex-direction: column;
   }
 
+  /* The title and describe box: one 760px column, centered in the hero like
+     the site's other hero titles, or moved right only as far as it takes to
+     clear the site's page nav (--sf-creator-left) */
   .hero-main > :not(.builder-tabs) {
-    margin-left: var(--sf-creator-left, 0px);
+    width: min(760px, 100% - var(--sf-creator-left, 0px));
+    margin-left: max(var(--sf-creator-left, 0px), (100% - 760px) / 2);
   }
 
   /* The body: the step, then the character box in a column on the right, kept
@@ -277,6 +281,10 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
     gap: 48px;
+  }
+
+  .builder-body.no-side {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   /* New, beside Build it */
