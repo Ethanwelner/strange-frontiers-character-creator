@@ -195,7 +195,7 @@ describe("legal Dreft characters", () => {
     expectLegal(r);
     expect(r.warnings).toEqual([]);
     expect(r.summary!.stats).toMatchObject({ power: 2, grace: 3, memory: 1 });
-    expect(r.summary!.coreStats).toEqual({ physical: 1, social: 0, mental: 0 });
+    expect(r.summary!.coreStats).toEqual({ physical: 1, social: 0, mental: 0, magic: 0 });
     expect(r.summary!.picks.universal).toEqual({ available: 10, spent: 4, banked: 6 });
     expect(r.summary!.picks.background).toEqual({ available: 2, spent: 0, banked: 2 });
   });
@@ -754,9 +754,9 @@ describe("rule 10: prerequisites and ranks", () => {
 describe("rule 11: HP, VP and SP", () => {
   it("takes HP, VP and SP from the Physical, Social and Mental focus stats", () => {
     // Endurance 1, Power 2 and Grace 3 after a physical level 1; 1 in each other stat.
-    expect(check(human).summary!.resources).toEqual({ hp: 16, vp: 3, sp: 3 });
+    expect(check(human).summary!.resources).toEqual({ hp: 16, vp: 3, sp: 3, mp: 0 });
     const r = check({ ...human, levels: [{ group: "mental", points: { logic: 3 } }] }).summary!;
-    expect(r.resources).toEqual({ hp: 13, vp: 3, sp: 6 });
+    expect(r.resources).toEqual({ hp: 13, vp: 3, sp: 6, mp: 0 });
   });
 
   it("adds a Trait's resources once per rank held", () => {
@@ -766,6 +766,46 @@ describe("rule 11: HP, VP and SP", () => {
         t.id === "survivalist" ? { ...t, resources: { hp: 2 } } : t.id === "dreft" ? { ...t, resources: { sp: 1 } } : t,
       ),
     };
-    expect(check(human, boosted).summary!.resources).toEqual({ hp: 18, vp: 3, sp: 5 });
+    expect(check(human, boosted).summary!.resources).toEqual({ hp: 18, vp: 3, sp: 5, mp: 0 });
+  });
+
+  it("adds a Kind's resources, like the Goblinoid Tatot's 6 MP", () => {
+    expect(check(goblinoid).summary!.resources.mp).toBe(6);
+  });
+});
+
+describe("rule 13: Magic", () => {
+  // A level 3 Isek: the sample's Physical level, then two in Magic.
+  const mage = { ...isek, level: 3, levels: [...isek.levels!, { group: "magic" as const, points: {} }, { group: "magic" as const, points: {} }] };
+  const L3 = { startingLevel: 3 };
+
+  it("opens Magic to the Kinds of Dreft through Magical Heritage", () => {
+    const r = check(isek);
+    expect(r.summary!.traits).toContainEqual({ trait: "magical-heritage", rank: 1, sources: ["kind isek"] });
+    expect(r.summary!.coreAccess).toContain("magic");
+    expect(check(human).summary!.coreAccess).toEqual(["physical", "social", "mental"]);
+  });
+
+  it("takes levels with no focus points, at 3 MP each", () => {
+    const r = check(mage, content, L3);
+    expectLegal(r);
+    expect(r.summary!.coreStats).toMatchObject({ physical: 1, magic: 2 });
+    expect(r.summary!.resources.mp).toBe(6);
+    // Magic gives no picks: only the Physical level's points add any.
+    expect(r.summary!.picks).toEqual(check(isek).summary!.picks);
+  });
+
+  it("rejects Magic for a character without the Trait that opens it", () => {
+    const humanMage = { ...human, level: 2, levels: [...human.levels!, { group: "magic" as const, points: {} }] };
+    expect(check(humanMage, content, { startingLevel: 2 }).errors).toEqual([
+      expect.objectContaining({ code: "core-access", message: "1 level goes to Magic, which this character can't level without Magical Heritage", path: "levels" }),
+    ]);
+  });
+
+  it("rejects focus points on a Magic level", () => {
+    const r = check({ ...mage, levels: [...isek.levels!, { group: "magic", points: { logic: 1 } }, { group: "magic", points: {} }] }, content, L3);
+    expect(r.errors).toEqual([
+      expect.objectContaining({ code: "allocation", message: "Level 2 puts points in logic, which isn't a magic stat; magic has no focus stats" }),
+    ]);
   });
 });

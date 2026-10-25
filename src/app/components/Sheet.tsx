@@ -1,21 +1,24 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { FREE_TEXT_POOLS, type BuildResult } from "../../engine/validate.js";
+import { FREE_TEXT_POOLS, MP_PER_MAGIC, type BuildResult } from "../../engine/validate.js";
 import { STAT_GROUPS, type StatId } from "../../schema/index.js";
-import { kindById, packageById, traitById } from "../content.js";
+import { coreStatsShown } from "../check.js";
+import { content, kindById, packageById, traitById } from "../content.js";
 import type { Draft } from "../draft.js";
-import { askerName, baseStats, Chip, GROUPS, NameField, SettingIcon, StatLine, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
+import { askerName, baseStats, Chip, NameField, SettingIcon, StatLine, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
 
-const SOURCE = /^(origin|profession|past) ([a-z0-9-]+)( choice)?$/;
+const SOURCE = /^(kind|origin|profession|past) ([a-z0-9-]+)( choice)?$/;
 const TRAIT_CHOICE = /^trait ([a-z0-9-]+) choice$/;
 
-// "origin dreft" → "Dreft (origin)", "trait additional-language choice" →
+// "origin dreft" → "Dreft (origin)", "kind isek" → "Isek (kind)",
+// "trait additional-language choice" →
 // "Additional Language (choice)"; pick sources read as they are.
 function source(s: string) {
   const t = TRAIT_CHOICE.exec(s);
   if (t) return `${traitName(t[1]!)} (choice)`;
   const m = SOURCE.exec(s);
   if (!m) return s;
-  return `${packageById.get(m[2]!)?.name ?? m[2]} (${m[1]}${m[3] ?? ""})`;
+  const name = m[1] === "kind" ? kindById.get(m[2]!)?.name : packageById.get(m[2]!)?.name;
+  return `${name ?? m[2]} (${m[1]}${m[3] ?? ""})`;
 }
 
 type Held = NonNullable<BuildResult["summary"]>["traits"][number];
@@ -101,6 +104,9 @@ export function Sheet({
   const packages = [draft.origin, draft.profession, draft.past].map((id) => (id ? packageById.get(id) : undefined));
   const base = baseStats(draft);
   const summary = result.summary;
+  const groups = coreStatsShown(draft, content, result);
+  // MP shows once the character can level Magic or has any.
+  const resources = groups.includes("magic") || (summary?.resources.mp ?? 0) > 0 ? (["hp", "vp", "sp", "mp"] as const) : (["hp", "vp", "sp"] as const);
   // Contacts, as the player wrote them.
   const records = draft.choices.flatMap((c) =>
     c.from === "contact" ? c.traits.map((text) => ({ text, noun: FREE_TEXT_POOLS[c.from]!, from: askerName(c) })) : [],
@@ -149,7 +155,7 @@ export function Sheet({
               Level {draft.level} {kind?.name ?? "—"} · {packages.map((p) => p?.name ?? "—").join(" · ")}
             </p>
             <p className="sheet-resources">
-              {(["hp", "vp", "sp"] as const).map((r) => (
+              {resources.map((r) => (
                 <span key={r}>
                   <i>{summary?.resources[r] ?? "–"}</i> <strong>{r.toUpperCase()}</strong>
                 </span>
@@ -178,7 +184,7 @@ export function Sheet({
 
         <div className="c-sheet-box sheet-body">
           <div className="sheet-stats">
-            {GROUPS.map((g) => (
+            {groups.map((g) => (
               <div key={g} className="sheet-group">
                 <div className="sheet-group-head">
                   <span className="stat-badge" title="Core stat">
@@ -186,6 +192,11 @@ export function Sheet({
                   </span>
                   <h4 className="rule">{title(g)}</h4>
                 </div>
+                {!STAT_GROUPS[g].length && (
+                  <p className="tiny-text muted">
+                    No focus stats. Each point adds {MP_PER_MAGIC} MP.
+                  </p>
+                )}
                 {STAT_GROUPS[g].map((s: StatId) => {
                   const value = summary?.stats[s];
                   // The Kind's bonus, with any free bonus points placed, shows gray.

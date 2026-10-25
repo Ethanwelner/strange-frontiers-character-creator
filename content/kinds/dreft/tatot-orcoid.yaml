@@ -11,6 +11,9 @@ features:
   - name: Merchant Clans
     description: Easier access to trading guild and merchant clan Traits.
 traitAccess: [trading-guild, merchant-clan]
+# Every Kind of Dreft is born to magic.
+grants:
+  - trait: magical-heritage
 stats:
   endurance: { bonus: 2, max: 18 }
   power: { bonus: 2, max: 18 }

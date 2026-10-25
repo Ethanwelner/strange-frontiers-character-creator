@@ -31,6 +31,7 @@ Every tab's Description is `summary`, Tags is `tags`, and Notes is for anything 
 | Plane, Region, Lore | `plane`, `region`, `lore`. Plane is Earth, Isekai or Any (lowercase in YAML). Every Trait tab has a Plane column after Name: a Trait is Earth or Isekai only when it names that setting's places, peoples, institutions, languages, technology or magic, and Any otherwise |
 | Kinds: Features | `features`, one `name: description` per line |
 | Kinds: Trait Access, Free Points, Max Total | `traitAccess`, `freePoints`, `maxTotal` |
+| Kinds: Grants, Resources | `grants` (Traits every character of the Kind holds, like Magical Heritage), `resources` (like `{ mp: 6 }`) |
 | Kinds: Physical / Social / Mental (bonus/max) | `stats`, from lines like "Endurance +1/15" |
 | Packages: Grants | `grants`; "Knowledge: X (1)" is Trait `x` at rank 1 |
 | Packages: Choices | `choices`, as their `note` |
@@ -60,7 +61,7 @@ Two pools are written in by the player rather than picked from Traits: `contact`
 
 A Trait marked `conveyed: true` (Explorers’ Lodge Membership, Imperial Service Record) can only come from a package's grants or from play, never from a pick, so it can't go on a package's `backgroundTraits` (the validator errors). Circumstance Traits use `category: circumstance`.
 
-A Trait that raises HP, VP or SP lists it under `resources` (for example `resources: { hp: 2 }`), counted once per rank held.
+A Trait that raises HP, VP, SP or MP lists it under `resources` (for example `resources: { hp: 2 }`), counted once per rank held. A Trait that lets a character level a core stat beyond Physical, Social and Mental lists it under `coreAccess`, like Magical Heritage's `coreAccess: [magic]`.
 
 ## Validator rules
 

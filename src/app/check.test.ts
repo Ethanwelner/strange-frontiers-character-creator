@@ -22,7 +22,7 @@ const human: Draft = {
   profession: "royal-guard",
   past: "noble-household",
   level: 1,
-  core: { physical: 1, social: 0, mental: 0 },
+  core: { physical: 1, social: 0, mental: 0, magic: 0 },
   points: { power: 1, grace: 2 },
   traits: [{ trait: "tracker", rank: 1, pick: "universal" }],
   choices: [],
@@ -133,7 +133,7 @@ describe("stat pool errors", () => {
   });
 
   it("says once per group how many focus points are left", () => {
-    const short: Draft = { ...withLevel(human, 2), core: { physical: 2, social: 0, mental: 0 }, points: { power: 1 } };
+    const short: Draft = { ...withLevel(human, 2), core: { physical: 2, social: 0, mental: 0, magic: 0 }, points: { power: 1 } };
     const messages = check(short, bundled, { startingLevel: 2 }).errors.map((e) => e.message);
     expect(messages.filter((m) => m.includes("Physical"))).toEqual(["Place 5 more Physical points"]);
     expect(stepOf(check(short, bundled, { startingLevel: 2 }).errors.find((e) => e.message.includes("Physical"))!)).toBe("stats");
@@ -150,18 +150,18 @@ describe("drafts", () => {
   });
 
   it("splits the stats pool into one allocation per level, and back", () => {
-    const levels = poolToLevels({ physical: 2, social: 0, mental: 1 }, { power: 4, grace: 2, logic: 3 });
+    const levels = poolToLevels({ physical: 2, social: 0, mental: 1, magic: 0 }, { power: 4, grace: 2, logic: 3 });
     expect(levels).toEqual([
       { group: "physical", points: { power: 3 } },
       { group: "physical", points: { power: 1, grace: 2 } },
       { group: "mental", points: { logic: 3 } },
     ]);
-    expect(levelsToPool(levels)).toEqual({ core: { physical: 2, social: 0, mental: 1 }, points: { power: 4, grace: 2, logic: 3 } });
+    expect(levelsToPool(levels)).toEqual({ core: { physical: 2, social: 0, mental: 1, magic: 0 }, points: { power: 4, grace: 2, logic: 3 } });
   });
 
   it("keeps the pool when the level goes up, and takes core points back from Mental first when it goes down", () => {
     const three = withCore(withCore(withLevel(human, 3), "social", 1), "mental", 1);
-    expect(three.core).toEqual({ physical: 1, social: 1, mental: 1 });
+    expect(three.core).toEqual({ physical: 1, social: 1, mental: 1, magic: 0 });
     expect(three.points).toEqual(human.points);
     expect(withLevel(three, 1)).toEqual({ ...human, level: 1 });
   });

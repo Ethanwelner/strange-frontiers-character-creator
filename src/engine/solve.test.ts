@@ -181,6 +181,15 @@ describe("solveConcept", () => {
     expect(s.result.ok).toBe(true);
   });
 
+  it("puts levels in Magic for a Kind that opens it, and not for one that doesn't", () => {
+    const s = solve({ ...hunter, focus: ["grace"], magic: 2, traits: [] }, 3);
+    expect(s.build.levels.map((l) => l.group)).toEqual(["physical", "magic", "magic"]);
+    expect(s.result.ok).toBe(true);
+    expect(s.result.summary!.resources.mp).toBe(6);
+    const human = solve({ ...hunter, kind: "human", magic: 2, traits: [] }, 3);
+    expect(human.build.levels.map((l) => l.group)).not.toContain("magic");
+  });
+
   it("buys nothing when the Kind or a package is wrong", () => {
     const s = solve({ ...hunter, kind: "dragon" });
     expect(s.result.ok).toBe(false);

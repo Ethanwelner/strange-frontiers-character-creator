@@ -1,9 +1,10 @@
 import { useState } from "react";
-import type { BuildResult } from "../../engine/validate.js";
+import { MP_PER_MAGIC, type BuildResult } from "../../engine/validate.js";
 import { STAT_GROUPS, type StatId } from "../../schema/index.js";
-import { packageById } from "../content.js";
+import { coreStatsShown } from "../check.js";
+import { content, packageById } from "../content.js";
 import type { Draft } from "../draft.js";
-import { baseStats, GROUPS, NameField, title } from "./ui.js";
+import { baseStats, NameField, title } from "./ui.js";
 
 interface Props {
   draft: Draft;
@@ -45,12 +46,19 @@ export function ValidationPanel({ draft, result, onName }: Props) {
         </ul>
         <h4>Stats</h4>
         <div className="panel-stats">
-          {GROUPS.map((g) => (
+          {coreStatsShown(draft, content, result).map((g) => (
             <div key={g} className="panel-group">
               <div className="panel-group-head">
                 <span>{title(g)}</span>
                 <span className="num">Core {summary ? summary.coreStats[g] : "–"}</span>
               </div>
+              {/* Magic has no focus stats; its points show as MP */}
+              {!STAT_GROUPS[g].length && (
+                <div className="panel-stat">
+                  <span>MP</span>
+                  <span className="num">{summary ? summary.resources.mp : MP_PER_MAGIC * draft.core[g]}</span>
+                </div>
+              )}
               {STAT_GROUPS[g].map((s: StatId) => {
                 const v = summary?.stats[s];
                 const max = base?.[s]?.max;

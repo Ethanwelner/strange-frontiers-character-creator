@@ -5,6 +5,8 @@ import { kindById, packageById, traitById } from "../content.js";
 import { STEPS, type Draft, type Step } from "../draft.js";
 
 export const GROUPS = Object.keys(STAT_GROUPS) as (keyof typeof STAT_GROUPS)[];
+// The core stats with focus stats: every one but Magic.
+export const FOCUS_GROUPS = GROUPS.filter((g) => STAT_GROUPS[g].length > 0);
 
 export const title = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
@@ -108,7 +110,7 @@ export function StatLine({ bonus, value, max }: { bonus: number; value: number; 
 export function StatRanges({ stats }: { stats: StatBlock }) {
   return (
     <div className="stat-ranges">
-      {GROUPS.map((g) => (
+      {FOCUS_GROUPS.map((g) => (
         <div key={g}>
           <div className="stat-ranges-group">{title(g)}</div>
           {STAT_GROUPS[g].map((s: StatId) => (

@@ -51,7 +51,7 @@ export interface Saved {
 }
 
 const POOL_GROUPS = Object.keys(STAT_GROUPS) as StatGroup[];
-export const noCore = (): Record<StatGroup, number> => ({ physical: 0, social: 0, mental: 0 });
+export const noCore = (): Record<StatGroup, number> => ({ physical: 0, social: 0, mental: 0, magic: 0 });
 
 export const EMPTY: Saved = {
   draft: { level: 3, core: noCore(), points: {}, traits: [], choices: [] },

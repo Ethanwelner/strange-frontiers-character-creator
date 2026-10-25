@@ -1,0 +1,11 @@
+id: magical-heritage
+name: "Magical Heritage"
+status: placeholder
+plane: isekai
+region: dreft
+summary: "Born on a plane where magic is part of the world, this character can level the Magic core stat."
+tags: [magic, dreft, heritage]
+category: ability
+conveyed: true
+coreAccess: [magic]
+effect: "This character can put levels into Magic, a core stat with no focus stats. Each point of Magic adds 3 MP (Mana Points)."
