@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, type KeyboardEvent, type ReactNode } from "react";
+import { useState, type KeyboardEvent, type ReactNode } from "react";
 import { MAX_LEVEL } from "../../ai/level.js";
 import { STAT_GROUPS, type StatBlock, type StatId } from "../../schema/index.js";
 import { kindById, packageById, traitById } from "../content.js";
@@ -42,13 +42,9 @@ export function baseStats(draft: Draft): StatBlock | undefined {
   return draft.kind ? kindById.get(draft.kind)?.stats : undefined;
 }
 
-// The engine's errors for the step on screen, as the player should read them.
-export const StepErrors = createContext<string[]>([]);
-
-// A step's title, then the site's black stinger with what's wrong on this
-// step beside it, then what the step is for.
+// A step's title, then the site's black stinger, then what the step is for.
+// What's wrong on the step shows beside the next step button (App.tsx).
 export function StepHeader({ step, title, children }: { step: Step; title: string; children?: ReactNode }) {
-  const errors = useContext(StepErrors);
   return (
     <header className="step-head">
       <h2>{title}</h2>
@@ -56,13 +52,6 @@ export function StepHeader({ step, title, children }: { step: Step; title: strin
         <div className="copy stinger black">
           Step {STEPS.indexOf(step) + 1} of {STEPS.length}
         </div>
-        {errors.length > 0 && (
-          <ul className="issues bad step-issues">
-            {errors.map((e, i) => (
-              <li key={i}>{e}</li>
-            ))}
-          </ul>
-        )}
       </div>
       {children && <p className="lede">{children}</p>}
     </header>

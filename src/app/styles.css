@@ -720,7 +720,7 @@
     margin-bottom: 1rem;
   }
 
-  /* The site's black .copy.stinger, with the step's errors to its right */
+  /* The site's black .copy.stinger */
   .stinger-row {
     display: flex;
     flex-wrap: wrap;
@@ -737,14 +737,14 @@
     margin-top: 0;
   }
 
-  /* What's wrong on this step, side by side beside the stinger, as red chips
+  /* What's wrong on this step, side by side left of the next step button, as red chips
      shaped like the site's Trait badges (.trait-box .badge in css/rpg.css) */
   .step-issues {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    justify-content: flex-end;
     gap: 0.5rem;
-    flex: 1 1 16rem;
   }
 
   .issues.step-issues li {
@@ -762,12 +762,30 @@
   .pager {
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
     margin-bottom: 24px;
 
     button {
       display: inline-flex;
       align-items: center;
       gap: 0.4em;
+    }
+  }
+
+  /* What's left to fix on the step, then the next step button, at the right.
+     When they don't fit on one line, the chips drop below the button. */
+  .pager-next {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-wrap: wrap-reverse;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+
+    .step-issues {
+      flex: 0 1 auto;
     }
   }
 
