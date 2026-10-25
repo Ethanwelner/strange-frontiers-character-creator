@@ -29,6 +29,8 @@ export function KindCards({ draft, onChange }: { draft: Draft; onChange: (d: Dra
                     <Chip tone="muted">{k.plane}</Chip>
                   </div>
                   <p>{k.summary}</p>
+                  {/* Bonus and max for every stat, then the features and grants */}
+                  <StatRanges stats={k.stats} />
                   <ul className="features">
                     {k.features.map((f) => (
                       <li key={f.name}>
@@ -49,7 +51,6 @@ export function KindCards({ draft, onChange }: { draft: Draft; onChange: (d: Dra
                       </div>
                     </div>
                   )}
-                  <StatRanges stats={k.stats} />
                 </Card>
               ))}
             </div>
