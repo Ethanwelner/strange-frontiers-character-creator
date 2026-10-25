@@ -354,17 +354,26 @@
     opacity: 0.6;
   }
 
-  /* Bootstrap's .badge, as a red count */
-  .badge {
+  /* A finished step: the selected card's green check, sized for the tab */
+  .step-done {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--portfolio-green);
+    color: var(--portfolio-white);
     font-family: var(--body);
-    font-size: 0.72rem;
-    font-weight: 700;
+    font-size: 0.7rem;
+    font-weight: 600;
     letter-spacing: 0;
     line-height: 1;
-    background: var(--portfolio-red);
-    color: var(--portfolio-white);
-    border-radius: 999px;
-    padding: 0.15rem 0.45rem;
+
+    &::before {
+      content: "✓";
+    }
   }
 
   /* Describe your character (the AI layer), in the hero */
