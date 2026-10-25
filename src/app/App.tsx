@@ -7,7 +7,7 @@ import { DescribeBox } from "./components/DescribeBox.js";
 import { StatsStep } from "./components/StatsStep.js";
 import { Sheet } from "./components/Sheet.js";
 import { TraitsStep } from "./components/TraitsStep.js";
-import { StepErrors } from "./components/ui.js";
+import { Arrow, StepErrors } from "./components/ui.js";
 import { ValidationPanel } from "./components/ValidationPanel.js";
 import { content, contentErrors } from "./content.js";
 import type { DescribeResult } from "../ai/types.js";
@@ -36,10 +36,25 @@ export function App() {
   useEffect(() => save(saved), [saved]);
 
   const result = useMemo(() => check(draft, content, campaign), [draft, campaign]);
-  const counts = useMemo(() => {
-    const n: Partial<Record<Step, number>> = {};
-    for (const e of result.errors) n[stepOf(e)] = (n[stepOf(e)] ?? 0) + 1;
-    return n;
+  // A step is done once it has nothing left to fix. Stats, Traits and Choices
+  // also wait for Character and Background, since the engine doesn't check them
+  // until a Kind and all three packages are picked. Traits also wants every
+  // pick spent, though banking them is legal. The Sheet is done once the build
+  // is legal, banked picks and all.
+  const done = useMemo(() => {
+    const wrong = new Set(result.errors.map(stepOf));
+    const picks = result.summary?.picks;
+    const spent = Boolean(picks) && Object.values(picks!).every((p) => p.banked === 0);
+    const picked = !wrong.has("character") && !wrong.has("background");
+    const d: Partial<Record<Step, boolean>> = {
+      character: !wrong.has("character"),
+      background: !wrong.has("background"),
+      stats: picked && !wrong.has("stats"),
+      traits: picked && !wrong.has("traits") && spent,
+      choices: picked && !wrong.has("choices"),
+    };
+    d.sheet = Boolean(result.summary) && result.errors.length === 0;
+    return d;
   }, [result]);
 
   // The current step's errors, shown under its header.
@@ -159,7 +174,7 @@ export function App() {
                   onClick={() => setStep(s)}
                 >
                   <span className="step-n">{n + 1}</span> {LABELS[s]}
-                  {counts[s] ? <span className="badge">{counts[s]}</span> : null}
+                  {done[s] && <span className="step-done" role="img" aria-label="done" />}
                 </button>
               ))}
             </nav>
@@ -180,10 +195,10 @@ export function App() {
             <StepErrors.Provider value={stepErrors}>
               {/* The previous and next steps, above the step's title */}
               <div className="pager">
-                {i > 0 ? <button onClick={() => setStep(STEPS[i - 1]!)}>← {LABELS[STEPS[i - 1]!]}</button> : <span />}
+                {i > 0 ? <button onClick={() => setStep(STEPS[i - 1]!)}><Arrow to="left" /> {LABELS[STEPS[i - 1]!]}</button> : <span />}
                 {i < STEPS.length - 1 && (
-                  <button className="primary" onClick={() => setStep(STEPS[i + 1]!)}>
-                    {LABELS[STEPS[i + 1]!]} →
+                  <button className={`step-next${done[step] ? " is-done" : ""}`} onClick={() => setStep(STEPS[i + 1]!)}>
+                    {LABELS[STEPS[i + 1]!]} <Arrow to="right" />
                   </button>
                 )}
               </div>

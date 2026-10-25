@@ -354,17 +354,26 @@
     opacity: 0.6;
   }
 
-  /* Bootstrap's .badge, as a red count */
-  .badge {
+  /* A finished step: the selected card's green check, sized for the tab */
+  .step-done {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--portfolio-green);
+    color: var(--portfolio-white);
     font-family: var(--body);
-    font-size: 0.72rem;
-    font-weight: 700;
+    font-size: 0.7rem;
+    font-weight: 600;
     letter-spacing: 0;
     line-height: 1;
-    background: var(--portfolio-red);
-    color: var(--portfolio-white);
-    border-radius: 999px;
-    padding: 0.15rem 0.45rem;
+
+    &::before {
+      content: "✓";
+    }
   }
 
   /* Describe your character (the AI layer), in the hero */
@@ -747,6 +756,39 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 24px;
+
+    button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4em;
+    }
+  }
+
+  /* The step buttons' arrows, a little smaller than the type */
+  .arrow-icon {
+    flex: none;
+    width: 0.9em;
+    height: 0.9em;
+    fill: currentColor;
+  }
+
+  /* The next step: Build it's disabled green until this step is finished,
+     then its full green. It still works either way, so steps can be skipped. */
+  .pager .step-next {
+    background: var(--frontiers-green);
+    color: var(--portfolio-black);
+    opacity: 0.45;
+    transition:
+      opacity 200ms,
+      background-color 200ms;
+
+    &.is-done {
+      opacity: 1;
+    }
+
+    &:hover {
+      background-color: color-mix(in srgb, var(--frontiers-green) 75%, var(--portfolio-white));
+    }
   }
 
   /* Boxed step content: the site's .tech-fields box, which holds the Setting
@@ -768,8 +810,82 @@
   }
 
   /* The first slot heading in a box sits at its top */
-  .step-box > .slot:first-child > .subhead:first-child {
+  .step-box > .slot:first-child > .subhead:first-child,
+  .step-box > .slot:first-child > summary > .subhead {
     margin-top: 0;
+  }
+
+  /* Background slots: a heading that folds its cards away, with the site's
+     Details + and − (.lore-details in css/rpg.css) at the end of its rule */
+  details.slot > summary {
+    display: block;
+    list-style: none;
+    cursor: pointer;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &:hover :is(.slot-pick, .slot-toggle) {
+      opacity: 0.6;
+    }
+  }
+
+  details.slot:not([open]) .subhead {
+    margin-bottom: 0;
+  }
+
+  /* Folding and opening slide the cards' height. Browsers without
+     interpolate-size or ::details-content just snap, as before. */
+  details.slot {
+    interpolate-size: allow-keywords;
+
+    .subhead {
+      transition: margin-bottom 300ms ease;
+    }
+
+    &::details-content {
+      block-size: 0;
+      overflow: hidden;
+      transition:
+        block-size 300ms ease,
+        content-visibility 300ms allow-discrete;
+    }
+
+    &[open]::details-content {
+      block-size: auto;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    details.slot {
+      .subhead,
+      &::details-content {
+        transition: none;
+      }
+    }
+  }
+
+  /* The picked package, in place of the blurb */
+  .slot-pick {
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: opacity 0.2s ease;
+  }
+
+  .slot-toggle {
+    order: 1;
+    width: 1em;
+    text-align: center;
+    transition: opacity 0.2s ease;
+
+    &::before {
+      content: "+";
+    }
+
+    details[open] > summary &::before {
+      content: "\2212";
+    }
   }
 
   /* Kind and package cards, at least 360px wide */
@@ -999,11 +1115,11 @@
     margin: 0 0 1rem;
   }
 
-  /* The groups side by side, each drawn like the sheet's stat block */
+  /* The groups in rows, one under the next, each drawn like the sheet's stat block */
   .pool-stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr));
-    gap: 24px 48px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
   }
 
   .pool-stats .sheet-group.locked .sheet-stat {
@@ -1358,6 +1474,19 @@
     color: var(--portfolio-black);
   }
 
+  /* The background packages, between the name and the stats */
+  .panel-background {
+    list-style: none;
+    margin: 0 0 1.25rem;
+    padding: 0;
+    display: grid;
+    gap: 0.25rem;
+
+    strong {
+      text-align: right;
+    }
+  }
+
   .panel-stats {
     display: grid;
     gap: 0.75rem;
@@ -1480,8 +1609,19 @@
     }
   }
 
+  /* On the Sheet the pen follows the name, 16px after it; the field takes the
+     line while it's open */
   .sheet-name {
     margin-bottom: 0.5rem;
+    gap: 16px;
+
+    h2 {
+      flex: 0 1 auto;
+    }
+
+    &:has(.name-input) h2 {
+      flex: 1;
+    }
   }
 
   .name-text {

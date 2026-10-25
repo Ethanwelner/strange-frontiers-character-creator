@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { BuildResult } from "../../engine/validate.js";
 import { STAT_GROUPS, type StatId } from "../../schema/index.js";
+import { packageById } from "../content.js";
 import type { Draft } from "../draft.js";
 import { baseStats, GROUPS, NameField, title } from "./ui.js";
 
@@ -14,6 +15,10 @@ export function ValidationPanel({ draft, result, onName }: Props) {
   const [open, setOpen] = useState(false);
   const { summary } = result;
   const base = baseStats(draft);
+  // The background packages, with a dash for each one not picked yet, like the stats
+  const background = (["origin", "profession", "past"] as const).map(
+    (slot) => [title(slot), draft[slot] ? (packageById.get(draft[slot])?.name ?? draft[slot]) : "–"] as const,
+  );
 
   return (
     <aside className={`panel${open ? " open" : ""}`} aria-label="Validation">
@@ -30,6 +35,14 @@ export function ValidationPanel({ draft, result, onName }: Props) {
 
       <div className="panel-body">
         <NameField className="panel-name" heading="h3" name={draft.name} onChange={onName} />
+        <ul className="panel-background">
+          {background.map(([label, name]) => (
+            <li key={label} className="panel-stat">
+              <span>{label}</span>
+              <strong>{name}</strong>
+            </li>
+          ))}
+        </ul>
         <h4>Stats</h4>
         <div className="panel-stats">
           {GROUPS.map((g) => (
