@@ -46,9 +46,13 @@ export function App() {
   const stepErrors = useMemo(() => result.errors.filter((e) => stepOf(e) === step).map((e) => describe(e, draft)), [result, step, draft]);
 
   const setDraft = (d: Draft) => setSaved((s) => ({ ...s, draft: d }));
-  const setStep = (st: Step) => {
-    setSaved((s) => ({ ...s, step: st }));
-    window.scrollTo({ top: 0 });
+  // Changing steps keeps the page where it is. The ← / → buttons at the bottom
+  // of a step bring the tabs back into view, so the next step starts at its top.
+  const setStep = (st: Step) => setSaved((s) => ({ ...s, step: st }));
+  const tabs = useRef<HTMLElement>(null);
+  const pageTo = (st: Step) => {
+    setStep(st);
+    tabs.current?.scrollIntoView({ block: "start" });
   };
   const setStartingLevel = (level: number) =>
     setSaved((s) => ({ ...s, campaign: { startingLevel: level }, draft: withLevel(s.draft, level) }));
@@ -153,7 +157,7 @@ export function App() {
               }
             />
 
-            <nav className="builder-tabs rpg-tab-list" aria-label="Steps">
+            <nav ref={tabs} className="builder-tabs rpg-tab-list" aria-label="Steps">
               {STEPS.map((s, n) => (
                 <button
                   key={s}
@@ -203,9 +207,9 @@ export function App() {
               {step === "sheet" && <Sheet draft={draft} result={result} onExport={exportBuild} onImport={() => fileInput.current?.click()} />}
 
               <div className="pager">
-                {i > 0 ? <button onClick={() => setStep(STEPS[i - 1]!)}>← {LABELS[STEPS[i - 1]!]}</button> : <span />}
+                {i > 0 ? <button onClick={() => pageTo(STEPS[i - 1]!)}>← {LABELS[STEPS[i - 1]!]}</button> : <span />}
                 {i < STEPS.length - 1 && (
-                  <button className="primary" onClick={() => setStep(STEPS[i + 1]!)}>
+                  <button className="primary" onClick={() => pageTo(STEPS[i + 1]!)}>
                     {LABELS[STEPS[i + 1]!]} →
                   </button>
                 )}
