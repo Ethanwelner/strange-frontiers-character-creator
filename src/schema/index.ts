@@ -79,8 +79,8 @@ export type TraitChoice = z.infer<typeof TraitChoice>;
 
 export const Kind = BaseEntry.extend({
   features: z.array(Feature).default([]),
-  // Traits every character of this Kind holds, like the Dreftian Kinds'
-  // Magical Heritage. They don't use picks.
+  // Traits every character of this Kind holds, like the Isek's Magical
+  // Heritage. They don't use picks.
   grants: z.array(TraitGrant).default([]),
   // Added to the character's HP, VP, SP or MP, like the Goblinoid Tatot's MP.
   resources: Resources.default({}),

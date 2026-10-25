@@ -9,7 +9,7 @@ import { addPick, poolToLevels, toBuild, type Draft, type Step } from "./draft.j
 const LEVEL_PATH = /^levels\[(\d+)\]/;
 
 // The core stats to show for a draft: Physical, Social and Mental, plus any
-// the build can level (Magic, for the Kinds of Dreft) or already has points in,
+// the build can level (Magic, for most Kinds of Dreft) or already has points in,
 // so the player can take back points a new Kind can't hold. Before the build
 // checks out, the Kind's and packages' grants and the picks stand in.
 export function coreStatsShown(draft: Draft, content: Content, result?: BuildResult): StatGroup[] {

@@ -779,11 +779,12 @@ describe("rule 13: Magic", () => {
   const mage = { ...isek, level: 3, levels: [...isek.levels!, { group: "magic" as const, points: {} }, { group: "magic" as const, points: {} }] };
   const L3 = { startingLevel: 3 };
 
-  it("opens Magic to the Kinds of Dreft through Magical Heritage", () => {
+  it("opens Magic to the Kinds of Dreft through Magical Heritage, but not to the Orcoid Tatot", () => {
     const r = check(isek);
     expect(r.summary!.traits).toContainEqual({ trait: "magical-heritage", rank: 1, sources: ["kind isek"] });
     expect(r.summary!.coreAccess).toContain("magic");
     expect(check(human).summary!.coreAccess).toEqual(["physical", "social", "mental"]);
+    expect(check(orcoid).summary!.coreAccess).toEqual(["physical", "social", "mental"]);
   });
 
   it("takes levels with no focus points, at 3 MP each", () => {

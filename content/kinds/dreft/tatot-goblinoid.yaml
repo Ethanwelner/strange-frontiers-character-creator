@@ -11,7 +11,7 @@ features:
   - name: Merchant Clans
     description: Easier access to trading guild and merchant clan Traits.
 traitAccess: [trading-guild, merchant-clan]
-# Every Kind of Dreft is born to magic.
+# Born to magic, like every Kind of Dreft but the Orcoid Tatot.
 grants:
   - trait: magical-heritage
 # Plentiful mana: MP without any Magic.

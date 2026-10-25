@@ -435,7 +435,7 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
   });
 
   // Rule 13: a level can only go to a core stat the build can level. Magic
-  // needs a held Trait that opens it, like the Dreftian Kinds' Magical Heritage.
+  // needs a held Trait that opens it, like the Magical Heritage most Kinds of Dreft grant.
   const coreAccess = new Set(coreAccessOf(held.keys(), content));
   for (const g of Object.keys(coreStats) as StatGroup[]) {
     if (!coreStats[g] || coreAccess.has(g)) continue;
