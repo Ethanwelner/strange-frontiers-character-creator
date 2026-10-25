@@ -46,14 +46,8 @@ export function App() {
   const stepErrors = useMemo(() => result.errors.filter((e) => stepOf(e) === step).map((e) => describe(e, draft)), [result, step, draft]);
 
   const setDraft = (d: Draft) => setSaved((s) => ({ ...s, draft: d }));
-  // Changing steps keeps the page where it is. The ← / → buttons at the bottom
-  // of a step bring the tabs back into view, so the next step starts at its top.
+  // Changing steps keeps the page where it is.
   const setStep = (st: Step) => setSaved((s) => ({ ...s, step: st }));
-  const tabs = useRef<HTMLElement>(null);
-  const pageTo = (st: Step) => {
-    setStep(st);
-    tabs.current?.scrollIntoView({ block: "start" });
-  };
   const setStartingLevel = (level: number) =>
     setSaved((s) => ({ ...s, campaign: { startingLevel: level }, draft: withLevel(s.draft, level) }));
 
@@ -156,7 +150,7 @@ export function App() {
               }
             />
 
-            <nav ref={tabs} className="builder-tabs rpg-tab-list" aria-label="Steps">
+            <nav className="builder-tabs rpg-tab-list" aria-label="Steps">
               {STEPS.map((s, n) => (
                 <button
                   key={s}
@@ -184,6 +178,15 @@ export function App() {
           )}
           <main>
             <StepErrors.Provider value={stepErrors}>
+              {/* The previous and next steps, above the step's title */}
+              <div className="pager">
+                {i > 0 ? <button onClick={() => setStep(STEPS[i - 1]!)}>← {LABELS[STEPS[i - 1]!]}</button> : <span />}
+                {i < STEPS.length - 1 && (
+                  <button className="primary" onClick={() => setStep(STEPS[i + 1]!)}>
+                    {LABELS[STEPS[i + 1]!]} →
+                  </button>
+                )}
+              </div>
               {contentErrors.length > 0 && (
                 <div className="notice bad">
                   Content failed to load: {contentErrors.join("; ")}
@@ -209,14 +212,6 @@ export function App() {
               {step === "traits" && <TraitsStep draft={draft} campaign={campaign} result={result} onChange={setDraft} />}
               {step === "sheet" && <Sheet draft={draft} result={result} onExport={exportBuild} onImport={() => fileInput.current?.click()} />}
 
-              <div className="pager">
-                {i > 0 ? <button onClick={() => pageTo(STEPS[i - 1]!)}>← {LABELS[STEPS[i - 1]!]}</button> : <span />}
-                {i < STEPS.length - 1 && (
-                  <button className="primary" onClick={() => pageTo(STEPS[i + 1]!)}>
-                    {LABELS[STEPS[i + 1]!]} →
-                  </button>
-                )}
-              </div>
             </StepErrors.Provider>
           </main>
         </div>
