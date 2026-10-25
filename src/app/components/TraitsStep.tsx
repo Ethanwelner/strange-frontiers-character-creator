@@ -5,7 +5,7 @@ import { TraitCategory, type Trait } from "../../schema/index.js";
 import { traitOptions } from "../check.js";
 import { content, traitById } from "../content.js";
 import { addPick, type Draft } from "../draft.js";
-import { Chip, SettingIcon, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
+import { Chip, SettingIcon, Sign, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
 
 interface Props {
   draft: Draft;
@@ -177,7 +177,7 @@ export function TraitsStep({ draft, campaign, result, onChange }: Props) {
                         <div className="rank-step" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
                           <span className="rank-label">Rank</span>
                           <button type="button" aria-label={`Drop a rank of ${t.name}`} onClick={() => remove(lastPick(t.id))}>
-                            −
+                            <Sign is="minus" />
                           </button>
                           <span className="num">{heldRank.get(t.id) ?? 0}</span>
                           <button
@@ -187,7 +187,7 @@ export function TraitsStep({ draft, campaign, result, onChange }: Props) {
                             aria-label={`Take ${t.name} rank ${rank} with a ${pick} pick`}
                             onClick={() => onChange(addPick(draft, t.id, rank, pick))}
                           >
-                            +
+                            <Sign is="plus" />
                           </button>
                         </div>
                       )}

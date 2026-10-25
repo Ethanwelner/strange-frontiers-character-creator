@@ -215,6 +215,21 @@ export function Arrow({ to }: { to: keyof typeof ARROWS }) {
   );
 }
 
+// Plus and minus, for the steppers and the Background slots' fold toggle, in
+// the text's color
+const SIGNS = {
+  plus: "M432 256c0 17.69-14.33 32.01-32 32.01H256v144c0 17.69-14.33 31.99-32 31.99s-32-14.3-32-31.99v-144H48c-17.67 0-32-14.32-32-32.01s14.33-31.99 32-31.99H192v-144c0-17.69 14.33-32.01 32-32.01s32 14.32 32 32.01v144h144C417.7 224 432 238.3 432 256z",
+  minus: "M400 288h-352c-17.69 0-32-14.32-32-32.01s14.31-31.99 32-31.99h352c17.69 0 32 14.3 32 31.99S417.7 288 400 288z",
+};
+
+export function Sign({ is }: { is: keyof typeof SIGNS }) {
+  return (
+    <svg className="sign-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" aria-hidden="true">
+      <path d={SIGNS[is]} />
+    </svg>
+  );
+}
+
 // A level from 1 to MAX_LEVEL: its label over − and + around the number. The
 // describe box and the Character step both use it.
 export function LevelStepper({
@@ -235,13 +250,13 @@ export function LevelStepper({
       <span className="field-label">{label}</span>
       <div className="stepper">
         <button type="button" onClick={() => onChange(Math.max(1, level - 1))} disabled={disabled || level <= 1} aria-label="Lower level">
-          −
+          <Sign is="minus" />
         </button>
         <span className="num" aria-live="polite">
           {level}
         </span>
         <button type="button" onClick={() => onChange(Math.min(MAX_LEVEL, level + 1))} disabled={disabled || level >= MAX_LEVEL} aria-label="Raise level">
-          +
+          <Sign is="plus" />
         </button>
       </div>
     </div>
