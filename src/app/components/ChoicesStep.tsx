@@ -45,19 +45,21 @@ export function ChoicesStep({ draft, result, onChange }: { draft: Draft; result:
       </StepHeader>
       <div className="tech-fields tech-fields-light step-box">
         {qs.length === 0 && <p className="empty">This build's packages and Traits have no choices to answer.</p>}
-        {qs.map((q) => (
-          <div key={`${q.by}/${q.id}/${q.from}`} className={`choice headed ${regionClass(askerPlane(q))}`}>
-            <div className="card-head">
-              <h3>
-                <SettingIcon plane={askerPlane(q)} />
-                {q.name}
-              </h3>
-              <Chip tone="muted">{askedBy(q)}</Chip>
+        <div className="choice-grid">
+          {qs.map((q) => (
+            <div key={`${q.by}/${q.id}/${q.from}`} className={`choice headed ${regionClass(askerPlane(q))}`}>
+              <div className="card-head">
+                <h3>
+                  <SettingIcon plane={askerPlane(q)} />
+                  {q.name}
+                </h3>
+                <Chip tone="muted">{askedBy(q)}</Chip>
+              </div>
+              <p>{q.notes.join("; ") || choiceLabel(q.count, q.from)}</p>
+              <Answer q={q} answer={answerOf(q)?.traits ?? []} onAnswer={(t) => setAnswer(q, t)} />
             </div>
-            <p>{q.notes.join("; ") || choiceLabel(q.count, q.from)}</p>
-            <Answer q={q} answer={answerOf(q)?.traits ?? []} onAnswer={(t) => setAnswer(q, t)} />
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );

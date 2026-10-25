@@ -1067,8 +1067,11 @@
 
   /* Choices */
 
-  .choice {
-    margin-bottom: 1rem;
+  /* Choice cards side by side, each up to 480px wide; an answer fills its card */
+  .choice-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 480px));
+    gap: 16px;
   }
 
   .answer {
@@ -1076,7 +1079,6 @@
     flex-direction: column;
     gap: 0.5rem;
     margin-top: 0.5rem;
-    max-width: 28rem;
   }
 
   .free-text {
