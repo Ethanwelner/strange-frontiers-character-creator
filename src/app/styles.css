@@ -599,7 +599,7 @@
 
   /* The Stats step's bars sit on the dark box: core badges light, the Kind's
      bonus in the game's purple at the left, the player's points after it in
-     green, open slots a lighter outline, and slots past the max a faded red. */
+     green, and open slots a lighter outline. */
   .builder-panel .pool-stats {
     .stat-badge {
       background-color: var(--portfolio-near-white);
@@ -616,10 +616,6 @@
 
     .stat.empty {
       border-color: #8a8a8a;
-    }
-
-    .stat.unavailable {
-      opacity: 0.45;
     }
 
     /* A locked group's row is already faded */
@@ -1801,6 +1797,11 @@
   .sheet-stat .stat-line {
     grid-template-columns: repeat(20, minmax(0, 20px));
     gap: 4px;
+  }
+
+  /* Slots past a stat's maximum stay faded, on the Stats step and the Sheet */
+  .sheet-stat .stat.unavailable {
+    opacity: 0.45;
   }
 
   /* A point past the stat's maximum */
