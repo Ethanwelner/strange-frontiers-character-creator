@@ -36,7 +36,12 @@ export function ValidationPanel({ draft, result, onName }: Props) {
 
       <div className="panel-body">
         <NameField className="panel-name" heading="h3" name={draft.name} onChange={onName} />
+        {/* The level, then the background packages */}
         <ul className="panel-background">
+          <li className="panel-stat">
+            <span>Level</span>
+            <strong>{draft.level}</strong>
+          </li>
           {background.map(([label, name]) => (
             <li key={label} className="panel-stat">
               <span>{label}</span>
