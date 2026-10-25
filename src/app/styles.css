@@ -1146,6 +1146,11 @@
     opacity: 0.45;
   }
 
+  /* How many of the group's points a stat can still take, beside its name */
+  .stat-spend {
+    margin-left: 12px;
+  }
+
   /* Core stat: the sheet's round badge with − and + to its right. Each stat has
      its bar with its own − and + beside it. */
   .core-control,

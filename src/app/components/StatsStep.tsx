@@ -133,13 +133,19 @@ export function StatsStep({ draft, onChange }: Props) {
                 {STAT_GROUPS[g].map((s: StatId) => {
                   const value = valueOf(s);
                   const max = base[s]?.max ?? 0;
+                  // The group's unspent points this stat can still take under its max
+                  const toSpend = Math.max(0, Math.min(spare, max - value));
                   return (
                     <div key={s} className="sheet-stat">
                       <div className="tiny-text">
                         <strong>
                           {title(s)} - {value}
                         </strong>
-                        <span className="muted"> max {max}</span>
+                        {toSpend > 0 && (
+                          <span className="stat-spend muted">
+                            Spend {toSpend} {toSpend === 1 ? "point" : "points"}
+                          </span>
+                        )}
                       </div>
                       <div className="pool-stat-row">
                         <div className="stat-buttons">
