@@ -810,8 +810,51 @@
   }
 
   /* The first slot heading in a box sits at its top */
-  .step-box > .slot:first-child > .subhead:first-child {
+  .step-box > .slot:first-child > .subhead:first-child,
+  .step-box > .slot:first-child > summary > .subhead {
     margin-top: 0;
+  }
+
+  /* Background slots: a heading that folds its cards away, with the site's
+     Details + and − (.lore-details in css/rpg.css) at the end of its rule */
+  details.slot > summary {
+    display: block;
+    list-style: none;
+    cursor: pointer;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &:hover :is(.slot-pick, .slot-toggle) {
+      opacity: 0.6;
+    }
+  }
+
+  details.slot:not([open]) .subhead {
+    margin-bottom: 0;
+  }
+
+  /* The picked package, in place of the blurb */
+  .slot-pick {
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: opacity 0.2s ease;
+  }
+
+  .slot-toggle {
+    order: 1;
+    width: 1em;
+    text-align: center;
+    transition: opacity 0.2s ease;
+
+    &::before {
+      content: "+";
+    }
+
+    details[open] > summary &::before {
+      content: "\2212";
+    }
   }
 
   /* Kind and package cards, at least 360px wide */
@@ -1041,11 +1084,11 @@
     margin: 0 0 1rem;
   }
 
-  /* The groups side by side, each drawn like the sheet's stat block */
+  /* The groups in rows, one under the next, each drawn like the sheet's stat block */
   .pool-stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr));
-    gap: 24px 48px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
   }
 
   .pool-stats .sheet-group.locked .sheet-stat {

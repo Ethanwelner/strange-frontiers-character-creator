@@ -1,5 +1,6 @@
+import { useEffect, useState } from "react";
 import type { BackgroundPackage } from "../../schema/index.js";
-import { content } from "../content.js";
+import { content, packageById } from "../content.js";
 import type { Draft } from "../draft.js";
 import { Card, Chip, choiceLabel, regionClass, SettingIcon, StepHeader, title, traitName } from "./ui.js";
 
@@ -63,9 +64,19 @@ export function PackageGrants({ pkg }: { pkg: BackgroundPackage }) {
   );
 }
 
+type Slot = (typeof SLOTS)[number];
+
 export function BackgroundStep({ draft, onChange }: { draft: Draft; onChange: (d: Draft) => void }) {
+  // Each slot folds away once it has a package, showing the pick in its
+  // heading, and opens again from there. Whenever a slot's package changes,
+  // by a click, an import or a build, it folds if it has one and opens if not.
+  const [open, setOpen] = useState<Record<Slot, boolean>>(() => ({ origin: !draft.origin, profession: !draft.profession, past: !draft.past }));
+  const setSlotOpen = (slot: Slot, value: boolean) => setOpen((o) => (o[slot] === value ? o : { ...o, [slot]: value }));
+  useEffect(() => setSlotOpen("origin", !draft.origin), [draft.origin]);
+  useEffect(() => setSlotOpen("profession", !draft.profession), [draft.profession]);
+  useEffect(() => setSlotOpen("past", !draft.past), [draft.past]);
   // Clicking the chosen package again clears the slot.
-  const choose = (slot: (typeof SLOTS)[number], id: string) => {
+  const choose = (slot: Slot, id: string) => {
     const old = draft[slot];
     // Answers to the old package's choices no longer apply.
     onChange({ ...draft, [slot]: old === id ? undefined : id, choices: draft.choices.filter((c) => c.package !== old) });
@@ -77,10 +88,14 @@ export function BackgroundStep({ draft, onChange }: { draft: Draft; onChange: (d
       </StepHeader>
       <div className="tech-fields tech-fields-light step-box">
         {SLOTS.map((slot) => (
-          <div key={slot} className="slot">
-            <h3 className="subhead">
-              {title(slot)} <span className="muted">{BLURB[slot]}</span>
-            </h3>
+          <details key={slot} className="slot" open={open[slot]} onToggle={(e) => setSlotOpen(slot, e.currentTarget.open)}>
+            <summary>
+              <h3 className="subhead">
+                {title(slot)}{" "}
+                {draft[slot] ? <span className="slot-pick">{packageById.get(draft[slot])?.name ?? draft[slot]}</span> : <span className="muted">{BLURB[slot]}</span>}
+                <span className="slot-toggle" aria-hidden="true" />
+              </h3>
+            </summary>
             <div className="cards" role="radiogroup" aria-label={title(slot)}>
               {content.packages
                 .filter((p) => p.type === slot)
@@ -98,7 +113,7 @@ export function BackgroundStep({ draft, onChange }: { draft: Draft; onChange: (d
                   </Card>
                 ))}
             </div>
-          </div>
+          </details>
         ))}
       </div>
     </section>

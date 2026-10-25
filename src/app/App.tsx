@@ -39,8 +39,8 @@ export function App() {
   // A step is done once it has nothing left to fix. Stats, Traits and Choices
   // also wait for Character and Background, since the engine doesn't check them
   // until a Kind and all three packages are picked. Traits also wants every
-  // pick spent, though banking them is legal, and the Sheet is done when every
-  // step before it is.
+  // pick spent, though banking them is legal. The Sheet is done once the build
+  // is legal, banked picks and all.
   const done = useMemo(() => {
     const wrong = new Set(result.errors.map(stepOf));
     const picks = result.summary?.picks;
@@ -53,7 +53,7 @@ export function App() {
       traits: picked && !wrong.has("traits") && spent,
       choices: picked && !wrong.has("choices"),
     };
-    d.sheet = STEPS.slice(0, -1).every((st) => d[st]);
+    d.sheet = Boolean(result.summary) && result.errors.length === 0;
     return d;
   }, [result]);
 
