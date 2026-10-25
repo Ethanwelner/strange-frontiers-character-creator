@@ -835,6 +835,37 @@
     margin-bottom: 0;
   }
 
+  /* Folding and opening slide the cards' height. Browsers without
+     interpolate-size or ::details-content just snap, as before. */
+  details.slot {
+    interpolate-size: allow-keywords;
+
+    .subhead {
+      transition: margin-bottom 300ms ease;
+    }
+
+    &::details-content {
+      block-size: 0;
+      overflow: hidden;
+      transition:
+        block-size 300ms ease,
+        content-visibility 300ms allow-discrete;
+    }
+
+    &[open]::details-content {
+      block-size: auto;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    details.slot {
+      .subhead,
+      &::details-content {
+        transition: none;
+      }
+    }
+  }
+
   /* The picked package, in place of the blurb */
   .slot-pick {
     font-size: 0.9rem;
