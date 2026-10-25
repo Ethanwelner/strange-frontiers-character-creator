@@ -764,6 +764,20 @@
     }
   }
 
+  /* Plus and minus, centered in their round buttons */
+  .sign-icon {
+    flex: none;
+    width: 0.75em;
+    height: 0.75em;
+    fill: currentColor;
+  }
+
+  button:has(> .sign-icon) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   /* The step buttons' arrows, a little smaller than the type */
   .arrow-icon {
     flex: none;
@@ -875,16 +889,12 @@
 
   .slot-toggle {
     order: 1;
-    width: 1em;
-    text-align: center;
+    display: flex;
     transition: opacity 0.2s ease;
 
-    &::before {
-      content: "+";
-    }
-
-    details[open] > summary &::before {
-      content: "\2212";
+    .sign-icon {
+      width: 18px;
+      height: 18px;
     }
   }
 

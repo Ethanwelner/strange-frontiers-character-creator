@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import type { BackgroundPackage } from "../../schema/index.js";
 import { content, packageById } from "../content.js";
 import type { Draft } from "../draft.js";
-import { Card, Chip, choiceLabel, regionClass, SettingIcon, StepHeader, title, traitName } from "./ui.js";
+import { Card, Chip, choiceLabel, regionClass, SettingIcon, Sign, StepHeader, title, traitName } from "./ui.js";
 
 const SLOTS = ["origin", "profession", "past"] as const;
 
@@ -93,7 +93,9 @@ export function BackgroundStep({ draft, onChange }: { draft: Draft; onChange: (d
               <h3 className="subhead">
                 {title(slot)}{" "}
                 {draft[slot] ? <span className="slot-pick">{packageById.get(draft[slot])?.name ?? draft[slot]}</span> : <span className="muted">{BLURB[slot]}</span>}
-                <span className="slot-toggle" aria-hidden="true" />
+                <span className="slot-toggle" aria-hidden="true">
+                  <Sign is={open[slot] ? "minus" : "plus"} />
+                </span>
               </h3>
             </summary>
             <div className="cards" role="radiogroup" aria-label={title(slot)}>

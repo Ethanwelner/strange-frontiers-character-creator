@@ -3,7 +3,7 @@ import { FOCUS_POINTS_PER_LEVEL as POINTS_PER_LEVEL } from "../../engine/validat
 import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { kindById } from "../content.js";
 import { withCore, type Draft } from "../draft.js";
-import { baseStats, GROUPS, StatLine, StepHeader, title } from "./ui.js";
+import { baseStats, GROUPS, Sign, StatLine, StepHeader, title } from "./ui.js";
 
 interface Props {
   draft: Draft;
@@ -111,7 +111,7 @@ export function StatsStep({ draft, onChange }: Props) {
                       onClick={() => onChange(withCore(draft, g, core - 1))}
                       disabled={core === 0 || stranded}
                     >
-                      −
+                      <Sign is="minus" />
                     </button>
                     <button
                       aria-label={`Put a core point in ${g}`}
@@ -119,7 +119,7 @@ export function StatsStep({ draft, onChange }: Props) {
                       onClick={() => onChange(withCore(draft, g, core + 1))}
                       disabled={!canLevel}
                     >
-                      +
+                      <Sign is="plus" />
                     </button>
                   </div>
                   <h4 className="rule">{title(g)}</h4>
@@ -142,10 +142,10 @@ export function StatsStep({ draft, onChange }: Props) {
                       <div className="pool-stat-row">
                         <div className="stat-buttons">
                           <button aria-label={`Take a point from ${s}`} onClick={() => bump(s, -1)} disabled={value <= kindStart(s)}>
-                            −
+                            <Sign is="minus" />
                           </button>
                           <button aria-label={`Add a point to ${s}`} onClick={() => bump(s, 1)} disabled={spare === 0 || value >= max}>
-                            +
+                            <Sign is="plus" />
                           </button>
                         </div>
                         <StatLine start={level0(s)} value={value} max={max} />
