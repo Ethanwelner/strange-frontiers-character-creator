@@ -21,7 +21,8 @@ interface Props {
 // bonus points first, if it has any (they need no core point), then the
 // group's unlocked points. Taking a point back returns the group's points first,
 // then the free ones; core points stay put until the player takes them
-// back with −. A group can't take a core point its stats have no room
+// back with −, which also takes back any focus points the group can no
+// longer hold. A group can't take a core point its stats have no room
 // for, like an AI Core's Physical, where every max is 0.
 export function StatsStep({ draft, onChange }: Props) {
   const base = baseStats(draft);
@@ -98,8 +99,8 @@ export function StatsStep({ draft, onChange }: Props) {
             // Room left under the group's maxes, after the points already unlocked.
             const headroom = STAT_GROUPS[g].reduce((n, s) => n + Math.max(0, (base[s]?.max ?? 0) - valueOf(s)), 0) - Math.max(0, room - spent);
             const canLevel = coreLeft > 0 && headroom >= POINTS_PER_LEVEL;
-            // Taking a core point back would strand focus points.
-            const stranded = spent > (core - 1) * POINTS_PER_LEVEL;
+            // Focus points that taking a core point back also takes back
+            const stranded = Math.max(0, spent - (core - 1) * POINTS_PER_LEVEL);
             return (
               <div key={g} className={`sheet-group${locked ? " locked" : ""}`}>
                 <div className="sheet-group-head">
@@ -109,9 +110,9 @@ export function StatsStep({ draft, onChange }: Props) {
                     </span>
                     <button
                       aria-label={`Take a core point from ${g}`}
-                      title={core > 0 && stranded ? `Take ${spent - (core - 1) * POINTS_PER_LEVEL} focus points out first` : undefined}
+                      title={core > 0 && stranded ? `Also takes back ${stranded} focus ${stranded === 1 ? "point" : "points"}` : undefined}
                       onClick={() => onChange(withCore(draft, g, core - 1))}
-                      disabled={core === 0 || stranded}
+                      disabled={core === 0}
                     >
                       <Sign is="minus" />
                     </button>

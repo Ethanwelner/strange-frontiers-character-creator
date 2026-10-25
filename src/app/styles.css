@@ -641,8 +641,9 @@
   }
 
   /* The sheet goes dark on screen too: the step box's gray around darker inner
-     boxes, light text, and the same flipped bars and badges as the Stats step.
-     Its Trait cards stay light like every card. Printing keeps the light sheet. */
+     boxes, light text, and the Stats step's badges and bars, with the Kind's
+     bonus in purple and the player's points in green. Its Trait cards stay
+     light like every card. Printing keeps the light sheet's gray and black. */
   @media screen {
     .builder-panel .c-sheet {
       --rule: rgb(255 255 255 / 18%);
@@ -680,11 +681,11 @@
       }
 
       .stat.filled {
-        background-color: var(--portfolio-near-white);
+        background-color: var(--frontiers-green);
       }
 
       .stat.default {
-        background-color: #7d7d7d;
+        background-color: var(--frontiers-lore-on-black);
       }
 
       .stat.empty {
