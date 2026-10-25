@@ -7,7 +7,7 @@ import { DescribeBox } from "./components/DescribeBox.js";
 import { StatsStep } from "./components/StatsStep.js";
 import { Sheet } from "./components/Sheet.js";
 import { TraitsStep } from "./components/TraitsStep.js";
-import { Arrow, StepErrors } from "./components/ui.js";
+import { Arrow } from "./components/ui.js";
 import { ValidationPanel } from "./components/ValidationPanel.js";
 import { content, contentErrors } from "./content.js";
 import type { DescribeResult } from "../ai/types.js";
@@ -57,7 +57,7 @@ export function App() {
     return d;
   }, [result]);
 
-  // The current step's errors, shown under its header.
+  // The current step's errors, shown beside the next step button.
   const stepErrors = useMemo(() => result.errors.filter((e) => stepOf(e) === step).map((e) => describe(e, draft)), [result, step, draft]);
 
   const setDraft = (d: Draft) => setSaved((s) => ({ ...s, draft: d }));
@@ -192,15 +192,25 @@ export function App() {
             </aside>
           )}
           <main>
-            <StepErrors.Provider value={stepErrors}>
-              {/* The previous and next steps, above the step's title */}
+            <>
+              {/* The previous and next steps, above the step's title, with what's
+                  left to fix on this step to the left of the next one */}
               <div className="pager">
                 {i > 0 ? <button onClick={() => setStep(STEPS[i - 1]!)}><Arrow to="left" /> {LABELS[STEPS[i - 1]!]}</button> : <span />}
-                {i < STEPS.length - 1 && (
-                  <button className={`step-next${done[step] ? " is-done" : ""}`} onClick={() => setStep(STEPS[i + 1]!)}>
-                    {LABELS[STEPS[i + 1]!]} <Arrow to="right" />
-                  </button>
-                )}
+                <div className="pager-next">
+                  {stepErrors.length > 0 && (
+                    <ul className="issues bad step-issues">
+                      {stepErrors.map((e, n) => (
+                        <li key={n}>{e}</li>
+                      ))}
+                    </ul>
+                  )}
+                  {i < STEPS.length - 1 && (
+                    <button className={`step-next${done[step] ? " is-done" : ""}`} onClick={() => setStep(STEPS[i + 1]!)}>
+                      {LABELS[STEPS[i + 1]!]} <Arrow to="right" />
+                    </button>
+                  )}
+                </div>
               </div>
               {contentErrors.length > 0 && (
                 <div className="notice bad">
@@ -227,7 +237,7 @@ export function App() {
               {step === "traits" && <TraitsStep draft={draft} campaign={campaign} result={result} onChange={setDraft} />}
               {step === "sheet" && <Sheet draft={draft} result={result} onExport={exportBuild} onImport={() => fileInput.current?.click()} onName={(name) => setDraft({ ...draft, name })} />}
 
-            </StepErrors.Provider>
+            </>
           </main>
         </div>
       </div>
