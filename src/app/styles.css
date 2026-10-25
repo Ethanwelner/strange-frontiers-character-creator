@@ -244,33 +244,47 @@
 
   /* Hero: the site's black section with the green title */
 
-  /* Content sits in the site's .container rows. The hero's row is the title,
-     describe box and step tabs (flex-11) beside the character box (flex-3),
-     48px apart. */
-  /* At least as tall as the site's heroes (.short-section, 75vh), counting the
-     room the page leaves above it for the site's nav (--sf-creator-top, set by
-     creator.php's css/rpg.css). The title, describe box (with New beside Build
-     it) and character box are centered, and the tabs sit at the bottom. */
+  /* At least 65vh or 768px tall, whichever is larger. The title
+     and describe box (with New beside Build it) are centered, and the tabs sit
+     at the bottom. On creator.php, --sf-creator-top clears the site's logo and
+     search, and --sf-creator-left moves the title and describe box beside the
+     site's page nav (both set in the site's css/rpg.css). */
   .builder-hero {
     display: grid;
     /* One column the step tabs can scroll inside, instead of widening it */
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: 1fr;
-    min-height: 75vh;
+    min-height: max(65vh, 768px);
     color: var(--portfolio-white);
-    padding-top: var(--sf-creator-top, 32px);
+    padding-top: var(--sf-creator-top, 24px);
   }
 
-  /* The tabs sit at the bottom of the left column, on the panel, however tall
-     the character box makes the row. */
   .hero-main {
+    flex: 1;
+    /* The step tabs scroll inside it instead of widening the page */
+    min-width: 0;
     display: flex;
     flex-direction: column;
   }
 
-  .builder-hero .builder-side {
-    align-self: center;
-    padding: 32px 0;
+  /* The title and describe box: one 760px column, centered in the hero like
+     the site's other hero titles, or moved right only as far as it takes to
+     clear the site's page nav (--sf-creator-left) */
+  .hero-main > :not(.builder-tabs) {
+    width: min(760px, 100% - var(--sf-creator-left, 0px));
+    margin-left: max(var(--sf-creator-left, 0px), (100% - 760px) / 2);
+  }
+
+  /* The body: the character box in a column on the left, kept in view while
+     the step scrolls, then the step */
+  .builder-body {
+    display: grid;
+    grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
+    gap: 48px;
+  }
+
+  .builder-body.no-side {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   /* New, beside Build it */
@@ -302,8 +316,8 @@
   /* .title.hero-title.frontiers-accent over .title.section-title */
   /* Auto margins above it and above the tabs center it and the describe box. */
   .builder-statement {
-    margin: auto 0 40px;
-    padding-top: 48px;
+    margin-top: auto;
+    margin-bottom: 40px;
     line-height: 1;
 
     > * {
@@ -508,13 +522,6 @@
       background: none;
       color: inherit;
     }
-  }
-
-  .describe-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 1rem;
   }
 
   .describe-status {
@@ -739,7 +746,7 @@
   .pager {
     display: flex;
     justify-content: space-between;
-    margin-top: 3rem;
+    margin-bottom: 24px;
   }
 
   /* Boxed step content: the site's .tech-fields box, which holds the Setting
@@ -1067,8 +1074,11 @@
 
   /* Choices */
 
-  .choice {
-    margin-bottom: 1rem;
+  /* Choice cards side by side, each up to 480px wide; an answer fills its card */
+  .choice-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 480px));
+    gap: 16px;
   }
 
   .answer {
@@ -1076,7 +1086,6 @@
     flex-direction: column;
     gap: 0.5rem;
     margin-top: 0.5rem;
-    max-width: 28rem;
   }
 
   .free-text {
@@ -1238,12 +1247,8 @@
     border-bottom: 1px solid var(--rule);
   }
 
-  /* Validation panel: a small .c-sheet, in the hero beside the title on
-     desktops. Its flex-3 column keeps room for the Picks table on narrower
-     desktops. */
-  .builder-side {
-    min-width: 260px;
-  }
+  /* Validation panel: a small .c-sheet, in the body beside the step on
+     desktops; its column keeps room for the Picks table. */
 
   .panel {
     --rule: rgb(255 255 255 / 18%);
@@ -1272,14 +1277,6 @@
     }
   }
 
-  @media (min-width: 992px) {
-    .builder-hero .panel {
-      position: static;
-      max-height: none;
-      overflow: visible;
-    }
-  }
-
   .panel-toggle {
     display: none;
   }
@@ -1302,8 +1299,11 @@
 
   .panel-name {
     margin: 0 0 1.25rem;
-    font-size: 1.25rem;
-    font-weight: 600;
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
   }
 
   /* Character step: the name (up to 640px wide) with the starting level right
@@ -1465,6 +1465,67 @@
     flex: 1 1 24rem;
   }
 
+  /* The name, with the pen that edits it at the right end of its line, on
+     the Sheet (.sheet-name) and in the character box (.panel-name) */
+  .name-field-line {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    h2,
+    h3 {
+      flex: 1;
+      min-width: 0;
+      margin: 0;
+    }
+  }
+
+  .sheet-name {
+    margin-bottom: 0.5rem;
+  }
+
+  .name-text {
+    all: unset;
+    cursor: text;
+    overflow-wrap: anywhere;
+  }
+
+  .name-text:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  /* The field takes the heading's look, so only the underline changes */
+  .name-input {
+    width: 100%;
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+    border-bottom: 2px solid currentColor;
+    padding: 0;
+  }
+
+  .name-edit {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .pen-icon {
+    width: 18px;
+    height: 18px;
+    background-color: currentColor;
+    mask: url("./img/pen.svg") center / contain no-repeat;
+  }
+
   /* The background packages, a second column beside the name */
   .sheet-background {
     flex: 0 1 16rem;
@@ -1612,17 +1673,10 @@
 
   /* Below the site's lg breakpoint: one column, the panel docks to the bottom. */
   @media (max-width: 991px) {
-    .builder-row {
+    /* The character box docks to the bottom of the screen instead */
+    .builder-body {
+      grid-template-columns: minmax(0, 1fr);
       gap: 0;
-    }
-
-    .builder-main {
-      flex: 1 100%;
-    }
-
-    .builder-side {
-      flex: none;
-      min-width: 0;
     }
 
     .builder-panel.unlimited {
@@ -1730,7 +1784,6 @@
   @media (max-width: 575px) {
     .builder-statement {
       margin-bottom: 28px;
-      padding-top: 32px;
     }
 
     h2 {
@@ -1768,6 +1821,7 @@
     .pager,
     .notice,
     .step-head,
+    .name-edit,
     .sheet-actions button {
       display: none !important;
     }

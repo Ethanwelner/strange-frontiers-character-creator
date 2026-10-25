@@ -14,7 +14,6 @@ interface Props {
   startingLevel: number;
   hasBuild: boolean;
   onBuilt: (result: DescribeResult, description: string, seconds: number, name?: string) => void;
-  onDismiss: () => void;
   // New, to the right of Build it
   actions?: ReactNode;
 }
@@ -104,7 +103,7 @@ const requestBuild = (request: BuildRequest, onProgress: (p: Progress) => void) 
 // 67 seconds as "1:07".
 export const clock = (seconds: number) => `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, "0")}`;
 
-export function DescribeBox({ notes, showNotes, startingLevel, hasBuild, onBuilt, onDismiss, draft, actions }: Props) {
+export function DescribeBox({ notes, showNotes, startingLevel, hasBuild, onBuilt, draft, actions }: Props) {
   const [text, setText] = useState(notes?.description ?? "");
   // A name for the builder to use, and the level to build at. Writing a level
   // in the description ("level 10") sets the stepper; the stepper has the last word.
@@ -244,17 +243,12 @@ export function DescribeBox({ notes, showNotes, startingLevel, hasBuild, onBuilt
 
       {notes && showNotes && !busy && (
         <div className="describe-result">
-          <div className="describe-head">
-            <p className={`describe-status ${notes.status === "accepted" ? "good" : "bad"}`}>
-              {notes.seconds !== undefined && <strong>Build finished in {clock(notes.seconds)}. </strong>}
-              {notes.status === "accepted"
-                ? "Built from your description. Edit anything below; the panel keeps checking."
-                : "The builder ran out of turns before the build was legal. The panel shows what's left to fix."}
-            </p>
-            <button className="link" onClick={onDismiss} aria-label="Hide the reasons">
-              ✕
-            </button>
-          </div>
+          <p className={`describe-status ${notes.status === "accepted" ? "good" : "bad"}`}>
+            {notes.seconds !== undefined && <strong>Build finished in {clock(notes.seconds)}. </strong>}
+            {notes.status === "accepted"
+              ? "Built from your description. Edit anything below; the panel keeps checking."
+              : "The builder ran out of turns before the build was legal. The panel shows what's left to fix."}
+          </p>
           {notes.summary && <p>{notes.summary}</p>}
           {/* The reasons for each choice, folded away in the site's Details box */}
           <details className="lore-details">

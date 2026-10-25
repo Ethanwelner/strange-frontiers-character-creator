@@ -3,7 +3,7 @@ import { FREE_TEXT_POOLS, type BuildResult } from "../../engine/validate.js";
 import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { kindById, packageById, traitById } from "../content.js";
 import type { Draft } from "../draft.js";
-import { askerName, baseStats, Chip, GROUPS, SettingIcon, StatLine, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
+import { askerName, baseStats, Chip, GROUPS, NameField, SettingIcon, StatLine, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
 
 const SOURCE = /^(origin|profession|past) ([a-z0-9-]+)( choice)?$/;
 const TRAIT_CHOICE = /^trait ([a-z0-9-]+) choice$/;
@@ -84,7 +84,19 @@ function TraitModal({ held, places, onClose }: { held: Held; places: string[]; o
 // Laid out like the sample character sheet on the site's Mechanics tab.
 // Knowledges and Languages are a list of links, as on that sheet, each opening
 // its card; the other Traits are cards.
-export function Sheet({ draft, result, onExport, onImport }: { draft: Draft; result: BuildResult; onExport: () => void; onImport: () => void }) {
+export function Sheet({
+  draft,
+  result,
+  onExport,
+  onImport,
+  onName,
+}: {
+  draft: Draft;
+  result: BuildResult;
+  onExport: () => void;
+  onImport: () => void;
+  onName: (name?: string) => void;
+}) {
   const kind = draft.kind ? kindById.get(draft.kind) : undefined;
   const packages = [draft.origin, draft.profession, draft.past].map((id) => (id ? packageById.get(id) : undefined));
   const base = baseStats(draft);
@@ -132,7 +144,7 @@ export function Sheet({ draft, result, onExport, onImport }: { draft: Draft; res
 
         <div className="c-sheet-box sheet-head">
           <div className="sheet-head-main">
-            <h2>{draft.name || "Unnamed character"}</h2>
+            <NameField className="sheet-name" heading="h2" name={draft.name} onChange={onName} />
             <p className="lede">
               Level {draft.level} {kind?.name ?? "—"} · {packages.map((p) => p?.name ?? "—").join(" · ")}
             </p>

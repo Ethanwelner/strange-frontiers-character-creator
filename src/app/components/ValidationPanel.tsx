@@ -2,14 +2,15 @@ import { useState } from "react";
 import type { BuildResult } from "../../engine/validate.js";
 import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import type { Draft } from "../draft.js";
-import { baseStats, GROUPS, title } from "./ui.js";
+import { baseStats, GROUPS, NameField, title } from "./ui.js";
 
 interface Props {
   draft: Draft;
   result: BuildResult;
+  onName: (name?: string) => void;
 }
 
-export function ValidationPanel({ draft, result }: Props) {
+export function ValidationPanel({ draft, result, onName }: Props) {
   const [open, setOpen] = useState(false);
   const { summary } = result;
   const base = baseStats(draft);
@@ -28,7 +29,7 @@ export function ValidationPanel({ draft, result }: Props) {
       </button>
 
       <div className="panel-body">
-        <h3 className={`panel-name${draft.name ? "" : " muted"}`}>{draft.name ?? "Unnamed character"}</h3>
+        <NameField className="panel-name" heading="h3" name={draft.name} onChange={onName} />
         <h4>Stats</h4>
         <div className="panel-stats">
           {GROUPS.map((g) => (
