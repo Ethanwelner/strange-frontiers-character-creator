@@ -1462,6 +1462,62 @@
     flex: 1 1 24rem;
   }
 
+  /* The name, with the pen that edits it at the right end of its line */
+  .sheet-name {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 0.5rem;
+
+    h2 {
+      flex: 1;
+      min-width: 0;
+      margin: 0;
+    }
+  }
+
+  .sheet-name-text {
+    all: unset;
+    cursor: text;
+    overflow-wrap: anywhere;
+  }
+
+  .sheet-name-text:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  /* The field takes the heading's look, so only the underline changes */
+  .sheet-name-input {
+    width: 100%;
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+    border-bottom: 2px solid currentColor;
+    padding: 0;
+  }
+
+  .sheet-name-edit {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .pen-icon {
+    width: 18px;
+    height: 18px;
+    background-color: currentColor;
+    mask: url("./img/pen.svg") center / contain no-repeat;
+  }
+
   /* The background packages, a second column beside the name */
   .sheet-background {
     flex: 0 1 16rem;
@@ -1757,6 +1813,7 @@
     .pager,
     .notice,
     .step-head,
+    .sheet-name-edit,
     .sheet-actions button {
       display: none !important;
     }

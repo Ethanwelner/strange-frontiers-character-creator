@@ -210,7 +210,7 @@ export function App() {
               )}
               {step === "choices" && <ChoicesStep draft={draft} result={result} onChange={setDraft} />}
               {step === "traits" && <TraitsStep draft={draft} campaign={campaign} result={result} onChange={setDraft} />}
-              {step === "sheet" && <Sheet draft={draft} result={result} onExport={exportBuild} onImport={() => fileInput.current?.click()} />}
+              {step === "sheet" && <Sheet draft={draft} result={result} onExport={exportBuild} onImport={() => fileInput.current?.click()} onName={(name) => setDraft({ ...draft, name })} />}
 
             </StepErrors.Provider>
           </main>
