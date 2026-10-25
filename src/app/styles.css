@@ -758,6 +758,25 @@
     margin-bottom: 24px;
   }
 
+  /* The next step: Build it's disabled green until this step is finished,
+     then its full green. It still works either way, so steps can be skipped. */
+  .pager .step-next {
+    background: var(--frontiers-green);
+    color: var(--portfolio-black);
+    opacity: 0.45;
+    transition:
+      opacity 200ms,
+      background-color 200ms;
+
+    &.is-done {
+      opacity: 1;
+    }
+
+    &:hover {
+      background-color: color-mix(in srgb, var(--frontiers-green) 75%, var(--portfolio-white));
+    }
+  }
+
   /* Boxed step content: the site's .tech-fields box, which holds the Setting
      tab's sub-tabs, in the panel's lighter gray. The Traits step keeps its
      Universal/Background sub-tabs along the top edge; the other steps have no

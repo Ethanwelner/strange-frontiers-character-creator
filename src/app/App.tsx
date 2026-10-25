@@ -197,7 +197,7 @@ export function App() {
               <div className="pager">
                 {i > 0 ? <button onClick={() => setStep(STEPS[i - 1]!)}>← {LABELS[STEPS[i - 1]!]}</button> : <span />}
                 {i < STEPS.length - 1 && (
-                  <button className="primary" onClick={() => setStep(STEPS[i + 1]!)}>
+                  <button className={`step-next${done[step] ? " is-done" : ""}`} onClick={() => setStep(STEPS[i + 1]!)}>
                     {LABELS[STEPS[i + 1]!]} →
                   </button>
                 )}
