@@ -188,8 +188,8 @@ export function Sheet({
                 </div>
                 {STAT_GROUPS[g].map((s: StatId) => {
                   const value = summary?.stats[s];
-                  // Level 0 points, including any the player placed, show gray.
-                  const start = (base?.[s]?.start ?? 0) + (draft.startPoints?.[s] ?? 0);
+                  // The Kind's bonus, with any free bonus points placed, shows gray.
+                  const bonus = (base?.[s]?.bonus ?? 0) + (draft.startPoints?.[s] ?? 0);
                   const max = base?.[s]?.max ?? 0;
                   return (
                     <div key={s} className="sheet-stat">
@@ -199,7 +199,7 @@ export function Sheet({
                         </strong>
                         <span className="muted"> max {base?.[s]?.max ?? "–"}</span>
                       </div>
-                      <StatLine start={start} value={value ?? start} max={max} />
+                      <StatLine bonus={bonus} value={value ?? bonus} max={max} />
                     </div>
                   );
                 })}

@@ -13,12 +13,12 @@ features:
   - name: Beard Nets
     description: Guwain beards grow in thick, tangled messes. Most Guwain braid theirs, often with tie-offs and a meshed pattern that lets them carry goods inside.
 stats:
-  endurance: { start: 2, max: 20 }
-  power: { start: 2, max: 17 }
-  grace: { start: 0, max: 10 }
-  empathy: { start: 1, max: 15 }
-  persuasion: { start: 1, max: 14 }
-  demeanor: { start: 1, max: 16 }
-  logic: { start: 1, max: 15 }
-  intuition: { start: 0, max: 14 }
-  memory: { start: 1, max: 14 }
+  endurance: { bonus: 2, max: 20 }
+  power: { bonus: 2, max: 17 }
+  grace: { bonus: 0, max: 10 }
+  empathy: { bonus: 1, max: 15 }
+  persuasion: { bonus: 1, max: 14 }
+  demeanor: { bonus: 1, max: 16 }
+  logic: { bonus: 1, max: 15 }
+  intuition: { bonus: 0, max: 14 }
+  memory: { bonus: 1, max: 14 }

@@ -43,7 +43,7 @@ export const Build = z.object({
   origin: Id,
   profession: Id,
   past: Id,
-  // Where the Kind's free level 0 points go, if it has any.
+  // Where the Kind's free bonus points go, if it has any.
   startPoints: z.partialRecord(StatId, z.number().int().min(0)).default({}),
   level: z.number().int().min(1).default(1),
   // One entry per level, starting with level 1.

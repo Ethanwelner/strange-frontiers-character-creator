@@ -597,8 +597,9 @@
     }
   }
 
-  /* The Stats step's bars sit on the dark box, so they flip: placed points and
-     core badges light, level 0 points mid gray, open slots a lighter outline. */
+  /* The Stats step's bars sit on the dark box: core badges light, the Kind's
+     bonus in the game's purple at the left, the player's points after it in
+     green, and open slots a lighter outline. */
   .builder-panel .pool-stats {
     .stat-badge {
       background-color: var(--portfolio-near-white);
@@ -606,15 +607,20 @@
     }
 
     .stat.filled {
-      background-color: var(--portfolio-near-white);
+      background-color: var(--frontiers-green);
     }
 
     .stat.default {
-      background-color: #7d7d7d;
+      background-color: var(--frontiers-lore-on-black);
     }
 
     .stat.empty {
       border-color: #8a8a8a;
+    }
+
+    /* A locked group's row is already faded */
+    .sheet-group.locked .stat.unavailable {
+      opacity: 1;
     }
   }
 
@@ -635,8 +641,9 @@
   }
 
   /* The sheet goes dark on screen too: the step box's gray around darker inner
-     boxes, light text, and the same flipped bars and badges as the Stats step.
-     Its Trait cards stay light like every card. Printing keeps the light sheet. */
+     boxes, light text, and the Stats step's badges and bars, with the Kind's
+     bonus in purple and the player's points in green. Its Trait cards stay
+     light like every card. Printing keeps the light sheet's gray and black. */
   @media screen {
     .builder-panel .c-sheet {
       --rule: rgb(255 255 255 / 18%);
@@ -674,11 +681,11 @@
       }
 
       .stat.filled {
-        background-color: var(--portfolio-near-white);
+        background-color: var(--frontiers-green);
       }
 
       .stat.default {
-        background-color: #7d7d7d;
+        background-color: var(--frontiers-lore-on-black);
       }
 
       .stat.empty {
@@ -1134,6 +1141,11 @@
 
   .pool-stats .sheet-group.locked .sheet-stat {
     opacity: 0.45;
+  }
+
+  /* How many of the group's points a stat can still take, beside its name */
+  .stat-spend {
+    margin-left: 12px;
   }
 
   /* Core stat: the sheet's round badge with − and + to its right. Each stat has
@@ -1784,8 +1796,13 @@
   /* The sheet's circles and squares (the site's .stat-line) hold a set size,
      shrinking only when the column is too narrow for all 20. */
   .sheet-stat .stat-line {
-    grid-template-columns: repeat(20, minmax(0, 18px));
+    grid-template-columns: repeat(20, minmax(0, 20px));
     gap: 4px;
+  }
+
+  /* Slots past a stat's maximum stay faded, on the Stats step and the Sheet */
+  .sheet-stat .stat.unavailable {
+    opacity: 0.45;
   }
 
   /* A point past the stat's maximum */

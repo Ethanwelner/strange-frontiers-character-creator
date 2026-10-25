@@ -6,24 +6,22 @@ summary: "A sentient, self-contained machine mind, capable of inhabiting differe
 tags: [ai-core, artificial-intelligence, machine, earth, kashgar]
 features:
   - name: Creatures of Logic
-    description: AI Cores start with 6 points in Mental, and the player places the other 3 wherever they like.
+    description: AI Cores get a +3 bonus to every Mental stat.
   - name: Bodiless
     description: AI Cores can’t put points into Physical stats. An AI Core inhabits a chassis, which determines its physical stats.
   - name: Armored Core
     description: An AI Core’s central core is an item with 10 HP, and it must be destroyed separately from its chassis for the character to be killed.
   - name: Machine Mind
     description: An AI Core can interface directly with other machines through the cabled port interfaces on its core.
-# The 3 level 0 points the player places; Bodiless keeps them out of Physical.
-freePoints: 3
 # Bodiless keeps Physical at 0, so the maximums total 120, not Human's 135.
 maxTotal: 120
 stats:
-  endurance: { start: 0, max: 0 }
-  power: { start: 0, max: 0 }
-  grace: { start: 0, max: 0 }
-  empathy: { start: 0, max: 20 }
-  persuasion: { start: 0, max: 20 }
-  demeanor: { start: 0, max: 20 }
-  logic: { start: 2, max: 20 }
-  intuition: { start: 2, max: 20 }
-  memory: { start: 2, max: 20 }
+  endurance: { bonus: 0, max: 0 }
+  power: { bonus: 0, max: 0 }
+  grace: { bonus: 0, max: 0 }
+  empathy: { bonus: 0, max: 20 }
+  persuasion: { bonus: 0, max: 20 }
+  demeanor: { bonus: 0, max: 20 }
+  logic: { bonus: 3, max: 20 }
+  intuition: { bonus: 3, max: 20 }
+  memory: { bonus: 3, max: 20 }

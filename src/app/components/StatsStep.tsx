@@ -13,14 +13,16 @@ interface Props {
 // Stats as a pool, drawn like the character sheet. Each core point (one
 // per level) goes to a group and unlocks 3 focus points for that group's
 // stats, which the player adds with each stat's + and −. The stats' circle and
-// square bars show the result, with the Kind's level 0 stats in gray.
+// square bars show the result: the Kind's bonus in purple, then the player's
+// points in green.
 //
 // A group's stats only take points its core stat has unlocked, so the player
 // levels the core stat first, with +. A stat's + spends the Kind's free
-// level 0 points first (the AI Core's 3, which need no core point), then the
+// bonus points first, if it has any (they need no core point), then the
 // group's unlocked points. Taking a point back returns the group's points first,
 // then the free ones; core points stay put until the player takes them
-// back with −. A group can't take a core point its stats have no room
+// back with −, which also takes back any focus points the group can no
+// longer hold. A group can't take a core point its stats have no room
 // for, like an AI Core's Physical, where every max is 0.
 export function StatsStep({ draft, onChange }: Props) {
   const base = baseStats(draft);
@@ -30,11 +32,12 @@ export function StatsStep({ draft, onChange }: Props) {
   const corePlaced = GROUPS.reduce((n, g) => n + draft.core[g], 0);
   const coreLeft = draft.level - corePlaced;
   const spentIn = (g: StatGroup) => STAT_GROUPS[g].reduce((n, s) => n + (draft.points[s] ?? 0), 0);
-  const kindStart = (s: StatId) => base?.[s]?.start ?? 0;
-  const level0 = (s: StatId) => kindStart(s) + (start[s] ?? 0);
-  const valueOf = (s: StatId) => level0(s) + (draft.points[s] ?? 0);
+  const kindBonus = (s: StatId) => base?.[s]?.bonus ?? 0;
+  // The Kind's bonus plus any free bonus points placed on the stat
+  const bonusOf = (s: StatId) => kindBonus(s) + (start[s] ?? 0);
+  const valueOf = (s: StatId) => bonusOf(s) + (draft.points[s] ?? 0);
 
-  // One point on or off a stat: on from the free level 0 points while any are
+  // One point on or off a stat: on from the free bonus points while any are
   // left, otherwise from the group's unlocked points; off from the group's
   // points first.
   const bump = (s: StatId, by: 1 | -1) => {
@@ -54,7 +57,7 @@ export function StatsStep({ draft, onChange }: Props) {
     return (
       <section>
         <StepHeader step="stats" title="Stats" />
-        <p className="empty">Choose a Kind first; it sets your level 0 stats and how far each can go.</p>
+        <p className="empty">Choose a Kind first; it adds a bonus to each stat and sets how far each can go.</p>
       </section>
     );
   }
@@ -63,8 +66,8 @@ export function StatsStep({ draft, onChange }: Props) {
     <section>
       <StepHeader step="stats" title="Stats">
         Each level gives a core point. Level a group's core stat with the + beside its number to unlock {POINTS_PER_LEVEL} focus points for its
-        stats, then spend them with each stat's +. A group's stats can't take points until its core stat is leveled. Your Kind's level 0 stats are already
-        filled in, in gray.
+        stats, then spend them with each stat's +. A group's stats can't take points until its core stat is leveled. Your stats start at 0, and your Kind's bonus
+        is added on top, in purple; your points show in green.
       </StepHeader>
       <div className="tech-fields tech-fields-light step-box">
         <p className="pool-summary">
@@ -79,7 +82,7 @@ export function StatsStep({ draft, onChange }: Props) {
               <span className={`num${freeLeft === 0 ? " good" : ""}`}>
                 {free - freeLeft}/{free}
               </span>{" "}
-              free level 0 points placed
+              free bonus points placed
               <span className="muted"> (spent first, on any stat)</span>
             </>
           )}
@@ -96,8 +99,8 @@ export function StatsStep({ draft, onChange }: Props) {
             // Room left under the group's maxes, after the points already unlocked.
             const headroom = STAT_GROUPS[g].reduce((n, s) => n + Math.max(0, (base[s]?.max ?? 0) - valueOf(s)), 0) - Math.max(0, room - spent);
             const canLevel = coreLeft > 0 && headroom >= POINTS_PER_LEVEL;
-            // Taking a core point back would strand focus points.
-            const stranded = spent > (core - 1) * POINTS_PER_LEVEL;
+            // Focus points that taking a core point back also takes back
+            const stranded = Math.max(0, spent - (core - 1) * POINTS_PER_LEVEL);
             return (
               <div key={g} className={`sheet-group${locked ? " locked" : ""}`}>
                 <div className="sheet-group-head">
@@ -107,9 +110,9 @@ export function StatsStep({ draft, onChange }: Props) {
                     </span>
                     <button
                       aria-label={`Take a core point from ${g}`}
-                      title={core > 0 && stranded ? `Take ${spent - (core - 1) * POINTS_PER_LEVEL} focus points out first` : undefined}
+                      title={core > 0 && stranded ? `Also takes back ${stranded} focus ${stranded === 1 ? "point" : "points"}` : undefined}
                       onClick={() => onChange(withCore(draft, g, core - 1))}
-                      disabled={core === 0 || stranded}
+                      disabled={core === 0}
                     >
                       <Sign is="minus" />
                     </button>
@@ -131,24 +134,30 @@ export function StatsStep({ draft, onChange }: Props) {
                 {STAT_GROUPS[g].map((s: StatId) => {
                   const value = valueOf(s);
                   const max = base[s]?.max ?? 0;
+                  // The group's unspent points this stat can still take under its max
+                  const toSpend = Math.max(0, Math.min(spare, max - value));
                   return (
                     <div key={s} className="sheet-stat">
                       <div className="tiny-text">
                         <strong>
                           {title(s)} - {value}
                         </strong>
-                        <span className="muted"> max {max}</span>
+                        {toSpend > 0 && (
+                          <span className="stat-spend muted">
+                            Spend {toSpend} {toSpend === 1 ? "point" : "points"}
+                          </span>
+                        )}
                       </div>
                       <div className="pool-stat-row">
                         <div className="stat-buttons">
-                          <button aria-label={`Take a point from ${s}`} onClick={() => bump(s, -1)} disabled={value <= kindStart(s)}>
+                          <button aria-label={`Take a point from ${s}`} onClick={() => bump(s, -1)} disabled={value <= kindBonus(s)}>
                             <Sign is="minus" />
                           </button>
                           <button aria-label={`Add a point to ${s}`} onClick={() => bump(s, 1)} disabled={spare === 0 || value >= max}>
                             <Sign is="plus" />
                           </button>
                         </div>
-                        <StatLine start={level0(s)} value={value} max={max} />
+                        <StatLine bonus={bonusOf(s)} value={value} max={max} />
                       </div>
                     </div>
                   );

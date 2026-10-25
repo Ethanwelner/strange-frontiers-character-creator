@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { loadContent } from "./content.js";
 import { allocateLevels, Concept, rankFocus, solveConcept, type ConceptInput, type Solution } from "./solve.js";
 import { validateBuild } from "./validate.js";
-import { Trait } from "../schema/index.js";
+import { Kind, Trait } from "../schema/index.js";
 
 // Knowledges need Memory 3 and up, out of reach for these level 1 fixtures,
 // so the rules are tested without Knowledge minimum stats. validate.test.ts
@@ -41,7 +41,7 @@ describe("allocateLevels", () => {
   });
 
   it("moves points to the group's other stats when a priority stat is at its max", () => {
-    const capped = { ...isek, grace: { start: 18, max: 18 } };
+    const capped = { ...isek, grace: { bonus: 18, max: 18 } };
     expect(allocateLevels(["grace"], capped, 1)).toEqual([{ group: "physical", points: { power: 2, endurance: 1 } }]);
   });
 
@@ -159,9 +159,24 @@ describe("solveConcept", () => {
     expect(s.result.ok).toBe(true);
   });
 
-  it("places a Kind's free level 0 points in the priority stats", () => {
-    const s = solve({ ...hunter, kind: "ai-core", focus: ["logic", "persuasion", "power"], traits: [] });
-    // Power has a max of 0 for an AI Core, so it's skipped.
+  it("places a Kind's free bonus points in the priority stats", () => {
+    // No Kind gives free bonus points right now: this one is the AI Core with
+    // 3 points of its Mental bonus left to place.
+    const aiCore = content.kinds.find((k) => k.id === "ai-core")!;
+    const freeCore = Kind.parse({
+      ...aiCore,
+      id: "fixture-free-core",
+      freePoints: 3,
+      stats: { ...aiCore.stats, logic: { bonus: 2, max: 20 }, intuition: { bonus: 2, max: 20 }, memory: { bonus: 2, max: 20 } },
+    });
+    const out = solveConcept(
+      { ...hunter, kind: freeCore.id, focus: ["logic", "persuasion", "power"], traits: [] },
+      { ...content, kinds: [...content.kinds, freeCore] },
+      L1,
+    );
+    if ("error" in out) throw new Error(out.error);
+    const s = out as Solution;
+    // Power has a max of 0 for this Kind, so it's skipped.
     expect(s.build.startPoints).toEqual({ logic: 2, persuasion: 1 });
     expect(s.result.ok).toBe(true);
   });
@@ -192,7 +207,7 @@ describe("rank stats among the priority stats", () => {
   const ranked = {
     ...content,
     traits: content.traits.map((t) => (["dreftian-law", "seafaring"].includes(t.id) ? { ...t, rankStats: ["memory" as const] } : t)),
-    kinds: content.kinds.map((k) => (k.id === "isek" ? { ...k, stats: { ...k.stats!, memory: { start: 3, max: 15 } } } : k)),
+    kinds: content.kinds.map((k) => (k.id === "isek" ? { ...k, stats: { ...k.stats!, memory: { bonus: 3, max: 15 } } } : k)),
   };
   // Listing a granted Trait once asks for rank 2.
   const mage: ConceptInput = { ...hunter, profession: "licensed-mage", traits: ["dreftian-law"] };

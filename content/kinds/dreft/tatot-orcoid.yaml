@@ -12,12 +12,12 @@ features:
     description: Easier access to trading guild and merchant clan Traits.
 traitAccess: [trading-guild, merchant-clan]
 stats:
-  endurance: { start: 2, max: 18 }
-  power: { start: 2, max: 18 }
-  grace: { start: 1, max: 13 }
-  empathy: { start: 1, max: 14 }
-  persuasion: { start: 1, max: 15 }
-  demeanor: { start: 1, max: 15 }
-  logic: { start: 0, max: 13 }
-  intuition: { start: 1, max: 15 }
-  memory: { start: 0, max: 14 }
+  endurance: { bonus: 2, max: 18 }
+  power: { bonus: 2, max: 18 }
+  grace: { bonus: 1, max: 13 }
+  empathy: { bonus: 1, max: 14 }
+  persuasion: { bonus: 1, max: 15 }
+  demeanor: { bonus: 1, max: 15 }
+  logic: { bonus: 0, max: 13 }
+  intuition: { bonus: 1, max: 15 }
+  memory: { bonus: 0, max: 14 }

@@ -6,16 +6,16 @@ summary: "The humanity of Earth Baseline."
 tags: [generalist, earth]
 features:
   - name: Generalists
-    description: Humans start with 1 point in every focus stat.
+    description: Humans get a +1 bonus to every focus stat.
   - name: Unexceptional
     description: Humans can't exceed 15 in any focus stat unless otherwise modified.
 stats:
-  endurance: { start: 1, max: 15 }
-  power: { start: 1, max: 15 }
-  grace: { start: 1, max: 15 }
-  empathy: { start: 1, max: 15 }
-  persuasion: { start: 1, max: 15 }
-  demeanor: { start: 1, max: 15 }
-  logic: { start: 1, max: 15 }
-  intuition: { start: 1, max: 15 }
-  memory: { start: 1, max: 15 }
+  endurance: { bonus: 1, max: 15 }
+  power: { bonus: 1, max: 15 }
+  grace: { bonus: 1, max: 15 }
+  empathy: { bonus: 1, max: 15 }
+  persuasion: { bonus: 1, max: 15 }
+  demeanor: { bonus: 1, max: 15 }
+  logic: { bonus: 1, max: 15 }
+  intuition: { bonus: 1, max: 15 }
+  memory: { bonus: 1, max: 15 }
