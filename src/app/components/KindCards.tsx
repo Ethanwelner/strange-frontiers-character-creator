@@ -29,13 +29,8 @@ export function KindCards({ draft, onChange }: { draft: Draft; onChange: (d: Dra
                     <Chip tone="muted">{k.plane}</Chip>
                   </div>
                   <p>{k.summary}</p>
-                  <ul className="features">
-                    {k.features.map((f) => (
-                      <li key={f.name}>
-                        <strong>{f.name}.</strong> {f.description}
-                      </li>
-                    ))}
-                  </ul>
+                  {/* Bonus and max for every stat, then the grants and features */}
+                  <StatRanges stats={k.stats} />
                   {/* Traits every character of the Kind holds, like the packages' Grants */}
                   {k.grants.length > 0 && (
                     <div className="grants">
@@ -49,7 +44,13 @@ export function KindCards({ draft, onChange }: { draft: Draft; onChange: (d: Dra
                       </div>
                     </div>
                   )}
-                  <StatRanges stats={k.stats} />
+                  <ul className="features">
+                    {k.features.map((f) => (
+                      <li key={f.name}>
+                        <strong>{f.name}.</strong> {f.description}
+                      </li>
+                    ))}
+                  </ul>
                 </Card>
               ))}
             </div>

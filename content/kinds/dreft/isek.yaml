@@ -3,15 +3,13 @@ name: Isek
 status: placeholder
 plane: isekai
 region: dreft
-summary: "The so-called “Free Elves.” Brash and adventure-seeking by nature, this nigh-immortal Kind rarely sees old age. Young Isek chase rebellion and are possessed of an irresistible wanderlust; the few who grow old tend to grow bitter and live apart from their kind."
+summary: "The so-called “Free Elves.” Brash and adventure-seeking by nature, this nigh-immortal Kind rarely sees old age. Young Isek chase rebellion and are possessed of an irresistible wanderlust."
 tags: [elf, immortal, restless, rebel, adventurer]
 features:
   - name: Nigh Immortal
     description: Isek don’t age past their prime, though with their inveterate adventure-seeking and simple lack of self-care, few live to see old age.
   - name: Reckless
     description: Higher Power and Grace maximums, lower Demeanor maximum.
-  - name: Restless Doctrine
-    description: Starts with the Isek doctrine of restlessness and seeking as a knowledge Trait.
   - name: Restless
     description: Ill-suited to sedentary life. Isek have easier access to military, guild, and caravan Traits.
 traitAccess: [military, guild, caravan]
