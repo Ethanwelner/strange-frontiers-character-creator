@@ -1525,7 +1525,7 @@
     color: var(--portfolio-black);
   }
 
-  /* The background packages, between the name and the stats */
+  /* The level and background packages, between the name and the stats */
   .panel-background {
     list-style: none;
     margin: 0 0 1.25rem;
