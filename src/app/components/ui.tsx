@@ -106,13 +106,14 @@ export function StatLine({ bonus, value, max }: { bonus: number; value: number; 
   );
 }
 
-// A core stat with no focus stats, like Magic: a diamond per point, out of 20.
-// No Kind sets a Magic maximum, so every slot past the points is open.
-export function CoreLine({ value }: { value: number }) {
+// A core stat with no focus stats, like Magic: a diamond per point, out of 20,
+// with any bonus from a package (gray, or purple on the dark sheet) first. No
+// Kind sets a Magic maximum, so every slot past the points is open.
+export function CoreLine({ bonus = 0, value }: { bonus?: number; value: number }) {
   return (
     <div className="stat-line" aria-hidden="true">
       {Array.from({ length: STAT_SLOTS }, (_, n) => (
-        <span key={n} className={`stat diamond ${n < value ? "filled" : "empty"}`} />
+        <span key={n} className={`stat diamond ${n < bonus ? "default" : n < value ? "filled" : "empty"}`} />
       ))}
     </div>
   );

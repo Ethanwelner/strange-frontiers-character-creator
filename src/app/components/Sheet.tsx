@@ -200,7 +200,7 @@ export function Sheet({
                         Each point in {title(g)} adds {MP_PER_MAGIC} MP (Mana Points)
                       </strong>
                     </div>
-                    <CoreLine value={summary?.coreStats[g] ?? draft.core[g]} />
+                    <CoreLine bonus={summary?.coreBonus[g] ?? 0} value={summary?.coreStats[g] ?? draft.core[g]} />
                   </div>
                 )}
                 {STAT_GROUPS[g].map((s: StatId) => {

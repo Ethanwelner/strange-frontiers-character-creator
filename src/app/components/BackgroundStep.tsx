@@ -29,12 +29,17 @@ function chipLabels(entries: { trait: string; rank?: number }[]): string[] {
 export function PackageGrants({ pkg }: { pkg: BackgroundPackage }) {
   return (
     <div className="grants">
-      {pkg.bonusPoints.length > 0 && (
+      {(pkg.bonusPoints.length > 0 || Object.keys(pkg.coreBonus).length > 0) && (
         <div>
           <span className="label">Bonus</span>
           {pkg.bonusPoints.map((b) => (
             <Chip key={b.group} tone="accent">
               +{b.count} {title(b.group)} {b.count === 1 ? "point" : "points"}
+            </Chip>
+          ))}
+          {Object.entries(pkg.coreBonus).map(([g, n]) => (
+            <Chip key={g} tone="accent">
+              +{n} {title(g)}
             </Chip>
           ))}
         </div>

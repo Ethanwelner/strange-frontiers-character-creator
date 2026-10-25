@@ -790,7 +790,9 @@ describe("rule 11: HP, VP and SP", () => {
   });
 
   it("adds a Kind's resources, like the Goblinoid Tatot's 6 MP", () => {
-    expect(check(goblinoid).summary!.resources.mp).toBe(6);
+    // The sample is a Licensed Mage, whose bonus Magic adds 3 more.
+    expect(check(goblinoid).summary!.resources.mp).toBe(9);
+    expect(check({ ...goblinoid, profession: "caravaneer", choices: [] }).summary!.resources.mp).toBe(6);
   });
 });
 
@@ -821,6 +823,18 @@ describe("rule 13: Magic", () => {
     expect(check(humanMage, content, { startingLevel: 2 }).errors).toEqual([
       expect.objectContaining({ code: "core-access", message: "1 level goes to Magic, which this character can't level without Magical Heritage", path: "levels" }),
     ]);
+  });
+
+  it("adds a Profession's bonus Magic without a level, for a character who can level Magic", () => {
+    const r = check({ ...isek, profession: "licensed-mage", choices: [] });
+    expect(r.summary!.coreStats.magic).toBe(1);
+    expect(r.summary!.coreBonus.magic).toBe(1);
+    expect(r.summary!.resources.mp).toBe(3);
+    expect(r.errors.filter((e) => e.code === "core-access" || e.code === "level")).toEqual([]);
+    // A Human hedge witch can't level Magic, so the bonus doesn't count.
+    const h = check({ ...human, profession: "hedge-witch", choices: [] });
+    expect(h.summary!.coreStats.magic).toBe(0);
+    expect(h.summary!.resources.mp).toBe(0);
   });
 
   it("rejects focus points on a Magic level", () => {
