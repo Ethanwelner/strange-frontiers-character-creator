@@ -524,13 +524,6 @@
     }
   }
 
-  .describe-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-
   .describe-status {
     margin: 0;
     font-weight: 600;

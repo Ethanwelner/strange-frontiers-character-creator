@@ -134,7 +134,6 @@ export function App() {
               startingLevel={campaign.startingLevel}
               hasBuild={Boolean(draft.kind || draft.origin || draft.profession || draft.past || draft.traits.length)}
               onBuilt={applyDescribed}
-              onDismiss={() => setSaved((s) => ({ ...s, ai: undefined }))}
               actions={
                 <div className="hero-bar">
                   {confirmingNew ? (
