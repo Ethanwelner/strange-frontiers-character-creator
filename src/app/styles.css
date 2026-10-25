@@ -597,8 +597,9 @@
     }
   }
 
-  /* The Stats step's bars sit on the dark box, so they flip: placed points and
-     core badges light, the Kind's bonus mid gray, open slots a lighter outline. */
+  /* The Stats step's bars sit on the dark box: core badges light, the Kind's
+     bonus in the game's purple at the left, the player's points after it in
+     green, open slots a lighter outline, and slots past the max a faded red. */
   .builder-panel .pool-stats {
     .stat-badge {
       background-color: var(--portfolio-near-white);
@@ -606,15 +607,24 @@
     }
 
     .stat.filled {
-      background-color: var(--portfolio-near-white);
+      background-color: var(--frontiers-green);
     }
 
     .stat.default {
-      background-color: #7d7d7d;
+      background-color: var(--frontiers-lore-on-black);
     }
 
     .stat.empty {
       border-color: #8a8a8a;
+    }
+
+    .stat.unavailable {
+      opacity: 0.45;
+    }
+
+    /* A locked group's row is already faded */
+    .sheet-group.locked .stat.unavailable {
+      opacity: 1;
     }
   }
 

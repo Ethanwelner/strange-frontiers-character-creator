@@ -13,7 +13,8 @@ interface Props {
 // Stats as a pool, drawn like the character sheet. Each core point (one
 // per level) goes to a group and unlocks 3 focus points for that group's
 // stats, which the player adds with each stat's + and −. The stats' circle and
-// square bars show the result, with the Kind's bonus in gray.
+// square bars show the result: the Kind's bonus in purple, then the player's
+// points in green.
 //
 // A group's stats only take points its core stat has unlocked, so the player
 // levels the core stat first, with +. A stat's + spends the Kind's free
@@ -65,7 +66,7 @@ export function StatsStep({ draft, onChange }: Props) {
       <StepHeader step="stats" title="Stats">
         Each level gives a core point. Level a group's core stat with the + beside its number to unlock {POINTS_PER_LEVEL} focus points for its
         stats, then spend them with each stat's +. A group's stats can't take points until its core stat is leveled. Your stats start at 0, and your Kind's bonus
-        is added on top, in gray.
+        is added on top, in purple; your points show in green.
       </StepHeader>
       <div className="tech-fields tech-fields-light step-box">
         <p className="pool-summary">
