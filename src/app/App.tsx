@@ -120,8 +120,8 @@ export function App() {
   return (
     <div className="sf-creator">
       <header className="builder-hero">
-        <div className="container d-flex flex-gap-48 builder-row">
-          <div className="flex-11 builder-main hero-main">
+        <div className="container d-flex builder-row">
+          <div className="builder-main hero-main">
             <div className="builder-statement">
               <h1 className="title hero-title frontiers-accent">Strange Frontiers</h1>
               <p className="title section-title">Character Builder</p>
@@ -171,14 +171,12 @@ export function App() {
               ))}
             </nav>
           </div>
-          <div className="flex-3 builder-side">
-            <ValidationPanel draft={draft} result={result} />
-          </div>
         </div>
       </header>
 
+      {/* The step on the left, the character box beside it */}
       <div className="section unlimited white-bg builder-panel">
-        <div className="container">
+        <div className="container builder-body">
           <main>
             <StepErrors.Provider value={stepErrors}>
               {contentErrors.length > 0 && (
@@ -216,6 +214,9 @@ export function App() {
               </div>
             </StepErrors.Provider>
           </main>
+          <aside className="builder-side">
+            <ValidationPanel draft={draft} result={result} />
+          </aside>
         </div>
       </div>
     </div>

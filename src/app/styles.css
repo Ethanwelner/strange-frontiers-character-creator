@@ -244,33 +244,39 @@
 
   /* Hero: the site's black section with the green title */
 
-  /* Content sits in the site's .container rows. The hero's row is the title,
-     describe box and step tabs (flex-11) beside the character box (flex-3),
-     48px apart. */
-  /* At least as tall as the site's heroes (.short-section, 75vh), counting the
-     room the page leaves above it for the site's nav (--sf-creator-top, set by
-     creator.php's css/rpg.css). The title, describe box (with New beside Build
-     it) and character box are centered, and the tabs sit at the bottom. */
+  /* At least 65vh or 768px tall, whichever is larger. The title
+     and describe box (with New beside Build it) are centered, and the tabs sit
+     at the bottom. On creator.php, --sf-creator-top clears the site's logo and
+     search, and --sf-creator-left moves the title and describe box beside the
+     site's page nav (both set in the site's css/rpg.css). */
   .builder-hero {
     display: grid;
     /* One column the step tabs can scroll inside, instead of widening it */
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: 1fr;
-    min-height: 75vh;
+    min-height: max(65vh, 768px);
     color: var(--portfolio-white);
-    padding-top: var(--sf-creator-top, 32px);
+    padding-top: var(--sf-creator-top, 24px);
   }
 
-  /* The tabs sit at the bottom of the left column, on the panel, however tall
-     the character box makes the row. */
   .hero-main {
+    flex: 1;
+    /* The step tabs scroll inside it instead of widening the page */
+    min-width: 0;
     display: flex;
     flex-direction: column;
   }
 
-  .builder-hero .builder-side {
-    align-self: center;
-    padding: 32px 0;
+  .hero-main > :not(.builder-tabs) {
+    margin-left: var(--sf-creator-left, 0px);
+  }
+
+  /* The body: the step, then the character box in a column on the right, kept
+     in view while the step scrolls */
+  .builder-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
+    gap: 48px;
   }
 
   /* New, beside Build it */
@@ -302,8 +308,8 @@
   /* .title.hero-title.frontiers-accent over .title.section-title */
   /* Auto margins above it and above the tabs center it and the describe box. */
   .builder-statement {
-    margin: auto 0 40px;
-    padding-top: 48px;
+    margin-top: auto;
+    margin-bottom: 40px;
     line-height: 1;
 
     > * {
@@ -1240,12 +1246,8 @@
     border-bottom: 1px solid var(--rule);
   }
 
-  /* Validation panel: a small .c-sheet, in the hero beside the title on
-     desktops. Its flex-3 column keeps room for the Picks table on narrower
-     desktops. */
-  .builder-side {
-    min-width: 260px;
-  }
+  /* Validation panel: a small .c-sheet, in the body beside the step on
+     desktops; its column keeps room for the Picks table. */
 
   .panel {
     --rule: rgb(255 255 255 / 18%);
@@ -1271,14 +1273,6 @@
         height: 1px;
         background-color: var(--rule);
       }
-    }
-  }
-
-  @media (min-width: 992px) {
-    .builder-hero .panel {
-      position: static;
-      max-height: none;
-      overflow: visible;
     }
   }
 
@@ -1614,17 +1608,10 @@
 
   /* Below the site's lg breakpoint: one column, the panel docks to the bottom. */
   @media (max-width: 991px) {
-    .builder-row {
+    /* The character box docks to the bottom of the screen instead */
+    .builder-body {
+      grid-template-columns: minmax(0, 1fr);
       gap: 0;
-    }
-
-    .builder-main {
-      flex: 1 100%;
-    }
-
-    .builder-side {
-      flex: none;
-      min-width: 0;
     }
 
     .builder-panel.unlimited {
@@ -1732,7 +1719,6 @@
   @media (max-width: 575px) {
     .builder-statement {
       margin-bottom: 28px;
-      padding-top: 32px;
     }
 
     h2 {
