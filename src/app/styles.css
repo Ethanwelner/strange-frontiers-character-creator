@@ -275,11 +275,11 @@
     margin-left: max(var(--sf-creator-left, 0px), (100% - 760px) / 2);
   }
 
-  /* The body: the step, then the character box in a column on the right, kept
-     in view while the step scrolls */
+  /* The body: the character box in a column on the left, kept in view while
+     the step scrolls, then the step */
   .builder-body {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
+    grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
     gap: 48px;
   }
 
