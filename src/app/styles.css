@@ -1299,8 +1299,11 @@
 
   .panel-name {
     margin: 0 0 1.25rem;
-    font-size: 1.25rem;
-    font-weight: 600;
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
   }
 
   /* Character step: the name (up to 640px wide) with the starting level right
@@ -1462,33 +1465,38 @@
     flex: 1 1 24rem;
   }
 
-  /* The name, with the pen that edits it at the right end of its line */
-  .sheet-name {
+  /* The name, with the pen that edits it at the right end of its line, on
+     the Sheet (.sheet-name) and in the character box (.panel-name) */
+  .name-field-line {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 0.5rem;
 
-    h2 {
+    h2,
+    h3 {
       flex: 1;
       min-width: 0;
       margin: 0;
     }
   }
 
-  .sheet-name-text {
+  .sheet-name {
+    margin-bottom: 0.5rem;
+  }
+
+  .name-text {
     all: unset;
     cursor: text;
     overflow-wrap: anywhere;
   }
 
-  .sheet-name-text:focus-visible {
+  .name-text:focus-visible {
     outline: 2px solid currentColor;
     outline-offset: 2px;
   }
 
   /* The field takes the heading's look, so only the underline changes */
-  .sheet-name-input {
+  .name-input {
     width: 100%;
     font: inherit;
     color: inherit;
@@ -1498,7 +1506,7 @@
     padding: 0;
   }
 
-  .sheet-name-edit {
+  .name-edit {
     flex: none;
     display: grid;
     place-items: center;
@@ -1813,7 +1821,7 @@
     .pager,
     .notice,
     .step-head,
-    .sheet-name-edit,
+    .name-edit,
     .sheet-actions button {
       display: none !important;
     }

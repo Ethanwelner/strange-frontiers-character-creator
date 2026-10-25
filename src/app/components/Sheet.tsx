@@ -3,7 +3,7 @@ import { FREE_TEXT_POOLS, type BuildResult } from "../../engine/validate.js";
 import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { kindById, packageById, traitById } from "../content.js";
 import type { Draft } from "../draft.js";
-import { askerName, baseStats, Chip, GROUPS, SettingIcon, StatLine, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
+import { askerName, baseStats, Chip, GROUPS, NameField, SettingIcon, StatLine, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
 
 const SOURCE = /^(origin|profession|past) ([a-z0-9-]+)( choice)?$/;
 const TRAIT_CHOICE = /^trait ([a-z0-9-]+) choice$/;
@@ -84,57 +84,6 @@ function TraitModal({ held, places, onClose }: { held: Held; places: string[]; o
 // Laid out like the sample character sheet on the site's Mechanics tab.
 // Knowledges and Languages are a list of links, as on that sheet, each opening
 // its card; the other Traits are cards.
-// The character's name, which turns into a field when it or the pen is
-// clicked. Enter or leaving the field keeps the change; Escape drops it.
-function NameField({ name, onChange }: { name?: string; onChange: (name?: string) => void }) {
-  const [editing, setEditing] = useState(false);
-  const [value, setValue] = useState(name ?? "");
-  const start = () => {
-    setValue(name ?? "");
-    setEditing(true);
-  };
-  const finish = (keep: boolean) => {
-    if (keep) onChange(value.trim() || undefined);
-    setEditing(false);
-  };
-  return (
-    <div className="sheet-name">
-      <h2>
-        {editing ? (
-          <input
-            className="sheet-name-input"
-            aria-label="Character name"
-            value={value}
-            maxLength={80}
-            placeholder="Unnamed character"
-            autoFocus
-            onChange={(e) => setValue(e.target.value)}
-            onBlur={() => finish(true)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") finish(true);
-              if (e.key === "Escape") finish(false);
-            }}
-          />
-        ) : (
-          <button type="button" className="sheet-name-text" onClick={start}>
-            {name || "Unnamed character"}
-          </button>
-        )}
-      </h2>
-      <button
-        type="button"
-        className="sheet-name-edit"
-        aria-label="Edit the name"
-        // Keeps the field from losing focus first, so the pen doesn't reopen it
-        onMouseDown={(e) => editing && e.preventDefault()}
-        onClick={() => (editing ? finish(true) : start())}
-      >
-        <span className="pen-icon" aria-hidden="true" />
-      </button>
-    </div>
-  );
-}
-
 export function Sheet({
   draft,
   result,
@@ -195,7 +144,7 @@ export function Sheet({
 
         <div className="c-sheet-box sheet-head">
           <div className="sheet-head-main">
-            <NameField name={draft.name} onChange={onName} />
+            <NameField className="sheet-name" heading="h2" name={draft.name} onChange={onName} />
             <p className="lede">
               Level {draft.level} {kind?.name ?? "—"} · {packages.map((p) => p?.name ?? "—").join(" · ")}
             </p>

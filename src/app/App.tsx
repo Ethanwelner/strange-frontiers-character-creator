@@ -173,7 +173,7 @@ export function App() {
         <div className={`container builder-body${step === "sheet" ? " no-side" : ""}`}>
           {step !== "sheet" && (
             <aside className="builder-side">
-              <ValidationPanel draft={draft} result={result} />
+              <ValidationPanel draft={draft} result={result} onName={(name) => setDraft({ ...draft, name })} />
             </aside>
           )}
           <main>

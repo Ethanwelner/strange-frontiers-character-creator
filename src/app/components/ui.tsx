@@ -1,4 +1,4 @@
-import { createContext, useContext, type KeyboardEvent, type ReactNode } from "react";
+import { createContext, useContext, useState, type KeyboardEvent, type ReactNode } from "react";
 import { MAX_LEVEL } from "../../ai/level.js";
 import { STAT_GROUPS, type StatBlock, type StatId } from "../../schema/index.js";
 import { kindById, packageById, traitById } from "../content.js";
@@ -133,6 +133,68 @@ export function StatRanges({ stats }: { stats: StatBlock }) {
           ))}
         </div>
       ))}
+    </div>
+  );
+}
+
+// The character's name, which turns into a field when it or the pen at the
+// end of its line is clicked. Enter or leaving the field keeps the change;
+// Escape drops it. The Sheet and the character box both use it.
+export function NameField({
+  name,
+  onChange,
+  heading: Heading,
+  className,
+}: {
+  name?: string;
+  onChange: (name?: string) => void;
+  heading: "h2" | "h3";
+  className: string;
+}) {
+  const [editing, setEditing] = useState(false);
+  const [value, setValue] = useState(name ?? "");
+  const start = () => {
+    setValue(name ?? "");
+    setEditing(true);
+  };
+  const finish = (keep: boolean) => {
+    if (keep) onChange(value.trim() || undefined);
+    setEditing(false);
+  };
+  return (
+    <div className={`name-field-line ${className}`}>
+      <Heading>
+        {editing ? (
+          <input
+            className="name-input"
+            aria-label="Character name"
+            value={value}
+            maxLength={80}
+            placeholder="Unnamed character"
+            autoFocus
+            onChange={(e) => setValue(e.target.value)}
+            onBlur={() => finish(true)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") finish(true);
+              if (e.key === "Escape") finish(false);
+            }}
+          />
+        ) : (
+          <button type="button" className={`name-text${name ? "" : " muted"}`} onClick={start}>
+            {name || "Unnamed character"}
+          </button>
+        )}
+      </Heading>
+      <button
+        type="button"
+        className="name-edit"
+        aria-label="Edit the name"
+        // Keeps the field from losing focus first, so the pen doesn't reopen it
+        onMouseDown={(e) => editing && e.preventDefault()}
+        onClick={() => (editing ? finish(true) : start())}
+      >
+        <span className="pen-icon" aria-hidden="true" />
+      </button>
     </div>
   );
 }
