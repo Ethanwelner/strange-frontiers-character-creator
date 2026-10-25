@@ -49,6 +49,7 @@ export function contentIndex(content: Content): string {
       lines.push(
         `- ${p.id}: ${p.name}${p.region ? ` (${p.region})` : ""}. ${p.summary} Tags: ${p.tags.join(", ") || "none"}.` +
           ` Grants: ${grants || "none"}.${choices ? ` Choices: ${choices}.` : ""}` +
+          `${p.bonusPoints.length ? ` Bonus points (placed by the engine): ${p.bonusPoints.map((b) => `${b.count} ${b.group}`).join(", ")}.` : ""}` +
           `${p.backgroundTraits.length ? ` Background Traits: ${p.backgroundTraits.join(", ")}.` : ""}`,
       );
     }

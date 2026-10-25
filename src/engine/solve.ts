@@ -9,7 +9,7 @@ import { z } from "zod";
 import { STAT_CAP, STAT_GROUPS, StatId, type StatBlock, type Trait } from "../schema/index.js";
 import { Build, ChoiceAnswer, DEFAULT_CAMPAIGN, type Campaign, type LevelAllocation, type PickKind, type StatGroup } from "./build.js";
 import type { Content } from "./content.js";
-import { answers, choicePool, isFreeTextPool, FOCUS_POINTS_PER_LEVEL, validateBuild, type BuildResult } from "./validate.js";
+import { answers, bonusPointsOf, choicePool, isFreeTextPool, FOCUS_POINTS_PER_LEVEL, validateBuild, type BuildResult } from "./validate.js";
 
 // The Kind and package fields take ids, as the Build does, so a name like
 // "Dreft" comes back to the model as a format problem it can fix.
@@ -60,20 +60,31 @@ function baseStats(concept: Concept, content: Content): StatBlock | undefined {
   return content.kinds.find((k) => k.id === concept.kind)?.stats;
 }
 
-// Places a Kind's free bonus points: into the priority stats in turn, then into
-// whichever stat has the most room. Stats with a max of 0 never get one.
-export function allocateStart(focusIn: string[], base: StatBlock | undefined, free: number): Partial<Record<StatId, number>> {
+// Places free bonus points: first each package's, in its group, then the
+// Kind's, in any stat. Each goes into the priority stats it can take in turn,
+// then into whichever stat it can take has the most room. Stats with a max of
+// 0 never get one.
+export function allocateStart(
+  focusIn: string[],
+  base: StatBlock | undefined,
+  free: number,
+  groups: { group: StatGroup; count: number }[] = [],
+): Partial<Record<StatId, number>> {
   const focus = [...new Set(focusIn.filter(isStat))];
   const current = Object.fromEntries(StatId.options.map((s) => [s, base?.[s]?.bonus ?? 0])) as Record<StatId, number>;
   const room = (s: StatId) => Math.min(base?.[s]?.max ?? STAT_CAP, STAT_CAP) - current[s];
   const points: Partial<Record<StatId, number>> = {};
-  for (let p = 0; p < free; p++) {
-    const candidates = focus.filter((s) => room(s) > 0);
-    const stat = candidates.length ? candidates[p % candidates.length]! : [...StatId.options].sort((a, b) => room(b) - room(a))[0]!;
-    if (room(stat) <= 0) break;
-    points[stat] = (points[stat] ?? 0) + 1;
-    current[stat]++;
-  }
+  const place = (count: number, allowed: readonly StatId[]) => {
+    for (let p = 0; p < count; p++) {
+      const candidates = focus.filter((s) => allowed.includes(s) && room(s) > 0);
+      const stat = candidates.length ? candidates[p % candidates.length]! : [...allowed].sort((a, b) => room(b) - room(a))[0];
+      if (!stat || room(stat) <= 0) break;
+      points[stat] = (points[stat] ?? 0) + 1;
+      current[stat]++;
+    }
+  };
+  for (const g of groups) place(g.count, STAT_GROUPS[g.group]);
+  place(free, StatId.options);
   return points;
 }
 
@@ -218,10 +229,13 @@ export function solveConcept(input: unknown, content: Content, campaign: Campaig
   const concept = parsed.data;
   const traits = new Map<string, Trait>(content.traits.map((t) => [t.id, t]));
 
-  // The Kind's free bonus points go to the focus first; the levels build on them.
+  // Free bonus points go to the focus first; the levels build on them.
   const focus = rankFocus(concept, content);
   const base = baseStats(concept, content);
-  const startPoints = allocateStart(focus, base, content.kinds.find((k) => k.id === concept.kind)?.freePoints ?? 0);
+  const kind = content.kinds.find((k) => k.id === concept.kind);
+  const packages = (["origin", "profession", "past"] as const).flatMap((slot) => content.packages.filter((p) => p.id === concept[slot] && p.type === slot));
+  const bonus = bonusPointsOf(kind, packages);
+  const startPoints = allocateStart(focus, base, bonus.any, bonus.groups);
   const afterStart = base && (Object.fromEntries(
     Object.entries(base).map(([s, r]) => [s, { ...r, bonus: r.bonus + (startPoints[s as StatId] ?? 0) }]),
   ) as StatBlock);

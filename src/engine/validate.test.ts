@@ -7,10 +7,12 @@ import { validateBuild, type IssueCode } from "./validate.js";
 const loaded = loadContent();
 // Knowledges need Memory 3 and up, out of reach for these level 1 fixtures,
 // so the rules are tested without Knowledge minimum stats. Rule 12's tests
-// check the real ones.
+// check the real ones. The fixtures don't place Origins' bonus points either;
+// rule 1's tests check those against the real packages.
 const content: Content = {
   ...loaded.content,
   traits: loaded.content.traits.map((t) => (t.category === "knowledge" ? { ...t, minStats: {} } : t)),
+  packages: loaded.content.packages.map((p) => ({ ...p, bonusPoints: [] })),
 };
 
 // No Kind gives free bonus points right now, so the rule is tested with this
@@ -317,6 +319,24 @@ describe("rule 4: stat maximums", () => {
     expect(check({ ...human, startPoints: { grace: 1 } }).errors).toEqual([
       expect.objectContaining({ code: "allocation", message: "Human has no free bonus points, but the build places 1" }),
     ]);
+  });
+
+  it("needs an Origin's bonus point placed in its group, unless the Kind has no room there", () => {
+    // The real packages: Dreft gives 1 Physical point, the Chinese Empire 1 Mental.
+    const real = { ...content, packages: loaded.content.packages };
+    const freeErrors = (b: BuildInput) => check(b, real).errors.filter((e) => e.path === "startPoints");
+    expect(freeErrors(human)).toEqual([
+      expect.objectContaining({ code: "allocation", message: "Place 1 Physical bonus point from Dreft" }),
+    ]);
+    expect(freeErrors({ ...human, startPoints: { power: 1 } })).toEqual([]);
+    expect(check({ ...human, startPoints: { power: 1 } }, real).summary!.stats.power).toBe(3);
+    expect(freeErrors({ ...human, startPoints: { logic: 1 } }).map((e) => e.message)).toEqual([
+      "Place 1 Physical bonus point from Dreft",
+      "The build places 1 more bonus point than its packages give",
+    ]);
+    expect(freeErrors({ ...human, origin: "chinese-empire-earth", startPoints: { memory: 1 } })).toEqual([]);
+    // An AI Core's Physical maximums are 0, so the American Empire's Physical point is dropped.
+    expect(freeErrors({ ...human, kind: "ai-core", origin: "american-empire-earth", levels: [{ group: "mental", points: { logic: 3 } }] })).toEqual([]);
   });
 
   it("rejects a stat above its Kind max", () => {

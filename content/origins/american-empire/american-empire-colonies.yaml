@@ -7,6 +7,9 @@ summary: "You grew up in the Empire’s stellar territories, in New Columbia on 
 tags: [american-empire, colonies, luna, ark, space]
 lore: american-empire
 type: origin
+# A free bonus point the player places in a Physical stat.
+bonusPoints:
+  - { count: 1, group: physical }
 grants:
   - { trait: american-history, rank: 1 }
   - { trait: imperial-law, rank: 1 }

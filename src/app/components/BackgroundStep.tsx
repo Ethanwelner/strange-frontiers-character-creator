@@ -29,6 +29,16 @@ function chipLabels(entries: { trait: string; rank?: number }[]): string[] {
 export function PackageGrants({ pkg }: { pkg: BackgroundPackage }) {
   return (
     <div className="grants">
+      {pkg.bonusPoints.length > 0 && (
+        <div>
+          <span className="label">Bonus</span>
+          {pkg.bonusPoints.map((b) => (
+            <Chip key={b.group} tone="accent">
+              +{b.count} {title(b.group)} {b.count === 1 ? "point" : "points"}
+            </Chip>
+          ))}
+        </div>
+      )}
       {pkg.grants.length > 0 && (
         <div>
           <span className="label">Grants</span>
@@ -78,8 +88,16 @@ export function BackgroundStep({ draft, onChange }: { draft: Draft; onChange: (d
   // Clicking the chosen package again clears the slot.
   const choose = (slot: Slot, id: string) => {
     const old = draft[slot];
-    // Answers to the old package's choices no longer apply.
-    onChange({ ...draft, [slot]: old === id ? undefined : id, choices: draft.choices.filter((c) => c.package !== old) });
+    const next = old === id ? undefined : id;
+    // Answers to the old package's choices no longer apply, and bonus points
+    // placed for either package start over.
+    const bonusChanged = [old, next].some((p) => p && packageById.get(p)?.bonusPoints.length);
+    onChange({
+      ...draft,
+      [slot]: next,
+      choices: draft.choices.filter((c) => c.package !== old),
+      ...(bonusChanged ? { startPoints: undefined } : {}),
+    });
   };
   return (
     <section>

@@ -8,11 +8,12 @@ import { addPick, fromBuild, levelsToPool, poolToLevels, toBuild, withCore, with
 const campaign = { startingLevel: 1 };
 
 // Knowledges need Memory 3 and up, out of reach for these level 1 fixtures,
-// so the rules are tested without Knowledge minimum stats. validate.test.ts
-// checks the real ones.
+// so the rules are tested without Knowledge minimum stats, or Origins' bonus
+// points. validate.test.ts checks the real ones.
 const bundled: Content = {
   ...appContent,
   traits: appContent.traits.map((t) => (t.category === "knowledge" ? { ...t, minStats: {} } : t)),
+  packages: appContent.packages.map((p) => ({ ...p, bonusPoints: [] })),
 };
 
 const human: Draft = {

@@ -5,7 +5,9 @@ import { validateBuild } from "../engine/validate.js";
 import { contentIndex } from "./prompt.js";
 import { checkBuild, openChoices, runTool, ToolError, TOOLS, unknownIds } from "./tools.js";
 
-const { content } = loadContent();
+// The fixture builds don't place Origins' bonus points; validate.test.ts checks those.
+const loaded = loadContent().content;
+const content = { ...loaded, packages: loaded.packages.map((p) => ({ ...p, bonusPoints: [] })) };
 // These fixtures are level 1 characters; the default campaign starts at 3.
 const L1 = { startingLevel: 1 };
 

@@ -1,8 +1,8 @@
 import type { StatGroup } from "../../engine/build.js";
-import { MP_PER_MAGIC, FOCUS_POINTS_PER_LEVEL as POINTS_PER_LEVEL } from "../../engine/validate.js";
+import { bonusPointsOf, MP_PER_MAGIC, FOCUS_POINTS_PER_LEVEL as POINTS_PER_LEVEL } from "../../engine/validate.js";
 import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { coreAccessFor, coreStatsShown } from "../check.js";
-import { content, kindById } from "../content.js";
+import { content, kindById, packageById } from "../content.js";
 import { withCore, type Draft } from "../draft.js";
 import { baseStats, GROUPS, Sign, StatLine, StepHeader, title } from "./ui.js";
 
@@ -18,9 +18,10 @@ interface Props {
 // points in green.
 //
 // A group's stats only take points its core stat has unlocked, so the player
-// levels the core stat first, with +. A stat's + spends the Kind's free
-// bonus points first, if it has any (they need no core point), then the
-// group's unlocked points. Taking a point back returns the group's points first,
+// levels the core stat first, with +. A stat's + spends free bonus points
+// first, if there are any it can take (an Origin's in its group, like the
+// American Empire's 1 Physical point, then the Kind's in any stat; they need
+// no core point), then the group's unlocked points. Taking a point back returns the group's points first,
 // then the free ones; core points stay put until the player takes them
 // back with −, which also takes back any focus points the group can no
 // longer hold. A group can't take a core point its stats have no room
@@ -30,9 +31,19 @@ interface Props {
 // point in it adds MP instead.
 export function StatsStep({ draft, onChange }: Props) {
   const base = baseStats(draft);
-  const free = (draft.kind ? kindById.get(draft.kind)?.freePoints : 0) ?? 0;
+  // Free bonus points: the Origin's and other packages', each in its group,
+  // and the Kind's, in any stat.
+  const packages = [draft.origin, draft.profession, draft.past].flatMap((id) => (id && packageById.get(id) ? [packageById.get(id)!] : []));
+  const bonus = bonusPointsOf(draft.kind ? kindById.get(draft.kind) : undefined, packages);
   const start = draft.startPoints ?? {};
-  const freeLeft = free - Object.values(start).reduce((n, p) => n + (p ?? 0), 0);
+  const placedIn = (g: StatGroup) => STAT_GROUPS[g].reduce((n, s) => n + (start[s] ?? 0), 0);
+  const needIn = (g: StatGroup) => bonus.groups.find((b) => b.group === g)?.count ?? 0;
+  const inGroups = bonus.groups.reduce((n, b) => n + Math.min(placedIn(b.group), b.count), 0);
+  const placed = Object.values(start).reduce((n, p) => n + (p ?? 0), 0);
+  const anyLeft = Math.max(0, bonus.any - (placed - inGroups));
+  // Free points a group's stats can still take: its own, then the Kind's
+  const freeFor = (g: StatGroup) => Math.max(0, needIn(g) - placedIn(g)) + anyLeft;
+  const groupOf = (s: StatId) => (Object.keys(STAT_GROUPS) as StatGroup[]).find((g) => STAT_GROUPS[g].includes(s))!;
   const corePlaced = GROUPS.reduce((n, g) => n + draft.core[g], 0);
   const coreLeft = draft.level - corePlaced;
   const shown = coreStatsShown(draft, content);
@@ -50,7 +61,7 @@ export function StatsStep({ draft, onChange }: Props) {
     const startPoints = { ...start };
     const points = { ...draft.points };
     if (by > 0) {
-      if (freeLeft > 0) startPoints[s] = (startPoints[s] ?? 0) + 1;
+      if (freeFor(groupOf(s)) > 0) startPoints[s] = (startPoints[s] ?? 0) + 1;
       else points[s] = (points[s] ?? 0) + 1;
     } else if (points[s]) points[s] -= 1;
     else if (startPoints[s]) startPoints[s] -= 1;
@@ -82,11 +93,21 @@ export function StatsStep({ draft, onChange }: Props) {
           </span>{" "}
           core points placed
           {coreLeft > 0 && <span className="muted"> · {coreLeft} left</span>}
-          {free > 0 && (
+          {bonus.groups.map((b) => (
+            <span key={b.group}>
+              {" · "}
+              <span className={`num${placedIn(b.group) >= b.count ? " good" : ""}`}>
+                {Math.min(placedIn(b.group), b.count)}/{b.count}
+              </span>{" "}
+              {title(b.group)} bonus {b.count === 1 ? "point" : "points"} placed
+              <span className="muted"> (from {b.from.join(" and ")}, spent first)</span>
+            </span>
+          ))}
+          {bonus.any > 0 && (
             <>
               {" · "}
-              <span className={`num${freeLeft === 0 ? " good" : ""}`}>
-                {free - freeLeft}/{free}
+              <span className={`num${anyLeft === 0 ? " good" : ""}`}>
+                {bonus.any - anyLeft}/{bonus.any}
               </span>{" "}
               free bonus points placed
               <span className="muted"> (spent first, on any stat)</span>
@@ -132,7 +153,7 @@ export function StatsStep({ draft, onChange }: Props) {
               );
             }
             // Points any of this group's stats could still take.
-            const spare = Math.max(0, freeLeft) + Math.max(0, room - spent);
+            const spare = freeFor(g) + Math.max(0, room - spent);
             const locked = spare === 0 && spent === 0;
             // Room left under the group's maxes, after the points already unlocked.
             const headroom = STAT_GROUPS[g].reduce((n, s) => n + Math.max(0, (base[s]?.max ?? 0) - valueOf(s)), 0) - Math.max(0, room - spent);

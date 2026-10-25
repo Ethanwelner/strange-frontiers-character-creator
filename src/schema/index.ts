@@ -88,7 +88,8 @@ export const Kind = BaseEntry.extend({
   traitAccess: z.array(z.string()).default([]),
   stats: StatBlock,
   // Bonus points the player places in any stats, on top of the Kind's
-  // bonuses. Maximums still apply. No Kind uses them right now.
+  // bonuses. Maximums still apply. No Kind uses them right now; packages'
+  // bonusPoints work the same way, limited to one group.
   freePoints: z.number().int().min(0).default(0),
   // What this Kind's stat maximums add up to, when it's deliberately off
   // Human's 135, like the AI Core's 120. The validator checks against it.
@@ -98,9 +99,18 @@ export type Kind = z.infer<typeof Kind>;
 
 export const PackageType = z.enum(["origin", "profession", "past"]);
 
+// Bonus points a package gives the player to place, each in one of a group's
+// focus stats, like the American Empire's 1 Physical point.
+export const BonusPoints = z.object({
+  count: z.number().int().min(1),
+  group: z.enum(OPEN_CORE_STATS),
+});
+export type BonusPoints = z.infer<typeof BonusPoints>;
+
 export const BackgroundPackage = BaseEntry.extend({
   type: PackageType,
   grants: z.array(TraitGrant).default([]),
+  bonusPoints: z.array(BonusPoints).default([]),
   choices: z.array(TraitChoice).default([]),
   // Traits this package puts on the character's Background Trait list.
   backgroundTraits: z.array(Id).default([]),
