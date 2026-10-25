@@ -15,10 +15,10 @@ export function ValidationPanel({ draft, result, onName }: Props) {
   const [open, setOpen] = useState(false);
   const { summary } = result;
   const base = baseStats(draft);
-  // The background packages picked so far, in Origin, Profession, Past order
-  const background = (["origin", "profession", "past"] as const)
-    .filter((slot) => draft[slot])
-    .map((slot) => [title(slot), packageById.get(draft[slot]!)?.name ?? draft[slot]] as const);
+  // The background packages, with a dash for each one not picked yet, like the stats
+  const background = (["origin", "profession", "past"] as const).map(
+    (slot) => [title(slot), draft[slot] ? (packageById.get(draft[slot])?.name ?? draft[slot]) : "–"] as const,
+  );
 
   return (
     <aside className={`panel${open ? " open" : ""}`} aria-label="Validation">
@@ -35,16 +35,14 @@ export function ValidationPanel({ draft, result, onName }: Props) {
 
       <div className="panel-body">
         <NameField className="panel-name" heading="h3" name={draft.name} onChange={onName} />
-        {background.length > 0 && (
-          <ul className="panel-background">
-            {background.map(([label, name]) => (
-              <li key={label} className="panel-stat">
-                <span>{label}</span>
-                <strong>{name}</strong>
-              </li>
-            ))}
-          </ul>
-        )}
+        <ul className="panel-background">
+          {background.map(([label, name]) => (
+            <li key={label} className="panel-stat">
+              <span>{label}</span>
+              <strong>{name}</strong>
+            </li>
+          ))}
+        </ul>
         <h4>Stats</h4>
         <div className="panel-stats">
           {GROUPS.map((g) => (

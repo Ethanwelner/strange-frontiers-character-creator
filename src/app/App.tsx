@@ -7,7 +7,7 @@ import { DescribeBox } from "./components/DescribeBox.js";
 import { StatsStep } from "./components/StatsStep.js";
 import { Sheet } from "./components/Sheet.js";
 import { TraitsStep } from "./components/TraitsStep.js";
-import { StepErrors } from "./components/ui.js";
+import { Arrow, StepErrors } from "./components/ui.js";
 import { ValidationPanel } from "./components/ValidationPanel.js";
 import { content, contentErrors } from "./content.js";
 import type { DescribeResult } from "../ai/types.js";
@@ -195,10 +195,10 @@ export function App() {
             <StepErrors.Provider value={stepErrors}>
               {/* The previous and next steps, above the step's title */}
               <div className="pager">
-                {i > 0 ? <button onClick={() => setStep(STEPS[i - 1]!)}>← {LABELS[STEPS[i - 1]!]}</button> : <span />}
+                {i > 0 ? <button onClick={() => setStep(STEPS[i - 1]!)}><Arrow to="left" /> {LABELS[STEPS[i - 1]!]}</button> : <span />}
                 {i < STEPS.length - 1 && (
                   <button className={`step-next${done[step] ? " is-done" : ""}`} onClick={() => setStep(STEPS[i + 1]!)}>
-                    {LABELS[STEPS[i + 1]!]} →
+                    {LABELS[STEPS[i + 1]!]} <Arrow to="right" />
                   </button>
                 )}
               </div>

@@ -756,6 +756,20 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 24px;
+
+    button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4em;
+    }
+  }
+
+  /* The step buttons' arrows, a little smaller than the type */
+  .arrow-icon {
+    flex: none;
+    width: 0.9em;
+    height: 0.9em;
+    fill: currentColor;
   }
 
   /* The next step: Build it's disabled green until this step is finished,
@@ -1386,7 +1400,7 @@
     color: var(--portfolio-black);
   }
 
-  /* The picked background packages, between the name and the stats */
+  /* The background packages, between the name and the stats */
   .panel-background {
     list-style: none;
     margin: 0 0 1.25rem;
