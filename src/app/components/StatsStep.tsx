@@ -17,7 +17,7 @@ interface Props {
 //
 // A group's stats only take points its core stat has unlocked, so the player
 // levels the core stat first, with +. A stat's + spends the Kind's free
-// bonus points first (the AI Core's 3, which need no core point), then the
+// bonus points first, if it has any (they need no core point), then the
 // group's unlocked points. Taking a point back returns the group's points first,
 // then the free ones; core points stay put until the player takes them
 // back with −. A group can't take a core point its stats have no room

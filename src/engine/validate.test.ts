@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { BackgroundPackage, Trait } from "../schema/index.js";
+import { BackgroundPackage, Kind, Trait } from "../schema/index.js";
 import { loadContent, type Content } from "./content.js";
 import type { BuildInput } from "./build.js";
 import { validateBuild, type IssueCode } from "./validate.js";
@@ -12,6 +12,29 @@ const content: Content = {
   ...loaded.content,
   traits: loaded.content.traits.map((t) => (t.category === "knowledge" ? { ...t, minStats: {} } : t)),
 };
+
+// No Kind gives free bonus points right now, so the rule is tested with this
+// one: the AI Core's stats with 3 points of its Mental bonus left to place.
+const freeCore = Kind.parse({
+  id: "fixture-free-core",
+  name: "Free Core",
+  status: "placeholder",
+  plane: "earth",
+  summary: "Test fixture: a Kind with free bonus points.",
+  freePoints: 3,
+  maxTotal: 120,
+  stats: {
+    endurance: { bonus: 0, max: 0 },
+    power: { bonus: 0, max: 0 },
+    grace: { bonus: 0, max: 0 },
+    empathy: { bonus: 0, max: 20 },
+    persuasion: { bonus: 0, max: 20 },
+    demeanor: { bonus: 0, max: 20 },
+    logic: { bonus: 2, max: 20 },
+    intuition: { bonus: 2, max: 20 },
+    memory: { bonus: 2, max: 20 },
+  },
+});
 
 // The real content has no Background, starter-only, prerequisite or
 // rank-stat Traits yet, and only two languages, so the rules that need them
@@ -270,20 +293,27 @@ describe("rule 3: each level is 1 core point and 3 focus points", () => {
 
 describe("rule 4: stat maximums", () => {
   it("keeps an AI Core out of Physical stats, which its chassis decides", () => {
-    const aiCore = { ...human, kind: "ai-core", startPoints: { empathy: 3 }, traits: [] };
-    expectLegal(check({ ...aiCore, levels: [{ group: "mental", points: { logic: 3 } }] }));
+    const aiCore = { ...human, kind: "ai-core", traits: [] };
+    const r = check({ ...aiCore, levels: [{ group: "mental", points: { logic: 3 } }] });
+    expectLegal(r);
+    expect(r.summary!.stats).toMatchObject({ logic: 6, intuition: 3, memory: 3, empathy: 0 });
     expect(codes(check({ ...aiCore, levels: [{ group: "physical", points: { power: 3 } }] }))).toEqual(["stat-max"]);
-    expect(codes(check({ ...aiCore, startPoints: { power: 3 }, levels: [{ group: "mental", points: { logic: 3 } }] }))).toEqual(["stat-max"]);
   });
 
   it("needs a Kind's free bonus points placed, and only a Kind that has them", () => {
-    const aiCore = { ...human, kind: "ai-core", traits: [], levels: [{ group: "mental" as const, points: { logic: 3 } }] };
-    const r = check({ ...aiCore, startPoints: { empathy: 2, logic: 1 } });
+    const withFree = { ...content, kinds: [...content.kinds, freeCore] };
+    const core = { ...human, kind: freeCore.id, traits: [], levels: [{ group: "mental" as const, points: { logic: 3 } }] };
+    const r = check({ ...core, startPoints: { empathy: 2, logic: 1 } }, withFree);
     expectLegal(r);
     expect(r.summary!.stats).toMatchObject({ empathy: 2, logic: 6, memory: 2 });
-    expect(check({ ...aiCore, startPoints: { empathy: 2 } }).errors).toEqual([
-      expect.objectContaining({ code: "allocation", message: "Place 1 more of AI Core's 3 free bonus points", path: "startPoints" }),
+    expect(check({ ...core, startPoints: {} }, withFree).errors).toEqual([
+      expect.objectContaining({ code: "allocation", message: "Place Free Core's 3 free bonus points", path: "startPoints" }),
     ]);
+    expect(check({ ...core, startPoints: { empathy: 2 } }, withFree).errors).toEqual([
+      expect.objectContaining({ code: "allocation", message: "Place 1 more of Free Core's 3 free bonus points", path: "startPoints" }),
+    ]);
+    // Free points still respect the Kind's maximums.
+    expect(codes(check({ ...core, startPoints: { power: 3 } }, withFree))).toEqual(["stat-max"]);
     expect(check({ ...human, startPoints: { grace: 1 } }).errors).toEqual([
       expect.objectContaining({ code: "allocation", message: "Human has no free bonus points, but the build places 1" }),
     ]);

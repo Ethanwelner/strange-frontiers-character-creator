@@ -44,7 +44,7 @@ Content flow: write in the Sheet → convert the new or changed rows to data fil
 
 The rules `validateBuild` (in `src/engine/`) enforces:
 
-1. Every stat starts at 0, and the Kind adds a bonus to each (`bonus` in a Kind's stats). A Kind can also give free bonus points (`freePoints`, like the AI Core's 3) that the player places in any stats, within the Kind's maximums; the build records them as `startPoints`, and they count toward the 9-point bonus budget. The bonus counts toward a stat's value like any other point: picks, requirements, resources and maximums all use the total.
+1. Every stat starts at 0, and the Kind adds a bonus to each (`bonus` in a Kind's stats). A Kind can also give free bonus points (`freePoints`; none does right now) that the player places in any stats, within the Kind's maximums; the build records them as `startPoints`, and they count toward the 9-point bonus budget. The bonus counts toward a stat's value like any other point: picks, requirements, resources and maximums all use the total.
 2. Characters start at level 3 by default. The starting level is set per campaign, and a GM may start lower or higher; level 1 is the lowest.
 3. Each level, including level 1 at creation, gives 1 core point in one group (physical, social or mental) and 3 focus points to spread among that group's three stats.
 4. No focus stat may exceed its Kind max, and nothing may exceed 20. Traits and gear that push past that are out of scope for now.

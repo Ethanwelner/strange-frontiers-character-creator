@@ -73,7 +73,7 @@ export const Kind = BaseEntry.extend({
   traitAccess: z.array(z.string()).default([]),
   stats: StatBlock,
   // Bonus points the player places in any stats, on top of the Kind's
-  // bonuses, like an AI Core's 3. Maximums still apply.
+  // bonuses. Maximums still apply. No Kind uses them right now.
   freePoints: z.number().int().min(0).default(0),
   // What this Kind's stat maximums add up to, when it's deliberately off
   // Human's 135, like the AI Core's 120. The validator checks against it.
