@@ -1,12 +1,32 @@
 // Everything the UI knows about legality comes from validateBuild. These
 // helpers only ask it questions; none of them re-implement a rule.
-import type { Campaign, PickKind } from "../engine/build.js";
+import type { Campaign, PickKind, StatGroup } from "../engine/build.js";
 import type { Content } from "../engine/parse.js";
-import { FOCUS_POINTS_PER_LEVEL, validateBuild, type BuildResult, type Issue } from "../engine/validate.js";
+import { coreAccessOf, FOCUS_POINTS_PER_LEVEL, validateBuild, type BuildResult, type Issue } from "../engine/validate.js";
 import { STAT_GROUPS, type Trait } from "../schema/index.js";
 import { addPick, poolToLevels, toBuild, type Draft, type Step } from "./draft.js";
 
 const LEVEL_PATH = /^levels\[(\d+)\]/;
+
+// The core stats to show for a draft: Physical, Social and Mental, plus any
+// the build can level (Magic, for most Kinds of Dreft) or already has points in,
+// so the player can take back points a new Kind can't hold. Before the build
+// checks out, the Kind's and packages' grants and the picks stand in.
+export function coreStatsShown(draft: Draft, content: Content, result?: BuildResult): StatGroup[] {
+  const open = coreAccessFor(draft, content, result);
+  return (Object.keys(STAT_GROUPS) as StatGroup[]).filter((g) => open.includes(g) || draft.core[g] > 0);
+}
+
+// The core stats a draft can level, from the check if it has one.
+export function coreAccessFor(draft: Draft, content: Content, result?: BuildResult): StatGroup[] {
+  if (result?.summary) return result.summary.coreAccess;
+  const held = [
+    ...(content.kinds.find((k) => k.id === draft.kind)?.grants ?? []).map((g) => g.trait),
+    ...content.packages.filter((p) => [draft.origin, draft.profession, draft.past].includes(p.id)).flatMap((p) => p.grants.map((g) => g.trait)),
+    ...draft.traits.map((t) => t.trait),
+  ];
+  return coreAccessOf(held, content);
+}
 
 export function check(draft: Draft, content: Content, campaign: Campaign): BuildResult {
   const result = validateBuild(toBuild(draft), content, campaign);
@@ -101,6 +121,7 @@ export function stepOf(issue: Issue): Step {
       // The starting level is set on the Character step; the allocations are Stats'.
       return issue.path === "level" ? "character" : "stats";
     case "allocation":
+    case "core-access":
     case "stat-max":
     case "stat-cap":
       return "stats";

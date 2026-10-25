@@ -23,6 +23,13 @@ const CONCEPT_SCHEMA = {
       items: { type: "string", enum: StatId.options },
       description: "The stats that matter most for this character, most important first (two to four). Stat points go to these.",
     },
+    magic: {
+      type: "integer",
+      minimum: 0,
+      description:
+        "How many of the character's levels go to the Magic core stat, for a spellcaster or anyone magical. Only Kinds or packages that " +
+        "grant a Trait opening Magic (Magical Heritage, for every Kind of Dreft but the Orcoid Tatot) can use it. Each Magic level gives 3 MP but no focus points. Default 0.",
+    },
     traits: {
       type: "array",
       items: { type: "string" },

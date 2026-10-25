@@ -1,6 +1,6 @@
 import { content } from "../content.js";
 import type { Draft } from "../draft.js";
-import { Card, Chip, regionClass, SettingIcon, StatRanges, title } from "./ui.js";
+import { Card, Chip, regionClass, SettingIcon, StatRanges, title, traitName } from "./ui.js";
 
 // Kinds are listed by where they come from: Earth's Kinds are The Systems',
 // and the rest go under their region. The Systems come first, then Dreft.
@@ -36,6 +36,19 @@ export function KindCards({ draft, onChange }: { draft: Draft; onChange: (d: Dra
                       </li>
                     ))}
                   </ul>
+                  {/* Traits every character of the Kind holds, like the packages' Grants */}
+                  {k.grants.length > 0 && (
+                    <div className="grants">
+                      <div>
+                        <span className="label">Grants</span>
+                        {k.grants.map((g) => (
+                          <Chip key={g.trait} tone="accent">
+                            {traitName(g.trait)}
+                          </Chip>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   <StatRanges stats={k.stats} />
                 </Card>
               ))}

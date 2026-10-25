@@ -25,6 +25,9 @@ export const Concept = z.object({
   // Priority stats, most important first. Levels go to the groups these
   // stats are in, in this order, and points go to these stats first.
   focus: z.array(z.string()).default([]),
+  // How many levels go to Magic, for a character whose Kind or packages open
+  // it. Ignored otherwise. Magic levels give MP instead of focus points.
+  magic: z.number().int().min(0).default(0),
   // Trait ids, best fit first. Listing a ranked Trait twice asks for rank 2.
   traits: z.array(z.string()).default([]),
   // Answers to package or Trait choices the engine can check, like languages.
@@ -223,6 +226,15 @@ export function solveConcept(input: unknown, content: Content, campaign: Campaig
     Object.entries(base).map(([s, r]) => [s, { ...r, bonus: r.bonus + (startPoints[s as StatId] ?? 0) }]),
   ) as StatBlock);
 
+  // Magic levels come after the focus levels, if the Kind or a package grants
+  // a Trait that opens Magic.
+  const granted = [
+    ...(content.kinds.find((k) => k.id === concept.kind)?.grants ?? []),
+    ...content.packages.filter((p) => [concept.origin, concept.profession, concept.past].includes(p.id)).flatMap((p) => p.grants),
+  ];
+  const canMagic = granted.some((g) => traits.get(g.trait)?.coreAccess.includes("magic"));
+  const magicLevels = canMagic ? Math.min(concept.magic, campaign.startingLevel) : 0;
+
   let build: Build = Build.parse({
     ...(concept.name ? { name: concept.name } : {}),
     kind: concept.kind,
@@ -231,7 +243,10 @@ export function solveConcept(input: unknown, content: Content, campaign: Campaig
     past: concept.past,
     level: campaign.startingLevel,
     startPoints,
-    levels: allocateLevels(focus, afterStart, campaign.startingLevel),
+    levels: [
+      ...allocateLevels(focus, afterStart, campaign.startingLevel - magicLevels),
+      ...Array.from({ length: magicLevels }, () => ({ group: "magic" as const, points: {} })),
+    ],
     traits: [],
     choices: answerChoices(concept, content),
   });

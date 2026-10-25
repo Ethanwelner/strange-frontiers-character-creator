@@ -7,10 +7,15 @@ summary: "The “High Orks.” A polyphenic Kind: every Tatot is born either orc
 tags: [tatot, goblinoid, merchant, magic]
 features:
   - name: Goblinoid
-    description: Higher Memory and Logic maximums, and access to magic Traits.
+    description: Higher Memory and Logic maximums, access to magic Traits, and +6 MP.
   - name: Merchant Clans
     description: Easier access to trading guild and merchant clan Traits.
 traitAccess: [trading-guild, merchant-clan]
+# Born to magic, like every Kind of Dreft but the Orcoid Tatot.
+grants:
+  - trait: magical-heritage
+# Plentiful mana: MP without any Magic.
+resources: { mp: 6 }
 stats:
   endurance: { bonus: 1, max: 13 }
   power: { bonus: 0, max: 10 }

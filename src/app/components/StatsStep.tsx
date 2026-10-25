@@ -1,7 +1,8 @@
 import type { StatGroup } from "../../engine/build.js";
-import { FOCUS_POINTS_PER_LEVEL as POINTS_PER_LEVEL } from "../../engine/validate.js";
+import { MP_PER_MAGIC, FOCUS_POINTS_PER_LEVEL as POINTS_PER_LEVEL } from "../../engine/validate.js";
 import { STAT_GROUPS, type StatId } from "../../schema/index.js";
-import { kindById } from "../content.js";
+import { coreAccessFor, coreStatsShown } from "../check.js";
+import { content, kindById } from "../content.js";
 import { withCore, type Draft } from "../draft.js";
 import { baseStats, GROUPS, Sign, StatLine, StepHeader, title } from "./ui.js";
 
@@ -24,6 +25,9 @@ interface Props {
 // back with −, which also takes back any focus points the group can no
 // longer hold. A group can't take a core point its stats have no room
 // for, like an AI Core's Physical, where every max is 0.
+//
+// Magic, for characters who can level it, has no focus stats: each core
+// point in it adds MP instead.
 export function StatsStep({ draft, onChange }: Props) {
   const base = baseStats(draft);
   const free = (draft.kind ? kindById.get(draft.kind)?.freePoints : 0) ?? 0;
@@ -31,6 +35,8 @@ export function StatsStep({ draft, onChange }: Props) {
   const freeLeft = free - Object.values(start).reduce((n, p) => n + (p ?? 0), 0);
   const corePlaced = GROUPS.reduce((n, g) => n + draft.core[g], 0);
   const coreLeft = draft.level - corePlaced;
+  const shown = coreStatsShown(draft, content);
+  const open = coreAccessFor(draft, content);
   const spentIn = (g: StatGroup) => STAT_GROUPS[g].reduce((n, s) => n + (draft.points[s] ?? 0), 0);
   const kindBonus = (s: StatId) => base?.[s]?.bonus ?? 0;
   // The Kind's bonus plus any free bonus points placed on the stat
@@ -89,10 +95,42 @@ export function StatsStep({ draft, onChange }: Props) {
         </p>
 
         <div className="pool-stats">
-          {GROUPS.map((g) => {
+          {shown.map((g) => {
             const core = draft.core[g];
             const room = core * POINTS_PER_LEVEL;
             const spent = spentIn(g);
+            if (!STAT_GROUPS[g].length) {
+              const canLevel = coreLeft > 0 && open.includes(g);
+              return (
+                <div key={g} className={`sheet-group${core === 0 && !canLevel ? " locked" : ""}`}>
+                  <div className="sheet-group-head">
+                    <div className="core-control">
+                      <span className="stat-badge" title="Core stat">
+                        {core}
+                      </span>
+                      <button aria-label={`Take a core point from ${g}`} onClick={() => onChange(withCore(draft, g, core - 1))} disabled={core === 0}>
+                        <Sign is="minus" />
+                      </button>
+                      <button
+                        aria-label={`Put a core point in ${g}`}
+                        title={coreLeft > 0 && !open.includes(g) ? `This character can't level ${title(g)}` : undefined}
+                        onClick={() => onChange(withCore(draft, g, core + 1))}
+                        disabled={!canLevel}
+                      >
+                        <Sign is="plus" />
+                      </button>
+                    </div>
+                    <h4 className="rule">{title(g)}</h4>
+                    <span className={`num${core === 0 ? " muted" : ""}`}>{MP_PER_MAGIC * core} MP</span>
+                  </div>
+                  <p className="hint">
+                    {open.includes(g)
+                      ? `No focus stats: each point in ${title(g)} adds ${MP_PER_MAGIC} MP (Mana Points).`
+                      : `This character can't level ${title(g)}; take these points back.`}
+                  </p>
+                </div>
+              );
+            }
             // Points any of this group's stats could still take.
             const spare = Math.max(0, freeLeft) + Math.max(0, room - spent);
             const locked = spare === 0 && spent === 0;

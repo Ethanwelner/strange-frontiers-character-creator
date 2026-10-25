@@ -15,6 +15,9 @@ features:
   - name: Restless
     description: Ill-suited to sedentary life. Isek have easier access to military, guild, and caravan Traits.
 traitAccess: [military, guild, caravan]
+# Born to magic, like every Kind of Dreft but the Orcoid Tatot.
+grants:
+  - trait: magical-heritage
 stats:
   endurance: { bonus: 1, max: 15 }
   power: { bonus: 2, max: 18 }

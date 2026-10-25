@@ -21,11 +21,14 @@ function checkBudget(label: string, stats: StatBlock, freePoints = 0, maxTotal =
   if (max !== maxTotal) warnings.push(`${label}: maximums total ${max}, expected ${maxTotal}`);
 }
 
+const traitIds = new Set(traits.map((t) => t.id));
 for (const kind of kinds) {
   checkBudget(`kinds/${kind.id}`, kind.stats, kind.freePoints, kind.maxTotal);
+  for (const g of kind.grants) {
+    if (!traitIds.has(g.trait)) errors.push(`kinds/${kind.id}: granted Trait "${g.trait}" doesn't exist`);
+  }
 }
 
-const traitIds = new Set(traits.map((t) => t.id));
 for (const pkg of packages) {
   const refs = [...pkg.grants.map((g) => g.trait), ...pkg.backgroundTraits];
   for (const ref of refs) {

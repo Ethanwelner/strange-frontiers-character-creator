@@ -12,6 +12,9 @@ features:
     description: Can hold their breath for hours, and are unbothered by the thin air of high altitudes.
   - name: Beard Nets
     description: Guwain beards grow in thick, tangled messes. Most Guwain braid theirs, often with tie-offs and a meshed pattern that lets them carry goods inside.
+# Born to magic, like every Kind of Dreft but the Orcoid Tatot.
+grants:
+  - trait: magical-heritage
 stats:
   endurance: { bonus: 2, max: 20 }
   power: { bonus: 2, max: 17 }

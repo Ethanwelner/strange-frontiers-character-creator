@@ -1,18 +1,28 @@
 import { z } from "zod";
 
-// Focus stats, grouped under the core stat they belong to.
-export const STAT_GROUPS = {
-  physical: ["endurance", "power", "grace"],
-  social: ["empathy", "persuasion", "demeanor"],
-  mental: ["logic", "intuition", "memory"],
-} as const;
+const PHYSICAL = ["endurance", "power", "grace"] as const;
+const SOCIAL = ["empathy", "persuasion", "demeanor"] as const;
+const MENTAL = ["logic", "intuition", "memory"] as const;
 
-export const StatId = z.enum([
-  ...STAT_GROUPS.physical,
-  ...STAT_GROUPS.social,
-  ...STAT_GROUPS.mental,
-]);
+export const StatId = z.enum([...PHYSICAL, ...SOCIAL, ...MENTAL]);
 export type StatId = z.infer<typeof StatId>;
+
+// Core stats, each with the focus stats it unlocks. Magic has none: each point
+// in it adds MP instead, and only characters with a Trait that opens it
+// (coreAccess) can level it.
+export const STAT_GROUPS: Record<"physical" | "social" | "mental" | "magic", readonly StatId[]> = {
+  physical: PHYSICAL,
+  social: SOCIAL,
+  mental: MENTAL,
+  magic: [],
+};
+
+// The core stats every character can level; the others need a Trait.
+export const OPEN_CORE_STATS = ["physical", "social", "mental"] as const;
+
+// HP, VP, SP and MP, as Kinds and Traits add to them.
+export const Resources = z.object({ hp: z.number().int(), vp: z.number().int(), sp: z.number().int(), mp: z.number().int() }).partial();
+export type Resources = z.infer<typeof Resources>;
 
 // Focus stats can't be raised above 20 without Traits or equipment.
 export const STAT_CAP = 20;
@@ -69,6 +79,11 @@ export type TraitChoice = z.infer<typeof TraitChoice>;
 
 export const Kind = BaseEntry.extend({
   features: z.array(Feature).default([]),
+  // Traits every character of this Kind holds, like the Isek's Magical
+  // Heritage. They don't use picks.
+  grants: z.array(TraitGrant).default([]),
+  // Added to the character's HP, VP, SP or MP, like the Goblinoid Tatot's MP.
+  resources: Resources.default({}),
   // Trait pools this Kind gets easier access to.
   traitAccess: z.array(z.string()).default([]),
   stats: StatBlock,
@@ -145,7 +160,10 @@ export const Trait = BaseEntry.extend({
   // Asked when the Trait is held, e.g. which language an Additional Language
   // is. A ranked Trait asks again for each rank.
   choices: z.array(TraitChoice).default([]),
-  // Added to the character's HP, VP or SP for each rank held.
-  resources: z.object({ hp: z.number().int(), vp: z.number().int(), sp: z.number().int() }).partial().default({}),
+  // Added to the character's HP, VP, SP or MP for each rank held.
+  resources: Resources.default({}),
+  // Core stats beyond Physical, Social and Mental that holding this Trait
+  // lets a character level, like Magical Heritage's Magic.
+  coreAccess: z.array(z.enum(["magic"])).default([]),
 });
 export type Trait = z.infer<typeof Trait>;

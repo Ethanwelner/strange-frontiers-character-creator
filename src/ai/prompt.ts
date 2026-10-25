@@ -14,6 +14,7 @@ How you work:
 The concept:
 - One Kind, one origin, one profession and one past.
 - focus: the two to four stats that matter most for this character (its priority stats), most important first. The engine puts most of each level's stat points into these, and spreads a few into the other stats as the level rises, so a high-level character isn't helpless outside their specialty.
+- magic: optional. How many levels go to the Magic core stat. Every Kind of Dreft but the Orcoid Tatot holds Magical Heritage, which opens Magic; other characters can't level it. Each Magic level gives 3 MP (Mana Points) but no focus points, so it buys no Traits: give a spellcaster or a magical character one or two, and leave it at 0 for anyone else.
 - traits: Trait ids that fit the character, best fit first. List 12 to 20, more than the picks will cover; the engine buys them in order and skips any the build can't take, so put the ones that matter most at the top. A Trait fits when it belongs in this character's life: what the description says or implies, and their Kind, home, work and past. Background picks only buy Traits from the packages' Background Traits (in the index), so include the ones there that fit. Picks left over are banked for later, so don't pad the list with Traits that don't belong. Don't list Traits the packages already grant (their Grants in the index). List a ranked Trait twice only if rank 2 matters.
 - choices: optional. Package and Trait choices with a pool, like languages (an Additional Language asks which one), are filled in for you; answer one only to pick a specific Trait from its pool, naming the package or the Trait that asks. Contacts and Places (like which seas Seafaring covers) are written in by the player, so never answer a Contact or Place choice.
 
@@ -32,7 +33,12 @@ const stats = (block: StatBlock) => STAT_ORDER.map((s) => `${s} ${block[s]?.bonu
 export function contentIndex(content: Content): string {
   const lines: string[] = ["# Content index", "", "Stats are listed as Kind bonus/max. Every stat starts at 0 and the Kind adds its bonus.", "", "## Kinds"];
   for (const k of content.kinds) {
-    lines.push(`- ${k.id}: ${k.name}. ${k.summary} Tags: ${k.tags.join(", ") || "none"}. Trait access: ${k.traitAccess.join(", ") || "none"}.`);
+    const grants = k.grants.map((g) => g.trait).join(", ");
+    const resources = Object.entries(k.resources).map(([r, n]) => `+${n} ${r.toUpperCase()}`).join(", ");
+    lines.push(
+      `- ${k.id}: ${k.name}. ${k.summary} Tags: ${k.tags.join(", ") || "none"}. Trait access: ${k.traitAccess.join(", ") || "none"}.` +
+        `${grants ? ` Grants: ${grants}.` : ""}${resources ? ` Resources: ${resources}.` : ""}`,
+    );
     lines.push(`  Stats: ${stats(k.stats)}${k.freePoints ? `. Plus ${k.freePoints} free bonus points, placed by the engine` : ""}`);
   }
   for (const type of ["origin", "profession", "past"] as const) {

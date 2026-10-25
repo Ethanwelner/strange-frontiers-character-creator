@@ -1,7 +1,7 @@
 // Checks a character build against the creation rules in docs/PLAN.md
 // (Decisions → Character creation). Deterministic: same build and content,
 // same result.
-import { STAT_CAP, STAT_GROUPS, StatId, type BackgroundPackage, type StatBlock, type Trait, type TraitChoice } from "../schema/index.js";
+import { OPEN_CORE_STATS, STAT_CAP, STAT_GROUPS, StatId, type BackgroundPackage, type StatBlock, type Trait, type TraitChoice } from "../schema/index.js";
 import { Build, DEFAULT_CAMPAIGN, type Campaign, type PickKind, type StatGroup } from "./build.js";
 import type { Content } from "./content.js";
 
@@ -23,7 +23,8 @@ export type IssueCode =
   | "rank"
   | "rank-stats"
   | "min-stats"
-  | "prerequisite";
+  | "prerequisite"
+  | "core-access";
 
 export interface Issue {
   code: IssueCode;
@@ -60,9 +61,13 @@ export interface ChoiceQuestion {
 export interface BuildSummary {
   stats: Record<StatId, number>;
   coreStats: Record<StatGroup, number>;
+  // The core stats this build can level: Physical, Social and Mental, plus any
+  // a held Trait opens, like Magic.
+  coreAccess: StatGroup[];
   // HP is 10 plus the Physical focus stats; VP and SP are the Social and
-  // Mental focus stat totals. Traits can add to any of them.
-  resources: Record<"hp" | "vp" | "sp", number>;
+  // Mental focus stat totals; MP is 3 per point of Magic. Kinds and Traits
+  // can add to any of them.
+  resources: Record<"hp" | "vp" | "sp" | "mp", number>;
   picks: Record<PickKind, PickCount>;
   traits: HeldTrait[];
   // Traits the build may spend background picks on.
@@ -83,6 +88,7 @@ const STATS = StatId.options;
 const PACKAGE_SLOTS = ["origin", "profession", "past"] as const;
 export const FOCUS_POINTS_PER_LEVEL = 3;
 export const BASE_HP = 10;
+export const MP_PER_MAGIC = 3;
 
 // Choice pools the engine knows how to resolve. Others (and pools with no
 // Traits in them yet) can't be checked, so answers to them only warn.
@@ -131,6 +137,14 @@ function questionsOf(by: ChoiceQuestion["by"], owner: { id: string; name: string
     } else out.push({ by, id: owner.id, name: owner.name, from: c.from, count: c.choose * (c.perRank === false ? 1 : times), notes: c.note ? [c.note] : [] });
   }
   return out;
+}
+
+// The core stats a character holding these Traits can level: Physical, Social
+// and Mental, plus any a Trait opens, like Magical Heritage's Magic.
+export function coreAccessOf(traitIds: Iterable<string>, content: Content): StatGroup[] {
+  const open = new Set<StatGroup>(OPEN_CORE_STATS);
+  for (const id of traitIds) for (const g of content.traits.find((t) => t.id === id)?.coreAccess ?? []) open.add(g);
+  return [...open];
 }
 
 const label = (t: Trait) => `${t.name} (${t.id})`;
@@ -196,21 +210,24 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     );
   }
 
-  // Rule 3: each level is 1 core point and 3 focus points in that group.
-  const coreStats = { physical: 0, social: 0, mental: 0 } as Record<StatGroup, number>;
+  // Rule 3: each level is 1 core point and 3 focus points in that group, or
+  // no focus points for a core stat without any, like Magic.
+  const coreStats = Object.fromEntries(Object.keys(STAT_GROUPS).map((g) => [g, 0])) as Record<StatGroup, number>;
   build.levels.forEach((lvl, i) => {
     const path = `levels[${i}].points`;
     coreStats[lvl.group]++;
     const groupStats: readonly string[] = STAT_GROUPS[lvl.group];
+    const perLevel = groupStats.length ? FOCUS_POINTS_PER_LEVEL : 0;
     let total = 0;
     for (const [stat, points = 0] of Object.entries(lvl.points)) {
       if (!groupStats.includes(stat)) {
-        error("allocation", `Level ${i + 1} puts points in ${stat}, which isn't a ${lvl.group} stat (${groupStats.join(", ")})`, path);
+        const which = groupStats.length ? ` (${groupStats.join(", ")})` : `; ${lvl.group} has no focus stats`;
+        error("allocation", `Level ${i + 1} puts points in ${stat}, which isn't a ${lvl.group} stat${which}`, path);
       }
       stats[stat as StatId] += points;
       total += points;
     }
-    if (total !== FOCUS_POINTS_PER_LEVEL) {
+    if (total !== perLevel && perLevel) {
       error("allocation", `Level ${i + 1} spends ${total} focus points; each level gives exactly ${FOCUS_POINTS_PER_LEVEL}`, path);
     }
   });
@@ -240,6 +257,7 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
       h.sources.push(source);
     }
   };
+  for (const g of kind?.grants ?? []) hold(g.trait, g.rank ?? 1, `kind ${kind!.id}`);
   for (const pkg of packages) {
     for (const g of pkg.grants) hold(g.trait, g.rank ?? 1, `${pkg.type} ${pkg.id}`);
   }
@@ -416,6 +434,20 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     }
   });
 
+  // Rule 13: a level can only go to a core stat the build can level. Magic
+  // needs a held Trait that opens it, like the Magical Heritage most Kinds of Dreft grant.
+  const coreAccess = new Set(coreAccessOf(held.keys(), content));
+  for (const g of Object.keys(coreStats) as StatGroup[]) {
+    if (!coreStats[g] || coreAccess.has(g)) continue;
+    const openers = content.traits.filter((t) => t.coreAccess.includes(g as never)).map((t) => t.name);
+    const name = g.charAt(0).toUpperCase() + g.slice(1);
+    error(
+      "core-access",
+      `${coreStats[g]} ${coreStats[g] === 1 ? "level goes" : "levels go"} to ${name}, which this character can't level${openers.length ? ` without ${openers.join(" or ")}` : ""}`,
+      "levels",
+    );
+  }
+
   // Rule 12: a picked Trait's minimum stats, focus and core, once per Trait.
   for (const id of byTrait.keys()) {
     const t = traits.get(id)!;
@@ -440,10 +472,12 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
   }
 
   const focusTotal = (g: StatGroup) => STAT_GROUPS[g].reduce((n, s) => n + stats[s], 0);
-  const resources = { hp: BASE_HP + focusTotal("physical"), vp: focusTotal("social"), sp: focusTotal("mental") };
+  const resources = { hp: BASE_HP + focusTotal("physical"), vp: focusTotal("social"), sp: focusTotal("mental"), mp: MP_PER_MAGIC * coreStats.magic };
+  const RESOURCES = ["hp", "vp", "sp", "mp"] as const;
+  for (const r of RESOURCES) resources[r] += kind?.resources[r] ?? 0;
   for (const h of held.values()) {
     const bonus = traits.get(h.trait)?.resources ?? {};
-    for (const r of ["hp", "vp", "sp"] as const) resources[r] += (bonus[r] ?? 0) * h.rank;
+    for (const r of RESOURCES) resources[r] += (bonus[r] ?? 0) * h.rank;
   }
 
   return {
@@ -453,6 +487,7 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     summary: {
       stats,
       coreStats,
+      coreAccess: [...coreAccess],
       resources,
       picks,
       traits: [...held.values()],
