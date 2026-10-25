@@ -57,11 +57,11 @@ function baseStats(concept: Concept, content: Content): StatBlock | undefined {
   return content.kinds.find((k) => k.id === concept.kind)?.stats;
 }
 
-// Places a Kind's free level 0 points: into the priority stats in turn, then into
+// Places a Kind's free bonus points: into the priority stats in turn, then into
 // whichever stat has the most room. Stats with a max of 0 never get one.
 export function allocateStart(focusIn: string[], base: StatBlock | undefined, free: number): Partial<Record<StatId, number>> {
   const focus = [...new Set(focusIn.filter(isStat))];
-  const current = Object.fromEntries(StatId.options.map((s) => [s, base?.[s]?.start ?? 0])) as Record<StatId, number>;
+  const current = Object.fromEntries(StatId.options.map((s) => [s, base?.[s]?.bonus ?? 0])) as Record<StatId, number>;
   const room = (s: StatId) => Math.min(base?.[s]?.max ?? STAT_CAP, STAT_CAP) - current[s];
   const points: Partial<Record<StatId, number>> = {};
   for (let p = 0; p < free; p++) {
@@ -90,7 +90,7 @@ const BREADTH_EVERY = 5;
 // level rises, some points spread out (SPREAD_FROM_LEVEL, BREADTH_FROM_LEVEL).
 export function allocateLevels(focusIn: string[], base: StatBlock | undefined, level: number): LevelAllocation[] {
   const focus = [...new Set(focusIn.filter(isStat))];
-  const current = Object.fromEntries(StatId.options.map((s) => [s, base?.[s]?.start ?? 0])) as Record<StatId, number>;
+  const current = Object.fromEntries(StatId.options.map((s) => [s, base?.[s]?.bonus ?? 0])) as Record<StatId, number>;
   const max = (s: StatId) => Math.min(base?.[s]?.max ?? STAT_CAP, STAT_CAP);
   const room = (s: StatId) => max(s) - current[s];
 
@@ -215,12 +215,12 @@ export function solveConcept(input: unknown, content: Content, campaign: Campaig
   const concept = parsed.data;
   const traits = new Map<string, Trait>(content.traits.map((t) => [t.id, t]));
 
-  // The Kind's free level 0 points go to the focus first; the levels build on them.
+  // The Kind's free bonus points go to the focus first; the levels build on them.
   const focus = rankFocus(concept, content);
   const base = baseStats(concept, content);
   const startPoints = allocateStart(focus, base, content.kinds.find((k) => k.id === concept.kind)?.freePoints ?? 0);
   const afterStart = base && (Object.fromEntries(
-    Object.entries(base).map(([s, r]) => [s, { ...r, start: r.start + (startPoints[s as StatId] ?? 0) }]),
+    Object.entries(base).map(([s, r]) => [s, { ...r, bonus: r.bonus + (startPoints[s as StatId] ?? 0) }]),
   ) as StatBlock);
 
   let build: Build = Build.parse({

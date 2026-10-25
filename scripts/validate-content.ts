@@ -4,20 +4,20 @@ import { loadContent } from "../src/engine/content.js";
 import type { StatBlock } from "../src/schema/index.js";
 
 // Human's budget, which every Kind is balanced against.
-const START_TOTAL = 9;
+const BONUS_TOTAL = 9;
 const MAX_TOTAL = 135;
 
 const { content, errors } = loadContent();
 const { kinds, packages, traits } = content;
 const warnings: string[] = [];
 
-// A Kind's free level 0 points count toward its starting total. A Kind that's
+// A Kind's free bonus points count toward its bonus total. A Kind that's
 // deliberately off Human's maximums says so with maxTotal.
 function checkBudget(label: string, stats: StatBlock, freePoints = 0, maxTotal = MAX_TOTAL) {
   const ranges = Object.values(stats);
-  const start = ranges.reduce((sum, r) => sum + r.start, 0) + freePoints;
+  const bonus = ranges.reduce((sum, r) => sum + r.bonus, 0) + freePoints;
   const max = ranges.reduce((sum, r) => sum + r.max, 0);
-  if (start !== START_TOTAL) warnings.push(`${label}: starting stats total ${start}, expected ${START_TOTAL}`);
+  if (bonus !== BONUS_TOTAL) warnings.push(`${label}: stat bonuses total ${bonus}, expected ${BONUS_TOTAL}`);
   if (max !== maxTotal) warnings.push(`${label}: maximums total ${max}, expected ${maxTotal}`);
 }
 

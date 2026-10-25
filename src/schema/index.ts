@@ -34,10 +34,10 @@ const BaseEntry = z.object({
 
 export const StatRange = z
   .object({
-    start: z.number().int().min(0),
+    bonus: z.number().int().min(0),
     max: z.number().int().min(0).max(STAT_CAP),
   })
-  .refine((r) => r.start <= r.max, "start can't exceed max");
+  .refine((r) => r.bonus <= r.max, "bonus can't exceed max");
 
 // Every focus stat must be listed.
 export const StatBlock = z.record(StatId, StatRange);
@@ -72,8 +72,8 @@ export const Kind = BaseEntry.extend({
   // Trait pools this Kind gets easier access to.
   traitAccess: z.array(z.string()).default([]),
   stats: StatBlock,
-  // Level 0 points the player places in any stats, on top of the starting
-  // stats, like an AI Core's 3. Maximums still apply.
+  // Bonus points the player places in any stats, on top of the Kind's
+  // bonuses, like an AI Core's 3. Maximums still apply.
   freePoints: z.number().int().min(0).default(0),
   // What this Kind's stat maximums add up to, when it's deliberately off
   // Human's 135, like the AI Core's 120. The validator checks against it.

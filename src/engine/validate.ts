@@ -152,7 +152,7 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
   const build = parsed.data;
   const traits = new Map(content.traits.map((t) => [t.id, t]));
 
-  // Rule 1: level 0 stats come from the Kind.
+  // Rule 1: every stat starts at 0, and the Kind adds its bonus.
   const kind = content.kinds.find((k) => k.id === build.kind);
   if (!kind) error("kind", `Kind "${build.kind}" doesn't exist`, "kind");
   const base: StatBlock | undefined = kind?.stats;
@@ -173,9 +173,9 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     error("level", `A level ${build.level} character needs ${build.level} level allocations, but the build has ${build.levels.length}`, "levels");
   }
 
-  const stats = Object.fromEntries(STATS.map((s) => [s, base?.[s]?.start ?? 0])) as Record<StatId, number>;
+  const stats = Object.fromEntries(STATS.map((s) => [s, base?.[s]?.bonus ?? 0])) as Record<StatId, number>;
 
-  // Rule 1: a Kind's free level 0 points are all placed, by the player.
+  // Rule 1: a Kind's free bonus points are all placed, by the player.
   const free = kind?.freePoints ?? 0;
   let placed = 0;
   for (const [stat, points = 0] of Object.entries(build.startPoints)) {
@@ -185,7 +185,13 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
   if (kind && placed !== free) {
     error(
       "allocation",
-      free ? `${kind.name} gives ${free} level 0 points to place, but the build places ${placed}` : `${kind.name} has no level 0 points to place, but the build places ${placed}`,
+      !free
+        ? `${kind.name} has no free bonus points, but the build places ${placed}`
+        : placed < free
+          ? placed === 0
+            ? `Place ${kind.name}'s ${free} free bonus points`
+            : `Place ${free - placed} more of ${kind.name}'s ${free} free bonus points`
+          : `${kind.name} gives ${free} free bonus points, but the build places ${placed}`,
       "startPoints",
     );
   }

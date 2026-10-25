@@ -13,11 +13,11 @@ interface Props {
 // Stats as a pool, drawn like the character sheet. Each core point (one
 // per level) goes to a group and unlocks 3 focus points for that group's
 // stats, which the player adds with each stat's + and −. The stats' circle and
-// square bars show the result, with the Kind's level 0 stats in gray.
+// square bars show the result, with the Kind's bonus in gray.
 //
 // A group's stats only take points its core stat has unlocked, so the player
 // levels the core stat first, with +. A stat's + spends the Kind's free
-// level 0 points first (the AI Core's 3, which need no core point), then the
+// bonus points first (the AI Core's 3, which need no core point), then the
 // group's unlocked points. Taking a point back returns the group's points first,
 // then the free ones; core points stay put until the player takes them
 // back with −. A group can't take a core point its stats have no room
@@ -30,11 +30,12 @@ export function StatsStep({ draft, onChange }: Props) {
   const corePlaced = GROUPS.reduce((n, g) => n + draft.core[g], 0);
   const coreLeft = draft.level - corePlaced;
   const spentIn = (g: StatGroup) => STAT_GROUPS[g].reduce((n, s) => n + (draft.points[s] ?? 0), 0);
-  const kindStart = (s: StatId) => base?.[s]?.start ?? 0;
-  const level0 = (s: StatId) => kindStart(s) + (start[s] ?? 0);
-  const valueOf = (s: StatId) => level0(s) + (draft.points[s] ?? 0);
+  const kindBonus = (s: StatId) => base?.[s]?.bonus ?? 0;
+  // The Kind's bonus plus any free bonus points placed on the stat
+  const bonusOf = (s: StatId) => kindBonus(s) + (start[s] ?? 0);
+  const valueOf = (s: StatId) => bonusOf(s) + (draft.points[s] ?? 0);
 
-  // One point on or off a stat: on from the free level 0 points while any are
+  // One point on or off a stat: on from the free bonus points while any are
   // left, otherwise from the group's unlocked points; off from the group's
   // points first.
   const bump = (s: StatId, by: 1 | -1) => {
@@ -54,7 +55,7 @@ export function StatsStep({ draft, onChange }: Props) {
     return (
       <section>
         <StepHeader step="stats" title="Stats" />
-        <p className="empty">Choose a Kind first; it sets your level 0 stats and how far each can go.</p>
+        <p className="empty">Choose a Kind first; it adds a bonus to each stat and sets how far each can go.</p>
       </section>
     );
   }
@@ -63,8 +64,8 @@ export function StatsStep({ draft, onChange }: Props) {
     <section>
       <StepHeader step="stats" title="Stats">
         Each level gives a core point. Level a group's core stat with the + beside its number to unlock {POINTS_PER_LEVEL} focus points for its
-        stats, then spend them with each stat's +. A group's stats can't take points until its core stat is leveled. Your Kind's level 0 stats are already
-        filled in, in gray.
+        stats, then spend them with each stat's +. A group's stats can't take points until its core stat is leveled. Your stats start at 0, and your Kind's bonus
+        is added on top, in gray.
       </StepHeader>
       <div className="tech-fields tech-fields-light step-box">
         <p className="pool-summary">
@@ -79,7 +80,7 @@ export function StatsStep({ draft, onChange }: Props) {
               <span className={`num${freeLeft === 0 ? " good" : ""}`}>
                 {free - freeLeft}/{free}
               </span>{" "}
-              free level 0 points placed
+              free bonus points placed
               <span className="muted"> (spent first, on any stat)</span>
             </>
           )}
@@ -141,14 +142,14 @@ export function StatsStep({ draft, onChange }: Props) {
                       </div>
                       <div className="pool-stat-row">
                         <div className="stat-buttons">
-                          <button aria-label={`Take a point from ${s}`} onClick={() => bump(s, -1)} disabled={value <= kindStart(s)}>
+                          <button aria-label={`Take a point from ${s}`} onClick={() => bump(s, -1)} disabled={value <= kindBonus(s)}>
                             <Sign is="minus" />
                           </button>
                           <button aria-label={`Add a point to ${s}`} onClick={() => bump(s, 1)} disabled={spare === 0 || value >= max}>
                             <Sign is="plus" />
                           </button>
                         </div>
-                        <StatLine start={level0(s)} value={value} max={max} />
+                        <StatLine bonus={bonusOf(s)} value={value} max={max} />
                       </div>
                     </div>
                   );

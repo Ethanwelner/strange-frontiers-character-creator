@@ -27,13 +27,13 @@ Most content is early and its effect text is placeholder, so judge fit by names,
 
 const STAT_ORDER = Object.values(STAT_GROUPS).flat();
 
-const stats = (block: StatBlock) => STAT_ORDER.map((s) => `${s} ${block[s]?.start}/${block[s]?.max}`).join(", ");
+const stats = (block: StatBlock) => STAT_ORDER.map((s) => `${s} ${block[s]?.bonus}/${block[s]?.max}`).join(", ");
 
 export function contentIndex(content: Content): string {
-  const lines: string[] = ["# Content index", "", "Stats are listed as start/max.", "", "## Kinds"];
+  const lines: string[] = ["# Content index", "", "Stats are listed as Kind bonus/max. Every stat starts at 0 and the Kind adds its bonus.", "", "## Kinds"];
   for (const k of content.kinds) {
     lines.push(`- ${k.id}: ${k.name}. ${k.summary} Tags: ${k.tags.join(", ") || "none"}. Trait access: ${k.traitAccess.join(", ") || "none"}.`);
-    lines.push(`  Stats: ${stats(k.stats)}${k.freePoints ? `. Plus ${k.freePoints} free level 0 points, placed by the engine` : ""}`);
+    lines.push(`  Stats: ${stats(k.stats)}${k.freePoints ? `. Plus ${k.freePoints} free bonus points, placed by the engine` : ""}`);
   }
   for (const type of ["origin", "profession", "past"] as const) {
     lines.push("", `## ${type[0]!.toUpperCase()}${type.slice(1)}s`);

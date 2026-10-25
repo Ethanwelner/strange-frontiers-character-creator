@@ -598,7 +598,7 @@
   }
 
   /* The Stats step's bars sit on the dark box, so they flip: placed points and
-     core badges light, level 0 points mid gray, open slots a lighter outline. */
+     core badges light, the Kind's bonus mid gray, open slots a lighter outline. */
   .builder-panel .pool-stats {
     .stat-badge {
       background-color: var(--portfolio-near-white);

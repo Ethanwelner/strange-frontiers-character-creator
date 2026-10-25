@@ -15,7 +15,7 @@ export function CharacterStep({ draft, startingLevel, onChange, onStartingLevel 
     <section>
       <StepHeader step="character" title="Character">
         Name your character, set the level your campaign starts at, and choose a Kind. Your GM sets the level; most campaigns start at 3.
-        A Kind sets your level 0 stats and how far each can go; numbers show start/max.
+        A Kind adds a bonus to each stat and sets how far each can go; numbers show bonus/max.
       </StepHeader>
       <div className="tech-fields tech-fields-light step-box character-fields">
         <label className="field name-field">

@@ -16,12 +16,12 @@ features:
     description: Ill-suited to sedentary life. Isek have easier access to military, guild, and caravan Traits.
 traitAccess: [military, guild, caravan]
 stats:
-  endurance: { start: 1, max: 15 }
-  power: { start: 2, max: 18 }
-  grace: { start: 2, max: 18 }
-  empathy: { start: 1, max: 14 }
-  persuasion: { start: 1, max: 15 }
-  demeanor: { start: 0, max: 10 }
-  logic: { start: 0, max: 14 }
-  intuition: { start: 1, max: 16 }
-  memory: { start: 1, max: 15 }
+  endurance: { bonus: 1, max: 15 }
+  power: { bonus: 2, max: 18 }
+  grace: { bonus: 2, max: 18 }
+  empathy: { bonus: 1, max: 14 }
+  persuasion: { bonus: 1, max: 15 }
+  demeanor: { bonus: 0, max: 10 }
+  logic: { bonus: 0, max: 14 }
+  intuition: { bonus: 1, max: 16 }
+  memory: { bonus: 1, max: 15 }

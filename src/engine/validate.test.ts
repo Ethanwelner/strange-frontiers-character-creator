@@ -217,7 +217,7 @@ describe("schema", () => {
   });
 });
 
-describe("rule 1: level 0 stats come from the Kind", () => {
+describe("rule 1: stats start at 0 and the Kind adds its bonus", () => {
   it("takes each Tatot Kind's own stats", () => {
     expect(check(orcoid).summary!.stats).toMatchObject({ endurance: 2, logic: 0 });
     expect(check(goblinoid).summary!.stats).toMatchObject({ endurance: 1, logic: 3 });
@@ -276,16 +276,16 @@ describe("rule 4: stat maximums", () => {
     expect(codes(check({ ...aiCore, startPoints: { power: 3 }, levels: [{ group: "mental", points: { logic: 3 } }] }))).toEqual(["stat-max"]);
   });
 
-  it("needs a Kind's free level 0 points placed, and only a Kind that has them", () => {
+  it("needs a Kind's free bonus points placed, and only a Kind that has them", () => {
     const aiCore = { ...human, kind: "ai-core", traits: [], levels: [{ group: "mental" as const, points: { logic: 3 } }] };
     const r = check({ ...aiCore, startPoints: { empathy: 2, logic: 1 } });
     expectLegal(r);
     expect(r.summary!.stats).toMatchObject({ empathy: 2, logic: 6, memory: 2 });
     expect(check({ ...aiCore, startPoints: { empathy: 2 } }).errors).toEqual([
-      expect.objectContaining({ code: "allocation", message: "AI Core gives 3 level 0 points to place, but the build places 2", path: "startPoints" }),
+      expect.objectContaining({ code: "allocation", message: "Place 1 more of AI Core's 3 free bonus points", path: "startPoints" }),
     ]);
     expect(check({ ...human, startPoints: { grace: 1 } }).errors).toEqual([
-      expect.objectContaining({ code: "allocation", message: "Human has no level 0 points to place, but the build places 1" }),
+      expect.objectContaining({ code: "allocation", message: "Human has no free bonus points, but the build places 1" }),
     ]);
   });
 

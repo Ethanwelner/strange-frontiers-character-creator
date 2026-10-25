@@ -15,12 +15,12 @@ export interface Draft {
   origin?: string;
   profession?: string;
   past?: string;
-  // Where the Kind's free level 0 points go, if it has any.
+  // Where the Kind's free bonus points go, if it has any.
   startPoints?: Partial<Record<StatId, number>>;
   level: number;
   // Core points placed in each group; one per level.
   core: Record<StatGroup, number>;
-  // Focus points placed above level 0, per stat.
+  // Focus points the player placed from levels, per stat, on top of the Kind's bonus.
   points: Partial<Record<StatId, number>>;
   traits: TraitPick[];
   choices: ChoiceAnswer[];
