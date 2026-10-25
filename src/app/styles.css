@@ -1806,9 +1806,28 @@
     margin: 0;
   }
 
-  /* The card opened in the site's lore popup (.lore-modal), on its white panel,
-     below the popup's close button */
+  /* The card opened in the site's lore popup (.lore-modal), on the dark
+     panel's gray with a light close button, below that button. The card
+     stays light, like the Sheet's. */
+  .lore-modal-panel {
+    background-color: var(--panel);
+    color: var(--panel-text);
+  }
+
+  .lore-modal-close {
+    background: var(--portfolio-near-white);
+    color: var(--portfolio-black);
+
+    &:hover {
+      background-color: color-mix(in srgb, var(--portfolio-near-white) 75%, var(--portfolio-black));
+    }
+  }
+
   .lore-modal :focus-visible {
+    outline-color: var(--portfolio-white);
+  }
+
+  .lore-modal .trait-box :focus-visible {
     outline-color: var(--portfolio-black);
   }
 
