@@ -4,7 +4,7 @@ import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { coreStatsShown } from "../check.js";
 import { content, kindById, packageById, traitById } from "../content.js";
 import type { Draft } from "../draft.js";
-import { askerName, baseStats, Chip, NameField, SettingIcon, StatLine, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
+import { askerName, baseStats, Chip, CoreLine, NameField, SettingIcon, StatLine, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
 
 const SOURCE = /^(kind|origin|profession|past) ([a-z0-9-]+)( choice)?$/;
 const TRAIT_CHOICE = /^trait ([a-z0-9-]+) choice$/;
@@ -192,10 +192,16 @@ export function Sheet({
                   </span>
                   <h4 className="rule">{title(g)}</h4>
                 </div>
+                {/* Magic: a diamond per point, under its number */}
                 {!STAT_GROUPS[g].length && (
-                  <p className="tiny-text muted">
-                    No focus stats. Each point adds {MP_PER_MAGIC} MP.
-                  </p>
+                  <div className="sheet-stat">
+                    <div className="tiny-text">
+                      <strong>
+                        Each point in {title(g)} adds {MP_PER_MAGIC} MP (Mana Points)
+                      </strong>
+                    </div>
+                    <CoreLine value={summary?.coreStats[g] ?? draft.core[g]} />
+                  </div>
                 )}
                 {STAT_GROUPS[g].map((s: StatId) => {
                   const value = summary?.stats[s];

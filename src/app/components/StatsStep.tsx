@@ -4,7 +4,7 @@ import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { coreAccessFor, coreStatsShown } from "../check.js";
 import { content, kindById, packageById } from "../content.js";
 import { withCore, type Draft } from "../draft.js";
-import { baseStats, GROUPS, Sign, StatLine, StepHeader, title } from "./ui.js";
+import { baseStats, CoreLine, GROUPS, Sign, StatLine, StepHeader, title } from "./ui.js";
 
 interface Props {
   draft: Draft;
@@ -144,11 +144,16 @@ export function StatsStep({ draft, onChange }: Props) {
                     <h4 className="rule">{title(g)}</h4>
                     <span className={`num${core === 0 ? " muted" : ""}`}>{MP_PER_MAGIC * core} MP</span>
                   </div>
-                  <p className="hint">
-                    {open.includes(g)
-                      ? `No focus stats: each point in ${title(g)} adds ${MP_PER_MAGIC} MP (Mana Points).`
-                      : `This character can't level ${title(g)}; take these points back.`}
-                  </p>
+                  {/* A diamond per point, under the core's − and +, which already set it */}
+                  <div className="sheet-stat">
+                    <div className="tiny-text">
+                      <strong>
+                        Each point in {title(g)} adds {MP_PER_MAGIC} MP (Mana Points)
+                      </strong>
+                    </div>
+                    <CoreLine value={core} />
+                  </div>
+                  {!open.includes(g) && <p className="hint">This character can't level {title(g)}; take these points back.</p>}
                 </div>
               );
             }

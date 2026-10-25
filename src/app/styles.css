@@ -1829,6 +1829,12 @@
     gap: 4px;
   }
 
+  /* Magic's points: the same slots, turned into diamonds that fit the cell */
+  .stat.diamond {
+    border-radius: 2px;
+    transform: rotate(45deg) scale(0.72);
+  }
+
   /* Slots past a stat's maximum stay faded, on the Stats step and the Sheet */
   .sheet-stat .stat.unavailable {
     opacity: 0.45;
