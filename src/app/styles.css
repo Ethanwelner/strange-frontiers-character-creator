@@ -1386,6 +1386,19 @@
     color: var(--portfolio-black);
   }
 
+  /* The picked background packages, between the name and the stats */
+  .panel-background {
+    list-style: none;
+    margin: 0 0 1.25rem;
+    padding: 0;
+    display: grid;
+    gap: 0.25rem;
+
+    strong {
+      text-align: right;
+    }
+  }
+
   .panel-stats {
     display: grid;
     gap: 0.75rem;
