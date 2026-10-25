@@ -1040,6 +1040,11 @@
     }
   }
 
+  /* In a card, the grid's gap spaces the features list like everything else */
+  .card > .features {
+    margin: 0;
+  }
+
   /* Chips: the side nav's black badges */
   .chip {
     display: inline-block;
