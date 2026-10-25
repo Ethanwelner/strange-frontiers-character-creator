@@ -7,6 +7,9 @@ summary: "You grew up in the Union’s stellar or planar territories: the Martia
 tags: [sdu, colonies, mars, ark, space]
 lore: stellar-democratic-union
 type: origin
+# A free bonus point the player places in a Social stat.
+bonusPoints:
+  - { count: 1, group: social }
 grants:
   - { trait: the-stellar-democratic-union, rank: 1 }
   - { trait: sdu-law, rank: 1 }

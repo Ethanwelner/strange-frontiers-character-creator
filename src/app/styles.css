@@ -874,25 +874,29 @@
     margin-bottom: 0;
   }
 
-  /* Folding and opening slide the cards' height. Browsers without
-     interpolate-size or ::details-content just snap, as before. */
-  details.slot {
-    interpolate-size: allow-keywords;
+  /* Folding and opening slide the cards' height. The slide clips the cards,
+     with room past the edges for a selected card's check badge, which sits
+     12px out. Browsers without interpolate-size just snap, unclipped. */
+  @supports (interpolate-size: allow-keywords) {
+    details.slot {
+      interpolate-size: allow-keywords;
 
-    .subhead {
-      transition: margin-bottom 300ms ease;
-    }
+      .subhead {
+        transition: margin-bottom 300ms ease;
+      }
 
-    &::details-content {
-      block-size: 0;
-      overflow: hidden;
-      transition:
-        block-size 300ms ease,
-        content-visibility 300ms allow-discrete;
-    }
+      &::details-content {
+        block-size: 0;
+        overflow: clip;
+        overflow-clip-margin: 16px;
+        transition:
+          block-size 300ms ease,
+          content-visibility 300ms allow-discrete;
+      }
 
-    &[open]::details-content {
-      block-size: auto;
+      &[open]::details-content {
+        block-size: auto;
+      }
     }
   }
 

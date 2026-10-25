@@ -7,6 +7,9 @@ summary: "You were born in the Union’s Earth territories, anywhere from core E
 tags: [sdu, earth, union]
 lore: stellar-democratic-union
 type: origin
+# A free bonus point the player places in a Social stat.
+bonusPoints:
+  - { count: 1, group: social }
 grants:
   - { trait: the-stellar-democratic-union, rank: 1 }
   - { trait: sdu-law, rank: 1 }

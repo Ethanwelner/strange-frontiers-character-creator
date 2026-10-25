@@ -139,6 +139,28 @@ function questionsOf(by: ChoiceQuestion["by"], owner: { id: string; name: string
   return out;
 }
 
+// The free bonus points a build places: the Kind's, in any stat, and each
+// package's, in its group, summed per group with the packages that give them.
+// A group gets no more than the Kind's maximums leave room for, so an AI Core,
+// whose Physical maximums are all 0, gets no Physical points.
+export function bonusPointsOf(kind: { freePoints: number; stats: StatBlock } | undefined, packages: BackgroundPackage[]) {
+  const groups: { group: StatGroup; count: number; from: string[] }[] = [];
+  for (const pkg of packages) {
+    for (const b of pkg.bonusPoints) {
+      const g = groups.find((x) => x.group === b.group);
+      if (g) {
+        g.count += b.count;
+        g.from.push(pkg.name);
+      } else groups.push({ group: b.group, count: b.count, from: [pkg.name] });
+    }
+  }
+  for (const g of groups) {
+    const room = STAT_GROUPS[g.group].reduce((n, s) => n + Math.max(0, (kind?.stats[s]?.max ?? STAT_CAP) - (kind?.stats[s]?.bonus ?? 0)), 0);
+    g.count = Math.min(g.count, room);
+  }
+  return { any: kind?.freePoints ?? 0, groups: groups.filter((g) => g.count > 0) };
+}
+
 // The core stats a character holding these Traits can level: Physical, Social
 // and Mental, plus any a Trait opens, like Magical Heritage's Magic.
 export function coreAccessOf(traitIds: Iterable<string>, content: Content): StatGroup[] {
@@ -189,23 +211,38 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
 
   const stats = Object.fromEntries(STATS.map((s) => [s, base?.[s]?.bonus ?? 0])) as Record<StatId, number>;
 
-  // Rule 1: a Kind's free bonus points are all placed, by the player.
-  const free = kind?.freePoints ?? 0;
-  let placed = 0;
-  for (const [stat, points = 0] of Object.entries(build.startPoints)) {
-    stats[stat as StatId] += points;
-    placed += points;
+  // Rule 1: free bonus points are all placed, by the player: a package's in
+  // its group's stats (the American Empire's 1 Physical point), a Kind's in
+  // any stat.
+  for (const [stat, points = 0] of Object.entries(build.startPoints)) stats[stat as StatId] += points;
+  const bonus = bonusPointsOf(kind, packages);
+  const placedIn = (g: StatGroup) => STAT_GROUPS[g].reduce((n, st) => n + (build.startPoints[st] ?? 0), 0);
+  const placed = Object.values(build.startPoints).reduce((n, p) => n + (p ?? 0), 0);
+  let inGroups = 0;
+  for (const need of bonus.groups) {
+    const have = placedIn(need.group);
+    inGroups += Math.min(have, need.count);
+    if (have < need.count) {
+      const n = need.count - have;
+      const name = need.group.charAt(0).toUpperCase() + need.group.slice(1);
+      error("allocation", `Place ${n} ${name} bonus ${n === 1 ? "point" : "points"} from ${need.from.join(" and ")}`, "startPoints");
+    }
   }
-  if (kind && placed !== free) {
+  // What's left over goes to the Kind's free points, which take any stat.
+  const free = bonus.any;
+  const anyPlaced = placed - inGroups;
+  if (kind && anyPlaced !== free && (free || anyPlaced > 0)) {
     error(
       "allocation",
       !free
-        ? `${kind.name} has no free bonus points, but the build places ${placed}`
-        : placed < free
-          ? placed === 0
+        ? bonus.groups.length
+          ? `The build places ${anyPlaced} more bonus ${anyPlaced === 1 ? "point" : "points"} than its packages give`
+          : `${kind.name} has no free bonus points, but the build places ${placed}`
+        : anyPlaced < free
+          ? anyPlaced === 0
             ? `Place ${kind.name}'s ${free} free bonus points`
-            : `Place ${free - placed} more of ${kind.name}'s ${free} free bonus points`
-          : `${kind.name} gives ${free} free bonus points, but the build places ${placed}`,
+            : `Place ${free - anyPlaced} more of ${kind.name}'s ${free} free bonus points`
+          : `${kind.name} gives ${free} free bonus points, but the build places ${anyPlaced}`,
       "startPoints",
     );
   }

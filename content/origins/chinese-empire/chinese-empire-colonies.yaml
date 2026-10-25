@@ -7,6 +7,9 @@ summary: "You grew up in the Empire’s stellar territories, in Yùtù, the Jade
 tags: [chinese-empire, colonies, luna, ark, space]
 lore: chinese-empire
 type: origin
+# A free bonus point the player places in a Mental stat.
+bonusPoints:
+  - { count: 1, group: mental }
 grants:
   - { trait: the-chinese-empire, rank: 1 }
   - { trait: chinese-imperial-law, rank: 1 }

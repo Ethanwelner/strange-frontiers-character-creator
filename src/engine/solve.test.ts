@@ -190,6 +190,14 @@ describe("solveConcept", () => {
     expect(human.build.levels.map((l) => l.group)).not.toContain("magic");
   });
 
+  it("places an Origin's bonus point in its group's priority stats", () => {
+    // Dreft's 1 Physical point, with the real packages.
+    const out = solveConcept({ ...hunter, focus: ["logic", "grace"], traits: [] }, { ...content, packages: loadContent().content.packages }, L1);
+    if ("error" in out) throw new Error(out.error);
+    expect(out.build.startPoints).toEqual({ grace: 1 });
+    expect(out.result.ok).toBe(true);
+  });
+
   it("buys nothing when the Kind or a package is wrong", () => {
     const s = solve({ ...hunter, kind: "dragon" });
     expect(s.result.ok).toBe(false);

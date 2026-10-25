@@ -7,6 +7,9 @@ summary: "Born and raised in the Kingdom of Dreft, whether in Port Herminst, a c
 tags: [kingdom, dreft, isekai]
 lore: dreft
 type: origin
+# A free bonus point the player places in a Physical stat.
+bonusPoints:
+  - { count: 1, group: physical }
 grants:
   - { trait: dreft, rank: 1 }
   - { trait: dreftian-law, rank: 1 }

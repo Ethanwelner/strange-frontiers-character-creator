@@ -7,6 +7,9 @@ summary: "You were born in the Empire of China’s Earth territories, from Wuhan
 tags: [chinese-empire, earth, empire, corporate]
 lore: chinese-empire
 type: origin
+# A free bonus point the player places in a Mental stat.
+bonusPoints:
+  - { count: 1, group: mental }
 grants:
   - { trait: the-chinese-empire, rank: 1 }
   - { trait: chinese-imperial-law, rank: 1 }
