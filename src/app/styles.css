@@ -1100,10 +1100,12 @@
     }
   }
 
+  /* Physical, Social and Mental side by side, 2.5rem apart, or closer (down
+     to 0.75rem) when the card is too narrow for that and three 6rem columns */
   .stat-ranges {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
-    gap: 0.75rem;
+    gap: 0.75rem clamp(0.75rem, (100% - 18rem) / 2, 2.5rem);
     font-size: 0.8rem;
   }
 
