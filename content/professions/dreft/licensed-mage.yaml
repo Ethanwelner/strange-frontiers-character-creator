@@ -6,6 +6,8 @@ region: dreft
 summary: "Trained in the licensed colleges of magic in Dreft or one of its neighboring kingdoms, these mages practice officially sanctioned, and supposedly safe, magic."
 tags: [mage, magic, licensed, scholar]
 type: profession
+# A bonus point in Magic, without a level, for a character who can level it.
+coreBonus: { magic: 1 }
 grants:
   - { trait: incantation }
   - { trait: relic-handling }

@@ -61,6 +61,9 @@ export interface ChoiceQuestion {
 export interface BuildSummary {
   stats: Record<StatId, number>;
   coreStats: Record<StatGroup, number>;
+  // The part of each core stat that packages add without a level, like the
+  // Licensed Mage's 1 Magic. Included in coreStats.
+  coreBonus: Record<StatGroup, number>;
   // The core stats this build can level: Physical, Social and Mental, plus any
   // a held Trait opens, like Magic.
   coreAccess: StatGroup[];
@@ -485,6 +488,16 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     );
   }
 
+  // Rule 13: a package's core bonus, like the Licensed Mage's 1 Magic, adds to
+  // the core stat without a level, if the build can level that stat.
+  const coreBonus = Object.fromEntries(Object.keys(STAT_GROUPS).map((g) => [g, 0])) as Record<StatGroup, number>;
+  for (const pkg of packages) {
+    for (const [g, n = 0] of Object.entries(pkg.coreBonus) as [StatGroup, number | undefined][]) {
+      if (coreAccess.has(g)) coreBonus[g] += n;
+    }
+  }
+  for (const g of Object.keys(coreStats) as StatGroup[]) coreStats[g] += coreBonus[g];
+
   // Rule 12: a picked Trait's minimum stats, focus and core, once per Trait.
   for (const id of byTrait.keys()) {
     const t = traits.get(id)!;
@@ -524,6 +537,7 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     summary: {
       stats,
       coreStats,
+      coreBonus,
       coreAccess: [...coreAccess],
       resources,
       picks,

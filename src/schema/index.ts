@@ -111,6 +111,11 @@ export const BackgroundPackage = BaseEntry.extend({
   type: PackageType,
   grants: z.array(TraitGrant).default([]),
   bonusPoints: z.array(BonusPoints).default([]),
+  // Points added straight to a core stat, without a level, like the Licensed
+  // Mage's 1 Magic. They count only if the character can level that stat.
+  // Only Magic for now: a bonus to a stat with focus stats would also need
+  // the focus points it unlocks.
+  coreBonus: z.partialRecord(z.enum(["magic"]), z.number().int().min(1)).default({}),
   choices: z.array(TraitChoice).default([]),
   // Traits this package puts on the character's Background Trait list.
   backgroundTraits: z.array(Id).default([]),

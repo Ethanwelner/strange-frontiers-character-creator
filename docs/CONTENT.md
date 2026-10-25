@@ -32,6 +32,7 @@ Every tab's Description is `summary`, Tags is `tags`, and Notes is for anything 
 | Kinds: Features | `features`, one `name: description` per line |
 | Kinds: Trait Access, Free Points, Max Total | `traitAccess`, `freePoints`, `maxTotal` |
 | Packages: Bonus | `bonusPoints`, like `[{ count: 1, group: physical }]`: free points the player places in that group's focus stats |
+| Packages: Core Bonus | `coreBonus`, like `{ magic: 1 }`: added to Magic without a level, if the character can level it |
 | Kinds: Grants, Resources | `grants` (Traits every character of the Kind holds, like Magical Heritage), `resources` (like `{ mp: 6 }`) |
 | Kinds: Physical / Social / Mental (bonus/max) | `stats`, from lines like "Endurance +1/15" |
 | Packages: Grants | `grants`; "Knowledge: X (1)" is Trait `x` at rank 1 |

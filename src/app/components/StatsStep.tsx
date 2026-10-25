@@ -4,7 +4,7 @@ import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { coreAccessFor, coreStatsShown } from "../check.js";
 import { content, kindById, packageById } from "../content.js";
 import { withCore, type Draft } from "../draft.js";
-import { baseStats, GROUPS, Sign, StatLine, StepHeader, title } from "./ui.js";
+import { baseStats, CoreLine, GROUPS, Sign, StatLine, StepHeader, title } from "./ui.js";
 
 interface Props {
   draft: Draft;
@@ -122,12 +122,14 @@ export function StatsStep({ draft, onChange }: Props) {
             const spent = spentIn(g);
             if (!STAT_GROUPS[g].length) {
               const canLevel = coreLeft > 0 && open.includes(g);
+              // A package's bonus, like the Licensed Mage's 1 Magic, on top of the levels
+              const extra = open.includes(g) ? packages.reduce((n, p) => n + (p.coreBonus[g as "magic"] ?? 0), 0) : 0;
               return (
                 <div key={g} className={`sheet-group${core === 0 && !canLevel ? " locked" : ""}`}>
                   <div className="sheet-group-head">
                     <div className="core-control">
                       <span className="stat-badge" title="Core stat">
-                        {core}
+                        {core + extra}
                       </span>
                       <button aria-label={`Take a core point from ${g}`} onClick={() => onChange(withCore(draft, g, core - 1))} disabled={core === 0}>
                         <Sign is="minus" />
@@ -142,13 +144,18 @@ export function StatsStep({ draft, onChange }: Props) {
                       </button>
                     </div>
                     <h4 className="rule">{title(g)}</h4>
-                    <span className={`num${core === 0 ? " muted" : ""}`}>{MP_PER_MAGIC * core} MP</span>
+                    <span className={`num${core + extra === 0 ? " muted" : ""}`}>{MP_PER_MAGIC * (core + extra)} MP</span>
                   </div>
-                  <p className="hint">
-                    {open.includes(g)
-                      ? `No focus stats: each point in ${title(g)} adds ${MP_PER_MAGIC} MP (Mana Points).`
-                      : `This character can't level ${title(g)}; take these points back.`}
-                  </p>
+                  {/* A diamond per point, under the core's − and +, which already set it */}
+                  <div className="sheet-stat">
+                    <div className="tiny-text">
+                      <strong>
+                        Each point in {title(g)} adds {MP_PER_MAGIC} MP (Mana Points)
+                      </strong>
+                    </div>
+                    <CoreLine bonus={extra} value={core + extra} />
+                  </div>
+                  {!open.includes(g) && <p className="hint">This character can't level {title(g)}; take these points back.</p>}
                 </div>
               );
             }

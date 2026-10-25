@@ -50,6 +50,7 @@ export function contentIndex(content: Content): string {
         `- ${p.id}: ${p.name}${p.region ? ` (${p.region})` : ""}. ${p.summary} Tags: ${p.tags.join(", ") || "none"}.` +
           ` Grants: ${grants || "none"}.${choices ? ` Choices: ${choices}.` : ""}` +
           `${p.bonusPoints.length ? ` Bonus points (placed by the engine): ${p.bonusPoints.map((b) => `${b.count} ${b.group}`).join(", ")}.` : ""}` +
+          `${Object.keys(p.coreBonus).length ? ` Core bonus: ${Object.entries(p.coreBonus).map(([g, n]) => `+${n} ${g}`).join(", ")} (if the character can level it).` : ""}` +
           `${p.backgroundTraits.length ? ` Background Traits: ${p.backgroundTraits.join(", ")}.` : ""}`,
       );
     }

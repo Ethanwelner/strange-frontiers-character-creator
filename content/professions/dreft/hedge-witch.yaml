@@ -6,6 +6,8 @@ region: dreft
 summary: "Practices magic outside the licensed system of Dreft and its neighboring kingdoms. Working far from the scrutiny of cities and trading posts, these mages are a mixed bag."
 tags: [witch, magic, unlicensed, folk]
 type: profession
+# A bonus point in Magic, without a level, for a character who can level it.
+coreBonus: { magic: 1 }
 grants:
   - { trait: folk-remedies }
   - { trait: countryside-lore }
