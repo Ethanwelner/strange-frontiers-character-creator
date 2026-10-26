@@ -14,13 +14,14 @@ How you work:
 The concept:
 - One Kind, one origin, one profession and one past.
 - focus: the two to four stats that matter most for this character (its priority stats), most important first. The engine puts most of each level's stat points into these, and spreads a few into the other stats as the level rises, so a high-level character isn't helpless outside their specialty.
-- magic: optional. How many levels go to the Magic core stat. Every Kind of Dreft but the Orcoid Tatot holds Magical Heritage, which opens Magic; other characters can't level it. Each Magic level gives 3 MP (Mana Points) but no focus points, so it buys no Traits: give a spellcaster or a magical character one or two, and leave it at 0 for anyone else.
+- magic: optional. How many levels go to the Magic core stat. Only a character holding a Trait that opens Magic can level it: Magic Access, which every Kind of Dreft but the Orcoid Tatot gets through its Magical Heritage. Each Magic level gives 3 MP (Mana Points) but no focus points, so it buys no Traits: give a spellcaster or a magical character one or two, and leave it at 0 for anyone else.
 - traits: Trait ids that fit the character, best fit first. List 12 to 20, more than the picks will cover; the engine buys them in order and skips any the build can't take, so put the ones that matter most at the top. A Trait fits when it belongs in this character's life: what the description says or implies, and their Kind, home, work and past. Background picks only buy Traits from the packages' Background Traits (in the index), so include the ones there that fit. Picks left over are banked for later, so don't pad the list with Traits that don't belong. Don't list Traits the packages already grant (their Grants in the index). List a ranked Trait twice only if rank 2 matters.
 - choices: optional. Package and Trait choices with a pool, like languages (an Additional Language asks which one), are filled in for you; answer one only to pick a specific Trait from its pool, naming the package or the Trait that asks. Contacts and Places (like which seas Seafaring covers) are written in by the player, so never answer a Contact or Place choice.
 
 Rules you must follow:
 - Use only ids that exist in the content. Never invent a Kind, package or Trait. Unknown ids are rejected in code.
 - Don't work out stat points or pick counts yourself. That's the engine's job.
+- A Trait on a list (marked "magic list" in the index) can only be taken by a character holding a Trait that opens that list (marked "opens the magic list", like Magic Access, which most Kinds of Dreft get through their Magical Heritage; a Trait that grants an opener counts too). Don't list them for anyone else.
 
 Reasons: give one short line per choice, in plain words a player would use, tied to what they asked for. Targets are kind, origin, profession, past, levels (one line on why the priority stats), and each listed Trait's id.
 
@@ -62,6 +63,9 @@ export function contentIndex(content: Content): string {
       t.background ? "background" : "",
       t.starterOnly ? "starter only" : "",
       t.conveyed ? "conveyed, packages only" : "",
+      t.list ? `${t.list} list` : "",
+      t.opensLists.length ? `opens the ${t.opensLists.join(", ")} list` : "",
+      t.grants.length ? `grants ${t.grants.map((g) => g.trait).join(", ")}` : "",
       t.prerequisites.length ? `needs ${t.prerequisites.join(", ")}` : "",
       t.prerequisiteTags.length ? `needs a Trait tagged ${t.prerequisiteTags.join(", ")}` : "",
       Object.keys(t.minStats).length ? `min ${Object.entries(t.minStats).map(([s, n]) => `${s} ${n}`).join(", ")}` : "",

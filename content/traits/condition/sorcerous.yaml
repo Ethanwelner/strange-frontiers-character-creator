@@ -5,5 +5,7 @@ plane: isekai
 summary: "Able to take magic Traits and to put points into the Magic core stat."
 tags: [magic, sorcerous, site-example]
 category: condition
+# On the Magic list: only a character with Magical Heritage can pick it.
+list: magic
 background: true
 effect: "This character may take magic-related traits and may spend stat points on the Magic core stat."

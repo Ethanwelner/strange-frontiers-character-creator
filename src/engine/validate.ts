@@ -24,7 +24,8 @@ export type IssueCode =
   | "rank-stats"
   | "min-stats"
   | "prerequisite"
-  | "core-access";
+  | "core-access"
+  | "trait-list";
 
 export interface Issue {
   code: IssueCode;
@@ -75,6 +76,8 @@ export interface BuildSummary {
   traits: HeldTrait[];
   // Traits the build may spend background picks on.
   backgroundList: string[];
+  // The Trait lists the build holds an opener for, like magic.
+  traitLists: string[];
   // Every choice the build asks, packages first, answered or not.
   questions: ChoiceQuestion[];
 }
@@ -164,11 +167,31 @@ export function bonusPointsOf(kind: { freePoints: number; stats: StatBlock } | u
   return { any: kind?.freePoints ?? 0, groups: groups.filter((g) => g.count > 0) };
 }
 
+// These Traits and every Trait they convey, like Magical Heritage's Magic Access.
+export function withConveyed(traitIds: Iterable<string>, content: Content): Set<string> {
+  const all = new Set<string>();
+  const add = (id: string) => {
+    if (all.has(id)) return;
+    all.add(id);
+    for (const g of content.traits.find((t) => t.id === id)?.grants ?? []) add(g.trait);
+  };
+  for (const id of traitIds) add(id);
+  return all;
+}
+
+// The Trait lists a character holding these Traits can take from, like the
+// Magic list that Magic Access opens.
+export function listsOpenedBy(traitIds: Iterable<string>, content: Content): Set<string> {
+  const open = new Set<string>();
+  for (const id of withConveyed(traitIds, content)) for (const l of content.traits.find((t) => t.id === id)?.opensLists ?? []) open.add(l);
+  return open;
+}
+
 // The core stats a character holding these Traits can level: Physical, Social
-// and Mental, plus any a Trait opens, like Magical Heritage's Magic.
+// and Mental, plus any a Trait opens, like Magic Access's Magic.
 export function coreAccessOf(traitIds: Iterable<string>, content: Content): StatGroup[] {
   const open = new Set<StatGroup>(OPEN_CORE_STATS);
-  for (const id of traitIds) for (const g of content.traits.find((t) => t.id === id)?.coreAccess ?? []) open.add(g);
+  for (const id of withConveyed(traitIds, content)) for (const g of content.traits.find((t) => t.id === id)?.coreAccess ?? []) open.add(g);
   return [...open];
 }
 
@@ -291,8 +314,11 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
   const held = new Map<string, HeldTrait>();
   const hold = (id: string, rank: number, source: string) => {
     const h = held.get(id);
-    if (!h) held.set(id, { trait: id, rank, sources: [source] });
-    else {
+    if (!h) {
+      held.set(id, { trait: id, rank, sources: [source] });
+      // A held Trait conveys its own grants, like Magical Heritage's Magic Access.
+      for (const g of traits.get(id)?.grants ?? []) hold(g.trait, g.rank ?? 1, `trait ${id}`);
+    } else {
       h.rank = Math.max(h.rank, rank);
       h.sources.push(source);
     }
@@ -364,11 +390,17 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
   }
 
   // Rule 7: the Background Trait list is the packages' backgroundTraits plus
-  // Traits tagged with one of the Kind's traitAccess pools.
+  // Traits tagged with one of the Kind's traitAccess pools, plus the
+  // Background Traits on any Trait list the build has opened (rule 14).
   const access = new Set(kind?.traitAccess ?? []);
+  const openedBefore = listsOpenedBy(held.keys(), content);
   const backgroundList = new Set(packages.flatMap((p) => p.backgroundTraits));
-  // Conveyed Traits never go on it: no pick can buy them.
-  for (const t of content.traits) if (!t.conveyed && t.tags.some((tag) => access.has(tag))) backgroundList.add(t.id);
+  // Conveyed Traits never go on it: no pick can buy them. Nor do Traits on a
+  // list the build hasn't opened.
+  for (const t of content.traits) {
+    if (t.conveyed || (t.list && !openedBefore.has(t.list))) continue;
+    if (t.tags.some((tag) => access.has(tag)) || (t.list && t.background)) backgroundList.add(t.id);
+  }
 
   // Group picks by Trait, keeping their positions for error paths.
   const byTrait = new Map<string, { rank: number; index: number }[]>();
@@ -475,7 +507,8 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
   });
 
   // Rule 13: a level can only go to a core stat the build can level. Magic
-  // needs a held Trait that opens it, like the Magical Heritage most Kinds of Dreft grant.
+  // needs a held Trait that opens it, like Magic Access, which most Kinds of
+  // Dreft get through Magical Heritage.
   const coreAccess = new Set(coreAccessOf(held.keys(), content));
   for (const g of Object.keys(coreStats) as StatGroup[]) {
     if (!coreStats[g] || coreAccess.has(g)) continue;
@@ -497,6 +530,21 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     }
   }
   for (const g of Object.keys(coreStats) as StatGroup[]) coreStats[g] += coreBonus[g];
+
+  // Rule 14: a Trait on a list, like a Magic Trait, needs a held Trait that
+  // opens that list, like Magic Access. Granted Traits skip the check.
+  const opened = listsOpenedBy(held.keys(), content);
+  for (const id of byTrait.keys()) {
+    const t = traits.get(id)!;
+    if (!t.list || opened.has(t.list)) continue;
+    const openers = content.traits.filter((o) => o.opensLists.includes(t.list!)).map((o) => o.name);
+    const list = t.list.charAt(0).toUpperCase() + t.list.slice(1);
+    error(
+      "trait-list",
+      `${label(t)} is on the ${list} list, which this character can't take from${openers.length ? ` without ${openers.join(" or ")}` : ""}`,
+      `traits[${byTrait.get(id)![0]!.index}]`,
+    );
+  }
 
   // Rule 12: a picked Trait's minimum stats, focus and core, once per Trait.
   for (const id of byTrait.keys()) {
@@ -543,6 +591,7 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
       picks,
       traits: [...held.values()],
       backgroundList: [...backgroundList].sort(),
+      traitLists: [...opened],
       questions,
     },
   };

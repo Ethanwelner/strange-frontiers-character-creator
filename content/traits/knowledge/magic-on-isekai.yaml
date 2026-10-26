@@ -6,5 +6,7 @@ summary: How magic works on Isekai.
 tags: [magic]
 lore: isekai-magic
 category: knowledge
+# On the Magic list: only a character with Magical Heritage can pick it.
+list: magic
 minStats: { memory: 3, intuition: 2 }
 effect: "This character has knowledge of the magic on Isekai and can be assumed to be familiar with the philosophies, cultures, methods, and laws related to its practice."

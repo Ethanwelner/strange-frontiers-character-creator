@@ -1,0 +1,11 @@
+id: magic-access
+name: "Magic Access"
+status: placeholder
+plane: any
+summary: "This character can use magic: they can level the Magic core stat and take Traits on the Magic list."
+tags: [magic, access]
+category: ability
+conveyed: true
+coreAccess: [magic]
+opensLists: [magic]
+effect: "This character can put levels into Magic, a core stat with no focus stats; each point of Magic adds 3 MP (Mana Points). They can also take Traits on the Magic list, like Incantation."

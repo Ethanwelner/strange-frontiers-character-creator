@@ -5,4 +5,6 @@ plane: isekai
 summary: Casting spells by incantation.
 tags: [magic, spellcasting]
 category: skill
+# On the Magic list: only a character with Magical Heritage can pick it.
+list: magic
 effect: Placeholder. Effect not yet written.

@@ -8,6 +8,7 @@ import { askerName, baseStats, Chip, CoreLine, NameField, SettingIcon, StatLine,
 
 const SOURCE = /^(kind|origin|profession|past) ([a-z0-9-]+)( choice)?$/;
 const TRAIT_CHOICE = /^trait ([a-z0-9-]+) choice$/;
+const TRAIT_GRANT = /^trait ([a-z0-9-]+)$/;
 
 // "origin dreft" → "Dreft (origin)", "kind isek" → "Isek (kind)",
 // "trait additional-language choice" →
@@ -15,6 +16,9 @@ const TRAIT_CHOICE = /^trait ([a-z0-9-]+) choice$/;
 function source(s: string) {
   const t = TRAIT_CHOICE.exec(s);
   if (t) return `${traitName(t[1]!)} (choice)`;
+  // Conveyed by another Trait, like Magic Access by Magical Heritage
+  const g = TRAIT_GRANT.exec(s);
+  if (g) return traitName(g[1]!);
   const m = SOURCE.exec(s);
   if (!m) return s;
   const name = m[1] === "kind" ? kindById.get(m[2]!)?.name : packageById.get(m[2]!)?.name;
