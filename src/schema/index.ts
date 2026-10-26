@@ -180,5 +180,11 @@ export const Trait = BaseEntry.extend({
   // Core stats beyond Physical, Social and Mental that holding this Trait
   // lets a character level, like Magical Heritage's Magic.
   coreAccess: z.array(z.enum(["magic"])).default([]),
+  // Trait lists: a Trait on a list (like Incantation on `magic`) can only be
+  // picked by a character holding a Trait that opens that list (like
+  // Magical Heritage). Lists are named freely; each is its own tab on the
+  // Traits step.
+  list: z.string().optional(),
+  opensLists: z.array(z.string()).default([]),
 });
 export type Trait = z.infer<typeof Trait>;

@@ -81,23 +81,35 @@ export interface TraitOption {
   trait: Trait;
   // The rank this pick would buy.
   rank: number;
+  // The pick that would buy it.
+  pick: PickKind;
   // Why the engine would reject it. Empty when the pick is legal.
   reasons: string[];
 }
 
-// The Traits a pick of this type could go on, each tried against the engine.
-// A Trait is left out when the engine says it needs the other kind of pick;
-// it's kept but given reasons when the engine rejects it for anything else.
-// A Trait's own choices, like which language an Additional Language is, are
-// answered on the Choices step afterward, so they don't count against it.
-// Undefined until the build is complete enough for the engine to check.
-export function traitOptions(draft: Draft, content: Content, campaign: Campaign, pick: PickKind): TraitOption[] | undefined {
+// A Traits step tab: a pick type, or a Trait list the build has opened, like
+// Magic, whose Traits each take the pick they need.
+export type TraitTab = PickKind | { list: string };
+
+// The Traits a tab offers, each tried against the engine. A pick type's tab
+// leaves out Traits on a list, which have their own tabs, and Traits the
+// engine says need the other kind of pick; it keeps the rest, with reasons
+// when the engine rejects them for anything else. A list's tab offers only
+// that list's Traits, and only once the build has opened it. A Trait's own
+// choices, like which language an Additional Language is, are answered on the
+// Choices step afterward, so they don't count against it. Undefined until the
+// build is complete enough for the engine to check.
+export function traitOptions(draft: Draft, content: Content, campaign: Campaign, tab: TraitTab): TraitOption[] | undefined {
   const base = check(draft, content, campaign);
   if (!base.summary) return undefined;
   const before = new Set(base.errors.map((e) => e.message));
   const held = new Map(base.summary.traits.map((h) => [h.trait, h.rank]));
   const options: TraitOption[] = [];
+  const list = typeof tab === "string" ? undefined : tab.list;
+  if (list && !base.summary.traitLists.includes(list)) return [];
   for (const trait of content.traits) {
+    if (trait.list !== list) continue;
+    const pick: PickKind = typeof tab === "string" ? tab : trait.background ? "background" : "universal";
     // Non-ranked Traits are only ever bought at rank 1; the engine explains a duplicate.
     const rank = trait.ranked ? (held.get(trait.id) ?? 0) + 1 : 1;
     const trial = check(addPick(draft, trait.id, rank, pick), content, campaign);
@@ -105,7 +117,7 @@ export function traitOptions(draft: Draft, content: Content, campaign: Campaign,
     const added = trial.errors.filter((e) => !before.has(e.message) && !(e.code === "choice" && e.message.startsWith(ownChoice)));
     // A Conveyed Trait can't be picked at all, and the wrong kind of pick is the other tab's.
     if (added.some((e) => e.code === "pick-type" || e.code === "conveyed")) continue;
-    options.push({ trait, rank, reasons: added.map((e) => e.message) });
+    options.push({ trait, rank, pick, reasons: added.map((e) => e.message) });
   }
   return options;
 }

@@ -21,6 +21,7 @@ The concept:
 Rules you must follow:
 - Use only ids that exist in the content. Never invent a Kind, package or Trait. Unknown ids are rejected in code.
 - Don't work out stat points or pick counts yourself. That's the engine's job.
+- A Trait on a list (marked "magic list" in the index) can only be taken by a character holding a Trait that opens that list (marked "opens the magic list", like Magical Heritage, which most Kinds of Dreft grant). Don't list them for anyone else.
 
 Reasons: give one short line per choice, in plain words a player would use, tied to what they asked for. Targets are kind, origin, profession, past, levels (one line on why the priority stats), and each listed Trait's id.
 
@@ -62,6 +63,8 @@ export function contentIndex(content: Content): string {
       t.background ? "background" : "",
       t.starterOnly ? "starter only" : "",
       t.conveyed ? "conveyed, packages only" : "",
+      t.list ? `${t.list} list` : "",
+      t.opensLists.length ? `opens the ${t.opensLists.join(", ")} list` : "",
       t.prerequisites.length ? `needs ${t.prerequisites.join(", ")}` : "",
       t.prerequisiteTags.length ? `needs a Trait tagged ${t.prerequisiteTags.join(", ")}` : "",
       Object.keys(t.minStats).length ? `min ${Object.entries(t.minStats).map(([s, n]) => `${s} ${n}`).join(", ")}` : "",

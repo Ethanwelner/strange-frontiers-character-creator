@@ -63,7 +63,7 @@ Two pools are written in by the player rather than picked from Traits: `contact`
 
 A Trait marked `conveyed: true` (Explorers’ Lodge Membership, Imperial Service Record) can only come from a package's grants or from play, never from a pick, so it can't go on a package's `backgroundTraits` (the validator errors). Circumstance Traits use `category: circumstance`.
 
-A Trait that raises HP, VP, SP or MP lists it under `resources` (for example `resources: { hp: 2 }`), counted once per rank held. A Trait that lets a character level a core stat beyond Physical, Social and Mental lists it under `coreAccess`, like Magical Heritage's `coreAccess: [magic]`.
+A Trait that raises HP, VP, SP or MP lists it under `resources` (for example `resources: { hp: 2 }`), counted once per rank held. A Trait that lets a character level a core stat beyond Physical, Social and Mental lists it under `coreAccess`, like Magical Heritage's `coreAccess: [magic]`. A Trait that only some characters can pick goes on a named list (`list: magic`), and the Trait that opens it says so (`opensLists: [magic]`); each list is its own tab on the Traits step.
 
 ## Validator rules
 

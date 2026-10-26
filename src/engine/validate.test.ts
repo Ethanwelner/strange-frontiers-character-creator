@@ -629,7 +629,7 @@ describe("rule 8: unspent picks are banked", () => {
 
   it("rejects spending more universal picks than the stats give", () => {
     const universal = ["survivalist", "tracker", "farming", "streetwise", "concealment", "teamster",
-      "tinkerer", "ambusher", "sleight-of-hand", "incantation", "herbalism"];
+      "tinkerer", "ambusher", "sleight-of-hand", "haggler", "herbalism"];
     const r = check({ ...human, traits: universal.map((trait) => ({ trait, pick: "universal" as const })) });
     expect(codes(r)).toEqual(["picks-overspent"]);
   });
@@ -835,6 +835,25 @@ describe("rule 13: Magic", () => {
     const h = check({ ...human, profession: "hedge-witch", choices: [] });
     expect(h.summary!.coreStats.magic).toBe(0);
     expect(h.summary!.resources.mp).toBe(0);
+  });
+
+  it("lets only a character with Magical Heritage take Traits on the Magic list (rule 14)", () => {
+    const pick = (b: BuildInput, trait: string, kind: "universal" | "background" = "universal") => check({ ...b, traits: [{ trait, pick: kind }] });
+    expect(pick(isek, "incantation").errors.filter((e) => e.code === "trait-list")).toEqual([]);
+    expect(pick(isek, "incantation").summary!.traitLists).toEqual(["magic"]);
+    expect(pick(human, "incantation").errors).toEqual([
+      expect.objectContaining({
+        code: "trait-list",
+        message: "Incantation (incantation) is on the Magic list, which this character can't take from without Magical Heritage",
+      }),
+    ]);
+    expect(pick(human, "incantation").summary!.traitLists).toEqual([]);
+    // A Background Trait on an open list joins the Background Trait list.
+    expect(check(isek).summary!.backgroundList).toContain("sorcerous");
+    expect(check(human).summary!.backgroundList).not.toContain("sorcerous");
+    expect(pick(isek, "sorcerous", "background").errors.filter((e) => e.code === "pick-type" || e.code === "trait-list")).toEqual([]);
+    // A package can still grant a listed Trait to anyone, like a Human hedge witch's Magic on Isekai.
+    expect(check({ ...human, profession: "hedge-witch", choices: [] }).summary!.traits.map((h) => h.trait)).toContain("magic-on-isekai");
   });
 
   it("rejects focus points on a Magic level", () => {

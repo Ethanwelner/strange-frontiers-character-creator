@@ -5,6 +5,8 @@ plane: isekai
 summary: "The theory and history of Elemental Magics."
 tags: [magic, elemental, site-example]
 category: knowledge
+# On the Magic list: only a character with Magical Heritage can pick it.
+list: magic
 ranked: true
 minStats: { memory: 3, intuition: 5 }
 effect: "This character has knowledge of Elemental Magics, including the theoretical underpinnings of that magic as well as its history."

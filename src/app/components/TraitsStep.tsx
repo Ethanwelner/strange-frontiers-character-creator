@@ -2,7 +2,7 @@ import { useMemo, useState, type KeyboardEvent } from "react";
 import type { Campaign, PickKind } from "../../engine/build.js";
 import type { BuildResult } from "../../engine/validate.js";
 import { TraitCategory, type Trait } from "../../schema/index.js";
-import { traitOptions } from "../check.js";
+import { traitOptions, type TraitTab } from "../check.js";
 import { content, traitById } from "../content.js";
 import { addPick, type Draft } from "../draft.js";
 import { Chip, SettingIcon, Sign, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
@@ -42,15 +42,27 @@ const PICK_HELP: Record<PickKind, string> = {
   background: "Background picks take only Traits on this character's Background Trait list.",
 };
 
+// Who opens a Trait list, for its tab's help: "Magical Heritage".
+const openersOf = (list: string) =>
+  content.traits
+    .filter((t) => t.opensLists.includes(list))
+    .map((t) => t.name)
+    .join(" or ");
+
 export function TraitsStep({ draft, campaign, result, onChange }: Props) {
-  const [pick, setPick] = useState<PickKind>("universal");
+  // A pick type, or a Trait list the character has opened, like Magic
+  const [chosen, setTab] = useState<TraitTab>("universal");
   const [query, setQuery] = useState("");
   // Categories whose boxes are unchecked; all of them show by default.
   const [hidden, setHidden] = useState<Set<string>>(new Set());
   const [hideRejected, setHideRejected] = useState(true);
 
-  const options = useMemo(() => traitOptions(draft, content, campaign, pick), [draft, campaign, pick]);
   const summary = result.summary;
+  const lists = summary?.traitLists ?? [];
+  // A list's tab goes back to Universal if the character can't take from it any more.
+  const tab: TraitTab = typeof chosen === "string" || lists.includes(chosen.list) ? chosen : "universal";
+  const tabKey = typeof tab === "string" ? tab : `list:${tab.list}`;
+  const options = useMemo(() => traitOptions(draft, content, campaign, tab), [draft, campaign, tabKey]);
 
   if (!options || !summary) {
     return (
@@ -82,7 +94,7 @@ export function TraitsStep({ draft, campaign, result, onChange }: Props) {
   // A card is checked once a pick holds its Trait; clicking it again drops the latest of those picks.
   const lastPick = (id: string) => draft.traits.map((p) => p.trait).lastIndexOf(id);
   const heldRank = new Map(summary.traits.map((h) => [h.trait, h.rank]));
-  const toggle = (id: string, rank: number) => {
+  const toggle = (id: string, rank: number, pick: PickKind) => {
     const i = lastPick(id);
     if (i >= 0) remove(i);
     else onChange(addPick(draft, id, rank, pick));
@@ -102,16 +114,30 @@ export function TraitsStep({ draft, campaign, result, onChange }: Props) {
               <button
                 key={k}
                 role="tab"
-                aria-selected={pick === k}
-                className={`tech-field-tab${pick === k ? " is-active" : ""}`}
-                onClick={() => setPick(k)}
+                aria-selected={tab === k}
+                className={`tech-field-tab${tab === k ? " is-active" : ""}`}
+                onClick={() => setTab(k)}
               >
                 {title(k)} <span className="num">{p.spent}/{p.available}</span>
               </button>
             );
           })}
+          {/* One tab per Trait list the character has opened, with how many of its Traits are taken */}
+          {lists.map((l) => {
+            const active = typeof tab !== "string" && tab.list === l;
+            const takenHere = new Set(draft.traits.filter((p) => traitById.get(p.trait)?.list === l).map((p) => p.trait)).size;
+            return (
+              <button key={l} role="tab" aria-selected={active} className={`tech-field-tab${active ? " is-active" : ""}`} onClick={() => setTab({ list: l })}>
+                {title(l)} <span className="num">{takenHere}</span>
+              </button>
+            );
+          })}
         </div>
-        <p className="hint">{PICK_HELP[pick]}</p>
+        <p className="hint">
+          {typeof tab === "string"
+            ? PICK_HELP[tab]
+            : `${title(tab.list)} Traits, open to this character through ${openersOf(tab.list)}. Background Traits here take background picks; the rest take universal picks.`}
+        </p>
 
         <div className="filters">
           <input type="search" placeholder="Search name or tag" value={query} onChange={(e) => setQuery(e.target.value)} aria-label="Search Traits" />
@@ -125,7 +151,7 @@ export function TraitsStep({ draft, campaign, result, onChange }: Props) {
           </label>
         </div>
 
-        {options.length === 0 && pick === "background" && (
+        {options.length === 0 && tab === "background" && (
           <p className="empty">This character's Background Trait list is empty. It grows from package background Traits and the Kind's Trait access.</p>
         )}
         {options.length > 0 && shown.length === 0 && (
@@ -136,13 +162,13 @@ export function TraitsStep({ draft, campaign, result, onChange }: Props) {
           <div key={g.category} className="trait-group">
             <h3 className="subhead">{GROUP_TITLE[g.category]}</h3>
             <ul className="trait-list">
-              {g.options.map(({ trait: t, rank, reasons }) => {
+              {g.options.map(({ trait: t, rank, pick, reasons }) => {
                 const selected = lastPick(t.id) >= 0;
                 const rejected = !selected && reasons.length > 0;
                 const onKey = (e: KeyboardEvent) => {
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
-                    if (!rejected) toggle(t.id, rank);
+                    if (!rejected) toggle(t.id, rank, pick);
                   }
                 };
                 return (
@@ -154,7 +180,7 @@ export function TraitsStep({ draft, campaign, result, onChange }: Props) {
                     aria-label={selected ? `${t.name}, taken` : `Take ${t.name}${t.ranked || rank > 1 ? ` rank ${rank}` : ""} with a ${pick} pick`}
                     tabIndex={0}
                     className={`trait trait-box ${traitRegionClass(t.id)}${selected ? " selected" : ""}${rejected ? " rejected" : ""}`}
-                    onClick={() => !rejected && toggle(t.id, rank)}
+                    onClick={() => !rejected && toggle(t.id, rank, pick)}
                     onKeyDown={onKey}
                   >
                     <h3 className="trait-name">
