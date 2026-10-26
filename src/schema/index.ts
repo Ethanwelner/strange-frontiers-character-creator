@@ -178,13 +178,16 @@ export const Trait = BaseEntry.extend({
   // Added to the character's HP, VP, SP or MP for each rank held.
   resources: Resources.default({}),
   // Core stats beyond Physical, Social and Mental that holding this Trait
-  // lets a character level, like Magical Heritage's Magic.
+  // lets a character level, like Magic Access's Magic.
   coreAccess: z.array(z.enum(["magic"])).default([]),
   // Trait lists: a Trait on a list (like Incantation on `magic`) can only be
   // picked by a character holding a Trait that opens that list (like
-  // Magical Heritage). Lists are named freely; each is its own tab on the
+  // Magic Access). Lists are named freely; each is its own tab on the
   // Traits step.
   list: z.string().optional(),
   opensLists: z.array(z.string()).default([]),
+  // Traits holding this one conveys, like Magical Heritage's Magic Access,
+  // held for as long as this one is, from whatever source.
+  grants: z.array(TraitGrant).default([]),
 });
 export type Trait = z.infer<typeof Trait>;

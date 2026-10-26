@@ -28,7 +28,7 @@ const CONCEPT_SCHEMA = {
       minimum: 0,
       description:
         "How many of the character's levels go to the Magic core stat, for a spellcaster or anyone magical. Only Kinds or packages that " +
-        "grant a Trait opening Magic (Magical Heritage, for every Kind of Dreft but the Orcoid Tatot) can use it. Each Magic level gives 3 MP but no focus points. Default 0.",
+        "grant a Trait opening Magic (Magic Access, which every Kind of Dreft but the Orcoid Tatot gets through Magical Heritage) can use it. Each Magic level gives 3 MP but no focus points. Default 0.",
     },
     traits: {
       type: "array",

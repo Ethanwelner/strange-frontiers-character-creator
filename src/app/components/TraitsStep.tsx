@@ -42,7 +42,7 @@ const PICK_HELP: Record<PickKind, string> = {
   background: "Background picks take only Traits on this character's Background Trait list.",
 };
 
-// Who opens a Trait list, for its tab's help: "Magical Heritage".
+// Who opens a Trait list, for its tab's help: "Magic Access".
 const openersOf = (list: string) =>
   content.traits
     .filter((t) => t.opensLists.includes(list))

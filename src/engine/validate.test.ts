@@ -801,9 +801,11 @@ describe("rule 13: Magic", () => {
   const mage = { ...isek, level: 3, levels: [...isek.levels!, { group: "magic" as const, points: {} }, { group: "magic" as const, points: {} }] };
   const L3 = { startingLevel: 3 };
 
-  it("opens Magic to the Kinds of Dreft through Magical Heritage, but not to the Orcoid Tatot", () => {
+  it("opens Magic to the Kinds of Dreft through the Magic Access their Magical Heritage conveys, but not to the Orcoid Tatot", () => {
     const r = check(isek);
     expect(r.summary!.traits).toContainEqual({ trait: "magical-heritage", rank: 1, sources: ["kind isek"] });
+    // The heritage conveys Magic Access, which is what opens Magic.
+    expect(r.summary!.traits).toContainEqual({ trait: "magic-access", rank: 1, sources: ["trait magical-heritage"] });
     expect(r.summary!.coreAccess).toContain("magic");
     expect(check(human).summary!.coreAccess).toEqual(["physical", "social", "mental"]);
     expect(check(orcoid).summary!.coreAccess).toEqual(["physical", "social", "mental"]);
@@ -821,7 +823,7 @@ describe("rule 13: Magic", () => {
   it("rejects Magic for a character without the Trait that opens it", () => {
     const humanMage = { ...human, level: 2, levels: [...human.levels!, { group: "magic" as const, points: {} }] };
     expect(check(humanMage, content, { startingLevel: 2 }).errors).toEqual([
-      expect.objectContaining({ code: "core-access", message: "1 level goes to Magic, which this character can't level without Magical Heritage", path: "levels" }),
+      expect.objectContaining({ code: "core-access", message: "1 level goes to Magic, which this character can't level without Magic Access", path: "levels" }),
     ]);
   });
 
@@ -837,14 +839,14 @@ describe("rule 13: Magic", () => {
     expect(h.summary!.resources.mp).toBe(0);
   });
 
-  it("lets only a character with Magical Heritage take Traits on the Magic list (rule 14)", () => {
+  it("lets only a character with Magic Access take Traits on the Magic list (rule 14)", () => {
     const pick = (b: BuildInput, trait: string, kind: "universal" | "background" = "universal") => check({ ...b, traits: [{ trait, pick: kind }] });
     expect(pick(isek, "incantation").errors.filter((e) => e.code === "trait-list")).toEqual([]);
     expect(pick(isek, "incantation").summary!.traitLists).toEqual(["magic"]);
     expect(pick(human, "incantation").errors).toEqual([
       expect.objectContaining({
         code: "trait-list",
-        message: "Incantation (incantation) is on the Magic list, which this character can't take from without Magical Heritage",
+        message: "Incantation (incantation) is on the Magic list, which this character can't take from without Magic Access",
       }),
     ]);
     expect(pick(human, "incantation").summary!.traitLists).toEqual([]);

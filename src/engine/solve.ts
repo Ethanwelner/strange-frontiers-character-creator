@@ -9,7 +9,7 @@ import { z } from "zod";
 import { STAT_CAP, STAT_GROUPS, StatId, type StatBlock, type Trait } from "../schema/index.js";
 import { Build, ChoiceAnswer, DEFAULT_CAMPAIGN, type Campaign, type LevelAllocation, type PickKind, type StatGroup } from "./build.js";
 import type { Content } from "./content.js";
-import { answers, bonusPointsOf, choicePool, isFreeTextPool, FOCUS_POINTS_PER_LEVEL, validateBuild, type BuildResult } from "./validate.js";
+import { answers, bonusPointsOf, choicePool, coreAccessOf, isFreeTextPool, FOCUS_POINTS_PER_LEVEL, validateBuild, type BuildResult } from "./validate.js";
 
 // The Kind and package fields take ids, as the Build does, so a name like
 // "Dreft" comes back to the model as a format problem it can fix.
@@ -246,7 +246,10 @@ export function solveConcept(input: unknown, content: Content, campaign: Campaig
     ...(content.kinds.find((k) => k.id === concept.kind)?.grants ?? []),
     ...content.packages.filter((p) => [concept.origin, concept.profession, concept.past].includes(p.id)).flatMap((p) => p.grants),
   ];
-  const canMagic = granted.some((g) => traits.get(g.trait)?.coreAccess.includes("magic"));
+  const canMagic = coreAccessOf(
+    granted.map((g) => g.trait),
+    content,
+  ).includes("magic");
   const magicLevels = canMagic ? Math.min(concept.magic, campaign.startingLevel) : 0;
 
   let build: Build = Build.parse({

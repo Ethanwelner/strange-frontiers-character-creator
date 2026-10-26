@@ -167,19 +167,31 @@ export function bonusPointsOf(kind: { freePoints: number; stats: StatBlock } | u
   return { any: kind?.freePoints ?? 0, groups: groups.filter((g) => g.count > 0) };
 }
 
+// These Traits and every Trait they convey, like Magical Heritage's Magic Access.
+export function withConveyed(traitIds: Iterable<string>, content: Content): Set<string> {
+  const all = new Set<string>();
+  const add = (id: string) => {
+    if (all.has(id)) return;
+    all.add(id);
+    for (const g of content.traits.find((t) => t.id === id)?.grants ?? []) add(g.trait);
+  };
+  for (const id of traitIds) add(id);
+  return all;
+}
+
 // The Trait lists a character holding these Traits can take from, like the
-// Magic list Magical Heritage opens.
+// Magic list that Magic Access opens.
 export function listsOpenedBy(traitIds: Iterable<string>, content: Content): Set<string> {
   const open = new Set<string>();
-  for (const id of traitIds) for (const l of content.traits.find((t) => t.id === id)?.opensLists ?? []) open.add(l);
+  for (const id of withConveyed(traitIds, content)) for (const l of content.traits.find((t) => t.id === id)?.opensLists ?? []) open.add(l);
   return open;
 }
 
 // The core stats a character holding these Traits can level: Physical, Social
-// and Mental, plus any a Trait opens, like Magical Heritage's Magic.
+// and Mental, plus any a Trait opens, like Magic Access's Magic.
 export function coreAccessOf(traitIds: Iterable<string>, content: Content): StatGroup[] {
   const open = new Set<StatGroup>(OPEN_CORE_STATS);
-  for (const id of traitIds) for (const g of content.traits.find((t) => t.id === id)?.coreAccess ?? []) open.add(g);
+  for (const id of withConveyed(traitIds, content)) for (const g of content.traits.find((t) => t.id === id)?.coreAccess ?? []) open.add(g);
   return [...open];
 }
 
@@ -302,8 +314,11 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
   const held = new Map<string, HeldTrait>();
   const hold = (id: string, rank: number, source: string) => {
     const h = held.get(id);
-    if (!h) held.set(id, { trait: id, rank, sources: [source] });
-    else {
+    if (!h) {
+      held.set(id, { trait: id, rank, sources: [source] });
+      // A held Trait conveys its own grants, like Magical Heritage's Magic Access.
+      for (const g of traits.get(id)?.grants ?? []) hold(g.trait, g.rank ?? 1, `trait ${id}`);
+    } else {
       h.rank = Math.max(h.rank, rank);
       h.sources.push(source);
     }
@@ -492,7 +507,8 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
   });
 
   // Rule 13: a level can only go to a core stat the build can level. Magic
-  // needs a held Trait that opens it, like the Magical Heritage most Kinds of Dreft grant.
+  // needs a held Trait that opens it, like Magic Access, which most Kinds of
+  // Dreft get through Magical Heritage.
   const coreAccess = new Set(coreAccessOf(held.keys(), content));
   for (const g of Object.keys(coreStats) as StatGroup[]) {
     if (!coreStats[g] || coreAccess.has(g)) continue;
@@ -516,7 +532,7 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
   for (const g of Object.keys(coreStats) as StatGroup[]) coreStats[g] += coreBonus[g];
 
   // Rule 14: a Trait on a list, like a Magic Trait, needs a held Trait that
-  // opens that list, like Magical Heritage. Granted Traits skip the check.
+  // opens that list, like Magic Access. Granted Traits skip the check.
   const opened = listsOpenedBy(held.keys(), content);
   for (const id of byTrait.keys()) {
     const t = traits.get(id)!;
