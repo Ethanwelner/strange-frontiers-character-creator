@@ -2,7 +2,7 @@ id: officer-of-the-bureau-of-planar-management-and-enforcement
 name: "Officer of the Bureau of Planar Management and Enforcement"
 status: placeholder
 plane: earth
-summary: "Enforces the laws on planar exploration for the Bureau, inspecting gates and chasing down unregulated exploitation across the systems."
+summary: "Enforces the laws on planar exploration for the Bureau, inspecting gates and chasing down unregulated exploitation across the settled systems."
 tags: [law, enforcement, planes, bureau, tetra]
 type: profession
 grants:

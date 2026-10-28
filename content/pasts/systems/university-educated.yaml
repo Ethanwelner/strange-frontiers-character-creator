@@ -2,7 +2,7 @@ id: university-educated
 name: "University Educated"
 status: placeholder
 plane: earth
-summary: "Studied at one of the systems’ universities, and still owes someone for it."
+summary: "Studied at one of the settled systems’ universities, and still owes someone for it."
 tags: [education, university, science]
 type: past
 grants:
