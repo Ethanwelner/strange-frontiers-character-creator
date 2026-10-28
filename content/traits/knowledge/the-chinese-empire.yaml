@@ -1,5 +1,5 @@
 id: the-chinese-empire
-name: "The Chinese Empire"
+name: "The Empire of China"
 status: placeholder
 plane: earth
 region: chinese-empire
@@ -9,4 +9,4 @@ lore: chinese-empire
 category: knowledge
 ranked: true
 minStats: { memory: 3 }
-effect: "This character has knowledge of the Chinese Empire and can be assumed to be familiar with its customs, politics, and territories."
+effect: "This character has knowledge of the Empire of China and can be assumed to be familiar with its customs, politics, and territories."
