@@ -709,10 +709,12 @@
     margin-bottom: 1rem;
   }
 
+  /* An opaque tint, so the error reads the same on the light panels and on
+     the dark hero, where a see-through one left dark text on near-black */
   .notice.bad {
     border-color: var(--portfolio-red);
     color: var(--portfolio-black);
-    background: rgb(235 8 68 / 6%);
+    background: color-mix(in srgb, var(--portfolio-red) 6%, var(--portfolio-white));
   }
 
   /* Step title, then the stinger, then the step's description */
