@@ -497,7 +497,7 @@ describe("Conveyed Traits", () => {
   });
 });
 
-describe("the Systems Origins", () => {
+describe("the Settled Systems Origins", () => {
   it("lets the SDU take any one language, spoken and written", () => {
     const sdu = { ...human, origin: "sdu-colonies", traits: [], choices: [{ package: "sdu-colonies", from: "spoken-and-written-language", traits: ["mandarin"] }] };
     const r = check(sdu);

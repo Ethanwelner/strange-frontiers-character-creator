@@ -2,10 +2,10 @@ import { content } from "../content.js";
 import type { Draft } from "../draft.js";
 import { Card, Chip, regionClass, SettingIcon, StatRanges, title, traitName } from "./ui.js";
 
-// Kinds are listed by where they come from: Earth's Kinds are The Systems',
-// and the rest go under their region. The Systems come first, then Dreft.
+// Kinds are listed by where they come from: Earth's Kinds are The Settled Systems',
+// and the rest go under their region. The Settled Systems come first, then Dreft.
 const ORDER = ["systems", "dreft"];
-const REGION_TITLE: Record<string, string> = { systems: "The Systems", dreft: "Dreft" };
+const REGION_TITLE: Record<string, string> = { systems: "The Settled Systems", dreft: "Dreft" };
 const regionOf = (k: (typeof content.kinds)[number]) => k.region ?? (k.plane === "earth" ? "systems" : k.plane);
 const rank = (r: string) => (ORDER.includes(r) ? ORDER.indexOf(r) : ORDER.length);
 const regions = [...new Set(content.kinds.map(regionOf))].sort((a, b) => rank(a) - rank(b));

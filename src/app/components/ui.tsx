@@ -13,7 +13,7 @@ export const title = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 export const traitName = (id: string) => traitById.get(id)?.name ?? id;
 
 // A card's header bar color, the same for every card: anything from Isekai
-// gets Dreft's green, and the rest (Earth and any plane) the Systems gray.
+// gets Dreft's green, and the rest (Earth and any plane) the Settled Systems gray.
 export const regionClass = (plane: string | undefined) => `region-${plane === "isekai" ? "dreft" : "systems"}`;
 export const traitRegionClass = (id: string) => regionClass(traitById.get(id)?.plane);
 
@@ -22,11 +22,11 @@ export const choiceLabel = (count: number, pool: string) =>
   `+${count} ${pool.split("-").map(title).join(" ")}`;
 
 // The setting mark at the start of a card's name: Isekai's for anything from
-// Isekai, The Systems' for anything from Earth. Generic cards (plane "any")
+// Isekai, The Settled Systems' for anything from Earth. Generic cards (plane "any")
 // get none.
 const SETTINGS: Record<string, { mark: string; name: string }> = {
   isekai: { mark: "isekai", name: "Isekai" },
-  earth: { mark: "systems", name: "The Systems" },
+  earth: { mark: "systems", name: "The Settled Systems" },
 };
 
 export function SettingIcon({ plane }: { plane: string | undefined }) {

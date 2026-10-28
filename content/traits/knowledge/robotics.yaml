@@ -2,7 +2,7 @@ id: robotics
 name: "Robotics"
 status: placeholder
 plane: earth
-summary: "Drones, chassis and the machines that do the systems’ work."
+summary: "Drones, chassis and the machines that do the settled systems’ work."
 tags: [robotics, technology, machines]
 category: knowledge
 ranked: true

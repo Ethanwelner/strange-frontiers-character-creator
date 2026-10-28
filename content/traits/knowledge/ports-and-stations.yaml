@@ -7,4 +7,4 @@ tags: [ports, stations, space]
 category: knowledge
 ranked: true
 minStats: { memory: 3 }
-effect: "This character has knowledge of the ports and stations of the systems and can be assumed to be familiar with the customs, regulations, industries, ships, and docks involved in trade."
+effect: "This character has knowledge of the ports and stations of the settled systems and can be assumed to be familiar with the customs, regulations, industries, ships, and docks involved in trade."
