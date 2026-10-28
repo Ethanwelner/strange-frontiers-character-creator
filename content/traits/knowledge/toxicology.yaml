@@ -1,0 +1,10 @@
+id: toxicology
+name: "Toxicology"
+status: draft
+plane: any
+summary: "Poisons, venoms and their antidotes."
+tags: [medicine, poison, antidotes]
+category: knowledge
+ranked: true
+minStats: { memory: 3, logic: 3 }
+effect: "This character has knowledge of toxicology and can be assumed to be familiar with common poisons and venoms, their symptoms and their antidotes."
