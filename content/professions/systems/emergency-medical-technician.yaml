@@ -13,3 +13,6 @@ grants:
 backgroundTraits:
   - surgery
   - pilot-truck
+  - pharmacology
+  - toxicology
+  - psychology

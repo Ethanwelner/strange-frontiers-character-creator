@@ -1,0 +1,10 @@
+id: pathology
+name: "Pathology"
+status: draft
+plane: any
+summary: "Disease: how it spreads, how it shows itself, and how it is stopped."
+tags: [medicine, disease, contagion]
+category: knowledge
+ranked: true
+minStats: { memory: 4, logic: 3, intuition: 2 }
+effect: "This character has knowledge of pathology and can be assumed to be familiar with common diseases, how they spread and present, and how outbreaks are contained."

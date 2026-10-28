@@ -1,0 +1,10 @@
+id: psychology
+name: "Psychology"
+status: draft
+plane: any
+summary: "The mind: how it works, how it breaks, and how it heals."
+tags: [medicine, mind, psychology]
+category: knowledge
+ranked: true
+minStats: { memory: 3, empathy: 4 }
+effect: "This character has knowledge of psychology and can be assumed to be familiar with how minds work, common mental illnesses, and the treatment of trauma and stress."
