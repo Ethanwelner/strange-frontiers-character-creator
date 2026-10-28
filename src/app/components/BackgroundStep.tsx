@@ -81,6 +81,76 @@ export function PackageGrants({ pkg }: { pkg: BackgroundPackage }) {
 
 type Slot = (typeof SLOTS)[number];
 
+// Filter labels for a package's plane, in the order they're listed.
+const PLANES: [string, string][] = [
+  ["earth", "The Settled Systems"],
+  ["isekai", "Isekai"],
+  ["any", "Any"],
+];
+const GROUPS = ["physical", "social", "mental"] as const;
+
+// One slot's cards, with a search box and checkbox filters for the planes and
+// bonus groups its packages have. The picked package stays in view whatever
+// the filters say.
+function SlotCards({ slot, picked, onChoose }: { slot: Slot; picked?: string; onChoose: (id: string) => void }) {
+  const [query, setQuery] = useState("");
+  const [hidden, setHidden] = useState<Set<string>>(new Set());
+  const packages = content.packages.filter((p) => p.type === slot);
+  const planes = PLANES.filter(([plane]) => packages.some((p) => p.plane === plane));
+  const groups = GROUPS.filter((g) => packages.some((p) => p.bonusPoints.some((b) => b.group === g)));
+  const toggle = (key: string) => {
+    const next = new Set(hidden);
+    if (!next.delete(key)) next.add(key);
+    setHidden(next);
+  };
+  const q = query.trim().toLowerCase();
+  const shown = packages.filter(
+    (p) =>
+      p.id === picked ||
+      (!hidden.has(`plane:${p.plane}`) &&
+        !p.bonusPoints.some((b) => hidden.has(`bonus:${b.group}`)) &&
+        (!q || p.name.toLowerCase().includes(q) || p.tags.some((t) => t.toLowerCase().includes(q)))),
+  );
+  return (
+    <>
+      <div className="filters">
+        <input type="search" placeholder="Search name or tag" value={query} onChange={(e) => setQuery(e.target.value)} aria-label={`Search ${title(slot)}s`} />
+        {planes.length > 1 &&
+          planes.map(([plane, label]) => (
+            <label key={plane} className="check">
+              <input type="checkbox" checked={!hidden.has(`plane:${plane}`)} onChange={() => toggle(`plane:${plane}`)} /> {label}
+            </label>
+          ))}
+        {groups.length > 1 &&
+          groups.map((g) => (
+            <label key={g} className="check">
+              <input type="checkbox" checked={!hidden.has(`bonus:${g}`)} onChange={() => toggle(`bonus:${g}`)} /> {title(g)} bonus
+            </label>
+          ))}
+      </div>
+      {shown.length === 0 ? (
+        <p className="empty">No {title(slot)}s match.</p>
+      ) : (
+        <div className="cards" role="radiogroup" aria-label={title(slot)}>
+          {shown.map((p) => (
+            <Card key={p.id} className={`headed ${regionClass(p.plane)}`} label={p.name} selected={picked === p.id} onSelect={() => onChoose(p.id)}>
+              <div className="card-head">
+                <h3>
+                  <SettingIcon plane={p.plane} />
+                  {p.name}
+                </h3>
+                <Chip tone="muted">{p.plane}</Chip>
+              </div>
+              <p>{p.summary}</p>
+              <PackageGrants pkg={p} />
+            </Card>
+          ))}
+        </div>
+      )}
+    </>
+  );
+}
+
 export function BackgroundStep({ draft, onChange }: { draft: Draft; onChange: (d: Draft) => void }) {
   // Each slot folds away once it has a package, showing the pick in its
   // heading, and opens again from there. Whenever a slot's package changes,
@@ -121,23 +191,7 @@ export function BackgroundStep({ draft, onChange }: { draft: Draft; onChange: (d
                 </span>
               </h3>
             </summary>
-            <div className="cards" role="radiogroup" aria-label={title(slot)}>
-              {content.packages
-                .filter((p) => p.type === slot)
-                .map((p) => (
-                  <Card key={p.id} className={`headed ${regionClass(p.plane)}`} label={p.name} selected={draft[slot] === p.id} onSelect={() => choose(slot, p.id)}>
-                    <div className="card-head">
-                      <h3>
-                        <SettingIcon plane={p.plane} />
-                        {p.name}
-                      </h3>
-                      <Chip tone="muted">{p.plane}</Chip>
-                    </div>
-                    <p>{p.summary}</p>
-                    <PackageGrants pkg={p} />
-                  </Card>
-                ))}
-            </div>
+            <SlotCards slot={slot} picked={draft[slot]} onChoose={(id) => choose(slot, id)} />
           </details>
         ))}
       </div>
