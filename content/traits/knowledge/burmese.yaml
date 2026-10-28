@@ -1,0 +1,10 @@
+id: burmese
+name: "Burmese (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in the Chinese Empire."
+tags: [language, burmese, earth]
+category: knowledge
+types: [language]
+language: burmese
+effect: "This character is conversational in the Burmese language and can speak it."

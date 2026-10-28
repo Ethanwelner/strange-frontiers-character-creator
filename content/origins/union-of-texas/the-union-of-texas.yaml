@@ -1,0 +1,26 @@
+id: the-union-of-texas
+name: "The Union of Texas"
+status: placeholder
+plane: earth
+region: union-of-texas
+summary: "You grew up in the Union of Texas, an embittered, impoverished military republic that has spent 130 years preparing for a war with the Empire that never came."
+tags: [union-of-texas, earth, military]
+lore: union-of-texas
+type: origin
+bonusPoints:
+  - { count: 1, group: physical }
+grants:
+  - { trait: the-union-of-texas, rank: 1 }
+  - { trait: english }
+  - { trait: english-written }
+choices:
+  - choose: 1
+    from: language
+    note: "+1 Language"
+backgroundTraits:
+  - military-tactics
+  - spanish
+  - spanish-written
+  - the-free-american-states
+  - wielder-rifle
+  - survivalist

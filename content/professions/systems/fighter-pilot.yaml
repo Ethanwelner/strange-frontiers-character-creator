@@ -1,0 +1,16 @@
+id: fighter-pilot
+name: "Fighter Pilot"
+status: placeholder
+plane: earth
+summary: "Flies fighters for a navy, a corporation or whoever is paying, and knows a dogfight from the inside."
+tags: [pilot, military, fighter, space]
+type: profession
+grants:
+  - { trait: pilot-fighter }
+  - { trait: military-drill }
+  - { trait: vigilance }
+  - { trait: military-tactics }
+backgroundTraits:
+  - pilot-helicopter
+  - starship-engineering
+  - shipping-lanes

@@ -1,0 +1,11 @@
+id: raised-at-court
+name: "Raised at Court"
+status: placeholder
+plane: any
+summary: "Grew up around a royal or noble court, among its manners, its rivalries and its whispers."
+tags: [court, nobility, intrigue]
+type: past
+grants:
+  - { trait: courtly-manners }
+  - { trait: court-etiquette }
+  - { trait: heraldry }

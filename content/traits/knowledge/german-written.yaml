@@ -1,0 +1,10 @@
+id: german-written
+name: "German (Written)"
+status: draft
+plane: earth
+summary: "Spoken in the Stellar Democratic Union."
+tags: [language, german, earth, writing]
+category: knowledge
+types: [language]
+language: german
+effect: "This character can read and write the German language."

@@ -1,0 +1,10 @@
+id: romanian-written
+name: "Romanian (Written)"
+status: draft
+plane: earth
+summary: "Spoken in the Stellar Democratic Union."
+tags: [language, romanian, earth, writing]
+category: knowledge
+types: [language]
+language: romanian
+effect: "This character can read and write the Romanian language."

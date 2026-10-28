@@ -152,6 +152,16 @@ export function allocateLevels(focusIn: string[], base: StatBlock | undefined, l
   return levels;
 }
 
+// A choice's pool with the character's own world first: Traits from the
+// Origin's region, then its plane, then any plane, then the rest, so a
+// Dreftian's spare language is Dreftan rather than whatever sorts first.
+function homeFirst(pool: Trait[], concept: Concept, content: Content): Trait[] {
+  const origin = content.packages.find((p) => p.id === concept.origin && p.type === "origin");
+  const rank = (t: Trait) =>
+    origin?.region && t.region === origin.region ? 0 : t.plane === origin?.plane ? 1 : t.plane === "any" ? 2 : 3;
+  return [...pool].sort((a, b) => rank(a) - rank(b));
+}
+
 // Answers every package choice the engine can check: the concept's valid
 // answers first, then the first Traits in the pool that aren't held yet.
 // Contacts and pools with nothing in them are left for the player.
@@ -165,7 +175,7 @@ function answerChoices(concept: Concept, content: Content): ChoiceAnswer[] {
     const pools = new Map<string, number>();
     for (const c of pkg.choices) pools.set(c.from, (pools.get(c.from) ?? 0) + c.choose);
     for (const [from, count] of pools) {
-      const pool = choicePool(from, content);
+      const pool = homeFirst(choicePool(from, content), concept, content);
       if (isFreeTextPool(from) || pool.length === 0) continue;
       const ids = new Set(pool.map((t) => t.id));
       const given = concept.choices.find((a) => a.package === pkg.id && a.from === from)?.traits ?? [];
@@ -272,7 +282,7 @@ export function solveConcept(input: unknown, content: Content, campaign: Campaig
 
   // Answers the choices of the Traits a build holds, like the language an
   // Additional Language gives: the concept's valid answers first, then the
-  // first Traits in the pool that aren't held. Contacts stay with the player,
+  // first Traits in the pool, home first, that aren't held. Contacts stay with the player,
   // and pools with nothing in them get placeholders while checking.
   const answerTraitChoices = (b: Build): Build => {
     const r = check(b);
@@ -280,7 +290,7 @@ export function solveConcept(input: unknown, content: Content, campaign: Campaig
     let choices = b.choices;
     for (const q of r.summary?.questions ?? []) {
       if (q.by !== "trait" || isFreeTextPool(q.from)) continue;
-      const pool = choicePool(q.from, content);
+      const pool = homeFirst(choicePool(q.from, content), concept, content);
       if (pool.length === 0) {
         open = [...open.filter((a) => !answers(a, q)), { trait: q.id, from: q.from, traits: Array.from({ length: q.count }, (_, i) => `player-choice-${i + 1}`) }];
         continue;

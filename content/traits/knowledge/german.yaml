@@ -1,0 +1,10 @@
+id: german
+name: "German (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in the Stellar Democratic Union."
+tags: [language, german, earth]
+category: knowledge
+types: [language]
+language: german
+effect: "This character is conversational in the German language and can speak it."

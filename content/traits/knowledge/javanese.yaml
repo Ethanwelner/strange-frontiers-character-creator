@@ -1,0 +1,10 @@
+id: javanese
+name: "Javanese (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in the Chinese Empire."
+tags: [language, javanese, earth]
+category: knowledge
+types: [language]
+language: javanese
+effect: "This character is conversational in the Javanese language and can speak it."

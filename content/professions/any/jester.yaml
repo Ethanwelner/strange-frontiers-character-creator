@@ -1,0 +1,16 @@
+id: jester
+name: "Jester"
+status: placeholder
+plane: any
+summary: "Entertains a court or a crowd, and gets away with saying what no one else there can."
+tags: [jester, performer, court]
+type: profession
+grants:
+  - { trait: performer-acrobatics }
+  - { trait: sleight-of-hand }
+  - { trait: smooth-talker }
+  - { trait: court-etiquette }
+backgroundTraits:
+  - performer-music
+  - schemer
+  - disguise

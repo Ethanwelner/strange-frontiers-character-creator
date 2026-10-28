@@ -1,0 +1,17 @@
+id: university-educated
+name: "University Educated"
+status: placeholder
+plane: earth
+summary: "Studied at one of the systems’ universities, and still owes someone for it."
+tags: [education, university, science]
+type: past
+grants:
+  - { trait: research }
+  - { trait: mathematics }
+choices:
+  - choose: 1
+    from: language
+    note: "+1 Language"
+  - choose: 1
+    from: contact
+    note: "+1 Contact"

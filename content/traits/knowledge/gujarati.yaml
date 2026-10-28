@@ -1,0 +1,10 @@
+id: gujarati
+name: "Gujarati (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in the Kingdom of India."
+tags: [language, gujarati, earth]
+category: knowledge
+types: [language]
+language: gujarati
+effect: "This character is conversational in the Gujarati language and can speak it."

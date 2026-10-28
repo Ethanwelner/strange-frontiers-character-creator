@@ -1,0 +1,10 @@
+id: kyrgyz
+name: "Kyrgyz (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in the Ural Federation."
+tags: [language, kyrgyz, earth]
+category: knowledge
+types: [language]
+language: kyrgyz
+effect: "This character is conversational in the Kyrgyz language and can speak it."

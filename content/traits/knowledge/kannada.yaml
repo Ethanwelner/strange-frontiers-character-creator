@@ -1,0 +1,10 @@
+id: kannada
+name: "Kannada (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in the Kingdom of India."
+tags: [language, kannada, earth]
+category: knowledge
+types: [language]
+language: kannada
+effect: "This character is conversational in the Kannada language and can speak it."

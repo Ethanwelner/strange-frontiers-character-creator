@@ -1,0 +1,10 @@
+id: kazakh
+name: "Kazakh (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in the Ural Federation."
+tags: [language, kazakh, earth]
+category: knowledge
+types: [language]
+language: kazakh
+effect: "This character is conversational in the Kazakh language and can speak it."

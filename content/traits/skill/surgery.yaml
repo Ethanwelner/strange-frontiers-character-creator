@@ -1,0 +1,11 @@
+id: surgery
+name: "Surgery"
+status: draft
+plane: any
+summary: "Operating to repair serious injuries."
+tags: [medicine, surgery, healing]
+category: skill
+ranked: true
+minStats: { memory: 6, grace: 5, logic: 4 }
+prerequisites: [medical-aid]
+effect: "This character is capable of performing surgery to treat severe injuries, such as removing shrapnel or closing internal wounds, given the proper tools. Rank *10 added to skill check rolls involving surgery."

@@ -1,0 +1,10 @@
+id: disguise
+name: "Disguise"
+status: draft
+plane: any
+summary: "Passing as someone else, through costume, makeup and manner."
+tags: [disguise, deception, spy]
+category: skill
+ranked: true
+minStats: { demeanor: 4, grace: 2, intuition: 2 }
+effect: "This character is capable of putting together a convincing simple disguise without a skill check. Rank *10 added to skill check rolls involving disguise and impersonation."

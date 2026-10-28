@@ -1,0 +1,10 @@
+id: cantonese-written
+name: "Cantonese (Written)"
+status: draft
+plane: earth
+summary: "One of the common languages of Earth Baseline."
+tags: [language, cantonese, earth, writing]
+category: knowledge
+types: [language]
+language: cantonese
+effect: "This character can read and write the Cantonese language."

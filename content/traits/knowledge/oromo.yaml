@@ -1,0 +1,10 @@
+id: oromo
+name: "Oromo (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in Centafrica."
+tags: [language, oromo, earth]
+category: knowledge
+types: [language]
+language: oromo
+effect: "This character is conversational in the Oromo language and can speak it."

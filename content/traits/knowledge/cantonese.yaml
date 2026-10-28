@@ -1,0 +1,10 @@
+id: cantonese
+name: "Cantonese (Spoken)"
+status: draft
+plane: earth
+summary: "One of the common languages of Earth Baseline."
+tags: [language, cantonese, earth]
+category: knowledge
+types: [language]
+language: cantonese
+effect: "This character is conversational in the Cantonese language and can speak it."

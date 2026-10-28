@@ -1,0 +1,10 @@
+id: khmer-written
+name: "Khmer (Written)"
+status: draft
+plane: earth
+summary: "Spoken in the Chinese Empire."
+tags: [language, khmer, earth, writing]
+category: knowledge
+types: [language]
+language: khmer
+effect: "This character can read and write the Khmer language."

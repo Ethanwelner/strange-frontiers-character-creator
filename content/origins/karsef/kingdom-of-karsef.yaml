@@ -1,0 +1,24 @@
+# Karsef’s lore is still coming soon on the site; the description only draws on Dreft’s history.
+id: kingdom-of-karsef
+name: "Kingdom of Karsef"
+status: placeholder
+plane: isekai
+region: karsef
+summary: "You grew up in the Kingdom of Karsef, across the Corsine Pass from Dreft, and an old rival of it."
+tags: [karsef, kingdom, isekai, mountains]
+lore: kingdom-of-karsef
+type: origin
+bonusPoints:
+  - { count: 1, group: physical }
+grants:
+  - { trait: karsef, rank: 1 }
+choices:
+  - choose: 1
+    from: language
+    note: "+1 Language"
+backgroundTraits:
+  - the-corsine-pass
+  - mountaineering
+  - dreft
+  - shield-wall
+  - military-tactics

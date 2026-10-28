@@ -1,0 +1,10 @@
+id: gujarati-written
+name: "Gujarati (Written)"
+status: draft
+plane: earth
+summary: "Spoken in the Kingdom of India."
+tags: [language, gujarati, earth, writing]
+category: knowledge
+types: [language]
+language: gujarati
+effect: "This character can read and write the Gujarati language."

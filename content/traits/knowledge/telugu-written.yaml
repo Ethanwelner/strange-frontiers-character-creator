@@ -1,0 +1,10 @@
+id: telugu-written
+name: "Telugu (Written)"
+status: draft
+plane: earth
+summary: "Spoken in the Kingdom of India."
+tags: [language, telugu, earth, writing]
+category: knowledge
+types: [language]
+language: telugu
+effect: "This character can read and write the Telugu language."

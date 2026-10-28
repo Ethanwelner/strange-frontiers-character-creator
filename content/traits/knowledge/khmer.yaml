@@ -1,0 +1,10 @@
+id: khmer
+name: "Khmer (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in the Chinese Empire."
+tags: [language, khmer, earth]
+category: knowledge
+types: [language]
+language: khmer
+effect: "This character is conversational in the Khmer language and can speak it."

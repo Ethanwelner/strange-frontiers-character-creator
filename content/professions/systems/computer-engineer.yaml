@@ -1,0 +1,16 @@
+id: computer-engineer
+name: "Computer Engineer"
+status: placeholder
+plane: earth
+summary: "Designs, builds and fixes the software and systems that run the settled systems."
+tags: [computers, engineering, technology, ai]
+type: profession
+grants:
+  - { trait: programming }
+  - { trait: research }
+  - { trait: computer-systems }
+  - { trait: mathematics }
+backgroundTraits:
+  - robotics
+  - artificial-intelligence
+  - cybernetics

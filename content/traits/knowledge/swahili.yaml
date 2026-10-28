@@ -1,0 +1,10 @@
+id: swahili
+name: "Swahili (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in Centafrica and Xanthus."
+tags: [language, swahili, earth]
+category: knowledge
+types: [language]
+language: swahili
+effect: "This character is conversational in the Swahili language and can speak it."

@@ -1,0 +1,10 @@
+id: vietnamese
+name: "Vietnamese (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in the Chinese Empire."
+tags: [language, vietnamese, earth]
+category: knowledge
+types: [language]
+language: vietnamese
+effect: "This character is conversational in the Vietnamese language and can speak it."

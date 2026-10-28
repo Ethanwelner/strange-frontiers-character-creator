@@ -1,0 +1,15 @@
+id: tanner
+name: "Tanner"
+status: placeholder
+plane: any
+summary: "Turns hides into leather, including the hides of stranger beasts when someone brings them in."
+tags: [craft, leather, trade]
+type: profession
+grants:
+  - { trait: craft-leatherworking }
+  - { trait: animal-husbandry }
+  - { trait: haggler }
+backgroundTraits:
+  - appraisal
+  - specimen-handling
+  - countryside-lore

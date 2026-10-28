@@ -1,0 +1,15 @@
+id: stonemason
+name: "Stonemason"
+status: placeholder
+plane: any
+summary: "Cuts and lays stone for walls, bridges and buildings, and knows which ones will still stand in a hundred years."
+tags: [craft, masonry, building]
+type: profession
+grants:
+  - { trait: craft-masonry }
+  - { trait: teamster }
+  - { trait: architecture }
+backgroundTraits:
+  - artist-sculpture
+  - mountaineering
+  - appraisal

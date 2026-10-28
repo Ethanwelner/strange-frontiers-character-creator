@@ -1,0 +1,10 @@
+id: tamil
+name: "Tamil (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in the Kingdom of India."
+tags: [language, tamil, earth]
+category: knowledge
+types: [language]
+language: tamil
+effect: "This character is conversational in the Tamil language and can speak it."

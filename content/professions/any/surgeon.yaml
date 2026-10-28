@@ -1,0 +1,14 @@
+id: surgeon
+name: "Surgeon"
+status: placeholder
+plane: any
+summary: "Operates to repair what medicine alone can’t, from battlefield wounds to failing organs."
+tags: [medicine, surgery, healing, science]
+type: profession
+grants:
+  - { trait: surgery }
+  - { trait: medical-aid }
+  - { trait: medicine }
+backgroundTraits:
+  - research
+  - cybernetics

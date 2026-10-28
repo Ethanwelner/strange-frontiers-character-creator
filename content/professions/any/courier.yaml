@@ -1,0 +1,16 @@
+id: courier
+name: "Courier"
+status: placeholder
+plane: any
+summary: "Carries messages and parcels, fast and unread, by whatever route gets them there."
+tags: [courier, travel, messages]
+type: profession
+grants:
+  - { trait: rider-basic-animals }
+  - { trait: survivalist }
+  - { trait: vigilance }
+  - { trait: local-history }
+backgroundTraits:
+  - concealment
+  - pilot-truck
+  - animal-husbandry

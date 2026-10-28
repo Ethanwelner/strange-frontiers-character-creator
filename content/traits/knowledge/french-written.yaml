@@ -1,0 +1,10 @@
+id: french-written
+name: "French (Written)"
+status: draft
+plane: earth
+summary: "Spoken in the Stellar Democratic Union and Centafrica."
+tags: [language, french, earth, writing]
+category: knowledge
+types: [language]
+language: french
+effect: "This character can read and write the French language."

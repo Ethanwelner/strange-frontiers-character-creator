@@ -1,0 +1,10 @@
+id: uyghur-written
+name: "Uyghur (Written)"
+status: draft
+plane: earth
+summary: "Spoken in the Ural Federation."
+tags: [language, uyghur, earth, writing]
+category: knowledge
+types: [language]
+language: uyghur
+effect: "This character can read and write the Uyghur language."

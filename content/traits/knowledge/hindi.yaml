@@ -1,0 +1,10 @@
+id: hindi
+name: "Hindi (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in the Kingdom of India and Kashgar."
+tags: [language, hindi, earth]
+category: knowledge
+types: [language]
+language: hindi
+effect: "This character is conversational in the Hindi language and can speak it."

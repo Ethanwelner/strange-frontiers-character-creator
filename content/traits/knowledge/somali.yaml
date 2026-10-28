@@ -1,0 +1,10 @@
+id: somali
+name: "Somali (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in Centafrica."
+tags: [language, somali, earth]
+category: knowledge
+types: [language]
+language: somali
+effect: "This character is conversational in the Somali language and can speak it."

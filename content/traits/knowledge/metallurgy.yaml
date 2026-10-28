@@ -1,0 +1,10 @@
+id: metallurgy
+name: "Metallurgy"
+status: draft
+plane: any
+summary: "Metals and alloys: how they are smelted, worked and tempered."
+tags: [metal, smithing, craft]
+category: knowledge
+ranked: true
+minStats: { memory: 3, logic: 2 }
+effect: "This character has knowledge of metallurgy and can be assumed to be familiar with common metals and alloys and how they are smelted, worked and tempered."

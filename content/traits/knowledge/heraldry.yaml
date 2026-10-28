@@ -1,0 +1,10 @@
+id: heraldry
+name: "Heraldry"
+status: draft
+plane: any
+summary: "The arms, mottos and lineages of noble houses, and what they say about who you are talking to."
+tags: [nobility, heraldry, court]
+category: knowledge
+ranked: true
+minStats: { memory: 3 }
+effect: "This character has knowledge of heraldry and can be assumed to be familiar with the arms, colors and lineages of noble houses and orders."

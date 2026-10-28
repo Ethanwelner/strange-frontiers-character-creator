@@ -1,0 +1,10 @@
+id: yoruba
+name: "Yoruba (Spoken)"
+status: draft
+plane: earth
+summary: "One of the common languages of Earth Baseline."
+tags: [language, yoruba, earth]
+category: knowledge
+types: [language]
+language: yoruba
+effect: "This character is conversational in the Yoruba language and can speak it."

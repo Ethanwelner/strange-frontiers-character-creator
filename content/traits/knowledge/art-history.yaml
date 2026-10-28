@@ -1,0 +1,10 @@
+id: art-history
+name: "Art History"
+status: draft
+plane: any
+summary: "Artists, movements and famous works, and what they are worth."
+tags: [art, culture, history]
+category: knowledge
+ranked: true
+minStats: { memory: 3 }
+effect: "This character has knowledge of art history and can be assumed to be familiar with notable artists, movements and works and their value."

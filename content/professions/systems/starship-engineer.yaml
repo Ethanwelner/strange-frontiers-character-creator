@@ -1,0 +1,16 @@
+id: starship-engineer
+name: "Starship Engineer"
+status: placeholder
+plane: earth
+summary: "Keeps starships running: reactors, drives, life support, and everything that rattles in between."
+tags: [engineering, starships, technology, space]
+type: profession
+grants:
+  - { trait: starship-engineering }
+  - { trait: tinkerer }
+  - { trait: exotic-materials }
+  - { trait: ports-and-stations }
+backgroundTraits:
+  - programming
+  - cargo-handling
+  - robotics

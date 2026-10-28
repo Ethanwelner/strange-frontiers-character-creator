@@ -1,0 +1,10 @@
+id: bengali
+name: "Bengali (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in the Kingdom of India."
+tags: [language, bengali, earth]
+category: knowledge
+types: [language]
+language: bengali
+effect: "This character is conversational in the Bengali language and can speak it."

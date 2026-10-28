@@ -1,0 +1,10 @@
+id: oromo-written
+name: "Oromo (Written)"
+status: draft
+plane: earth
+summary: "Spoken in Centafrica."
+tags: [language, oromo, earth, writing]
+category: knowledge
+types: [language]
+language: oromo
+effect: "This character can read and write the Oromo language."

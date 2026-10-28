@@ -1,0 +1,10 @@
+id: odia
+name: "Odia (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in the Kingdom of India."
+tags: [language, odia, earth]
+category: knowledge
+types: [language]
+language: odia
+effect: "This character is conversational in the Odia language and can speak it."

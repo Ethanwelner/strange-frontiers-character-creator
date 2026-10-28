@@ -1,0 +1,10 @@
+id: computer-systems
+name: "Computer Systems"
+status: draft
+plane: earth
+summary: "The networks, software and hardware that run the settled systems."
+tags: [computers, technology, networks]
+category: knowledge
+ranked: true
+minStats: { memory: 3, logic: 3 }
+effect: "This character has knowledge of computer systems and can be assumed to be familiar with common networks, software and hardware and how they are secured."

@@ -28,7 +28,7 @@ Every tab's Description is `summary`, Tags is `tags`, and Notes is for anything 
 
 | Sheet column | YAML |
 |---|---|
-| Plane, Region, Lore | `plane`, `region`, `lore`. Plane is Earth, Isekai or Any (lowercase in YAML). Every Trait tab has a Plane column after Name: a Trait is Earth or Isekai only when it names that setting's places, peoples, institutions, languages, technology or magic, and Any otherwise |
+| Plane, Region, Lore | `plane`, `region`, `lore`. Plane is Earth, Isekai or Any (lowercase in YAML); the Sheet's "Settled Systems" is `earth`. A package's Region is The Systems (no `region`), Any (no `region`) or a nation or kingdom (its slug, like `union-of-texas`). Every Trait tab has a Plane column after Name: a Trait is Earth or Isekai only when it names that setting's places, peoples, institutions, languages, technology or magic, and Any otherwise |
 | Kinds: Features | `features`, one `name: description` per line |
 | Kinds: Trait Access, Free Points, Max Total | `traitAccess`, `freePoints`, `maxTotal` |
 | Packages: Bonus | `bonusPoints`, like `[{ count: 1, group: physical }]`: free points the player places in that group's focus stats |
@@ -36,9 +36,9 @@ Every tab's Description is `summary`, Tags is `tags`, and Notes is for anything 
 | Kinds: Grants, Resources | `grants` (Traits every character of the Kind holds, like Magical Heritage), `resources` (like `{ mp: 6 }`) |
 | Kinds: Physical / Social / Mental (bonus/max) | `stats`, from lines like "Endurance +1/15" |
 | Packages: Grants | `grants`; "Knowledge: X (1)" is Trait `x` at rank 1 |
-| Packages: Choices | `choices`, as their `note` |
+| Packages: Choices | `choices`, with the Sheet text as their `note`: "+1 Contact" is `from: contact`, "+1 Language" is `from: language`, "+1 Language (Spoken & Written)" is `from: spoken-and-written-language` |
 | Packages: Background Traits | `backgroundTraits` |
-| Traits: Category | `category`; Language rows are `knowledge` with `types: [language]` |
+| Traits: Category | `category`; Language rows are `knowledge` with `types: [language]`. "X (Spoken)" has id `x` and "X (Written)" `x-written`, both with `language: x`, which pairs them for spoken-and-written choices |
 | Traits: Ranked, Conveyed | `ranked`, `conveyed` |
 | Traits: Effect | `effect` |
 | Traits: Stat Requirements | stats go in `minStats` (focus or core: "Power 3", "Physical 5"), a Trait's name in `prerequisites`, "Any Pilot skill" in `prerequisiteTags: [pilot]`, anything else in `rpRequirement` |

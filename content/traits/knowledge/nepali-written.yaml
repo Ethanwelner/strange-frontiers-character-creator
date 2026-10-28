@@ -1,0 +1,10 @@
+id: nepali-written
+name: "Nepali (Written)"
+status: draft
+plane: earth
+summary: "Spoken in the Kingdom of India."
+tags: [language, nepali, earth, writing]
+category: knowledge
+types: [language]
+language: nepali
+effect: "This character can read and write the Nepali language."

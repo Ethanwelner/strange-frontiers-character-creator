@@ -1,0 +1,10 @@
+id: wielder-pistol
+name: "Wielder: Pistol"
+status: draft
+plane: any
+summary: "Fighting with, and maintaining, a pistol."
+tags: [combat, firearms, sidearm]
+category: skill
+ranked: true
+minStats: { grace: 3, intuition: 2 }
+effect: "This character is capable of performing the basic tasks of maintaining a Pistol without a skill check. Rank *5 added to skill check rolls involving a Pistol."

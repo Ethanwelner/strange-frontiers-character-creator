@@ -1,0 +1,10 @@
+id: telugu
+name: "Telugu (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in the Kingdom of India."
+tags: [language, telugu, earth]
+category: knowledge
+types: [language]
+language: telugu
+effect: "This character is conversational in the Telugu language and can speak it."

@@ -1,0 +1,10 @@
+id: thai
+name: "Thai (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in the Chinese Empire."
+tags: [language, thai, earth]
+category: knowledge
+types: [language]
+language: thai
+effect: "This character is conversational in the Thai language and can speak it."

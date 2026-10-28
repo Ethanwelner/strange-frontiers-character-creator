@@ -1,0 +1,10 @@
+id: lingala-written
+name: "Lingala (Written)"
+status: draft
+plane: earth
+summary: "Spoken in Centafrica and Xanthus."
+tags: [language, lingala, earth, writing]
+category: knowledge
+types: [language]
+language: lingala
+effect: "This character can read and write the Lingala language."

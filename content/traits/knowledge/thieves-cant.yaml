@@ -1,0 +1,10 @@
+id: thieves-cant
+name: "Thieves' Cant (Spoken)"
+status: draft
+plane: any
+summary: "The coded slang criminals use to talk business in plain hearing."
+tags: [language, crime, underworld]
+category: knowledge
+types: [language]
+language: thieves-cant
+effect: "This character can speak and understand Thieves' Cant, passing hidden messages in ordinary conversation."

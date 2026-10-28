@@ -1,0 +1,10 @@
+id: sinhala-written
+name: "Sinhala (Written)"
+status: draft
+plane: earth
+summary: "Spoken in the Kingdom of India."
+tags: [language, sinhala, earth, writing]
+category: knowledge
+types: [language]
+language: sinhala
+effect: "This character can read and write the Sinhala language."

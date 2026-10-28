@@ -1,0 +1,10 @@
+id: arabic
+name: "Arabic (Spoken)"
+status: draft
+plane: earth
+summary: "One of the common languages of Earth Baseline."
+tags: [language, arabic, earth]
+category: knowledge
+types: [language]
+language: arabic
+effect: "This character is conversational in the Arabic language and can speak it."

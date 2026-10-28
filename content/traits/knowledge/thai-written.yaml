@@ -1,0 +1,10 @@
+id: thai-written
+name: "Thai (Written)"
+status: draft
+plane: earth
+summary: "Spoken in the Chinese Empire."
+tags: [language, thai, earth, writing]
+category: knowledge
+types: [language]
+language: thai
+effect: "This character can read and write the Thai language."

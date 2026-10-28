@@ -1,0 +1,20 @@
+id: bard
+name: "Bard"
+status: placeholder
+plane: any
+summary: "Travels from town to town with songs and stories, carrying the news along with them."
+tags: [bard, music, performer, stories]
+type: profession
+grants:
+  - { trait: performer-music }
+  - { trait: smooth-talker }
+  - { trait: music }
+  - { trait: local-folklore }
+choices:
+  - choose: 1
+    from: language
+    note: "+1 Language"
+backgroundTraits:
+  - sleight-of-hand
+  - local-history
+  - heraldry

@@ -1,0 +1,11 @@
+id: traveling-troupe
+name: "Traveling Troupe"
+status: placeholder
+plane: any
+summary: "Grew up on the road with a company of performers, never in one town for long."
+tags: [performer, travel, troupe]
+type: past
+grants:
+  - { trait: performer-music }
+  - { trait: smooth-talker }
+  - { trait: sleight-of-hand }

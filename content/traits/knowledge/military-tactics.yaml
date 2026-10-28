@@ -1,0 +1,10 @@
+id: military-tactics
+name: "Military Tactics"
+status: draft
+plane: any
+summary: "How battles are fought: formations, maneuvers and command."
+tags: [military, tactics, combat]
+category: knowledge
+ranked: true
+minStats: { memory: 3, logic: 3 }
+effect: "This character has knowledge of military tactics and can be assumed to be familiar with formations, maneuvers, chains of command and how battles are fought."

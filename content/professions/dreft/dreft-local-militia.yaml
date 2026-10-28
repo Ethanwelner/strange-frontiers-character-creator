@@ -1,0 +1,18 @@
+id: dreft-local-militia
+name: "Dreft Local Militia"
+status: placeholder
+plane: isekai
+region: dreft
+summary: "Called up from a town or village to defend it from bandits and monsters when the crown’s soldiers are far away."
+tags: [militia, military, village, dreft]
+type: profession
+grants:
+  - { trait: shield-wall }
+  - { trait: vigilance }
+  - { trait: local-history }
+  - { trait: countryside-lore }
+backgroundTraits:
+  - wielder-war-axe
+  - wielder-longsword
+  - tracker
+  - military-tactics

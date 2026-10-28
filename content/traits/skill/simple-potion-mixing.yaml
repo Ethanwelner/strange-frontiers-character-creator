@@ -1,0 +1,10 @@
+id: simple-potion-mixing
+name: "Simple Potion Mixing"
+status: draft
+plane: isekai
+summary: "Brewing simple potions from a known recipe."
+tags: [potions, alchemy, herbs]
+category: skill
+ranked: true
+minStats: { memory: 3, intuition: 3 }
+effect: "This character can brew simple potions, such as healing draughts and sleeping tonics, from a known recipe and the right ingredients without a skill check. Rank *10 added to skill check rolls involving brewing potions."

@@ -1,0 +1,10 @@
+id: dutch
+name: "Dutch (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in the Stellar Democratic Union."
+tags: [language, dutch, earth]
+category: knowledge
+types: [language]
+language: dutch
+effect: "This character is conversational in the Dutch language and can speak it."

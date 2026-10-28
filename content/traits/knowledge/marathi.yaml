@@ -1,0 +1,10 @@
+id: marathi
+name: "Marathi (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in the Kingdom of India."
+tags: [language, marathi, earth]
+category: knowledge
+types: [language]
+language: marathi
+effect: "This character is conversational in the Marathi language and can speak it."

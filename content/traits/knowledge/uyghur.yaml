@@ -1,0 +1,10 @@
+id: uyghur
+name: "Uyghur (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in the Ural Federation."
+tags: [language, uyghur, earth]
+category: knowledge
+types: [language]
+language: uyghur
+effect: "This character is conversational in the Uyghur language and can speak it."

@@ -1,0 +1,10 @@
+id: the-lunar-industrial-syndicate
+name: "The Lunar Industrial Syndicate"
+status: draft
+plane: earth
+summary: "The Eighth Lunar Industrial Syndicate: a business cartel grown into a nation, with shareholders and Citizens."
+tags: [lunar-industrial-syndicate, luna, corporate]
+category: knowledge
+ranked: true
+minStats: { memory: 3 }
+effect: "This character has knowledge of the Lunar Industrial Syndicate and can be assumed to be familiar with its board, holdings, territories and corporate politics."
