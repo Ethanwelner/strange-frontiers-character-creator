@@ -34,7 +34,7 @@ export function PackageGrants({ pkg }: { pkg: BackgroundPackage }) {
           <span className="label">Bonus</span>
           {pkg.bonusPoints.map((b) => (
             <Chip key={b.group} tone="accent">
-              +{b.count} {title(b.group)} {b.count === 1 ? "point" : "points"}
+              +{b.count} {title(b.group)} focus {b.count === 1 ? "point" : "points"}
             </Chip>
           ))}
           {Object.entries(pkg.coreBonus).map(([g, n]) => (
