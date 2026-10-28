@@ -3,9 +3,9 @@ name: "Chinese Imperial Law"
 status: placeholder
 plane: earth
 region: chinese-empire
-summary: "The laws of the Chinese Empire, written and as the syndicates actually apply them."
+summary: "The laws of the Empire of China, written and as the syndicates actually apply them."
 tags: [law, chinese-empire]
 category: knowledge
 ranked: true
 minStats: { memory: 3 }
-effect: "This character has knowledge of Chinese Imperial Law and can be assumed to be familiar with the laws and courts of the Chinese Empire."
+effect: "This character has knowledge of Chinese Imperial Law and can be assumed to be familiar with the laws and courts of the Empire of China."
