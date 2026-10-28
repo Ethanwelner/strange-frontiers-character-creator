@@ -11,3 +11,6 @@ grants:
   - { trait: planar-exploration }
   - { trait: paraphysics }
   - { trait: tinkerer }
+backgroundTraits:
+  - physics
+  - engineering

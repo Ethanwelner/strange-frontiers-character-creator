@@ -1,0 +1,10 @@
+id: security-systems
+name: "Security Systems"
+status: draft
+plane: earth
+summary: "Locks, alarms, cameras and checkpoints, and how they are run and beaten."
+tags: [security, technology, surveillance]
+category: knowledge
+ranked: true
+minStats: { memory: 3, logic: 3 }
+effect: "This character has knowledge of security systems and can be assumed to be familiar with common locks, alarms, surveillance and access controls, and their weaknesses."

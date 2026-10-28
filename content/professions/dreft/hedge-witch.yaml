@@ -13,3 +13,7 @@ grants:
   - { trait: countryside-lore }
   - { trait: magic-on-isekai }
   - { trait: herbalism }
+backgroundTraits:
+  - animal-lore
+  - wilderness-lore
+  - biology

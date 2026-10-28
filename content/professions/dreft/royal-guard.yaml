@@ -11,3 +11,8 @@ grants:
   - { trait: vigilance }
   - { trait: court-etiquette }
   - { trait: aristocracy }
+backgroundTraits:
+  - weapons
+  - law-enforcement
+  - politics
+  - high-society

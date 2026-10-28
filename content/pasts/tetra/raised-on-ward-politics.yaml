@@ -11,3 +11,6 @@ grants:
   - { trait: liquid-democracy }
   - { trait: schemer }
   - { trait: smooth-talker }
+backgroundTraits:
+  - politics
+  - bureaucracy

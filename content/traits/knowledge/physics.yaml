@@ -1,0 +1,10 @@
+id: physics
+name: "Physics"
+status: draft
+plane: any
+summary: "How the physical world works: motion, energy, light and matter."
+tags: [science, physics]
+category: knowledge
+ranked: true
+minStats: { memory: 3, logic: 4 }
+effect: "This character has knowledge of physics and can be assumed to be familiar with motion, energy, forces, light and matter, and the math that describes them."

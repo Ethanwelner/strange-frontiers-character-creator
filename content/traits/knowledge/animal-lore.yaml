@@ -1,0 +1,10 @@
+id: animal-lore
+name: "Animal Lore"
+status: draft
+plane: any
+summary: "Common animals: their habits, needs, dangers and uses."
+tags: [animals, nature]
+category: knowledge
+ranked: true
+minStats: { memory: 2, intuition: 2 }
+effect: "This character has knowledge of animals and can be assumed to be familiar with the habits, needs, dangers and uses of common domestic and wild animals."

@@ -1,0 +1,10 @@
+id: theater
+name: "Theater"
+status: draft
+plane: any
+summary: "Plays, performers, stagecraft and the people who put on a show."
+tags: [theater, performance, culture]
+category: knowledge
+ranked: true
+minStats: { memory: 2, persuasion: 2 }
+effect: "This character has knowledge of theater and can be assumed to be familiar with famous plays and performers, stagecraft, and how a performance is put together."

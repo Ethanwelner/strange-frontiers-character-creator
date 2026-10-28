@@ -9,3 +9,7 @@ grants:
   - { trait: performer-music }
   - { trait: smooth-talker }
   - { trait: sleight-of-hand }
+backgroundTraits:
+  - theater
+  - literature
+  - geography

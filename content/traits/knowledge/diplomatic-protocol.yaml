@@ -1,0 +1,10 @@
+id: diplomatic-protocol
+name: "Diplomatic Protocol"
+status: draft
+plane: any
+summary: "The rules of formal meetings between powers: precedence, ceremony and what not to say."
+tags: [diplomacy, etiquette, politics]
+category: knowledge
+ranked: true
+minStats: { memory: 3, empathy: 3 }
+effect: "This character has knowledge of diplomatic protocol and can be assumed to be familiar with the ceremonies, forms of address and unwritten rules of formal diplomacy."

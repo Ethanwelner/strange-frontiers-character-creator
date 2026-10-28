@@ -1,0 +1,10 @@
+id: history
+name: "History"
+status: draft
+plane: any
+summary: "The broad sweep of the past: wars, dynasties, discoveries and how the present came to be."
+tags: [history, scholar]
+category: knowledge
+ranked: true
+minStats: { memory: 4 }
+effect: "This character has knowledge of history and can be assumed to be familiar with the major events, people and turning points of their world’s past."

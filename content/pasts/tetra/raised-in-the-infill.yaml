@@ -11,3 +11,6 @@ grants:
   - { trait: ark-life }
   - { trait: tinkerer }
   - { trait: concealment }
+backgroundTraits:
+  - spacefaring
+  - engineering

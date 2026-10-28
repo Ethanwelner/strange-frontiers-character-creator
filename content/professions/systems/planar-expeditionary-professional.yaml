@@ -12,3 +12,8 @@ grants:
   - { trait: planar-exploration }
   - { trait: the-explorers-lodge }
   - { trait: explorers-lodge-membership }
+backgroundTraits:
+  - wilderness-lore
+  - geography
+  - navigation
+  - biology

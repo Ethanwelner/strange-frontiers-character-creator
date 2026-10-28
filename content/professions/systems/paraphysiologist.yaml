@@ -10,3 +10,7 @@ grants:
   - { trait: parabiology }
   - { trait: parazoology }
   - { trait: specimen-handling }
+backgroundTraits:
+  - biology
+  - chemistry
+  - medicine

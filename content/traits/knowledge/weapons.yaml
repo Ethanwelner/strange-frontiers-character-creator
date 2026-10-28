@@ -1,0 +1,10 @@
+id: weapons
+name: "Weapons"
+status: draft
+plane: any
+summary: "Weapons of every kind: how they work, what they do, and how they are made and cared for."
+tags: [weapons, combat, military]
+category: knowledge
+ranked: true
+minStats: { memory: 3 }
+effect: "This character has knowledge of weapons and can be assumed to be familiar with common weapons, how they work and are maintained, and what they can do."

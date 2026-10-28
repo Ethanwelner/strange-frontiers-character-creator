@@ -12,3 +12,7 @@ grants:
   - { trait: tracker }
   - { trait: monsters-of-isekai }
   - { trait: the-kings-woods }
+backgroundTraits:
+  - animal-lore
+  - wilderness-lore
+  - weapons

@@ -9,3 +9,7 @@ grants:
   - { trait: courtly-manners }
   - { trait: court-etiquette }
   - { trait: heraldry }
+backgroundTraits:
+  - high-society
+  - politics
+  - history

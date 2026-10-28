@@ -1,0 +1,10 @@
+id: biology
+name: "Biology"
+status: draft
+plane: any
+summary: "Living things: how they grow, work, sicken and die."
+tags: [science, biology, life]
+category: knowledge
+ranked: true
+minStats: { memory: 3, logic: 2 }
+effect: "This character has knowledge of biology and can be assumed to be familiar with how living things grow, function, reproduce and interact."

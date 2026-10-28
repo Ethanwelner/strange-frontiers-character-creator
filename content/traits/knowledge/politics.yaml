@@ -1,0 +1,10 @@
+id: politics
+name: "Politics"
+status: draft
+plane: any
+summary: "How power works: factions, alliances, elections, rivalries and who owes whom."
+tags: [politics, power, intrigue]
+category: knowledge
+ranked: true
+minStats: { memory: 3, intuition: 3 }
+effect: "This character has knowledge of politics and can be assumed to be familiar with how power is won, held and traded, and the factions and figures that matter."

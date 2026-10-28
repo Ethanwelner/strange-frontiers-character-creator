@@ -13,3 +13,8 @@ grants:
   - { trait: relic-handling }
   - { trait: magic-on-isekai }
   - { trait: dreftian-law }
+backgroundTraits:
+  - history
+  - literature
+  - bureaucracy
+  - chemistry

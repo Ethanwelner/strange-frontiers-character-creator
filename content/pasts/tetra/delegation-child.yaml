@@ -15,3 +15,7 @@ choices:
   - choose: 1
     from: language
     note: "+1 Language"
+backgroundTraits:
+  - diplomatic-protocol
+  - politics
+  - high-society

@@ -1,0 +1,10 @@
+id: starships
+name: "Starships"
+status: draft
+plane: earth
+summary: "The ships of the settled systems: their classes, makers, capabilities and quirks."
+tags: [starships, space, technology]
+category: knowledge
+ranked: true
+minStats: { memory: 3, logic: 2 }
+effect: "This character has knowledge of starships and can be assumed to be familiar with the classes, makers, capabilities and common faults of the starships of the systems."

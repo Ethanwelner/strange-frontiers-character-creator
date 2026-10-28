@@ -11,3 +11,6 @@ grants:
   - { trait: countryside-lore }
   - { trait: local-folklore }
   - { trait: teamster }
+backgroundTraits:
+  - animal-lore
+  - wilderness-lore

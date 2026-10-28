@@ -11,3 +11,6 @@ grants:
   - { trait: concealment }
   - { trait: the-drovus-empire }
   - { trait: the-sunrise-princedoms }
+backgroundTraits:
+  - bureaucracy
+  - geography

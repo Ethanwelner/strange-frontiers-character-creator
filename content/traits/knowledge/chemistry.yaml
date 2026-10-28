@@ -1,0 +1,10 @@
+id: chemistry
+name: "Chemistry"
+status: draft
+plane: any
+summary: "What things are made of and how they react."
+tags: [science, chemistry]
+category: knowledge
+ranked: true
+minStats: { memory: 3, logic: 3 }
+effect: "This character has knowledge of chemistry and can be assumed to be familiar with common substances, how they react, and how to handle them safely."

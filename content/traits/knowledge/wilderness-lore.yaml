@@ -1,0 +1,10 @@
+id: wilderness-lore
+name: "Wilderness Lore"
+status: draft
+plane: any
+summary: "The wild: terrain, weather, edible plants and how not to die out there."
+tags: [wilderness, survival, nature]
+category: knowledge
+ranked: true
+minStats: { memory: 2, intuition: 3 }
+effect: "This character has knowledge of the wilderness and can be assumed to be familiar with terrain, weather, edible and dangerous plants, and the signs that keep travelers alive."

@@ -1,0 +1,10 @@
+id: commerce
+name: "Commerce"
+status: draft
+plane: any
+summary: "Trade and business: markets, prices, contracts and money."
+tags: [trade, business, money]
+category: knowledge
+ranked: true
+minStats: { memory: 3, logic: 2 }
+effect: "This character has knowledge of commerce and can be assumed to be familiar with how markets and businesses work, fair prices, contracts and the movement of money."

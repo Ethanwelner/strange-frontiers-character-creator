@@ -1,0 +1,10 @@
+id: bureaucracy
+name: "Bureaucracy"
+status: draft
+plane: any
+summary: "Officialdom: forms, permits, departments, and how to get anything done through them."
+tags: [bureaucracy, government, paperwork]
+category: knowledge
+ranked: true
+minStats: { memory: 3, logic: 2 }
+effect: "This character has knowledge of bureaucracy and can be assumed to be familiar with how officials and departments work, which forms and permits are needed, and who to ask."

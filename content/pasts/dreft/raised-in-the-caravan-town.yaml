@@ -11,3 +11,7 @@ grants:
   - { trait: sleight-of-hand }
   - { trait: caravan-routes }
   - { trait: earth-baseline-customs }
+backgroundTraits:
+  - commerce
+  - geography
+  - animal-lore

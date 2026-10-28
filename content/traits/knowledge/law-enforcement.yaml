@@ -1,0 +1,10 @@
+id: law-enforcement
+name: "Law Enforcement"
+status: draft
+plane: any
+summary: "How police and guards work: procedures, patrols, evidence and arrests."
+tags: [law, police, enforcement]
+category: knowledge
+ranked: true
+minStats: { memory: 3, intuition: 2 }
+effect: "This character has knowledge of law enforcement and can be assumed to be familiar with police and guard procedures, how evidence is handled, and how arrests and investigations proceed."

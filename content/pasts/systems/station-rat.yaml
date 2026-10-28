@@ -9,3 +9,6 @@ grants:
   - { trait: tinkerer }
   - { trait: concealment }
   - { trait: ports-and-stations }
+backgroundTraits:
+  - spacefaring
+  - engineering

@@ -16,3 +16,9 @@ choices:
   - choose: 1
     from: contact
     note: "+1 Contact"
+backgroundTraits:
+  - diplomatic-protocol
+  - politics
+  - history
+  - bureaucracy
+  - high-society
