@@ -1,0 +1,16 @@
+id: station-maintenance
+name: "Station Maintenance"
+status: placeholder
+plane: earth
+summary: "Keeps a station or Ark habitable: air, water, power and the endless repairs nobody notices until they stop."
+tags: [maintenance, station, ark, technology]
+type: profession
+grants:
+  - { trait: tinkerer }
+  - { trait: cargo-handling }
+  - { trait: ark-life }
+  - { trait: ports-and-stations }
+backgroundTraits:
+  - starship-engineering
+  - programming
+  - concealment

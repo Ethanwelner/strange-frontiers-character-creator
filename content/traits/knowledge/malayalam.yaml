@@ -1,0 +1,10 @@
+id: malayalam
+name: "Malayalam (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in the Kingdom of India."
+tags: [language, malayalam, earth]
+category: knowledge
+types: [language]
+language: malayalam
+effect: "This character is conversational in the Malayalam language and can speak it."

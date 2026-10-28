@@ -1,0 +1,10 @@
+id: kinyarwanda
+name: "Kinyarwanda (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in Centafrica."
+tags: [language, kinyarwanda, earth]
+category: knowledge
+types: [language]
+language: kinyarwanda
+effect: "This character is conversational in the Kinyarwanda language and can speak it."

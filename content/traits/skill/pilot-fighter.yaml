@@ -1,0 +1,10 @@
+id: pilot-fighter
+name: "Pilot: Fighter"
+status: draft
+plane: earth
+summary: "Flying fighters in and out of combat."
+tags: [pilot, fighter, military, space]
+category: skill
+ranked: true
+minStats: { grace: 5, intuition: 4, memory: 4 }
+effect: "This character is capable of piloting a fighter in simple scenarios and describing its basic functions and controls without a skill check. Rank *10 added to skill check rolls involving fighter piloting."

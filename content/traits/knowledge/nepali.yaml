@@ -1,0 +1,10 @@
+id: nepali
+name: "Nepali (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in the Kingdom of India."
+tags: [language, nepali, earth]
+category: knowledge
+types: [language]
+language: nepali
+effect: "This character is conversational in the Nepali language and can speak it."

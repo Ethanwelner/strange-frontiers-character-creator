@@ -1,0 +1,11 @@
+id: station-rat
+name: "Station Rat"
+status: placeholder
+plane: earth
+summary: "Grew up in the corridors and crawlspaces of a station, where everyone knows how to fix things and where not to go."
+tags: [station, space, urban, tech]
+type: past
+grants:
+  - { trait: tinkerer }
+  - { trait: concealment }
+  - { trait: ports-and-stations }

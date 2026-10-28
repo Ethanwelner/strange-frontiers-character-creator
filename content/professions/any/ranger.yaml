@@ -1,0 +1,17 @@
+id: ranger
+name: "Ranger"
+status: placeholder
+plane: any
+summary: "Patrols the wild places, tracking dangerous beasts and guiding travelers through."
+tags: [ranger, wilderness, hunting]
+type: profession
+grants:
+  - { trait: tracker }
+  - { trait: survivalist }
+  - { trait: vigilance }
+  - { trait: countryside-lore }
+backgroundTraits:
+  - ambusher
+  - wielder-musket
+  - rider-basic-animals
+  - animal-husbandry

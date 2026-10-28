@@ -1,0 +1,10 @@
+id: investigation
+name: "Investigation"
+status: draft
+plane: any
+summary: "Gathering evidence, reading a scene and following leads."
+tags: [investigation, law, detective]
+category: skill
+ranked: true
+minStats: { intuition: 4, logic: 3, memory: 2 }
+effect: "This character is capable of searching a scene and following obvious leads without a skill check. Rank *10 added to skill check rolls involving investigating crimes and mysteries."

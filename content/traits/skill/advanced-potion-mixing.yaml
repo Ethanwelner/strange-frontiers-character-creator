@@ -1,0 +1,11 @@
+id: advanced-potion-mixing
+name: "Advanced Potion Mixing"
+status: draft
+plane: isekai
+summary: "Brewing complex, potent potions, and working out new ones."
+tags: [potions, alchemy, expert]
+category: skill
+mastery: true
+minStats: { memory: 6, intuition: 6, logic: 4 }
+prerequisites: [simple-potion-mixing]
+effect: "This character can brew complex and potent potions, and can work out a new recipe from its ingredients’ properties. This character can request advantage on skill checks involving brewing potions."

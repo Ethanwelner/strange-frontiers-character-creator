@@ -1,0 +1,26 @@
+id: the-lunar-industrial-syndicate
+name: "The Lunar Industrial Syndicate"
+status: placeholder
+plane: earth
+region: lunar-industrial-syndicate
+summary: "You grew up a “Citizen” of the Eighth Lunar Industrial Syndicate, on Earth, Luna or one of its outposts, in a nation run for its shareholders first."
+tags: [lunar-industrial-syndicate, earth, luna, corporate]
+lore: lunar-industrial-syndicate
+type: origin
+bonusPoints:
+  - { count: 1, group: mental }
+grants:
+  - { trait: the-lunar-industrial-syndicate, rank: 1 }
+  - { trait: english }
+  - { trait: english-written }
+choices:
+  - choose: 1
+    from: language
+    note: "+1 Language"
+backgroundTraits:
+  - portuguese
+  - portuguese-written
+  - the-corporate-syndicates
+  - ark-life
+  - starship-engineering
+  - cargo-handling

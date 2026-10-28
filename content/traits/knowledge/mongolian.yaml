@@ -1,0 +1,10 @@
+id: mongolian
+name: "Mongolian (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in the Ural Federation."
+tags: [language, mongolian, earth]
+category: knowledge
+types: [language]
+language: mongolian
+effect: "This character is conversational in the Mongolian language and can speak it."

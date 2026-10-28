@@ -1,0 +1,10 @@
+id: javanese-written
+name: "Javanese (Written)"
+status: draft
+plane: earth
+summary: "Spoken in the Chinese Empire."
+tags: [language, javanese, earth, writing]
+category: knowledge
+types: [language]
+language: javanese
+effect: "This character can read and write the Javanese language."

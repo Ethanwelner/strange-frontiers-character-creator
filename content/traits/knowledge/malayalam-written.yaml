@@ -1,0 +1,10 @@
+id: malayalam-written
+name: "Malayalam (Written)"
+status: draft
+plane: earth
+summary: "Spoken in the Kingdom of India."
+tags: [language, malayalam, earth, writing]
+category: knowledge
+types: [language]
+language: malayalam
+effect: "This character can read and write the Malayalam language."

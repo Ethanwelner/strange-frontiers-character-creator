@@ -1,0 +1,10 @@
+id: programming
+name: "Programming"
+status: draft
+plane: earth
+summary: "Writing, reading and breaking software."
+tags: [computers, programming, technology]
+category: skill
+ranked: true
+minStats: { logic: 4, memory: 3, intuition: 2 }
+effect: "This character is capable of writing and debugging simple software and reading other people’s code without a skill check. Rank *10 added to skill check rolls involving programming and hacking."

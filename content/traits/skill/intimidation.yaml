@@ -1,0 +1,10 @@
+id: intimidation
+name: "Intimidation"
+status: draft
+plane: any
+summary: "Getting what you want through threats and presence."
+tags: [intimidation, social, threat]
+category: skill
+ranked: true
+minStats: { demeanor: 3, power: 3 }
+effect: "This character is capable of making a credible threat without a skill check. Rank *10 added to skill check rolls involving intimidation."

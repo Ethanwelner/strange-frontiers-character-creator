@@ -1,0 +1,10 @@
+id: sinhala
+name: "Sinhala (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in the Kingdom of India."
+tags: [language, sinhala, earth]
+category: knowledge
+types: [language]
+language: sinhala
+effect: "This character is conversational in the Sinhala language and can speak it."

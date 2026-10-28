@@ -1,0 +1,10 @@
+id: alchemy
+name: "Alchemy"
+status: draft
+plane: isekai
+summary: "The properties of substances and how they combine, the theory behind every potion."
+tags: [alchemy, potions, science]
+category: knowledge
+ranked: true
+minStats: { memory: 4, logic: 3, intuition: 2 }
+effect: "This character has knowledge of alchemy and can be assumed to be familiar with the properties of common reagents and how they combine in potions."

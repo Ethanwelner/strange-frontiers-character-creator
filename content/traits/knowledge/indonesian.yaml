@@ -1,0 +1,10 @@
+id: indonesian
+name: "Indonesian (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in the Chinese Empire."
+tags: [language, indonesian, earth]
+category: knowledge
+types: [language]
+language: indonesian
+effect: "This character is conversational in the Indonesian language and can speak it."

@@ -1,0 +1,10 @@
+id: the-bureau-of-planar-management
+name: "The Bureau of Planar Management"
+status: draft
+plane: earth
+summary: "The Bureau that licenses, inspects and polices planar exploration across the systems."
+tags: [bureau, planes, law, tetra]
+category: knowledge
+ranked: true
+minStats: { memory: 3 }
+effect: "This character has knowledge of the Bureau of Planar Management and can be assumed to be familiar with its regulations, inspections, offices and officers."

@@ -1,0 +1,10 @@
+id: malay
+name: "Malay (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in the Chinese Empire."
+tags: [language, malay, earth]
+category: knowledge
+types: [language]
+language: malay
+effect: "This character is conversational in the Malay language and can speak it."

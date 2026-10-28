@@ -1,0 +1,22 @@
+id: spy
+name: "Spy"
+status: placeholder
+plane: any
+summary: "Gathers secrets for a government, a noble house, a guild or a corporation, and is rarely who they say they are."
+tags: [spy, intrigue, secrets]
+type: profession
+grants:
+  - { trait: concealment }
+  - { trait: disguise }
+  - { trait: schemer }
+  - { trait: smooth-talker }
+choices:
+  - choose: 1
+    from: language
+    note: "+1 Language"
+backgroundTraits:
+  - investigation
+  - sleight-of-hand
+  - lockpicking
+  - thieves-cant
+  - heraldry

@@ -1,0 +1,17 @@
+id: knight
+name: "Knight"
+status: placeholder
+plane: any
+summary: "A sworn warrior of a noble house or order, trained to fight on horseback and to carry its honor."
+tags: [knight, nobility, military]
+type: profession
+grants:
+  - { trait: wielder-longsword }
+  - { trait: shield-wall }
+  - { trait: rider-basic-animals }
+  - { trait: courtly-manners }
+  - { trait: heraldry }
+backgroundTraits:
+  - court-etiquette
+  - military-tactics
+  - vigilance

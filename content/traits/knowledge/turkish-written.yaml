@@ -1,0 +1,10 @@
+id: turkish-written
+name: "Turkish (Written)"
+status: draft
+plane: earth
+summary: "One of the common languages of Earth Baseline."
+tags: [language, turkish, earth, writing]
+category: knowledge
+types: [language]
+language: turkish
+effect: "This character can read and write the Turkish language."

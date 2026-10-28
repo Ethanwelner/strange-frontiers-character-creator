@@ -1,0 +1,17 @@
+id: apothecary
+name: "Apothecary"
+status: placeholder
+plane: any
+summary: "Mixes remedies and simple potions for the sick and injured, and sells them over the counter."
+tags: [potions, healing, herbs, trade]
+type: profession
+grants:
+  - { trait: folk-remedies }
+  - { trait: simple-potion-mixing }
+  - { trait: haggler }
+  - { trait: herbalism }
+backgroundTraits:
+  - medical-aid
+  - advanced-potion-mixing
+  - medicine
+  - alchemy

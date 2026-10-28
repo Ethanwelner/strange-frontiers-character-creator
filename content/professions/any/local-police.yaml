@@ -1,0 +1,21 @@
+id: local-police
+name: "Local Police"
+status: placeholder
+plane: any
+summary: "Keeps the peace in a town, city or station, and knows its streets and the people on them."
+tags: [police, law, enforcement]
+type: profession
+grants:
+  - { trait: vigilance }
+  - { trait: investigation }
+  - { trait: wielder-pistol }
+  - { trait: local-history }
+choices:
+  - choose: 1
+    from: contact
+    note: "+1 Contact"
+backgroundTraits:
+  - streetwise
+  - intimidation
+  - medical-aid
+  - criminal-underworld

@@ -1,0 +1,10 @@
+id: arabic-written
+name: "Arabic (Written)"
+status: draft
+plane: earth
+summary: "One of the common languages of Earth Baseline."
+tags: [language, arabic, earth, writing]
+category: knowledge
+types: [language]
+language: arabic
+effect: "This character can read and write the Arabic language."

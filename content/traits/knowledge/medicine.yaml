@@ -1,0 +1,10 @@
+id: medicine
+name: "Medicine"
+status: draft
+plane: any
+summary: "How bodies work, how they fail, and how to treat them."
+tags: [medicine, healing, science]
+category: knowledge
+ranked: true
+minStats: { memory: 4, logic: 3 }
+effect: "This character has knowledge of medicine and can be assumed to be familiar with anatomy, common illnesses and injuries, and how they are treated."

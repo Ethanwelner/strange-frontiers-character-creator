@@ -1,0 +1,14 @@
+id: criminal-family
+name: "Criminal Family"
+status: placeholder
+plane: any
+summary: "Born into a family business that the law would rather not hear about."
+tags: [crime, family, underworld]
+type: past
+grants:
+  - { trait: streetwise }
+  - { trait: criminal-underworld }
+choices:
+  - choose: 1
+    from: contact
+    note: "+1 Contact"

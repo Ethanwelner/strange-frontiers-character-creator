@@ -1,0 +1,11 @@
+id: simple-farmer
+name: "Simple Farmer"
+status: placeholder
+plane: any
+summary: "Grew up working the land, wherever there was land to work, and learned that the harvest waits for no one."
+tags: [farming, rural, family]
+type: past
+grants:
+  - { trait: teamster }
+  - { trait: simple-cooking }
+  - { trait: farming }

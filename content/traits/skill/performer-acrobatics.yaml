@@ -1,0 +1,10 @@
+id: performer-acrobatics
+name: "Performer: Acrobatics"
+status: draft
+plane: any
+summary: "Tumbling, juggling and feats of balance for a crowd."
+tags: [acrobatics, performance, agility]
+category: skill
+ranked: true
+minStats: { grace: 4, endurance: 3, persuasion: 2 }
+effect: "This character is capable of tumbling, juggling and keeping their balance in a performance without a skill check. Rank *10 added to skill check rolls involving acrobatics and balance."

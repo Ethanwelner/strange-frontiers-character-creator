@@ -1,0 +1,10 @@
+id: burmese-written
+name: "Burmese (Written)"
+status: draft
+plane: earth
+summary: "Spoken in the Chinese Empire."
+tags: [language, burmese, earth, writing]
+category: knowledge
+types: [language]
+language: burmese
+effect: "This character can read and write the Burmese language."

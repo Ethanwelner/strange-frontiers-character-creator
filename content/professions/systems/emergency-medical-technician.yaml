@@ -1,0 +1,15 @@
+id: emergency-medical-technician
+name: "Emergency Medical Technician"
+status: placeholder
+plane: earth
+summary: "First on the scene of accidents and emergencies, keeping people alive until they reach a hospital."
+tags: [medicine, emergency, healing, urban]
+type: profession
+grants:
+  - { trait: medical-aid }
+  - { trait: vigilance }
+  - { trait: streetwise }
+  - { trait: medicine }
+backgroundTraits:
+  - surgery
+  - pilot-truck

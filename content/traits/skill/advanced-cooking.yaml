@@ -1,0 +1,11 @@
+id: advanced-cooking
+name: "Advanced Cooking"
+status: draft
+plane: any
+summary: "Cooking at a professional level, for a crowd or a court."
+tags: [cooking, food, expert]
+category: skill
+mastery: true
+minStats: { intuition: 5, memory: 4, empathy: 3 }
+prerequisites: [simple-cooking]
+effect: "This character cooks at a professional level and can feed a large group. This character can request advantage on skill checks involving cooking, and a fine meal can earn them favor in social situations at the GM’s discretion."

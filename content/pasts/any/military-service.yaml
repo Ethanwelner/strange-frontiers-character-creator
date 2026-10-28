@@ -1,0 +1,11 @@
+id: military-service
+name: "Military Service"
+status: placeholder
+plane: any
+summary: "Served a term in an army, navy or militia, and came out with the habits to prove it."
+tags: [military, veteran, service]
+type: past
+grants:
+  - { trait: military-drill }
+  - { trait: vigilance }
+  - { trait: military-tactics }

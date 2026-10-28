@@ -1,9 +1,10 @@
 id: wielder-rifle
 name: "Wielder: Rifle"
-status: placeholder
+status: draft
 plane: earth
 summary: "Fighting with, and maintaining, a modern rifle."
 tags: [combat, firearms, military]
 category: skill
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { grace: 3, intuition: 3, power: 2 }
+effect: "This character is capable of performing the basic tasks of maintaining a Rifle without a skill check. Rank *5 added to skill check rolls involving a Rifle."

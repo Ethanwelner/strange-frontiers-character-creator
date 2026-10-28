@@ -1,0 +1,10 @@
+id: filipino-written
+name: "Filipino (Written)"
+status: draft
+plane: earth
+summary: "Spoken in the Chinese Empire."
+tags: [language, filipino, earth, writing]
+category: knowledge
+types: [language]
+language: filipino
+effect: "This character can read and write the Filipino language."

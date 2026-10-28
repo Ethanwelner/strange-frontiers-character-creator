@@ -1,0 +1,10 @@
+id: hindi-written
+name: "Hindi (Written)"
+status: draft
+plane: earth
+summary: "Spoken in the Kingdom of India and Kashgar."
+tags: [language, hindi, earth, writing]
+category: knowledge
+types: [language]
+language: hindi
+effect: "This character can read and write the Hindi language."

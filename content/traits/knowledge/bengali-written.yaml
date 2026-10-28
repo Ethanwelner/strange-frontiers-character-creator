@@ -1,0 +1,10 @@
+id: bengali-written
+name: "Bengali (Written)"
+status: draft
+plane: earth
+summary: "Spoken in the Kingdom of India."
+tags: [language, bengali, earth, writing]
+category: knowledge
+types: [language]
+language: bengali
+effect: "This character can read and write the Bengali language."

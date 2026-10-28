@@ -1,0 +1,11 @@
+# Lore for Sorellion is still coming soon on the site.
+id: sorellion
+name: "Sorellion"
+status: draft
+plane: isekai
+summary: "The Kingdom of Sorellion, one of Dreft’s neighbors on Isekai."
+tags: [sorellion, kingdom, isekai]
+category: knowledge
+ranked: true
+minStats: { memory: 3 }
+effect: "This character has knowledge of the Kingdom of Sorellion and can be assumed to be familiar with its people, places and customs."

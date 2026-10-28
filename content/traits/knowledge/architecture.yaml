@@ -1,0 +1,10 @@
+id: architecture
+name: "Architecture"
+status: draft
+plane: any
+summary: "How buildings and bridges are designed, built and brought down."
+tags: [building, masonry, engineering]
+category: knowledge
+ranked: true
+minStats: { memory: 3, logic: 2 }
+effect: "This character has knowledge of architecture and can be assumed to be familiar with building styles, structural design and construction methods."

@@ -1,0 +1,10 @@
+id: persian
+name: "Persian (Spoken)"
+status: draft
+plane: earth
+summary: "One of the common languages of Earth Baseline."
+tags: [language, persian, earth]
+category: knowledge
+types: [language]
+language: persian
+effect: "This character is conversational in the Persian language and can speak it."

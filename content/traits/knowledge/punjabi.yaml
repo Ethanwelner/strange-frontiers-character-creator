@@ -1,0 +1,10 @@
+id: punjabi
+name: "Punjabi (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in the Kingdom of India."
+tags: [language, punjabi, earth]
+category: knowledge
+types: [language]
+language: punjabi
+effect: "This character is conversational in the Punjabi language and can speak it."

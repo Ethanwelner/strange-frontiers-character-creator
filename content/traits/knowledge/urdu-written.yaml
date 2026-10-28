@@ -1,0 +1,10 @@
+id: urdu-written
+name: "Urdu (Written)"
+status: draft
+plane: earth
+summary: "Spoken in the Kingdom of India."
+tags: [language, urdu, earth, writing]
+category: knowledge
+types: [language]
+language: urdu
+effect: "This character can read and write the Urdu language."

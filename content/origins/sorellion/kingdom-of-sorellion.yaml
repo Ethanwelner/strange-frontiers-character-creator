@@ -1,0 +1,23 @@
+# Sorellion’s lore is still coming soon on the site; this is a placeholder to fill in.
+id: kingdom-of-sorellion
+name: "Kingdom of Sorellion"
+status: placeholder
+plane: isekai
+region: sorellion
+summary: "You grew up in the Kingdom of Sorellion, one of Dreft’s neighbors on Isekai."
+tags: [sorellion, kingdom, isekai]
+lore: kingdom-of-sorellion
+type: origin
+bonusPoints:
+  - { count: 1, group: social }
+grants:
+  - { trait: sorellion, rank: 1 }
+choices:
+  - choose: 1
+    from: language
+    note: "+1 Language"
+backgroundTraits:
+  - dreft
+  - heraldry
+  - courtly-manners
+  - haggler

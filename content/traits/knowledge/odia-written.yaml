@@ -1,0 +1,10 @@
+id: odia-written
+name: "Odia (Written)"
+status: draft
+plane: earth
+summary: "Spoken in the Kingdom of India."
+tags: [language, odia, earth, writing]
+category: knowledge
+types: [language]
+language: odia
+effect: "This character can read and write the Odia language."

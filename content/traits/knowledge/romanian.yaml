@@ -1,0 +1,10 @@
+id: romanian
+name: "Romanian (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in the Stellar Democratic Union."
+tags: [language, romanian, earth]
+category: knowledge
+types: [language]
+language: romanian
+effect: "This character is conversational in the Romanian language and can speak it."

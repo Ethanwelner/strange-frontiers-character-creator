@@ -1,0 +1,10 @@
+id: lao
+name: "Lao (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in the Chinese Empire."
+tags: [language, lao, earth]
+category: knowledge
+types: [language]
+language: lao
+effect: "This character is conversational in the Lao language and can speak it."

@@ -1,0 +1,16 @@
+id: blacksmith
+name: "Blacksmith"
+status: placeholder
+plane: any
+summary: "Works metal at the forge: tools, fittings, and now and then a blade."
+tags: [craft, smithing, trade]
+type: profession
+grants:
+  - { trait: craft-smithing }
+  - { trait: appraisal }
+  - { trait: haggler }
+  - { trait: metallurgy }
+backgroundTraits:
+  - wielder-longsword
+  - wielder-war-axe
+  - craft-leatherworking

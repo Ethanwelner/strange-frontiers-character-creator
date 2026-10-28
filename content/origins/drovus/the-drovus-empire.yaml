@@ -1,0 +1,23 @@
+# Drovus’s lore is still coming soon on the site; the description only draws on Dreft’s history.
+id: the-drovus-empire
+name: "The Drovus Empire"
+status: placeholder
+plane: isekai
+region: drovus
+summary: "You grew up in the Drovus Empire, which has spent the last decade swallowing its neighbors, the Sunrise Princedoms among them."
+tags: [drovus, empire, isekai, military]
+lore: drovus-empire
+type: origin
+bonusPoints:
+  - { count: 1, group: physical }
+grants:
+  - { trait: the-drovus-empire, rank: 1 }
+choices:
+  - choose: 1
+    from: language
+    note: "+1 Language"
+backgroundTraits:
+  - the-sunrise-princedoms
+  - military-tactics
+  - military-drill
+  - heraldry

@@ -1,0 +1,10 @@
+id: italian
+name: "Italian (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in the Stellar Democratic Union."
+tags: [language, italian, earth]
+category: knowledge
+types: [language]
+language: italian
+effect: "This character is conversational in the Italian language and can speak it."

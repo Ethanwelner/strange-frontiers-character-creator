@@ -1,0 +1,17 @@
+id: privileged-upbringing
+name: "Privileged Upbringing"
+status: placeholder
+plane: any
+summary: "Grew up wanting for nothing, with tutors, connections, and the manners that open doors."
+tags: [wealth, privilege, education, family]
+type: past
+grants:
+  - { trait: smooth-talker }
+  - { trait: appraisal }
+choices:
+  - choose: 1
+    from: language
+    note: "+1 Language"
+  - choose: 1
+    from: contact
+    note: "+1 Contact"

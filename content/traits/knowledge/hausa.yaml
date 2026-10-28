@@ -1,0 +1,10 @@
+id: hausa
+name: "Hausa (Spoken)"
+status: draft
+plane: earth
+summary: "One of the common languages of Earth Baseline."
+tags: [language, hausa, earth]
+category: knowledge
+types: [language]
+language: hausa
+effect: "This character is conversational in the Hausa language and can speak it."

@@ -1,0 +1,10 @@
+id: russian-written
+name: "Russian (Written)"
+status: draft
+plane: earth
+summary: "Spoken in the Stellar Democratic Union and the Ural Federation."
+tags: [language, russian, earth, writing]
+category: knowledge
+types: [language]
+language: russian
+effect: "This character can read and write the Russian language."

@@ -1,0 +1,10 @@
+id: lingala
+name: "Lingala (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in Centafrica and Xanthus."
+tags: [language, lingala, earth]
+category: knowledge
+types: [language]
+language: lingala
+effect: "This character is conversational in the Lingala language and can speak it."

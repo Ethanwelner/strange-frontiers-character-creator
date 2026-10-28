@@ -1,0 +1,11 @@
+# Pairs with Dwarvish Runes (Written).
+id: dwarvish
+name: "Dwarvish (Spoken)"
+status: draft
+plane: isekai
+summary: "The spoken tongue that Dwarvish Runes are written in."
+tags: [language, dwarvish, isekai]
+category: knowledge
+types: [language]
+language: dwarvish-runes
+effect: "This character is conversational in the Dwarvish language and can speak it."

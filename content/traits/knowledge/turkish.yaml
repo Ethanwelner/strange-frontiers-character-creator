@@ -1,0 +1,10 @@
+id: turkish
+name: "Turkish (Spoken)"
+status: draft
+plane: earth
+summary: "One of the common languages of Earth Baseline."
+tags: [language, turkish, earth]
+category: knowledge
+types: [language]
+language: turkish
+effect: "This character is conversational in the Turkish language and can speak it."

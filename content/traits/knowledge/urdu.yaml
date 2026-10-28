@@ -1,0 +1,10 @@
+id: urdu
+name: "Urdu (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in the Kingdom of India."
+tags: [language, urdu, earth]
+category: knowledge
+types: [language]
+language: urdu
+effect: "This character is conversational in the Urdu language and can speak it."

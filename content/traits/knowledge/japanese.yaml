@@ -1,0 +1,10 @@
+id: japanese
+name: "Japanese (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in the Stellar Democratic Union."
+tags: [language, japanese, earth]
+category: knowledge
+types: [language]
+language: japanese
+effect: "This character is conversational in the Japanese language and can speak it."

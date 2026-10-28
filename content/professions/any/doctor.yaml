@@ -1,0 +1,20 @@
+id: doctor
+name: "Doctor"
+status: placeholder
+plane: any
+summary: "Diagnoses and treats illness and injury, in a hospital, a clinic, a ship’s sick bay or a village sickroom."
+tags: [medicine, doctor, healing, science]
+type: profession
+grants:
+  - { trait: medical-aid }
+  - { trait: research }
+  - { trait: smooth-talker }
+  - { trait: medicine }
+choices:
+  - choose: 1
+    from: contact
+    note: "+1 Contact"
+backgroundTraits:
+  - surgery
+  - herbalism
+  - cybernetics

@@ -152,6 +152,17 @@ describe("solveConcept", () => {
     expect(s.result.ok).toBe(true);
   });
 
+  it("fills an unanswered language choice from the character's own world first", () => {
+    const spare = (origin: string) => {
+      const s = solve({ ...hunter, origin, traits: ["additional-language"], choices: [] });
+      expect(s.result.ok).toBe(true);
+      return content.traits.find((t) => t.id === s.build.choices.find((c) => c.trait === "additional-language")!.traits[0])!;
+    };
+    // A Dreftian's spare language is Dreftian, an Earth character's from Earth.
+    expect(spare("dreft").region).toBe("dreft");
+    expect(spare("tetra").plane).toBe("earth");
+  });
+
   it("answers the Tetra Origin's language with one language, spoken and written", () => {
     const s = solve({ ...hunter, origin: "tetra", traits: [], choices: [{ package: "tetra", from: "spoken-and-written-language", traits: ["english"] }] });
     expect(s.build.choices).toEqual([{ package: "tetra", from: "spoken-and-written-language", traits: ["english"] }]);

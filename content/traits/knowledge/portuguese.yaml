@@ -1,0 +1,10 @@
+id: portuguese
+name: "Portuguese (Spoken)"
+status: draft
+plane: earth
+summary: "One of the languages of the Lunar Industrial Syndicate and its former South American nations."
+tags: [language, portuguese, earth]
+category: knowledge
+types: [language]
+language: portuguese
+effect: "This character is conversational in the Portuguese language and can speak it."

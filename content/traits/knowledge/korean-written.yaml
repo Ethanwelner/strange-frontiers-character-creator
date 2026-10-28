@@ -1,0 +1,10 @@
+id: korean-written
+name: "Korean (Written)"
+status: draft
+plane: earth
+summary: "Spoken in the Stellar Democratic Union."
+tags: [language, korean, earth, writing]
+category: knowledge
+types: [language]
+language: korean
+effect: "This character can read and write the Korean language."

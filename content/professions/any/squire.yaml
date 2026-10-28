@@ -1,0 +1,16 @@
+id: squire
+name: "Squire"
+status: placeholder
+plane: any
+summary: "A knight’s apprentice, learning to fight and ride by carrying their armor and minding their horse."
+tags: [squire, knight, nobility, military]
+type: profession
+grants:
+  - { trait: rider-basic-animals }
+  - { trait: shield-wall }
+  - { trait: court-etiquette }
+  - { trait: heraldry }
+backgroundTraits:
+  - wielder-longsword
+  - courtly-manners
+  - animal-husbandry

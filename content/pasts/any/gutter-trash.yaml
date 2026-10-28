@@ -1,0 +1,11 @@
+id: gutter-trash
+name: "Gutter Trash"
+status: placeholder
+plane: any
+summary: "Grew up on the streets with nothing, and learned to take what wasn’t given and to disappear when it mattered."
+tags: [streets, poverty, urban, crime]
+type: past
+grants:
+  - { trait: streetwise }
+  - { trait: sleight-of-hand }
+  - { trait: concealment }

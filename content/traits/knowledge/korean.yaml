@@ -1,0 +1,10 @@
+id: korean
+name: "Korean (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in the Stellar Democratic Union."
+tags: [language, korean, earth]
+category: knowledge
+types: [language]
+language: korean
+effect: "This character is conversational in the Korean language and can speak it."

@@ -1,0 +1,17 @@
+id: farmer
+name: "Farmer"
+status: placeholder
+plane: any
+summary: "Works the land, raising crops and livestock, wherever there’s land to work."
+tags: [farming, rural, labor]
+type: profession
+grants:
+  - { trait: teamster }
+  - { trait: animal-husbandry }
+  - { trait: simple-cooking }
+  - { trait: farming }
+backgroundTraits:
+  - rider-basic-animals
+  - countryside-lore
+  - herbalism
+  - local-folklore

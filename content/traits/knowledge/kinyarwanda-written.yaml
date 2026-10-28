@@ -1,0 +1,10 @@
+id: kinyarwanda-written
+name: "Kinyarwanda (Written)"
+status: draft
+plane: earth
+summary: "Spoken in Centafrica."
+tags: [language, kinyarwanda, earth, writing]
+category: knowledge
+types: [language]
+language: kinyarwanda
+effect: "This character can read and write the Kinyarwanda language."

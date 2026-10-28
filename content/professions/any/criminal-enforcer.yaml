@@ -1,0 +1,21 @@
+id: criminal-enforcer
+name: "Criminal Enforcer"
+status: placeholder
+plane: any
+summary: "Muscle for a criminal outfit: collecting debts, guarding deals and making examples of people who talk."
+tags: [crime, enforcer, muscle]
+type: profession
+grants:
+  - { trait: streetwise }
+  - { trait: intimidation }
+  - { trait: vigilance }
+  - { trait: ambusher }
+choices:
+  - choose: 1
+    from: contact
+    note: "+1 Contact"
+backgroundTraits:
+  - concealment
+  - schemer
+  - wielder-pistol
+  - criminal-underworld

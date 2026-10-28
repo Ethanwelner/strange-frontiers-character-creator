@@ -1,0 +1,10 @@
+id: amharic
+name: "Amharic (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in Centafrica."
+tags: [language, amharic, earth]
+category: knowledge
+types: [language]
+language: amharic
+effect: "This character is conversational in the Amharic language and can speak it."

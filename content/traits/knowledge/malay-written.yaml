@@ -1,0 +1,10 @@
+id: malay-written
+name: "Malay (Written)"
+status: draft
+plane: earth
+summary: "Spoken in the Chinese Empire."
+tags: [language, malay, earth, writing]
+category: knowledge
+types: [language]
+language: malay
+effect: "This character can read and write the Malay language."

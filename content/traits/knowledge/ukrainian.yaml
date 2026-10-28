@@ -1,0 +1,10 @@
+id: ukrainian
+name: "Ukrainian (Spoken)"
+status: draft
+plane: earth
+summary: "One of the common languages of Earth Baseline."
+tags: [language, ukrainian, earth]
+category: knowledge
+types: [language]
+language: ukrainian
+effect: "This character is conversational in the Ukrainian language and can speak it."

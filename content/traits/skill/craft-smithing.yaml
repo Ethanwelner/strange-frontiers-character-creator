@@ -1,0 +1,10 @@
+id: craft-smithing
+name: "Craft: Smithing"
+status: draft
+plane: any
+summary: "Forging and repairing metal tools, fittings and weapons."
+tags: [craft, smithing, metal]
+category: skill
+ranked: true
+minStats: { power: 4, endurance: 3, grace: 2 }
+effect: "This character is capable of forging and repairing simple metal tools, fittings and weapons without a skill check. Rank *10 added to skill check rolls involving smithing."

@@ -1,0 +1,10 @@
+id: lockpicking
+name: "Lockpicking"
+status: draft
+plane: any
+summary: "Opening locks without the key."
+tags: [locks, theft, security]
+category: skill
+ranked: true
+minStats: { grace: 4, intuition: 2 }
+effect: "This character is capable of opening simple mechanical locks with the right tools without a skill check. Rank *10 added to skill check rolls involving picking locks and bypassing security."

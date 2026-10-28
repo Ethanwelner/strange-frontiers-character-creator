@@ -1,0 +1,10 @@
+id: marathi-written
+name: "Marathi (Written)"
+status: draft
+plane: earth
+summary: "Spoken in the Kingdom of India."
+tags: [language, marathi, earth, writing]
+category: knowledge
+types: [language]
+language: marathi
+effect: "This character can read and write the Marathi language."

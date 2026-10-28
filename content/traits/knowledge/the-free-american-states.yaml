@@ -1,0 +1,10 @@
+id: the-free-american-states
+name: "The Free American States"
+status: draft
+plane: earth
+summary: "The fractious free-trade zone of independent states between the American Empire and the Union of Texas."
+tags: [free-american-states, earth, trade]
+category: knowledge
+ranked: true
+minStats: { memory: 3 }
+effect: "This character has knowledge of the Free American States and can be assumed to be familiar with its member states, its trade and its border disputes."

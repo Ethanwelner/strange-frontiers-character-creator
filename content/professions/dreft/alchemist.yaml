@@ -1,0 +1,17 @@
+id: alchemist
+name: "Alchemist"
+status: placeholder
+plane: isekai
+region: dreft
+summary: "Studies the properties of substances and brews potions to unlock them, with more ambition than safety."
+tags: [potions, alchemy, scholar, dreft]
+type: profession
+grants:
+  - { trait: simple-potion-mixing }
+  - { trait: research }
+  - { trait: alchemy }
+  - { trait: herbalism }
+backgroundTraits:
+  - advanced-potion-mixing
+  - appraisal
+  - exotic-materials

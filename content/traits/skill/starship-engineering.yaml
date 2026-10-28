@@ -1,0 +1,10 @@
+id: starship-engineering
+name: "Starship Engineering"
+status: draft
+plane: earth
+summary: "Maintaining and repairing a starship’s reactors, drives and life support."
+tags: [engineering, starships, technology, space]
+category: skill
+ranked: true
+minStats: { logic: 4, memory: 3, grace: 2 }
+effect: "This character is capable of maintaining and making routine repairs to a starship’s reactors, drives and life support without a skill check. Rank *10 added to skill check rolls involving starship repair."
