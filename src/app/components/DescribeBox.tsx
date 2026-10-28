@@ -103,12 +103,32 @@ const requestBuild = (request: BuildRequest, onProgress: (p: Progress) => void) 
 // 67 seconds as "1:07".
 export const clock = (seconds: number) => `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, "0")}`;
 
+// Description placeholders, one picked per page load, covering each Kind and a
+// spread of Origins and backgrounds.
+const EXAMPLES = [
+  "A goblin who failed out of the mage schools and now patches up caravan guards with whatever grows by the road.",
+  "An orcoid Tatot mercenary from Karsef who guards caravans by day and gambles away the pay by night.",
+  "A young Isek who ran away from a noble household to range the wild country past the Dreft border.",
+  "A Guwain smuggler from the Glintl docks who knows every harbor inspector's price and every tavern on the coast.",
+  "An Isek bard from Sorellion whose songs about the nobility mean leaving every town before morning.",
+  "A Guwain squire whose knight died in the succession crisis, now sworn to whichever noble will feed them.",
+  "A citizen shareholder of the Lunar Industrial Syndicate, a station rat turned starship engineer who can fix anything with a wrench and a grudge.",
+  "A Texan truck pilot hauling cargo between the systems, with a pistol under the seat and a debt to the wrong people.",
+  "An AI Core spy for the Empire of China who has worn a dozen bodies and trusts none of them.",
+  "A university-educated paraecologist from the Kingdom of India, cataloguing Murk Legs on a newly opened plane.",
+  "An officer of the Bureau of Planar Management and Enforcement from the Stellar Democratic Union, chasing smugglers through the switch gates.",
+  "A Centafrican combat medic who served at a frontier gate and came home with steady hands and bad dreams.",
+  "An interplanar rights lawyer from the Free American States who takes the parasapient cases nobody else will.",
+  "A holding company kid from Tetra who quit the family business to explore new planes with the Explorers' Lodge.",
+];
+
 export function DescribeBox({ notes, showNotes, startingLevel, hasBuild, onBuilt, draft, actions }: Props) {
   const [text, setText] = useState(notes?.description ?? "");
   // A name for the builder to use, and the level to build at. Writing a level
   // in the description ("level 10") sets the stepper; the stepper has the last word.
   const [name, setName] = useState(notes?.name ?? "");
   const [level, setLevel] = useState(startingLevel);
+  const [example] = useState(() => EXAMPLES[Math.floor(Math.random() * EXAMPLES.length)]);
   useEffect(() => setLevel(startingLevel), [startingLevel]);
   const describe = (value: string) => {
     setText(value);
@@ -192,7 +212,7 @@ export function DescribeBox({ notes, showNotes, startingLevel, hasBuild, onBuilt
                 value={text}
                 rows={3}
                 maxLength={4000}
-                placeholder="e.g. A goblin who failed out of the mage schools and now patches up caravan guards with whatever grows by the road."
+                placeholder={`e.g. ${example}`}
                 onChange={(e) => describe(e.target.value)}
                 disabled={busy}
               />
