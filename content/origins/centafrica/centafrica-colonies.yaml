@@ -1,0 +1,31 @@
+id: centafrica-colonies
+name: "Centafrica: Colonies"
+status: placeholder
+plane: earth
+region: centafrica
+summary: "You grew up aboard Aksum, Centafrica’s station on its long elliptical orbit through the inner solar system."
+tags: [centafrica, colonies, station, space]
+lore: centafrica
+type: origin
+# A free bonus point the player places in a Mental stat.
+bonusPoints:
+  - { count: 1, group: mental }
+grants:
+  - { trait: centafrica, rank: 1 }
+  - { trait: centafrican-law, rank: 1 }
+  - { trait: swahili }
+  - { trait: swahili-written }
+choices:
+  - choose: 1
+    from: spoken-and-written-language
+    note: "+1 Language (Spoken & Written)"
+backgroundTraits:
+  - aksum
+  - ports-and-stations
+  - spacefaring
+  - starships
+  - shipping-lanes
+  - music
+  - earth-baseline-technology
+  - french
+  - english

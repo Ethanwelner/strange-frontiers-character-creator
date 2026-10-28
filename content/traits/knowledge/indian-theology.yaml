@@ -1,0 +1,11 @@
+id: indian-theology
+name: "Indian Theology"
+status: draft
+plane: earth
+region: kingdom-of-india
+summary: "The land of 10,000 gods: the faiths of India and the theocracy that rules in their name."
+tags: [religion, india]
+category: knowledge
+ranked: true
+minStats: { memory: 3 }
+effect: "This character has knowledge of Indian theology and can be assumed to be familiar with the gods, temples, and rites of the Kingdom of India."

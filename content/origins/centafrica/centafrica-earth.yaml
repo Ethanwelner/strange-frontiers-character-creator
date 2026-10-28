@@ -1,0 +1,34 @@
+id: centafrica-earth
+name: "Centafrica: Earth"
+status: placeholder
+plane: earth
+region: centafrica
+summary: "You were born in Centafrica, anywhere from Lagos to Kinshasa to Addis Ababa, in a vibrant democracy whose wealth is rarely spread evenly and whose people have long memories."
+tags: [centafrica, earth, democracy, culture]
+lore: centafrica
+type: origin
+# A free bonus point the player places in a Social stat.
+bonusPoints:
+  - { count: 1, group: social }
+grants:
+  - { trait: centafrica, rank: 1 }
+  - { trait: centafrican-law, rank: 1 }
+  - { trait: swahili }
+  - { trait: swahili-written }
+choices:
+  - choose: 1
+    from: spoken-and-written-language
+    note: "+1 Language (Spoken & Written)"
+backgroundTraits:
+  - music
+  - art-history
+  - theater
+  - politics
+  - commerce
+  - earth-baseline-technology
+  - french
+  - french-written
+  - english
+  - lingala
+  - yoruba
+  - hausa

@@ -1,0 +1,31 @@
+id: the-kingdom-of-india-colonies
+name: "The Kingdom of India: Colonies"
+status: placeholder
+plane: earth
+region: kingdom-of-india
+summary: "You grew up in the Kingdom’s new homes beyond Earth: in Pataliputra, the planar capital where millions arrive every year, or aboard Amaravati, its station in high Earth orbit."
+tags: [india, colonies, planar, pataliputra, station]
+lore: kingdom-of-india
+type: origin
+# A free bonus point the player places in a Social stat.
+bonusPoints:
+  - { count: 1, group: social }
+grants:
+  - { trait: the-kingdom-of-india, rank: 1 }
+  - { trait: indian-law, rank: 1 }
+  - { trait: hindi }
+  - { trait: hindi-written }
+choices:
+  - choose: 1
+    from: spoken-and-written-language
+    note: "+1 Language (Spoken & Written)"
+backgroundTraits:
+  - pataliputra
+  - amaravati
+  - indian-theology
+  - planar-exploration
+  - interplanar-relations
+  - ecology
+  - earth-baseline-technology
+  - english
+  - english-written

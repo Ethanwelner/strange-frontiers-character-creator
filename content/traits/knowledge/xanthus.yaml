@@ -1,0 +1,12 @@
+id: xanthus
+name: "Xanthus"
+status: draft
+plane: earth
+region: xanthus
+summary: "Xanthus, the free Ark built around an iron asteroid, and the micro-nations that appear in its wake."
+tags: [xanthus, ark]
+lore: xanthus
+category: knowledge
+ranked: true
+minStats: { memory: 3 }
+effect: "This character has knowledge of Ark Xanthus and can be assumed to be familiar with the peoples, places, and customs aboard it."

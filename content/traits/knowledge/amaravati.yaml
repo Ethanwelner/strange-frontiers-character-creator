@@ -1,0 +1,12 @@
+# Amaravati has no lore entry on the site yet.
+id: amaravati
+name: "Amaravati"
+status: draft
+plane: earth
+region: kingdom-of-india
+summary: "Amaravati, the Kingdom of India’s station in high Earth orbit."
+tags: [india, station, orbit]
+category: knowledge
+ranked: true
+minStats: { memory: 3 }
+effect: "This character has knowledge of Amaravati and can be assumed to be familiar with the peoples, places, and customs of India’s station in high Earth orbit."

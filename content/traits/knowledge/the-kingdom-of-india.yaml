@@ -1,0 +1,12 @@
+id: the-kingdom-of-india
+name: "The Kingdom of India"
+status: draft
+plane: earth
+region: kingdom-of-india
+summary: "The Kingdom of India: its royal house, its temples and the regreening of the subcontinent."
+tags: [india, politics]
+lore: kingdom-of-india
+category: knowledge
+ranked: true
+minStats: { memory: 3 }
+effect: "This character has knowledge of the Kingdom of India and can be assumed to be familiar with its customs, politics, and territories."

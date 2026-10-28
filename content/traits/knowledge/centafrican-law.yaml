@@ -1,0 +1,11 @@
+id: centafrican-law
+name: "Centafrican Law"
+status: draft
+plane: earth
+region: centafrica
+summary: "The laws of Centafrica’s federal democratic republic and how they’re enforced."
+tags: [law, centafrica]
+category: knowledge
+ranked: true
+minStats: { memory: 3 }
+effect: "This character has knowledge of Centafrican law and can be assumed to be familiar with the laws and courts of Centafrica."

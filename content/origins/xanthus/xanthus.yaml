@@ -1,0 +1,32 @@
+id: xanthus
+name: "Xanthus"
+status: placeholder
+plane: earth
+region: xanthus
+summary: "You grew up aboard Xanthus, the free Ark built around an iron asteroid: a pariah state, a model democracy and a haven for anyone escaping poverty or persecution."
+tags: [xanthus, ark, space, democracy, refugee]
+lore: xanthus
+type: origin
+# A free bonus point the player places in a Social stat.
+bonusPoints:
+  - { count: 1, group: social }
+grants:
+  - { trait: xanthus, rank: 1 }
+  - { trait: swahili }
+  - { trait: swahili-written }
+choices:
+  - choose: 1
+    from: spoken-and-written-language
+    note: "+1 Language (Spoken & Written)"
+backgroundTraits:
+  - ark-life
+  - asteroid-mining
+  - ports-and-stations
+  - spacefaring
+  - centafrica
+  - criminal-underworld
+  - starship-engineering
+  - lingala
+  - english
+  - spanish
+  - portuguese

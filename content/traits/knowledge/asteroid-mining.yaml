@@ -1,0 +1,10 @@
+id: asteroid-mining
+name: "Asteroid Mining"
+status: draft
+plane: earth
+summary: "Finding, claiming and working asteroids for ore and ice."
+tags: [mining, space, asteroid]
+category: knowledge
+ranked: true
+minStats: { memory: 3 }
+effect: "This character has knowledge of asteroid mining and can be assumed to be familiar with how asteroids are surveyed, claimed, and worked."

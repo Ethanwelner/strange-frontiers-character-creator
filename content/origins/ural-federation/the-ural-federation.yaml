@@ -1,0 +1,33 @@
+id: the-ural-federation
+name: "The Ural Federation"
+status: placeholder
+plane: earth
+region: ural-federation
+summary: "You grew up in the Ural Federation, among the tribal statelets of the steppe and the thawed Siberian breadbasket, in a melting pot of native peoples, climate refugees and the last of the Russian diaspora."
+tags: [ural-federation, earth, tribal, steppe]
+lore: ural-federation
+type: origin
+# A free bonus point the player places in a Physical stat.
+bonusPoints:
+  - { count: 1, group: physical }
+grants:
+  - { trait: the-ural-federation, rank: 1 }
+  - { trait: ural-tribal-law, rank: 1 }
+  - { trait: russian }
+  - { trait: russian-written }
+choices:
+  - choose: 1
+    from: spoken-and-written-language
+    note: "+1 Language (Spoken & Written)"
+backgroundTraits:
+  - farming
+  - countryside-lore
+  - wilderness-lore
+  - survivalist
+  - rider-basic-animals
+  - animal-husbandry
+  - the-chinese-empire
+  - earth-baseline-technology
+  - kazakh
+  - mongolian
+  - uyghur
