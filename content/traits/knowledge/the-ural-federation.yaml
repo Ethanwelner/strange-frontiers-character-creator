@@ -1,0 +1,12 @@
+id: the-ural-federation
+name: "The Ural Federation"
+status: draft
+plane: earth
+region: ural-federation
+summary: "The Ural Federation: hundreds of tribal statelets across the steppe and the thawed Siberian breadbasket."
+tags: [ural-federation, politics]
+lore: ural-federation
+category: knowledge
+ranked: true
+minStats: { memory: 3 }
+effect: "This character has knowledge of the Ural Federation and can be assumed to be familiar with its customs, politics, and territories."

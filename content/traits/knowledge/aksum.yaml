@@ -1,0 +1,12 @@
+# Aksum has no lore entry on the site yet.
+id: aksum
+name: "Aksum"
+status: draft
+plane: earth
+region: centafrica
+summary: "Aksum, Centafrica’s station on its elliptical orbit through the inner solar system."
+tags: [centafrica, station, space]
+category: knowledge
+ranked: true
+minStats: { memory: 3 }
+effect: "This character has knowledge of Aksum and can be assumed to be familiar with the peoples, places, and customs of Centafrica’s inner-system station."

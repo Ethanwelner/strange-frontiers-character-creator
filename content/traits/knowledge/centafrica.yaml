@@ -1,0 +1,12 @@
+id: centafrica
+name: "Centafrica"
+status: draft
+plane: earth
+region: centafrica
+summary: "Centafrica: its federal democracy, its storied universities and the unreconciled history of its founding."
+tags: [centafrica, politics]
+lore: centafrica
+category: knowledge
+ranked: true
+minStats: { memory: 3 }
+effect: "This character has knowledge of Centafrica and can be assumed to be familiar with its customs, politics, and territories."

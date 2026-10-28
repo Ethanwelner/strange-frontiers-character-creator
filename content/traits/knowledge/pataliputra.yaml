@@ -1,0 +1,12 @@
+id: pataliputra
+name: "Pataliputra"
+status: draft
+plane: earth
+region: kingdom-of-india
+summary: "295/c/29 - “Pataliputra,” India’s planar capital and the largest planar colony ever attempted."
+tags: [india, planar, colony]
+lore: pataliputra
+category: knowledge
+ranked: true
+minStats: { memory: 3 }
+effect: "This character has knowledge of Pataliputra and can be assumed to be familiar with the peoples, places, and customs of India’s planar capital."

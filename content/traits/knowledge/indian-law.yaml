@@ -1,0 +1,11 @@
+id: indian-law
+name: "Indian Law"
+status: draft
+plane: earth
+region: kingdom-of-india
+summary: "The laws of the Kingdom of India, set by its crown and its temples, and how they’re enforced."
+tags: [law, india]
+category: knowledge
+ranked: true
+minStats: { memory: 3 }
+effect: "This character has knowledge of Indian law and can be assumed to be familiar with the laws and courts of the Kingdom of India."

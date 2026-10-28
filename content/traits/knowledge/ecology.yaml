@@ -1,0 +1,10 @@
+id: ecology
+name: "Ecology"
+status: draft
+plane: any
+summary: "Ecosystems, climate and how damaged land is restored."
+tags: [ecology, science, nature]
+category: knowledge
+ranked: true
+minStats: { memory: 3 }
+effect: "This character has knowledge of ecology and can be assumed to be familiar with how ecosystems work and how damaged land is restored."

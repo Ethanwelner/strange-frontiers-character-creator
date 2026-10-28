@@ -1,0 +1,11 @@
+id: ural-tribal-law
+name: "Ural Tribal Law"
+status: draft
+plane: earth
+region: ural-federation
+summary: "The customs and tribal laws of the Ural Federation’s statelets."
+tags: [law, ural-federation]
+category: knowledge
+ranked: true
+minStats: { memory: 3 }
+effect: "This character has knowledge of Ural tribal law and can be assumed to be familiar with the customs and laws of the Ural Federation’s statelets."

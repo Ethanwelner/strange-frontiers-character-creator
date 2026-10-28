@@ -1,0 +1,32 @@
+id: the-kingdom-of-india-earth
+name: "The Kingdom of India: Earth"
+status: placeholder
+plane: earth
+region: kingdom-of-india
+summary: "You were born in the Kingdom of India’s Earth territories, a regreened paradise whose crown, and millions of its people, have left for Pataliputra."
+tags: [india, earth, kingdom, theocracy]
+lore: kingdom-of-india
+type: origin
+# A free bonus point the player places in a Physical stat.
+bonusPoints:
+  - { count: 1, group: physical }
+grants:
+  - { trait: the-kingdom-of-india, rank: 1 }
+  - { trait: indian-law, rank: 1 }
+  - { trait: hindi }
+  - { trait: hindi-written }
+choices:
+  - choose: 1
+    from: spoken-and-written-language
+    note: "+1 Language (Spoken & Written)"
+backgroundTraits:
+  - indian-theology
+  - ecology
+  - farming
+  - herbalism
+  - pataliputra
+  - earth-baseline-technology
+  - english
+  - english-written
+  - bengali
+  - tamil
