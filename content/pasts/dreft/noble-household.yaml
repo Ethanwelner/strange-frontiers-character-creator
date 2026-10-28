@@ -11,3 +11,7 @@ grants:
   - { trait: schemer }
   - { trait: noble-houses-of-dreft }
   - { trait: succession-law }
+backgroundTraits:
+  - high-society
+  - history
+  - politics

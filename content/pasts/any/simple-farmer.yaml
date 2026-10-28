@@ -9,3 +9,6 @@ grants:
   - { trait: teamster }
   - { trait: simple-cooking }
   - { trait: farming }
+backgroundTraits:
+  - animal-lore
+  - wilderness-lore

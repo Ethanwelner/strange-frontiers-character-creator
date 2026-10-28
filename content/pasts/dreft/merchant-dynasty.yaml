@@ -14,3 +14,6 @@ choices:
   - choose: 1
     from: language
     note: "+1 Language"
+backgroundTraits:
+  - commerce
+  - high-society

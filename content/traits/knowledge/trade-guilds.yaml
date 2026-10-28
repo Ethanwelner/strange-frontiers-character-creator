@@ -1,0 +1,10 @@
+id: trade-guilds
+name: "Trade Guilds"
+status: draft
+plane: any
+summary: "The guilds and unions of craftsmen and traders: their ranks, rules and rivalries."
+tags: [guild, craft, trade]
+category: knowledge
+ranked: true
+minStats: { memory: 3 }
+effect: "This character has knowledge of trade guilds and can be assumed to be familiar with how craft and trade guilds are organized, their ranks, rules and the masters who run them."

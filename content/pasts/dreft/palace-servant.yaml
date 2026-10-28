@@ -12,3 +12,6 @@ grants:
   - { trait: sleight-of-hand }
   - { trait: noble-houses-of-dreft }
   - { trait: port-herminst }
+backgroundTraits:
+  - high-society
+  - politics

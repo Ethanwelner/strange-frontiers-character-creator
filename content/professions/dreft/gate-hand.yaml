@@ -11,3 +11,6 @@ grants:
   - { trait: haggler }
   - { trait: tetra-frontiers-co }
   - { trait: earth-baseline-customs }
+backgroundTraits:
+  - commerce
+  - bureaucracy

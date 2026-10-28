@@ -1,0 +1,10 @@
+id: navigation
+name: "Navigation"
+status: draft
+plane: any
+summary: "Finding the way: maps, stars, instruments and charts."
+tags: [navigation, travel, maps]
+category: knowledge
+ranked: true
+minStats: { memory: 3, intuition: 3 }
+effect: "This character has knowledge of navigation and can be assumed to be familiar with reading maps, charts, stars and instruments, and plotting a course."

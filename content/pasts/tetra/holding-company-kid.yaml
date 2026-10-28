@@ -11,3 +11,6 @@ grants:
   - { trait: tetra-frontiers-co }
   - { trait: haggler }
   - { trait: appraisal }
+backgroundTraits:
+  - commerce
+  - bureaucracy

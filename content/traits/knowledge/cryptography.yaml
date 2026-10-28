@@ -1,0 +1,10 @@
+id: cryptography
+name: "Cryptography"
+status: draft
+plane: any
+summary: "Codes and ciphers: making them, and breaking them."
+tags: [codes, secrets, spy]
+category: knowledge
+ranked: true
+minStats: { memory: 3, logic: 4 }
+effect: "This character has knowledge of cryptography and can be assumed to be familiar with common codes and ciphers and the methods used to make and break them."

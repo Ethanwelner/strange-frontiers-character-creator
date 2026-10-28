@@ -12,3 +12,7 @@ grants:
   - { trait: mountaineering }
   - { trait: the-corsine-pass }
   - { trait: karsef }
+backgroundTraits:
+  - weapons
+  - wilderness-lore
+  - geography

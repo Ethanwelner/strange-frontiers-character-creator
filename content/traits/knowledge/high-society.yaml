@@ -1,0 +1,10 @@
+id: high-society
+name: "High Society"
+status: draft
+plane: any
+summary: "The world of the rich and well-connected: their manners, fashions, scandals and parties."
+tags: [society, wealth, social]
+category: knowledge
+ranked: true
+minStats: { memory: 2, empathy: 3 }
+effect: "This character has knowledge of high society and can be assumed to be familiar with the manners, fashions, families and scandals of the wealthy and powerful."

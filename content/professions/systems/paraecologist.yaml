@@ -11,3 +11,8 @@ grants:
   - { trait: field-sampling }
   - { trait: parabiology }
   - { trait: the-explorers-lodge }
+backgroundTraits:
+  - biology
+  - wilderness-lore
+  - animal-lore
+  - geography

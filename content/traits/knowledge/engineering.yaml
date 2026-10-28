@@ -1,0 +1,10 @@
+id: engineering
+name: "Engineering"
+status: draft
+plane: any
+summary: "How machines, structures and systems are designed and kept running."
+tags: [engineering, technology, building]
+category: knowledge
+ranked: true
+minStats: { memory: 3, logic: 4 }
+effect: "This character has knowledge of engineering and can be assumed to be familiar with how machines, structures and systems are designed, built, maintained and broken."

@@ -9,3 +9,7 @@ grants:
   - { trait: specimen-handling }
   - { trait: parazoology }
   - { trait: vigilance }
+backgroundTraits:
+  - animal-lore
+  - biology
+  - security-systems

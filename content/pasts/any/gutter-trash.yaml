@@ -9,3 +9,6 @@ grants:
   - { trait: streetwise }
   - { trait: sleight-of-hand }
   - { trait: concealment }
+backgroundTraits:
+  - gambling
+  - law-enforcement

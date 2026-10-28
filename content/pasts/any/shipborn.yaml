@@ -9,3 +9,8 @@ grants:
   - { trait: cargo-handling }
   - { trait: tinkerer }
   - { trait: vigilance }
+backgroundTraits:
+  - navigation
+  - starships
+  - spacefaring
+  - geography

@@ -1,0 +1,10 @@
+id: spacefaring
+name: "Spacefaring"
+status: draft
+plane: earth
+summary: "Living and working in space: vacuum, zero gravity, airlocks and life support."
+tags: [space, station, survival]
+category: knowledge
+ranked: true
+minStats: { memory: 3, intuition: 2 }
+effect: "This character has knowledge of spacefaring and can be assumed to be familiar with life in vacuum and zero gravity, airlocks, suits, life support, and what to do when they fail."

@@ -11,3 +11,6 @@ grants:
   - { trait: magic-on-isekai }
   - { trait: port-herminst }
   - { trait: concealment }
+backgroundTraits:
+  - literature
+  - history

@@ -1,0 +1,10 @@
+id: geography
+name: "Geography"
+status: draft
+plane: any
+summary: "The lay of the land: regions, cities, routes and the people who live along them."
+tags: [geography, travel, places]
+category: knowledge
+ranked: true
+minStats: { memory: 3 }
+effect: "This character has knowledge of geography and can be assumed to be familiar with the regions, cities, terrain and routes of the places they have lived and traveled."

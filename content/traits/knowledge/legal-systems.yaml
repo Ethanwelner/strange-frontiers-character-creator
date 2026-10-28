@@ -1,0 +1,10 @@
+id: legal-systems
+name: "Legal Systems"
+status: draft
+plane: any
+summary: "How laws are made, courts run, and cases won or lost."
+tags: [law, courts]
+category: knowledge
+ranked: true
+minStats: { memory: 4, logic: 3 }
+effect: "This character has knowledge of legal systems and can be assumed to be familiar with how laws are written and enforced, how courts work, and common legal procedures."

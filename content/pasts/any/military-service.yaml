@@ -9,3 +9,7 @@ grants:
   - { trait: military-drill }
   - { trait: vigilance }
   - { trait: military-tactics }
+backgroundTraits:
+  - weapons
+  - wilderness-lore
+  - navigation

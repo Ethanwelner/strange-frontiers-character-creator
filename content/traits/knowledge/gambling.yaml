@@ -1,0 +1,10 @@
+id: gambling
+name: "Gambling"
+status: draft
+plane: any
+summary: "Games of chance: the odds, the tells, and the cheats."
+tags: [gambling, games, underworld]
+category: knowledge
+ranked: true
+minStats: { memory: 2, intuition: 3 }
+effect: "This character has knowledge of gambling and can be assumed to be familiar with common games of chance, their odds, and the tricks cheats use."

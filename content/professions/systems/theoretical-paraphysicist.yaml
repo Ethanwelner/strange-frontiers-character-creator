@@ -10,3 +10,7 @@ grants:
   - { trait: paraphysics }
   - { trait: exotic-materials }
   - { trait: mathematics }
+backgroundTraits:
+  - physics
+  - chemistry
+  - engineering

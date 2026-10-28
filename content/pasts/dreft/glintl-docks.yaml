@@ -12,3 +12,7 @@ grants:
   - { trait: coastal-trade }
   - { trait: glintl }
   - { trait: haggler }
+backgroundTraits:
+  - commerce
+  - navigation
+  - gambling
