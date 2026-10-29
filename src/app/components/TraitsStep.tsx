@@ -12,6 +12,9 @@ interface Props {
   campaign: Campaign;
   result: BuildResult;
   onChange: (d: Draft) => void;
+  // Traits to leave out of the lists, like the ones a character in Game
+  // Tools already had before this round of picks.
+  hide?: ReadonlySet<string>;
 }
 
 // What a Trait needs before it can be picked, as the site writes it:
@@ -49,7 +52,7 @@ const openersOf = (list: string) =>
     .map((t) => t.name)
     .join(" or ");
 
-export function TraitsStep({ draft, campaign, result, onChange }: Props) {
+export function TraitsStep({ draft, campaign, result, onChange, hide }: Props) {
   // A pick type, or a Trait list the character has opened, like Magic
   const [chosen, setTab] = useState<TraitTab>("universal");
   const [query, setQuery] = useState("");
@@ -78,6 +81,7 @@ export function TraitsStep({ draft, campaign, result, onChange }: Props) {
   const taken = new Set(draft.traits.map((p) => p.trait));
   const shown = options.filter(
     (o) =>
+      !hide?.has(o.trait.id) &&
       !hidden.has(o.trait.category) &&
       (!hideRejected || o.reasons.length === 0 || taken.has(o.trait.id)) &&
       (!q || o.trait.name.toLowerCase().includes(q) || o.trait.tags.some((t) => t.toLowerCase().includes(q))),

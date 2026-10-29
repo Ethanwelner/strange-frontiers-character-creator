@@ -1,16 +1,47 @@
-import { useMemo, useState } from "react";
-import type { BuildResult } from "../../engine/validate.js";
+import { useCallback, useMemo, useState } from "react";
+import { FOCUS_POINTS_PER_LEVEL, type BuildResult } from "../../engine/validate.js";
+import { STAT_GROUPS } from "../../schema/index.js";
 import { content, traitById } from "../../app/content.js";
+import type { Draft } from "../../app/draft.js";
 import { Sheet } from "../../app/components/Sheet.js";
-import { Sign } from "../../app/components/ui.js";
-import { addCondition, currentOf, hpConditions, maxOf, playConditions, removeCondition, RESOURCES, withResource, type Play, type ResourceKey } from "../play.js";
+import { StatsStep } from "../../app/components/StatsStep.js";
+import { TraitsStep } from "../../app/components/TraitsStep.js";
+import { LorePopup, Sign } from "../../app/components/ui.js";
+import { addCondition, checkPlay, currentOf, hpConditions, maxOf, playConditions, removeCondition, RESOURCES, withResource, type Play, type ResourceKey } from "../play.js";
 
 const NAMES: Record<ResourceKey, string> = { hp: "Hit Points", vp: "Vibe Points", sp: "Savvy Points", mp: "Mana Points" };
+
+// A level up is placed once its core point is in and every core stat's focus
+// points are spent.
+function levelPlaced(draft: Draft) {
+  const groups = Object.keys(STAT_GROUPS) as (keyof typeof STAT_GROUPS)[];
+  const core = groups.reduce((n, g) => n + draft.core[g], 0);
+  const spent = (g: keyof typeof STAT_GROUPS) => STAT_GROUPS[g].reduce((n, s) => n + (draft.points[s] ?? 0), 0);
+  return core === draft.level && groups.every((g) => !STAT_GROUPS[g].length || spent(g) === draft.core[g] * FOCUS_POINTS_PER_LEVEL);
+}
 
 // HP, VP, SP and MP, each with its current value against the max the engine
 // works out, then the rest of the character sheet. The Conditions sit in the
 // right column, under the assistant.
-export function Tracker({ play, result, onChange }: { play: Play; result: BuildResult; onChange: (p: Play) => void }) {
+//
+// Level Up! (beside the name) hands this a `levelDraft`: the character one
+// level up, which the creator's Stats step edits in place of the sheet's
+// stats until it's confirmed or cancelled. Traits available, under the
+// sheet's Traits title, opens the creator's Traits step in a popup, without
+// the Traits the character already has, and Submit keeps the picks.
+export function Tracker({
+  play,
+  result,
+  onChange,
+  levelDraft,
+  onLevelDraft,
+}: {
+  play: Play;
+  result: BuildResult;
+  onChange: (p: Play) => void;
+  levelDraft?: Draft;
+  onLevelDraft: (d?: Draft) => void;
+}) {
   // MP shows once the character has any.
   const shown = RESOURCES.filter((r) => r !== "mp" || maxOf(result, r) > 0);
   const [amounts, setAmounts] = useState<Partial<Record<ResourceKey, string>>>({});
@@ -22,6 +53,12 @@ export function Tracker({ play, result, onChange }: { play: Play; result: BuildR
     setAmounts({ ...amounts, [r]: "" });
   };
   const full = shown.every((r) => currentOf(play, result, r) >= maxOf(result, r));
+
+  const [traitDraft, setTraitDraft] = useState<Draft>();
+  const closeTraits = useCallback(() => setTraitDraft(undefined), []);
+  const traitResult = useMemo(() => (traitDraft ? checkPlay(traitDraft, content) : undefined), [traitDraft]);
+  const banked = (result.summary?.picks.universal.banked ?? 0) + (result.summary?.picks.background.banked ?? 0);
+  const held = useMemo(() => new Set(result.summary?.traits.map((h) => h.trait) ?? []), [result]);
 
   return (
     <section className="tools-tracker">
@@ -83,8 +120,56 @@ export function Tracker({ play, result, onChange }: { play: Play; result: BuildR
         </button>
       </p>
 
+      {/* Leveling up: the creator's Stats step, for the new level only */}
+      {levelDraft && (
+        <div className="tools-level-up">
+          <StatsStep draft={levelDraft} onChange={onLevelDraft} floor={play.draft} />
+          <div className="tools-level-actions">
+            <button type="button" className="build-button" disabled={!levelPlaced(levelDraft)} onClick={() => (onChange({ ...play, draft: levelDraft }), onLevelDraft(undefined))}>
+              Level up to {levelDraft.level}
+            </button>
+            <button type="button" onClick={() => onLevelDraft(undefined)}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* The rest of the character sheet: stats, Knowledges and Traits */}
-      <Sheet draft={play.draft} result={result} embedded />
+      <Sheet
+        draft={play.draft}
+        result={result}
+        embedded
+        stats={!levelDraft}
+        traitsAction={
+          banked > 0 && (
+            <p className="tools-traits-available">
+              <button type="button" className="build-button" onClick={() => setTraitDraft(play.draft)}>
+                Traits available
+              </button>
+            </p>
+          )
+        }
+      />
+
+      {/* The creator's Traits step, without the Traits the character already has */}
+      {traitDraft && traitResult && (
+        <LorePopup label="Choose Traits" onClose={closeTraits} className="tools-traits-popup">
+          <TraitsStep draft={traitDraft} campaign={{ startingLevel: traitDraft.level }} result={traitResult} onChange={setTraitDraft} hide={held} />
+          <div className="tools-traits-submit">
+            <button
+              type="button"
+              className="build-button"
+              onClick={() => {
+                onChange({ ...play, draft: traitDraft });
+                setTraitDraft(undefined);
+              }}
+            >
+              Submit
+            </button>
+          </div>
+        </LorePopup>
+      )}
     </section>
   );
 }

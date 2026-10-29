@@ -120,7 +120,7 @@ export function Notice({ children, fades, onDismiss }: { children: string; fades
 // Something's card in the site's lore popup (.lore-modal), like a Knowledge
 // opened from the sheet. Escape, the backdrop and the close button shut it,
 // and focus goes back to whatever opened it.
-export function LorePopup({ label, onClose, children }: { label: string; onClose: () => void; children: ReactNode }) {
+export function LorePopup({ label, onClose, children, className = "" }: { label: string; onClose: () => void; children: ReactNode; className?: string }) {
   const close = useRef<HTMLButtonElement>(null);
   const shut = useRef(onClose);
   shut.current = onClose;
@@ -139,7 +139,7 @@ export function LorePopup({ label, onClose, children }: { label: string; onClose
     };
   }, []);
   return (
-    <div className="lore-modal is-open" role="dialog" aria-modal="true" aria-label={label} onClick={(e) => e.target === e.currentTarget && onClose()}>
+    <div className={`lore-modal is-open ${className}`} role="dialog" aria-modal="true" aria-label={label} onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className="lore-modal-panel">
         <button ref={close} type="button" className="lore-modal-close" aria-label="Close" onClick={onClose}>
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true">

@@ -291,37 +291,41 @@
     align-items: center;
   }
 
-  .tools-groups {
+  /* Level Up!: the creator's Stats step for the new level, then confirming
+     or cancelling it, above the rest of the sheet */
+  .tools-level-up {
+    margin-bottom: 40px;
+  }
+
+  .tools-level-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
-
-  .tools-group.is-active {
-    background: var(--frontiers-green);
-    color: var(--portfolio-black);
-
-    .muted {
-      color: var(--portfolio-black);
-    }
-  }
-
-  .tools-focus {
-    display: grid;
     gap: 12px;
-    margin-bottom: 16px;
-  }
-
-  .tools-focus-row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .tools-picks {
     margin-top: 16px;
+  }
+
+  /* Traits available, under the sheet's Traits title */
+  .tools-traits-available {
+    margin: 0 0 16px;
+  }
+
+  /* The creator's Traits step in a wide popup on the panel's dark gray, with
+     Submit under it */
+  .tools-traits-popup .lore-modal-panel {
+    max-width: 1100px;
+    background: var(--panel);
+    color: var(--panel-text);
+  }
+
+  .tools-traits-submit {
+    position: sticky;
+    bottom: -32px;
+    display: flex;
+    justify-content: flex-end;
+    margin: 24px -32px -32px;
+    padding: 16px 32px;
+    background: var(--panel);
+    border-top: 1px solid var(--card-border);
   }
 
   /* The assistant and the Conditions under it, at the top of the right

@@ -1,19 +1,18 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import { endpointCreate } from "../ai/remote.js";
 import { content, contentErrors } from "../app/content.js";
-import { slug, toBuild } from "../app/draft.js";
+import { slug, toBuild, type Draft } from "../app/draft.js";
 import { NameField, Notice } from "../app/components/ui.js";
 import { checkPlay, creatorDraft, load, save, startPlay, type Play } from "./play.js";
 import { BackgroundPopup } from "./components/BackgroundPopup.js";
 import { Chat } from "./components/Chat.js";
 import { Items } from "./components/Items.js";
-import { LevelUp } from "./components/LevelUp.js";
 import { Conditions, Tracker } from "./components/Tracker.js";
 
-// The character sheet sits under the Tracker, not on a tab of its own.
-const TABS = ["tracker", "items", "level"] as const;
+// The character sheet and leveling up both happen on the Tracker.
+const TABS = ["tracker", "items"] as const;
 type Tab = (typeof TABS)[number];
-const LABELS: Record<Tab, string> = { tracker: "Tracker", items: "Items", level: "Level Up" };
+const LABELS: Record<Tab, string> = { tracker: "Tracker", items: "Items" };
 
 export function ToolsApp() {
   const [play, setPlay] = useState<Play | undefined>(load);
@@ -25,6 +24,8 @@ export function ToolsApp() {
   // The Kind or background package whose card is open, from the line under the name
   const [showing, setShowing] = useState<string>();
   const closePopup = useCallback(() => setShowing(undefined), []);
+  // The character one level up, while Level Up! is open on the Tracker
+  const [levelDraft, setLevelDraft] = useState<Draft>();
   const fileInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => save(play), [play]);
@@ -99,6 +100,16 @@ export function ToolsApp() {
                   onChange={(name) => setPlay({ ...play, draft: { ...play.draft, name } })}
                 />
                 <div className="hero-bar tools-actions">
+                  <button
+                    type="button"
+                    disabled={Boolean(levelDraft)}
+                    onClick={() => {
+                      setTab("tracker");
+                      setLevelDraft({ ...play.draft, level: play.draft.level + 1 });
+                    }}
+                  >
+                    Level Up!
+                  </button>
                   <button type="button" onClick={exportBuild}>
                     Export
                   </button>
@@ -109,6 +120,7 @@ export function ToolsApp() {
                         type="button"
                         onClick={() => {
                           setPlay(undefined);
+                          setLevelDraft(undefined);
                           setConfirmingSwitch(false);
                           setNotice(undefined);
                         }}
@@ -183,9 +195,10 @@ export function ToolsApp() {
               </section>
             )}
 
-            {play && result && tab === "tracker" && <Tracker play={play} result={result} onChange={setPlay} />}
+            {play && result && tab === "tracker" && (
+              <Tracker play={play} result={result} onChange={setPlay} levelDraft={levelDraft} onLevelDraft={setLevelDraft} />
+            )}
             {play && result && tab === "items" && <Items play={play} onChange={setPlay} />}
-            {play && result && tab === "level" && <LevelUp play={play} result={result} onChange={setPlay} />}
           </main>
           {play && result && (
             <aside className="tools-chat-side">

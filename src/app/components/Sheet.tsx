@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, type ReactNode } from "react";
 import { FREE_TEXT_POOLS, MP_PER_MAGIC, type BuildResult } from "../../engine/validate.js";
 import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { coreStatsShown } from "../check.js";
@@ -72,6 +72,8 @@ export function Sheet({
   onImport,
   onName,
   embedded = false,
+  stats = true,
+  traitsAction,
 }: {
   draft: Draft;
   result: BuildResult;
@@ -79,6 +81,10 @@ export function Sheet({
   onImport?: () => void;
   onName?: (name?: string) => void;
   embedded?: boolean;
+  // Leaves the stats out, as Game Tools does while it shows them editable for a level up
+  stats?: boolean;
+  // Shown under the Traits title, like Game Tools' "Traits available"
+  traitsAction?: ReactNode;
 }) {
   const kind = draft.kind ? kindById.get(draft.kind) : undefined;
   const packages = [draft.origin, draft.profession, draft.past].map((id) => (id ? packageById.get(id) : undefined));
@@ -171,46 +177,48 @@ export function Sheet({
         )}
 
         <div className="c-sheet-box sheet-body">
-          <div className="sheet-stats">
-            {groups.map((g) => (
-              <div key={g} className="sheet-group">
-                <div className="sheet-group-head">
-                  <span className="stat-badge" title="Core stat">
-                    {summary?.coreStats[g] ?? "–"}
-                  </span>
-                  <h4 className="rule">{title(g)}</h4>
-                </div>
-                {/* Magic: a diamond per point, under its number */}
-                {!STAT_GROUPS[g].length && (
-                  <div className="sheet-stat">
-                    <div className="tiny-text">
-                      <strong>
-                        Each point in {title(g)} adds {MP_PER_MAGIC} MP (Mana Points)
-                      </strong>
-                    </div>
-                    <CoreLine bonus={summary?.coreBonus[g] ?? 0} value={summary?.coreStats[g] ?? draft.core[g]} />
+          {stats && (
+            <div className="sheet-stats">
+              {groups.map((g) => (
+                <div key={g} className="sheet-group">
+                  <div className="sheet-group-head">
+                    <span className="stat-badge" title="Core stat">
+                      {summary?.coreStats[g] ?? "–"}
+                    </span>
+                    <h4 className="rule">{title(g)}</h4>
                   </div>
-                )}
-                {STAT_GROUPS[g].map((s: StatId) => {
-                  const value = summary?.stats[s];
-                  // The Kind's bonus, with any free bonus points placed, shows gray.
-                  const bonus = (base?.[s]?.bonus ?? 0) + (draft.startPoints?.[s] ?? 0);
-                  const max = base?.[s]?.max ?? 0;
-                  return (
-                    <div key={s} className="sheet-stat">
+                  {/* Magic: a diamond per point, under its number */}
+                  {!STAT_GROUPS[g].length && (
+                    <div className="sheet-stat">
                       <div className="tiny-text">
                         <strong>
-                          {title(s)} - {value ?? "–"}
+                          Each point in {title(g)} adds {MP_PER_MAGIC} MP (Mana Points)
                         </strong>
-                        <span className="muted"> max {base?.[s]?.max ?? "–"}</span>
                       </div>
-                      <StatLine bonus={bonus} value={value ?? bonus} max={max} />
+                      <CoreLine bonus={summary?.coreBonus[g] ?? 0} value={summary?.coreStats[g] ?? draft.core[g]} />
                     </div>
-                  );
-                })}
-              </div>
-            ))}
-          </div>
+                  )}
+                  {STAT_GROUPS[g].map((s: StatId) => {
+                    const value = summary?.stats[s];
+                    // The Kind's bonus, with any free bonus points placed, shows gray.
+                    const bonus = (base?.[s]?.bonus ?? 0) + (draft.startPoints?.[s] ?? 0);
+                    const max = base?.[s]?.max ?? 0;
+                    return (
+                      <div key={s} className="sheet-stat">
+                        <div className="tiny-text">
+                          <strong>
+                            {title(s)} - {value ?? "–"}
+                          </strong>
+                          <span className="muted"> max {base?.[s]?.max ?? "–"}</span>
+                        </div>
+                        <StatLine bonus={bonus} value={value ?? bonus} max={max} />
+                      </div>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+          )}
 
           <div className="sheet-side">
             <h4 className="rule">Knowledges</h4>
@@ -245,6 +253,7 @@ export function Sheet({
 
         <div className="c-sheet-box">
           <h3 className="subhead">Traits</h3>
+          {traitsAction}
           {others.length > 0 ? (
             <ul className="sheet-traits">
               {others.map((h) => (
