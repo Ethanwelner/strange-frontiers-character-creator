@@ -1,6 +1,16 @@
 /* Game Tools: the creator's styles (src/app/styles.css, under .sf-creator)
    plus these, under .sf-tools. */
 .sf-tools {
+  /* The hero, then the panel filling the rest of the screen down to the
+     footer, so a short tab (or no character yet) doesn't leave the night sky
+     showing under it. .sf-creator is already at least the screen's height. */
+  display: flex;
+  flex-direction: column;
+
+  .builder-panel {
+    flex: 1;
+  }
+
   /* The character's name, level and actions, across the top of the panel */
   .tools-character {
     grid-column: 1 / -1;
