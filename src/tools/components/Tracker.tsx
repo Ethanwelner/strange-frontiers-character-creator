@@ -28,10 +28,8 @@ export function Tracker({ play, result, onChange }: { play: Play; result: BuildR
 
   return (
     <section className="tools-tracker">
-      <header className="step-head">
-        <h2>Tracker</h2>
-        <p className="lede">Your resources and Conditions right now. Change them here, or tell the assistant what happened.</p>
-      </header>
+      {/* The character's name above stands in for this tab's title. */}
+      <p className="lede">Your resources and Conditions right now. Change them here, or tell the assistant what happened.</p>
 
       {!result.summary && <div className="notice bad">The engine couldn't read this character, so its maximums aren't known. Check the Sheet tab.</div>}
 

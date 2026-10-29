@@ -80,10 +80,10 @@ export function ToolsApp() {
 
       <div className="section unlimited white-bg builder-panel">
         <div className={`container builder-body tools-body${play ? "" : " no-side"}`}>
-          {/* The character's name over the tools and the assistant, with its level and the actions under it */}
+          {/* The character's name, titled like a tab, over the tools and the assistant, with its level and the actions under it */}
           {play && result && (
-            <header className="tools-character">
-              <h2 className="tools-name">{play.draft.name ?? "Unnamed character"}</h2>
+            <header className="step-head tools-character">
+              <h2>{play.draft.name ?? "Unnamed character"}</h2>
               <p className="tools-line">
                 Level {play.draft.level} {play.draft.kind ? (content.kinds.find((k) => k.id === play.draft.kind)?.name ?? play.draft.kind) : ""}
                 {result.ok ? "" : ` · ${result.errors.length} rules ${result.errors.length === 1 ? "problem" : "problems"}`}

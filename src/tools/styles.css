@@ -11,18 +11,12 @@
     grid-column: 1 / -1;
   }
 
-  .tools-name {
-    font-family: var(--title);
-    font-size: 3rem;
-    font-weight: normal;
-    line-height: 1;
-    margin: 0 0 8px;
-    color: var(--frontiers-green);
+  .tools-character h2 {
+    margin-bottom: 8px;
   }
 
   .tools-line {
     margin: 0 0 8px;
-    font-size: 1rem;
   }
 
   /* The tool, then the assistant beside it */
