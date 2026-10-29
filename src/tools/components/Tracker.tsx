@@ -125,7 +125,7 @@ export function Tracker({
           );
         })}
       </div>
-      <p>
+      <p className="tools-restore">
         <button type="button" onClick={() => onChange({ ...play, current: {} })} disabled={full}>
           Restore all
         </button>

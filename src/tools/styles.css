@@ -371,6 +371,17 @@
     }
   }
 
+  /* 48px between the resources (down to Restore all) and the stats, or the
+     stats editor when it's open */
+  .tools-restore {
+    margin: 0 0 48px;
+  }
+
+  .tools-tracker > :is(.sheet-embedded, .tools-level-up) {
+    margin-top: 0;
+    padding-top: 0;
+  }
+
   /* Level Up!: the creator's Stats step for the new level, then confirming
      or cancelling it, above the rest of the sheet */
   .tools-level-up {
