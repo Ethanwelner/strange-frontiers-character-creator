@@ -290,7 +290,7 @@
   }
 
   .tools-qty {
-    width: 5em;
+    width: 3.5em;
   }
 
   .tools-item-row {
@@ -329,8 +329,20 @@
       margin-top: 0;
     }
 
-    .tools-add input[type="text"] {
-      flex: 1 1 100%;
+    /* Name, count, category and Add on one line */
+    .tools-add {
+      flex-wrap: nowrap;
+
+      input[type="text"] {
+        flex: 1 1 auto;
+        width: 0;
+        min-width: 0;
+      }
+
+      select,
+      button {
+        flex: none;
+      }
     }
 
     .tools-item {
