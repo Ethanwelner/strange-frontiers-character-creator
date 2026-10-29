@@ -312,8 +312,9 @@
     margin-top: 16px;
   }
 
-  /* The assistant, at the top of the right column, stays in view while the
-     tools scroll, like the creator's character box */
+  /* The assistant and the Conditions under it, at the top of the right
+     column, stay in view while the tools scroll, like the creator's
+     character box, scrolling inside when they're taller than the window */
   .tools-chat-side {
     grid-column: 2;
     grid-row: 1 / span 2;
@@ -321,7 +322,13 @@
     top: 1rem;
     align-self: start;
     display: grid;
-    gap: 16px;
+    gap: 24px;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+  }
+
+  .tools-conditions-side .subhead {
+    margin-top: 0;
   }
 
   /* Export and Switch character, beside the name. Switching asks on its
@@ -470,6 +477,7 @@
 
     .tools-chat-side {
       position: static;
+      max-height: none;
     }
   }
 }

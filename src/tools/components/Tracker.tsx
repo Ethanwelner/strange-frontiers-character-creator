@@ -8,15 +8,12 @@ import { addCondition, currentOf, hpConditions, maxOf, playConditions, removeCon
 const NAMES: Record<ResourceKey, string> = { hp: "Hit Points", vp: "Vibe Points", sp: "Savvy Points", mp: "Mana Points" };
 
 // HP, VP, SP and MP, each with its current value against the max the engine
-// works out, then the Conditions: the ones HP decides, and the temporary ones
-// the player adds. The rest of the character sheet follows.
+// works out, then the rest of the character sheet. The Conditions sit in the
+// right column, under the assistant.
 export function Tracker({ play, result, onChange }: { play: Play; result: BuildResult; onChange: (p: Play) => void }) {
   // MP shows once the character has any.
   const shown = RESOURCES.filter((r) => r !== "mp" || maxOf(result, r) > 0);
   const [amounts, setAmounts] = useState<Partial<Record<ResourceKey, string>>>({});
-  const options = useMemo(() => playConditions(content), []);
-  const [adding, setAdding] = useState("");
-
   const set = (r: ResourceKey, value: number) => onChange(withResource(play, result, r, value));
   const apply = (r: ResourceKey, sign: 1 | -1) => {
     const n = Number(amounts[r]);
@@ -25,13 +22,12 @@ export function Tracker({ play, result, onChange }: { play: Play; result: BuildR
     setAmounts({ ...amounts, [r]: "" });
   };
   const full = shown.every((r) => currentOf(play, result, r) >= maxOf(result, r));
-  const hp = hpConditions(currentOf(play, result, "hp"), maxOf(result, "hp"));
 
   return (
     <section className="tools-tracker">
       {/* The character's name above stands in for this tab's title. */}
 
-      {!result.summary && <div className="notice bad">The engine couldn't read this character, so its maximums aren't known. Check the Sheet tab.</div>}
+      {!result.summary && <div className="notice bad">The engine couldn't read this character, so its maximums aren't known. Check the sheet below.</div>}
 
       <div className="tools-resources">
         {shown.map((r) => {
@@ -87,6 +83,22 @@ export function Tracker({ play, result, onChange }: { play: Play; result: BuildR
         </button>
       </p>
 
+      {/* The rest of the character sheet: stats, Knowledges and Traits */}
+      <h3 className="subhead">Sheet</h3>
+      <Sheet draft={play.draft} result={result} embedded />
+    </section>
+  );
+}
+
+// The Conditions: the ones HP decides, and the temporary ones the player
+// adds, with Add a Condition above them. They sit under the assistant.
+export function Conditions({ play, result, onChange }: { play: Play; result: BuildResult; onChange: (p: Play) => void }) {
+  const options = useMemo(() => playConditions(content), []);
+  const [adding, setAdding] = useState("");
+  const hp = hpConditions(currentOf(play, result, "hp"), maxOf(result, "hp"));
+
+  return (
+    <section className="tools-conditions-side" aria-label="Conditions">
       <h3 className="subhead">Conditions</h3>
       {/* Add a Condition, above the ones the character has */}
       <div className="tools-add">
@@ -158,10 +170,6 @@ export function Tracker({ play, result, onChange }: { play: Play; result: BuildR
           );
         })}
       </ul>
-
-      {/* The rest of the character sheet: stats, Knowledges and Traits */}
-      <h3 className="subhead">Sheet</h3>
-      <Sheet draft={play.draft} result={result} embedded />
     </section>
   );
 }

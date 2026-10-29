@@ -7,7 +7,7 @@ import { checkPlay, creatorDraft, load, save, startPlay, type Play } from "./pla
 import { Chat } from "./components/Chat.js";
 import { Items } from "./components/Items.js";
 import { LevelUp } from "./components/LevelUp.js";
-import { Tracker } from "./components/Tracker.js";
+import { Conditions, Tracker } from "./components/Tracker.js";
 
 // The character sheet sits under the Tracker, not on a tab of its own.
 const TABS = ["tracker", "items", "level"] as const;
@@ -177,6 +177,7 @@ export function ToolsApp() {
           {play && result && (
             <aside className="tools-chat-side">
               <Chat play={play} result={result} content={content} create={create} model={__SF_AI__.model} onChange={setPlay} check={(p) => checkPlay(p.draft, content)} />
+              <Conditions play={play} result={result} onChange={setPlay} />
             </aside>
           )}
         </div>

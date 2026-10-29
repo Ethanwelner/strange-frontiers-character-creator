@@ -23,7 +23,7 @@ export function LevelUp({ play, result, onChange }: { play: Play; result: BuildR
         <header className="step-head">
           <h2>Level Up</h2>
         </header>
-        <div className="notice bad">The engine couldn't read this character, so it can't level up. Check the Sheet tab.</div>
+        <div className="notice bad">The engine couldn't read this character, so it can't level up. Check the sheet on the Tracker.</div>
       </section>
     );
   }
