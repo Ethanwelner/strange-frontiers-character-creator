@@ -70,10 +70,10 @@ export function Chat({
       <ol className="tools-chat-log" ref={log} aria-live="polite">
         {play.chat.length === 0 && (
           <li className="tools-chat-empty">
-            <p className="muted small">Ask about the rules or your Traits, or say what happened and I'll update the tracker.</p>
+            <p className="muted">Ask about the rules or your Traits, or say what happened and I'll update the tracker.</p>
             <div className="tools-chat-examples">
               {EXAMPLES.map((e) => (
-                <button key={e} type="button" className="chip" onClick={() => send(e)} disabled={busy || !result.summary}>
+                <button key={e} type="button" className="tools-chat-example" onClick={() => send(e)} disabled={busy || !result.summary}>
                   {e}
                 </button>
               ))}
@@ -108,7 +108,7 @@ export function Chat({
       >
         <textarea
           className="rpg-search-input"
-          rows={2}
+          rows={4}
           placeholder="Ask, or say what happened"
           aria-label="Message to the assistant"
           value={message}

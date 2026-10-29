@@ -221,10 +221,10 @@
     align-self: start;
   }
 
+  /* Title, conversation, then the message box and Send, 24px apart */
   .tools-chat {
-    display: flex;
-    flex-direction: column;
-    max-height: calc(100vh - 48px);
+    display: grid;
+    gap: 24px;
   }
 
   .tools-chat-head {
@@ -233,28 +233,57 @@
     align-items: baseline;
 
     .subhead {
-      margin-top: 0;
+      margin: 0;
     }
   }
 
   .tools-chat-log {
     list-style: none;
     padding: 0;
-    margin: 0 0 12px;
+    margin: 0;
     overflow-y: auto;
     min-height: 160px;
+    max-height: calc(100vh - 420px);
     display: flex;
     flex-direction: column;
     gap: 8px;
   }
 
+  /* Before the first message: what to ask, then the examples */
+  .tools-chat-empty {
+    display: grid;
+    gap: 24px;
+
+    p {
+      margin: 0;
+    }
+  }
+
   .tools-chat-examples {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 8px;
+  }
 
-    .chip {
-      cursor: pointer;
+  /* Example questions in the body font, sentence case, not the site's
+     all-caps button type */
+  button.tools-chat-example {
+    font-family: var(--body);
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.3;
+    text-transform: none;
+    text-align: left;
+    padding: 6px 12px;
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    background: rgb(255 255 255 / 6%);
+    color: var(--panel-text);
+
+    &:hover:not(:disabled) {
+      background: rgb(255 255 255 / 14%);
+      color: var(--panel-text);
     }
   }
 
@@ -286,18 +315,24 @@
     font-size: 0.9em;
   }
 
-  .tools-chat-form {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+  .tools-chat .notice {
+    margin: 0;
+  }
 
-    textarea {
+  .tools-chat-form {
+    display: grid;
+    gap: 24px;
+
+    textarea.rpg-search-input {
       width: 100%;
+      height: auto;
+      min-height: 120px;
+      padding: 12px 16px;
       resize: vertical;
     }
 
     .build-button {
-      align-self: flex-end;
+      justify-self: end;
     }
   }
 
