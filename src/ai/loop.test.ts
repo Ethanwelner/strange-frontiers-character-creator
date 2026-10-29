@@ -101,6 +101,20 @@ describe("describeCharacter", () => {
     expect(result.reasons.find((r) => r.target === "origin")?.reason).toBe("fits: origin");
   });
 
+  it("keeps the name from an earlier submit when the final one drops it", async () => {
+    const { name: _, ...unnamed } = goblinoid;
+    const { create } = script(message([submit(goblinoid)]), message([submit(unnamed)]));
+    const result = await describeCharacter({ description: "A goblin mage.", content, provider: anthropicProvider(create), campaign: L1 });
+    expect(result.status).toBe("accepted");
+    expect(result.build?.name).toBe("Pell");
+  });
+
+  it("names the character as the player did, whatever the model submits", async () => {
+    const { create } = script(message([submit(goblinoid)]), message([submit({ ...goblinoid, name: "Someone Else" })]));
+    const result = await describeCharacter({ description: "A goblin mage.", name: "Tibb", content, provider: anthropicProvider(create), campaign: L1 });
+    expect(result.build?.name).toBe("Tibb");
+  });
+
   it("builds with another Claude model when told to, without a refusal fallback for Haiku", async () => {
     const opus = script(message([submit(goblinoid)]));
     await describeCharacter({ description: "A goblin mage.", content, provider: noReview(anthropicProvider(opus.create)), campaign: L1 });

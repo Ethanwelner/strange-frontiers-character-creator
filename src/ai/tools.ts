@@ -13,7 +13,7 @@ const CONCEPT_SCHEMA = {
   type: "object",
   description: "Who the character is. The rules engine turns this into a full legal build. Every id must come from the game's content.",
   properties: {
-    name: { type: "string", description: "The character's name, if the player gave one or one fits." },
+    name: { type: "string", description: "The character's name: the player's, or one you make up that fits their Kind, home and past." },
     kind: { type: "string", description: "Kind id, e.g. isek." },
     origin: { type: "string", description: "Origin package id." },
     profession: { type: "string", description: "Profession package id." },
@@ -54,7 +54,7 @@ const CONCEPT_SCHEMA = {
       },
     },
   },
-  required: ["kind", "origin", "profession", "past", "focus", "traits"],
+  required: ["name", "kind", "origin", "profession", "past", "focus", "traits"],
 } as const;
 
 export const TOOLS: Tool[] = [
