@@ -66,11 +66,22 @@ npm run dev      # http://localhost:5173
 npm run build    # static site in dist/; Build it calls creator-api.php next to the page
 ```
 
-**Publishing to the site:** `npm run build:site` builds into `../portfolio_site/creator/` (or `SF_SITE_DIR`), replacing what's there. It writes just the script, the stylesheet and `.vite/manifest.json`, which `creator.php` reads. Commit `creator/` in the site's repo and merge, and the site's deploy publishes it. Content and code changes reach the site only this way.
+**Publishing to the site:** `npm run build:site` builds the builder and Game Tools into `../portfolio_site/creator/` (or `SF_SITE_DIR`), replacing what's there. It writes just the scripts, the stylesheets and `.vite/manifest.json`, which `creator.php` and `game-tools.php` read. Commit `creator/` in the site's repo and merge, and the site's deploy publishes it. Content and code changes reach the site only this way.
 
 - Every legality check comes from `validateBuild`. The Trait picker tries each pick against the engine, greys out the ones it would reject, and shows the engine's reason.
 - The in-progress build is saved in the browser's localStorage. **Export** downloads it as a `Build` JSON file and **Import** loads one back; an imported build's level becomes the campaign's starting level.
 - Content is bundled at build time. `npm run dev` reloads the builder and restarts the AI server when `content/` changes; run `npm run build` again to update `dist/`.
+
+## Game Tools
+
+A second page for running a character that already exists, during play (`tools.html` in development, `game-tools.php` on the site). It imports a character file the builder exports, or picks up the build open in the builder, and checks it with `validateBuild` at its own level. Four tabs:
+
+- **Tracker:** current HP, VP, SP and MP against the engine's maximums, the HP Conditions (Healthy, Injured, Severely Injured, Incapacitated, Dead) worked out from HP, and temporary Condition Traits the player adds.
+- **Items:** a free-form inventory (name, count, category, equipped, notes) until item rules settle.
+- **Level Up:** one core point and its 3 focus points, then the builder's own Traits step to spend the new picks.
+- **Sheet:** the builder's character sheet.
+
+Beside them, an assistant (Claude) answers questions about the character and the rules and changes the tracker when the player says what happened, through tools in `src/tools/chat.ts`. Its loop runs in the browser and sends each turn to `api/messages` in development and the site's `game-tools-api.php` in a build. The session (tracker, items, Conditions, chat) is kept in localStorage; **Export** downloads the build, level-ups included, for the builder to import.
 
 ## Scripts
 
@@ -78,7 +89,7 @@ npm run build    # static site in dist/; Build it calls creator-api.php next to 
 |---|---|
 | `npm run dev` | Runs the builder and the local AI server with hot reload |
 | `npm run build` | Builds the builder into `dist/` |
-| `npm run build:site` | Builds the builder into the site's `creator/` folder, for `creator.php` |
+| `npm run build:site` | Builds the builder and Game Tools into the site's `creator/` folder, for `creator.php` and `game-tools.php` |
 | `npm run preview` | Serves the built `dist/` |
 | `npm run validate` | Checks every content file against the schemas and cross-file rules |
 | `npm test` | Runs the engine and builder tests |
@@ -96,4 +107,5 @@ npm run build    # static site in dist/; Build it calls creator-api.php next to 
 - `evals/`: sample player descriptions for `npm run eval`.
 - `characters/`: Build JSON files made in Claude Code; `npm run check-build` checks them.
 - `src/app/`: the manual builder (Vite + React). `content.ts` bundles `content/` with `import.meta.glob`; `check.ts` holds the helpers that ask the engine about picks. `styles.css` holds only the builder's own styles, scoped to `.sf-creator`; everything it shares with the site (colors, fonts, columns, tabs, Trait boxes, the character sheet, the night sky) comes from the site's CSS, which `creator.php` loads on the site and `vite.config.ts` links in development.
+- `src/tools/`: Game Tools. `play.ts` holds a character in play (resources, items, Conditions) and its storage, `chat.ts` the assistant's instructions, tools and loop, and `components/` the tabs. `styles.css` adds its own styles, scoped to `.sf-tools`, on top of the builder's.
 - `scripts/validate-content.ts`: checks every content file against the schemas and the cross-file rules.

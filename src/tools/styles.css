@@ -1,0 +1,313 @@
+/* Game Tools: the creator's styles (src/app/styles.css, under .sf-creator)
+   plus these, under .sf-tools. */
+.sf-tools {
+  /* A shorter hero than the creator's: there's no describe box. */
+  .builder-hero {
+    min-height: max(45vh, 480px);
+  }
+
+  .tools-who {
+    margin-bottom: 0;
+  }
+
+  .tools-name {
+    font-family: var(--title);
+    font-size: 2rem;
+    line-height: 1;
+    margin: 0 0 4px;
+    color: var(--frontiers-green);
+  }
+
+  .tools-line {
+    margin: 0 0 12px;
+  }
+
+  /* The tool, then the assistant beside it */
+  .tools-body {
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+  }
+
+  .tools-start {
+    max-width: 760px;
+
+    h2 {
+      font-family: var(--title);
+      font-size: 2.25rem;
+      font-weight: normal;
+    }
+  }
+
+  .tools-start-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 24px 0 16px;
+  }
+
+  /* The step header without the creator's "Step n of 6" stinger, which the
+     reused Traits step and Sheet bring along */
+  .step-head .stinger-row {
+    display: none;
+  }
+
+  /* Boxes on the dark panel */
+  .tools-resource,
+  .tools-item,
+  .tools-chat {
+    background: var(--panel-box);
+    border: 1px solid var(--card-border);
+    padding: 16px;
+  }
+
+  .tools-resources {
+    display: grid;
+    /* As many as fit, three across on most screens, each card at most 360px */
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .tools-resource {
+    max-width: 360px;
+  }
+
+  .tools-resource-head {
+    margin-bottom: 8px;
+
+    strong {
+      font-family: var(--title);
+      font-size: 1.5rem;
+      font-weight: normal;
+    }
+  }
+
+  .tools-resource-value {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .num {
+      font-family: var(--title);
+      font-size: 2.25rem;
+      line-height: 1;
+      white-space: nowrap;
+      flex: 1;
+      text-align: center;
+    }
+  }
+
+  .tools-meter {
+    height: 6px;
+    margin: 12px 0;
+    background: rgb(255 255 255 / 12%);
+
+    > span {
+      display: block;
+      height: 100%;
+      background: var(--frontiers-green);
+      transition: width 200ms;
+    }
+  }
+
+  .tools-meter-hp > span {
+    background: #e2574c;
+  }
+
+  .tools-meter-mp > span {
+    background: #9b7bff;
+  }
+
+  .tools-resource-apply {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    input {
+      width: 0;
+      flex: 1;
+      min-width: 64px;
+    }
+  }
+
+  .tools-conditions,
+  .tools-item-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 12px;
+    margin: 0 0 16px;
+  }
+
+  .tools-conditions {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  }
+
+  .tools-rank {
+    margin: 4px 0;
+  }
+
+  .tools-note {
+    width: 100%;
+    margin: 8px 0;
+  }
+
+  .tools-add {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .tools-qty {
+    width: 5em;
+  }
+
+  .tools-item-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .tools-item-name {
+    flex: 1;
+    min-width: 160px;
+  }
+
+  .tools-equipped {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .tools-groups {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .tools-group.is-active {
+    background: var(--frontiers-green);
+    color: var(--portfolio-black);
+
+    .muted {
+      color: var(--portfolio-black);
+    }
+  }
+
+  .tools-focus {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .tools-focus-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .tools-picks {
+    margin-top: 16px;
+  }
+
+  /* The assistant stays in view while the tool scrolls */
+  .tools-chat-side {
+    position: sticky;
+    top: 24px;
+    align-self: start;
+  }
+
+  .tools-chat {
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 48px);
+  }
+
+  .tools-chat-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+
+    .subhead {
+      margin-top: 0;
+    }
+  }
+
+  .tools-chat-log {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 12px;
+    overflow-y: auto;
+    min-height: 160px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .tools-chat-examples {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+
+    .chip {
+      cursor: pointer;
+    }
+  }
+
+  .tools-chat-msg {
+    max-width: 90%;
+    padding: 8px 12px;
+
+    p {
+      margin: 0;
+      white-space: pre-wrap;
+    }
+
+    &.is-user {
+      align-self: flex-end;
+      background: var(--frontiers-green);
+      color: var(--portfolio-black);
+    }
+
+    &.is-assistant {
+      align-self: flex-start;
+      background: rgb(255 255 255 / 8%);
+    }
+  }
+
+  .tools-chat-changes {
+    margin: 6px 0 0;
+    padding-left: 1rem;
+    color: var(--panel-good);
+    font-size: 0.9em;
+  }
+
+  .tools-chat-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    textarea {
+      width: 100%;
+      resize: vertical;
+    }
+
+    .build-button {
+      align-self: flex-end;
+    }
+  }
+
+  @media (max-width: 991px) {
+    .tools-body {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .tools-chat-side {
+      position: static;
+    }
+  }
+}

@@ -709,6 +709,12 @@
     margin-bottom: 1rem;
   }
 
+  /* A passing notice fading out (Notice in components/ui.tsx) */
+  .notice.is-leaving {
+    opacity: 0;
+    transition: opacity 400ms;
+  }
+
   /* An opaque tint, so the error reads the same on the light panels and on
      the dark hero, where a see-through one left dark text on near-black */
   .notice.bad {

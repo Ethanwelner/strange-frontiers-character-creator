@@ -7,7 +7,7 @@ import { DescribeBox } from "./components/DescribeBox.js";
 import { StatsStep } from "./components/StatsStep.js";
 import { Sheet } from "./components/Sheet.js";
 import { TraitsStep } from "./components/TraitsStep.js";
-import { Arrow } from "./components/ui.js";
+import { Arrow, Notice } from "./components/ui.js";
 import { ValidationPanel } from "./components/ValidationPanel.js";
 import { content, contentErrors } from "./content.js";
 import type { DescribeResult } from "../ai/types.js";
@@ -27,7 +27,8 @@ export function App() {
   // The last build's notes show only right after it finishes, not after a reload
   // or an import. The saved notes still fill in the description and name.
   const [justBuilt, setJustBuilt] = useState(false);
-  const [notice, setNotice] = useState<string>();
+  // A passing notice fades on its own; an error stays.
+  const [notice, setNotice] = useState<{ text: string; fades?: boolean }>();
   // New asks inline before clearing; native confirm() dialogs are blocked in some browsers.
   const [confirmingNew, setConfirmingNew] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
@@ -86,9 +87,9 @@ export function App() {
       // The last build's notes don't describe an imported sheet.
       setSaved((s) => ({ ...s, draft: imported, campaign: { startingLevel: imported.level }, ai: undefined }));
       setJustBuilt(false);
-      setNotice(`Imported ${file.name}.`);
+      setNotice({ text: `Imported ${file.name}.`, fades: true });
     } catch (err) {
-      setNotice(`Couldn't import ${file.name}: ${err instanceof Error ? err.message : String(err)}`);
+      setNotice({ text: `Couldn't import ${file.name}: ${err instanceof Error ? err.message : String(err)}` });
     }
   };
 
@@ -218,12 +219,9 @@ export function App() {
                 </div>
               )}
               {notice && (
-                <div className="notice" role="status">
-                  {notice}
-                  <button className="link" onClick={() => setNotice(undefined)} aria-label="Dismiss">
-                    ✕
-                  </button>
-                </div>
+                <Notice fades={notice.fades} onDismiss={() => setNotice(undefined)}>
+                  {notice.text}
+                </Notice>
               )}
 
               {step === "character" && (

@@ -1,4 +1,4 @@
-import { useState, type KeyboardEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { MAX_LEVEL } from "../../ai/level.js";
 import { STAT_GROUPS, type StatBlock, type StatId } from "../../schema/index.js";
 import { kindById, packageById, traitById } from "../content.js";
@@ -80,6 +80,38 @@ export function Card(props: { selected: boolean; onSelect: () => void; children:
       onKeyDown={onKey}
     >
       {props.children}
+    </div>
+  );
+}
+
+// How long a passing notice, like "Imported grosh.json.", stays before it
+// fades out, and how long the fade takes (.notice.is-leaving in styles.css).
+const NOTICE_MS = 5000;
+const NOTICE_FADE_MS = 400;
+
+// A notice with a dismiss button. One that `fades` goes away on its own after
+// 5 seconds; errors stay until the player dismisses them. A new message
+// starts the wait over, so the message is one string.
+export function Notice({ children, fades, onDismiss }: { children: string; fades?: boolean; onDismiss: () => void }) {
+  const [leaving, setLeaving] = useState(false);
+  const dismiss = useRef(onDismiss);
+  dismiss.current = onDismiss;
+  useEffect(() => {
+    setLeaving(false);
+    if (!fades) return;
+    const fade = setTimeout(() => setLeaving(true), NOTICE_MS);
+    const gone = setTimeout(() => dismiss.current(), NOTICE_MS + NOTICE_FADE_MS);
+    return () => {
+      clearTimeout(fade);
+      clearTimeout(gone);
+    };
+  }, [children, fades]);
+  return (
+    <div className={`notice${leaving ? " is-leaving" : ""}`} role="status">
+      {children}
+      <button className="link" onClick={onDismiss} aria-label="Dismiss">
+        ✕
+      </button>
     </div>
   );
 }

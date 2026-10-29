@@ -53,6 +53,9 @@ export default defineConfig(({ command, mode }) => {
     route: dev && env.SF_PROVIDER?.trim().toLowerCase() !== "anthropic" ? "server" : "browser",
     endpoint: env.VITE_SF_ENDPOINT || (dev ? "api/messages" : "creator-api.php"),
     model: (dev ? env.ANTHROPIC_MODEL?.trim() : env.VITE_SF_MODEL?.trim()) || "claude-haiku-5-5",
+    // Game Tools' assistant always runs in the browser, through the local AI
+    // server in development and the site's game-tools-api.php in a build.
+    toolsEndpoint: env.VITE_SF_TOOLS_ENDPOINT || (dev ? "api/messages" : "game-tools-api.php"),
   };
 
   return {

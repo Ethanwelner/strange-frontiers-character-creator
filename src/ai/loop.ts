@@ -127,6 +127,9 @@ export async function describeCharacter(opts: DescribeOptions): Promise<Describe
   let reasonsAsked = false;
   // Reasons by target, so a resubmission that skips some keeps the earlier ones.
   const reasonsSoFar = new Map<string, Reason>();
+  // The player's name always wins; otherwise the last name the model gave,
+  // so a resubmission that drops it keeps the character named.
+  let nameSoFar = opts.name?.trim() || undefined;
   // Reasoning helps with the concept; fixing what the engine sends back
   // doesn't need it, so models that can skip it stop after the first submit.
   let submitted = false;
@@ -169,10 +172,12 @@ export async function describeCharacter(opts: DescribeOptions): Promise<Describe
           continue;
         }
         submitted = true;
+        if (!opts.name?.trim() && typeof concept.name === "string" && concept.name.trim()) nameSoFar = concept.name.trim();
+        const named = nameSoFar ? { ...concept, name: nameSoFar } : concept;
         // A concept the Build schema still can't take goes back to the model like any format problem.
         let solved: ReturnType<typeof solveConcept>;
         try {
-          solved = solveConcept(concept, content, campaign);
+          solved = solveConcept(named, content, campaign);
         } catch (err) {
           if (!(err instanceof ZodError)) throw err;
           solved = { error: err.issues.map((i) => `${i.path.join(".") || "concept"}: ${i.message}`).join("; ") };
