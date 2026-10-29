@@ -91,20 +91,18 @@
     max-width: 360px;
   }
 
-  .tools-resource-head {
-    margin-bottom: 8px;
-
-    strong {
-      font-family: var(--title);
-      font-size: 1.5rem;
-      font-weight: normal;
-    }
-  }
-
   .tools-resource-value {
     display: flex;
     align-items: center;
     gap: 12px;
+
+    .tools-resource-name {
+      font-family: var(--title);
+      font-size: 1.5rem;
+      font-weight: normal;
+      line-height: 1;
+      min-width: 2ch;
+    }
 
     .num {
       font-family: var(--title);
