@@ -516,7 +516,10 @@
 
   /* The assistant and the Conditions under it, at the top of the right
      column, stay in view while the tools scroll, like the creator's
-     character box, scrolling inside when they're taller than the window */
+     character box. The column never scrolls on its own: the conversation
+     scrolls inside the chat, and when the Conditions make the column taller
+     than the window it stops sticking (.is-tall, set in App.tsx) and scrolls
+     with the page. */
   .tools-chat-side {
     grid-column: 2;
     grid-row: 1 / span 2;
@@ -525,8 +528,10 @@
     align-self: start;
     display: grid;
     gap: 24px;
-    max-height: calc(100vh - 2rem);
-    overflow-y: auto;
+
+    &.is-tall {
+      position: static;
+    }
   }
 
   /* The sheet under the point cards: its stats, Knowledges and Traits sit
@@ -595,8 +600,9 @@
     padding: 0;
     margin: 0;
     overflow-y: auto;
-    min-height: 160px;
-    max-height: calc(100vh - 420px);
+    /* The room the rest of the column leaves in the window (App.tsx sets it) */
+    min-height: 120px;
+    max-height: var(--chat-log-max, calc(100vh - 440px));
     display: flex;
     flex-direction: column;
     gap: 8px;
