@@ -67,9 +67,17 @@
     padding-bottom: var(--sf-creator-top, 24px);
   }
 
-  /* The character's name, level and actions, across the top of the panel */
+  /* The character's name, level and background at the top of the left
+     column, the tools under them; the assistant has the right column from
+     the top, like the creator's character box. */
   .tools-character {
-    grid-column: 1 / -1;
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .tools-body > main {
+    grid-column: 1;
+    grid-row: 2;
   }
 
   .tools-character h2 {
@@ -295,10 +303,13 @@
     margin-top: 16px;
   }
 
-  /* The assistant stays in view while the tool scrolls */
+  /* The actions and the assistant, at the top of the right column, stay in
+     view while the tools scroll, like the creator's character box */
   .tools-chat-side {
+    grid-column: 2;
+    grid-row: 1 / span 2;
     position: sticky;
-    top: 24px;
+    top: 1rem;
     align-self: start;
     display: grid;
     gap: 16px;
@@ -437,6 +448,13 @@
   @media (max-width: 991px) {
     .tools-body {
       grid-template-columns: minmax(0, 1fr);
+    }
+
+    .tools-character,
+    .tools-body > main,
+    .tools-chat-side {
+      grid-column: auto;
+      grid-row: auto;
     }
 
     .tools-chat-side {
