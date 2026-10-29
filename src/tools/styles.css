@@ -1,6 +1,53 @@
 /* Game Tools: the creator's styles (src/app/styles.css, under .sf-creator)
    plus these, under .sf-tools. */
 .sf-tools {
+  /* The hero, then the panel filling the rest of the screen down to the
+     footer, so a short tab (or no character yet) doesn't leave the night sky
+     showing under it. .sf-creator is already at least the screen's height. */
+  display: flex;
+  flex-direction: column;
+
+  .builder-panel {
+    flex: 1;
+    position: relative;
+  }
+
+  /* Messages like "Imported grosh.json." sit 20px from the top of the panel,
+     over its padding, at the content's left edge and only as wide as their
+     text, so they don't push the page down when they come and go. */
+  .tools-body > main > .notice[role="status"] {
+    position: absolute;
+    top: 20px;
+    z-index: 2;
+    margin: 0;
+  }
+
+  /* The title sits in the middle of the hero, above the tabs, like the
+     site's other heroes. The creator's leans low to make room for its
+     describe box. */
+  .builder-statement {
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+
+  /* With no describe box under it, the title is only as wide as its text and
+     centered across the hero, like the site's other hero titles. */
+  .hero-main > .builder-statement {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .builder-tabs {
+    margin-top: 0;
+  }
+
+  /* With no character there are no tabs, so the bottom matches the room
+     the top leaves for the site's nav. */
+  .builder-hero:not(:has(.builder-tabs)) {
+    padding-bottom: var(--sf-creator-top, 24px);
+  }
+
   /* The character's name, level and actions, across the top of the panel */
   .tools-character {
     grid-column: 1 / -1;
@@ -53,34 +100,46 @@
 
   .tools-resources {
     display: grid;
-    /* As many as fit, three across on most screens, each card at most 360px */
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 16px;
+    /* As many as fit, all four (HP, VP, SP, MP) across on most screens,
+       each card at most 360px */
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 12px;
     margin-bottom: 16px;
   }
 
   .tools-resource {
     max-width: 360px;
-  }
-
-  .tools-resource-head {
-    margin-bottom: 8px;
-
-    strong {
-      font-family: var(--title);
-      font-size: 1.5rem;
-      font-weight: normal;
-    }
+    padding: 12px;
   }
 
   .tools-resource-value {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
+
+    /* − and +, round */
+    button {
+      flex: none;
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .tools-resource-name {
+      font-family: var(--title);
+      font-size: 1.5rem;
+      font-weight: normal;
+      line-height: 1;
+      min-width: 2ch;
+    }
 
     .num {
       font-family: var(--title);
-      font-size: 2.25rem;
+      font-size: 2rem;
       line-height: 1;
       white-space: nowrap;
       flex: 1;
@@ -112,12 +171,17 @@
   .tools-resource-apply {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px;
 
     input {
       width: 0;
       flex: 1;
-      min-width: 64px;
+      min-width: 48px;
+    }
+
+    button {
+      padding-left: 10px;
+      padding-right: 10px;
     }
   }
 
@@ -211,6 +275,23 @@
     position: sticky;
     top: 24px;
     align-self: start;
+    display: grid;
+    gap: 16px;
+  }
+
+  /* Export and Switch character, above the assistant. Switching asks on
+     its own line, with Yes and Cancel under it. */
+  .tools-actions {
+    flex-wrap: wrap;
+
+    .hero-confirm {
+      flex-wrap: wrap;
+      gap: 8px 16px;
+    }
+
+    .tools-confirm-text {
+      flex-basis: 100%;
+    }
   }
 
   /* Title, conversation, then the message box and Send, 24px apart */

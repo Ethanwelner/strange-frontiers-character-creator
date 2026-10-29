@@ -82,42 +82,18 @@ export function ToolsApp() {
 
       <div className="section unlimited white-bg builder-panel">
         <div className={`container builder-body tools-body${play ? "" : " no-side"}`}>
-          {/* The character's name, titled like a tab, over the tools and the assistant, with its level and the actions under it */}
+          {/* The character's name, titled like a tab, over the tools and the assistant, with its level under it */}
           {play && result && (
             <header className="step-head tools-character">
               <h2>{play.draft.name ?? "Unnamed character"}</h2>
+              {/* "Level 3 Isek • Dreft • Licensed Mage • Expelled from the Mage Schools", then any rules problems */}
               <p className="tools-line">
-                Level {play.draft.level} {play.draft.kind ? (content.kinds.find((k) => k.id === play.draft.kind)?.name ?? play.draft.kind) : ""}
-                {result.ok ? "" : ` · ${result.errors.length} rules ${result.errors.length === 1 ? "problem" : "problems"}`}
+                {[
+                  `Level ${play.draft.level}${play.draft.kind ? ` ${content.kinds.find((k) => k.id === play.draft.kind)?.name ?? play.draft.kind}` : ""}`,
+                  ...[play.draft.origin, play.draft.profession, play.draft.past].flatMap((id) => (id ? [content.packages.find((p) => p.id === id)?.name ?? id] : [])),
+                  ...(result.ok ? [] : [`${result.errors.length} rules ${result.errors.length === 1 ? "problem" : "problems"}`]),
+                ].join(" • ")}
               </p>
-              <div className="hero-bar">
-                <button type="button" className="hero-link" onClick={exportBuild}>
-                  Export
-                </button>
-                {confirmingSwitch ? (
-                  <span className="hero-confirm">
-                    Put this character away? Its tracker, items and chat are cleared.
-                    <button
-                      type="button"
-                      className="hero-link"
-                      onClick={() => {
-                        setPlay(undefined);
-                        setConfirmingSwitch(false);
-                        setNotice(undefined);
-                      }}
-                    >
-                      Yes
-                    </button>
-                    <button type="button" className="hero-link" onClick={() => setConfirmingSwitch(false)}>
-                      Cancel
-                    </button>
-                  </span>
-                ) : (
-                  <button type="button" className="hero-link" onClick={() => setConfirmingSwitch(true)}>
-                    Switch character
-                  </button>
-                )}
-              </div>
             </header>
           )}
           <main>
@@ -166,6 +142,35 @@ export function ToolsApp() {
           </main>
           {play && result && (
             <aside className="tools-chat-side">
+              {/* What to do with the character, above the assistant, in the same buttons as Damage and Heal */}
+              <div className="hero-bar tools-actions">
+                <button type="button" onClick={exportBuild}>
+                  Export
+                </button>
+                {confirmingSwitch ? (
+                  <span className="hero-confirm">
+                    <span className="tools-confirm-text">Put this character away? Its tracker, items and chat are cleared.</span>
+                    <button
+                      type="button"
+                     
+                      onClick={() => {
+                        setPlay(undefined);
+                        setConfirmingSwitch(false);
+                        setNotice(undefined);
+                      }}
+                    >
+                      Yes
+                    </button>
+                    <button type="button" onClick={() => setConfirmingSwitch(false)}>
+                      Cancel
+                    </button>
+                  </span>
+                ) : (
+                  <button type="button" onClick={() => setConfirmingSwitch(true)}>
+                    Switch character
+                  </button>
+                )}
+              </div>
               <Chat play={play} result={result} content={content} create={create} model={__SF_AI__.model} onChange={setPlay} check={(p) => checkPlay(p.draft, content)} />
             </aside>
           )}

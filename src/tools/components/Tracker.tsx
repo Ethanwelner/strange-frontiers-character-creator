@@ -29,7 +29,6 @@ export function Tracker({ play, result, onChange }: { play: Play; result: BuildR
   return (
     <section className="tools-tracker">
       {/* The character's name above stands in for this tab's title. */}
-      <p className="lede">Your resources and Conditions right now. Change them here, or tell the assistant what happened.</p>
 
       {!result.summary && <div className="notice bad">The engine couldn't read this character, so its maximums aren't known. Check the Sheet tab.</div>}
 
@@ -40,10 +39,11 @@ export function Tracker({ play, result, onChange }: { play: Play; result: BuildR
           const pct = max > 0 ? Math.max(0, Math.min(100, (cur / max) * 100)) : 0;
           return (
             <div key={r} className="c-sheet-box tools-resource">
-              <div className="tools-resource-head">
-                <strong>{r.toUpperCase()}</strong> <span className="muted small">{NAMES[r]}</span>
-              </div>
+              {/* HP, then −, the value and +, on one line; the full name shows on hover */}
               <div className="tools-resource-value">
+                <strong className="tools-resource-name" title={NAMES[r]}>
+                  {r.toUpperCase()}
+                </strong>
                 <button type="button" onClick={() => set(r, cur - 1)} aria-label={`1 less ${r.toUpperCase()}`}>
                   <Sign is="minus" />
                 </button>
@@ -63,7 +63,7 @@ export function Tracker({ play, result, onChange }: { play: Play; result: BuildR
                   type="number"
                   min={1}
                   inputMode="numeric"
-                  placeholder="Amount"
+                  placeholder="#"
                   aria-label={`Amount of ${r.toUpperCase()}`}
                   value={amounts[r] ?? ""}
                   onChange={(e) => setAmounts({ ...amounts, [r]: e.target.value })}
@@ -82,11 +82,32 @@ export function Tracker({ play, result, onChange }: { play: Play; result: BuildR
       </div>
       <p>
         <button type="button" onClick={() => onChange({ ...play, current: {} })} disabled={full}>
-          Restore all to full
+          Restore all
         </button>
       </p>
 
       <h3 className="subhead">Conditions</h3>
+      {/* Add a Condition, above the ones the character has */}
+      <div className="tools-add">
+        <select aria-label="Condition to add" value={adding} onChange={(e) => setAdding(e.target.value)}>
+          <option value="">Add a Condition…</option>
+          {options.map((t) => (
+            <option key={t.id} value={t.id}>
+              {t.name}
+            </option>
+          ))}
+        </select>
+        <button
+          type="button"
+          disabled={!adding}
+          onClick={() => {
+            onChange(addCondition(play, content, adding));
+            setAdding("");
+          }}
+        >
+          Add
+        </button>
+      </div>
       <ul className="tools-conditions">
         {hp.map((id) => {
           const t = traitById.get(id);
@@ -136,26 +157,6 @@ export function Tracker({ play, result, onChange }: { play: Play; result: BuildR
           );
         })}
       </ul>
-      <div className="tools-add">
-        <select aria-label="Condition to add" value={adding} onChange={(e) => setAdding(e.target.value)}>
-          <option value="">Add a Condition…</option>
-          {options.map((t) => (
-            <option key={t.id} value={t.id}>
-              {t.name}
-            </option>
-          ))}
-        </select>
-        <button
-          type="button"
-          disabled={!adding}
-          onClick={() => {
-            onChange(addCondition(play, content, adding));
-            setAdding("");
-          }}
-        >
-          Add
-        </button>
-      </div>
     </section>
   );
 }
