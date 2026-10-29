@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { loadContent } from "../engine/content.js";
-import { applyTool, ask, sheetText } from "./chat.js";
+import { applyTool, ask, sheetText, trackerLine } from "./chat.js";
 import { addCondition, addItem, checkPlay, currentOf, hpConditions, maxOf, playConditions, pointsToPlace, removeItem, startPlay, withResource } from "./play.js";
 import type { CreateMessage } from "../ai/anthropic.js";
 
@@ -78,14 +78,31 @@ describe("a character in play", () => {
 });
 
 describe("the assistant's tools", () => {
-  it("changes resources by an amount or to a value", () => {
+  it("changes several resources at once, by an amount or to a value, reporting before and after", () => {
     const play = fresh();
     const result = checkPlay(play.draft, content);
     const max = maxOf(result, "hp");
-    const hit = applyTool("change_resource", { resource: "hp", by: -5 }, play, result, content);
+    const hit = applyTool("change_resources", { changes: [{ resource: "hp", by: -5 }, { resource: "vp", to: 1 }] }, play, result, content);
     expect(currentOf(hit.play, result, "hp")).toBe(max - 5);
-    expect(hit.change).toBe(`HP ${max} → ${max - 5}`);
-    expect(() => applyTool("change_resource", { resource: "xp", by: 1 }, play, result, content)).toThrow();
+    expect(currentOf(hit.play, result, "vp")).toBe(1);
+    expect(hit.change).toBe(`HP ${max} → ${max - 5}; VP ${maxOf(result, "vp")} → 1`);
+    expect((hit.result as { now: Record<string, { current: number }> }).now.hp!.current).toBe(max - 5);
+  });
+
+  it("changes nothing when one of the changes is bad", () => {
+    const play = fresh();
+    const result = checkPlay(play.draft, content);
+    expect(() => applyTool("change_resources", { changes: [{ resource: "hp", by: -5 }, { resource: "xp", by: 1 }] }, play, result, content)).toThrow();
+    expect(() => applyTool("change_resources", { changes: [{ resource: "hp" }] }, play, result, content)).toThrow();
+  });
+
+  it("reads the tracker's current values back from the play, not from anything said", () => {
+    const play = { ...fresh(), current: { hp: 0 } };
+    const result = checkPlay(play.draft, content);
+    const state = applyTool("get_state", {}, play, result, content).result as { resources: Record<string, { current: number; max: number }>; hpConditions: string[] };
+    expect(state.resources.hp).toEqual({ current: 0, max: maxOf(result, "hp") });
+    expect(state.hpConditions).toEqual(["Dead"]);
+    expect(trackerLine(play, result, content)).toMatch(new RegExp(`^HP 0/${maxOf(result, "hp")}, VP \\d+/\\d+, SP \\d+/\\d+; Dead$`));
   });
 
   it("refuses Conditions that aren't Condition Traits", () => {
@@ -104,7 +121,7 @@ describe("the assistant's tools", () => {
 
   it("runs tool calls until Claude answers, and reports what changed", async () => {
     const replies = [
-      { stop_reason: "tool_use", content: [{ type: "tool_use", id: "t1", name: "change_resource", input: { resource: "hp", by: -2 } }] },
+      { stop_reason: "tool_use", content: [{ type: "tool_use", id: "t1", name: "change_resources", input: { changes: [{ resource: "hp", by: -2 }] } }] },
       { stop_reason: "end_turn", content: [{ type: "text", text: "Ouch. HP down 2." }] },
     ];
     const sent: unknown[] = [];
@@ -118,5 +135,18 @@ describe("the assistant's tools", () => {
     expect(out.changes).toHaveLength(1);
     expect(out.play.current.hp).toBe(maxOf(checkPlay(play.draft, content), "hp") - 2);
     expect((sent[0] as { system: { text: string }[] }).system[0]!.text).toMatch(/^You help a player run their Strange Frontiers character at the table\./);
+  });
+
+  it("sends the tracker's current values with the player's message, and marks earlier changes as history", async () => {
+    const sent: { messages: { role: string; content: unknown }[] }[] = [];
+    const create = (async (params: unknown) => {
+      sent.push(structuredClone(params) as (typeof sent)[number]);
+      return { stop_reason: "end_turn", content: [{ type: "text", text: "Noted." }] };
+    }) as unknown as CreateMessage;
+    const play = { ...fresh(), current: { hp: 3 }, chat: [{ role: "user" as const, text: "I took 5" }, { role: "assistant" as const, text: "Done.", changes: ["HP 18 → 13"] }] };
+    await ask({ message: "How am I?", play, check: (p) => checkPlay(p.draft, content), content, create, model: "claude-haiku-5-5" });
+    const messages = sent[0]!.messages;
+    expect(messages[1]!.content).toBe("Done.\n(Changed then: HP 18 → 13)");
+    expect(messages[messages.length - 1]!.content).toMatch(/^How am I\?\n\n\(Tracker now: HP 3\/\d+,/);
   });
 });

@@ -35,10 +35,18 @@ export const INSTRUCTIONS_START = "You help a player run their Strange Frontiers
 
 const INSTRUCTIONS = `${INSTRUCTIONS_START} Strange Frontiers is a tabletop RPG; the character's sheet, as the rules engine works it out, is below.
 
+Numbers come from the tracker, never from memory:
+- The tracker's current values come with each player message ("Tracker now: ..."), from get_state, and from the results of the tools that change it. Those are the only current numbers.
+- Earlier messages are history. Any number in them, including "(Changed then: ...)" notes, may be out of date: never start a change or an answer from one.
+- Before changing the tracker, check the values you're changing in the latest "Tracker now" or get_state. Make all of one message's resource changes in a single change_resources call.
+- When you say what changed, use the before and after values the tool returned, exactly. If a value isn't what the player expects, say what the tracker shows rather than guessing.
+
+How to help:
 - Answer from the sheet and the game's content. Look Traits up with search_traits and get_trait rather than guessing what they do. If the rules don't say, say so, and that it's the GM's call.
 - When the player says something happened to their character (they took damage, healed, spent VP, picked up or used an item, caught or shook off a Condition), change the tracker with the tools. Only change what they told you about. Damage comes off HP after resistances the player mentions; you don't know the character's armor unless it's in their items.
 - Never level the character up or change their Traits or stats: the player does that on the page.
-- Keep answers short: a sentence or two, or a short list. Say what you changed.`;
+- Keep answers short: a sentence or two, or a short list. Say what you changed.
+- Write plain text: the chat shows Markdown as typed, so no asterisks or other formatting.`;
 
 const MAX_TURNS = 6;
 // Earlier messages sent along with each new one.
@@ -63,16 +71,33 @@ export const CHAT_TOOLS: Tool[] = [
     input_schema: { type: "object", properties: { id: { type: "string" } }, required: ["id"] },
   },
   {
-    name: "change_resource",
-    description: "Change the character's current HP, VP, SP or MP. Pass `by` to add or subtract (damage is negative), or `to` to set it. Values stop at the max.",
+    name: "get_state",
+    description:
+      "The tracker right now, read from it: current and max HP, VP, SP and MP, the HP Conditions, the temporary Conditions and the items. Call it before a change if you're not sure of a value.",
+    input_schema: { type: "object", properties: {} },
+  },
+  {
+    name: "change_resources",
+    description:
+      "Change the character's current HP, VP, SP or MP, all of one message's changes in one call. Each change passes `by` to add or subtract (damage is negative) or `to` to set the value. Values stop at the max. Returns each value before and after, and the tracker's resources afterward.",
     input_schema: {
       type: "object",
       properties: {
-        resource: { type: "string", enum: [...RESOURCES] },
-        by: { type: "integer" },
-        to: { type: "integer" },
+        changes: {
+          type: "array",
+          minItems: 1,
+          items: {
+            type: "object",
+            properties: {
+              resource: { type: "string", enum: [...RESOURCES] },
+              by: { type: "integer" },
+              to: { type: "integer" },
+            },
+            required: ["resource"],
+          },
+        },
       },
-      required: ["resource"],
+      required: ["changes"],
     },
   },
   {
@@ -116,6 +141,27 @@ export const CHAT_TOOLS: Tool[] = [
 ];
 
 const name = (content: Content, id: string) => content.traits.find((t) => t.id === id)?.name ?? id;
+
+// The tracker as it stands, read from the play: what get_state returns.
+export function stateOf(play: Play, result: BuildResult, content: Content) {
+  const resources = Object.fromEntries(
+    RESOURCES.filter((r) => r !== "mp" || maxOf(result, r) > 0).map((r) => [r, { current: currentOf(play, result, r), max: maxOf(result, r) }]),
+  ) as Partial<Record<ResourceKey, { current: number; max: number }>>;
+  return {
+    level: play.draft.level,
+    resources,
+    hpConditions: hpConditions(currentOf(play, result, "hp"), maxOf(result, "hp")).map((id) => name(content, id)),
+    conditions: play.conditions.map((c) => ({ id: c.trait, name: name(content, c.trait), rank: c.rank, ...(c.note ? { note: c.note } : {}) })),
+    items: play.items.map((i) => ({ name: i.name, qty: i.qty, category: i.category, equipped: i.equipped, ...(i.notes ? { notes: i.notes } : {}) })),
+  };
+}
+
+// The tracker in a line, like "HP 0/16, VP 2/2, SP 8/8, MP 2/6; Dead; Stimm Rush".
+export function trackerLine(play: Play, result: BuildResult, content: Content): string {
+  const s = stateOf(play, result, content);
+  const res = Object.entries(s.resources).map(([r, v]) => `${r.toUpperCase()} ${v.current}/${v.max}`);
+  return [res.join(", "), s.hpConditions.join(", "), ...s.conditions.map((c) => c.name + (c.rank > 1 ? ` (${c.rank})` : ""))].filter(Boolean).join("; ");
+}
 
 // The character as Claude sees it: the engine's numbers, what's on the
 // tracker, and every held Trait's effect.
@@ -186,19 +232,30 @@ export function applyTool(
       if (!t) throw new ToolError(`No Trait "${String(input.id)}". Search for it with search_traits.`);
       return { play, result: t };
     }
-    case "change_resource": {
-      const r = str(input.resource) as ResourceKey | undefined;
-      if (!r || !RESOURCES.includes(r)) throw new ToolError(`resource must be one of ${RESOURCES.join(", ")}`);
-      const before = currentOf(play, result, r);
-      const by = int(input.by);
-      const to = int(input.to);
-      if (by === undefined && to === undefined) throw new ToolError("Pass `by` or `to`.");
-      const next = withResource(play, result, r, to ?? before + by!);
-      const after = currentOf(next, result, r);
+    case "get_state":
+      return { play, result: stateOf(play, result, content) };
+    case "change_resources": {
+      const asked = Array.isArray(input.changes) ? (input.changes as Record<string, unknown>[]) : [];
+      if (!asked.length) throw new ToolError("Pass `changes`, a list of { resource, by } or { resource, to }.");
+      // Checked before any change is made, so a bad one changes nothing.
+      const steps = asked.map((c) => {
+        const r = str(c?.resource) as ResourceKey | undefined;
+        if (!r || !RESOURCES.includes(r)) throw new ToolError(`resource must be one of ${RESOURCES.join(", ")}`);
+        const by = int(c.by);
+        const to = int(c.to);
+        if (by === undefined && to === undefined) throw new ToolError(`Pass by or to for ${r}.`);
+        return { r, by, to };
+      });
+      let next = play;
+      const changed = steps.map(({ r, by, to }) => {
+        const before = currentOf(next, result, r);
+        next = withResource(next, result, r, to ?? before + by!);
+        return { resource: r, before, after: currentOf(next, result, r), max: maxOf(result, r) };
+      });
       return {
         play: next,
-        result: { resource: r, before, after, max: maxOf(result, r) },
-        change: `${r.toUpperCase()} ${before} → ${after}`,
+        result: { changed, now: stateOf(next, result, content).resources },
+        change: changed.map((c) => `${c.resource.toUpperCase()} ${c.before} → ${c.after}`).join("; "),
       };
     }
     case "add_item": {
@@ -260,9 +317,11 @@ export async function ask(opts: {
   // Earlier messages, as plain text, starting with the player's.
   const history = play.chat.slice(-HISTORY);
   while (history[0]?.role === "assistant") history.shift();
+  // The tracker's current values ride on the player's message, so the
+  // numbers Claude starts from are never the history's.
   const messages: MessageParam[] = [
-    ...history.map((m): MessageParam => ({ role: m.role, content: m.changes?.length ? `${m.text}\n(Changed: ${m.changes.join("; ")})` : m.text })),
-    { role: "user", content: opts.message },
+    ...history.map((m): MessageParam => ({ role: m.role, content: m.changes?.length ? `${m.text}\n(Changed then: ${m.changes.join("; ")})` : m.text })),
+    { role: "user", content: `${opts.message}\n\n(Tracker now: ${trackerLine(play, opts.check(play), opts.content)})` },
   ];
 
   for (let turn = 0; turn < MAX_TURNS; turn++) {
