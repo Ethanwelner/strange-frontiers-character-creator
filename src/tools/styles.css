@@ -12,14 +12,14 @@
     position: relative;
   }
 
-  /* Messages like "Imported grosh.json." sit 24px from the top of the panel,
+  /* Messages like "Imported grosh.json." sit 36px from the top of the panel,
      over its padding, at the content's left edge and only as wide as their
      text, so they don't push the page down when they come and go. They're
      dark like the panel, with its light text; a success is dark green with
      light green text. */
   .tools-body > main > .notice[role="status"] {
     position: absolute;
-    top: 24px;
+    top: 36px;
     z-index: 2;
     margin: 0;
     background: var(--panel-box);
@@ -40,7 +40,7 @@
       }
     }
   }
-
+
   /* The title sits in the middle of the hero, above the tabs, like the
      site's other heroes. The creator's leans low to make room for its
      describe box. */
@@ -60,7 +60,7 @@
   .builder-tabs {
     margin-top: 0;
   }
-
+
   /* With no character there are no tabs, so the bottom matches the room
      the top leaves for the site's nav. */
   .builder-hero:not(:has(.builder-tabs)) {
