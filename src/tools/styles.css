@@ -466,6 +466,16 @@
     padding: 0;
   }
 
+  /* The character's Trait and Condition cards only show what they are: no
+     pointer or hover border, unlike the creator's cards, which pick a Trait */
+  :is(.sheet-embedded, .tools-conditions-side) .trait-box {
+    cursor: default;
+
+    &:hover {
+      border-color: var(--card-border);
+    }
+  }
+
   /* 48px between the stats, Knowledges and Items columns and the Traits */
   .sheet-embedded .c-sheet {
     gap: 48px;
