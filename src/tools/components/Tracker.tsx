@@ -1,21 +1,19 @@
 import { useMemo, useState } from "react";
 import type { BuildResult } from "../../engine/validate.js";
 import { content, traitById } from "../../app/content.js";
+import { Sheet } from "../../app/components/Sheet.js";
 import { Sign } from "../../app/components/ui.js";
 import { addCondition, currentOf, hpConditions, maxOf, playConditions, removeCondition, RESOURCES, withResource, type Play, type ResourceKey } from "../play.js";
 
 const NAMES: Record<ResourceKey, string> = { hp: "Hit Points", vp: "Vibe Points", sp: "Savvy Points", mp: "Mana Points" };
 
 // HP, VP, SP and MP, each with its current value against the max the engine
-// works out, then the Conditions: the ones HP decides, and the temporary ones
-// the player adds.
+// works out, then the rest of the character sheet. The Conditions sit in the
+// right column, under the assistant.
 export function Tracker({ play, result, onChange }: { play: Play; result: BuildResult; onChange: (p: Play) => void }) {
   // MP shows once the character has any.
   const shown = RESOURCES.filter((r) => r !== "mp" || maxOf(result, r) > 0);
   const [amounts, setAmounts] = useState<Partial<Record<ResourceKey, string>>>({});
-  const options = useMemo(() => playConditions(content), []);
-  const [adding, setAdding] = useState("");
-
   const set = (r: ResourceKey, value: number) => onChange(withResource(play, result, r, value));
   const apply = (r: ResourceKey, sign: 1 | -1) => {
     const n = Number(amounts[r]);
@@ -24,13 +22,12 @@ export function Tracker({ play, result, onChange }: { play: Play; result: BuildR
     setAmounts({ ...amounts, [r]: "" });
   };
   const full = shown.every((r) => currentOf(play, result, r) >= maxOf(result, r));
-  const hp = hpConditions(currentOf(play, result, "hp"), maxOf(result, "hp"));
 
   return (
     <section className="tools-tracker">
       {/* The character's name above stands in for this tab's title. */}
 
-      {!result.summary && <div className="notice bad">The engine couldn't read this character, so its maximums aren't known. Check the Sheet tab.</div>}
+      {!result.summary && <div className="notice bad">The engine couldn't read this character, so its maximums aren't known. Check the sheet below.</div>}
 
       <div className="tools-resources">
         {shown.map((r) => {
@@ -86,7 +83,21 @@ export function Tracker({ play, result, onChange }: { play: Play; result: BuildR
         </button>
       </p>
 
-      <h3 className="subhead">Conditions</h3>
+      {/* The rest of the character sheet: stats, Knowledges and Traits */}
+      <Sheet draft={play.draft} result={result} embedded />
+    </section>
+  );
+}
+
+// The Conditions: the ones HP decides, and the temporary ones the player
+// adds, with Add a Condition above them. They sit under the assistant.
+export function Conditions({ play, result, onChange }: { play: Play; result: BuildResult; onChange: (p: Play) => void }) {
+  const options = useMemo(() => playConditions(content), []);
+  const [adding, setAdding] = useState("");
+  const hp = hpConditions(currentOf(play, result, "hp"), maxOf(result, "hp"));
+
+  return (
+    <section className="tools-conditions-side" aria-label="Conditions">
       {/* Add a Condition, above the ones the character has */}
       <div className="tools-add">
         <select aria-label="Condition to add" value={adding} onChange={(e) => setAdding(e.target.value)}>

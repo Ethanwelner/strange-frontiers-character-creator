@@ -67,17 +67,52 @@
     padding-bottom: var(--sf-creator-top, 24px);
   }
 
-  /* The character's name, level and actions, across the top of the panel */
+  /* The character's name, level and background at the top of the left
+     column, the tools under them; the assistant has the right column from
+     the top, like the creator's character box. */
   .tools-character {
-    grid-column: 1 / -1;
+    grid-column: 1;
+    grid-row: 1;
   }
 
-  .tools-character h2 {
+  .tools-body > main {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  /* The name and its pen, from the creator's Sheet, in the tab title style */
+  .tools-name {
     margin-bottom: 8px;
+
+    h2 {
+      margin: 0;
+    }
+  }
+
+  /* The name on the left, Export and Switch character on the right */
+  .tools-character-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px 24px;
   }
 
   .tools-line {
     margin: 0 0 8px;
+  }
+
+  /* The rules problems chip, under the background line */
+  .tools-issues {
+    justify-content: flex-start;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 8px;
+  }
+
+  /* A Kind's or package's card in its popup: the creator's card, unclickable */
+  .tools-background-card {
+    cursor: default;
   }
 
   /* The tool, then the assistant beside it */
@@ -289,19 +324,36 @@
     margin-top: 16px;
   }
 
-  /* The assistant stays in view while the tool scrolls */
+  /* The assistant and the Conditions under it, at the top of the right
+     column, stay in view while the tools scroll, like the creator's
+     character box, scrolling inside when they're taller than the window */
   .tools-chat-side {
+    grid-column: 2;
+    grid-row: 1 / span 2;
     position: sticky;
-    top: 24px;
+    top: 1rem;
     align-self: start;
     display: grid;
-    gap: 16px;
+    gap: 24px;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
   }
 
-  /* Export and Switch character, above the assistant. Switching asks on
-     its own line, with Yes and Cancel under it. */
+  /* The sheet under the point cards: its stats, Knowledges and Traits sit
+     right on the panel, without the sheet's boxes around them */
+  .sheet-embedded :is(.c-sheet, .c-sheet-box) {
+    background: none;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+  }
+
+  /* Export and Switch character, beside the name. Switching asks on its
+     own line, with Yes and Cancel under it. */
   .tools-actions {
     flex-wrap: wrap;
+    justify-content: flex-end;
+    max-width: 380px;
 
     .hero-confirm {
       flex-wrap: wrap;
@@ -433,8 +485,16 @@
       grid-template-columns: minmax(0, 1fr);
     }
 
+    .tools-character,
+    .tools-body > main,
+    .tools-chat-side {
+      grid-column: auto;
+      grid-row: auto;
+    }
+
     .tools-chat-side {
       position: static;
+      max-height: none;
     }
   }
 }

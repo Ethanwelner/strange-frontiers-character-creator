@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { FREE_TEXT_POOLS, MP_PER_MAGIC, type BuildResult } from "../../engine/validate.js";
 import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { coreStatsShown } from "../check.js";
 import { content, kindById, packageById, traitById } from "../content.js";
 import type { Draft } from "../draft.js";
-import { askerName, baseStats, Chip, CoreLine, NameField, SettingIcon, StatLine, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
+import { askerName, baseStats, Chip, CoreLine, LorePopup, NameField, SettingIcon, StatLine, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
 
 const SOURCE = /^(kind|origin|profession|past) ([a-z0-9-]+)( choice)?$/;
 const TRAIT_CHOICE = /^trait ([a-z0-9-]+) choice$/;
@@ -49,60 +49,36 @@ function TraitCard({ held, places }: { held: Held; places: string[] }) {
   );
 }
 
-// A Knowledge's card, opened from the sheet's list in the site's lore popup
-// (.lore-modal). Escape, the backdrop and the close button shut it, and focus
-// goes back to the link.
+// A Knowledge's card, opened from the sheet's list in the site's lore popup.
 function TraitModal({ held, places, onClose }: { held: Held; places: string[]; onClose: () => void }) {
-  const close = useRef<HTMLButtonElement>(null);
-  useEffect(() => {
-    const opener = document.activeElement as HTMLElement | null;
-    close.current?.focus();
-    document.documentElement.classList.add("lore-modal-open");
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      document.documentElement.classList.remove("lore-modal-open");
-      opener?.focus();
-    };
-  }, [onClose]);
   return (
-    <div
-      className="lore-modal is-open"
-      role="dialog"
-      aria-modal="true"
-      aria-label={traitName(held.trait)}
-      onClick={(e) => e.target === e.currentTarget && onClose()}
-    >
-      <div className="lore-modal-panel">
-        <button ref={close} type="button" className="lore-modal-close" aria-label="Close" onClick={onClose}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true">
-            <path d="M2 2l16 16M18 2L2 18" fill="none" stroke="currentColor" strokeWidth="2" />
-          </svg>
-        </button>
-        <TraitCard held={held} places={places} />
-      </div>
-    </div>
+    <LorePopup label={traitName(held.trait)} onClose={onClose}>
+      <TraitCard held={held} places={places} />
+    </LorePopup>
   );
 }
 
 // Laid out like the sample character sheet on the site's Mechanics tab.
 // Knowledges and Languages are a list of links, as on that sheet, each opening
 // its card; the other Traits are cards.
+//
+// Game Tools shows it `embedded` under its tracker, which already has the
+// name, level, background, the Kind's features, resources and the actions:
+// there the sheet keeps only the stats, Knowledges and Traits.
 export function Sheet({
   draft,
   result,
   onExport,
   onImport,
   onName,
+  embedded = false,
 }: {
   draft: Draft;
   result: BuildResult;
-  onExport: () => void;
-  onImport: () => void;
-  onName: (name?: string) => void;
+  onExport?: () => void;
+  onImport?: () => void;
+  onName?: (name?: string) => void;
+  embedded?: boolean;
 }) {
   const kind = draft.kind ? kindById.get(draft.kind) : undefined;
   const packages = [draft.origin, draft.profession, draft.past].map((id) => (id ? packageById.get(id) : undefined));
@@ -138,53 +114,61 @@ export function Sheet({
   ];
 
   return (
-    <section className="sheet">
-      <StepHeader step="sheet" title="Sheet" />
-      {/* Whether the build is legal, then Export, Import and Print, above the sheet */}
-      <div className="sheet-actions">
-        <span className={`status ${result.ok ? "good" : "bad"}`}>{result.ok ? "Legal" : `${result.errors.length} ${result.errors.length === 1 ? "error" : "errors"}`}</span>
-        <button onClick={onExport}>Export</button>
-        <button onClick={onImport}>Import</button>
-        <button onClick={() => window.print()}>Print</button>
-      </div>
-      <div className="c-sheet">
-        <div className="level-badge" aria-label={`Level ${draft.level}`}>
-          {draft.level}
-        </div>
-
-        <div className="c-sheet-box sheet-head">
-          <div className="sheet-head-main">
-            <NameField className="sheet-name" heading="h2" name={draft.name} onChange={onName} />
-            <p className="lede">
-              Level {draft.level} {kind?.name ?? "—"} · {packages.map((p) => p?.name ?? "—").join(" · ")}
-            </p>
-            <p className="sheet-resources">
-              {resources.map((r) => (
-                <span key={r}>
-                  <i>{summary?.resources[r] ?? "–"}</i> <strong>{r.toUpperCase()}</strong>
-                </span>
-              ))}
-            </p>
-            {kind && kind.features.length > 0 && (
-              <ul className="features kind-features">
-                {kind.features.map((f) => (
-                  <li key={f.name}>
-                    <strong>{f.name}.</strong> {f.description}
-                  </li>
-                ))}
-              </ul>
-            )}
+    <section className={`sheet${embedded ? " sheet-embedded" : ""}`}>
+      {!embedded && (
+        <>
+          <StepHeader step="sheet" title="Sheet" />
+          {/* Whether the build is legal, then Export, Import and Print, above the sheet */}
+          <div className="sheet-actions">
+            <span className={`status ${result.ok ? "good" : "bad"}`}>{result.ok ? "Legal" : `${result.errors.length} ${result.errors.length === 1 ? "error" : "errors"}`}</span>
+            <button onClick={onExport}>Export</button>
+            <button onClick={onImport}>Import</button>
+            <button onClick={() => window.print()}>Print</button>
           </div>
-          {/* Kind, Origin, Profession and Past, beside the name */}
-          <ul className="call-response sheet-background">
-            {background.map(([label, value]) => (
-              <li key={label}>
-                <span>{label}</span>
-                <strong>{value ?? "—"}</strong>
-              </li>
-            ))}
-          </ul>
-        </div>
+        </>
+      )}
+      <div className="c-sheet">
+        {!embedded && (
+          <div className="level-badge" aria-label={`Level ${draft.level}`}>
+            {draft.level}
+          </div>
+        )}
+
+        {!embedded && (
+          <div className="c-sheet-box sheet-head">
+            <div className="sheet-head-main">
+              <NameField className="sheet-name" heading="h2" name={draft.name} onChange={onName ?? (() => {})} />
+              <p className="lede">
+                Level {draft.level} {kind?.name ?? "—"} · {packages.map((p) => p?.name ?? "—").join(" · ")}
+              </p>
+              <p className="sheet-resources">
+                {resources.map((r) => (
+                  <span key={r}>
+                    <i>{summary?.resources[r] ?? "–"}</i> <strong>{r.toUpperCase()}</strong>
+                  </span>
+                ))}
+              </p>
+              {kind && kind.features.length > 0 && (
+                <ul className="features kind-features">
+                  {kind.features.map((f) => (
+                    <li key={f.name}>
+                      <strong>{f.name}.</strong> {f.description}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+            {/* Kind, Origin, Profession and Past, beside the name */}
+            <ul className="call-response sheet-background">
+              {background.map(([label, value]) => (
+                <li key={label}>
+                  <span>{label}</span>
+                  <strong>{value ?? "—"}</strong>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <div className="c-sheet-box sheet-body">
           <div className="sheet-stats">

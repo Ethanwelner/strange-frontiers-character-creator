@@ -86,11 +86,11 @@ export function Card(props: { selected: boolean; onSelect: () => void; children:
 
 // How long a passing notice, like "Imported grosh.json.", stays before it
 // fades out, and how long the fade takes (.notice.is-leaving in styles.css).
-const NOTICE_MS = 5000;
+const NOTICE_MS = 3000;
 const NOTICE_FADE_MS = 400;
 
 // A notice with a dismiss button. One that `fades` is a success (is-success)
-// and goes away on its own after 5 seconds; errors stay until the player
+// and goes away on its own after 3 seconds; errors stay until the player
 // dismisses them. A new message starts the wait over, so the message is one
 // string.
 export function Notice({ children, fades, onDismiss }: { children: string; fades?: boolean; onDismiss: () => void }) {
@@ -113,6 +113,41 @@ export function Notice({ children, fades, onDismiss }: { children: string; fades
       <button className="link" onClick={onDismiss} aria-label="Dismiss">
         ✕
       </button>
+    </div>
+  );
+}
+
+// Something's card in the site's lore popup (.lore-modal), like a Knowledge
+// opened from the sheet. Escape, the backdrop and the close button shut it,
+// and focus goes back to whatever opened it.
+export function LorePopup({ label, onClose, children }: { label: string; onClose: () => void; children: ReactNode }) {
+  const close = useRef<HTMLButtonElement>(null);
+  const shut = useRef(onClose);
+  shut.current = onClose;
+  useEffect(() => {
+    const opener = document.activeElement as HTMLElement | null;
+    close.current?.focus();
+    document.documentElement.classList.add("lore-modal-open");
+    const onKey = (e: globalThis.KeyboardEvent) => {
+      if (e.key === "Escape") shut.current();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.documentElement.classList.remove("lore-modal-open");
+      opener?.focus();
+    };
+  }, []);
+  return (
+    <div className="lore-modal is-open" role="dialog" aria-modal="true" aria-label={label} onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <div className="lore-modal-panel">
+        <button ref={close} type="button" className="lore-modal-close" aria-label="Close" onClick={onClose}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true">
+            <path d="M2 2l16 16M18 2L2 18" fill="none" stroke="currentColor" strokeWidth="2" />
+          </svg>
+        </button>
+        {children}
+      </div>
     </div>
   );
 }
