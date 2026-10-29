@@ -230,9 +230,17 @@ export function Conditions({ play, result, onChange }: { play: Play; result: Bui
             onChange({ ...play, conditions: play.conditions.map((x) => (x === c ? { ...x, rank } : x)) });
           return (
             <li key={c.trait} className="trait-box">
-              <div className="trait-name">
-                {t?.name ?? c.trait}
-                {t?.ranked ? ` (${c.rank})` : ""}
+              {/* The name, with an ✕ at the right of its bar that takes the Condition off */}
+              <div className="trait-name tools-condition-head">
+                <span>
+                  {t?.name ?? c.trait}
+                  {t?.ranked ? ` (${c.rank})` : ""}
+                </span>
+                <button type="button" className="tools-condition-remove" aria-label={`Remove ${t?.name ?? c.trait}`} onClick={() => onChange(removeCondition(play, c.trait))}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M2 2l16 16M18 2L2 18" fill="none" stroke="currentColor" strokeWidth="2.5" />
+                  </svg>
+                </button>
               </div>
               {t?.ranked && (
                 <div className="stepper tools-rank">
@@ -255,9 +263,6 @@ export function Conditions({ play, result, onChange }: { play: Play; result: Bui
                 value={c.note ?? ""}
                 onChange={(e) => onChange({ ...play, conditions: play.conditions.map((x) => (x === c ? { ...x, note: e.target.value || undefined } : x)) })}
               />
-              <button type="button" className="link" onClick={() => onChange(removeCondition(play, c.trait))}>
-                Remove
-              </button>
             </li>
           );
         })}

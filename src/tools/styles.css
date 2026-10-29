@@ -398,6 +398,36 @@
     margin-top: 24px;
   }
 
+  /* A Condition the player added: an ✕ at the right of its name bar */
+  .tools-condition-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+
+  button.tools-condition-remove {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    margin: -4px -6px -4px 0;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: inherit;
+    cursor: pointer;
+    opacity: 0.75;
+
+    &:hover:not(:disabled),
+    &:focus-visible {
+      background: none;
+      color: inherit;
+      opacity: 1;
+    }
+  }
+
   /* Add a Condition: the dropdown takes the column's width, beside Add */
   .tools-conditions-side .tools-add {
     flex-wrap: nowrap;
