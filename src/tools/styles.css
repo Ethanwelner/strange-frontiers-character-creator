@@ -1,11 +1,6 @@
 /* Game Tools: the creator's styles (src/app/styles.css, under .sf-creator)
    plus these, under .sf-tools. */
 .sf-tools {
-  /* A shorter hero than the creator's: there's no describe box. */
-  .builder-hero {
-    min-height: max(45vh, 480px);
-  }
-
   /* The character's name, level and actions, across the top of the panel */
   .tools-character {
     grid-column: 1 / -1;
