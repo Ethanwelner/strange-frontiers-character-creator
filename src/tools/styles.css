@@ -359,6 +359,18 @@
      or cancelling it, above the rest of the sheet */
   .tools-level-up {
     margin-bottom: 40px;
+
+    /* Just the stats: no "Stats" title or instructions, and no box around them */
+    .step-head {
+      display: none;
+    }
+
+    .step-box {
+      background: none;
+      border: 0;
+      border-radius: 0;
+      padding: 0;
+    }
   }
 
   .tools-level-actions {

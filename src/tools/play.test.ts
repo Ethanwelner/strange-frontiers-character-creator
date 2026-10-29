@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { loadContent } from "../engine/content.js";
 import { applyTool, ask, sheetText } from "./chat.js";
-import { addCondition, addItem, checkPlay, currentOf, hpConditions, maxOf, playConditions, removeItem, startPlay, withResource } from "./play.js";
+import { addCondition, addItem, checkPlay, currentOf, hpConditions, maxOf, playConditions, pointsToPlace, removeItem, startPlay, withResource } from "./play.js";
 import type { CreateMessage } from "../ai/anthropic.js";
 
 const { content } = loadContent();
@@ -44,6 +44,16 @@ describe("a character in play", () => {
     expect(ids).not.toContain("severely-injured");
     expect(ids).not.toContain("destroyed");
     expect(ids.length).toBeGreaterThan(0);
+  });
+
+  it("knows when stat points are left to place", () => {
+    // Grosh hasn't placed Dreft's Physical bonus point.
+    expect(pointsToPlace(fresh().draft, content)).toBe(true);
+    const placed = { ...fresh().draft, startPoints: { endurance: 1 } };
+    expect(pointsToPlace(placed, content)).toBe(false);
+    // A level up leaves a core point and its focus points to place.
+    expect(pointsToPlace({ ...placed, level: 2 }, content)).toBe(true);
+    expect(pointsToPlace({ ...placed, level: 2, core: { ...placed.core, physical: 2 } }, content)).toBe(true);
   });
 
   it("stacks items by name and removes part of a stack", () => {

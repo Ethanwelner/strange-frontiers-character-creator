@@ -3,7 +3,8 @@
 // Conditions, the chat with the assistant). The build itself stays a Build,
 // so the engine checks it and works out its stats, resources and Traits.
 import type { Content } from "../engine/parse.js";
-import { validateBuild, type BuildResult } from "../engine/validate.js";
+import { bonusPointsOf, FOCUS_POINTS_PER_LEVEL, validateBuild, type BuildResult } from "../engine/validate.js";
+import { STAT_GROUPS } from "../schema/index.js";
 import { fromBuild, toBuild, type Draft } from "../app/draft.js";
 
 export const RESOURCES = ["hp", "vp", "sp", "mp"] as const;
@@ -70,6 +71,24 @@ export function playConditions(content: Content) {
 // campaign's starting level only matters at creation.
 export function checkPlay(draft: Draft, content: Content): BuildResult {
   return validateBuild(toBuild(draft), content, { startingLevel: draft.level });
+}
+
+// Whether a character has stat points left to place: a core point per level,
+// each core point's focus points, and the free bonus points its Kind and
+// packages give. Player Tools opens the Stats step while any are left.
+export function pointsToPlace(draft: Draft, content: Content): boolean {
+  const groups = Object.keys(STAT_GROUPS) as (keyof typeof STAT_GROUPS)[];
+  if (groups.reduce((n, g) => n + draft.core[g], 0) < draft.level) return true;
+  const spent = (g: keyof typeof STAT_GROUPS) => STAT_GROUPS[g].reduce((n, s) => n + (draft.points[s] ?? 0), 0);
+  if (groups.some((g) => STAT_GROUPS[g].length && spent(g) < draft.core[g] * FOCUS_POINTS_PER_LEVEL)) return true;
+  const kind = content.kinds.find((k) => k.id === draft.kind);
+  const packages = content.packages.filter((p) => [draft.origin, draft.profession, draft.past].includes(p.id));
+  const bonus = bonusPointsOf(kind, packages);
+  const start = draft.startPoints ?? {};
+  const placedIn = (g: keyof typeof STAT_GROUPS) => STAT_GROUPS[g].reduce((n, s) => n + (start[s] ?? 0), 0);
+  const placed = Object.values(start).reduce((n, p) => n + (p ?? 0), 0);
+  const inGroups = bonus.groups.reduce((n, b) => n + Math.min(placedIn(b.group), b.count), 0);
+  return bonus.groups.some((b) => placedIn(b.group) < b.count) || placed - inGroups < bonus.any;
 }
 
 export function maxOf(result: BuildResult, r: ResourceKey): number {

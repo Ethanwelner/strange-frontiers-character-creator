@@ -1,6 +1,5 @@
-import { useCallback, useMemo, useState } from "react";
-import { FOCUS_POINTS_PER_LEVEL, type BuildResult } from "../../engine/validate.js";
-import { STAT_GROUPS } from "../../schema/index.js";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import type { BuildResult } from "../../engine/validate.js";
 import { content, traitById } from "../../app/content.js";
 import type { Draft } from "../../app/draft.js";
 import { Sheet } from "../../app/components/Sheet.js";
@@ -8,18 +7,22 @@ import { StatsStep } from "../../app/components/StatsStep.js";
 import { TraitsStep } from "../../app/components/TraitsStep.js";
 import { Items } from "./Items.js";
 import { LorePopup, Sign } from "../../app/components/ui.js";
-import { addCondition, checkPlay, currentOf, hpConditions, maxOf, playConditions, removeCondition, RESOURCES, withResource, type Play, type ResourceKey } from "../play.js";
+import {
+  addCondition,
+  checkPlay,
+  currentOf,
+  hpConditions,
+  maxOf,
+  playConditions,
+  pointsToPlace,
+  removeCondition,
+  RESOURCES,
+  withResource,
+  type Play,
+  type ResourceKey,
+} from "../play.js";
 
 const NAMES: Record<ResourceKey, string> = { hp: "Hit Points", vp: "Vibe Points", sp: "Savvy Points", mp: "Mana Points" };
-
-// A level up is placed once its core point is in and every core stat's focus
-// points are spent.
-function levelPlaced(draft: Draft) {
-  const groups = Object.keys(STAT_GROUPS) as (keyof typeof STAT_GROUPS)[];
-  const core = groups.reduce((n, g) => n + draft.core[g], 0);
-  const spent = (g: keyof typeof STAT_GROUPS) => STAT_GROUPS[g].reduce((n, s) => n + (draft.points[s] ?? 0), 0);
-  return core === draft.level && groups.every((g) => !STAT_GROUPS[g].length || spent(g) === draft.core[g] * FOCUS_POINTS_PER_LEVEL);
-}
 
 // HP, VP, SP and MP, each with its current value against the max the engine
 // works out, then the rest of the character sheet. The Conditions sit in the
@@ -27,7 +30,9 @@ function levelPlaced(draft: Draft) {
 //
 // Level Up! (beside the name) hands this a `levelDraft`: the character one
 // level up, which the creator's Stats step edits in place of the sheet's
-// stats until it's confirmed or cancelled. Traits available, under the
+// stats until it's confirmed or cancelled. A character with points left to
+// place (an unplaced bonus point, say) gets the Stats step on its own, at
+// its own level, until they're placed and saved. Traits available, under the
 // sheet's Traits title, opens the creator's Traits step in a popup, without
 // the Traits the character already has, and Submit keeps the picks.
 export function Tracker({
@@ -60,6 +65,12 @@ export function Tracker({
   const traitResult = useMemo(() => (traitDraft ? checkPlay(traitDraft, content) : undefined), [traitDraft]);
   const banked = (result.summary?.picks.universal.banked ?? 0) + (result.summary?.picks.background.banked ?? 0);
   const held = useMemo(() => new Set(result.summary?.traits.map((h) => h.trait) ?? []), [result]);
+
+  // Points left to place open the Stats step, at the character's own level.
+  useEffect(() => {
+    if (!levelDraft && pointsToPlace(play.draft, content)) onLevelDraft(play.draft);
+  }, [play.draft, levelDraft, onLevelDraft]);
+  const levelingUp = Boolean(levelDraft && levelDraft.level > play.draft.level);
 
   return (
     <section className="tools-tracker">
@@ -121,17 +132,25 @@ export function Tracker({
         </button>
       </p>
 
-      {/* Leveling up: the creator's Stats step, for the new level only */}
+      {/* Placing stats: the creator's Stats step, for a level up or for points
+          still to place, with the points already placed locked */}
       {levelDraft && (
         <div className="tools-level-up">
           <StatsStep draft={levelDraft} onChange={onLevelDraft} floor={play.draft} />
           <div className="tools-level-actions">
-            <button type="button" className="build-button" disabled={!levelPlaced(levelDraft)} onClick={() => (onChange({ ...play, draft: levelDraft }), onLevelDraft(undefined))}>
-              Level up to {levelDraft.level}
+            <button
+              type="button"
+              className="build-button"
+              disabled={pointsToPlace(levelDraft, content)}
+              onClick={() => (onChange({ ...play, draft: levelDraft }), onLevelDraft(undefined))}
+            >
+              {levelingUp ? `Level up to ${levelDraft.level}` : "Save stats"}
             </button>
-            <button type="button" onClick={() => onLevelDraft(undefined)}>
-              Cancel
-            </button>
+            {levelingUp && (
+              <button type="button" onClick={() => onLevelDraft(undefined)}>
+                Cancel
+              </button>
+            )}
           </div>
         </div>
       )}
