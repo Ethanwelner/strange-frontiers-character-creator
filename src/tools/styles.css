@@ -12,14 +12,22 @@
     position: relative;
   }
 
-  /* Messages like "Imported grosh.json." sit 20px from the top of the panel,
+  /* Messages like "Imported grosh.json." sit 24px from the top of the panel,
      over its padding, at the content's left edge and only as wide as their
-     text, so they don't push the page down when they come and go. */
+     text, so they don't push the page down when they come and go. They're
+     dark like the panel, with its light text. */
   .tools-body > main > .notice[role="status"] {
     position: absolute;
-    top: 20px;
+    top: 24px;
     z-index: 2;
     margin: 0;
+    background: var(--panel-box);
+    border-color: var(--card-border);
+    color: var(--panel-text);
+
+    button.link {
+      color: var(--panel-text);
+    }
   }
 
   /* The title sits in the middle of the hero, above the tabs, like the
