@@ -138,9 +138,9 @@ export function ToolsApp() {
           </main>
           {play && result && (
             <aside className="tools-chat-side">
-              {/* What to do with the character, above the assistant */}
+              {/* What to do with the character, above the assistant, in the same buttons as Damage and Heal */}
               <div className="hero-bar tools-actions">
-                <button type="button" className="hero-link" onClick={exportBuild}>
+                <button type="button" onClick={exportBuild}>
                   Export
                 </button>
                 {confirmingSwitch ? (
@@ -148,7 +148,7 @@ export function ToolsApp() {
                     <span className="tools-confirm-text">Put this character away? Its tracker, items and chat are cleared.</span>
                     <button
                       type="button"
-                      className="hero-link"
+                     
                       onClick={() => {
                         setPlay(undefined);
                         setConfirmingSwitch(false);
@@ -157,12 +157,12 @@ export function ToolsApp() {
                     >
                       Yes
                     </button>
-                    <button type="button" className="hero-link" onClick={() => setConfirmingSwitch(false)}>
+                    <button type="button" onClick={() => setConfirmingSwitch(false)}>
                       Cancel
                     </button>
                   </span>
                 ) : (
-                  <button type="button" className="hero-link" onClick={() => setConfirmingSwitch(true)}>
+                  <button type="button" onClick={() => setConfirmingSwitch(true)}>
                     Switch character
                   </button>
                 )}
