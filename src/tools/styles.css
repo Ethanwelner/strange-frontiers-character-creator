@@ -9,6 +9,17 @@
 
   .builder-panel {
     flex: 1;
+    position: relative;
+  }
+
+  /* Messages like "Imported grosh.json." sit 12px from the top of the panel,
+     over its padding, at the content's left edge and only as wide as their
+     text, so they don't push the page down when they come and go. */
+  .tools-body > main > .notice[role="status"] {
+    position: absolute;
+    top: 12px;
+    z-index: 2;
+    margin: 0;
   }
 
   /* The title sits in the middle of the hero, above the tabs, like the
