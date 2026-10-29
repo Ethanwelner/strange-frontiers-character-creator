@@ -10,6 +10,24 @@
   .builder-panel {
     flex: 1;
   }
+
+  /* The title sits in the middle of the hero, above the tabs, like the
+     site's other heroes. The creator's leans low to make room for its
+     describe box. */
+  .builder-statement {
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+
+  .builder-tabs {
+    margin-top: 0;
+  }
+
+  /* With no character there are no tabs, so the bottom matches the room
+     the top leaves for the site's nav. */
+  .builder-hero:not(:has(.builder-tabs)) {
+    padding-bottom: var(--sf-creator-top, 24px);
+  }
 
   /* The character's name, level and actions, across the top of the panel */
   .tools-character {
