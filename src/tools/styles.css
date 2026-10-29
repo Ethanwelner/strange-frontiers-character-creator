@@ -89,9 +89,12 @@
     }
   }
 
-  /* Level Up to N! (Cancel while leveling) in the creator's green, like
-     Build it */
-  .tools-level-button button {
+  /* The creator's green, like Build it: Level Up to N! (Cancel while
+     leveling), Traits available, and the stats' Submit once every point is
+     placed (gray until then) */
+  .tools-level-button button,
+  .tools-traits-available button,
+  .tools-level-actions button:not(:disabled) {
     background: var(--frontiers-green);
     color: var(--portfolio-black);
 
@@ -414,7 +417,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
-    margin-top: 16px;
+    margin-top: 24px;
   }
 
   /* Traits available, under the sheet's Traits title */
