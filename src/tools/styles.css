@@ -331,6 +331,15 @@
     margin-top: 0;
   }
 
+  /* The sheet under the point cards: its stats and Traits boxes sit right
+     on the panel, without the sheet's own outer box around them */
+  .sheet-embedded .c-sheet {
+    background: none;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+  }
+
   /* Export and Switch character, beside the name. Switching asks on its
      own line, with Yes and Cancel under it. */
   .tools-actions {
