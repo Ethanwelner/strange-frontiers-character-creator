@@ -74,6 +74,7 @@ export function Sheet({
   embedded = false,
   stats = true,
   traitsAction,
+  extraColumn,
 }: {
   draft: Draft;
   result: BuildResult;
@@ -85,6 +86,8 @@ export function Sheet({
   stats?: boolean;
   // Shown under the Traits title, like Game Tools' "Traits available"
   traitsAction?: ReactNode;
+  // A third column after the Knowledges, like Game Tools' Items
+  extraColumn?: ReactNode;
 }) {
   const kind = draft.kind ? kindById.get(draft.kind) : undefined;
   const packages = [draft.origin, draft.profession, draft.past].map((id) => (id ? packageById.get(id) : undefined));
@@ -249,6 +252,7 @@ export function Sheet({
               </>
             )}
           </div>
+          {extraColumn}
         </div>
 
         <div className="c-sheet-box">

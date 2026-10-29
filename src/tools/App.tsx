@@ -7,17 +7,11 @@ import { describe } from "../app/check.js";
 import { checkPlay, creatorDraft, load, save, startPlay, type Play } from "./play.js";
 import { BackgroundPopup } from "./components/BackgroundPopup.js";
 import { Chat } from "./components/Chat.js";
-import { Items } from "./components/Items.js";
 import { Conditions, Tracker } from "./components/Tracker.js";
 
-// The character sheet and leveling up both happen on the Tracker.
-const TABS = ["tracker", "items"] as const;
-type Tab = (typeof TABS)[number];
-const LABELS: Record<Tab, string> = { tracker: "Tracker", items: "Items" };
 
 export function ToolsApp() {
   const [play, setPlay] = useState<Play | undefined>(load);
-  const [tab, setTab] = useState<Tab>("tracker");
   // A passing notice fades on its own; an error stays.
   const [notice, setNotice] = useState<{ text: string; fades?: boolean }>();
   // Switching characters asks inline; native confirm() dialogs are blocked in some browsers.
@@ -43,7 +37,6 @@ export function ToolsApp() {
     if (!file) return;
     try {
       setPlay(startPlay(JSON.parse(await file.text())));
-      setTab("tracker");
       setNotice({ text: `Imported ${file.name}.`, fades: true });
     } catch (err) {
       setNotice({ text: `Couldn't import ${file.name}: ${err instanceof Error ? err.message : String(err)}` });
@@ -76,15 +69,6 @@ export function ToolsApp() {
               </h1>
               <p className="title section-title">Game Tools</p>
             </div>
-            {play && result && (
-              <nav className="builder-tabs rpg-tab-list" aria-label="Game tools">
-                {TABS.map((t) => (
-                  <button key={t} className={`rpg-tab${t === tab ? " is-active" : ""}`} aria-current={t === tab ? "page" : undefined} onClick={() => setTab(t)}>
-                    {LABELS[t]}
-                  </button>
-                ))}
-              </nav>
-            )}
           </div>
         </div>
       </header>
@@ -107,10 +91,7 @@ export function ToolsApp() {
                   <button
                     type="button"
                     disabled={Boolean(levelDraft)}
-                    onClick={() => {
-                      setTab("tracker");
-                      setLevelDraft({ ...play.draft, level: play.draft.level + 1 });
-                    }}
+                    onClick={() => setLevelDraft({ ...play.draft, level: play.draft.level + 1 })}
                   >
                     Level Up!
                   </button>
@@ -197,7 +178,7 @@ export function ToolsApp() {
                 </p>
                 <div className="tools-start-options">
                   {fromCreator && (
-                    <button type="button" className="build-button" onClick={() => (setPlay(startPlay(toBuild(fromCreator))), setTab("tracker"))}>
+                    <button type="button" className="build-button" onClick={() => setPlay(startPlay(toBuild(fromCreator)))}>
                       Use {fromCreator.name ?? "the character"} from the Character Creator
                     </button>
                   )}
@@ -211,10 +192,10 @@ export function ToolsApp() {
               </section>
             )}
 
-            {play && result && tab === "tracker" && (
+            {/* Everything happens on the Tracker: resources, the sheet, items and leveling up */}
+            {play && result && (
               <Tracker play={play} result={result} onChange={setPlay} levelDraft={levelDraft} onLevelDraft={setLevelDraft} />
             )}
-            {play && result && tab === "items" && <Items play={play} onChange={setPlay} />}
           </main>
           {play && result && (
             <aside className="tools-chat-side">

@@ -311,6 +311,38 @@
     align-items: center;
   }
 
+  /* The sheet's columns on the Tracker: stats, Knowledges, then Items (just
+     Knowledges and Items while Level Up! shows the stats editable above) */
+  .sheet-embedded .sheet-body {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 4fr);
+    gap: 40px;
+
+    &:not(:has(.sheet-stats)) {
+      grid-template-columns: minmax(0, 3fr) minmax(0, 4fr);
+    }
+  }
+
+  /* Items as a column: its heading like Knowledges', each item's fields
+     wrapping to fit */
+  .tools-items {
+    .rule {
+      margin-top: 0;
+    }
+
+    .tools-add input[type="text"] {
+      flex: 1 1 100%;
+    }
+
+    .tools-item {
+      padding: 12px;
+    }
+
+    .tools-item-name {
+      flex: 1 1 100%;
+      min-width: 0;
+    }
+  }
+
   /* Level Up!: the creator's Stats step for the new level, then confirming
      or cancelling it, above the rest of the sheet */
   .tools-level-up {
@@ -501,6 +533,24 @@
 
     .build-button {
       justify-self: end;
+    }
+  }
+
+  @media (max-width: 1199px) {
+    .sheet-embedded .sheet-body,
+    .sheet-embedded .sheet-body:not(:has(.sheet-stats)) {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .tools-items {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .sheet-embedded .sheet-body,
+    .sheet-embedded .sheet-body:not(:has(.sheet-stats)) {
+      grid-template-columns: minmax(0, 1fr);
     }
   }
 
