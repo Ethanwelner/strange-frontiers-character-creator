@@ -89,7 +89,7 @@
     }
   }
 
-  /* The name on the left, Export and Switch character on the right */
+  /* The name on the left, Level Up! on the right */
   .tools-character-head {
     display: flex;
     flex-wrap: wrap;
@@ -102,12 +102,32 @@
     margin: 0 0 8px;
   }
 
-  /* The rules problems chip, under the background line */
+  /* The rules problems chip, under the background line; it opens the list */
   .tools-issues {
     justify-content: flex-start;
     list-style: none;
     padding: 0;
     margin: 0 0 8px;
+
+    button {
+      all: unset;
+      cursor: pointer;
+    }
+
+    li:has(button:hover),
+    li:has(button:focus-visible) {
+      background: color-mix(in srgb, var(--portfolio-red) 80%, var(--portfolio-black));
+    }
+  }
+
+  /* The rules problems popup: a bulleted list */
+  .tools-issue-list {
+    margin: 0;
+    padding-left: 1.25rem;
+
+    li + li {
+      margin-top: 8px;
+    }
   }
 
   /* A Kind's or package's card in its popup: the creator's card, unclickable */
@@ -270,7 +290,7 @@
   }
 
   .tools-qty {
-    width: 5em;
+    width: 3.5em;
   }
 
   .tools-item-row {
@@ -291,37 +311,135 @@
     align-items: center;
   }
 
-  .tools-groups {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
+  /* The sheet's columns on the Tracker: stats, Knowledges, then Items (just
+     Knowledges and Items while Level Up! shows the stats editable above) */
+  .sheet-embedded .sheet-body {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 4fr);
+    gap: 40px;
 
-  .tools-group.is-active {
-    background: var(--frontiers-green);
-    color: var(--portfolio-black);
-
-    .muted {
-      color: var(--portfolio-black);
+    &:not(:has(.sheet-stats)) {
+      grid-template-columns: minmax(0, 3fr) minmax(0, 4fr);
     }
   }
 
-  .tools-focus {
-    display: grid;
-    gap: 12px;
-    margin-bottom: 16px;
+  /* Items as a column: its heading like Knowledges', each item's fields
+     wrapping to fit */
+  .tools-items {
+    .rule {
+      margin-top: 0;
+    }
+
+    /* Name, count, category and Add on one line */
+    .tools-add {
+      flex-wrap: nowrap;
+
+      input[type="text"] {
+        flex: 1 1 auto;
+        width: 0;
+        min-width: 0;
+      }
+
+      select,
+      button {
+        flex: none;
+      }
+    }
+
+    .tools-item {
+      padding: 12px;
+    }
+
+    .tools-item-name {
+      flex: 1 1 100%;
+      min-width: 0;
+    }
   }
 
-  .tools-focus-row {
+  /* Level Up!: the creator's Stats step for the new level, then confirming
+     or cancelling it, above the rest of the sheet */
+  .tools-level-up {
+    margin-bottom: 40px;
+  }
+
+  .tools-level-actions {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    gap: 16px;
+    gap: 12px;
+    margin-top: 16px;
   }
 
-  .tools-picks {
-    margin-top: 16px;
+  /* Traits available, under the sheet's Traits title */
+  .tools-traits-available {
+    margin: 0 0 16px;
+  }
+
+  /* The creator's Traits step in a wide popup on the panel's dark gray, with
+     Submit under it */
+  .tools-traits-popup .lore-modal-panel {
+    max-width: 1100px;
+    background: var(--panel);
+    color: var(--panel-text);
+  }
+
+  .tools-traits-submit {
+    position: sticky;
+    bottom: -32px;
+    display: flex;
+    justify-content: flex-end;
+    margin: 24px -32px -32px;
+    padding: 16px 32px;
+    background: var(--panel);
+    border-top: 1px solid var(--card-border);
+  }
+
+  /* 48px between the assistant and the Conditions under it (24px for the
+     column's gap, plus this) */
+  .tools-conditions-side {
+    margin-top: 24px;
+  }
+
+  /* A Condition the player added: an ✕ at the right of its name bar */
+  .tools-condition-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+
+  button.tools-condition-remove {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    margin: -4px -6px -4px 0;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: inherit;
+    cursor: pointer;
+    opacity: 0.75;
+
+    &:hover:not(:disabled),
+    &:focus-visible {
+      background: none;
+      color: inherit;
+      opacity: 1;
+    }
+  }
+
+  /* Add a Condition: the dropdown takes the column's width, beside Add */
+  .tools-conditions-side .tools-add {
+    flex-wrap: nowrap;
+
+    select {
+      flex: 1;
+      min-width: 0;
+    }
+
+    button {
+      flex: none;
+    }
   }
 
   /* The assistant and the Conditions under it, at the top of the right
@@ -348,12 +466,16 @@
     padding: 0;
   }
 
-  /* Export and Switch character, beside the name. Switching asks on its
-     own line, with Yes and Cancel under it. */
+  /* 48px between the stats, Knowledges and Items columns and the Traits */
+  .sheet-embedded .c-sheet {
+    gap: 48px;
+  }
+
+  /* Export and Switch character, above the assistant at its right edge.
+     Switching asks on its own line, with Yes and Cancel under it. */
   .tools-actions {
     flex-wrap: wrap;
     justify-content: flex-end;
-    max-width: 380px;
 
     .hero-confirm {
       flex-wrap: wrap;
@@ -477,6 +599,24 @@
 
     .build-button {
       justify-self: end;
+    }
+  }
+
+  @media (max-width: 1199px) {
+    .sheet-embedded .sheet-body,
+    .sheet-embedded .sheet-body:not(:has(.sheet-stats)) {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .tools-items {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .sheet-embedded .sheet-body,
+    .sheet-embedded .sheet-body:not(:has(.sheet-stats)) {
+      grid-template-columns: minmax(0, 1fr);
     }
   }
 

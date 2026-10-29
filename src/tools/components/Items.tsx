@@ -2,8 +2,9 @@ import { useState } from "react";
 import { title } from "../../app/components/ui.js";
 import { addItem, ITEM_CATEGORIES, type Item, type ItemCategory, type Play } from "../play.js";
 
-// The character's inventory. Item rules aren't settled yet, so an item is
-// what the player writes: a name, a count, a rough category and notes.
+// The character's inventory, a column of the sheet on the Tracker, after the
+// Knowledges. Item rules aren't settled yet, so an item is what the player
+// writes: a name, a count, a rough category and notes.
 export function Items({ play, onChange }: { play: Play; onChange: (p: Play) => void }) {
   const [name, setName] = useState("");
   const [qty, setQty] = useState("1");
@@ -20,10 +21,7 @@ export function Items({ play, onChange }: { play: Play; onChange: (p: Play) => v
 
   return (
     <section className="tools-items">
-      <header className="step-head">
-        <h2>Items</h2>
-        <p className="lede">What the character carries. Items with the same name stack.</p>
-      </header>
+      <h4 className="rule">Items</h4>
 
       <form
         className="tools-add"

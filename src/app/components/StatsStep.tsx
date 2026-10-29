@@ -9,6 +9,9 @@ import { baseStats, CoreLine, GROUPS, Sign, StatLine, StepHeader, title } from "
 interface Props {
   draft: Draft;
   onChange: (d: Draft) => void;
+  // The character as it stood before a level up (Game Tools): its core and
+  // focus points are fixed, so − only takes back what the new level added.
+  floor?: Draft;
 }
 
 // Stats as a pool, drawn like the character sheet. Each core point (one
@@ -29,7 +32,7 @@ interface Props {
 //
 // Magic, for characters who can level it, has no focus stats: each core
 // point in it adds MP instead.
-export function StatsStep({ draft, onChange }: Props) {
+export function StatsStep({ draft, onChange, floor }: Props) {
   const base = baseStats(draft);
   // Free bonus points: the Origin's and other packages', each in its group,
   // and the Kind's, in any stat.
@@ -53,6 +56,20 @@ export function StatsStep({ draft, onChange }: Props) {
   // The Kind's bonus plus any free bonus points placed on the stat
   const bonusOf = (s: StatId) => kindBonus(s) + (start[s] ?? 0);
   const valueOf = (s: StatId) => bonusOf(s) + (draft.points[s] ?? 0);
+  // What a stat or core stat was before a level up; nothing goes below it.
+  const floorOf = (s: StatId) => (floor ? kindBonus(s) + (floor.startPoints?.[s] ?? 0) + (floor.points[s] ?? 0) : kindBonus(s));
+  const coreFloor = (g: StatGroup) => floor?.core[g] ?? 0;
+  // Taking back a core point. On a level up, the group's stats go back to
+  // where they were before it, rather than losing points from the last stat.
+  const takeCore = (g: StatGroup) => {
+    if (!floor) return onChange(withCore(draft, g, draft.core[g] - 1));
+    const points = { ...draft.points };
+    for (const s of STAT_GROUPS[g]) {
+      if (floor.points[s]) points[s] = floor.points[s];
+      else delete points[s];
+    }
+    onChange({ ...draft, core: { ...draft.core, [g]: draft.core[g] - 1 }, points });
+  };
 
   // One point on or off a stat: on from the free bonus points while any are
   // left, otherwise from the group's unlocked points; off from the group's
@@ -131,7 +148,7 @@ export function StatsStep({ draft, onChange }: Props) {
                       <span className="stat-badge" title="Core stat">
                         {core + extra}
                       </span>
-                      <button aria-label={`Take a core point from ${g}`} onClick={() => onChange(withCore(draft, g, core - 1))} disabled={core === 0}>
+                      <button aria-label={`Take a core point from ${g}`} onClick={() => takeCore(g)} disabled={core <= coreFloor(g)}>
                         <Sign is="minus" />
                       </button>
                       <button
@@ -177,8 +194,8 @@ export function StatsStep({ draft, onChange }: Props) {
                     <button
                       aria-label={`Take a core point from ${g}`}
                       title={core > 0 && stranded ? `Also takes back ${stranded} focus ${stranded === 1 ? "point" : "points"}` : undefined}
-                      onClick={() => onChange(withCore(draft, g, core - 1))}
-                      disabled={core === 0}
+                      onClick={() => takeCore(g)}
+                      disabled={core <= coreFloor(g)}
                     >
                       <Sign is="minus" />
                     </button>
@@ -216,7 +233,7 @@ export function StatsStep({ draft, onChange }: Props) {
                       </div>
                       <div className="pool-stat-row">
                         <div className="stat-buttons">
-                          <button aria-label={`Take a point from ${s}`} onClick={() => bump(s, -1)} disabled={value <= kindBonus(s)}>
+                          <button aria-label={`Take a point from ${s}`} onClick={() => bump(s, -1)} disabled={value <= floorOf(s)}>
                             <Sign is="minus" />
                           </button>
                           <button aria-label={`Add a point to ${s}`} onClick={() => bump(s, 1)} disabled={spare === 0 || value >= max}>

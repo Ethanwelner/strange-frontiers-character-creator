@@ -1,23 +1,17 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import { endpointCreate } from "../ai/remote.js";
 import { content, contentErrors } from "../app/content.js";
-import { slug, toBuild } from "../app/draft.js";
-import { NameField, Notice } from "../app/components/ui.js";
+import { slug, toBuild, type Draft } from "../app/draft.js";
+import { LorePopup, NameField, Notice } from "../app/components/ui.js";
+import { describe } from "../app/check.js";
 import { checkPlay, creatorDraft, load, save, startPlay, type Play } from "./play.js";
 import { BackgroundPopup } from "./components/BackgroundPopup.js";
 import { Chat } from "./components/Chat.js";
-import { Items } from "./components/Items.js";
-import { LevelUp } from "./components/LevelUp.js";
 import { Conditions, Tracker } from "./components/Tracker.js";
 
-// The character sheet sits under the Tracker, not on a tab of its own.
-const TABS = ["tracker", "items", "level"] as const;
-type Tab = (typeof TABS)[number];
-const LABELS: Record<Tab, string> = { tracker: "Tracker", items: "Items", level: "Level Up" };
 
 export function ToolsApp() {
   const [play, setPlay] = useState<Play | undefined>(load);
-  const [tab, setTab] = useState<Tab>("tracker");
   // A passing notice fades on its own; an error stays.
   const [notice, setNotice] = useState<{ text: string; fades?: boolean }>();
   // Switching characters asks inline; native confirm() dialogs are blocked in some browsers.
@@ -25,6 +19,11 @@ export function ToolsApp() {
   // The Kind or background package whose card is open, from the line under the name
   const [showing, setShowing] = useState<string>();
   const closePopup = useCallback(() => setShowing(undefined), []);
+  // The list of rules problems, opened from their chip
+  const [showingIssues, setShowingIssues] = useState(false);
+  const closeIssues = useCallback(() => setShowingIssues(false), []);
+  // The character one level up, while Level Up! is open on the Tracker
+  const [levelDraft, setLevelDraft] = useState<Draft>();
   const fileInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => save(play), [play]);
@@ -38,7 +37,6 @@ export function ToolsApp() {
     if (!file) return;
     try {
       setPlay(startPlay(JSON.parse(await file.text())));
-      setTab("tracker");
       setNotice({ text: `Imported ${file.name}.`, fades: true });
     } catch (err) {
       setNotice({ text: `Couldn't import ${file.name}: ${err instanceof Error ? err.message : String(err)}` });
@@ -69,17 +67,8 @@ export function ToolsApp() {
               <h1 className="title hero-title frontiers-accent frontiers-glitch" data-text="Strange Frontiers">
                 Strange Frontiers
               </h1>
-              <p className="title section-title">Game Tools</p>
+              <p className="title section-title">Player Tools</p>
             </div>
-            {play && result && (
-              <nav className="builder-tabs rpg-tab-list" aria-label="Game tools">
-                {TABS.map((t) => (
-                  <button key={t} className={`rpg-tab${t === tab ? " is-active" : ""}`} aria-current={t === tab ? "page" : undefined} onClick={() => setTab(t)}>
-                    {LABELS[t]}
-                  </button>
-                ))}
-              </nav>
-            )}
           </div>
         </div>
       </header>
@@ -89,8 +78,7 @@ export function ToolsApp() {
           {/* The character's name, titled like a tab, at the top of the left column, with its level under it */}
           {play && result && (
             <header className="step-head tools-character">
-              {/* The name, with the creator's pen to edit it, then Export and Switch character to
-                  the right, in the same buttons as Damage and Heal */}
+              {/* The name, with the creator's pen to edit it, then Level Up! to the right */}
               <div className="tools-character-head">
                 <NameField
                   className="sheet-name tools-name"
@@ -98,32 +86,14 @@ export function ToolsApp() {
                   name={play.draft.name}
                   onChange={(name) => setPlay({ ...play, draft: { ...play.draft, name } })}
                 />
-                <div className="hero-bar tools-actions">
-                  <button type="button" onClick={exportBuild}>
-                    Export
+                <div className="hero-bar tools-level-button">
+                  <button
+                    type="button"
+                    disabled={Boolean(levelDraft)}
+                    onClick={() => setLevelDraft({ ...play.draft, level: play.draft.level + 1 })}
+                  >
+                    Level Up!
                   </button>
-                  {confirmingSwitch ? (
-                    <span className="hero-confirm">
-                      <span className="tools-confirm-text">Put this character away? Its tracker, items and chat are cleared.</span>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setPlay(undefined);
-                          setConfirmingSwitch(false);
-                          setNotice(undefined);
-                        }}
-                      >
-                        Yes
-                      </button>
-                      <button type="button" onClick={() => setConfirmingSwitch(false)}>
-                        Cancel
-                      </button>
-                    </span>
-                  ) : (
-                    <button type="button" onClick={() => setConfirmingSwitch(true)}>
-                      Switch character
-                    </button>
-                  )}
                 </div>
               </div>
               {/* "Level 3 • Isek • Dreft • Licensed Mage • Expelled from the Mage Schools", each
@@ -142,13 +112,25 @@ export function ToolsApp() {
                 )}
               </p>
               {showing && <BackgroundPopup id={showing} onClose={closePopup} />}
-              {/* Any rules problems, as the creator's red error chip */}
+              {/* Any rules problems, as the creator's red error chip, which opens them as a list */}
               {!result.ok && (
                 <ul className="issues step-issues tools-issues">
                   <li>
-                    {result.errors.length} rules {result.errors.length === 1 ? "problem" : "problems"}
+                    <button type="button" onClick={() => setShowingIssues(true)}>
+                      {result.errors.length} rules {result.errors.length === 1 ? "problem" : "problems"}
+                    </button>
                   </li>
                 </ul>
+              )}
+              {showingIssues && !result.ok && (
+                <LorePopup label="Rules problems" onClose={closeIssues} className="tools-issues-popup">
+                  <h3 className="lore-modal-title">Rules problems</h3>
+                  <ul className="tools-issue-list">
+                    {result.errors.map((e, i) => (
+                      <li key={i}>{describe(e, play.draft)}</li>
+                    ))}
+                  </ul>
+                </LorePopup>
               )}
             </header>
           )}
@@ -164,12 +146,12 @@ export function ToolsApp() {
               <section className="tools-start">
                 <h2>Bring in a character</h2>
                 <p className="lede">
-                  Game Tools runs a character you already have during play: HP and the other resources, items, Conditions, leveling up, and an assistant you can
+                  Player Tools runs a character you already have during play: HP and the other resources, items, Conditions, leveling up, and an assistant you can
                   ask about the rules or tell what just happened.
                 </p>
                 <div className="tools-start-options">
                   {fromCreator && (
-                    <button type="button" className="build-button" onClick={() => (setPlay(startPlay(toBuild(fromCreator))), setTab("tracker"))}>
+                    <button type="button" className="build-button" onClick={() => setPlay(startPlay(toBuild(fromCreator)))}>
                       Use {fromCreator.name ?? "the character"} from the Character Creator
                     </button>
                   )}
@@ -183,12 +165,42 @@ export function ToolsApp() {
               </section>
             )}
 
-            {play && result && tab === "tracker" && <Tracker play={play} result={result} onChange={setPlay} />}
-            {play && result && tab === "items" && <Items play={play} onChange={setPlay} />}
-            {play && result && tab === "level" && <LevelUp play={play} result={result} onChange={setPlay} />}
+            {/* Everything happens on the Tracker: resources, the sheet, items and leveling up */}
+            {play && result && (
+              <Tracker play={play} result={result} onChange={setPlay} levelDraft={levelDraft} onLevelDraft={setLevelDraft} />
+            )}
           </main>
           {play && result && (
             <aside className="tools-chat-side">
+              {/* Export and Switch character, above the assistant, in the same buttons as Damage and Heal */}
+              <div className="hero-bar tools-actions">
+                <button type="button" onClick={exportBuild}>
+                  Export
+                </button>
+                {confirmingSwitch ? (
+                  <span className="hero-confirm">
+                    <span className="tools-confirm-text">Put this character away? Its tracker, items and chat are cleared.</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPlay(undefined);
+                        setLevelDraft(undefined);
+                        setConfirmingSwitch(false);
+                        setNotice(undefined);
+                      }}
+                    >
+                      Yes
+                    </button>
+                    <button type="button" onClick={() => setConfirmingSwitch(false)}>
+                      Cancel
+                    </button>
+                  </span>
+                ) : (
+                  <button type="button" onClick={() => setConfirmingSwitch(true)}>
+                    Switch character
+                  </button>
+                )}
+              </div>
               <Chat play={play} result={result} content={content} create={create} model={__SF_AI__.model} onChange={setPlay} check={(p) => checkPlay(p.draft, content)} />
               <Conditions play={play} result={result} onChange={setPlay} />
             </aside>
