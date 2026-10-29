@@ -392,6 +392,12 @@
     border-top: 1px solid var(--card-border);
   }
 
+  /* 48px between the assistant and the Conditions under it (24px for the
+     column's gap, plus this) */
+  .tools-conditions-side {
+    margin-top: 24px;
+  }
+
   /* Add a Condition: the dropdown takes the column's width, beside Add */
   .tools-conditions-side .tools-add {
     flex-wrap: nowrap;
@@ -428,6 +434,11 @@
     border: none;
     border-radius: 0;
     padding: 0;
+  }
+
+  /* 48px between the stats, Knowledges and Items columns and the Traits */
+  .sheet-embedded .c-sheet {
+    gap: 48px;
   }
 
   /* Export and Switch character, above the assistant at its right edge.
