@@ -327,10 +327,6 @@
     overflow-y: auto;
   }
 
-  .tools-conditions-side .subhead {
-    margin-top: 0;
-  }
-
   /* The sheet under the point cards: its stats, Knowledges and Traits sit
      right on the panel, without the sheet's boxes around them */
   .sheet-embedded :is(.c-sheet, .c-sheet-box) {

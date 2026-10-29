@@ -98,7 +98,6 @@ export function Conditions({ play, result, onChange }: { play: Play; result: Bui
 
   return (
     <section className="tools-conditions-side" aria-label="Conditions">
-      <h3 className="subhead">Conditions</h3>
       {/* Add a Condition, above the ones the character has */}
       <div className="tools-add">
         <select aria-label="Condition to add" value={adding} onChange={(e) => setAdding(e.target.value)}>
