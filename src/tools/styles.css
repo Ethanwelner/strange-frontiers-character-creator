@@ -19,6 +19,14 @@
     margin-bottom: auto;
   }
 
+  /* With no describe box under it, the title is only as wide as its text and
+     centered across the hero, like the site's other hero titles. */
+  .hero-main > .builder-statement {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
   .builder-tabs {
     margin-top: 0;
   }
