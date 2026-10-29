@@ -84,7 +84,7 @@ export function Sheet({
   embedded?: boolean;
   // Stands in for the stats column, as Player Tools' stats editor does
   statsSlot?: ReactNode;
-  // Shown under the Traits title, like Game Tools' "Traits available"
+  // Shown at the right end of the Traits title's line, like Player Tools' "Traits available"
   traitsAction?: ReactNode;
   // A third column after the Knowledges, like Game Tools' Items
   extraColumn?: ReactNode;
@@ -258,8 +258,15 @@ export function Sheet({
         </div>
 
         <div className="c-sheet-box">
-          <h3 className="subhead">Traits</h3>
-          {traitsAction}
+          {traitsAction ? (
+            // The action at the right end of the Traits title's line
+            <div className="sheet-traits-head">
+              <h3 className="subhead">Traits</h3>
+              {traitsAction}
+            </div>
+          ) : (
+            <h3 className="subhead">Traits</h3>
+          )}
           {others.length > 0 ? (
             <ul className="sheet-traits">
               {others.map((h) => (
