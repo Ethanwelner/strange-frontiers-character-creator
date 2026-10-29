@@ -89,9 +89,10 @@ export function Card(props: { selected: boolean; onSelect: () => void; children:
 const NOTICE_MS = 5000;
 const NOTICE_FADE_MS = 400;
 
-// A notice with a dismiss button. One that `fades` goes away on its own after
-// 5 seconds; errors stay until the player dismisses them. A new message
-// starts the wait over, so the message is one string.
+// A notice with a dismiss button. One that `fades` is a success (is-success)
+// and goes away on its own after 5 seconds; errors stay until the player
+// dismisses them. A new message starts the wait over, so the message is one
+// string.
 export function Notice({ children, fades, onDismiss }: { children: string; fades?: boolean; onDismiss: () => void }) {
   const [leaving, setLeaving] = useState(false);
   const dismiss = useRef(onDismiss);
@@ -107,7 +108,7 @@ export function Notice({ children, fades, onDismiss }: { children: string; fades
     };
   }, [children, fades]);
   return (
-    <div className={`notice${leaving ? " is-leaving" : ""}`} role="status">
+    <div className={`notice${fades ? " is-success" : ""}${leaving ? " is-leaving" : ""}`} role="status">
       {children}
       <button className="link" onClick={onDismiss} aria-label="Dismiss">
         ✕
