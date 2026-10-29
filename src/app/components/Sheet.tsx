@@ -91,18 +91,24 @@ function TraitModal({ held, places, onClose }: { held: Held; places: string[]; o
 // Laid out like the sample character sheet on the site's Mechanics tab.
 // Knowledges and Languages are a list of links, as on that sheet, each opening
 // its card; the other Traits are cards.
+//
+// Game Tools shows it `embedded` under its tracker, which already has the
+// name, level, background, resources and the actions: there the sheet keeps
+// only the Kind's features, the stats, Knowledges and Traits.
 export function Sheet({
   draft,
   result,
   onExport,
   onImport,
   onName,
+  embedded = false,
 }: {
   draft: Draft;
   result: BuildResult;
-  onExport: () => void;
-  onImport: () => void;
-  onName: (name?: string) => void;
+  onExport?: () => void;
+  onImport?: () => void;
+  onName?: (name?: string) => void;
+  embedded?: boolean;
 }) {
   const kind = draft.kind ? kindById.get(draft.kind) : undefined;
   const packages = [draft.origin, draft.profession, draft.past].map((id) => (id ? packageById.get(id) : undefined));
@@ -138,53 +144,73 @@ export function Sheet({
   ];
 
   return (
-    <section className="sheet">
-      <StepHeader step="sheet" title="Sheet" />
-      {/* Whether the build is legal, then Export, Import and Print, above the sheet */}
-      <div className="sheet-actions">
-        <span className={`status ${result.ok ? "good" : "bad"}`}>{result.ok ? "Legal" : `${result.errors.length} ${result.errors.length === 1 ? "error" : "errors"}`}</span>
-        <button onClick={onExport}>Export</button>
-        <button onClick={onImport}>Import</button>
-        <button onClick={() => window.print()}>Print</button>
-      </div>
-      <div className="c-sheet">
-        <div className="level-badge" aria-label={`Level ${draft.level}`}>
-          {draft.level}
-        </div>
-
-        <div className="c-sheet-box sheet-head">
-          <div className="sheet-head-main">
-            <NameField className="sheet-name" heading="h2" name={draft.name} onChange={onName} />
-            <p className="lede">
-              Level {draft.level} {kind?.name ?? "—"} · {packages.map((p) => p?.name ?? "—").join(" · ")}
-            </p>
-            <p className="sheet-resources">
-              {resources.map((r) => (
-                <span key={r}>
-                  <i>{summary?.resources[r] ?? "–"}</i> <strong>{r.toUpperCase()}</strong>
-                </span>
-              ))}
-            </p>
-            {kind && kind.features.length > 0 && (
-              <ul className="features kind-features">
-                {kind.features.map((f) => (
-                  <li key={f.name}>
-                    <strong>{f.name}.</strong> {f.description}
-                  </li>
-                ))}
-              </ul>
-            )}
+    <section className={`sheet${embedded ? " sheet-embedded" : ""}`}>
+      {!embedded && (
+        <>
+          <StepHeader step="sheet" title="Sheet" />
+          {/* Whether the build is legal, then Export, Import and Print, above the sheet */}
+          <div className="sheet-actions">
+            <span className={`status ${result.ok ? "good" : "bad"}`}>{result.ok ? "Legal" : `${result.errors.length} ${result.errors.length === 1 ? "error" : "errors"}`}</span>
+            <button onClick={onExport}>Export</button>
+            <button onClick={onImport}>Import</button>
+            <button onClick={() => window.print()}>Print</button>
           </div>
-          {/* Kind, Origin, Profession and Past, beside the name */}
-          <ul className="call-response sheet-background">
-            {background.map(([label, value]) => (
-              <li key={label}>
-                <span>{label}</span>
-                <strong>{value ?? "—"}</strong>
-              </li>
-            ))}
-          </ul>
-        </div>
+        </>
+      )}
+      <div className="c-sheet">
+        {!embedded && (
+          <div className="level-badge" aria-label={`Level ${draft.level}`}>
+            {draft.level}
+          </div>
+        )}
+
+        {embedded && kind && kind.features.length > 0 && (
+          <div className="c-sheet-box">
+            <ul className="features kind-features">
+              {kind.features.map((f) => (
+                <li key={f.name}>
+                  <strong>{f.name}.</strong> {f.description}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {!embedded && (
+          <div className="c-sheet-box sheet-head">
+            <div className="sheet-head-main">
+              <NameField className="sheet-name" heading="h2" name={draft.name} onChange={onName ?? (() => {})} />
+              <p className="lede">
+                Level {draft.level} {kind?.name ?? "—"} · {packages.map((p) => p?.name ?? "—").join(" · ")}
+              </p>
+              <p className="sheet-resources">
+                {resources.map((r) => (
+                  <span key={r}>
+                    <i>{summary?.resources[r] ?? "–"}</i> <strong>{r.toUpperCase()}</strong>
+                  </span>
+                ))}
+              </p>
+              {kind && kind.features.length > 0 && (
+                <ul className="features kind-features">
+                  {kind.features.map((f) => (
+                    <li key={f.name}>
+                      <strong>{f.name}.</strong> {f.description}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+            {/* Kind, Origin, Profession and Past, beside the name */}
+            <ul className="call-response sheet-background">
+              {background.map(([label, value]) => (
+                <li key={label}>
+                  <span>{label}</span>
+                  <strong>{value ?? "—"}</strong>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <div className="c-sheet-box sheet-body">
           <div className="sheet-stats">

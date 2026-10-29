@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import type { BuildResult } from "../../engine/validate.js";
 import { content, traitById } from "../../app/content.js";
+import { Sheet } from "../../app/components/Sheet.js";
 import { Sign } from "../../app/components/ui.js";
 import { addCondition, currentOf, hpConditions, maxOf, playConditions, removeCondition, RESOURCES, withResource, type Play, type ResourceKey } from "../play.js";
 
@@ -8,7 +9,7 @@ const NAMES: Record<ResourceKey, string> = { hp: "Hit Points", vp: "Vibe Points"
 
 // HP, VP, SP and MP, each with its current value against the max the engine
 // works out, then the Conditions: the ones HP decides, and the temporary ones
-// the player adds.
+// the player adds. The rest of the character sheet follows.
 export function Tracker({ play, result, onChange }: { play: Play; result: BuildResult; onChange: (p: Play) => void }) {
   // MP shows once the character has any.
   const shown = RESOURCES.filter((r) => r !== "mp" || maxOf(result, r) > 0);
@@ -157,6 +158,10 @@ export function Tracker({ play, result, onChange }: { play: Play; result: BuildR
           );
         })}
       </ul>
+
+      {/* The rest of the character sheet: the Kind's features, stats, Knowledges and Traits */}
+      <h3 className="subhead">Sheet</h3>
+      <Sheet draft={play.draft} result={result} embedded />
     </section>
   );
 }

@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import { endpointCreate } from "../ai/remote.js";
 import { content, contentErrors } from "../app/content.js";
 import { slug, toBuild } from "../app/draft.js";
-import { Sheet } from "../app/components/Sheet.js";
 import { Notice } from "../app/components/ui.js";
 import { checkPlay, creatorDraft, load, save, startPlay, type Play } from "./play.js";
 import { Chat } from "./components/Chat.js";
@@ -10,9 +9,10 @@ import { Items } from "./components/Items.js";
 import { LevelUp } from "./components/LevelUp.js";
 import { Tracker } from "./components/Tracker.js";
 
-const TABS = ["tracker", "items", "level", "sheet"] as const;
+// The character sheet sits under the Tracker, not on a tab of its own.
+const TABS = ["tracker", "items", "level"] as const;
 type Tab = (typeof TABS)[number];
-const LABELS: Record<Tab, string> = { tracker: "Tracker", items: "Items", level: "Level Up", sheet: "Sheet" };
+const LABELS: Record<Tab, string> = { tracker: "Tracker", items: "Items", level: "Level Up" };
 
 export function ToolsApp() {
   const [play, setPlay] = useState<Play | undefined>(load);
@@ -130,15 +130,6 @@ export function ToolsApp() {
             {play && result && tab === "tracker" && <Tracker play={play} result={result} onChange={setPlay} />}
             {play && result && tab === "items" && <Items play={play} onChange={setPlay} />}
             {play && result && tab === "level" && <LevelUp play={play} result={result} onChange={setPlay} />}
-            {play && result && tab === "sheet" && (
-              <Sheet
-                draft={play.draft}
-                result={result}
-                onExport={exportBuild}
-                onImport={() => fileInput.current?.click()}
-                onName={(name) => setPlay({ ...play, draft: { ...play.draft, name } })}
-              />
-            )}
           </main>
           {play && result && (
             <aside className="tools-chat-side">
