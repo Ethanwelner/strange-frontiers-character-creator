@@ -3,6 +3,7 @@ import { endpointCreate } from "../ai/remote.js";
 import { content, contentErrors } from "../app/content.js";
 import { slug, toBuild } from "../app/draft.js";
 import { Sheet } from "../app/components/Sheet.js";
+import { Notice } from "../app/components/ui.js";
 import { checkPlay, creatorDraft, load, save, startPlay, type Play } from "./play.js";
 import { Chat } from "./components/Chat.js";
 import { Items } from "./components/Items.js";
@@ -16,7 +17,8 @@ const LABELS: Record<Tab, string> = { tracker: "Tracker", items: "Items", level:
 export function ToolsApp() {
   const [play, setPlay] = useState<Play | undefined>(load);
   const [tab, setTab] = useState<Tab>("tracker");
-  const [notice, setNotice] = useState<string>();
+  // A passing notice fades on its own; an error stays.
+  const [notice, setNotice] = useState<{ text: string; fades?: boolean }>();
   // Switching characters asks inline; native confirm() dialogs are blocked in some browsers.
   const [confirmingSwitch, setConfirmingSwitch] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
@@ -33,9 +35,9 @@ export function ToolsApp() {
     try {
       setPlay(startPlay(JSON.parse(await file.text())));
       setTab("tracker");
-      setNotice(`Imported ${file.name}.`);
+      setNotice({ text: `Imported ${file.name}.`, fades: true });
     } catch (err) {
-      setNotice(`Couldn't import ${file.name}: ${err instanceof Error ? err.message : String(err)}`);
+      setNotice({ text: `Couldn't import ${file.name}: ${err instanceof Error ? err.message : String(err)}` });
     }
   };
 
@@ -118,12 +120,9 @@ export function ToolsApp() {
           <main>
             {contentErrors.length > 0 && <div className="notice bad">Content failed to load: {contentErrors.join("; ")}</div>}
             {notice && (
-              <div className="notice" role="status">
-                {notice}
-                <button className="link" onClick={() => setNotice(undefined)} aria-label="Dismiss">
-                  ✕
-                </button>
-              </div>
+              <Notice fades={notice.fades} onDismiss={() => setNotice(undefined)}>
+                {notice.text}
+              </Notice>
             )}
 
             {!play && (

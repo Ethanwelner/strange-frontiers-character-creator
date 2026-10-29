@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { StatGroup } from "../../engine/build.js";
 import { FOCUS_POINTS_PER_LEVEL, MP_PER_MAGIC, type BuildResult } from "../../engine/validate.js";
 import { STAT_CAP, STAT_GROUPS, type StatId } from "../../schema/index.js";
-import { baseStats, CoreLine, Sign, StatLine, title } from "../../app/components/ui.js";
+import { baseStats, CoreLine, Notice, Sign, StatLine, title } from "../../app/components/ui.js";
 import { TraitsStep } from "../../app/components/TraitsStep.js";
 import type { Play } from "../play.js";
 
@@ -66,12 +66,9 @@ export function LevelUp({ play, result, onChange }: { play: Play; result: BuildR
       </header>
 
       {done !== undefined && (
-        <div className="notice" role="status">
-          Level {done}. {banked ? `${banked} ${banked === 1 ? "pick" : "picks"} to spend below.` : "No new picks this time."}
-          <button className="link" onClick={() => setDone(undefined)} aria-label="Dismiss">
-            ✕
-          </button>
-        </div>
+        <Notice fades onDismiss={() => setDone(undefined)}>
+          {`Level ${done}. ${banked ? `${banked} ${banked === 1 ? "pick" : "picks"} to spend below.` : "No new picks this time."}`}
+        </Notice>
       )}
 
       <h3 className="subhead">1. Core stat</h3>
