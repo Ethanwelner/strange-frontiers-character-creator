@@ -2,7 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent } f
 import { endpointCreate } from "../ai/remote.js";
 import { content, contentErrors } from "../app/content.js";
 import { slug, toBuild, type Draft } from "../app/draft.js";
-import { NameField, Notice } from "../app/components/ui.js";
+import { LorePopup, NameField, Notice } from "../app/components/ui.js";
+import { describe } from "../app/check.js";
 import { checkPlay, creatorDraft, load, save, startPlay, type Play } from "./play.js";
 import { BackgroundPopup } from "./components/BackgroundPopup.js";
 import { Chat } from "./components/Chat.js";
@@ -24,6 +25,9 @@ export function ToolsApp() {
   // The Kind or background package whose card is open, from the line under the name
   const [showing, setShowing] = useState<string>();
   const closePopup = useCallback(() => setShowing(undefined), []);
+  // The list of rules problems, opened from their chip
+  const [showingIssues, setShowingIssues] = useState(false);
+  const closeIssues = useCallback(() => setShowingIssues(false), []);
   // The character one level up, while Level Up! is open on the Tracker
   const [levelDraft, setLevelDraft] = useState<Draft>();
   const fileInput = useRef<HTMLInputElement>(null);
@@ -154,13 +158,25 @@ export function ToolsApp() {
                 )}
               </p>
               {showing && <BackgroundPopup id={showing} onClose={closePopup} />}
-              {/* Any rules problems, as the creator's red error chip */}
+              {/* Any rules problems, as the creator's red error chip, which opens them as a list */}
               {!result.ok && (
                 <ul className="issues step-issues tools-issues">
                   <li>
-                    {result.errors.length} rules {result.errors.length === 1 ? "problem" : "problems"}
+                    <button type="button" onClick={() => setShowingIssues(true)}>
+                      {result.errors.length} rules {result.errors.length === 1 ? "problem" : "problems"}
+                    </button>
                   </li>
                 </ul>
+              )}
+              {showingIssues && !result.ok && (
+                <LorePopup label="Rules problems" onClose={closeIssues} className="tools-issues-popup">
+                  <h3 className="lore-modal-title">Rules problems</h3>
+                  <ul className="tools-issue-list">
+                    {result.errors.map((e, i) => (
+                      <li key={i}>{describe(e, play.draft)}</li>
+                    ))}
+                  </ul>
+                </LorePopup>
               )}
             </header>
           )}

@@ -102,12 +102,32 @@
     margin: 0 0 8px;
   }
 
-  /* The rules problems chip, under the background line */
+  /* The rules problems chip, under the background line; it opens the list */
   .tools-issues {
     justify-content: flex-start;
     list-style: none;
     padding: 0;
     margin: 0 0 8px;
+
+    button {
+      all: unset;
+      cursor: pointer;
+    }
+
+    li:has(button:hover),
+    li:has(button:focus-visible) {
+      background: color-mix(in srgb, var(--portfolio-red) 80%, var(--portfolio-black));
+    }
+  }
+
+  /* The rules problems popup: a bulleted list */
+  .tools-issue-list {
+    margin: 0;
+    padding-left: 1.25rem;
+
+    li + li {
+      margin-top: 8px;
+    }
   }
 
   /* A Kind's or package's card in its popup: the creator's card, unclickable */
