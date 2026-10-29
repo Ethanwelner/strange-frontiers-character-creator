@@ -30,7 +30,7 @@ const NAMES: Record<ResourceKey, string> = { hp: "Hit Points", vp: "Vibe Points"
 //
 // Level Up! (beside the name) hands this a `levelDraft`: the character one
 // level up, which the creator's Stats step edits in place of the sheet's
-// stats until it's confirmed or cancelled. A character with points left to
+// stats until it's submitted or cancelled there. A character with points left to
 // place (an unplaced bonus point, say) gets the Stats step on its own, at
 // its own level, until they're placed and saved. Traits available, under the
 // sheet's Traits title, opens the creator's Traits step in a popup, without
@@ -70,7 +70,6 @@ export function Tracker({
   useEffect(() => {
     if (!levelDraft && pointsToPlace(play.draft, content)) onLevelDraft(play.draft);
   }, [play.draft, levelDraft, onLevelDraft]);
-  const levelingUp = Boolean(levelDraft && levelDraft.level > play.draft.level);
 
   return (
     <section className="tools-tracker">
@@ -138,19 +137,15 @@ export function Tracker({
         <div className="tools-level-up">
           <StatsStep draft={levelDraft} onChange={onLevelDraft} floor={play.draft} />
           <div className="tools-level-actions">
+            {/* Cancelling a level up is the Level Up button, beside the name */}
             <button
               type="button"
               className="build-button"
               disabled={pointsToPlace(levelDraft, content)}
               onClick={() => (onChange({ ...play, draft: levelDraft }), onLevelDraft(undefined))}
             >
-              {levelingUp ? `Level up to ${levelDraft.level}` : "Save stats"}
+              Submit
             </button>
-            {levelingUp && (
-              <button type="button" onClick={() => onLevelDraft(undefined)}>
-                Cancel
-              </button>
-            )}
           </div>
         </div>
       )}

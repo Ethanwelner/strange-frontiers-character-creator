@@ -87,13 +87,23 @@ export function ToolsApp() {
                   onChange={(name) => setPlay({ ...play, draft: { ...play.draft, name } })}
                 />
                 <div className="hero-bar tools-level-button">
-                  <button
-                    type="button"
-                    disabled={Boolean(levelDraft)}
-                    onClick={() => setLevelDraft({ ...play.draft, level: play.draft.level + 1 })}
-                  >
-                    Level Up!
-                  </button>
+                  {/* Level Up to N!, which turns into Cancel while the level up is open and
+                      throws its points away. Placing points the character already has
+                      (the editor opened on its own) has to be finished first. */}
+                  {levelDraft && levelDraft.level > play.draft.level ? (
+                    <button type="button" className="build-button" onClick={() => setLevelDraft(undefined)}>
+                      Cancel
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="build-button"
+                      disabled={Boolean(levelDraft)}
+                      onClick={() => setLevelDraft({ ...play.draft, level: play.draft.level + 1 })}
+                    >
+                      Level Up to {play.draft.level + 1}!
+                    </button>
+                  )}
                 </div>
               </div>
               {/* "Level 3 • Isek • Dreft • Licensed Mage • Expelled from the Mage Schools", each

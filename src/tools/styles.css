@@ -89,6 +89,22 @@
     }
   }
 
+  /* Level Up to N! (Cancel while leveling) in the creator's green, like
+     Build it */
+  .tools-level-button button {
+    background: var(--frontiers-green);
+    color: var(--portfolio-black);
+
+    &:hover:not(:disabled) {
+      background-color: color-mix(in srgb, var(--frontiers-green) 75%, var(--portfolio-white));
+      color: var(--portfolio-black);
+    }
+
+    &:disabled {
+      opacity: 0.45;
+    }
+  }
+
   /* The name on the left, Level Up! on the right */
   .tools-character-head {
     display: flex;
