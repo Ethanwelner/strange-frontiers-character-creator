@@ -331,9 +331,9 @@
     margin-top: 0;
   }
 
-  /* The sheet under the point cards: its stats and Traits boxes sit right
-     on the panel, without the sheet's own outer box around them */
-  .sheet-embedded .c-sheet {
+  /* The sheet under the point cards: its stats, Knowledges and Traits sit
+     right on the panel, without the sheet's boxes around them */
+  .sheet-embedded :is(.c-sheet, .c-sheet-box) {
     background: none;
     border: none;
     border-radius: 0;

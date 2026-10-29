@@ -86,11 +86,11 @@ export function Card(props: { selected: boolean; onSelect: () => void; children:
 
 // How long a passing notice, like "Imported grosh.json.", stays before it
 // fades out, and how long the fade takes (.notice.is-leaving in styles.css).
-const NOTICE_MS = 5000;
+const NOTICE_MS = 3000;
 const NOTICE_FADE_MS = 400;
 
 // A notice with a dismiss button. One that `fades` is a success (is-success)
-// and goes away on its own after 5 seconds; errors stay until the player
+// and goes away on its own after 3 seconds; errors stay until the player
 // dismisses them. A new message starts the wait over, so the message is one
 // string.
 export function Notice({ children, fades, onDismiss }: { children: string; fades?: boolean; onDismiss: () => void }) {
