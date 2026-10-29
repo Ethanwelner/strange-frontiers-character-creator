@@ -67,7 +67,7 @@ export function ToolsApp() {
               <h1 className="title hero-title frontiers-accent frontiers-glitch" data-text="Strange Frontiers">
                 Strange Frontiers
               </h1>
-              <p className="title section-title">Game Tools</p>
+              <p className="title section-title">Player Tools</p>
             </div>
           </div>
         </div>
@@ -173,7 +173,7 @@ export function ToolsApp() {
               <section className="tools-start">
                 <h2>Bring in a character</h2>
                 <p className="lede">
-                  Game Tools runs a character you already have during play: HP and the other resources, items, Conditions, leveling up, and an assistant you can
+                  Player Tools runs a character you already have during play: HP and the other resources, items, Conditions, leveling up, and an assistant you can
                   ask about the rules or tell what just happened.
                 </p>
                 <div className="tools-start-options">
