@@ -93,8 +93,8 @@ function TraitModal({ held, places, onClose }: { held: Held; places: string[]; o
 // its card; the other Traits are cards.
 //
 // Game Tools shows it `embedded` under its tracker, which already has the
-// name, level, background, resources and the actions: there the sheet keeps
-// only the Kind's features, the stats, Knowledges and Traits.
+// name, level, background, the Kind's features, resources and the actions:
+// there the sheet keeps only the stats, Knowledges and Traits.
 export function Sheet({
   draft,
   result,
@@ -161,18 +161,6 @@ export function Sheet({
         {!embedded && (
           <div className="level-badge" aria-label={`Level ${draft.level}`}>
             {draft.level}
-          </div>
-        )}
-
-        {embedded && kind && kind.features.length > 0 && (
-          <div className="c-sheet-box">
-            <ul className="features kind-features">
-              {kind.features.map((f) => (
-                <li key={f.name}>
-                  <strong>{f.name}.</strong> {f.description}
-                </li>
-              ))}
-            </ul>
           </div>
         )}
 

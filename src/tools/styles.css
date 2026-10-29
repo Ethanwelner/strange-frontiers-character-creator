@@ -80,6 +80,12 @@
     margin: 0 0 8px;
   }
 
+  .tools-kind-features {
+    margin: 0;
+    padding-left: 1.25rem;
+    max-width: 760px;
+  }
+
   /* The tool, then the assistant beside it */
   .tools-body {
     grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);

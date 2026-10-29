@@ -159,7 +159,7 @@ export function Tracker({ play, result, onChange }: { play: Play; result: BuildR
         })}
       </ul>
 
-      {/* The rest of the character sheet: the Kind's features, stats, Knowledges and Traits */}
+      {/* The rest of the character sheet: stats, Knowledges and Traits */}
       <h3 className="subhead">Sheet</h3>
       <Sheet draft={play.draft} result={result} embedded />
     </section>

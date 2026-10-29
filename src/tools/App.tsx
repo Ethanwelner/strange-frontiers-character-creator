@@ -94,6 +94,19 @@ export function ToolsApp() {
                   ...(result.ok ? [] : [`${result.errors.length} rules ${result.errors.length === 1 ? "problem" : "problems"}`]),
                 ].join(" • ")}
               </p>
+              {/* The Kind's features, like the Isek's Nigh Immortal, under the background */}
+              {(() => {
+                const features = content.kinds.find((k) => k.id === play.draft.kind)?.features ?? [];
+                return features.length > 0 ? (
+                  <ul className="features kind-features tools-kind-features">
+                    {features.map((f) => (
+                      <li key={f.name}>
+                        <strong>{f.name}.</strong> {f.description}
+                      </li>
+                    ))}
+                  </ul>
+                ) : null;
+              })()}
             </header>
           )}
           <main>
