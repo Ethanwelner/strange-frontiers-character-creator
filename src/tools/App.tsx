@@ -78,8 +78,7 @@ export function ToolsApp() {
           {/* The character's name, titled like a tab, at the top of the left column, with its level under it */}
           {play && result && (
             <header className="step-head tools-character">
-              {/* The name, with the creator's pen to edit it, then Export and Switch character to
-                  the right, in the same buttons as Damage and Heal */}
+              {/* The name, with the creator's pen to edit it, then Level Up! to the right */}
               <div className="tools-character-head">
                 <NameField
                   className="sheet-name tools-name"
@@ -87,7 +86,7 @@ export function ToolsApp() {
                   name={play.draft.name}
                   onChange={(name) => setPlay({ ...play, draft: { ...play.draft, name } })}
                 />
-                <div className="hero-bar tools-actions">
+                <div className="hero-bar tools-level-button">
                   <button
                     type="button"
                     disabled={Boolean(levelDraft)}
@@ -95,32 +94,6 @@ export function ToolsApp() {
                   >
                     Level Up!
                   </button>
-                  <button type="button" onClick={exportBuild}>
-                    Export
-                  </button>
-                  {confirmingSwitch ? (
-                    <span className="hero-confirm">
-                      <span className="tools-confirm-text">Put this character away? Its tracker, items and chat are cleared.</span>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setPlay(undefined);
-                          setLevelDraft(undefined);
-                          setConfirmingSwitch(false);
-                          setNotice(undefined);
-                        }}
-                      >
-                        Yes
-                      </button>
-                      <button type="button" onClick={() => setConfirmingSwitch(false)}>
-                        Cancel
-                      </button>
-                    </span>
-                  ) : (
-                    <button type="button" onClick={() => setConfirmingSwitch(true)}>
-                      Switch character
-                    </button>
-                  )}
                 </div>
               </div>
               {/* "Level 3 • Isek • Dreft • Licensed Mage • Expelled from the Mage Schools", each
@@ -199,6 +172,35 @@ export function ToolsApp() {
           </main>
           {play && result && (
             <aside className="tools-chat-side">
+              {/* Export and Switch character, above the assistant, in the same buttons as Damage and Heal */}
+              <div className="hero-bar tools-actions">
+                <button type="button" onClick={exportBuild}>
+                  Export
+                </button>
+                {confirmingSwitch ? (
+                  <span className="hero-confirm">
+                    <span className="tools-confirm-text">Put this character away? Its tracker, items and chat are cleared.</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPlay(undefined);
+                        setLevelDraft(undefined);
+                        setConfirmingSwitch(false);
+                        setNotice(undefined);
+                      }}
+                    >
+                      Yes
+                    </button>
+                    <button type="button" onClick={() => setConfirmingSwitch(false)}>
+                      Cancel
+                    </button>
+                  </span>
+                ) : (
+                  <button type="button" onClick={() => setConfirmingSwitch(true)}>
+                    Switch character
+                  </button>
+                )}
+              </div>
               <Chat play={play} result={result} content={content} create={create} model={__SF_AI__.model} onChange={setPlay} check={(p) => checkPlay(p.draft, content)} />
               <Conditions play={play} result={result} onChange={setPlay} />
             </aside>

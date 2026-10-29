@@ -89,7 +89,7 @@
     }
   }
 
-  /* The name on the left, Export and Switch character on the right */
+  /* The name on the left, Level Up! on the right */
   .tools-character-head {
     display: flex;
     flex-wrap: wrap;
@@ -416,12 +416,10 @@
     padding: 0;
   }
 
-  /* Export and Switch character, beside the name. Switching asks on its
+  /* Export and Switch character, above the assistant. Switching asks on its
      own line, with Yes and Cancel under it. */
   .tools-actions {
     flex-wrap: wrap;
-    justify-content: flex-end;
-    max-width: 380px;
 
     .hero-confirm {
       flex-wrap: wrap;
