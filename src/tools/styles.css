@@ -392,6 +392,20 @@
     border-top: 1px solid var(--card-border);
   }
 
+  /* Add a Condition: the dropdown takes the column's width, beside Add */
+  .tools-conditions-side .tools-add {
+    flex-wrap: nowrap;
+
+    select {
+      flex: 1;
+      min-width: 0;
+    }
+
+    button {
+      flex: none;
+    }
+  }
+
   /* The assistant and the Conditions under it, at the top of the right
      column, stay in view while the tools scroll, like the creator's
      character box, scrolling inside when they're taller than the window */
@@ -416,10 +430,11 @@
     padding: 0;
   }
 
-  /* Export and Switch character, above the assistant. Switching asks on its
-     own line, with Yes and Cancel under it. */
+  /* Export and Switch character, above the assistant at its right edge.
+     Switching asks on its own line, with Yes and Cancel under it. */
   .tools-actions {
     flex-wrap: wrap;
+    justify-content: flex-end;
 
     .hero-confirm {
       flex-wrap: wrap;
