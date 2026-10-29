@@ -84,6 +84,15 @@
     margin-bottom: 8px;
   }
 
+  /* The name on the left, Export and Switch character on the right */
+  .tools-character-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px 24px;
+  }
+
   .tools-line {
     margin: 0 0 8px;
   }
@@ -303,8 +312,8 @@
     margin-top: 16px;
   }
 
-  /* The actions and the assistant, at the top of the right column, stay in
-     view while the tools scroll, like the creator's character box */
+  /* The assistant, at the top of the right column, stays in view while the
+     tools scroll, like the creator's character box */
   .tools-chat-side {
     grid-column: 2;
     grid-row: 1 / span 2;
@@ -315,10 +324,12 @@
     gap: 16px;
   }
 
-  /* Export and Switch character, above the assistant. Switching asks on
-     its own line, with Yes and Cancel under it. */
+  /* Export and Switch character, beside the name. Switching asks on its
+     own line, with Yes and Cancel under it. */
   .tools-actions {
     flex-wrap: wrap;
+    justify-content: flex-end;
+    max-width: 380px;
 
     .hero-confirm {
       flex-wrap: wrap;

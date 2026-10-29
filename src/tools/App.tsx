@@ -82,10 +82,40 @@ export function ToolsApp() {
 
       <div className="section unlimited white-bg builder-panel">
         <div className={`container builder-body tools-body${play ? "" : " no-side"}`}>
-          {/* The character's name, titled like a tab, over the tools and the assistant, with its level under it */}
+          {/* The character's name, titled like a tab, at the top of the left column, with its level under it */}
           {play && result && (
             <header className="step-head tools-character">
-              <h2>{play.draft.name ?? "Unnamed character"}</h2>
+              {/* The name, with Export and Switch character to its right, in the same buttons as Damage and Heal */}
+              <div className="tools-character-head">
+                <h2>{play.draft.name ?? "Unnamed character"}</h2>
+                <div className="hero-bar tools-actions">
+                  <button type="button" onClick={exportBuild}>
+                    Export
+                  </button>
+                  {confirmingSwitch ? (
+                    <span className="hero-confirm">
+                      <span className="tools-confirm-text">Put this character away? Its tracker, items and chat are cleared.</span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setPlay(undefined);
+                          setConfirmingSwitch(false);
+                          setNotice(undefined);
+                        }}
+                      >
+                        Yes
+                      </button>
+                      <button type="button" onClick={() => setConfirmingSwitch(false)}>
+                        Cancel
+                      </button>
+                    </span>
+                  ) : (
+                    <button type="button" onClick={() => setConfirmingSwitch(true)}>
+                      Switch character
+                    </button>
+                  )}
+                </div>
+              </div>
               {/* "Level 3 Isek • Dreft • Licensed Mage • Expelled from the Mage Schools", then any rules problems */}
               <p className="tools-line">
                 {[
@@ -146,35 +176,6 @@ export function ToolsApp() {
           </main>
           {play && result && (
             <aside className="tools-chat-side">
-              {/* What to do with the character, above the assistant, in the same buttons as Damage and Heal */}
-              <div className="hero-bar tools-actions">
-                <button type="button" onClick={exportBuild}>
-                  Export
-                </button>
-                {confirmingSwitch ? (
-                  <span className="hero-confirm">
-                    <span className="tools-confirm-text">Put this character away? Its tracker, items and chat are cleared.</span>
-                    <button
-                      type="button"
-                     
-                      onClick={() => {
-                        setPlay(undefined);
-                        setConfirmingSwitch(false);
-                        setNotice(undefined);
-                      }}
-                    >
-                      Yes
-                    </button>
-                    <button type="button" onClick={() => setConfirmingSwitch(false)}>
-                      Cancel
-                    </button>
-                  </span>
-                ) : (
-                  <button type="button" onClick={() => setConfirmingSwitch(true)}>
-                    Switch character
-                  </button>
-                )}
-              </div>
               <Chat play={play} result={result} content={content} create={create} model={__SF_AI__.model} onChange={setPlay} check={(p) => checkPlay(p.draft, content)} />
             </aside>
           )}
