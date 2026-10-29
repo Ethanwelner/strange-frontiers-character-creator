@@ -15,6 +15,9 @@ interface Props {
   // Traits to leave out of the lists, like the ones a character in Game
   // Tools already had before this round of picks.
   hide?: ReadonlySet<string>;
+  // Picks from this index on are this round's (Game Tools' popup): only
+  // those are listed, as "Traits selected", and only they can be removed.
+  newFrom?: number;
 }
 
 // What a Trait needs before it can be picked, as the site writes it:
@@ -52,7 +55,7 @@ const openersOf = (list: string) =>
     .map((t) => t.name)
     .join(" or ");
 
-export function TraitsStep({ draft, campaign, result, onChange, hide }: Props) {
+export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom }: Props) {
   // A pick type, or a Trait list the character has opened, like Magic
   const [chosen, setTab] = useState<TraitTab>("universal");
   const [query, setQuery] = useState("");
@@ -236,12 +239,12 @@ export function TraitsStep({ draft, campaign, result, onChange, hide }: Props) {
           </div>
         ))}
 
-        <h3 className="subhead">Picks spent</h3>
-        {draft.traits.length === 0 ? (
-          <p className="empty">No picks spent yet.</p>
+        <h3 className="subhead">{newFrom === undefined ? "Picks spent" : "Traits selected"}</h3>
+        {draft.traits.length <= (newFrom ?? 0) ? (
+          <p className="empty">{newFrom === undefined ? "No picks spent yet." : "No Traits selected yet."}</p>
         ) : (
           <ul className="picks">
-            {draft.traits.map((p, i) => (
+            {draft.traits.map((p, i) => i < (newFrom ?? 0) ? null : (
               <li key={i}>
                 <span>
                   <strong>{traitName(p.trait)}</strong> rank {p.rank ?? 1} <span className="muted">· {p.pick} pick</span>
