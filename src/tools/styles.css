@@ -15,7 +15,8 @@
   /* Messages like "Imported grosh.json." sit 24px from the top of the panel,
      over its padding, at the content's left edge and only as wide as their
      text, so they don't push the page down when they come and go. They're
-     dark like the panel, with its light text. */
+     dark like the panel, with its light text; a success is dark green with
+     light green text. */
   .tools-body > main > .notice[role="status"] {
     position: absolute;
     top: 24px;
@@ -27,6 +28,16 @@
 
     button.link {
       color: var(--panel-text);
+    }
+
+    &.is-success {
+      background: color-mix(in srgb, var(--frontiers-green) 16%, #1c1c1c);
+      border-color: color-mix(in srgb, var(--frontiers-green) 45%, #1c1c1c);
+      color: color-mix(in srgb, var(--frontiers-green) 55%, var(--portfolio-white));
+
+      button.link {
+        color: inherit;
+      }
     }
   }
 
