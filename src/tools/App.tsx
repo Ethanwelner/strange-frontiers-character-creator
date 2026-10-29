@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent } f
 import { endpointCreate } from "../ai/remote.js";
 import { content, contentErrors } from "../app/content.js";
 import { slug, toBuild } from "../app/draft.js";
-import { Notice } from "../app/components/ui.js";
+import { NameField, Notice } from "../app/components/ui.js";
 import { checkPlay, creatorDraft, load, save, startPlay, type Play } from "./play.js";
 import { BackgroundPopup } from "./components/BackgroundPopup.js";
 import { Chat } from "./components/Chat.js";
@@ -89,9 +89,15 @@ export function ToolsApp() {
           {/* The character's name, titled like a tab, at the top of the left column, with its level under it */}
           {play && result && (
             <header className="step-head tools-character">
-              {/* The name, with Export and Switch character to its right, in the same buttons as Damage and Heal */}
+              {/* The name, with the creator's pen to edit it, then Export and Switch character to
+                  the right, in the same buttons as Damage and Heal */}
               <div className="tools-character-head">
-                <h2>{play.draft.name ?? "Unnamed character"}</h2>
+                <NameField
+                  className="sheet-name tools-name"
+                  heading="h2"
+                  name={play.draft.name}
+                  onChange={(name) => setPlay({ ...play, draft: { ...play.draft, name } })}
+                />
                 <div className="hero-bar tools-actions">
                   <button type="button" onClick={exportBuild}>
                     Export

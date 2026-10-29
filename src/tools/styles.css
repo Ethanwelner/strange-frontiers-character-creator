@@ -80,8 +80,13 @@
     grid-row: 2;
   }
 
-  .tools-character h2 {
+  /* The name and its pen, from the creator's Sheet, in the tab title style */
+  .tools-name {
     margin-bottom: 8px;
+
+    h2 {
+      margin: 0;
+    }
   }
 
   /* The name on the left, Export and Switch character on the right */
