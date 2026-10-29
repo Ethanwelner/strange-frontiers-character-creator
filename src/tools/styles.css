@@ -6,20 +6,23 @@
     min-height: max(45vh, 480px);
   }
 
-  .tools-who {
-    margin-bottom: 0;
+  /* The character's name, level and actions, across the top of the panel */
+  .tools-character {
+    grid-column: 1 / -1;
   }
 
   .tools-name {
     font-family: var(--title);
-    font-size: 2rem;
+    font-size: 3rem;
+    font-weight: normal;
     line-height: 1;
-    margin: 0 0 4px;
+    margin: 0 0 8px;
     color: var(--frontiers-green);
   }
 
   .tools-line {
-    margin: 0 0 12px;
+    margin: 0 0 8px;
+    font-size: 1rem;
   }
 
   /* The tool, then the assistant beside it */
