@@ -86,9 +86,13 @@ export function ToolsApp() {
           {play && result && (
             <header className="step-head tools-character">
               <h2>{play.draft.name ?? "Unnamed character"}</h2>
+              {/* "Level 3 Isek • Dreft • Licensed Mage • Expelled from the Mage Schools", then any rules problems */}
               <p className="tools-line">
-                Level {play.draft.level} {play.draft.kind ? (content.kinds.find((k) => k.id === play.draft.kind)?.name ?? play.draft.kind) : ""}
-                {result.ok ? "" : ` · ${result.errors.length} rules ${result.errors.length === 1 ? "problem" : "problems"}`}
+                {[
+                  `Level ${play.draft.level}${play.draft.kind ? ` ${content.kinds.find((k) => k.id === play.draft.kind)?.name ?? play.draft.kind}` : ""}`,
+                  ...[play.draft.origin, play.draft.profession, play.draft.past].flatMap((id) => (id ? [content.packages.find((p) => p.id === id)?.name ?? id] : [])),
+                  ...(result.ok ? [] : [`${result.errors.length} rules ${result.errors.length === 1 ? "problem" : "problems"}`]),
+                ].join(" • ")}
               </p>
             </header>
           )}
