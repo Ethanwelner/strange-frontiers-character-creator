@@ -72,7 +72,7 @@ export function Sheet({
   onImport,
   onName,
   embedded = false,
-  stats = true,
+  statsSlot,
   traitsAction,
   extraColumn,
 }: {
@@ -82,9 +82,9 @@ export function Sheet({
   onImport?: () => void;
   onName?: (name?: string) => void;
   embedded?: boolean;
-  // Leaves the stats out, as Game Tools does while it shows them editable for a level up
-  stats?: boolean;
-  // Shown under the Traits title, like Game Tools' "Traits available"
+  // Stands in for the stats column, as Player Tools' stats editor does
+  statsSlot?: ReactNode;
+  // Shown at the right end of the Traits title's line, like Player Tools' "Traits available"
   traitsAction?: ReactNode;
   // A third column after the Knowledges, like Game Tools' Items
   extraColumn?: ReactNode;
@@ -180,7 +180,9 @@ export function Sheet({
         )}
 
         <div className="c-sheet-box sheet-body">
-          {stats && (
+          {statsSlot ? (
+            <div className="sheet-stats">{statsSlot}</div>
+          ) : (
             <div className="sheet-stats">
               {groups.map((g) => (
                 <div key={g} className="sheet-group">
@@ -256,8 +258,15 @@ export function Sheet({
         </div>
 
         <div className="c-sheet-box">
-          <h3 className="subhead">Traits</h3>
-          {traitsAction}
+          {traitsAction ? (
+            // The action at the right end of the Traits title's line
+            <div className="sheet-traits-head">
+              <h3 className="subhead">Traits</h3>
+              {traitsAction}
+            </div>
+          ) : (
+            <h3 className="subhead">Traits</h3>
+          )}
           {others.length > 0 ? (
             <ul className="sheet-traits">
               {others.map((h) => (

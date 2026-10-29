@@ -4,7 +4,7 @@ import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { coreAccessFor, coreStatsShown } from "../check.js";
 import { content, kindById, packageById } from "../content.js";
 import { withCore, type Draft } from "../draft.js";
-import { baseStats, CoreLine, GROUPS, Sign, StatLine, StepHeader, title } from "./ui.js";
+import { baseStats, CoreLine, FOCUS_GROUPS, GROUPS, Sign, StatLine, StepHeader, title } from "./ui.js";
 
 interface Props {
   draft: Draft;
@@ -104,33 +104,69 @@ export function StatsStep({ draft, onChange, floor }: Props) {
         is added on top, in purple; your points show in green.
       </StepHeader>
       <div className="tech-fields tech-fields-light step-box">
-        <p className="pool-summary">
-          <span className={`num${coreLeft === 0 ? " good" : coreLeft < 0 ? " bad" : ""}`}>
-            {corePlaced}/{draft.level}
-          </span>{" "}
-          core points placed
-          {coreLeft > 0 && <span className="muted"> · {coreLeft} left</span>}
-          {bonus.groups.map((b) => (
-            <span key={b.group}>
-              {" · "}
-              <span className={`num${placedIn(b.group) >= b.count ? " good" : ""}`}>
-                {Math.min(placedIn(b.group), b.count)}/{b.count}
-              </span>{" "}
-              {title(b.group)} bonus {b.count === 1 ? "point" : "points"} placed
-              <span className="muted"> (from {b.from.join(" and ")}, spent first)</span>
-            </span>
-          ))}
-          {bonus.any > 0 && (
-            <>
-              {" · "}
-              <span className={`num${anyLeft === 0 ? " good" : ""}`}>
-                {bonus.any - anyLeft}/{bonus.any}
-              </span>{" "}
-              free bonus points placed
-              <span className="muted"> (spent first, on any stat)</span>
-            </>
-          )}
-        </p>
+        {floor ? (
+          // Leveling up in Player Tools: only what's left to place, and how
+          <ul className="pool-summary pool-left">
+            {coreLeft > 0 && (
+              <li>
+                <span className="num">{coreLeft}</span> core {coreLeft === 1 ? "point" : "points"} to place: level a core stat with the + beside its number.
+              </li>
+            )}
+            {FOCUS_GROUPS.map((g) => {
+              const left = draft.core[g] * POINTS_PER_LEVEL - spentIn(g);
+              return left > 0 ? (
+                <li key={g}>
+                  <span className="num">{left}</span> {title(g)} focus {left === 1 ? "point" : "points"} to spend with the + beside each {title(g)} stat.
+                </li>
+              ) : null;
+            })}
+            {bonus.groups.map((b) => {
+              const left = b.count - placedIn(b.group);
+              return left > 0 ? (
+                <li key={b.group}>
+                  <span className="num">{left}</span> {title(b.group)} bonus {left === 1 ? "point" : "points"} from {b.from.join(" and ")} to place with the + beside a{" "}
+                  {title(b.group)} stat.
+                </li>
+              ) : null;
+            })}
+            {anyLeft > 0 && (
+              <li>
+                <span className="num">{anyLeft}</span> free bonus {anyLeft === 1 ? "point" : "points"} to place with the + beside any stat.
+              </li>
+            )}
+            {coreLeft <= 0 && FOCUS_GROUPS.every((g) => spentIn(g) >= draft.core[g] * POINTS_PER_LEVEL) && bonus.groups.every((b) => placedIn(b.group) >= b.count) && anyLeft <= 0 && (
+              <li className="good">Every point is placed. Submit to keep them.</li>
+            )}
+          </ul>
+        ) : (
+          <p className="pool-summary">
+            <span className={`num${coreLeft === 0 ? " good" : coreLeft < 0 ? " bad" : ""}`}>
+              {corePlaced}/{draft.level}
+            </span>{" "}
+            core points placed
+            {coreLeft > 0 && <span className="muted"> · {coreLeft} left</span>}
+            {bonus.groups.map((b) => (
+              <span key={b.group}>
+                {" · "}
+                <span className={`num${placedIn(b.group) >= b.count ? " good" : ""}`}>
+                  {Math.min(placedIn(b.group), b.count)}/{b.count}
+                </span>{" "}
+                {title(b.group)} bonus {b.count === 1 ? "point" : "points"} placed
+                <span className="muted"> (from {b.from.join(" and ")}, spent first)</span>
+              </span>
+            ))}
+            {bonus.any > 0 && (
+              <>
+                {" · "}
+                <span className={`num${anyLeft === 0 ? " good" : ""}`}>
+                  {bonus.any - anyLeft}/{bonus.any}
+                </span>{" "}
+                free bonus points placed
+                <span className="muted"> (spent first, on any stat)</span>
+              </>
+            )}
+          </p>
+        )}
 
         <div className="pool-stats">
           {shown.map((g) => {

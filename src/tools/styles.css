@@ -89,6 +89,25 @@
     }
   }
 
+  /* The creator's green, like Build it: Level Up to N! (Cancel while
+     leveling), Traits available, and the stats' Submit once every point is
+     placed (gray until then) */
+  .tools-level-button button,
+  .tools-traits-available button,
+  .tools-level-actions button:not(:disabled) {
+    background: var(--frontiers-green);
+    color: var(--portfolio-black);
+
+    &:hover:not(:disabled) {
+      background-color: color-mix(in srgb, var(--frontiers-green) 75%, var(--portfolio-white));
+      color: var(--portfolio-black);
+    }
+
+    &:disabled {
+      opacity: 0.45;
+    }
+  }
+
   /* The name on the left, Level Up! on the right */
   .tools-character-head {
     display: flex;
@@ -355,22 +374,75 @@
     }
   }
 
-  /* Level Up!: the creator's Stats step for the new level, then confirming
-     or cancelling it, above the rest of the sheet */
-  .tools-level-up {
-    margin-bottom: 40px;
+  /* 48px between the resources (down to Restore all) and the sheet */
+  .tools-restore {
+    margin: 0 0 48px;
+  }
+
+  .tools-tracker > .sheet-embedded {
+    margin-top: 0;
+    padding-top: 0;
+  }
+
+  /* The sheet's stats: the creator's Stats step without its "Stats" title,
+     instructions or box. With no points to add it reads like the sheet: no
+     points-placed line, no − and +, no per-group counts, and no faded
+     groups. */
+  .tools-stats {
+    .step-head {
+      display: none;
+    }
+
+    .step-box {
+      background: none;
+      border: 0;
+      border-radius: 0;
+      padding: 0;
+    }
+
+    /* What's left to place, one line each */
+    .pool-left {
+      list-style: none;
+      padding: 0;
+      display: grid;
+      gap: 4px;
+    }
+
+    &.is-static {
+      :is(.pool-summary, .stat-buttons, .stat-spend, .hint),
+      .core-control button,
+      .sheet-group-head > .num {
+        display: none;
+      }
+
+      .sheet-group.locked .sheet-stat {
+        opacity: 1;
+      }
+    }
   }
 
   .tools-level-actions {
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
-    margin-top: 16px;
+    margin-top: 24px;
   }
 
-  /* Traits available, under the sheet's Traits title */
+  /* Traits available, at the right end of the Traits title's line */
+  .sheet-traits-head {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 0 0 24px;
+
+    .subhead {
+      flex: 1;
+      margin: 0;
+    }
+  }
+
   .tools-traits-available {
-    margin: 0 0 16px;
+    margin: 0;
   }
 
   /* The creator's Traits step in a wide popup on the panel's dark gray, with
@@ -464,6 +536,21 @@
     border: none;
     border-radius: 0;
     padding: 0;
+  }
+
+  /* The character's Trait and Condition cards only show what they are: no
+     pointer or hover border, unlike the creator's cards, which pick a Trait */
+  :is(.sheet-embedded, .tools-conditions-side) .trait-box {
+    cursor: default;
+
+    &:hover {
+      border-color: var(--card-border);
+    }
+  }
+
+  /* The character's Traits, at least 360px wide each */
+  .sheet-embedded .sheet-traits {
+    grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr));
   }
 
   /* 48px between the stats, Knowledges and Items columns and the Traits */
