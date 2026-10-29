@@ -239,6 +239,23 @@
     position: sticky;
     top: 24px;
     align-self: start;
+    display: grid;
+    gap: 16px;
+  }
+
+  /* Export and Switch character, above the assistant. Switching asks on
+     its own line, with Yes and Cancel under it. */
+  .tools-actions {
+    flex-wrap: wrap;
+
+    .hero-confirm {
+      flex-wrap: wrap;
+      gap: 8px 16px;
+    }
+
+    .tools-confirm-text {
+      flex-basis: 100%;
+    }
   }
 
   /* Title, conversation, then the message box and Send, 24px apart */
