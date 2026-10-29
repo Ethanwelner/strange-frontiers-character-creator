@@ -64,7 +64,7 @@ export function Tracker({ play, result, onChange }: { play: Play; result: BuildR
                   type="number"
                   min={1}
                   inputMode="numeric"
-                  placeholder="Amount"
+                  placeholder="Amt"
                   aria-label={`Amount of ${r.toUpperCase()}`}
                   value={amounts[r] ?? ""}
                   onChange={(e) => setAmounts({ ...amounts, [r]: e.target.value })}

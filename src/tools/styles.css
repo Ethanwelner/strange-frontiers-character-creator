@@ -81,20 +81,34 @@
 
   .tools-resources {
     display: grid;
-    /* As many as fit, three across on most screens, each card at most 360px */
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 16px;
+    /* As many as fit, all four (HP, VP, SP, MP) across on most screens,
+       each card at most 360px */
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 12px;
     margin-bottom: 16px;
   }
 
   .tools-resource {
     max-width: 360px;
+    padding: 12px;
   }
 
   .tools-resource-value {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
+
+    /* − and +, round */
+    button {
+      flex: none;
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
 
     .tools-resource-name {
       font-family: var(--title);
@@ -106,7 +120,7 @@
 
     .num {
       font-family: var(--title);
-      font-size: 2.25rem;
+      font-size: 2rem;
       line-height: 1;
       white-space: nowrap;
       flex: 1;
@@ -138,12 +152,17 @@
   .tools-resource-apply {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px;
 
     input {
       width: 0;
       flex: 1;
-      min-width: 64px;
+      min-width: 48px;
+    }
+
+    button {
+      padding-left: 10px;
+      padding-right: 10px;
     }
   }
 
