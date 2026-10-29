@@ -63,7 +63,7 @@ export function Tracker({ play, result, onChange }: { play: Play; result: BuildR
                   type="number"
                   min={1}
                   inputMode="numeric"
-                  placeholder="Amt"
+                  placeholder="#"
                   aria-label={`Amount of ${r.toUpperCase()}`}
                   value={amounts[r] ?? ""}
                   onChange={(e) => setAmounts({ ...amounts, [r]: e.target.value })}
@@ -82,11 +82,32 @@ export function Tracker({ play, result, onChange }: { play: Play; result: BuildR
       </div>
       <p>
         <button type="button" onClick={() => onChange({ ...play, current: {} })} disabled={full}>
-          Restore all to full
+          Restore all
         </button>
       </p>
 
       <h3 className="subhead">Conditions</h3>
+      {/* Add a Condition, above the ones the character has */}
+      <div className="tools-add">
+        <select aria-label="Condition to add" value={adding} onChange={(e) => setAdding(e.target.value)}>
+          <option value="">Add a Condition…</option>
+          {options.map((t) => (
+            <option key={t.id} value={t.id}>
+              {t.name}
+            </option>
+          ))}
+        </select>
+        <button
+          type="button"
+          disabled={!adding}
+          onClick={() => {
+            onChange(addCondition(play, content, adding));
+            setAdding("");
+          }}
+        >
+          Add
+        </button>
+      </div>
       <ul className="tools-conditions">
         {hp.map((id) => {
           const t = traitById.get(id);
@@ -136,26 +157,6 @@ export function Tracker({ play, result, onChange }: { play: Play; result: BuildR
           );
         })}
       </ul>
-      <div className="tools-add">
-        <select aria-label="Condition to add" value={adding} onChange={(e) => setAdding(e.target.value)}>
-          <option value="">Add a Condition…</option>
-          {options.map((t) => (
-            <option key={t.id} value={t.id}>
-              {t.name}
-            </option>
-          ))}
-        </select>
-        <button
-          type="button"
-          disabled={!adding}
-          onClick={() => {
-            onChange(addCondition(play, content, adding));
-            setAdding("");
-          }}
-        >
-          Add
-        </button>
-      </div>
     </section>
   );
 }
