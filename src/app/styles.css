@@ -254,7 +254,7 @@
     /* One column the step tabs can scroll inside, instead of widening it */
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: 1fr;
-    min-height: max(65vh, 768px);
+    min-height: max(50vh, 668px);
     color: var(--portfolio-white);
     padding-top: var(--sf-creator-top, 24px);
   }
