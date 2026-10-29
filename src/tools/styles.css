@@ -420,9 +420,9 @@
     margin-top: 24px;
   }
 
-  /* Traits available, under the sheet's Traits title */
+  /* Traits available, under the sheet's Traits title, 24px above the cards */
   .tools-traits-available {
-    margin: 0 0 16px;
+    margin: 0 0 24px;
   }
 
   /* The creator's Traits step in a wide popup on the panel's dark gray, with
