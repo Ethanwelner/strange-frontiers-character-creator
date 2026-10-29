@@ -476,6 +476,11 @@
     }
   }
 
+  /* The character's Traits, at least 360px wide each */
+  .sheet-embedded .sheet-traits {
+    grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr));
+  }
+
   /* 48px between the stats, Knowledges and Items columns and the Traits */
   .sheet-embedded .c-sheet {
     gap: 48px;
