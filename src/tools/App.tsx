@@ -4,7 +4,7 @@ import { content, contentErrors } from "../app/content.js";
 import { slug, toBuild, type Draft } from "../app/draft.js";
 import { LorePopup, NameField, Notice } from "../app/components/ui.js";
 import { describe } from "../app/check.js";
-import { checkPlay, creatorDraft, load, save, startPlay, type Play } from "./play.js";
+import { checkPlay, creatorDraft, load, pointsToPlace, save, startPlay, type Play } from "./play.js";
 import { BackgroundPopup } from "./components/BackgroundPopup.js";
 import { Chat } from "./components/Chat.js";
 import { Conditions, Tracker } from "./components/Tracker.js";
@@ -88,8 +88,8 @@ export function ToolsApp() {
                 />
                 <div className="hero-bar tools-level-button">
                   {/* Level Up to N!, which turns into Cancel while the level up is open and
-                      throws its points away. Placing points the character already has
-                      (the editor opened on its own) has to be finished first. */}
+                      throws its points away. Points the character already has to place come
+                      first, so it waits while there are any. */}
                   {levelDraft && levelDraft.level > play.draft.level ? (
                     <button type="button" className="build-button" onClick={() => setLevelDraft(undefined)}>
                       Cancel
@@ -98,7 +98,7 @@ export function ToolsApp() {
                     <button
                       type="button"
                       className="build-button"
-                      disabled={Boolean(levelDraft)}
+                      disabled={Boolean(levelDraft) || pointsToPlace(play.draft, content)}
                       onClick={() => setLevelDraft({ ...play.draft, level: play.draft.level + 1 })}
                     >
                       Level Up to {play.draft.level + 1}!

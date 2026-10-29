@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import type { BuildResult } from "../../engine/validate.js";
 import { content, traitById } from "../../app/content.js";
 import type { Draft } from "../../app/draft.js";
@@ -28,11 +28,11 @@ const NAMES: Record<ResourceKey, string> = { hp: "Hit Points", vp: "Vibe Points"
 // works out, then the rest of the character sheet. The Conditions sit in the
 // right column, under the assistant.
 //
-// Level Up! (beside the name) hands this a `levelDraft`: the character one
-// level up, which the creator's Stats step edits in place of the sheet's
-// stats until it's submitted or cancelled there. A character with points left to
-// place (an unplaced bonus point, say) gets the Stats step on its own, at
-// its own level, until they're placed and saved. Traits available, under the
+// The sheet's stats are the creator's Stats step, which gains its + and −
+// whenever there are points to add. Level Up! (beside the name) hands this a
+// `levelDraft`, the character one level up; adding points to a character
+// that has some unplaced starts one at its own level. Submit keeps it, and
+// the Level Up button (Cancel while leveling) throws a level up away. Traits available, under the
 // sheet's Traits title, opens the creator's Traits step in a popup, without
 // the Traits the character already has, and Submit keeps the picks.
 export function Tracker({
@@ -66,10 +66,29 @@ export function Tracker({
   const banked = (result.summary?.picks.universal.banked ?? 0) + (result.summary?.picks.background.banked ?? 0);
   const held = useMemo(() => new Set(result.summary?.traits.map((h) => h.trait) ?? []), [result]);
 
-  // Points left to place open the Stats step, at the character's own level.
-  useEffect(() => {
-    if (!levelDraft && pointsToPlace(play.draft, content)) onLevelDraft(play.draft);
-  }, [play.draft, levelDraft, onLevelDraft]);
+  // The stats are always the creator's Stats step. Its + and − and Submit
+  // show only while there are points to add: after Level Up!, or when the
+  // character has points it never placed. Otherwise it reads like the sheet.
+  const editing = levelDraft ?? play.draft;
+  const adding = Boolean(levelDraft) || pointsToPlace(play.draft, content);
+  const stats = (
+    <div className={`tools-stats${adding ? "" : " is-static"}`}>
+      <StatsStep draft={editing} onChange={onLevelDraft} floor={play.draft} />
+      {adding && (
+        <div className="tools-level-actions">
+          {/* Cancelling a level up is the Level Up button, beside the name */}
+          <button
+            type="button"
+            className="build-button"
+            disabled={pointsToPlace(editing, content)}
+            onClick={() => (onChange({ ...play, draft: editing }), onLevelDraft(undefined))}
+          >
+            Submit
+          </button>
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <section className="tools-tracker">
@@ -131,31 +150,12 @@ export function Tracker({
         </button>
       </p>
 
-      {/* Placing stats: the creator's Stats step, for a level up or for points
-          still to place, with the points already placed locked */}
-      {levelDraft && (
-        <div className="tools-level-up">
-          <StatsStep draft={levelDraft} onChange={onLevelDraft} floor={play.draft} />
-          <div className="tools-level-actions">
-            {/* Cancelling a level up is the Level Up button, beside the name */}
-            <button
-              type="button"
-              className="build-button"
-              disabled={pointsToPlace(levelDraft, content)}
-              onClick={() => (onChange({ ...play, draft: levelDraft }), onLevelDraft(undefined))}
-            >
-              Submit
-            </button>
-          </div>
-        </div>
-      )}
-
       {/* The rest of the character sheet: stats, Knowledges, Items and Traits */}
       <Sheet
         draft={play.draft}
         result={result}
         embedded
-        stats={!levelDraft}
+        statsSlot={stats}
         extraColumn={<Items play={play} onChange={onChange} />}
         traitsAction={
           banked > 0 && (
