@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { FREE_TEXT_POOLS, MP_PER_MAGIC, type BuildResult } from "../../engine/validate.js";
 import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { coreStatsShown } from "../check.js";
 import { content, kindById, packageById, traitById } from "../content.js";
 import type { Draft } from "../draft.js";
-import { askerName, baseStats, Chip, CoreLine, NameField, SettingIcon, StatLine, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
+import { askerName, baseStats, Chip, CoreLine, LorePopup, NameField, SettingIcon, StatLine, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
 
 const SOURCE = /^(kind|origin|profession|past) ([a-z0-9-]+)( choice)?$/;
 const TRAIT_CHOICE = /^trait ([a-z0-9-]+) choice$/;
@@ -49,42 +49,12 @@ function TraitCard({ held, places }: { held: Held; places: string[] }) {
   );
 }
 
-// A Knowledge's card, opened from the sheet's list in the site's lore popup
-// (.lore-modal). Escape, the backdrop and the close button shut it, and focus
-// goes back to the link.
+// A Knowledge's card, opened from the sheet's list in the site's lore popup.
 function TraitModal({ held, places, onClose }: { held: Held; places: string[]; onClose: () => void }) {
-  const close = useRef<HTMLButtonElement>(null);
-  useEffect(() => {
-    const opener = document.activeElement as HTMLElement | null;
-    close.current?.focus();
-    document.documentElement.classList.add("lore-modal-open");
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      document.documentElement.classList.remove("lore-modal-open");
-      opener?.focus();
-    };
-  }, [onClose]);
   return (
-    <div
-      className="lore-modal is-open"
-      role="dialog"
-      aria-modal="true"
-      aria-label={traitName(held.trait)}
-      onClick={(e) => e.target === e.currentTarget && onClose()}
-    >
-      <div className="lore-modal-panel">
-        <button ref={close} type="button" className="lore-modal-close" aria-label="Close" onClick={onClose}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true">
-            <path d="M2 2l16 16M18 2L2 18" fill="none" stroke="currentColor" strokeWidth="2" />
-          </svg>
-        </button>
-        <TraitCard held={held} places={places} />
-      </div>
-    </div>
+    <LorePopup label={traitName(held.trait)} onClose={onClose}>
+      <TraitCard held={held} places={places} />
+    </LorePopup>
   );
 }
 

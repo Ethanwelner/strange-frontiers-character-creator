@@ -105,10 +105,9 @@
     margin: 0 0 8px;
   }
 
-  .tools-kind-features {
-    margin: 0;
-    padding-left: 1.25rem;
-    max-width: 760px;
+  /* A Kind's or package's card in its popup: the creator's card, unclickable */
+  .tools-background-card {
+    cursor: default;
   }
 
   /* The tool, then the assistant beside it */

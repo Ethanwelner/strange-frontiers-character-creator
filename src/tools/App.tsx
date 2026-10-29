@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import { endpointCreate } from "../ai/remote.js";
 import { content, contentErrors } from "../app/content.js";
 import { slug, toBuild } from "../app/draft.js";
 import { Notice } from "../app/components/ui.js";
 import { checkPlay, creatorDraft, load, save, startPlay, type Play } from "./play.js";
+import { BackgroundPopup } from "./components/BackgroundPopup.js";
 import { Chat } from "./components/Chat.js";
 import { Items } from "./components/Items.js";
 import { LevelUp } from "./components/LevelUp.js";
@@ -21,6 +22,9 @@ export function ToolsApp() {
   const [notice, setNotice] = useState<{ text: string; fades?: boolean }>();
   // Switching characters asks inline; native confirm() dialogs are blocked in some browsers.
   const [confirmingSwitch, setConfirmingSwitch] = useState(false);
+  // The Kind or background package whose card is open, from the line under the name
+  const [showing, setShowing] = useState<string>();
+  const closePopup = useCallback(() => setShowing(undefined), []);
   const fileInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => save(play), [play]);
@@ -116,14 +120,22 @@ export function ToolsApp() {
                   )}
                 </div>
               </div>
-              {/* "Level 3 • Isek • Dreft • Licensed Mage • Expelled from the Mage Schools" */}
+              {/* "Level 3 • Isek • Dreft • Licensed Mage • Expelled from the Mage Schools", each
+                  of the Kind and background a link to its card */}
               <p className="tools-line">
-                {[
-                  `Level ${play.draft.level}`,
-                  ...(play.draft.kind ? [content.kinds.find((k) => k.id === play.draft.kind)?.name ?? play.draft.kind] : []),
-                  ...[play.draft.origin, play.draft.profession, play.draft.past].flatMap((id) => (id ? [content.packages.find((p) => p.id === id)?.name ?? id] : [])),
-                ].join(" • ")}
+                Level {play.draft.level}
+                {[play.draft.kind, play.draft.origin, play.draft.profession, play.draft.past].map((id, n) =>
+                  id ? (
+                    <span key={n}>
+                      {" • "}
+                      <button type="button" className="link" onClick={() => setShowing(id)}>
+                        {(n === 0 ? content.kinds.find((k) => k.id === id)?.name : content.packages.find((p) => p.id === id)?.name) ?? id}
+                      </button>
+                    </span>
+                  ) : null,
+                )}
               </p>
+              {showing && <BackgroundPopup id={showing} onClose={closePopup} />}
               {/* Any rules problems, as the creator's red error chip */}
               {!result.ok && (
                 <ul className="issues step-issues tools-issues">
@@ -132,19 +144,6 @@ export function ToolsApp() {
                   </li>
                 </ul>
               )}
-              {/* The Kind's features, like the Isek's Nigh Immortal, under the background */}
-              {(() => {
-                const features = content.kinds.find((k) => k.id === play.draft.kind)?.features ?? [];
-                return features.length > 0 ? (
-                  <ul className="features kind-features tools-kind-features">
-                    {features.map((f) => (
-                      <li key={f.name}>
-                        <strong>{f.name}.</strong> {f.description}
-                      </li>
-                    ))}
-                  </ul>
-                ) : null;
-              })()}
             </header>
           )}
           <main>
