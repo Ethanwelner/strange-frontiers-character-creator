@@ -400,6 +400,14 @@
       padding: 0;
     }
 
+    /* What's left to place, one line each */
+    .pool-left {
+      list-style: none;
+      padding: 0;
+      display: grid;
+      gap: 4px;
+    }
+
     &.is-static {
       :is(.pool-summary, .stat-buttons, .stat-spend, .hint),
       .core-control button,
