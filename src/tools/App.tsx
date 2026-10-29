@@ -116,14 +116,22 @@ export function ToolsApp() {
                   )}
                 </div>
               </div>
-              {/* "Level 3 Isek • Dreft • Licensed Mage • Expelled from the Mage Schools", then any rules problems */}
+              {/* "Level 3 • Isek • Dreft • Licensed Mage • Expelled from the Mage Schools" */}
               <p className="tools-line">
                 {[
-                  `Level ${play.draft.level}${play.draft.kind ? ` ${content.kinds.find((k) => k.id === play.draft.kind)?.name ?? play.draft.kind}` : ""}`,
+                  `Level ${play.draft.level}`,
+                  ...(play.draft.kind ? [content.kinds.find((k) => k.id === play.draft.kind)?.name ?? play.draft.kind] : []),
                   ...[play.draft.origin, play.draft.profession, play.draft.past].flatMap((id) => (id ? [content.packages.find((p) => p.id === id)?.name ?? id] : [])),
-                  ...(result.ok ? [] : [`${result.errors.length} rules ${result.errors.length === 1 ? "problem" : "problems"}`]),
                 ].join(" • ")}
               </p>
+              {/* Any rules problems, as the creator's red error chip */}
+              {!result.ok && (
+                <ul className="issues step-issues tools-issues">
+                  <li>
+                    {result.errors.length} rules {result.errors.length === 1 ? "problem" : "problems"}
+                  </li>
+                </ul>
+              )}
               {/* The Kind's features, like the Isek's Nigh Immortal, under the background */}
               {(() => {
                 const features = content.kinds.find((k) => k.id === play.draft.kind)?.features ?? [];
