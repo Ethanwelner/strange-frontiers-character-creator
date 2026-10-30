@@ -14,8 +14,9 @@ export function ToolsApp() {
   const [play, setPlay] = useState<Play | undefined>(load);
   // A passing notice fades on its own; an error stays.
   const [notice, setNotice] = useState<{ text: string; fades?: boolean }>();
-  // Switching characters asks inline; native confirm() dialogs are blocked in some browsers.
+  // Switching characters asks in a popup; native confirm() dialogs are blocked in some browsers.
   const [confirmingSwitch, setConfirmingSwitch] = useState(false);
+  const closeSwitch = useCallback(() => setConfirmingSwitch(false), []);
   // The Kind or background package whose card is open, from the line under the name
   const [showing, setShowing] = useState<string>();
   const closePopup = useCallback(() => setShowing(undefined), []);
@@ -118,11 +119,18 @@ export function ToolsApp() {
               <button type="button" onClick={exportBuild}>
                 Download character
               </button>
-              {confirmingSwitch ? (
-                <span className="hero-confirm">
-                  <span className="tools-confirm-text">Put this character away? Its tracker, items and chat are cleared.</span>
+              <button type="button" onClick={() => setConfirmingSwitch(true)}>
+                Switch character
+              </button>
+            </div>
+            {confirmingSwitch && (
+              <LorePopup label="Switch character" onClose={closeSwitch} className="tools-switch-popup">
+                <h3 className="lore-modal-title">Switch character</h3>
+                <p>Put {play.draft.name || "this character"} away? Their tracker, items and chat are cleared.</p>
+                <div className="tools-switch-actions">
                   <button
                     type="button"
+                    className="primary"
                     onClick={() => {
                       setPlay(undefined);
                       setLevelDraft(undefined);
@@ -130,18 +138,14 @@ export function ToolsApp() {
                       setNotice(undefined);
                     }}
                   >
-                    Yes
+                    Switch character
                   </button>
-                  <button type="button" onClick={() => setConfirmingSwitch(false)}>
+                  <button type="button" onClick={closeSwitch}>
                     Cancel
                   </button>
-                </span>
-              ) : (
-                <button type="button" onClick={() => setConfirmingSwitch(true)}>
-                  Switch character
-                </button>
-              )}
-            </div>
+                </div>
+              </LorePopup>
+            )}
           </div>
         )}
         <div className={`container builder-body tools-body${play ? "" : " no-side"}`}>
