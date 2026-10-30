@@ -99,11 +99,21 @@ export function ToolsApp() {
       </header>
 
       <div className="section unlimited white-bg builder-panel">
-        {/* Download character and Switch character, as gray badges, 24px from the top of the
-            panel over the right column. They scroll away with the page; the assistant under
-            them sticks. */}
+        {/* 24px from the top of the panel: the rules problems chip at the left, and Download
+            character and Switch character, as gray badges, over the right column. They scroll
+            away with the page; the assistant under them sticks. */}
         {play && result && (
           <div className="container tools-actions-bar">
+            {/* Any rules problems, as the creator's red error chip, which opens them as a list */}
+            {!result.ok && (
+              <ul className="issues step-issues tools-issues">
+                <li>
+                  <button type="button" onClick={() => setShowingIssues(true)}>
+                    {result.errors.length} rules {result.errors.length === 1 ? "problem" : "problems"}
+                  </button>
+                </li>
+              </ul>
+            )}
             <div className="hero-bar tools-actions">
               <button type="button" onClick={exportBuild}>
                 Download character
@@ -182,16 +192,6 @@ export function ToolsApp() {
                 )}
               </p>
               {showing && <BackgroundPopup id={showing} onClose={closePopup} />}
-              {/* Any rules problems, as the creator's red error chip, which opens them as a list */}
-              {!result.ok && (
-                <ul className="issues step-issues tools-issues">
-                  <li>
-                    <button type="button" onClick={() => setShowingIssues(true)}>
-                      {result.errors.length} rules {result.errors.length === 1 ? "problem" : "problems"}
-                    </button>
-                  </li>
-                </ul>
-              )}
               {showingIssues && !result.ok && (
                 <LorePopup label="Rules problems" onClose={closeIssues} className="tools-issues-popup">
                   <h3 className="lore-modal-title">Rules problems</h3>

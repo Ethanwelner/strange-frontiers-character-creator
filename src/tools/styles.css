@@ -121,12 +121,12 @@
     margin: 0 0 8px;
   }
 
-  /* The rules problems chip, under the background line; it opens the list */
+  /* The rules problems chip, at the top left of the panel; it opens the list */
   .tools-issues {
     justify-content: flex-start;
     list-style: none;
     padding: 0;
-    margin: 0 0 8px;
+    margin: 0;
 
     button {
       all: unset;
@@ -577,14 +577,19 @@
     white-space: nowrap;
   }
 
-  /* Download character and Switch character, 24px from the top of the panel,
-     at the right edge of the assistant's column. They aren't in the sticky
-     column, so they scroll away with the page. */
+  /* 24px from the top of the panel: the rules problems chip at the content's
+     left edge, and Download character and Switch character at the right edge
+     of the assistant's column. They aren't in the sticky column, so they
+     scroll away with the page. */
   .tools-actions-bar {
     position: absolute;
     top: 24px;
     left: 0;
     right: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 12px 24px;
   }
 
   /* Switching asks on its own line, with Yes and Cancel under it */
@@ -755,9 +760,9 @@
       max-height: none;
     }
 
-    /* Stacked, the panel's top padding is too short for them, so Download
-       and Switch character sit in the flow, still 24px from the top, with
-       the character's name 24px under them */
+    /* Stacked, the panel's top padding is too short for them, so the chip
+       and Download and Switch character sit in the flow, still 24px from the
+       top, with the character's name 24px under them */
     .builder-panel:has(> .tools-actions-bar) {
       padding-top: 24px;
     }
