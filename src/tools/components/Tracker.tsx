@@ -161,7 +161,7 @@ export function Tracker({
           banked > 0 && (
             <p className="tools-traits-available">
               <button type="button" className="build-button" onClick={() => setTraitDraft(play.draft)}>
-                Traits available
+                {banked} {banked === 1 ? "Trait" : "Traits"} available
               </button>
             </p>
           )
