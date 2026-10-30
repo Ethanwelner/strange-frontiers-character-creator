@@ -79,7 +79,8 @@
   }
 
   /* The character's level, in a large circle left of the name and the
-     background line, with a tiny "Level" over the number */
+     background line, with a tiny "Level" over the number. Dark like the
+     cards' header bars, with the cards' edge and the panel's light text. */
   .tools-level-badge {
     flex-shrink: 0;
     display: flex;
@@ -88,9 +89,10 @@
     justify-content: center;
     width: 96px;
     height: 96px;
+    border: 1px solid var(--card-border);
     border-radius: 50%;
-    background-color: var(--portfolio-near-white);
-    color: var(--portfolio-black);
+    background-color: #181818;
+    color: var(--panel-text);
     line-height: 1;
   }
 
