@@ -597,8 +597,7 @@
     }
   }
 
-  /* On screen they go dark: the site's black, like their name bars, with the
-     panel's light text */
+  /* On screen they go dark: the site's black, with the panel's light text */
   @media screen {
     .builder-panel,
     .lore-modal {
@@ -634,6 +633,14 @@
 
     .lore-modal .trait-box {
       border-color: #5e5e5e;
+    }
+
+    /* The black header bars go a shade darker than the card under them */
+    :is(.builder-panel, .lore-modal) {
+      .headed:not(.region-dreft) > .card-head,
+      .trait-box:not(.region-dreft) > .trait-name {
+        background-color: #181818;
+      }
     }
 
     .builder-panel .notice {
