@@ -270,25 +270,17 @@
     display: none;
   }
 
-  /* Boxes on the dark panel */
-  .tools-resource {
-    background: var(--panel-box);
-    border: 1px solid var(--card-border);
-    padding: 16px;
-  }
-
   .tools-resources {
     display: grid;
     /* As many as fit, all four (HP, VP, SP, MP) across on most screens,
-       each card at most 360px */
+       each at most 360px, right on the panel without boxes */
     grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-    gap: 12px;
+    gap: 36px;
     margin-bottom: 16px;
   }
 
   .tools-resource {
     max-width: 360px;
-    padding: 12px;
   }
 
   .tools-resource-value {
