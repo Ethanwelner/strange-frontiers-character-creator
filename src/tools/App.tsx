@@ -239,6 +239,7 @@ export function ToolsApp() {
                     </button>
                   )}
                   <button type="button" className="build-button" onClick={() => fileInput.current?.click()}>
+                    <Icon name="upload" />
                     Import a character file
                   </button>
                 </div>

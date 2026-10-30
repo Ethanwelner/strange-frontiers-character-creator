@@ -134,8 +134,14 @@ export function Sheet({
               <Icon name="download" />
               Download
             </button>
-            <button onClick={onImport}>Import</button>
-            <button onClick={() => window.print()}>Print</button>
+            <button onClick={onImport}>
+              <Icon name="upload" />
+              Import
+            </button>
+            <button onClick={() => window.print()}>
+              <Icon name="print" />
+              Print
+            </button>
           </div>
         </>
       )}
