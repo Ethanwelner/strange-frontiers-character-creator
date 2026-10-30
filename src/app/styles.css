@@ -597,12 +597,12 @@
     }
   }
 
-  /* On screen they go dark: a step lighter than the panel, with the panel's
-     light text, so the black name bars still read as headers */
+  /* On screen they go dark: the site's black, like their name bars, with the
+     panel's light text */
   @media screen {
     .builder-panel,
     .lore-modal {
-      --card-bg: #404040;
+      --card-bg: var(--portfolio-black);
     }
 
     .builder-panel :is(.card, .level-card, .choice, .trait-box, .notice),
@@ -620,6 +620,15 @@
 
       :focus-visible {
         outline-color: var(--portfolio-white);
+      }
+
+      /* Black chips would vanish into the black card */
+      .chip:not(.chip-muted, .chip-accent, .chip-bad) {
+        background: var(--portfolio-gray);
+      }
+
+      .chip-accent {
+        background: #6b6b6b;
       }
     }
 
