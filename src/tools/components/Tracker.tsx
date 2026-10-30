@@ -29,10 +29,10 @@ const NAMES: Record<ResourceKey, string> = { hp: "Hit Points", vp: "Vibe Points"
 // right column, under the assistant.
 //
 // The sheet's stats are the creator's Stats step, which gains its + and −
-// whenever there are points to add. Level Up! (beside the name) hands this a
+// whenever there are points to add. Level up (under the level circle) hands this a
 // `levelDraft`, the character one level up; adding points to a character
 // that has some unplaced starts one at its own level. Submit keeps it, and
-// the Level Up button (Cancel while leveling) throws a level up away. Traits available, under the
+// the Level up badge (Cancel while leveling) throws a level up away. Traits available, under the
 // sheet's Traits title, opens the creator's Traits step in a popup, without
 // the Traits the character already has, and Submit keeps the picks.
 export function Tracker({
@@ -67,7 +67,7 @@ export function Tracker({
   const held = useMemo(() => new Set(result.summary?.traits.map((h) => h.trait) ?? []), [result]);
 
   // The stats are always the creator's Stats step. Its + and − and Submit
-  // show only while there are points to add: after Level Up!, or when the
+  // show only while there are points to add: after Level up, or when the
   // character has points it never placed. Otherwise it reads like the sheet.
   const editing = levelDraft ?? play.draft;
   const adding = Boolean(levelDraft) || pointsToPlace(play.draft, content);
@@ -76,7 +76,7 @@ export function Tracker({
       <StatsStep draft={editing} onChange={onLevelDraft} floor={play.draft} />
       {adding && (
         <div className="tools-level-actions">
-          {/* Cancelling a level up is the Level Up button, beside the name */}
+          {/* Cancelling a level up is the Level up badge, under the level circle */}
           <button
             type="button"
             className="build-button"
