@@ -555,7 +555,9 @@
     }
   }
 
-  /* Dark panel: gray behind the steps, light text, light rules */
+  /* Dark panel: gray behind the steps, light text, light rules. On screen the
+     gray is a little see-through, so the night sky behind the page (.rpg-night,
+     css/rpg-night.css) faintly shows through it; the cards stay solid. */
 
   .builder-panel {
     --rule: rgb(255 255 255 / 18%);
@@ -563,6 +565,10 @@
     --card-border: #5e5e5e;
     background: var(--panel);
     color: var(--panel-text);
+
+    @media screen {
+      background: color-mix(in srgb, var(--panel) 88%, transparent);
+    }
   }
 
   /* The site's .section.unlimited:last-child drops the bottom padding */
