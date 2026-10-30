@@ -228,8 +228,15 @@
     grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
   }
 
+  /* Before a character is in, the same column as the site's Strange
+     Frontiers text: 768px at most (.single-column-content), after a 2 of 18
+     gutter from 1200px up (.flex-2.d-xl-inline-flex beside .flex-14) */
   .tools-start {
-    max-width: 760px;
+    max-width: 768px;
+
+    @media (min-width: 1200px) {
+      margin-left: calc(100% * 2 / 18);
+    }
 
     h2 {
       font-family: var(--title);
