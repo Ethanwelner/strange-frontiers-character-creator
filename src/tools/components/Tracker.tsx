@@ -102,7 +102,7 @@ export function Tracker({
           const max = maxOf(result, r);
           const pct = max > 0 ? Math.max(0, Math.min(100, (cur / max) * 100)) : 0;
           return (
-            <div key={r} className="c-sheet-box tools-resource">
+            <div key={r} className="tools-resource">
               {/* HP, then −, the value and +, on one line; the full name shows on hover */}
               <div className="tools-resource-value">
                 <strong className={`tools-resource-name resource-${r}`} title={NAMES[r]}>
@@ -137,7 +137,7 @@ export function Tracker({
                   {r === "hp" ? "Damage" : "Spend"}
                 </button>
                 <button type="button" onClick={() => apply(r, 1)}>
-                  {r === "hp" ? "Heal" : "Regain"}
+                  {r === "hp" ? "Heal" : "Gain"}
                 </button>
               </div>
             </div>
