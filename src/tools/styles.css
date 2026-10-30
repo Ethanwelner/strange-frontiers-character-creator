@@ -78,9 +78,11 @@
     gap: 24px;
   }
 
-  /* The character's level, in a large circle left of the name and the
+  /* The character's level, in a large blob left of the name and the
      background line, with a tiny "Level" over the number. The site's black,
-     like the cards, with their edge and the panel's light text. */
+     like the cards, with their edge and the panel's light text. The blob
+     slowly morphs between two lopsided shapes, after
+     codepen.io/myjessijess/pen/MWWgMwL; with reduced motion it holds still. */
   .tools-level-badge {
     flex-shrink: 0;
     display: flex;
@@ -90,10 +92,15 @@
     width: 96px;
     height: 96px;
     border: 1px solid var(--card-border);
-    border-radius: 50%;
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
     background-color: var(--portfolio-black);
     color: var(--panel-text);
     line-height: 1;
+    animation: tools-level-morph 8s ease-in-out infinite;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
   }
 
   /* The circle, with Level up under it */
@@ -855,5 +862,16 @@
       position: static;
       margin-bottom: 24px;
     }
+  }
+}
+
+/* The level blob's morph (.tools-level-badge) */
+@keyframes tools-level-morph {
+  0%,
+  100% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  }
+  50% {
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
   }
 }
