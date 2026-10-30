@@ -4,7 +4,7 @@ import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { coreStatsShown } from "../check.js";
 import { content, kindById, packageById, traitById } from "../content.js";
 import type { Draft } from "../draft.js";
-import { askerName, baseStats, Chip, CoreLine, LorePopup, NameField, SettingIcon, StatLine, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
+import { askerName, baseStats, Chip, CoreLine, Icon, LorePopup, NameField, SettingIcon, StatLine, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
 
 const SOURCE = /^(kind|origin|profession|past) ([a-z0-9-]+)( choice)?$/;
 const TRAIT_CHOICE = /^trait ([a-z0-9-]+) choice$/;
@@ -130,9 +130,18 @@ export function Sheet({
           {/* Whether the build is legal, then Download, Import and Print, above the sheet */}
           <div className="sheet-actions">
             <span className={`status ${result.ok ? "good" : "bad"}`}>{result.ok ? "Legal" : `${result.errors.length} ${result.errors.length === 1 ? "error" : "errors"}`}</span>
-            <button onClick={onExport}>Download</button>
-            <button onClick={onImport}>Import</button>
-            <button onClick={() => window.print()}>Print</button>
+            <button onClick={onExport}>
+              <Icon name="download" />
+              Download
+            </button>
+            <button onClick={onImport}>
+              <Icon name="upload" />
+              Import
+            </button>
+            <button onClick={() => window.print()}>
+              <Icon name="print" />
+              Print
+            </button>
           </div>
         </>
       )}
@@ -234,12 +243,7 @@ export function Sheet({
                   const t = traitById.get(h.trait);
                   return (
                     <li key={h.trait}>
-                      <span
-                        className={`sheet-type-icon ${isLanguage(h) ? "language-icon" : "knowledge-icon"}`}
-                        role="img"
-                        aria-label={isLanguage(h) ? "Language" : "Knowledge"}
-                        title={isLanguage(h) ? "Language" : "Knowledge"}
-                      />
+                      {isLanguage(h) ? <Icon name="language" label="Language" /> : <Icon name="knowledge" label="Knowledge" />}
                       <button type="button" className="link" onClick={() => setOpen(h.trait)}>
                         {traitName(h.trait)}
                         {t?.ranked || h.rank > 1 ? ` (${h.rank})` : ""}
