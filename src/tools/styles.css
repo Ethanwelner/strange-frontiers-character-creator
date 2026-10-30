@@ -17,7 +17,7 @@
      text, so they don't push the page down when they come and go. They're
      dark like the panel, with its light text; a success is dark green with
      light green text. */
-  .tools-body > main > .notice[role="status"] {
+  .tools-column > main > .notice[role="status"] {
     position: absolute;
     top: 36px;
     z-index: 2;
@@ -71,8 +71,6 @@
      column, the tools under them; the assistant has the right column from
      the top, like the creator's character box. */
   .tools-character {
-    grid-column: 1;
-    grid-row: 1;
     display: flex;
     align-items: center;
     gap: 24px;
@@ -140,9 +138,30 @@
     min-width: 0;
   }
 
-  .tools-body > main {
-    grid-column: 1;
-    grid-row: 2;
+  /* The left column: the character, then the tool under it */
+  .tools-column {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    min-width: 0;
+  }
+
+  /* With a character in, it sits in a box like the creator's sheet: the
+     sheet's lighter gray, its border and round corners */
+  .tools-box {
+    padding: 2rem;
+    background-color: var(--panel-box);
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+
+    @media (max-width: 767px) {
+      padding: 1.25rem;
+    }
+  }
+
+  /* Items take the darker gray of the HP, VP and SP boxes there */
+  .tools-box .tools-item {
+    background: var(--panel);
   }
 
   /* The name and its pen, from the creator's Sheet, in the tab title style */
@@ -529,7 +548,7 @@
      with the page. */
   .tools-chat-side {
     grid-column: 2;
-    grid-row: 1 / span 2;
+    grid-row: 1;
     position: sticky;
     top: 1rem;
     align-self: start;
@@ -543,7 +562,7 @@
 
   /* The sheet under the point cards: its stats, Knowledges and Traits sit
      right on the panel, without the sheet's boxes around them */
-  .sheet-embedded :is(.c-sheet, .c-sheet-box) {
+  .builder-panel .sheet-embedded :is(.c-sheet, .c-sheet > .c-sheet-box) {
     background: none;
     border: none;
     border-radius: 0;
@@ -758,8 +777,6 @@
       grid-template-columns: minmax(0, 1fr);
     }
 
-    .tools-character,
-    .tools-body > main,
     .tools-chat-side {
       grid-column: auto;
       grid-row: auto;

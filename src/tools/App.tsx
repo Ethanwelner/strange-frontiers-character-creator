@@ -152,108 +152,111 @@ export function ToolsApp() {
           </div>
         )}
         <div className={`container builder-body tools-body${play ? "" : " no-side"}`}>
-          {/* The character's level in a large circle, then its name, titled like a tab, at the top of the left column */}
-          {play && result && (
-            <header className="step-head tools-character">
-              {/* The level in its circle, with Level up under it as a green badge, which
-                  turns into Cancel while the level up is open and throws its points away.
-                  Points the character already has to place come first, so it waits while
-                  there are any. */}
-              <div className="tools-level">
-                <div className="tools-level-badge level-blob" aria-label={`Level ${play.draft.level}`}>
-                  <span className="tools-level-label">Level</span>
-                  <span className="tools-level-number">{play.draft.level}</span>
-                </div>
-                {levelDraft && levelDraft.level > play.draft.level ? (
-                  <button type="button" className="tools-level-up" onClick={() => setLevelDraft(undefined)}>
-                    Cancel
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    className="tools-level-up"
-                    disabled={Boolean(levelDraft) || pointsToPlace(play.draft, content)}
-                    onClick={() => setLevelDraft({ ...play.draft, level: play.draft.level + 1 })}
-                  >
-                    Level up
-                  </button>
-                )}
-              </div>
-              <div className="tools-character-main">
-                {/* The name, with the creator's pen to edit it */}
-                <div className="tools-character-head">
-                  <NameField
-                    className="sheet-name tools-name"
-                    heading="h2"
-                    name={play.draft.name}
-                    onChange={(name) => setPlay({ ...play, draft: { ...play.draft, name } })}
-                  />
-                </div>
-                {/* "Isek • Dreft • Licensed Mage • Expelled from the Mage Schools", each of the
-                    Kind and background a link to its card */}
-                <p className="tools-line">
-                  {[play.draft.kind, play.draft.origin, play.draft.profession, play.draft.past].map((id, n, ids) =>
-                    id ? (
-                      <span key={n}>
-                        {ids.slice(0, n).some(Boolean) && " • "}
-                        <button type="button" className="link" onClick={() => setShowing(id)}>
-                          {(n === 0 ? content.kinds.find((k) => k.id === id)?.name : content.packages.find((p) => p.id === id)?.name) ?? id}
-                        </button>
-                      </span>
-                    ) : null,
-                  )}
-                </p>
-                {showing && <BackgroundPopup id={showing} onClose={closePopup} />}
-                {showingIssues && !result.ok && (
-                  <LorePopup label="Rules problems" onClose={closeIssues} className="tools-issues-popup">
-                    <h3 className="lore-modal-title">Rules problems</h3>
-                    <ul className="tools-issue-list">
-                      {result.errors.map((e, i) => (
-                        <li key={i}>{describe(e, play.draft)}</li>
-                      ))}
-                    </ul>
-                  </LorePopup>
-                )}
-              </div>
-            </header>
-          )}
-          <main>
-            {contentErrors.length > 0 && <div className="notice bad">Content failed to load: {contentErrors.join("; ")}</div>}
-            {notice && (
-              <Notice fades={notice.fades} onDismiss={() => setNotice(undefined)}>
-                {notice.text}
-              </Notice>
-            )}
-
-            {!play && (
-              <section className="tools-start">
-                <h2>Bring in a character</h2>
-                <p className="lede">
-                  Player Tools runs a character you already have during play: HP and the other resources, items, Conditions, leveling up, and an assistant you can
-                  ask about the rules or tell what just happened.
-                </p>
-                <div className="tools-start-options">
-                  {fromCreator && (
-                    <button type="button" className="build-button" onClick={() => setPlay(startPlay(toBuild(fromCreator)))}>
-                      Use {fromCreator.name ?? "the character"} from the Character Creator
+          {/* The character and the tracker, in a box like the creator's sheet once a character is in */}
+          <div className={`tools-column${play ? " tools-box" : ""}`}>
+            {/* The character's level in a large circle, then its name, titled like a tab, at the top of the left column */}
+            {play && result && (
+              <header className="step-head tools-character">
+                {/* The level in its circle, with Level up under it as a green badge, which
+                    turns into Cancel while the level up is open and throws its points away.
+                    Points the character already has to place come first, so it waits while
+                    there are any. */}
+                <div className="tools-level">
+                  <div className="tools-level-badge level-blob" aria-label={`Level ${play.draft.level}`}>
+                    <span className="tools-level-label">Level</span>
+                    <span className="tools-level-number">{play.draft.level}</span>
+                  </div>
+                  {levelDraft && levelDraft.level > play.draft.level ? (
+                    <button type="button" className="tools-level-up" onClick={() => setLevelDraft(undefined)}>
+                      Cancel
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="tools-level-up"
+                      disabled={Boolean(levelDraft) || pointsToPlace(play.draft, content)}
+                      onClick={() => setLevelDraft({ ...play.draft, level: play.draft.level + 1 })}
+                    >
+                      Level up
                     </button>
                   )}
-                  <button type="button" className="build-button" onClick={() => fileInput.current?.click()}>
-                    <Icon name="upload" />
-                    Import a character file
-                  </button>
                 </div>
-                <p className="hint">
-                  A character file is the JSON the <a href="creator.php">Character Creator</a> exports from its Sheet. Everything here stays in this browser.
-                </p>
-              </section>
+                <div className="tools-character-main">
+                  {/* The name, with the creator's pen to edit it */}
+                  <div className="tools-character-head">
+                    <NameField
+                      className="sheet-name tools-name"
+                      heading="h2"
+                      name={play.draft.name}
+                      onChange={(name) => setPlay({ ...play, draft: { ...play.draft, name } })}
+                    />
+                  </div>
+                  {/* "Isek • Dreft • Licensed Mage • Expelled from the Mage Schools", each of the
+                      Kind and background a link to its card */}
+                  <p className="tools-line">
+                    {[play.draft.kind, play.draft.origin, play.draft.profession, play.draft.past].map((id, n, ids) =>
+                      id ? (
+                        <span key={n}>
+                          {ids.slice(0, n).some(Boolean) && " • "}
+                          <button type="button" className="link" onClick={() => setShowing(id)}>
+                            {(n === 0 ? content.kinds.find((k) => k.id === id)?.name : content.packages.find((p) => p.id === id)?.name) ?? id}
+                          </button>
+                        </span>
+                      ) : null,
+                    )}
+                  </p>
+                  {showing && <BackgroundPopup id={showing} onClose={closePopup} />}
+                  {showingIssues && !result.ok && (
+                    <LorePopup label="Rules problems" onClose={closeIssues} className="tools-issues-popup">
+                      <h3 className="lore-modal-title">Rules problems</h3>
+                      <ul className="tools-issue-list">
+                        {result.errors.map((e, i) => (
+                          <li key={i}>{describe(e, play.draft)}</li>
+                        ))}
+                      </ul>
+                    </LorePopup>
+                  )}
+                </div>
+              </header>
             )}
+            <main>
+              {contentErrors.length > 0 && <div className="notice bad">Content failed to load: {contentErrors.join("; ")}</div>}
+              {notice && (
+                <Notice fades={notice.fades} onDismiss={() => setNotice(undefined)}>
+                  {notice.text}
+                </Notice>
+              )}
 
-            {/* Everything happens on the Tracker: resources, the sheet, items and leveling up */}
-            {play && result && (
-              <Tracker play={play} result={result} onChange={setPlay} levelDraft={levelDraft} onLevelDraft={setLevelDraft} />
-            )}
-          </main>
+              {!play && (
+                <section className="tools-start">
+                  <h2>Bring in a character</h2>
+                  <p className="lede">
+                    Player Tools runs a character you already have during play: HP and the other resources, items, Conditions, leveling up, and an assistant you can
+                    ask about the rules or tell what just happened.
+                  </p>
+                  <div className="tools-start-options">
+                    {fromCreator && (
+                      <button type="button" className="build-button" onClick={() => setPlay(startPlay(toBuild(fromCreator)))}>
+                        Use {fromCreator.name ?? "the character"} from the Character Creator
+                      </button>
+                    )}
+                    <button type="button" className="build-button" onClick={() => fileInput.current?.click()}>
+                      <Icon name="upload" />
+                      Import a character file
+                    </button>
+                  </div>
+                  <p className="hint">
+                    A character file is the JSON the <a href="creator.php">Character Creator</a> exports from its Sheet. Everything here stays in this browser.
+                  </p>
+                </section>
+              )}
+
+              {/* Everything happens on the Tracker: resources, the sheet, items and leveling up */}
+              {play && result && (
+                <Tracker play={play} result={result} onChange={setPlay} levelDraft={levelDraft} onLevelDraft={setLevelDraft} />
+              )}
+            </main>
+          </div>
           {play && result && (
             <aside ref={side} className={`tools-chat-side${tallSide ? " is-tall" : ""}`}>
               <Chat play={play} result={result} content={content} create={create} model={__SF_AI__.model} onChange={setPlay} check={(p) => checkPlay(p.draft, content)} />
