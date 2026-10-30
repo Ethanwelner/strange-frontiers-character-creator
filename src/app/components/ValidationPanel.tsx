@@ -60,7 +60,7 @@ export function ValidationPanel({ draft, result, onName }: Props) {
               {/* Magic has no focus stats; its points show as MP */}
               {!STAT_GROUPS[g].length && (
                 <div className="panel-stat">
-                  <span>MP</span>
+                  <span className="resource-mp">MP</span>
                   <span className="num">{summary ? summary.resources.mp : MP_PER_MAGIC * draft.core[g]}</span>
                 </div>
               )}
