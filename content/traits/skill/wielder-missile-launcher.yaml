@@ -1,0 +1,10 @@
+id: wielder-missile-launcher
+name: "Wielder: Missile Launcher"
+status: draft
+plane: earth
+summary: "Firing and maintaining shoulder-fired rockets and guided missiles."
+tags: [combat, explosives, heavy weapons, military]
+category: skill
+ranked: true
+minStats: { intuition: 3, logic: 2, endurance: 3 }
+effect: "This character is capable of performing the basic tasks of maintaining a Missile Launcher without a skill check. Rank *5 added to skill check rolls involving a Missile Launcher."

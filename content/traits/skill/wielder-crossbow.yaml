@@ -1,0 +1,10 @@
+id: wielder-crossbow
+name: "Wielder: Crossbow"
+status: draft
+plane: any
+summary: "Fighting with, and maintaining, crossbows."
+tags: [combat, ranged, archery]
+category: skill
+ranked: true
+minStats: { grace: 2, power: 2, intuition: 3 }
+effect: "This character is capable of performing the basic tasks of maintaining a Crossbow without a skill check. Rank *5 added to skill check rolls involving a Crossbow."

@@ -1,0 +1,10 @@
+id: wielder-spear
+name: "Wielder: Spear"
+status: draft
+plane: any
+summary: "Fighting with, and maintaining, spears and lances."
+tags: [combat, melee, polearms]
+category: skill
+ranked: true
+minStats: { grace: 3, power: 3, endurance: 2 }
+effect: "This character is capable of performing the basic tasks of maintaining a Spear without a skill check. Rank *5 added to skill check rolls involving a Spear."

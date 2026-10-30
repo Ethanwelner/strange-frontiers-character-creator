@@ -1,0 +1,10 @@
+id: wielder-sling
+name: "Wielder: Sling"
+status: draft
+plane: any
+summary: "Fighting with, and maintaining, slings."
+tags: [combat, ranged]
+category: skill
+ranked: true
+minStats: { grace: 3, intuition: 3 }
+effect: "This character is capable of performing the basic tasks of maintaining a Sling without a skill check. Rank *5 added to skill check rolls involving a Sling."

@@ -1,0 +1,10 @@
+id: wielder-sniper-rifle
+name: "Wielder: Sniper Rifle"
+status: draft
+plane: earth
+summary: "Fighting with, and maintaining, long-range precision rifles."
+tags: [combat, firearms, military]
+category: skill
+ranked: true
+minStats: { intuition: 5, grace: 3, endurance: 2 }
+effect: "This character is capable of performing the basic tasks of maintaining a Sniper Rifle without a skill check. Rank *5 added to skill check rolls involving a Sniper Rifle."

@@ -1,0 +1,10 @@
+id: wielder-throwing-weapon
+name: "Wielder: Throwing Weapon"
+status: draft
+plane: any
+summary: "Fighting with thrown weapons like knives, axes and javelins."
+tags: [combat, ranged, thrown]
+category: skill
+ranked: true
+minStats: { grace: 3, intuition: 3, power: 2 }
+effect: "This character is capable of performing the basic tasks of maintaining a Throwing Weapon without a skill check. Rank *5 added to skill check rolls involving a Throwing Weapon."

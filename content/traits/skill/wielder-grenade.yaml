@@ -1,0 +1,10 @@
+id: wielder-grenade
+name: "Wielder: Grenade"
+status: draft
+plane: earth
+summary: "Throwing, launching and safely handling grenades."
+tags: [combat, explosives, military]
+category: skill
+ranked: true
+minStats: { grace: 2, intuition: 3, power: 2 }
+effect: "This character is capable of performing the basic tasks of maintaining a Grenade without a skill check. Rank *5 added to skill check rolls involving a Grenade."

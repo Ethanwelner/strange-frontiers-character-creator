@@ -1,0 +1,10 @@
+id: wielder-siege-engine
+name: "Wielder: Siege Engine"
+status: draft
+plane: any
+summary: "Crewing, aiming and maintaining catapults, trebuchets, ballistae and cannons."
+tags: [combat, siege, artillery]
+category: skill
+ranked: true
+minStats: { logic: 3, intuition: 3, power: 2 }
+effect: "This character is capable of performing the basic tasks of maintaining a Siege Engine without a skill check. Rank *5 added to skill check rolls involving a Siege Engine."
