@@ -201,14 +201,14 @@ export function Tracker({
 // adds, with Add a Condition above them. They sit under the assistant.
 export function Conditions({ play, result, onChange }: { play: Play; result: BuildResult; onChange: (p: Play) => void }) {
   const options = useMemo(() => playConditions(content), []);
-  const [adding, setAdding] = useState("");
   const hp = hpConditions(currentOf(play, result, "hp"), maxOf(result, "hp"));
 
   return (
     <section className="tools-conditions-side" aria-label="Conditions">
-      {/* Add a Condition, above the ones the character has */}
+      {/* Add a Condition, above the ones the character has: picking one adds it, and the
+          dropdown goes back to its prompt */}
       <div className="tools-add">
-        <select aria-label="Condition to add" value={adding} onChange={(e) => setAdding(e.target.value)}>
+        <select aria-label="Condition to add" value="" onChange={(e) => e.target.value && onChange(addCondition(play, content, e.target.value))}>
           <option value="">Add a Condition…</option>
           {options.map((t) => (
             <option key={t.id} value={t.id}>
@@ -216,16 +216,6 @@ export function Conditions({ play, result, onChange }: { play: Play; result: Bui
             </option>
           ))}
         </select>
-        <button
-          type="button"
-          disabled={!adding}
-          onClick={() => {
-            onChange(addCondition(play, content, adding));
-            setAdding("");
-          }}
-        >
-          Add
-        </button>
       </div>
       <ul className="tools-conditions">
         {hp.map((id) => {
