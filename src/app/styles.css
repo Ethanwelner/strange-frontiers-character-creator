@@ -583,7 +583,7 @@
     border-color: var(--card-border);
   }
 
-  /* Cards, notices and the sheet stay light, with their own dark text */
+  /* Printed, cards, notices and the sheet stay light, with their own dark text */
   .builder-panel :is(.card, .level-card, .choice, .trait-box, .c-sheet, .notice) {
     --rule: rgb(0 0 0 / 15%);
     color: var(--portfolio-black);
@@ -594,6 +594,47 @@
 
     .good:not(.status) {
       color: var(--good-on-light);
+    }
+  }
+
+  /* On screen they go dark: a step lighter than the panel, with the panel's
+     light text, so the black name bars still read as headers */
+  @media screen {
+    .builder-panel,
+    .lore-modal {
+      --card-bg: #404040;
+    }
+
+    .builder-panel :is(.card, .level-card, .choice, .trait-box, .notice),
+    .lore-modal .trait-box {
+      --rule: rgb(255 255 255 / 18%);
+      color: var(--panel-text);
+
+      :is(.muted, .hint, .empty, .tags) {
+        color: var(--panel-soft);
+      }
+
+      .good:not(.status) {
+        color: var(--panel-good);
+      }
+
+      :focus-visible {
+        outline-color: var(--portfolio-white);
+      }
+    }
+
+    .lore-modal .trait-box {
+      border-color: #5e5e5e;
+    }
+
+    .builder-panel .notice {
+      background: var(--card-bg);
+      border-color: var(--card-border);
+    }
+
+    .builder-panel .notice.bad {
+      border-color: var(--portfolio-red);
+      background: color-mix(in srgb, var(--portfolio-red) 22%, var(--panel));
     }
   }
 
@@ -642,8 +683,8 @@
 
   /* The sheet goes dark on screen too: the step box's gray around darker inner
      boxes, light text, and the Stats step's badges and bars, with the Kind's
-     bonus in purple and the player's points in green. Its Trait cards stay
-     light like every card. Printing keeps the light sheet's gray and black. */
+     bonus in purple and the player's points in green. Its Trait cards go
+     dark like every card. Printing keeps the light sheet's gray and black. */
   @media screen {
     .builder-panel .c-sheet {
       --rule: rgb(255 255 255 / 18%);
@@ -665,14 +706,6 @@
 
       :focus-visible {
         outline-color: var(--portfolio-white);
-      }
-
-      .trait-box {
-        --rule: rgb(0 0 0 / 15%);
-
-        :is(.muted, .hint, .empty, .tags) {
-          color: var(--portfolio-gray);
-        }
       }
 
       :is(.level-badge, .stat-badge) {
@@ -1816,7 +1849,7 @@
 
   /* The card opened in the site's lore popup (.lore-modal), on the dark
      panel's gray with a light close button, below that button. The card
-     stays light, like the Sheet's. */
+     is dark, like the Sheet's. */
   .lore-modal-panel {
     background-color: var(--panel);
     color: var(--panel-text);
@@ -1833,10 +1866,6 @@
 
   .lore-modal :focus-visible {
     outline-color: var(--portfolio-white);
-  }
-
-  .lore-modal .trait-box :focus-visible {
-    outline-color: var(--portfolio-black);
   }
 
   .lore-modal-panel > .trait-box {
