@@ -158,17 +158,31 @@ export function Chip(props: { children: ReactNode; tone?: "accent" | "muted" | "
 
 const STAT_SLOTS = 20;
 
+// What a stat bar held before its value last changed, so the points just
+// added can pop in (.is-new). It starts at the value, so nothing pops when
+// the bar first draws, and it holds until the value changes again, so other
+// re-renders don't cut a pop short.
+function useAddedFrom(value: number): number {
+  const seen = useRef({ value, from: value });
+  if (seen.current.value !== value) {
+    seen.current = { value, from: seen.current.value };
+  }
+  return seen.current.from;
+}
+
 // The site's stat bar: circles on odd points, squares on even. The Kind's
 // bonus is gray, the player's points after it are black, room up to the max
 // is open, and slots past the max are red.
 export function StatLine({ bonus, value, max }: { bonus: number; value: number; max: number }) {
+  const from = useAddedFrom(value);
   return (
     <div className="stat-line" aria-hidden="true">
       {Array.from({ length: STAT_SLOTS }, (_, n) => {
         const point = n + 1;
         const fill =
           point <= value ? (point > max ? "over" : point <= bonus ? "default" : "filled") : point <= max ? "empty" : "unavailable";
-        return <span key={point} className={`stat ${point % 2 ? "dot" : "square"} ${fill}`} />;
+        const added = fill === "filled" && point > from ? " is-new" : "";
+        return <span key={point} className={`stat ${point % 2 ? "dot" : "square"} ${fill}${added}`} />;
       })}
     </div>
   );
@@ -178,10 +192,14 @@ export function StatLine({ bonus, value, max }: { bonus: number; value: number; 
 // with any bonus from a package (gray, or purple on the dark sheet) first. No
 // Kind sets a Magic maximum, so every slot past the points is open.
 export function CoreLine({ bonus = 0, value }: { bonus?: number; value: number }) {
+  const from = useAddedFrom(value);
   return (
     <div className="stat-line" aria-hidden="true">
       {Array.from({ length: STAT_SLOTS }, (_, n) => (
-        <span key={n} className={`stat diamond ${n < bonus ? "default" : n < value ? "filled" : "empty"}`} />
+        <span
+          key={n}
+          className={`stat diamond ${n < bonus ? "default" : n < value ? `filled${n >= from ? " is-new" : ""}` : "empty"}`}
+        />
       ))}
     </div>
   );
