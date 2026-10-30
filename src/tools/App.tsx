@@ -207,10 +207,10 @@ export function ToolsApp() {
           </main>
           {play && result && (
             <aside ref={side} className={`tools-chat-side${tallSide ? " is-tall" : ""}`}>
-              {/* Export and Switch character, above the assistant, in the same buttons as Damage and Heal */}
+              {/* Download character and Switch character, above the assistant, in the same buttons as Damage and Heal */}
               <div className="hero-bar tools-actions">
                 <button type="button" onClick={exportBuild}>
-                  Export
+                  Download character
                 </button>
                 {confirmingSwitch ? (
                   <span className="hero-confirm">

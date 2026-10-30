@@ -563,7 +563,7 @@
     gap: 48px;
   }
 
-  /* Export and Switch character, above the assistant at its right edge.
+  /* Download character and Switch character, above the assistant at its right edge.
      Switching asks on its own line, with Yes and Cancel under it. */
   .tools-actions {
     flex-wrap: wrap;
