@@ -82,8 +82,9 @@
      background line, with a tiny "Level" over the number in the panel's
      light text. The blob, in the site's black behind the number, slowly
      morphs between two lopsided shapes while it turns, after
-     codepen.io/myjessijess/pen/MWWgMwL. It's a pseudo-element so the number
-     stays upright. With reduced motion it holds still. */
+     codepen.io/myjessijess/pen/MWWgMwL, and its purple glow slowly pulses.
+     It's a pseudo-element so the number stays upright. With reduced motion
+     it holds still with a steady glow. */
   .tools-level-badge {
     position: relative;
     isolation: isolate;
@@ -104,9 +105,11 @@
       z-index: -1;
       border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
       background-color: var(--portfolio-black);
+      box-shadow: 0 0 5px 0 var(--frontiers-lore-on-black);
       animation:
         tools-level-morph 8s ease-in-out infinite,
-        tools-level-spin 20s linear infinite;
+        tools-level-spin 20s linear infinite,
+        tools-level-glow 3s ease-in-out infinite alternate;
 
       @media (prefers-reduced-motion: reduce) {
         animation: none;
@@ -891,5 +894,16 @@
 @keyframes tools-level-spin {
   to {
     rotate: 1turn;
+  }
+}
+
+/* ...and its glow, #a67bf0 (--frontiers-lore-on-black), swelling from a
+   faint 5px to a bright 16px and back */
+@keyframes tools-level-glow {
+  from {
+    box-shadow: 0 0 5px 0 rgb(166 123 240 / 45%);
+  }
+  to {
+    box-shadow: 0 0 16px 0 rgb(166 123 240 / 100%);
   }
 }
