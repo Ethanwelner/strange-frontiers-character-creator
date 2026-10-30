@@ -860,6 +860,21 @@
     justify-content: center;
   }
 
+  /* Inline icons (Icon in ui.tsx), in the text color. A button with one lays
+     it out beside its label. */
+  .icon {
+    flex: none;
+    width: 1em;
+    height: 1em;
+    fill: currentColor;
+  }
+
+  button:has(> .icon) {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+  }
+
   /* The step buttons' arrows, a little smaller than the type */
   .arrow-icon {
     flex: none;
@@ -1991,20 +2006,8 @@
     gap: 6px;
   }
 
-  .sheet-type-icon {
-    flex-shrink: 0;
+  .knowledge-list .icon {
     width: 1.25em;
-    height: 1em;
-    background-color: currentColor;
-    mask: center / contain no-repeat;
-  }
-
-  .knowledge-icon {
-    mask-image: url("./img/knowledge.svg");
-  }
-
-  .language-icon {
-    mask-image: url("./img/language.svg");
   }
 
   /* The card opened in the site's lore popup (.lore-modal), on the dark

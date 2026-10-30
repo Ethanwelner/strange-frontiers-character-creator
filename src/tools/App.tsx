@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent } f
 import { endpointCreate } from "../ai/remote.js";
 import { content, contentErrors } from "../app/content.js";
 import { slug, toBuild, type Draft } from "../app/draft.js";
-import { LorePopup, NameField, Notice } from "../app/components/ui.js";
+import { Icon, LorePopup, NameField, Notice } from "../app/components/ui.js";
 import { describe } from "../app/check.js";
 import { checkPlay, creatorDraft, load, playBuild, pointsToPlace, save, startPlay, type Play } from "./play.js";
 import { BackgroundPopup } from "./components/BackgroundPopup.js";
@@ -118,9 +118,11 @@ export function ToolsApp() {
             )}
             <div className="hero-bar tools-actions">
               <button type="button" onClick={exportBuild}>
+                <Icon name="download" />
                 Download character
               </button>
               <button type="button" onClick={() => setConfirmingSwitch(true)}>
+                <Icon name="switch" />
                 Switch character
               </button>
             </div>
