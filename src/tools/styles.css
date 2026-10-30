@@ -79,7 +79,8 @@
   }
 
   /* The character's level, in a large circle left of the name and the
-     background line, with a tiny "Level" over the number */
+     background line, with a tiny "Level" over the number. The site's black,
+     like the cards, with their edge and the panel's light text. */
   .tools-level-badge {
     flex-shrink: 0;
     display: flex;
@@ -88,9 +89,10 @@
     justify-content: center;
     width: 96px;
     height: 96px;
+    border: 1px solid var(--card-border);
     border-radius: 50%;
-    background-color: var(--portfolio-near-white);
-    color: var(--portfolio-black);
+    background-color: var(--portfolio-black);
+    color: var(--panel-text);
     line-height: 1;
   }
 
@@ -671,21 +673,24 @@
     gap: 12px 24px;
   }
 
-  /* Switching asks on its own line, with Yes and Cancel under it */
   .tools-actions {
     flex-wrap: wrap;
     justify-content: flex-end;
     max-width: 380px;
     margin-left: auto;
+  }
 
-    .hero-confirm {
-      flex-wrap: wrap;
-      gap: 8px 16px;
-    }
+  /* Switch character asks in a small popup: the question, then Switch
+     character and Cancel, 24px under it */
+  .tools-switch-popup .lore-modal-panel {
+    max-width: 480px;
+  }
 
-    .tools-confirm-text {
-      flex-basis: 100%;
-    }
+  .tools-switch-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
   }
 
   /* Title, conversation, then the message box and Send, 24px apart */
