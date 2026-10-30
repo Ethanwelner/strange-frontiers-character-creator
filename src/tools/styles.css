@@ -754,5 +754,17 @@
       position: static;
       max-height: none;
     }
+
+    /* Stacked, the panel's top padding is too short for them, so Download
+       and Switch character sit in the flow, still 24px from the top, with
+       the character's name 24px under them */
+    .builder-panel:has(> .tools-actions-bar) {
+      padding-top: 24px;
+    }
+
+    .tools-actions-bar {
+      position: static;
+      margin-bottom: 24px;
+    }
   }
 }
