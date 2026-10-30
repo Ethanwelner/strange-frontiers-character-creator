@@ -2129,12 +2129,12 @@
 
 /* A much smaller take on the site's glitching Strange Frontiers title
    (.frontiers-glitch in css/rpg.css), on the things waiting for the player:
-   Player Tools' Traits available, and the stats' + while it has a point to
-   place. The same rhythm, but a faint green glow, a cyan and red split that
+   Player Tools' Traits available and rules problems chip, and the stats' +
+   while it has a point to place. The same rhythm, but a faint green glow, a cyan and red split that
    widens on the flares, and a slight skew instead of the title's slices and
    lurches. Every frame has the same three shadows (green, cyan to the left,
    red to the right), so they blend from one to the next. */
-.sf-creator :is(.tools-traits-available button, .is-plus:not(:disabled)) {
+.sf-creator :is(.tools-traits-available button, .tools-issues li, .is-plus:not(:disabled)) {
   animation:
     sf-glitch-small-shift 4s ease-in-out infinite alternate,
     sf-glitch-small-glow 8s ease-in-out infinite alternate;
@@ -2166,7 +2166,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sf-creator :is(.tools-traits-available button, .is-plus:not(:disabled)) {
+  .sf-creator :is(.tools-traits-available button, .tools-issues li, .is-plus:not(:disabled)) {
     animation: none;
   }
 }
