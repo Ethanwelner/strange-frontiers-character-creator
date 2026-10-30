@@ -1902,22 +1902,32 @@
   }
 
   /* On screen, the fields in the HP, VP and SP boxes, the Items and the
-     Conditions go dark: the site's black with light text, and dark
-     dropdown lists */
+     Conditions go dark: the site's black with light text, no border, and
+     dark dropdown lists. Focus shows as a light ring inside. Dropdowns draw
+     their own chevron, 12px in from the right. */
   @media screen {
     .builder-panel :is(.tools-resource, .tools-items, .tools-conditions-side) :is(input, select) {
       color-scheme: dark;
       background-color: var(--portfolio-black);
       color: var(--panel-text);
-      border-color: rgb(255 255 255 / 18%);
+      border-color: transparent;
 
       &::placeholder {
         color: var(--panel-soft);
       }
 
       &:focus {
-        border-color: rgb(255 255 255 / 55%);
+        border-color: transparent;
+        box-shadow: inset 0 0 0 1px rgb(255 255 255 / 55%);
       }
+    }
+
+    .builder-panel :is(.tools-resource, .tools-items, .tools-conditions-side) select {
+      appearance: none;
+      padding-right: 2.25rem;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23e8e8e8' stroke-width='1.5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
     }
   }
 
