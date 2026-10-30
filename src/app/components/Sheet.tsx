@@ -234,7 +234,12 @@ export function Sheet({
                   const t = traitById.get(h.trait);
                   return (
                     <li key={h.trait}>
-                      <span className="tiny-text">{isLanguage(h) ? "Language:" : "Knowledge:"}</span>{" "}
+                      <span
+                        className={`sheet-type-icon ${isLanguage(h) ? "language-icon" : "knowledge-icon"}`}
+                        role="img"
+                        aria-label={isLanguage(h) ? "Language" : "Knowledge"}
+                        title={isLanguage(h) ? "Language" : "Knowledge"}
+                      />
                       <button type="button" className="link" onClick={() => setOpen(h.trait)}>
                         {traitName(h.trait)}
                         {t?.ranked || h.rank > 1 ? ` (${h.rank})` : ""}
