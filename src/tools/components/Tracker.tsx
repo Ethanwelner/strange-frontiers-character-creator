@@ -137,7 +137,7 @@ export function Tracker({
                   {r === "hp" ? "Damage" : "Spend"}
                 </button>
                 <button type="button" onClick={() => apply(r, 1)}>
-                  {r === "hp" ? "Heal" : "Regain"}
+                  {r === "hp" ? "Heal" : "Gain"}
                 </button>
               </div>
             </div>
