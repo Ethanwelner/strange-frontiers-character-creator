@@ -198,7 +198,7 @@ export function StatsStep({ draft, onChange, floor }: Props) {
                       </button>
                     </div>
                     <h4 className="rule">{title(g)}</h4>
-                    <span className={`num${core + extra === 0 ? " muted" : ""}`}>{MP_PER_MAGIC * (core + extra)} MP</span>
+                    <span className={`num${core + extra === 0 ? " muted" : " resource-mp"}`}>{MP_PER_MAGIC * (core + extra)} MP</span>
                   </div>
                   {/* A diamond per point, under the core's − and +, which already set it */}
                   <div className="sheet-stat">

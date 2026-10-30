@@ -322,11 +322,19 @@
   }
 
   .tools-meter-hp > span {
-    background: #e2574c;
+    background: var(--frontiers-hp);
+  }
+
+  .tools-meter-vp > span {
+    background: var(--frontiers-vp);
+  }
+
+  .tools-meter-sp > span {
+    background: var(--frontiers-sp);
   }
 
   .tools-meter-mp > span {
-    background: #9b7bff;
+    background: var(--frontiers-mp);
   }
 
   .tools-resource-apply {

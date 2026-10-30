@@ -105,7 +105,7 @@ export function Tracker({
             <div key={r} className="c-sheet-box tools-resource">
               {/* HP, then −, the value and +, on one line; the full name shows on hover */}
               <div className="tools-resource-value">
-                <strong className="tools-resource-name" title={NAMES[r]}>
+                <strong className={`tools-resource-name resource-${r}`} title={NAMES[r]}>
                   {r.toUpperCase()}
                 </strong>
                 <button type="button" onClick={() => set(r, cur - 1)} aria-label={`1 less ${r.toUpperCase()}`}>

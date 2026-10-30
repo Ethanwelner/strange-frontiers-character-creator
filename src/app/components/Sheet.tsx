@@ -154,7 +154,7 @@ export function Sheet({
               <p className="sheet-resources">
                 {resources.map((r) => (
                   <span key={r}>
-                    <i>{summary?.resources[r] ?? "–"}</i> <strong>{r.toUpperCase()}</strong>
+                    <i>{summary?.resources[r] ?? "–"}</i> <strong className={`resource-${r}`}>{r.toUpperCase()}</strong>
                   </span>
                 ))}
               </p>

@@ -1797,6 +1797,23 @@
   }
 
   /* HP | VP | SP, like the site's sample sheet */
+  /* HP, VP, SP and MP in their colors (css/tokens.css): red, purple, yellow, blue */
+  .resource-hp {
+    color: var(--frontiers-hp);
+  }
+
+  .resource-vp {
+    color: var(--frontiers-vp);
+  }
+
+  .resource-sp {
+    color: var(--frontiers-sp);
+  }
+
+  .resource-mp {
+    color: var(--frontiers-mp);
+  }
+
   .sheet-resources {
     display: flex;
     margin: 0.5rem 0 0;
