@@ -398,6 +398,13 @@
       border: 0;
       border-radius: 0;
       padding: 0;
+      overflow: visible;
+    }
+
+    /* The core stat and its title line sit slightly outside the stats'
+       left edge */
+    .sheet-group-head {
+      margin-left: -15px;
     }
 
     /* What's left to place, one line each */
