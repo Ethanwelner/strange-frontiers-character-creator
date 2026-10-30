@@ -73,6 +73,41 @@
   .tools-character {
     grid-column: 1;
     grid-row: 1;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  /* The character's level, in a large circle left of the name and the
+     background line, with a tiny "Level" over the number */
+  .tools-level-badge {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background-color: var(--portfolio-near-white);
+    color: var(--portfolio-black);
+    line-height: 1;
+  }
+
+  .tools-level-label {
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .tools-level-number {
+    font-size: 2.75rem;
+    font-weight: 600;
+  }
+
+  .tools-character-main {
+    flex: 1;
+    min-width: 0;
   }
 
   .tools-body > main {

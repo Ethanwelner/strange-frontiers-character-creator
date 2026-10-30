@@ -100,73 +100,78 @@ export function ToolsApp() {
 
       <div className="section unlimited white-bg builder-panel">
         <div className={`container builder-body tools-body${play ? "" : " no-side"}`}>
-          {/* The character's name, titled like a tab, at the top of the left column, with its level under it */}
+          {/* The character's level in a large circle, then its name, titled like a tab, at the top of the left column */}
           {play && result && (
             <header className="step-head tools-character">
-              {/* The name, with the creator's pen to edit it, then Level Up! to the right */}
-              <div className="tools-character-head">
-                <NameField
-                  className="sheet-name tools-name"
-                  heading="h2"
-                  name={play.draft.name}
-                  onChange={(name) => setPlay({ ...play, draft: { ...play.draft, name } })}
-                />
-                <div className="hero-bar tools-level-button">
-                  {/* Level Up to N!, which turns into Cancel while the level up is open and
-                      throws its points away. Points the character already has to place come
-                      first, so it waits while there are any. */}
-                  {levelDraft && levelDraft.level > play.draft.level ? (
-                    <button type="button" className="build-button" onClick={() => setLevelDraft(undefined)}>
-                      Cancel
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      className="build-button"
-                      disabled={Boolean(levelDraft) || pointsToPlace(play.draft, content)}
-                      onClick={() => setLevelDraft({ ...play.draft, level: play.draft.level + 1 })}
-                    >
-                      Level Up to {play.draft.level + 1}!
-                    </button>
-                  )}
-                </div>
+              <div className="tools-level-badge" aria-label={`Level ${play.draft.level}`}>
+                <span className="tools-level-label">Level</span>
+                <span className="tools-level-number">{play.draft.level}</span>
               </div>
-              {/* "Level 3 • Isek • Dreft • Licensed Mage • Expelled from the Mage Schools", each
-                  of the Kind and background a link to its card */}
-              <p className="tools-line">
-                Level {play.draft.level}
-                {[play.draft.kind, play.draft.origin, play.draft.profession, play.draft.past].map((id, n) =>
-                  id ? (
-                    <span key={n}>
-                      {" • "}
-                      <button type="button" className="link" onClick={() => setShowing(id)}>
-                        {(n === 0 ? content.kinds.find((k) => k.id === id)?.name : content.packages.find((p) => p.id === id)?.name) ?? id}
+              <div className="tools-character-main">
+                {/* The name, with the creator's pen to edit it, then Level Up! to the right */}
+                <div className="tools-character-head">
+                  <NameField
+                    className="sheet-name tools-name"
+                    heading="h2"
+                    name={play.draft.name}
+                    onChange={(name) => setPlay({ ...play, draft: { ...play.draft, name } })}
+                  />
+                  <div className="hero-bar tools-level-button">
+                    {/* Level Up to N!, which turns into Cancel while the level up is open and
+                        throws its points away. Points the character already has to place come
+                        first, so it waits while there are any. */}
+                    {levelDraft && levelDraft.level > play.draft.level ? (
+                      <button type="button" className="build-button" onClick={() => setLevelDraft(undefined)}>
+                        Cancel
                       </button>
-                    </span>
-                  ) : null,
-                )}
-              </p>
-              {showing && <BackgroundPopup id={showing} onClose={closePopup} />}
-              {/* Any rules problems, as the creator's red error chip, which opens them as a list */}
-              {!result.ok && (
-                <ul className="issues step-issues tools-issues">
-                  <li>
-                    <button type="button" onClick={() => setShowingIssues(true)}>
-                      {result.errors.length} rules {result.errors.length === 1 ? "problem" : "problems"}
-                    </button>
-                  </li>
-                </ul>
-              )}
-              {showingIssues && !result.ok && (
-                <LorePopup label="Rules problems" onClose={closeIssues} className="tools-issues-popup">
-                  <h3 className="lore-modal-title">Rules problems</h3>
-                  <ul className="tools-issue-list">
-                    {result.errors.map((e, i) => (
-                      <li key={i}>{describe(e, play.draft)}</li>
-                    ))}
+                    ) : (
+                      <button
+                        type="button"
+                        className="build-button"
+                        disabled={Boolean(levelDraft) || pointsToPlace(play.draft, content)}
+                        onClick={() => setLevelDraft({ ...play.draft, level: play.draft.level + 1 })}
+                      >
+                        Level Up to {play.draft.level + 1}!
+                      </button>
+                    )}
+                  </div>
+                </div>
+                {/* "Isek • Dreft • Licensed Mage • Expelled from the Mage Schools", each of the
+                    Kind and background a link to its card */}
+                <p className="tools-line">
+                  {[play.draft.kind, play.draft.origin, play.draft.profession, play.draft.past].map((id, n, ids) =>
+                    id ? (
+                      <span key={n}>
+                        {ids.slice(0, n).some(Boolean) && " • "}
+                        <button type="button" className="link" onClick={() => setShowing(id)}>
+                          {(n === 0 ? content.kinds.find((k) => k.id === id)?.name : content.packages.find((p) => p.id === id)?.name) ?? id}
+                        </button>
+                      </span>
+                    ) : null,
+                  )}
+                </p>
+                {showing && <BackgroundPopup id={showing} onClose={closePopup} />}
+                {/* Any rules problems, as the creator's red error chip, which opens them as a list */}
+                {!result.ok && (
+                  <ul className="issues step-issues tools-issues">
+                    <li>
+                      <button type="button" onClick={() => setShowingIssues(true)}>
+                        {result.errors.length} rules {result.errors.length === 1 ? "problem" : "problems"}
+                      </button>
+                    </li>
                   </ul>
-                </LorePopup>
-              )}
+                )}
+                {showingIssues && !result.ok && (
+                  <LorePopup label="Rules problems" onClose={closeIssues} className="tools-issues-popup">
+                    <h3 className="lore-modal-title">Rules problems</h3>
+                    <ul className="tools-issue-list">
+                      {result.errors.map((e, i) => (
+                        <li key={i}>{describe(e, play.draft)}</li>
+                      ))}
+                    </ul>
+                  </LorePopup>
+                )}
+              </div>
             </header>
           )}
           <main>
