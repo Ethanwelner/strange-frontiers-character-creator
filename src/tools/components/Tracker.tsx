@@ -150,13 +150,18 @@ export function Tracker({
         </button>
       </p>
 
-      {/* The rest of the character sheet: stats, Knowledges, Items and Traits */}
+      {/* The rest of the character sheet: stats, Knowledges, Conditions and Items, and Traits */}
       <Sheet
         draft={play.draft}
         result={result}
         embedded
         statsSlot={stats}
-        extraColumn={<Items items={play.items} onChange={(items) => onChange({ ...play, items })} />}
+        extraColumn={
+          <div className="tools-sheet-extra">
+            <Conditions play={play} result={result} onChange={onChange} />
+            <Items items={play.items} onChange={(items) => onChange({ ...play, items })} />
+          </div>
+        }
         traitsAction={
           banked > 0 && (
             <p className="tools-traits-available">
@@ -198,13 +203,15 @@ export function Tracker({
 }
 
 // The Conditions: the ones HP decides, and the temporary ones the player
-// adds, with Add a Condition above them. They sit under the assistant.
+// adds, with Add a Condition above them. They sit in the sheet's last
+// column, above the Items.
 export function Conditions({ play, result, onChange }: { play: Play; result: BuildResult; onChange: (p: Play) => void }) {
   const options = useMemo(() => playConditions(content), []);
   const hp = hpConditions(currentOf(play, result, "hp"), maxOf(result, "hp"));
 
   return (
     <section className="tools-conditions-side" aria-label="Conditions">
+      <h4 className="rule">Conditions</h4>
       {/* Add a Condition, above the ones the character has: picking one adds it, and the
           dropdown goes back to its prompt */}
       <div className="tools-add">
