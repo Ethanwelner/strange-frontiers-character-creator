@@ -577,11 +577,22 @@
     white-space: nowrap;
   }
 
-  /* Download character and Switch character, above the assistant at its right edge.
-     Switching asks on its own line, with Yes and Cancel under it. */
+  /* Download character and Switch character, 24px from the top of the panel,
+     at the right edge of the assistant's column. They aren't in the sticky
+     column, so they scroll away with the page. */
+  .tools-actions-bar {
+    position: absolute;
+    top: 24px;
+    left: 0;
+    right: 0;
+  }
+
+  /* Switching asks on its own line, with Yes and Cancel under it */
   .tools-actions {
     flex-wrap: wrap;
     justify-content: flex-end;
+    max-width: 380px;
+    margin-left: auto;
 
     .hero-confirm {
       flex-wrap: wrap;

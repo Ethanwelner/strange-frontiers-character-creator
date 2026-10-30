@@ -99,6 +99,41 @@ export function ToolsApp() {
       </header>
 
       <div className="section unlimited white-bg builder-panel">
+        {/* Download character and Switch character, as gray badges, 24px from the top of the
+            panel over the right column. They scroll away with the page; the assistant under
+            them sticks. */}
+        {play && result && (
+          <div className="container tools-actions-bar">
+            <div className="hero-bar tools-actions">
+              <button type="button" onClick={exportBuild}>
+                Download character
+              </button>
+              {confirmingSwitch ? (
+                <span className="hero-confirm">
+                  <span className="tools-confirm-text">Put this character away? Its tracker, items and chat are cleared.</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPlay(undefined);
+                      setLevelDraft(undefined);
+                      setConfirmingSwitch(false);
+                      setNotice(undefined);
+                    }}
+                  >
+                    Yes
+                  </button>
+                  <button type="button" onClick={() => setConfirmingSwitch(false)}>
+                    Cancel
+                  </button>
+                </span>
+              ) : (
+                <button type="button" onClick={() => setConfirmingSwitch(true)}>
+                  Switch character
+                </button>
+              )}
+            </div>
+          </div>
+        )}
         <div className={`container builder-body tools-body${play ? "" : " no-side"}`}>
           {/* The character's name, titled like a tab, at the top of the left column, with its level under it */}
           {play && result && (
@@ -207,35 +242,6 @@ export function ToolsApp() {
           </main>
           {play && result && (
             <aside ref={side} className={`tools-chat-side${tallSide ? " is-tall" : ""}`}>
-              {/* Download character and Switch character, above the assistant, as gray badges */}
-              <div className="hero-bar tools-actions">
-                <button type="button" onClick={exportBuild}>
-                  Download character
-                </button>
-                {confirmingSwitch ? (
-                  <span className="hero-confirm">
-                    <span className="tools-confirm-text">Put this character away? Its tracker, items and chat are cleared.</span>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setPlay(undefined);
-                        setLevelDraft(undefined);
-                        setConfirmingSwitch(false);
-                        setNotice(undefined);
-                      }}
-                    >
-                      Yes
-                    </button>
-                    <button type="button" onClick={() => setConfirmingSwitch(false)}>
-                      Cancel
-                    </button>
-                  </span>
-                ) : (
-                  <button type="button" onClick={() => setConfirmingSwitch(true)}>
-                    Switch character
-                  </button>
-                )}
-              </div>
               <Chat play={play} result={result} content={content} create={create} model={__SF_AI__.model} onChange={setPlay} check={(p) => checkPlay(p.draft, content)} />
               <Conditions play={play} result={result} onChange={setPlay} />
             </aside>
