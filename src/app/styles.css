@@ -1901,26 +1901,47 @@
     width: 3.5em;
   }
 
-  /* Items as a column: its heading like Knowledges', then name, count,
-     category and Add on one line, then each item in a box on the dark panel
-     with its fields wrapping to fit */
+  /* On screen, the fields in the HP, VP and SP boxes, the Items and the
+     Conditions go dark: the site's black with light text, and dark
+     dropdown lists */
+  @media screen {
+    .builder-panel :is(.tools-resource, .tools-items, .tools-conditions-side) :is(input, select) {
+      color-scheme: dark;
+      background-color: var(--portfolio-black);
+      color: var(--panel-text);
+      border-color: rgb(255 255 255 / 18%);
+
+      &::placeholder {
+        color: var(--panel-soft);
+      }
+
+      &:focus {
+        border-color: rgb(255 255 255 / 55%);
+      }
+    }
+  }
+
+  /* Items as a column: its heading like Knowledges', then the name on its
+     own line with count, category and Add under it, then each item in a box
+     on the dark panel with its fields wrapping to fit */
   .tools-items {
     .rule {
       margin-top: 0;
     }
 
     .tools-add {
-      flex-wrap: nowrap;
-
       input[type="text"] {
-        flex: 1 1 auto;
-        width: 0;
-        min-width: 0;
+        flex: 1 1 100%;
       }
 
-      select,
+      .tools-qty,
       button {
         flex: none;
+      }
+
+      select {
+        flex: 1;
+        min-width: 0;
       }
     }
   }

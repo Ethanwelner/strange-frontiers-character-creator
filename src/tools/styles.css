@@ -376,9 +376,9 @@
     list-style: none;
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    grid-template-columns: minmax(0, 1fr);
     gap: 12px;
-    margin: 0 0 16px;
+    margin: 0;
   }
 
   .tools-rank {
@@ -493,10 +493,23 @@
     border-top: 1px solid var(--card-border);
   }
 
-  /* 48px between the assistant and the Conditions under it (24px for the
-     column's gap, plus this) */
+  /* The sheet's last column: the Conditions, then the Items, 40px apart */
+  .tools-sheet-extra {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: 40px;
+    min-width: 0;
+  }
+
   .tools-conditions-side {
-    margin-top: 24px;
+    .rule {
+      margin-top: 0;
+    }
+
+    .tools-add {
+      margin-bottom: 12px;
+    }
   }
 
   /* A Condition the player added: an ✕ at the right of its name bar */
@@ -539,12 +552,11 @@
     }
   }
 
-  /* The assistant and the Conditions under it, at the top of the right
-     column, stay in view while the tools scroll, like the creator's
-     character box. The column never scrolls on its own: the conversation
-     scrolls inside the chat, and when the Conditions make the column taller
-     than the window it stops sticking (.is-tall, set in App.tsx) and scrolls
-     with the page. */
+  /* The assistant, at the top of the right column, stays in view while the
+     tools scroll, like the creator's character box. The column never
+     scrolls on its own: the conversation scrolls inside the chat, and when
+     the column is taller than the window it stops sticking (.is-tall, set
+     in App.tsx) and scrolls with the page. */
   .tools-chat-side {
     grid-column: 2;
     grid-row: 1;

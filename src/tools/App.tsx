@@ -7,7 +7,7 @@ import { describe } from "../app/check.js";
 import { checkPlay, creatorDraft, load, playBuild, pointsToPlace, save, startPlay, type Play } from "./play.js";
 import { BackgroundPopup } from "./components/BackgroundPopup.js";
 import { Chat } from "./components/Chat.js";
-import { Conditions, Tracker } from "./components/Tracker.js";
+import { Tracker } from "./components/Tracker.js";
 
 
 export function ToolsApp() {
@@ -24,7 +24,7 @@ export function ToolsApp() {
   const [showingIssues, setShowingIssues] = useState(false);
   // The right column never scrolls itself. The chat's conversation gets the
   // window's height left over from the rest of the column (at least 120px)
-  // and scrolls inside; if even that doesn't fit (lots of Conditions), the
+  // and scrolls inside; if even that doesn't fit (a short window), the
   // column stops sticking and scrolls with the page.
   const side = useRef<HTMLElement>(null);
   const [tallSide, setTallSide] = useState(false);
@@ -260,7 +260,6 @@ export function ToolsApp() {
           {play && result && (
             <aside ref={side} className={`tools-chat-side${tallSide ? " is-tall" : ""}`}>
               <Chat play={play} result={result} content={content} create={create} model={__SF_AI__.model} onChange={setPlay} check={(p) => checkPlay(p.draft, content)} />
-              <Conditions play={play} result={result} onChange={setPlay} />
             </aside>
           )}
         </div>
