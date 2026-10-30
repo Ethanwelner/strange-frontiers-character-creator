@@ -188,6 +188,7 @@ export function StatsStep({ draft, onChange, floor }: Props) {
                         <Sign is="minus" />
                       </button>
                       <button
+                        className="is-plus"
                         aria-label={`Put a core point in ${g}`}
                         title={coreLeft > 0 && !open.includes(g) ? `This character can't level ${title(g)}` : undefined}
                         onClick={() => onChange(withCore(draft, g, core + 1))}
@@ -236,6 +237,7 @@ export function StatsStep({ draft, onChange, floor }: Props) {
                       <Sign is="minus" />
                     </button>
                     <button
+                      className="is-plus"
                       aria-label={`Put a core point in ${g}`}
                       title={coreLeft > 0 && !canLevel ? `${title(g)}'s stats have no room for ${POINTS_PER_LEVEL} more points` : undefined}
                       onClick={() => onChange(withCore(draft, g, core + 1))}
@@ -272,7 +274,7 @@ export function StatsStep({ draft, onChange, floor }: Props) {
                           <button aria-label={`Take a point from ${s}`} onClick={() => bump(s, -1)} disabled={value <= floorOf(s)}>
                             <Sign is="minus" />
                           </button>
-                          <button aria-label={`Add a point to ${s}`} onClick={() => bump(s, 1)} disabled={spare === 0 || value >= max}>
+                          <button className="is-plus" aria-label={`Add a point to ${s}`} onClick={() => bump(s, 1)} disabled={spare === 0 || value >= max}>
                             <Sign is="plus" />
                           </button>
                         </div>
