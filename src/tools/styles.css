@@ -78,43 +78,13 @@
     gap: 24px;
   }
 
-  /* The character's level, in a large blob left of the name and the
-     background line, with a tiny "Level" over the number in the panel's
-     light text. The blob, in the site's black behind the number, slowly
-     morphs between two lopsided shapes while it turns, after
-     codepen.io/myjessijess/pen/MWWgMwL, and its purple glow slowly pulses.
-     It's a pseudo-element so the number stays upright. With reduced motion
-     it holds still with a steady glow. */
+  /* The character's level, in a large blob (.level-blob, the creator's
+     styles) left of the name and the background line */
   .tools-level-badge {
     position: relative;
-    isolation: isolate;
     flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     width: 96px;
     height: 96px;
-    color: var(--panel-text);
-    line-height: 1;
-
-    &::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      z-index: -1;
-      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-      background-color: var(--portfolio-black);
-      box-shadow: 0 0 5px 0 var(--frontiers-lore-on-black);
-      animation:
-        tools-level-morph 8s ease-in-out infinite,
-        tools-level-spin 20s linear infinite,
-        tools-level-glow 3s ease-in-out infinite alternate;
-
-      @media (prefers-reduced-motion: reduce) {
-        animation: none;
-      }
-    }
   }
 
   /* The circle, with Level up under it */
@@ -283,7 +253,6 @@
 
   /* Boxes on the dark panel */
   .tools-resource,
-  .tools-item,
   .tools-chat {
     background: var(--panel-box);
     border: 1px solid var(--card-border);
@@ -377,56 +346,17 @@
     }
   }
 
-  .tools-conditions,
-  .tools-item-list {
+  .tools-conditions {
     list-style: none;
     padding: 0;
     display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 12px;
     margin: 0 0 16px;
   }
 
-  .tools-conditions {
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  }
-
   .tools-rank {
     margin: 4px 0;
-  }
-
-  .tools-note {
-    width: 100%;
-    margin: 8px 0;
-  }
-
-  .tools-add {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    align-items: center;
-    margin-bottom: 16px;
-  }
-
-  .tools-qty {
-    width: 3.5em;
-  }
-
-  .tools-item-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    align-items: center;
-  }
-
-  .tools-item-name {
-    flex: 1;
-    min-width: 160px;
-  }
-
-  .tools-equipped {
-    display: inline-flex;
-    gap: 4px;
-    align-items: center;
   }
 
   /* The sheet's columns on the Tracker: stats, Knowledges, then Items (just
@@ -437,39 +367,6 @@
 
     &:not(:has(.sheet-stats)) {
       grid-template-columns: minmax(0, 3fr) minmax(0, 4fr);
-    }
-  }
-
-  /* Items as a column: its heading like Knowledges', each item's fields
-     wrapping to fit */
-  .tools-items {
-    .rule {
-      margin-top: 0;
-    }
-
-    /* Name, count, category and Add on one line */
-    .tools-add {
-      flex-wrap: nowrap;
-
-      input[type="text"] {
-        flex: 1 1 auto;
-        width: 0;
-        min-width: 0;
-      }
-
-      select,
-      button {
-        flex: none;
-      }
-    }
-
-    .tools-item {
-      padding: 12px;
-    }
-
-    .tools-item-name {
-      flex: 1 1 100%;
-      min-width: 0;
     }
   }
 
@@ -876,34 +773,5 @@
       position: static;
       margin-bottom: 24px;
     }
-  }
-}
-
-/* The level blob's morph (.tools-level-badge::before) */
-@keyframes tools-level-morph {
-  0%,
-  100% {
-    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-  }
-  50% {
-    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
-  }
-}
-
-/* ...and its slow turn */
-@keyframes tools-level-spin {
-  to {
-    rotate: 1turn;
-  }
-}
-
-/* ...and its glow, #a67bf0 (--frontiers-lore-on-black), swelling from a
-   faint 5px to a bright 16px and back */
-@keyframes tools-level-glow {
-  from {
-    box-shadow: 0 0 5px 0 rgb(166 123 240 / 45%);
-  }
-  to {
-    box-shadow: 0 0 16px 0 rgb(166 123 240 / 100%);
   }
 }

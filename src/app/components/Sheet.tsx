@@ -138,8 +138,9 @@ export function Sheet({
       )}
       <div className="c-sheet">
         {!embedded && (
-          <div className="level-badge" aria-label={`Level ${draft.level}`}>
-            {draft.level}
+          <div className="level-badge level-blob" aria-label={`Level ${draft.level}`}>
+            <span className="level-badge-label">Level</span>
+            <span className="level-badge-number">{draft.level}</span>
           </div>
         )}
 

@@ -8,6 +8,7 @@ import type { Campaign } from "../engine/build.js";
 import type { DescribeResult, OpenChoice, Reason } from "../ai/types.js";
 import { STAT_GROUPS, type StatId } from "../schema/index.js";
 import { FOCUS_POINTS_PER_LEVEL } from "../engine/validate.js";
+import { readItems, type Item } from "./items.js";
 
 export interface Draft {
   name?: string;
@@ -24,6 +25,8 @@ export interface Draft {
   points: Partial<Record<StatId, number>>;
   traits: TraitPick[];
   choices: ChoiceAnswer[];
+  // What the character carries, from the sheet's Items column.
+  items?: Item[];
 }
 
 export const STEPS = ["character", "background", "stats", "traits", "choices", "sheet"] as const;
@@ -109,7 +112,7 @@ export function toBuild(draft: Draft): Record<string, unknown> {
   const { core, points, ...rest } = draft;
   const out: Record<string, unknown> = {};
   for (const [key, value] of Object.entries({ ...rest, levels: poolToLevels(core, points) })) {
-    if (value === undefined || value === "") continue;
+    if (value === undefined || value === "" || (key === "items" && Array.isArray(value) && !value.length)) continue;
     out[key] = value;
   }
   return out;
@@ -142,6 +145,7 @@ export function fromBuild(input: unknown): Draft {
     ...(b.core && typeof b.core === "object" ? savedPool(b) : levelsToPool(levels)),
     traits: array<TraitPick>(b.traits).map((t) => ({ ...t, rank: t.rank ?? 1 })),
     choices: array<ChoiceAnswer>(b.choices),
+    ...(Array.isArray(b.items) && b.items.length ? { items: readItems(b.items) } : {}),
   };
 }
 

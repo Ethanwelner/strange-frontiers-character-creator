@@ -6,21 +6,12 @@ import type { Content } from "../engine/parse.js";
 import { bonusPointsOf, FOCUS_POINTS_PER_LEVEL, validateBuild, type BuildResult } from "../engine/validate.js";
 import { STAT_GROUPS } from "../schema/index.js";
 import { fromBuild, toBuild, type Draft } from "../app/draft.js";
+import { readItems, withItem, withoutItem, type Item } from "../app/items.js";
+
+export { ITEM_CATEGORIES, type Item, type ItemCategory } from "../app/items.js";
 
 export const RESOURCES = ["hp", "vp", "sp", "mp"] as const;
 export type ResourceKey = (typeof RESOURCES)[number];
-
-export const ITEM_CATEGORIES = ["weapon", "armor", "gear", "consumable", "currency", "other"] as const;
-export type ItemCategory = (typeof ITEM_CATEGORIES)[number];
-
-export interface Item {
-  id: string;
-  name: string;
-  qty: number;
-  category: ItemCategory;
-  equipped: boolean;
-  notes?: string;
-}
 
 // A temporary Condition Trait the character has picked up in play, like
 // Severe Bleeding or Irradiated (2).
@@ -111,21 +102,19 @@ export function withResource(play: Play, result: BuildResult, r: ResourceKey, va
   return { ...play, current };
 }
 
-export const newId = () => Math.random().toString(36).slice(2, 10);
-
 // Items with the same name stack.
 export function addItem(play: Play, item: Omit<Item, "id">): Play {
-  const same = play.items.find((i) => i.name.toLowerCase() === item.name.toLowerCase());
-  if (same) return { ...play, items: play.items.map((i) => (i === same ? { ...i, qty: i.qty + item.qty } : i)) };
-  return { ...play, items: [...play.items, { ...item, id: newId() }] };
+  return { ...play, items: withItem(play.items, item) };
 }
 
 // Removes `qty` of an item, or all of it if `qty` is missing or covers it.
 export function removeItem(play: Play, name: string, qty?: number): Play {
-  const item = play.items.find((i) => i.name.toLowerCase() === name.toLowerCase());
-  if (!item) return play;
-  if (qty === undefined || qty >= item.qty) return { ...play, items: play.items.filter((i) => i !== item) };
-  return { ...play, items: play.items.map((i) => (i === item ? { ...i, qty: i.qty - qty } : i)) };
+  return { ...play, items: withoutItem(play.items, name, qty) };
+}
+
+// The build as a file, with the items the character carries now.
+export function playBuild(play: Play): Record<string, unknown> {
+  return toBuild({ ...play.draft, items: play.items });
 }
 
 // Taking a Condition again raises its rank if it's ranked, or does nothing.
@@ -143,9 +132,11 @@ export function removeCondition(play: Play, trait: string): Play {
   return { ...play, conditions: play.conditions.filter((c) => c.trait !== trait) };
 }
 
-// A new session for an imported build: full resources, nothing carried.
+// A new session for an imported build: full resources, carrying the build's
+// items. From then on the play's own items are the ones that count.
 export function startPlay(build: unknown): Play {
-  return { draft: fromBuild(build), current: {}, items: [], conditions: [], chat: [] };
+  const { items = [], ...draft } = fromBuild(build);
+  return { draft, current: {}, items, conditions: [], chat: [] };
 }
 
 const KEY = "sf-game-tools:v1";
@@ -161,7 +152,7 @@ export function load(): Play | undefined {
     return {
       draft: fromBuild(saved.draft),
       current: saved.current && typeof saved.current === "object" ? saved.current : {},
-      items: Array.isArray(saved.items) ? saved.items : [],
+      items: readItems(saved.items),
       conditions: Array.isArray(saved.conditions) ? saved.conditions : [],
       chat: Array.isArray(saved.chat) ? saved.chat : [],
     };

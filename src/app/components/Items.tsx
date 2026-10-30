@@ -1,20 +1,21 @@
 import { useState } from "react";
-import { title } from "../../app/components/ui.js";
-import { addItem, ITEM_CATEGORIES, type Item, type ItemCategory, type Play } from "../play.js";
+import { title } from "./ui.js";
+import { ITEM_CATEGORIES, withItem, type Item, type ItemCategory } from "../items.js";
 
-// The character's inventory, a column of the sheet on the Tracker, after the
-// Knowledges. Item rules aren't settled yet, so an item is what the player
-// writes: a name, a count, a rough category and notes.
-export function Items({ play, onChange }: { play: Play; onChange: (p: Play) => void }) {
+// The character's inventory, a column of the sheet after the Knowledges, in
+// the Character Creator and on Player Tools' Tracker. Item rules aren't
+// settled yet, so an item is what the player writes: a name, a count, a
+// rough category and notes.
+export function Items({ items, onChange }: { items: Item[]; onChange: (items: Item[]) => void }) {
   const [name, setName] = useState("");
   const [qty, setQty] = useState("1");
   const [category, setCategory] = useState<ItemCategory>("gear");
 
-  const update = (item: Item, change: Partial<Item>) => onChange({ ...play, items: play.items.map((i) => (i === item ? { ...i, ...change } : i)) });
-  const remove = (item: Item) => onChange({ ...play, items: play.items.filter((i) => i !== item) });
+  const update = (item: Item, change: Partial<Item>) => onChange(items.map((i) => (i === item ? { ...i, ...change } : i)));
+  const remove = (item: Item) => onChange(items.filter((i) => i !== item));
   const add = () => {
     if (!name.trim()) return;
-    onChange(addItem(play, { name: name.trim(), qty: Math.max(1, Math.round(Number(qty)) || 1), category, equipped: false }));
+    onChange(withItem(items, { name: name.trim(), qty: Math.max(1, Math.round(Number(qty)) || 1), category, equipped: false }));
     setName("");
     setQty("1");
   };
@@ -44,11 +45,11 @@ export function Items({ play, onChange }: { play: Play; onChange: (p: Play) => v
         </button>
       </form>
 
-      {play.items.length === 0 ? (
+      {items.length === 0 ? (
         <p className="empty">No items yet.</p>
       ) : (
         <ul className="tools-item-list">
-          {play.items.map((item) => (
+          {items.map((item) => (
             <li key={item.id} className="c-sheet-box tools-item">
               <div className="tools-item-row">
                 <input
