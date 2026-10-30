@@ -724,7 +724,7 @@
         outline-color: var(--portfolio-white);
       }
 
-      :is(.level-badge, .stat-badge) {
+      .stat-badge {
         background-color: var(--portfolio-near-white);
         color: var(--portfolio-black);
       }
@@ -1669,13 +1669,25 @@
     margin-top: 0;
   }
 
-  /* The site's .level-badge and .stat-badge, at a fixed size */
+  /* The site's .level-badge and .stat-badge, at a fixed size. The level is
+     Player Tools' blob (.level-blob), smaller, at the sheet's corner. */
   .level-badge {
     z-index: 1;
     width: 72px;
     height: 72px;
     padding: 0;
     line-height: 1;
+  }
+
+  .level-badge-label {
+    font-size: 0.625rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .level-badge-number {
+    font-size: 2.25rem;
   }
 
   .stat-badge {
@@ -1820,6 +1832,97 @@
     display: grid;
     grid-template-columns: minmax(0, 5fr) minmax(0, 3fr);
     gap: 48px;
+  }
+
+  /* With Items (components/Items.tsx) as a third column after the Knowledges */
+  .sheet-body:has(> .tools-items) {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 4fr);
+    gap: 40px;
+  }
+
+  @media (max-width: 1199px) {
+    .sheet-body:has(> .tools-items) {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .sheet-body > .tools-items {
+      grid-column: 1 / -1;
+    }
+  }
+
+  /* The add row (Items' and Player Tools' Add a Condition), item notes, and
+     the count */
+  .tools-add {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .tools-note {
+    width: 100%;
+    margin: 8px 0;
+  }
+
+  .tools-qty {
+    width: 3.5em;
+  }
+
+  /* Items as a column: its heading like Knowledges', then name, count,
+     category and Add on one line, then each item in a box on the dark panel
+     with its fields wrapping to fit */
+  .tools-items {
+    .rule {
+      margin-top: 0;
+    }
+
+    .tools-add {
+      flex-wrap: nowrap;
+
+      input[type="text"] {
+        flex: 1 1 auto;
+        width: 0;
+        min-width: 0;
+      }
+
+      select,
+      button {
+        flex: none;
+      }
+    }
+  }
+
+  .tools-item-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 12px;
+    margin: 0 0 16px;
+  }
+
+  .tools-item {
+    background: var(--panel-box);
+    border: 1px solid var(--card-border);
+    padding: 12px;
+  }
+
+  .tools-item-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .tools-item-name {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .tools-equipped {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
   }
 
   .sheet-stats {
@@ -2031,6 +2134,13 @@
       left: -8px;
       width: 56px;
       height: 56px;
+    }
+
+    .level-badge-label {
+      font-size: 0.5rem;
+    }
+
+    .level-badge-number {
       font-size: 1.75rem;
     }
   }
@@ -2129,12 +2239,14 @@
 
 /* A much smaller take on the site's glitching Strange Frontiers title
    (.frontiers-glitch in css/rpg.css), on the things waiting for the player:
-   Player Tools' Traits available and rules problems chip, and the stats' +
-   while it has a point to place. The same rhythm, but a faint green glow, a cyan and red split that
-   widens on the flares, and a slight skew instead of the title's slices and
+   Player Tools' Traits available and rules problems chip, the stats' +
+   while it has a point to place, and the creator's next step button once
+   its step is finished (green) and Build it once there's something to
+   build. The same rhythm, but a faint green glow, a
+   cyan and red split that widens on the flares, and a slight skew instead of the title's slices and
    lurches. Every frame has the same three shadows (green, cyan to the left,
    red to the right), so they blend from one to the next. */
-.sf-creator :is(.tools-traits-available button, .tools-issues li, .is-plus:not(:disabled)) {
+.sf-creator :is(.tools-traits-available button, .tools-issues li, .is-plus:not(:disabled), .pager .step-next.is-done, .describe .build-button:not(:disabled)) {
   animation:
     sf-glitch-small-shift 4s ease-in-out infinite alternate,
     sf-glitch-small-glow 8s ease-in-out infinite alternate;
@@ -2166,7 +2278,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sf-creator :is(.tools-traits-available button, .tools-issues li, .is-plus:not(:disabled)) {
+  .sf-creator :is(.tools-traits-available button, .tools-issues li, .is-plus:not(:disabled), .pager .step-next.is-done, .describe .build-button:not(:disabled)) {
     animation: none;
   }
 }
@@ -2187,5 +2299,71 @@
 @media (prefers-reduced-motion: reduce) {
   .sf-creator .stat.filled.is-new {
     animation: none;
+  }
+}
+
+/* The character's level as a blob: Player Tools' level (.tools-level-badge)
+   and the sheet's corner (.level-badge). A tiny "Level" over the number, in
+   the panel's light text. The blob, in the site's black behind them, slowly
+   morphs between two lopsided shapes while it turns, after
+   codepen.io/myjessijess/pen/MWWgMwL, and its purple glow slowly pulses.
+   It's a pseudo-element so the number stays upright. With reduced motion it
+   holds still with a steady glow. */
+.sf-creator .level-blob {
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--panel-text);
+  line-height: 1;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    background-color: var(--portfolio-black);
+    box-shadow: 0 0 5px 0 var(--frontiers-lore-on-black);
+    animation:
+      level-blob-morph 8s ease-in-out infinite,
+      level-blob-spin 20s linear infinite,
+      level-blob-glow 3s ease-in-out infinite alternate;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
+  }
+}
+
+@keyframes level-blob-morph {
+  0%,
+  100% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  }
+  50% {
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+  }
+}
+
+/* ...its slow turn */
+@keyframes level-blob-spin {
+  to {
+    rotate: 1turn;
+  }
+}
+
+/* ...and its glow, #a67bf0 (--frontiers-lore-on-black), swelling from a
+   faint 5px to a bright 16px and back */
+@keyframes level-blob-glow {
+  from {
+    box-shadow: 0 0 5px 0 rgb(166 123 240 / 45%);
+  }
+  to {
+    box-shadow: 0 0 16px 0 rgb(166 123 240 / 100%);
   }
 }

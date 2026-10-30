@@ -1,8 +1,9 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { loadContent } from "../engine/content.js";
+import { fromBuild } from "../app/draft.js";
 import { applyTool, ask, sheetText, trackerLine } from "./chat.js";
-import { addCondition, addItem, checkPlay, currentOf, hpConditions, maxOf, playConditions, pointsToPlace, removeItem, startPlay, withResource } from "./play.js";
+import { addCondition, addItem, checkPlay, currentOf, hpConditions, maxOf, playBuild, playConditions, pointsToPlace, removeItem, startPlay, withResource } from "./play.js";
 import type { CreateMessage } from "../ai/anthropic.js";
 
 const { content } = loadContent();
@@ -63,6 +64,17 @@ describe("a character in play", () => {
     expect(play.items[0]!.qty).toBe(3);
     expect(removeItem(play, "Ration", 1).items[0]!.qty).toBe(2);
     expect(removeItem(play, "Ration").items).toHaveLength(0);
+  });
+
+  it("carries the build's items into play, and the play's items back out", () => {
+    const play = startPlay({ ...grosh, items: [{ name: "Rope", qty: 2, category: "gear" }, { name: "" }] });
+    expect(play.items).toMatchObject([{ name: "Rope", qty: 2, category: "gear", equipped: false }]);
+    expect(play.draft.items).toBeUndefined();
+    const out = playBuild(addItem(play, { name: "Ration", qty: 3, category: "consumable", equipped: false }));
+    expect((out.items as { name: string }[]).map((i) => i.name)).toEqual(["Rope", "Ration"]);
+    expect(checkPlay(fromBuild(out), content).errors.filter((e) => e.code === "schema")).toEqual([]);
+    // No items, no items field.
+    expect(playBuild(fresh())).not.toHaveProperty("items");
   });
 
   it("raises a ranked Condition taken again, and ignores an unranked one", () => {

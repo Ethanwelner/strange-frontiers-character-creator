@@ -4,6 +4,7 @@ import { BackgroundStep } from "./components/BackgroundStep.js";
 import { CharacterStep } from "./components/CharacterStep.js";
 import { ChoicesStep } from "./components/ChoicesStep.js";
 import { DescribeBox } from "./components/DescribeBox.js";
+import { Items } from "./components/Items.js";
 import { StatsStep } from "./components/StatsStep.js";
 import { Sheet } from "./components/Sheet.js";
 import { TraitsStep } from "./components/TraitsStep.js";
@@ -235,7 +236,16 @@ export function App() {
               )}
               {step === "choices" && <ChoicesStep draft={draft} result={result} onChange={setDraft} />}
               {step === "traits" && <TraitsStep draft={draft} campaign={campaign} result={result} onChange={setDraft} />}
-              {step === "sheet" && <Sheet draft={draft} result={result} onExport={exportBuild} onImport={() => fileInput.current?.click()} onName={(name) => setDraft({ ...draft, name })} />}
+              {step === "sheet" && (
+                <Sheet
+                  draft={draft}
+                  result={result}
+                  onExport={exportBuild}
+                  onImport={() => fileInput.current?.click()}
+                  onName={(name) => setDraft({ ...draft, name })}
+                  extraColumn={<Items items={draft.items ?? []} onChange={(items) => setDraft({ ...draft, items })} />}
+                />
+              )}
 
             </>
           </main>

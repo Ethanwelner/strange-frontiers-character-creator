@@ -127,10 +127,10 @@ export function Sheet({
       {!embedded && (
         <>
           <StepHeader step="sheet" title="Sheet" />
-          {/* Whether the build is legal, then Export, Import and Print, above the sheet */}
+          {/* Whether the build is legal, then Download, Import and Print, above the sheet */}
           <div className="sheet-actions">
             <span className={`status ${result.ok ? "good" : "bad"}`}>{result.ok ? "Legal" : `${result.errors.length} ${result.errors.length === 1 ? "error" : "errors"}`}</span>
-            <button onClick={onExport}>Export</button>
+            <button onClick={onExport}>Download</button>
             <button onClick={onImport}>Import</button>
             <button onClick={() => window.print()}>Print</button>
           </div>
@@ -138,8 +138,9 @@ export function Sheet({
       )}
       <div className="c-sheet">
         {!embedded && (
-          <div className="level-badge" aria-label={`Level ${draft.level}`}>
-            {draft.level}
+          <div className="level-badge level-blob" aria-label={`Level ${draft.level}`}>
+            <span className="level-badge-label">Level</span>
+            <span className="level-badge-number">{draft.level}</span>
           </div>
         )}
 

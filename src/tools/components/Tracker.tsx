@@ -5,7 +5,7 @@ import type { Draft } from "../../app/draft.js";
 import { Sheet } from "../../app/components/Sheet.js";
 import { StatsStep } from "../../app/components/StatsStep.js";
 import { TraitsStep } from "../../app/components/TraitsStep.js";
-import { Items } from "./Items.js";
+import { Items } from "../../app/components/Items.js";
 import { LorePopup, Sign } from "../../app/components/ui.js";
 import {
   addCondition,
@@ -156,7 +156,7 @@ export function Tracker({
         result={result}
         embedded
         statsSlot={stats}
-        extraColumn={<Items play={play} onChange={onChange} />}
+        extraColumn={<Items items={play.items} onChange={(items) => onChange({ ...play, items })} />}
         traitsAction={
           banked > 0 && (
             <p className="tools-traits-available">

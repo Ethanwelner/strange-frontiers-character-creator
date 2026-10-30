@@ -37,6 +37,19 @@ export const ChoiceAnswer = z
   .refine((a) => (a.package === undefined) !== (a.trait === undefined), "an answer names either a package or a Trait");
 export type ChoiceAnswer = z.infer<typeof ChoiceAnswer>;
 
+// What the character carries. Item rules aren't settled yet, so an item is
+// what the player writes: a name, a count, a rough category and notes.
+export const ITEM_CATEGORIES = ["weapon", "armor", "gear", "consumable", "currency", "other"] as const;
+export const BuildItem = z.object({
+  id: z.string().optional(),
+  name: z.string().trim().min(1),
+  qty: z.number().int().min(0).default(1),
+  category: z.enum(ITEM_CATEGORIES).default("gear"),
+  equipped: z.boolean().default(false),
+  notes: z.string().optional(),
+});
+export type BuildItem = z.infer<typeof BuildItem>;
+
 export const Build = z.object({
   name: z.string().optional(),
   kind: Id,
@@ -50,6 +63,7 @@ export const Build = z.object({
   levels: z.array(LevelAllocation),
   traits: z.array(TraitPick).default([]),
   choices: z.array(ChoiceAnswer).default([]),
+  items: z.array(BuildItem).default([]),
 });
 export type Build = z.infer<typeof Build>;
 export type BuildInput = z.input<typeof Build>;

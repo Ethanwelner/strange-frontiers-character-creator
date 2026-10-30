@@ -4,7 +4,7 @@ import { content, contentErrors } from "../app/content.js";
 import { slug, toBuild, type Draft } from "../app/draft.js";
 import { LorePopup, NameField, Notice } from "../app/components/ui.js";
 import { describe } from "../app/check.js";
-import { checkPlay, creatorDraft, load, pointsToPlace, save, startPlay, type Play } from "./play.js";
+import { checkPlay, creatorDraft, load, playBuild, pointsToPlace, save, startPlay, type Play } from "./play.js";
 import { BackgroundPopup } from "./components/BackgroundPopup.js";
 import { Chat } from "./components/Chat.js";
 import { Conditions, Tracker } from "./components/Tracker.js";
@@ -69,10 +69,11 @@ export function ToolsApp() {
     }
   };
 
-  // The build as the Character Creator exports it, so it goes back there too.
+  // The build as the Character Creator exports it, with the items carried
+  // now, so it goes back there too.
   const exportBuild = () => {
     if (!play) return;
-    const json = JSON.stringify(toBuild(play.draft), null, 2);
+    const json = JSON.stringify(playBuild(play), null, 2);
     const url = URL.createObjectURL(new Blob([json + "\n"], { type: "application/json" }));
     const a = document.createElement("a");
     a.href = url;
@@ -157,7 +158,7 @@ export function ToolsApp() {
                   Points the character already has to place come first, so it waits while
                   there are any. */}
               <div className="tools-level">
-                <div className="tools-level-badge" aria-label={`Level ${play.draft.level}`}>
+                <div className="tools-level-badge level-blob" aria-label={`Level ${play.draft.level}`}>
                   <span className="tools-level-label">Level</span>
                   <span className="tools-level-number">{play.draft.level}</span>
                 </div>
