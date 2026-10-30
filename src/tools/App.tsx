@@ -154,7 +154,7 @@ export function ToolsApp() {
                   there are any. */}
               <div className="tools-level">
                 <div className="tools-level-badge" aria-label={`Level ${play.draft.level}`}>
-                  <span className="tools-level-label">Level</span>
+                  <span className="tools-level-label">LVL</span>
                   <span className="tools-level-number">{play.draft.level}</span>
                 </div>
                 {levelDraft && levelDraft.level > play.draft.level ? (

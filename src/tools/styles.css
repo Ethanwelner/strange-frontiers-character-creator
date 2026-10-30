@@ -79,7 +79,7 @@
   }
 
   /* The character's level, in a large circle left of the name and the
-     background line, with a tiny "Level" over the number */
+     background line, with a small "LVL" over the number */
   .tools-level-badge {
     flex-shrink: 0;
     display: flex;
