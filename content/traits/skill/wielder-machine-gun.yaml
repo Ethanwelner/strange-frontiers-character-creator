@@ -1,0 +1,10 @@
+id: wielder-machine-gun
+name: "Wielder: Machine Gun"
+status: draft
+plane: earth
+summary: "Fighting with, and maintaining, heavy automatic weapons fired from the hip, a bipod or a mount."
+tags: [combat, firearms, heavy weapons, military]
+category: skill
+ranked: true
+minStats: { power: 3, endurance: 3, grace: 2 }
+effect: "This character is capable of performing the basic tasks of maintaining a Machine Gun without a skill check. Rank *5 added to skill check rolls involving a Machine Gun."

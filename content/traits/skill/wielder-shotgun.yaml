@@ -1,0 +1,10 @@
+id: wielder-shotgun
+name: "Wielder: Shotgun"
+status: draft
+plane: earth
+summary: "Fighting with, and maintaining, shotguns."
+tags: [combat, firearms]
+category: skill
+ranked: true
+minStats: { grace: 2, power: 3, intuition: 2 }
+effect: "This character is capable of performing the basic tasks of maintaining a Shotgun without a skill check. Rank *5 added to skill check rolls involving a Shotgun."
