@@ -207,7 +207,7 @@ export function ToolsApp() {
           </main>
           {play && result && (
             <aside ref={side} className={`tools-chat-side${tallSide ? " is-tall" : ""}`}>
-              {/* Download character and Switch character, above the assistant, in the same buttons as Damage and Heal */}
+              {/* Download character and Switch character, above the assistant, as gray badges */}
               <div className="hero-bar tools-actions">
                 <button type="button" onClick={exportBuild}>
                   Download character

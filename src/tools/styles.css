@@ -563,6 +563,20 @@
     gap: 48px;
   }
 
+  /* Gray badges, shaped like the rules problems chip: Download character,
+     Switch character with its Yes and Cancel, and Restore all */
+  .tools-actions button,
+  .tools-restore button {
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: normal;
+    white-space: nowrap;
+  }
+
   /* Download character and Switch character, above the assistant at its right edge.
      Switching asks on its own line, with Yes and Cancel under it. */
   .tools-actions {
