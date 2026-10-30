@@ -500,17 +500,13 @@
     }
   }
 
-  /* Add a Condition: the dropdown takes the column's width, beside Add */
+  /* Add a Condition: the dropdown takes the column's width */
   .tools-conditions-side .tools-add {
     flex-wrap: nowrap;
 
     select {
       flex: 1;
       min-width: 0;
-    }
-
-    button {
-      flex: none;
     }
   }
 
