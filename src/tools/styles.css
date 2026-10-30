@@ -271,8 +271,7 @@
   }
 
   /* Boxes on the dark panel */
-  .tools-resource,
-  .tools-chat {
+  .tools-resource {
     background: var(--panel-box);
     border: 1px solid var(--card-border);
     padding: 16px;
@@ -678,30 +677,38 @@
   }
 
   .tools-chat-examples {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    justify-items: start;
     gap: 8px;
   }
 
-  /* Example questions in the body font, sentence case, not the site's
-     all-caps button type */
+  /* Example questions as monospaced green text, trailing off with an
+     ellipsis, like something half typed in a terminal */
   button.tools-chat-example {
-    font-family: var(--body);
+    all: unset;
+    font-family: var(--font-family-monospace, monospace);
     font-size: 13px;
-    font-weight: 400;
-    letter-spacing: 0;
-    line-height: 1.3;
-    text-transform: none;
-    text-align: left;
-    padding: 6px 12px;
-    border: 1px solid var(--card-border);
-    border-radius: 16px;
-    background: rgb(255 255 255 / 6%);
-    color: var(--panel-text);
+    line-height: 1.4;
+    color: var(--frontiers-green);
+    cursor: pointer;
 
-    &:hover:not(:disabled) {
-      background: rgb(255 255 255 / 14%);
-      color: var(--panel-text);
+    &::after {
+      content: "…";
+    }
+
+    &:hover:not(:disabled),
+    &:focus-visible {
+      text-decoration: underline;
+    }
+
+    &:focus-visible {
+      outline: 1px solid var(--portfolio-white);
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      opacity: 0.45;
+      cursor: default;
     }
   }
 
