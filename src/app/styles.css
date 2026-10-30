@@ -631,8 +631,25 @@
       }
     }
 
+    /* Trait cards: a 2px border the color of their header bar (--trait-edge),
+       and a soft shadow under them. A picked card keeps its green ring. */
+    .builder-panel .trait-box,
     .lore-modal .trait-box {
-      border-color: #5e5e5e;
+      --trait-edge: #181818;
+      border: 2px solid var(--trait-edge);
+      box-shadow: 0 4px 10px #00000030;
+
+      &.region-dreft {
+        --trait-edge: var(--frontiers-dreft);
+      }
+
+      &.selected {
+        box-shadow: 0 0 0 1px var(--portfolio-green), 0 4px 10px #00000030;
+      }
+
+      > .trait-name {
+        border-radius: 10px 10px 0 0;
+      }
     }
 
     /* The black header bars go a shade darker than the card under them */
