@@ -94,6 +94,43 @@
     line-height: 1;
   }
 
+  /* The circle, with Level up under it */
+  .tools-level {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  /* Level up (Cancel while leveling): a green badge, shaped like the rules
+     problems chip */
+  .tools-level-up {
+    padding: 0.5rem 1rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--frontiers-green);
+    color: var(--portfolio-black);
+    font-family: inherit;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:hover:not(:disabled),
+    &:focus-visible {
+      background-color: color-mix(in srgb, var(--frontiers-green) 75%, var(--portfolio-white));
+    }
+
+    &:disabled {
+      opacity: 0.45;
+      cursor: default;
+    }
+  }
+
   .tools-level-label {
     font-size: 0.875rem;
     text-transform: uppercase;
@@ -124,10 +161,8 @@
     }
   }
 
-  /* The creator's green, like Build it: Level Up to N! (Cancel while
-     leveling), Traits available, and the stats' Submit once every point is
-     placed (gray until then) */
-  .tools-level-button button,
+  /* The creator's green, like Build it: Traits available, and the stats'
+     Submit once every point is placed (gray until then) */
   .tools-traits-available button,
   .tools-level-actions button:not(:disabled) {
     background: var(--frontiers-green);
@@ -143,7 +178,6 @@
     }
   }
 
-  /* The name on the left, Level Up! on the right */
   .tools-character-head {
     display: flex;
     flex-wrap: wrap;
@@ -366,7 +400,7 @@
   }
 
   /* The sheet's columns on the Tracker: stats, Knowledges, then Items (just
-     Knowledges and Items while Level Up! shows the stats editable above) */
+     Knowledges and Items while Level up shows the stats editable above) */
   .sheet-embedded .sheet-body {
     grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 4fr);
     gap: 40px;

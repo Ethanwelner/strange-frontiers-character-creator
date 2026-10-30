@@ -47,7 +47,7 @@ export function ToolsApp() {
     };
   }, [Boolean(play)]);
   const closeIssues = useCallback(() => setShowingIssues(false), []);
-  // The character one level up, while Level Up! is open on the Tracker
+  // The character one level up, while Level up is open on the Tracker
   const [levelDraft, setLevelDraft] = useState<Draft>();
   const fileInput = useRef<HTMLInputElement>(null);
 
@@ -103,12 +103,32 @@ export function ToolsApp() {
           {/* The character's level in a large circle, then its name, titled like a tab, at the top of the left column */}
           {play && result && (
             <header className="step-head tools-character">
-              <div className="tools-level-badge" aria-label={`Level ${play.draft.level}`}>
-                <span className="tools-level-label">Level</span>
-                <span className="tools-level-number">{play.draft.level}</span>
+              {/* The level in its circle, with Level up under it as a green badge, which
+                  turns into Cancel while the level up is open and throws its points away.
+                  Points the character already has to place come first, so it waits while
+                  there are any. */}
+              <div className="tools-level">
+                <div className="tools-level-badge" aria-label={`Level ${play.draft.level}`}>
+                  <span className="tools-level-label">Level</span>
+                  <span className="tools-level-number">{play.draft.level}</span>
+                </div>
+                {levelDraft && levelDraft.level > play.draft.level ? (
+                  <button type="button" className="tools-level-up" onClick={() => setLevelDraft(undefined)}>
+                    Cancel
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="tools-level-up"
+                    disabled={Boolean(levelDraft) || pointsToPlace(play.draft, content)}
+                    onClick={() => setLevelDraft({ ...play.draft, level: play.draft.level + 1 })}
+                  >
+                    Level up
+                  </button>
+                )}
               </div>
               <div className="tools-character-main">
-                {/* The name, with the creator's pen to edit it, then Level Up! to the right */}
+                {/* The name, with the creator's pen to edit it */}
                 <div className="tools-character-head">
                   <NameField
                     className="sheet-name tools-name"
@@ -116,25 +136,6 @@ export function ToolsApp() {
                     name={play.draft.name}
                     onChange={(name) => setPlay({ ...play, draft: { ...play.draft, name } })}
                   />
-                  <div className="hero-bar tools-level-button">
-                    {/* Level Up to N!, which turns into Cancel while the level up is open and
-                        throws its points away. Points the character already has to place come
-                        first, so it waits while there are any. */}
-                    {levelDraft && levelDraft.level > play.draft.level ? (
-                      <button type="button" className="build-button" onClick={() => setLevelDraft(undefined)}>
-                        Cancel
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        className="build-button"
-                        disabled={Boolean(levelDraft) || pointsToPlace(play.draft, content)}
-                        onClick={() => setLevelDraft({ ...play.draft, level: play.draft.level + 1 })}
-                      >
-                        Level Up to {play.draft.level + 1}!
-                      </button>
-                    )}
-                  </div>
                 </div>
                 {/* "Isek • Dreft • Licensed Mage • Expelled from the Mage Schools", each of the
                     Kind and background a link to its card */}
