@@ -578,7 +578,7 @@
     cursor: default;
 
     &:hover {
-      border-color: var(--trait-edge, var(--card-border));
+      border-color: var(--card-edge, var(--card-border));
     }
   }
 
