@@ -124,16 +124,26 @@
      and the Traits */
   .tools-box {
     position: relative;
-    padding: 1rem;
+    padding: 2rem;
     background-color: var(--panel-box);
     border: 1px solid var(--card-border);
     border-radius: 24px;
+
+    @media (max-width: 767px) {
+      padding: 1.25rem;
+    }
   }
 
+  /* Items take the darker gray of the HP, VP and SP boxes there */
+  .tools-box .tools-item {
+    background: var(--panel);
+  }
+
+  /* 48px between the boxes */
   .tools-tracker {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 48px;
   }
 
   /* The first box, dark like the sheet's boxes */
@@ -173,7 +183,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     gap: 8px 24px;
 
     .tools-name {
@@ -544,6 +554,7 @@
      boxes, without the sheet's outer one, which the left column's box
      stands in for */
   .builder-panel .sheet-embedded .c-sheet {
+    gap: 48px;
     margin-top: 0;
     background: none;
     border: none;

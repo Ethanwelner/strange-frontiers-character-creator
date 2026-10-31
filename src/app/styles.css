@@ -1702,24 +1702,28 @@
   }
 
   /* The site's .level-badge and .stat-badge, at a fixed size. The level is
-     Player Tools' blob (.level-blob), smaller, at the sheet's corner. */
+     a 96px blob (.level-blob) centered on the corner of the creator's sheet
+     and Player Tools' box. */
   .level-badge {
     z-index: 1;
-    width: 72px;
-    height: 72px;
+    top: -48px;
+    left: -48px;
+    width: 96px;
+    height: 96px;
     padding: 0;
     line-height: 1;
   }
 
   .level-badge-label {
-    font-size: 0.625rem;
+    font-size: 0.875rem;
     font-weight: 400;
     text-transform: uppercase;
     letter-spacing: 0.08em;
   }
 
   .level-badge-number {
-    font-size: 2.25rem;
+    font-size: 3rem;
+    font-weight: 600;
   }
 
   .stat-badge {
