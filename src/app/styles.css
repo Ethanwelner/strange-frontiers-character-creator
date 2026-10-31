@@ -1853,10 +1853,9 @@
     color: var(--frontiers-mp);
   }
 
-  /* 48px under the name, as in Player Tools */
   .sheet-resources {
     display: flex;
-    margin: 48px 0 0;
+    margin: 0.5rem 0 0;
     font-size: 1.1rem;
 
     span + span {
