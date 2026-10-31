@@ -1702,12 +1702,13 @@
   }
 
   /* The site's .level-badge and .stat-badge, at a fixed size. The level is
-     a 96px blob (.level-blob) centered on the corner of the creator's sheet
-     and Player Tools' box. */
+     a 96px blob (.level-blob) centered between the corner of the creator's
+     sheet and the corner of the box inside it: half the sheet's 1rem padding
+     in. Player Tools' box centers it the same way. */
   .level-badge {
     z-index: 1;
-    top: -48px;
-    left: -48px;
+    top: calc(0.5rem - 48px);
+    left: calc(0.5rem - 48px);
     width: 96px;
     height: 96px;
     padding: 0;
