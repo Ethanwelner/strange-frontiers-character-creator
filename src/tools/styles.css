@@ -156,10 +156,15 @@
     gap: 48px;
   }
 
-  /* The first box, dark like the sheet's boxes */
+  /* The first box, dark like the sheet's boxes, with the name 48px above
+     the resources, as when it sat above the box */
   .tools-head {
     background-color: var(--panel);
     border-color: rgb(255 255 255 / 12%);
+
+    > .tools-character {
+      margin-bottom: 48px;
+    }
   }
 
   /* The name and its pen, from the creator's Sheet, in the tab title style */
