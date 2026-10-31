@@ -5,7 +5,7 @@ import { slug, toBuild, type Draft } from "../app/draft.js";
 import { Icon, LorePopup, NameField, Notice } from "../app/components/ui.js";
 import { describe } from "../app/check.js";
 import { checkPlay, creatorDraft, load, playBuild, pointsToPlace, save, startPlay, type Play } from "./play.js";
-import { BackgroundPopup } from "./components/BackgroundPopup.js";
+import { BackgroundPopup } from "../app/components/BackgroundPopup.js";
 import { Chat } from "./components/Chat.js";
 import { Tracker } from "./components/Tracker.js";
 

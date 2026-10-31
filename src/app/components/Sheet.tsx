@@ -4,6 +4,7 @@ import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { coreStatsShown } from "../check.js";
 import { content, kindById, packageById, traitById } from "../content.js";
 import type { Draft } from "../draft.js";
+import { BackgroundPopup } from "./BackgroundPopup.js";
 import { askerName, baseStats, Chip, CoreLine, Icon, LorePopup, NameField, SettingIcon, StatLine, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
 
 const SOURCE = /^(kind|origin|profession|past) ([a-z0-9-]+)( choice)?$/;
@@ -111,6 +112,9 @@ export function Sheet({
   const [open, setOpen] = useState<string>();
   const closeModal = useCallback(() => setOpen(undefined), []);
   const opened = held.find((h) => h.trait === open);
+  // The Kind or background package whose card is open, from the line under the name
+  const [showing, setShowing] = useState<string>();
+  const closeShowing = useCallback(() => setShowing(undefined), []);
   // The Kind's features sit at the top, under HP, VP and SP; the packages' at the bottom.
   const features = [
     ...packages.flatMap((p) => (p?.features ?? []).map((f) => ({ ...f, from: p!.name }))),
@@ -157,9 +161,21 @@ export function Sheet({
           <div className="c-sheet-box sheet-head">
             <div className="sheet-head-main">
               <NameField className="sheet-name" heading="h2" name={draft.name} onChange={onName ?? (() => {})} />
-              <p className="lede">
-                Level {draft.level} {kind?.name ?? "—"} · {packages.map((p) => p?.name ?? "—").join(" · ")}
+              {/* "Isek • Dreft • Licensed Mage • Expelled from the Mage Schools", each a link to
+                  its card, as in Player Tools */}
+              <p className="sheet-line">
+                {[draft.kind, draft.origin, draft.profession, draft.past].map((id, n, ids) =>
+                  id ? (
+                    <span key={n}>
+                      {ids.slice(0, n).some(Boolean) && " • "}
+                      <button type="button" className="link" onClick={() => setShowing(id)}>
+                        {(n === 0 ? kind?.name : packages[n - 1]?.name) ?? id}
+                      </button>
+                    </span>
+                  ) : null,
+                )}
               </p>
+              {showing && <BackgroundPopup id={showing} onClose={closeShowing} />}
               <p className="sheet-resources">
                 {resources.map((r) => (
                   <span key={r}>

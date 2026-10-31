@@ -1689,12 +1689,18 @@
 
   /* Sheet: the site's sample character sheet (.c-sheet, .c-sheet-box) */
 
+  /* 2rem around the boxes, like Player Tools' box (1.25rem on phones) */
   .c-sheet {
     position: relative;
     display: flex;
     flex-direction: column;
     gap: 24px;
     margin-top: 2.5rem;
+    padding: 2rem;
+
+    @media (max-width: 767px) {
+      padding: 1.25rem;
+    }
   }
 
   .c-sheet-box > .subhead:first-child {
@@ -1703,12 +1709,12 @@
 
   /* The site's .level-badge and .stat-badge, at a fixed size. The level is
      a 96px blob (.level-blob) centered between the corner of the creator's
-     sheet and the corner of the box inside it: half the sheet's 1rem padding
-     in. Player Tools' box centers it the same way. */
+     sheet (or Player Tools' box) and the corner of the box inside it: half
+     their 2rem padding in. */
   .level-badge {
     z-index: 1;
-    top: calc(0.5rem - 48px);
-    left: calc(0.5rem - 48px);
+    top: calc(1rem - 48px);
+    left: calc(1rem - 48px);
     width: 96px;
     height: 96px;
     padding: 0;
@@ -1741,10 +1747,12 @@
     align-items: flex-start;
     flex-wrap: wrap;
     gap: 0.75rem 2rem;
+  }
 
-    .lede {
-      margin-bottom: 0;
-    }
+  /* The Kind and background under the name, each a link to its card, 48px
+     above HP | VP | SP, as in Player Tools */
+  .sheet-line {
+    margin: 0 0 8px;
   }
 
   .sheet-head-main {
@@ -1853,7 +1861,7 @@
 
   .sheet-resources {
     display: flex;
-    margin: 0.5rem 0 0;
+    margin: 48px 0 0;
     font-size: 1.1rem;
 
     span + span {

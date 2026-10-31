@@ -134,16 +134,6 @@
     }
   }
 
-  /* The level's blob, centered between the box's corner and the first inner
-     box's corner: half the box's 2rem padding in. Phones keep the creator's
-     smaller blob. */
-  @media (min-width: 992px) {
-    .tools-box > .level-badge {
-      top: calc(1rem - 48px);
-      left: calc(1rem - 48px);
-    }
-  }
-
   /* Items take the darker gray of the HP, VP and SP boxes there */
   .tools-box .tools-item {
     background: var(--panel);
