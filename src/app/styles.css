@@ -1956,9 +1956,15 @@
       margin-top: 0;
     }
 
+    /* The count and category stretch to the Add button's height, like the
+       HP boxes' fields, and the name on its own line matches them (2.35rem
+       is the button's height) */
     .tools-add {
+      align-items: stretch;
+
       input[type="text"] {
         flex: 1 1 100%;
+        min-height: 2.35rem;
       }
 
       .tools-qty,
