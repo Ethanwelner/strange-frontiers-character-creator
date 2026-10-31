@@ -631,23 +631,23 @@
       }
     }
 
-    /* Trait cards: a 2px border the color of their header bar (--trait-edge),
-       and a soft shadow under them. A picked card keeps its green ring. */
-    .builder-panel .trait-box,
-    .lore-modal .trait-box {
-      --trait-edge: #181818;
-      border: 2px solid var(--trait-edge);
+    /* Trait cards and the headed cards (Kind, package, choice): a 2px border
+       the color of their header bar (--card-edge), and a soft shadow under
+       them. A picked card keeps its green ring. */
+    :is(.builder-panel, .lore-modal) :is(.trait-box, .headed) {
+      --card-edge: #181818;
+      border: 2px solid var(--card-edge);
       box-shadow: 0 4px 10px #00000030;
 
       &.region-dreft {
-        --trait-edge: var(--frontiers-dreft);
+        --card-edge: var(--frontiers-dreft);
       }
 
       &.selected {
         box-shadow: 0 0 0 1px var(--portfolio-green), 0 4px 10px #00000030;
       }
 
-      > .trait-name {
+      > :is(.trait-name, .card-head) {
         border-radius: 10px 10px 0 0;
       }
     }
