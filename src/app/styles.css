@@ -1918,12 +1918,12 @@
     width: 3.5em;
   }
 
-  /* On screen, the fields in the HP, VP and SP boxes, the Items and the
-     Conditions go dark: the site's black with light text, no border, and
-     dark dropdown lists. Focus shows as a light ring inside. Dropdowns draw
-     their own chevron, 12px in from the right. */
+  /* On screen, the fields across the creator and Player Tools go dark: the
+     site's black with light text, no border, and dark dropdown lists. Focus
+     shows as a light ring inside. Dropdowns draw their own chevron, 12px in
+     from the right. */
   @media screen {
-    .builder-panel :is(.tools-resource, .tools-items, .tools-conditions-side) :is(input, select) {
+    .builder-panel :is(input:not([type="checkbox"], [type="radio"], [type="range"], [type="file"]), select) {
       color-scheme: dark;
       background-color: var(--portfolio-black);
       color: var(--panel-text);
@@ -1939,7 +1939,12 @@
       }
     }
 
-    .builder-panel :is(.tools-resource, .tools-items, .tools-conditions-side) select {
+    /* On a black card (Choices), a field takes the panel's gray so it shows */
+    .builder-panel :is(.card, .choice, .level-card) :is(input, select) {
+      background-color: var(--panel);
+    }
+
+    .builder-panel select {
       appearance: none;
       padding-right: 2.25rem;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23e8e8e8' stroke-width='1.5'/%3E%3C/svg%3E");
