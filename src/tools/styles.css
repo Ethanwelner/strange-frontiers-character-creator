@@ -67,31 +67,13 @@
     padding-bottom: var(--sf-creator-top, 24px);
   }
 
-  /* The character's name, level and background at the top of the left
-     column, the tools under them; the assistant has the right column from
-     the top, like the creator's character box. */
+  /* The character's name and background at the top of the first box, the
+     resources under them; the assistant has the right column from the top,
+     like the creator's character box. */
   .tools-character {
     display: flex;
     align-items: center;
     gap: 24px;
-  }
-
-  /* The character's level, in a large blob (.level-blob, the creator's
-     styles) left of the name and the background line */
-  .tools-level-badge {
-    position: relative;
-    flex-shrink: 0;
-    width: 96px;
-    height: 96px;
-  }
-
-  /* The circle, with Level up under it */
-  .tools-level {
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
   }
 
   /* Level up (Cancel while leveling): a green badge, shaped like the rules
@@ -122,17 +104,6 @@
     }
   }
 
-  .tools-level-label {
-    font-size: 0.875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-
-  .tools-level-number {
-    font-size: 3rem;
-    font-weight: 600;
-  }
-
   .tools-character-main {
     flex: 1;
     min-width: 0;
@@ -146,22 +117,29 @@
     min-width: 0;
   }
 
-  /* With a character in, it sits in a box like the creator's sheet: the
-     sheet's lighter gray, its border and round corners */
+  /* With a character in, it's laid out like the creator's sheet: the sheet's
+     lighter gray, its border and round corners, with the level's blob
+     (.level-badge) over the top left corner and the zones in darker boxes:
+     the name over the resources, the stats, Knowledges and Items columns,
+     and the Traits */
   .tools-box {
-    padding: 2rem;
+    position: relative;
+    padding: 1rem;
     background-color: var(--panel-box);
     border: 1px solid var(--card-border);
     border-radius: 24px;
-
-    @media (max-width: 767px) {
-      padding: 1.25rem;
-    }
   }
 
-  /* Items take the darker gray of the HP, VP and SP boxes there */
-  .tools-box .tools-item {
-    background: var(--panel);
+  .tools-tracker {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  /* The first box, dark like the sheet's boxes */
+  .tools-head {
+    background-color: var(--panel);
+    border-color: rgb(255 255 255 / 12%);
   }
 
   /* The name and its pen, from the creator's Sheet, in the tab title style */
@@ -190,12 +168,18 @@
     }
   }
 
+  /* The name, with Level up at the right end of its line */
   .tools-character-head {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     gap: 8px 24px;
+
+    .tools-name {
+      flex: 1;
+      min-width: 0;
+    }
   }
 
   .tools-line {
@@ -388,9 +372,8 @@
     }
   }
 
-  /* 48px between the resources (down to Restore all) and the sheet */
   .tools-restore {
-    margin: 0 0 48px;
+    margin: 0;
   }
 
   .tools-tracker > .sheet-embedded {
@@ -557,9 +540,11 @@
     }
   }
 
-  /* The sheet under the point cards: its stats, Knowledges and Traits sit
-     right on the panel, without the sheet's boxes around them */
-  .builder-panel .sheet-embedded :is(.c-sheet, .c-sheet > .c-sheet-box) {
+  /* The sheet under the first box: its columns and Traits keep their own
+     boxes, without the sheet's outer one, which the left column's box
+     stands in for */
+  .builder-panel .sheet-embedded .c-sheet {
+    margin-top: 0;
     background: none;
     border: none;
     border-radius: 0;
@@ -579,11 +564,6 @@
   /* The character's Traits, at least 360px wide each */
   .sheet-embedded .sheet-traits {
     grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr));
-  }
-
-  /* 48px between the stats, Knowledges and Items columns and the Traits */
-  .sheet-embedded .c-sheet {
-    gap: 48px;
   }
 
   /* Gray badges, shaped like the rules problems chip: Download character,

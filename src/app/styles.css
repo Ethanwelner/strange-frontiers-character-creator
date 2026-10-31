@@ -2411,8 +2411,8 @@
   }
 }
 
-/* The character's level as a blob: Player Tools' level (.tools-level-badge)
-   and the sheet's corner (.level-badge). A tiny "Level" over the number, in
+/* The character's level as a blob at the corner of the creator's sheet and
+   Player Tools' box (.level-badge). A tiny "Level" over the number, in
    the panel's light text. The blob, in the site's black behind them, slowly
    morphs between two lopsided shapes while it turns, after
    codepen.io/myjessijess/pen/MWWgMwL, and its purple glow slowly pulses.
