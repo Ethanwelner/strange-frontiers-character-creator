@@ -4,6 +4,7 @@ import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { coreStatsShown } from "../check.js";
 import { content, kindById, packageById, traitById } from "../content.js";
 import type { Draft } from "../draft.js";
+import { BackgroundPopup } from "./BackgroundPopup.js";
 import { askerName, baseStats, Chip, CoreLine, Icon, LorePopup, NameField, SettingIcon, StatLine, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
 
 const SOURCE = /^(kind|origin|profession|past) ([a-z0-9-]+)( choice)?$/;
@@ -111,15 +112,18 @@ export function Sheet({
   const [open, setOpen] = useState<string>();
   const closeModal = useCallback(() => setOpen(undefined), []);
   const opened = held.find((h) => h.trait === open);
+  // The Kind or background package whose card is open, from the list beside the name
+  const [showing, setShowing] = useState<string>();
+  const closeShowing = useCallback(() => setShowing(undefined), []);
   // The Kind's features sit at the top, under HP, VP and SP; the packages' at the bottom.
   const features = [
     ...packages.flatMap((p) => (p?.features ?? []).map((f) => ({ ...f, from: p!.name }))),
   ];
-  const background: [string, string | undefined][] = [
-    ["Kind", kind?.name],
-    ["Origin", packages[0]?.name],
-    ["Profession", packages[1]?.name],
-    ["Past", packages[2]?.name],
+  const background: [string, string | undefined, string | undefined][] = [
+    ["Kind", draft.kind, kind?.name],
+    ["Origin", draft.origin, packages[0]?.name],
+    ["Profession", draft.profession, packages[1]?.name],
+    ["Past", draft.past, packages[2]?.name],
   ];
 
   return (
@@ -157,9 +161,6 @@ export function Sheet({
           <div className="c-sheet-box sheet-head">
             <div className="sheet-head-main">
               <NameField className="sheet-name" heading="h2" name={draft.name} onChange={onName ?? (() => {})} />
-              <p className="lede">
-                Level {draft.level} {kind?.name ?? "—"} · {packages.map((p) => p?.name ?? "—").join(" · ")}
-              </p>
               <p className="sheet-resources">
                 {resources.map((r) => (
                   <span key={r}>
@@ -177,15 +178,24 @@ export function Sheet({
                 </ul>
               )}
             </div>
-            {/* Kind, Origin, Profession and Past, beside the name */}
+            {/* Kind, Origin, Profession and Past, beside the name, each a link to its card */}
             <ul className="call-response sheet-background">
-              {background.map(([label, value]) => (
+              {background.map(([label, id, name]) => (
                 <li key={label}>
                   <span>{label}</span>
-                  <strong>{value ?? "—"}</strong>
+                  <strong>
+                    {id ? (
+                      <button type="button" className="link" onClick={() => setShowing(id)}>
+                        {name ?? id}
+                      </button>
+                    ) : (
+                      "—"
+                    )}
+                  </strong>
                 </li>
               ))}
             </ul>
+            {showing && <BackgroundPopup id={showing} onClose={closeShowing} />}
           </div>
         )}
 

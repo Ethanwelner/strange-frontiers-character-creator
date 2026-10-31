@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, type ReactNode } from "react";
 import type { BuildResult } from "../../engine/validate.js";
 import { content, traitById } from "../../app/content.js";
 import type { Draft } from "../../app/draft.js";
@@ -24,12 +24,12 @@ import {
 
 const NAMES: Record<ResourceKey, string> = { hp: "Hit Points", vp: "Vibe Points", sp: "Savvy Points", mp: "Mana Points" };
 
-// HP, VP, SP and MP, each with its current value against the max the engine
-// works out, then the rest of the character sheet. The Conditions sit in the
-// right column, under the assistant.
+// The character's name (`head`, from the app) over HP, VP, SP and MP, each
+// with its current value against the max the engine works out, in the first
+// of the sheet's boxes, then the rest of the character sheet in its own boxes.
 //
 // The sheet's stats are the creator's Stats step, which gains its + and −
-// whenever there are points to add. Level up (under the level circle) hands this a
+// whenever there are points to add. Level up (beside the name) hands this a
 // `levelDraft`, the character one level up; adding points to a character
 // that has some unplaced starts one at its own level. Submit keeps it, and
 // the Level up badge (Cancel while leveling) throws a level up away. Traits available, under the
@@ -41,12 +41,14 @@ export function Tracker({
   onChange,
   levelDraft,
   onLevelDraft,
+  head,
 }: {
   play: Play;
   result: BuildResult;
   onChange: (p: Play) => void;
   levelDraft?: Draft;
   onLevelDraft: (d?: Draft) => void;
+  head?: ReactNode;
 }) {
   // MP shows once the character has any.
   const shown = RESOURCES.filter((r) => r !== "mp" || maxOf(result, r) > 0);
@@ -92,63 +94,65 @@ export function Tracker({
 
   return (
     <section className="tools-tracker">
-      {/* The character's name above stands in for this tab's title. */}
-
       {!result.summary && <div className="notice bad">The engine couldn't read this character, so its maximums aren't known. Check the sheet below.</div>}
 
-      <div className="tools-resources">
-        {shown.map((r) => {
-          const cur = currentOf(play, result, r);
-          const max = maxOf(result, r);
-          const pct = max > 0 ? Math.max(0, Math.min(100, (cur / max) * 100)) : 0;
-          return (
-            <div key={r} className="tools-resource">
-              {/* HP, then −, the value and +, on one line; the full name shows on hover */}
-              <div className="tools-resource-value">
-                <strong className={`tools-resource-name resource-${r}`} title={NAMES[r]}>
-                  {r.toUpperCase()}
-                </strong>
-                <button type="button" onClick={() => set(r, cur - 1)} aria-label={`1 less ${r.toUpperCase()}`}>
-                  <Sign is="minus" />
-                </button>
-                <span className="num" aria-live="polite">
-                  {cur}
-                  <span className="muted"> / {max}</span>
-                </span>
-                <button type="button" onClick={() => set(r, cur + 1)} disabled={cur >= max} aria-label={`1 more ${r.toUpperCase()}`}>
-                  <Sign is="plus" />
-                </button>
+      {/* The character's name, standing in for this tab's title, over the resources, in a box like the sheet's head */}
+      <div className="c-sheet-box tools-head">
+        {head}
+        <div className="tools-resources">
+          {shown.map((r) => {
+            const cur = currentOf(play, result, r);
+            const max = maxOf(result, r);
+            const pct = max > 0 ? Math.max(0, Math.min(100, (cur / max) * 100)) : 0;
+            return (
+              <div key={r} className="tools-resource">
+                {/* HP, then −, the value and +, on one line; the full name shows on hover */}
+                <div className="tools-resource-value">
+                  <strong className={`tools-resource-name resource-${r}`} title={NAMES[r]}>
+                    {r.toUpperCase()}
+                  </strong>
+                  <button type="button" onClick={() => set(r, cur - 1)} aria-label={`1 less ${r.toUpperCase()}`}>
+                    <Sign is="minus" />
+                  </button>
+                  <span className="num" aria-live="polite">
+                    {cur}
+                    <span className="muted"> / {max}</span>
+                  </span>
+                  <button type="button" onClick={() => set(r, cur + 1)} disabled={cur >= max} aria-label={`1 more ${r.toUpperCase()}`}>
+                    <Sign is="plus" />
+                  </button>
+                </div>
+                <div className={`tools-meter tools-meter-${r}`} aria-hidden="true">
+                  <span style={{ width: `${pct}%` }} />
+                </div>
+                <div className="tools-resource-apply">
+                  <input
+                    type="number"
+                    min={1}
+                    inputMode="numeric"
+                    placeholder="#"
+                    aria-label={`Amount of ${r.toUpperCase()}`}
+                    value={amounts[r] ?? ""}
+                    onChange={(e) => setAmounts({ ...amounts, [r]: e.target.value })}
+                    onKeyDown={(e) => e.key === "Enter" && apply(r, -1)}
+                  />
+                  <button type="button" onClick={() => apply(r, -1)}>
+                    {r === "hp" ? "Damage" : "Spend"}
+                  </button>
+                  <button type="button" onClick={() => apply(r, 1)}>
+                    {r === "hp" ? "Heal" : "Gain"}
+                  </button>
+                </div>
               </div>
-              <div className={`tools-meter tools-meter-${r}`} aria-hidden="true">
-                <span style={{ width: `${pct}%` }} />
-              </div>
-              <div className="tools-resource-apply">
-                <input
-                  type="number"
-                  min={1}
-                  inputMode="numeric"
-                  placeholder="#"
-                  aria-label={`Amount of ${r.toUpperCase()}`}
-                  value={amounts[r] ?? ""}
-                  onChange={(e) => setAmounts({ ...amounts, [r]: e.target.value })}
-                  onKeyDown={(e) => e.key === "Enter" && apply(r, -1)}
-                />
-                <button type="button" onClick={() => apply(r, -1)}>
-                  {r === "hp" ? "Damage" : "Spend"}
-                </button>
-                <button type="button" onClick={() => apply(r, 1)}>
-                  {r === "hp" ? "Heal" : "Gain"}
-                </button>
-              </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
+        <p className="tools-restore">
+          <button type="button" onClick={() => onChange({ ...play, current: {} })} disabled={full}>
+            Restore all
+          </button>
+        </p>
       </div>
-      <p className="tools-restore">
-        <button type="button" onClick={() => onChange({ ...play, current: {} })} disabled={full}>
-          Restore all
-        </button>
-      </p>
 
       {/* The rest of the character sheet: stats, Knowledges, Conditions and Items, and Traits */}
       <Sheet

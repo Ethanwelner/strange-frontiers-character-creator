@@ -1,10 +1,11 @@
-import { PackageGrants } from "../../app/components/BackgroundStep.js";
-import { Chip, LorePopup, regionClass, SettingIcon, StatRanges, traitName } from "../../app/components/ui.js";
-import { kindById, packageById } from "../../app/content.js";
+import { PackageGrants } from "./BackgroundStep.js";
+import { Chip, LorePopup, regionClass, SettingIcon, StatRanges, traitName } from "./ui.js";
+import { kindById, packageById } from "../content.js";
 
 // A Kind's or a background package's card, drawn like its card in the
 // Character Creator, in the site's lore popup. Opened from the background
-// line under the character's name.
+// line under the character's name in Player Tools, and from the list beside
+// it on the Sheet.
 export function BackgroundPopup({ id, onClose }: { id: string; onClose: () => void }) {
   const kind = kindById.get(id);
   const pkg = kind ? undefined : packageById.get(id);

@@ -1689,12 +1689,18 @@
 
   /* Sheet: the site's sample character sheet (.c-sheet, .c-sheet-box) */
 
+  /* 2rem around the boxes, like Player Tools' box (1.25rem on phones) */
   .c-sheet {
     position: relative;
     display: flex;
     flex-direction: column;
     gap: 24px;
     margin-top: 2.5rem;
+    padding: 2rem;
+
+    @media (max-width: 767px) {
+      padding: 1.25rem;
+    }
   }
 
   .c-sheet-box > .subhead:first-child {
@@ -1702,24 +1708,29 @@
   }
 
   /* The site's .level-badge and .stat-badge, at a fixed size. The level is
-     Player Tools' blob (.level-blob), smaller, at the sheet's corner. */
+     a 96px blob (.level-blob) centered between the corner of the creator's
+     sheet (or Player Tools' box) and the corner of the box inside it: half
+     their 2rem padding in. */
   .level-badge {
     z-index: 1;
-    width: 72px;
-    height: 72px;
+    top: calc(1rem - 48px);
+    left: calc(1rem - 48px);
+    width: 96px;
+    height: 96px;
     padding: 0;
     line-height: 1;
   }
 
   .level-badge-label {
-    font-size: 0.625rem;
+    font-size: 0.875rem;
     font-weight: 400;
     text-transform: uppercase;
     letter-spacing: 0.08em;
   }
 
   .level-badge-number {
-    font-size: 2.25rem;
+    font-size: 3rem;
+    font-weight: 600;
   }
 
   .stat-badge {
@@ -1736,10 +1747,6 @@
     align-items: flex-start;
     flex-wrap: wrap;
     gap: 0.75rem 2rem;
-
-    .lede {
-      margin-bottom: 0;
-    }
   }
 
   .sheet-head-main {
@@ -2411,8 +2418,8 @@
   }
 }
 
-/* The character's level as a blob: Player Tools' level (.tools-level-badge)
-   and the sheet's corner (.level-badge). A tiny "Level" over the number, in
+/* The character's level as a blob at the corner of the creator's sheet and
+   Player Tools' box (.level-badge). A tiny "Level" over the number, in
    the panel's light text. The blob, in the site's black behind them, slowly
    morphs between two lopsided shapes while it turns, after
    codepen.io/myjessijess/pen/MWWgMwL, and its purple glow slowly pulses.
