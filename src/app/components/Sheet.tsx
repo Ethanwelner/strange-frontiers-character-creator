@@ -112,18 +112,18 @@ export function Sheet({
   const [open, setOpen] = useState<string>();
   const closeModal = useCallback(() => setOpen(undefined), []);
   const opened = held.find((h) => h.trait === open);
-  // The Kind or background package whose card is open, from the line under the name
+  // The Kind or background package whose card is open, from the list beside the name
   const [showing, setShowing] = useState<string>();
   const closeShowing = useCallback(() => setShowing(undefined), []);
   // The Kind's features sit at the top, under HP, VP and SP; the packages' at the bottom.
   const features = [
     ...packages.flatMap((p) => (p?.features ?? []).map((f) => ({ ...f, from: p!.name }))),
   ];
-  const background: [string, string | undefined][] = [
-    ["Kind", kind?.name],
-    ["Origin", packages[0]?.name],
-    ["Profession", packages[1]?.name],
-    ["Past", packages[2]?.name],
+  const background: [string, string | undefined, string | undefined][] = [
+    ["Kind", draft.kind, kind?.name],
+    ["Origin", draft.origin, packages[0]?.name],
+    ["Profession", draft.profession, packages[1]?.name],
+    ["Past", draft.past, packages[2]?.name],
   ];
 
   return (
@@ -161,21 +161,6 @@ export function Sheet({
           <div className="c-sheet-box sheet-head">
             <div className="sheet-head-main">
               <NameField className="sheet-name" heading="h2" name={draft.name} onChange={onName ?? (() => {})} />
-              {/* "Isek • Dreft • Licensed Mage • Expelled from the Mage Schools", each a link to
-                  its card, as in Player Tools */}
-              <p className="sheet-line">
-                {[draft.kind, draft.origin, draft.profession, draft.past].map((id, n, ids) =>
-                  id ? (
-                    <span key={n}>
-                      {ids.slice(0, n).some(Boolean) && " • "}
-                      <button type="button" className="link" onClick={() => setShowing(id)}>
-                        {(n === 0 ? kind?.name : packages[n - 1]?.name) ?? id}
-                      </button>
-                    </span>
-                  ) : null,
-                )}
-              </p>
-              {showing && <BackgroundPopup id={showing} onClose={closeShowing} />}
               <p className="sheet-resources">
                 {resources.map((r) => (
                   <span key={r}>
@@ -193,15 +178,24 @@ export function Sheet({
                 </ul>
               )}
             </div>
-            {/* Kind, Origin, Profession and Past, beside the name */}
+            {/* Kind, Origin, Profession and Past, beside the name, each a link to its card */}
             <ul className="call-response sheet-background">
-              {background.map(([label, value]) => (
+              {background.map(([label, id, name]) => (
                 <li key={label}>
                   <span>{label}</span>
-                  <strong>{value ?? "—"}</strong>
+                  <strong>
+                    {id ? (
+                      <button type="button" className="link" onClick={() => setShowing(id)}>
+                        {name ?? id}
+                      </button>
+                    ) : (
+                      "—"
+                    )}
+                  </strong>
                 </li>
               ))}
             </ul>
+            {showing && <BackgroundPopup id={showing} onClose={closeShowing} />}
           </div>
         )}
 

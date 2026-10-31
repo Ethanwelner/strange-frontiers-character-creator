@@ -1749,12 +1749,6 @@
     gap: 0.75rem 2rem;
   }
 
-  /* The Kind and background under the name, each a link to its card, 48px
-     above HP | VP | SP, as in Player Tools */
-  .sheet-line {
-    margin: 0 0 8px;
-  }
-
   .sheet-head-main {
     flex: 1 1 24rem;
   }
@@ -1859,6 +1853,7 @@
     color: var(--frontiers-mp);
   }
 
+  /* 48px under the name, as in Player Tools */
   .sheet-resources {
     display: flex;
     margin: 48px 0 0;

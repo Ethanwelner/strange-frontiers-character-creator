@@ -4,7 +4,8 @@ import { kindById, packageById } from "../content.js";
 
 // A Kind's or a background package's card, drawn like its card in the
 // Character Creator, in the site's lore popup. Opened from the background
-// line under the character's name, on the Sheet and in Player Tools.
+// line under the character's name in Player Tools, and from the list beside
+// it on the Sheet.
 export function BackgroundPopup({ id, onClose }: { id: string; onClose: () => void }) {
   const kind = kindById.get(id);
   const pkg = kind ? undefined : packageById.get(id);
