@@ -6,7 +6,7 @@ import type { BuildResult } from "../../engine/validate.js";
 import { ask } from "../chat.js";
 import type { Play } from "../play.js";
 
-const EXAMPLES = ["I took 6 slashing damage", "What does my best skill do?", "I picked up 3 ration packs"];
+const EXAMPLES = ["I took 6 slashing damage", "What is my condition?", "I picked up 3 ration packs"];
 
 // The assistant, beside the tools. It answers questions about the character
 // and the rules, and changes the tracker when the player says what happened.
