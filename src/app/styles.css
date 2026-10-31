@@ -2028,6 +2028,12 @@
     }
   }
 
+  /* On the sheet (and Player Tools' sheet), the core stat and its title line
+     sit slightly outside the stats' left edge */
+  .sheet-stats .sheet-group-head {
+    margin-left: -15px;
+  }
+
   .sheet-side .rule {
     margin-top: 0;
   }
