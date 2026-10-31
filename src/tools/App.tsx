@@ -227,6 +227,7 @@ export function ToolsApp() {
                               disabled={Boolean(levelDraft) || pointsToPlace(play.draft, content)}
                               onClick={() => setLevelDraft({ ...play.draft, level: play.draft.level + 1 })}
                             >
+                              <Icon name="plus" />
                               Level up
                             </button>
                           )}
