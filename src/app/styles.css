@@ -1443,6 +1443,29 @@
     }
   }
 
+  /* The sheet's Trait cards: the name at the left of the bar and, at the
+     right, where it came from (Kind, Origin...) and its category (Skill,
+     Language...) as badges */
+  .trait-name-with-chip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+
+    > span:first-child {
+      min-width: 0;
+    }
+  }
+
+  .trait-name-chips {
+    flex: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 4px;
+  }
+
   /* Isekai Traits get the Dreft Kind cards' green bar */
   .trait-box.region-dreft > .trait-name {
     background-color: var(--frontiers-dreft);
@@ -2171,6 +2194,50 @@
 
   .lore-modal-panel > .trait-box {
     margin-top: 36px;
+  }
+
+  /* A card on its own in the popup (.lore-modal-card: a Trait, Knowledge,
+     Kind or background package): the card is the popup's edge, with no
+     panel around it, and the close button floats outside its top right
+     corner. The panel lets it overflow, so a long card scrolls itself. On
+     phones, with no room at the side, the button sits above the card's
+     right edge. */
+  .lore-modal-card {
+    .lore-modal-panel {
+      max-width: 560px;
+      padding: 0;
+      border-radius: 12px;
+      background: none;
+      overflow: visible;
+    }
+
+    /* View only: no pointer, and no hover border like the cards to pick */
+    .lore-modal-panel > :is(.trait-box, .card) {
+      margin: 0;
+      max-height: calc(100dvh - 128px);
+      overflow-y: auto;
+      cursor: default;
+
+      &:hover {
+        border-color: var(--card-edge, var(--card-border));
+      }
+    }
+
+    .lore-modal-close {
+      top: -36px;
+      right: -36px;
+      width: 28px;
+      height: 28px;
+
+      svg {
+        width: 12px;
+        height: 12px;
+      }
+
+      @media (max-width: 767px) {
+        right: 0;
+      }
+    }
   }
 
   .sheet-stat {

@@ -6,7 +6,7 @@ import { Sheet } from "../../app/components/Sheet.js";
 import { StatsStep } from "../../app/components/StatsStep.js";
 import { TraitsStep } from "../../app/components/TraitsStep.js";
 import { Items } from "../../app/components/Items.js";
-import { LorePopup, Sign } from "../../app/components/ui.js";
+import { Chip, Icon, LorePopup, Sign } from "../../app/components/ui.js";
 import {
   addCondition,
   checkPlay,
@@ -60,7 +60,6 @@ export function Tracker({
     set(r, currentOf(play, result, r) + sign * n);
     setAmounts({ ...amounts, [r]: "" });
   };
-  const full = shown.every((r) => currentOf(play, result, r) >= maxOf(result, r));
 
   const [traitDraft, setTraitDraft] = useState<Draft>();
   const closeTraits = useCallback(() => setTraitDraft(undefined), []);
@@ -107,7 +106,8 @@ export function Tracker({
             const pct = max > 0 ? Math.max(0, Math.min(100, (cur / max) * 100)) : 0;
             return (
               <div key={r} className="tools-resource">
-                {/* HP, then −, the value and +, on one line; the full name shows on hover */}
+                {/* HP, then −, the value, + and restore to full, on one line; the full name
+                    shows on hover */}
                 <div className="tools-resource-value">
                   <strong className={`tools-resource-name resource-${r}`} title={NAMES[r]}>
                     {r.toUpperCase()}
@@ -121,6 +121,9 @@ export function Tracker({
                   </span>
                   <button type="button" onClick={() => set(r, cur + 1)} disabled={cur >= max} aria-label={`1 more ${r.toUpperCase()}`}>
                     <Sign is="plus" />
+                  </button>
+                  <button type="button" onClick={() => set(r, max)} disabled={cur >= max} aria-label={`Restore ${r.toUpperCase()} to full`} title="Restore to full">
+                    <Icon name="restore" />
                   </button>
                 </div>
                 <div className={`tools-meter tools-meter-${r}`} aria-hidden="true">
@@ -148,11 +151,6 @@ export function Tracker({
             );
           })}
         </div>
-        <p className="tools-restore">
-          <button type="button" onClick={() => onChange({ ...play, current: {} })} disabled={full}>
-            Restore all
-          </button>
-        </p>
       </div>
 
       {/* The rest of the character sheet: stats, Knowledges, Conditions and Items, and Traits */}
@@ -234,7 +232,14 @@ export function Conditions({ play, result, onChange }: { play: Play; result: Bui
           const t = traitById.get(id);
           return (
             <li key={id} className="trait-box">
-              <div className="trait-name">{t?.name ?? id}</div>
+              {/* Badges at the right of the bar, like the sheet's Trait cards: where it came from, and that it's a Condition */}
+              <div className="trait-name trait-name-with-chip">
+                <span>{t?.name ?? id}</span>
+                <span className="trait-name-chips">
+                  <Chip>HP</Chip>
+                  <Chip>Condition</Chip>
+                </span>
+              </div>
               <p className="muted small">From HP. {t?.temporary}</p>
               {t && <p className="effect">{t.effect}</p>}
             </li>
@@ -246,17 +251,21 @@ export function Conditions({ play, result, onChange }: { play: Play; result: Bui
             onChange({ ...play, conditions: play.conditions.map((x) => (x === c ? { ...x, rank } : x)) });
           return (
             <li key={c.trait} className="trait-box">
-              {/* The name, with an ✕ at the right of its bar that takes the Condition off */}
+              {/* The name, then at the right of its bar a Condition badge and an ✕ that takes
+                  the Condition off */}
               <div className="trait-name tools-condition-head">
                 <span>
                   {t?.name ?? c.trait}
                   {t?.ranked ? ` (${c.rank})` : ""}
                 </span>
-                <button type="button" className="tools-condition-remove" aria-label={`Remove ${t?.name ?? c.trait}`} onClick={() => onChange(removeCondition(play, c.trait))}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 20 20" aria-hidden="true">
-                    <path d="M2 2l16 16M18 2L2 18" fill="none" stroke="currentColor" strokeWidth="2.5" />
-                  </svg>
-                </button>
+                <span className="trait-name-chips">
+                  <Chip>Condition</Chip>
+                  <button type="button" className="tools-condition-remove" aria-label={`Remove ${t?.name ?? c.trait}`} onClick={() => onChange(removeCondition(play, c.trait))}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 20 20" aria-hidden="true">
+                      <path d="M2 2l16 16M18 2L2 18" fill="none" stroke="currentColor" strokeWidth="2.5" />
+                    </svg>
+                  </button>
+                </span>
               </div>
               {t?.ranked && (
                 <div className="stepper tools-rank">

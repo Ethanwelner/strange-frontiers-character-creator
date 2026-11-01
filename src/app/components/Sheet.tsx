@@ -28,17 +28,40 @@ function source(s: string) {
 
 type Held = NonNullable<BuildResult["summary"]>["traits"][number];
 
-// A held Trait, drawn like the site's Traits page cards (.trait-box)
-function TraitCard({ held, places }: { held: Held; places: string[] }) {
+// Where a held Trait came from, as badges: Kind for a Trait the Kind gives,
+// and Origin, Profession or Past for a Background Trait picked from that
+// package's list. A package's own grants (a Farmer's Teamster) get none.
+const PACKAGE_SLOTS = ["origin", "profession", "past"] as const;
+function sourceBadges(held: Held, draft: Draft): string[] {
+  const badges = held.sources.some((s) => SOURCE.exec(s)?.[1] === "kind") ? ["Kind"] : [];
+  if (held.sources.includes("background pick")) {
+    for (const slot of PACKAGE_SLOTS) {
+      if (packageById.get(draft[slot] ?? "")?.backgroundTraits.includes(held.trait)) badges.push(title(slot));
+    }
+  }
+  return badges;
+}
+
+// A held Trait, drawn like the site's Traits page cards (.trait-box), with
+// badges at the right of the name's bar: where it came from (Kind, or the
+// package of a Background Trait pick), then its category
+function TraitCard({ held, places, draft }: { held: Held; places: string[]; draft: Draft }) {
   const t = traitById.get(held.trait);
   return (
     <div className={`trait-box ${traitRegionClass(held.trait)}`}>
-      <div className="trait-name">
-        <SettingIcon plane={t?.plane} />
-        {traitName(held.trait)}
-        {t?.ranked || held.rank > 1 ? ` (${held.rank})` : ""}
+      <div className="trait-name trait-name-with-chip">
+        <span>
+          <SettingIcon plane={t?.plane} />
+          {traitName(held.trait)}
+          {t?.ranked || held.rank > 1 ? ` (${held.rank})` : ""}
+        </span>
+        <span className="trait-name-chips">
+          {sourceBadges(held, draft).map((b) => (
+            <Chip key={b}>{b}</Chip>
+          ))}
+          {t ? <Chip>{title(t.category)}</Chip> : <Chip tone="bad">not in content yet</Chip>}
+        </span>
       </div>
-      <div className="chips">{t ? <Chip>{title(t.category)}</Chip> : <Chip tone="bad">not in content yet</Chip>}</div>
       {t && <p className="effect">{t.effect}</p>}
       {places.length > 0 && (
         <p className="small">
@@ -51,10 +74,10 @@ function TraitCard({ held, places }: { held: Held; places: string[] }) {
 }
 
 // A Knowledge's card, opened from the sheet's list in the site's lore popup.
-function TraitModal({ held, places, onClose }: { held: Held; places: string[]; onClose: () => void }) {
+function TraitModal({ held, places, draft, onClose }: { held: Held; places: string[]; draft: Draft; onClose: () => void }) {
   return (
-    <LorePopup label={traitName(held.trait)} onClose={onClose}>
-      <TraitCard held={held} places={places} />
+    <LorePopup label={traitName(held.trait)} onClose={onClose} className="lore-modal-card">
+      <TraitCard held={held} places={places} draft={draft} />
     </LorePopup>
   );
 }
@@ -306,7 +329,7 @@ export function Sheet({
             <ul className="sheet-traits">
               {others.map((h) => (
                 <li key={h.trait}>
-                  <TraitCard held={h} places={places(h.trait)} />
+                  <TraitCard held={h} places={places(h.trait)} draft={draft} />
                 </li>
               ))}
             </ul>
@@ -341,7 +364,7 @@ export function Sheet({
           )}
         </div>
       </div>
-      {opened && <TraitModal held={opened} places={places(opened.trait)} onClose={closeModal} />}
+      {opened && <TraitModal held={opened} places={places(opened.trait)} draft={draft} onClose={closeModal} />}
     </section>
   );
 }

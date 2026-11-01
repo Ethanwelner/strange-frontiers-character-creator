@@ -234,6 +234,12 @@
     gap: 2px;
   }
 
+  /* The Kind and background links in the sheet's lighter purple, like the
+     Knowledges', which reads better on the dark box */
+  .tools-line button.link {
+    color: var(--frontiers-lore-on-black);
+  }
+
   /* Age and gender's value with a small pen that opens its field in place
      (LooksLine.tsx), under their labels */
   .tools-look-row {
@@ -374,7 +380,12 @@
     align-items: center;
     gap: 8px;
 
-    /* − and +, round */
+    /* −, + and restore, round, with their icons the same size */
+    .icon {
+      width: 0.75em;
+      height: 0.75em;
+    }
+
     button {
       flex: none;
       width: 32px;
@@ -472,10 +483,6 @@
     &:not(:has(.sheet-stats)) {
       grid-template-columns: minmax(0, 3fr) minmax(0, 4fr);
     }
-  }
-
-  .tools-restore {
-    margin: 0;
   }
 
   .tools-tracker > .sheet-embedded {
@@ -728,18 +735,21 @@
     background: none;
     cursor: pointer;
 
-    canvas {
+    /* The die and its numbers' canvas, glowing and floating together */
+    .tools-roller-die {
+      position: relative;
       display: block;
       width: 100%;
       height: 100%;
-      image-rendering: pixelated;
       filter: drop-shadow(0 0 4px color-mix(in srgb, var(--frontiers-green) 70%, transparent));
       transition: filter 200ms;
-      /* Floating: a smooth rise and fall, and on a longer loop a slow turn
-         one way and back. They move translate and rotate separately, so
-         the two loops run on their own clocks. */
+      /* Floating: a smooth rise and fall, a slower drift side to side, and
+         on a longer loop a slow turn one way and back. They move translate,
+         transform and rotate separately, and their lengths don't divide
+         into each other, so the three loops drift in and out of step. */
       animation:
         tools-die-bob 3.2s ease-in-out infinite alternate,
+        tools-die-sway 5.1s ease-in-out infinite alternate,
         tools-die-turn 14s ease-in-out infinite alternate;
 
       @media (prefers-reduced-motion: reduce) {
@@ -747,10 +757,25 @@
       }
     }
 
+    /* The die in chunky pixels; the numbers at full resolution over it
+       (Roller.tsx), so they can move by a screen pixel at a time */
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      image-rendering: pixelated;
+    }
+
+    .tools-roller-numbers {
+      position: absolute;
+      inset: 0;
+      image-rendering: auto;
+    }
+
     &:hover:not(:disabled) {
       background: none;
 
-      canvas {
+      .tools-roller-die {
         filter: drop-shadow(0 0 8px var(--frontiers-green));
       }
     }
@@ -804,9 +829,8 @@
   }
 
   /* Gray badges, shaped like the rules problems chip: Download character,
-     Switch character with its Yes and Cancel, and Restore all */
-  .tools-actions > button,
-  .tools-restore button {
+     Switch character with its Yes and Cancel */
+  .tools-actions > button {
     padding: 0.5rem 1rem;
     border-radius: 999px;
     font-family: inherit;
@@ -850,8 +874,7 @@
   /* The conversation, suggestions and all, then any error and the message
      box, in a darker box with the room the rest of the column leaves */
   .tools-chat-box {
-    /* Its top padding, 44px with the Clear badge (the scroll animations add
-       to it) */
+    /* Its top padding (the scroll animations add to it) */
     --chat-pad-top: 16px;
     flex: 1 1 0;
     min-height: 160px;
@@ -891,8 +914,10 @@
     scrollbar-color: auto;
     scrollbar-width: auto;
 
+    /* A 16px lane with the 6px handle at its right edge: 10px clear of the
+       content, and 5px in from the ends */
     &::-webkit-scrollbar {
-      width: 6px;
+      width: 16px;
     }
 
     &::-webkit-scrollbar-track,
@@ -905,12 +930,16 @@
     }
 
     &::-webkit-scrollbar-thumb {
-      background: rgb(255 255 255 / 25%);
-      border-radius: 999px;
+      background: rgb(255 255 255 / 25%) padding-box;
+      border: 5px solid transparent;
+      border-width: 5px 0 5px 10px;
+      /* Each corner's radius is its border plus 3px, so the visible handle
+         is a 6px pill with round ends whatever the borders are */
+      border-radius: 13px 3px 3px 13px / 8px;
     }
 
     &::-webkit-scrollbar-thumb:hover {
-      background: rgb(255 255 255 / 40%);
+      background: rgb(255 255 255 / 40%) padding-box;
     }
 
     @supports not selector(::-webkit-scrollbar) {
@@ -1083,27 +1112,27 @@
     }
   }
 
-  /* Clear, a gray badge like Download character in the chat box's top right
-     corner, 8px in. It's on the d20's layer (Roller.tsx), placed where the
-     box's top shows, so it stays in view while the box slides under the d20.
-     The conversation starts under it, so neither it nor the conversation's
-     scrollbar runs under the badge. */
+  /* Clear, a round gray button with the restore arrow like the resources',
+     centered on the chat box's top right corner. It's on the d20's layer
+     (Roller.tsx), placed where the box's top shows, so it stays in view while
+     the box slides under the d20, over the conversation and its scrollbar. */
   button.tools-chat-clear {
     position: absolute;
-    top: calc(100% + 8px);
-    right: 8px;
+    top: calc(100% - 16px);
+    right: -16px;
     z-index: 1;
-    padding: 0.35rem 0.75rem;
-    border-radius: 999px;
-    font-family: inherit;
-    font-size: 0.75rem;
-    font-weight: 600;
-    line-height: 1.2;
-    letter-spacing: normal;
-  }
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border-radius: 50%;
 
-  .tools-chat-side:has(.tools-chat-clear) .tools-chat-box {
-    --chat-pad-top: 44px;
+    .icon {
+      width: 0.75em;
+      height: 0.75em;
+    }
   }
 
   @media (max-width: 1199px) {
@@ -1206,7 +1235,7 @@
   }
 }
 
-/* The d20 floating over the chat (.tools-roller-screen canvas): bobbing
+/* The d20 floating over the chat (.tools-roller-die): bobbing
    up and down, and slowly turning one way and back */
 @keyframes tools-die-bob {
   from {
@@ -1214,6 +1243,15 @@
   }
   to {
     translate: 0 -10px;
+  }
+}
+
+@keyframes tools-die-sway {
+  from {
+    transform: translateX(-8px);
+  }
+  to {
+    transform: translateX(8px);
   }
 }
 

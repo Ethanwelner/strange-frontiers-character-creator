@@ -1,25 +1,29 @@
 import { PackageGrants } from "./BackgroundStep.js";
-import { Chip, LorePopup, regionClass, SettingIcon, StatRanges, traitName } from "./ui.js";
+import { Chip, LorePopup, regionClass, SettingIcon, StatRanges, title, traitName } from "./ui.js";
 import { kindById, packageById } from "../content.js";
 
 // A Kind's or a background package's card, drawn like its card in the
 // Character Creator, in the site's lore popup. Opened from the background
 // line under the character's name in Player Tools, and from the list beside
-// it on the Sheet.
+// it on the Sheet. Its header says what it is (Kind, Origin, Profession or
+// Past), like the badges on the Trait cards, then its setting.
 export function BackgroundPopup({ id, onClose }: { id: string; onClose: () => void }) {
   const kind = kindById.get(id);
   const pkg = kind ? undefined : packageById.get(id);
   const entry = kind ?? pkg;
   if (!entry) return null;
   return (
-    <LorePopup label={entry.name} onClose={onClose}>
+    <LorePopup label={entry.name} onClose={onClose} className="lore-modal-card">
       <div className={`card headed tools-background-card ${regionClass(entry.plane)}`}>
         <div className="card-head">
           <h3>
             <SettingIcon plane={entry.plane} />
             {entry.name}
           </h3>
-          <Chip tone="muted">{entry.plane}</Chip>
+          <span className="trait-name-chips">
+            <Chip>{kind ? "Kind" : title(pkg!.type)}</Chip>
+            <Chip tone="muted">{entry.plane}</Chip>
+          </span>
         </div>
         <p>{entry.summary}</p>
         {entry.lore && <p className="muted">{entry.lore}</p>}
