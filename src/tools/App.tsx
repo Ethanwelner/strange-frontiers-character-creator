@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import { endpointCreate } from "../ai/remote.js";
 import { content, contentErrors } from "../app/content.js";
 import { slug, toBuild, type Draft } from "../app/draft.js";
@@ -208,22 +208,24 @@ export function ToolsApp() {
                             </button>
                           )}
                         </div>
-                        {/* Kind, Origin, Profession and Past, each a plain label in the builder's field
-                            label style over a link to its card, side by side */}
+                        {/* Kind, then age and gender, then Origin, Profession and Past: each a plain label
+                            in the builder's field label style over its value, side by side. The Kind and
+                            background link to their cards; age and gender have pens to edit them. */}
                         <p className="tools-line">
-                          {[play.draft.kind, play.draft.origin, play.draft.profession, play.draft.past].map((id, n) =>
-                            id ? (
-                              <span key={n} className="tools-line-item">
-                                <span className="field-label">{["Kind", "Origin", "Profession", "Past"][n]}</span>
-                                <button type="button" className="link" onClick={() => setShowing(id)}>
-                                  {(n === 0 ? content.kinds.find((k) => k.id === id)?.name : content.packages.find((p) => p.id === id)?.name) ?? id}
-                                </button>
-                              </span>
-                            ) : null,
-                          )}
+                          {[play.draft.kind, play.draft.origin, play.draft.profession, play.draft.past].map((id, n) => (
+                            <Fragment key={n}>
+                              {id && (
+                                <span className="tools-line-item">
+                                  <span className="field-label">{["Kind", "Origin", "Profession", "Past"][n]}</span>
+                                  <button type="button" className="link" onClick={() => setShowing(id)}>
+                                    {(n === 0 ? content.kinds.find((k) => k.id === id)?.name : content.packages.find((p) => p.id === id)?.name) ?? id}
+                                  </button>
+                                </span>
+                              )}
+                              {n === 0 && <LooksLine looks={play.draft} onChange={(looks) => setPlay({ ...play, draft: { ...play.draft, ...looks } })} />}
+                            </Fragment>
+                          ))}
                         </p>
-                        {/* Age and gender, as the creator's sheet shows them, each with a pen to edit it */}
-                        <LooksLine looks={play.draft} onChange={(looks) => setPlay({ ...play, draft: { ...play.draft, ...looks } })} />
                         {showing && <BackgroundPopup id={showing} onClose={closePopup} />}
                         {showingIssues && !result.ok && (
                           <LorePopup label="Rules problems" onClose={closeIssues} className="tools-issues-popup">

@@ -208,14 +208,9 @@
     gap: 2px;
   }
 
-  /* Age and gender, under the Kind and background line, each with a small
-     pen that opens its field in place (LooksLine.tsx) */
-  .tools-looks {
-    align-items: center;
-    margin: 0 0 8px;
-  }
-
-  .tools-look {
+  /* Age and gender's value with a small pen that opens its field in place
+     (LooksLine.tsx), under their labels */
+  .tools-look-row {
     display: inline-flex;
     align-items: center;
     gap: 4px;
@@ -232,8 +227,8 @@
   }
 
   button.tools-look-edit {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
 
     .pen-icon {
       width: 13px;
