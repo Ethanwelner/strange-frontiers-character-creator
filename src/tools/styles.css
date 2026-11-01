@@ -541,15 +541,18 @@
      scrolls on its own: the conversation takes the column's leftover
      height and scrolls inside.
 
-     The column reaches from its top down to 16px above the bottom of the
-     window, all in CSS: two scroll-driven animations follow the tools body
-     (the column's top and bottom are the body's) through the window, inset
-     16px top and bottom. While the body's top rises from the bottom of the
-     window to the top, the column grows from nothing to the window's height,
-     so it always ends at the bottom of the window; while the body's bottom
-     does the same at the end of the page, the column shrinks so it stays
-     inside the body. Browsers without scroll-driven animations get the
-     window's height. */
+     The column is always the window's height less 16px above and below, so
+     nothing in it is laid out again as the page scrolls. Before it sticks,
+     its bottom is below the window, so the conversation, any error and the
+     message box slide up by that much, ending 16px above the bottom of the
+     window, and run under the d20 and the Assistant title, which cover them
+     in the panel's color. At the end of the page the panel pushes the
+     column up, so the d20 and the title slide down by that much instead.
+     Only transforms move, on two scroll-driven animations that follow the
+     tools body (the column's top and bottom are the body's) through the
+     window, inset 16px top and bottom, so the browser moves them in step
+     with the scroll. Browsers without scroll-driven animations just get the
+     column. */
   .tools-body {
     view-timeline: --tools-body block;
     view-timeline-inset: 16px;
@@ -565,17 +568,36 @@
     flex-direction: column;
     gap: 24px;
     height: calc(100dvh - 32px);
+    /* What slides past the column's top or bottom is hidden */
+    overflow-y: clip;
+  }
 
-    @supports (animation-timeline: view()) {
-      animation:
-        tools-side-grow linear both,
-        tools-side-shrink linear both;
-      animation-timeline: --tools-body, --tools-body;
-      /* Grow while the body's top crosses the window, shrink while its
-         bottom does */
-      animation-range:
-        entry-crossing 0% exit-crossing 0%,
-        entry-crossing 100% exit-crossing 100%;
+  /* The d20 and the title stay over the conversation, covering the gaps
+     under them too */
+  .tools-roller,
+  .tools-chat-head {
+    position: relative;
+    z-index: 1;
+    background: var(--panel);
+    box-shadow: 0 24px 0 var(--panel);
+  }
+
+  @supports (animation-timeline: view()) {
+    /* Up while the body's top crosses the window */
+    .tools-chat-log,
+    .tools-chat > .notice,
+    .tools-chat-form {
+      animation: tools-side-lift linear both;
+      animation-timeline: --tools-body;
+      animation-range: entry-crossing 0% exit-crossing 0%;
+    }
+
+    /* Down while its bottom does */
+    .tools-roller,
+    .tools-chat-head {
+      animation: tools-side-drop linear both;
+      animation-timeline: --tools-body;
+      animation-range: entry-crossing 100% exit-crossing 100%;
     }
   }
 
@@ -616,9 +638,10 @@
       border-color: var(--frontiers-green);
     }
 
+    /* Inside, since the column clips above it */
     &:focus-visible {
       outline: 2px solid var(--frontiers-green);
-      outline-offset: 2px;
+      outline-offset: -4px;
     }
 
     &:disabled {
@@ -750,6 +773,12 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+
+    /* Messages settle at the bottom, by the message box, so they're the
+       part in view while the d20 covers the top */
+    > :first-child {
+      margin-top: auto;
+    }
   }
 
   /* Before the first message: what to ask, then the examples */
@@ -884,7 +913,7 @@
     .tools-chat-side {
       position: static;
       height: auto;
-      animation: none;
+      overflow-y: visible;
     }
 
     .tools-chat {
@@ -894,6 +923,14 @@
     .tools-chat-log {
       flex: none;
       height: 360px;
+    }
+
+    .tools-chat-log,
+    .tools-chat > .notice,
+    .tools-chat-form,
+    .tools-roller,
+    .tools-chat-head {
+      animation: none;
     }
   }
 
@@ -910,7 +947,14 @@
     .tools-chat-side {
       position: static;
       height: auto;
-      max-height: none;
+      overflow-y: visible;
+    }
+
+    .tools-chat-log,
+    .tools-chat > .notice,
+    .tools-chat-form,
+    .tools-roller,
+    .tools-chat-head {
       animation: none;
     }
 
@@ -939,22 +983,23 @@
   }
 }
 
-/* The right column growing to the bottom of the window as the tools body
-   rises into view, and shrinking as its end leaves (.tools-chat-side) */
-@keyframes tools-side-grow {
+/* The right column's conversation and message box rising to the bottom of
+   the window, and its d20 and title dropping at the end of the page
+   (.tools-chat-side) */
+@keyframes tools-side-lift {
   from {
-    height: 0;
+    transform: translateY(calc(32px - 100dvh));
   }
   to {
-    height: calc(100dvh - 32px);
+    transform: none;
   }
 }
 
-@keyframes tools-side-shrink {
+@keyframes tools-side-drop {
   from {
-    max-height: calc(100dvh - 32px);
+    transform: none;
   }
   to {
-    max-height: 0;
+    transform: translateY(calc(100dvh - 32px));
   }
 }
