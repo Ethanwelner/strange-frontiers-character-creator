@@ -4,7 +4,7 @@ import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { coreStatsShown } from "../check.js";
 import { content, packageById } from "../content.js";
 import type { Draft } from "../draft.js";
-import { baseStats, NameField, title } from "./ui.js";
+import { baseStats, NameField, Portrait, title } from "./ui.js";
 
 interface Props {
   draft: Draft;
@@ -35,6 +35,7 @@ export function ValidationPanel({ draft, result, onName }: Props) {
       </button>
 
       <div className="panel-body">
+        <Portrait className="panel-portrait" portrait={draft.portrait} name={draft.name} />
         <NameField className="panel-name" heading="h3" name={draft.name} onChange={onName} />
         {/* The level, then the background packages */}
         <ul className="panel-background">
