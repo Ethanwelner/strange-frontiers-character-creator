@@ -526,10 +526,23 @@
     position: relative;
     z-index: 1;
     flex: none;
-    background-color: #212121;
+    /* Outside its rounded top corners, the panel's color, so the box's
+       square sides sliding up underneath don't show there */
+    background:
+      radial-gradient(circle at 100% 100%, #212121 15.5px, var(--panel) 16px) left top / 16px 16px no-repeat,
+      radial-gradient(circle at 0 100%, #212121 15.5px, var(--panel) 16px) right top / 16px 16px no-repeat,
+      #212121;
+  }
+
+  /* Its border: the top and sides of the box's, rounded at the top */
+  .tools-roller::before {
+    content: "";
+    position: absolute;
+    inset: 0;
     border: 1px solid var(--card-border);
     border-bottom: 0;
     border-radius: 16px 16px 0 0;
+    pointer-events: none;
   }
 
   @supports (animation-timeline: view()) {
