@@ -555,6 +555,66 @@
     }
   }
 
+  /* The d20, over the assistant: a green die on a little CRT, drawn in
+     chunky pixels (Roller.tsx) under scanlines and a dark vignette. The
+     whole screen is the roll button. */
+  .tools-roller-screen {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 184px;
+    padding: 0;
+    border: 1px solid color-mix(in srgb, var(--frontiers-green) 35%, #1c1c1c);
+    border-radius: 18px / 24px;
+    overflow: hidden;
+    background: radial-gradient(ellipse at center, #1f241f 0%, #141414 75%);
+    cursor: pointer;
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      image-rendering: pixelated;
+      filter: drop-shadow(0 0 4px color-mix(in srgb, var(--frontiers-green) 70%, transparent));
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        repeating-linear-gradient(to bottom, rgb(0 0 0 / 0%) 0 2px, rgb(0 0 0 / 28%) 2px 3px),
+        radial-gradient(ellipse at center, transparent 55%, rgb(0 0 0 / 55%) 100%);
+    }
+
+    &:hover:not(:disabled) {
+      border-color: var(--frontiers-green);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--frontiers-green);
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      cursor: default;
+    }
+  }
+
+  .tools-roller-caption {
+    position: absolute;
+    left: 14px;
+    bottom: 10px;
+    z-index: 1;
+    font-family: monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--frontiers-green);
+    text-shadow: 0 0 6px var(--frontiers-green);
+  }
+
   /* The sheet under the first box: its columns and Traits keep their own
      boxes, without the sheet's outer one, which the left column's box
      stands in for */
