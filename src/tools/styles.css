@@ -127,7 +127,7 @@
     padding: 2rem;
     background-color: var(--panel-box);
     border: 1px solid var(--card-border);
-    border-radius: 24px;
+    border-radius: 16px;
 
     @media (max-width: 767px) {
       padding: 1.25rem;
@@ -590,12 +590,12 @@
     left: 0;
     right: 0;
     top: calc(100% + 24px);
-    height: 24px;
+    height: 16px;
     pointer-events: none;
     background:
-      radial-gradient(circle at 100% 100%, transparent 22.5px, var(--card-border) 23px 23.5px, var(--panel) 24px) left top / 24px 24px no-repeat,
-      radial-gradient(circle at 0 100%, transparent 22.5px, var(--card-border) 23px 23.5px, var(--panel) 24px) right top / 24px 24px no-repeat,
-      linear-gradient(var(--card-border), var(--card-border)) center top / calc(100% - 48px) 1px no-repeat;
+      radial-gradient(circle at 100% 100%, transparent 14.5px, var(--card-border) 15px 15.5px, var(--panel) 16px) left top / 16px 16px no-repeat,
+      radial-gradient(circle at 0 100%, transparent 14.5px, var(--card-border) 15px 15.5px, var(--panel) 16px) right top / 16px 16px no-repeat,
+      linear-gradient(var(--card-border), var(--card-border)) center top / calc(100% - 32px) 1px no-repeat;
   }
 
   @supports (animation-timeline: view()) {
@@ -615,18 +615,17 @@
   }
 
   /* The d20, over the chat: a green die drawn in chunky pixels (Roller.tsx)
-     under faint scanlines, on the gray of the other boxes. The whole screen
-     is the roll button. */
+     on the panel, with nothing behind it. The whole area is the roll button,
+     and the die glows brighter under the pointer. */
   .tools-roller-screen {
     position: relative;
     display: block;
     width: 100%;
     height: 184px;
     padding: 0;
-    border: 1px solid var(--card-border);
-    border-radius: 18px / 24px;
-    overflow: hidden;
-    background: var(--panel-box);
+    border: 0;
+    border-radius: 16px;
+    background: none;
     cursor: pointer;
 
     canvas {
@@ -635,18 +634,25 @@
       height: 100%;
       image-rendering: pixelated;
       filter: drop-shadow(0 0 4px color-mix(in srgb, var(--frontiers-green) 70%, transparent));
-    }
+      transition: filter 200ms;
+      /* Floating: a smooth rise and fall, and on a longer loop a slow turn
+         one way and back. They move translate and rotate separately, so
+         the two loops run on their own clocks. */
+      animation:
+        tools-die-bob 3.2s ease-in-out infinite alternate,
+        tools-die-turn 14s ease-in-out infinite alternate;
 
-    &::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: repeating-linear-gradient(to bottom, rgb(0 0 0 / 0%) 0 2px, rgb(0 0 0 / 12%) 2px 3px);
+      @media (prefers-reduced-motion: reduce) {
+        animation: none;
+      }
     }
 
     &:hover:not(:disabled) {
-      border-color: var(--frontiers-green);
+      background: none;
+
+      canvas {
+        filter: drop-shadow(0 0 8px var(--frontiers-green));
+      }
     }
 
     /* Inside, since the column clips above it */
@@ -660,17 +666,14 @@
     }
   }
 
+  /* What the die landed on, for screen readers only */
   .tools-roller-caption {
     position: absolute;
-    left: 14px;
-    bottom: 10px;
-    z-index: 1;
-    font-family: monospace;
-    font-size: 0.8rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--frontiers-green);
-    text-shadow: 0 0 6px var(--frontiers-green);
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
   /* The sheet under the first box: its columns and Traits keep their own
@@ -769,7 +772,7 @@
     padding: 16px;
     background-color: #212121;
     border: 1px solid var(--card-border);
-    border-radius: 24px;
+    border-radius: 16px;
   }
 
   .tools-chat-log {
@@ -1084,5 +1087,25 @@
   }
   to {
     transform: translateY(calc(100dvh - 32px));
+  }
+}
+
+/* The d20 floating over the chat (.tools-roller-screen canvas): bobbing
+   up and down, and slowly turning one way and back */
+@keyframes tools-die-bob {
+  from {
+    translate: 0 8px;
+  }
+  to {
+    translate: 0 -10px;
+  }
+}
+
+@keyframes tools-die-turn {
+  from {
+    rotate: -9deg;
+  }
+  to {
+    rotate: 9deg;
   }
 }

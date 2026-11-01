@@ -50,7 +50,8 @@ function draw(canvas: HTMLCanvasElement, q: Quat, lift: number, landed?: number)
   const dark = "#1a1a1a";
   const { width: w, height: h } = canvas;
   ctx.clearRect(0, 0, w, h);
-  const r = h * 0.45;
+  // Room above and below for it to float (styles.css)
+  const r = h * 0.38;
   const cx = w / 2;
   const cy = h / 2 - lift;
   const at = (v: Vec) => [cx + v[0] * r, cy - v[1] * r] as const;
@@ -183,7 +184,7 @@ export function Roller({
       >
         <canvas ref={canvas} aria-hidden="true" />
         <span className="tools-roller-caption" aria-live="polite">
-          {rolling ? "Rolling…" : landed ? `d20: ${landed}` : "Click to roll"}
+          {rolling ? "Rolling…" : landed ? `Rolled ${landed}` : ""}
         </span>
       </button>
       {children}
