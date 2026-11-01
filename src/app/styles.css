@@ -2196,6 +2196,40 @@
     margin-top: 36px;
   }
 
+  /* A card on its own in the popup (.lore-modal-card: a Trait, Knowledge,
+     Kind or background package): the card is the popup's edge, with no
+     panel around it, and the close button sits in its top right corner, in
+     its header bar, which keeps room for it after the badges */
+  .lore-modal-card {
+    .lore-modal-panel {
+      max-width: 560px;
+      padding: 0;
+      border-radius: 12px;
+      background: none;
+    }
+
+    .lore-modal-panel > :is(.trait-box, .card) {
+      margin: 0;
+    }
+
+    .lore-modal-close {
+      top: 7px;
+      right: 8px;
+      z-index: 1;
+      width: 28px;
+      height: 28px;
+
+      svg {
+        width: 12px;
+        height: 12px;
+      }
+    }
+
+    :is(.trait-name, .card-head) {
+      padding-right: 48px;
+    }
+  }
+
   .sheet-stat {
     display: flex;
     flex-direction: column;

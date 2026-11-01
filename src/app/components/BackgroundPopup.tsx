@@ -13,7 +13,7 @@ export function BackgroundPopup({ id, onClose }: { id: string; onClose: () => vo
   const entry = kind ?? pkg;
   if (!entry) return null;
   return (
-    <LorePopup label={entry.name} onClose={onClose}>
+    <LorePopup label={entry.name} onClose={onClose} className="lore-modal-card">
       <div className={`card headed tools-background-card ${regionClass(entry.plane)}`}>
         <div className="card-head">
           <h3>

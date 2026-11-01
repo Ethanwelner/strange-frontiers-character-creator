@@ -76,7 +76,7 @@ function TraitCard({ held, places, draft }: { held: Held; places: string[]; draf
 // A Knowledge's card, opened from the sheet's list in the site's lore popup.
 function TraitModal({ held, places, draft, onClose }: { held: Held; places: string[]; draft: Draft; onClose: () => void }) {
   return (
-    <LorePopup label={traitName(held.trait)} onClose={onClose}>
+    <LorePopup label={traitName(held.trait)} onClose={onClose} className="lore-modal-card">
       <TraitCard held={held} places={places} draft={draft} />
     </LorePopup>
   );
