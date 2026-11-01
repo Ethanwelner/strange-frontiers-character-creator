@@ -738,14 +738,15 @@
     margin-top: 24px;
   }
 
-  /* Title, conversation, then the message box and Send, 24px apart, filling
-     the column under the d20 */
+  /* Title, the conversation in its box, then the message box and Send,
+     filling the column under the d20. The title is 24px over the
+     conversation; the rest are 20px apart. */
   .tools-chat {
     flex: 1 1 0;
     min-height: 0;
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 20px;
   }
 
   .tools-roller {
@@ -756,16 +757,21 @@
     display: flex;
     justify-content: space-between;
     align-items: baseline;
+    margin-bottom: 4px;
 
     .subhead {
       margin: 0;
     }
   }
 
+  /* The conversation, suggestions and all, in a box like the tracker's */
   .tools-chat-log {
     list-style: none;
-    padding: 0;
+    padding: 16px;
     margin: 0;
+    background-color: var(--panel-box);
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
     overflow-y: auto;
     /* The room the rest of the column leaves */
     flex: 1 1 0;
