@@ -100,7 +100,8 @@ export function App() {
     setJustBuilt(true);
     setSaved((s) => ({
       ...s,
-      draft: built,
+      // A portrait added before building stays; the AI doesn't look at it.
+      draft: { ...built, portrait: s.draft.portrait },
       campaign: { startingLevel: built.level },
       step: "sheet",
       ai: {
@@ -244,6 +245,7 @@ export function App() {
                   onImport={() => fileInput.current?.click()}
                   onName={(name) => setDraft({ ...draft, name })}
                   onLooks={(looks) => setDraft({ ...draft, ...looks })}
+                  onPortrait={(portrait) => setDraft({ ...draft, portrait })}
                   items={draft.items}
                   onItems={(items) => setDraft({ ...draft, items })}
                   conditions={draft.conditions}

@@ -160,6 +160,15 @@ describe("drafts", () => {
     expect([odd.age, odd.gender, odd.customGender]).toEqual([undefined, undefined, undefined]);
   });
 
+  it("keeps a portrait data URL through an export, and drops anything else", () => {
+    const portrait = "data:image/webp;base64,UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAcQERGIiP4HAA==";
+    const pictured = { ...human, portrait };
+    expect(fromBuild(JSON.parse(JSON.stringify(toBuild(pictured))))).toEqual(pictured);
+    for (const odd of ["https://example.com/me.png", "data:image/svg+xml;base64,PHN2Zz4=", "data:image/png;base64,<script>", "x".repeat(10)]) {
+      expect(fromBuild({ ...toBuild(human), portrait: odd }).portrait).toBeUndefined();
+    }
+  });
+
   it("splits the stats pool into one allocation per level, and back", () => {
     const levels = poolToLevels({ physical: 2, social: 0, mental: 1, magic: 0 }, { power: 4, grace: 2, logic: 3 });
     expect(levels).toEqual([

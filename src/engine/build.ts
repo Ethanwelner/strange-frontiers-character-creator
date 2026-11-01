@@ -66,6 +66,8 @@ export const Build = z.object({
   age: z.number().int().min(0).optional(),
   gender: z.enum(["male", "female", "indeterminate", "none", "fluid", "custom"]).optional(),
   customGender: z.string().optional(),
+  // The character's picture as an image data URL; cosmetic too.
+  portrait: z.string().optional(),
   kind: Id,
   origin: Id,
   profession: Id,

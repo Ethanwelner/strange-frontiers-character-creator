@@ -22,6 +22,9 @@ export interface Draft {
   gender?: Exclude<Gender, "unlisted">;
   // What the player wrote when gender is custom
   customGender?: string;
+  // The character's picture, shrunk in the browser and kept in the build as a
+  // data URL, so the JSON file carries it (see portrait.ts).
+  portrait?: string;
   kind?: string;
   origin?: string;
   profession?: string;
@@ -137,6 +140,12 @@ const array = <T>(v: unknown): T[] => (Array.isArray(v) ? (v as T[]) : []);
 const text = (v: unknown) => (typeof v === "string" && v !== "" ? v : undefined);
 
 // An age as a whole number of years, or nothing.
+// A portrait as the creator saves it: a base64 image data URL, not too big.
+// Anything else (a link, SVG, a huge photo) is dropped.
+export const MAX_PORTRAIT_LENGTH = 1_500_000;
+export const readPortrait = (v: unknown) =>
+  typeof v === "string" && v.length <= MAX_PORTRAIT_LENGTH && /^data:image\/(webp|jpeg|png);base64,[A-Za-z0-9+/]+=*$/.test(v) ? v : undefined;
+
 export const readAge = (v: unknown) => (typeof v === "number" && Number.isInteger(v) && v >= 0 && v <= MAX_AGE ? v : undefined);
 export const MAX_AGE = 9999;
 const readGender = (v: unknown) => (GENDERS.includes(v as Gender) && v !== "unlisted" ? (v as Draft["gender"]) : undefined);
@@ -165,6 +174,7 @@ export function fromBuild(input: unknown): Draft {
     age: readAge(b.age),
     gender: readGender(b.gender),
     customGender: b.gender === "custom" ? text(b.customGender) : undefined,
+    portrait: readPortrait(b.portrait),
     kind,
     origin: text(b.origin),
     profession: text(b.profession),

@@ -9,7 +9,7 @@ import type { HeldCondition } from "../conditions.js";
 import { CharacterLine } from "./CharacterLine.js";
 import { Conditions } from "./Conditions.js";
 import { Items } from "./Items.js";
-import { askerName, baseStats, Chip, CoreLine, Icon, LorePopup, NameField, SettingIcon, StatLine, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
+import { askerName, baseStats, Chip, CoreLine, Icon, LorePopup, NameField, Portrait, SettingIcon, StatLine, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
 
 const SOURCE = /^(kind|origin|profession|past) ([a-z0-9-]+)( choice)?$/;
 const TRAIT_CHOICE = /^trait ([a-z0-9-]+) choice$/;
@@ -100,6 +100,7 @@ export function Sheet({
   onImport,
   onName,
   onLooks,
+  onPortrait,
   embedded = false,
   statsSlot,
   traitsAction,
@@ -120,6 +121,8 @@ export function Sheet({
   // Shown at the right end of the Traits title's line, like Player Tools' "Traits available"
   traitsAction?: ReactNode;
   onLooks?: (looks: Pick<Draft, "age" | "gender" | "customGender">) => void;
+  // Changes the portrait from the sheet; without it the sheet only shows it.
+  onPortrait?: (portrait?: string) => void;
   // The last column, after the Knowledges: the Conditions, then the Items,
   // with the current HP the Conditions go by (full if not given)
   items?: Item[];
@@ -188,6 +191,7 @@ export function Sheet({
 
         {!embedded && (
           <div className="c-sheet-box sheet-head">
+            <Portrait className="sheet-portrait" portrait={draft.portrait} name={draft.name} onChange={onPortrait} />
             <div className="sheet-head-main">
               <NameField className="sheet-name" heading="h2" name={draft.name} onChange={onName ?? (() => {})} />
               {/* Kind, age, gender, Origin, Profession and Past, as in Player Tools */}
