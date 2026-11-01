@@ -9,9 +9,9 @@ type Looks = Pick<Draft, "age" | "gender" | "customGender">;
 const LABELS = ["Kind", "Origin", "Profession", "Past"];
 
 // The line under the character's name, the same on the Character Creator's
-// sheet and in Player Tools: Kind, age and gender on one row, Origin,
-// Profession and Past on the next, each a plain label in the builder's field
-// label style over its value. The Kind and background link to their cards;
+// sheet and in Player Tools: Kind, age and gender on one row, then Origin,
+// Profession and Past stacked under it, each a plain label in the builder's
+// field label style over its value. The Kind and background link to their cards;
 // age and gender have pens to edit them in place.
 export function CharacterLine({ draft, onLooks }: { draft: Draft; onLooks: (looks: Looks) => void }) {
   // The Kind or background package whose card is open
@@ -34,7 +34,7 @@ export function CharacterLine({ draft, onLooks }: { draft: Draft; onLooks: (look
           {item(0, draft.kind)}
           <LooksLine looks={draft} onChange={onLooks} />
         </p>
-        <p className="tools-line-row">
+        <p className="tools-line-row tools-line-stack">
           {item(1, draft.origin)}
           {item(2, draft.profession)}
           {item(3, draft.past)}
