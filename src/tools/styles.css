@@ -686,16 +686,31 @@
   }
 
   @supports (animation-timeline: view()) {
-    /* Up while the body's top crosses the window */
+    /* Up while the body's top crosses the window. The part that slides
+       under the d20 is added to the box's top padding at the same time, so
+       the conversation is only as tall as what shows of it and scrolls to
+       reach the rest. That edge is under the d20, so the padding (laid out,
+       not composited) can trail the scroll without showing. */
     .tools-chat-box {
-      animation: tools-side-lift linear both;
-      animation-timeline: --tools-body;
-      animation-range: entry-crossing 0% exit-crossing 0%;
+      animation:
+        tools-side-lift linear both,
+        tools-chat-uncover linear both;
+      animation-timeline: --tools-body, --tools-body;
+      animation-range:
+        entry-crossing 0% exit-crossing 0%,
+        entry-crossing 0% exit-crossing 0%;
     }
 
-    /* Down while its bottom does */
+    /* Down while its bottom does, and the conversation starts that much
+       lower, under it, for the same reason */
     .tools-roller {
       animation: tools-side-drop linear both;
+      animation-timeline: --tools-body;
+      animation-range: entry-crossing 100% exit-crossing 100%;
+    }
+
+    .tools-chat-log {
+      animation: tools-chat-uncover-end linear both;
       animation-timeline: --tools-body;
       animation-range: entry-crossing 100% exit-crossing 100%;
     }
@@ -837,12 +852,15 @@
   /* The conversation, suggestions and all, then any error and the message
      box, in a darker box with the room the rest of the column leaves */
   .tools-chat-box {
+    /* Its top padding, 44px with the Clear badge (the scroll animations add
+       to it) */
+    --chat-pad-top: 16px;
     flex: 1 1 0;
     min-height: 160px;
     display: flex;
     flex-direction: column;
     gap: 16px;
-    padding: 16px;
+    padding: var(--chat-pad-top) 16px 16px;
     background-color: #212121;
     border: 1px solid var(--card-border);
     border-radius: 16px;
@@ -1050,7 +1068,7 @@
   }
 
   .tools-chat-side:has(.tools-chat-clear) .tools-chat-box {
-    padding-top: 44px;
+    --chat-pad-top: 44px;
   }
 
   @media (max-width: 1199px) {
@@ -1091,6 +1109,7 @@
     }
 
     .tools-chat-box,
+    .tools-chat-log,
     .tools-roller {
       animation: none;
     }
@@ -1113,6 +1132,7 @@
     }
 
     .tools-chat-box,
+    .tools-chat-log,
     .tools-roller {
       animation: none;
     }
@@ -1168,5 +1188,26 @@
   }
   to {
     rotate: 9deg;
+  }
+}
+
+/* The chat box's top padding while it's slid under the d20: the hidden part
+   plus its own padding (.tools-chat-box) */
+@keyframes tools-chat-uncover {
+  from {
+    padding-top: calc(var(--chat-pad-top) + 100dvh - 32px);
+  }
+  to {
+    padding-top: var(--chat-pad-top);
+  }
+}
+
+/* The conversation's start, under the d20 as it drops at the end of the page */
+@keyframes tools-chat-uncover-end {
+  from {
+    margin-top: 0;
+  }
+  to {
+    margin-top: calc(100dvh - 32px);
   }
 }
