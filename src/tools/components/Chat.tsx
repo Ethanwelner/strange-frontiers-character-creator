@@ -35,6 +35,15 @@ export function Chat({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string>();
   const log = useRef<HTMLOListElement>(null);
+  // The message box starts a line tall and grows with what's typed, up to
+  // 256px (styles.css). Browsers without field-sizing get its height here.
+  const input = useRef<HTMLTextAreaElement>(null);
+  useEffect(() => {
+    const el = input.current;
+    if (!el || CSS.supports("field-sizing", "content")) return;
+    el.style.height = "auto";
+    el.style.height = `${Math.min(el.scrollHeight + el.offsetHeight - el.clientHeight, 256)}px`;
+  }, [message]);
   // The assistant's latest roll, for the die to land on
   const [shown, setShown] = useState<{ value: number; key: number }>();
   // A roll lands after its animation, so it's added to the play as it is then.
@@ -90,68 +99,72 @@ export function Chat({
             </button>
           )}
         </div>
-        <ol className="tools-chat-log" ref={log} aria-live="polite">
-          {play.chat.length === 0 && (
-            <li className="tools-chat-empty">
-              <p className="muted">Ask about the rules or your Traits, or say what happened and I'll update the tracker.</p>
-              <div className="tools-chat-examples">
-                {EXAMPLES.map((e) => (
-                  <button key={e} type="button" className="tools-chat-example" onClick={() => send(e)} disabled={busy || !result.summary}>
-                    {e}
-                  </button>
-                ))}
-              </div>
-            </li>
-          )}
-          {play.chat.map((m, i) => (
-            <li key={i} className={`tools-chat-msg is-${m.role}`}>
-              <p>{m.text}</p>
-              {m.changes && (
-                <ul className="tools-chat-changes">
-                  {m.changes.map((c, j) => (
-                    <li key={j}>{c}</li>
+        {/* The conversation and the message box under it, in one box */}
+        <div className="tools-chat-box">
+          <ol className="tools-chat-log" ref={log} aria-live="polite">
+            {play.chat.length === 0 && (
+              <li className="tools-chat-empty">
+                <p className="muted">Ask about the rules or your Traits, or say what happened and I'll update the tracker.</p>
+                <div className="tools-chat-examples">
+                  {EXAMPLES.map((e) => (
+                    <button key={e} type="button" className="tools-chat-example" onClick={() => send(e)} disabled={busy || !result.summary}>
+                      {e}
+                    </button>
                   ))}
-                </ul>
-              )}
-            </li>
-          ))}
-          {busy && (
-            <li className="tools-chat-msg is-assistant is-busy">
-              <p className="muted">Thinking…</p>
-            </li>
+                </div>
+              </li>
+            )}
+            {play.chat.map((m, i) => (
+              <li key={i} className={`tools-chat-msg is-${m.role}`}>
+                <p>{m.text}</p>
+                {m.changes && (
+                  <ul className="tools-chat-changes">
+                    {m.changes.map((c, j) => (
+                      <li key={j}>{c}</li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
+            {busy && (
+              <li className="tools-chat-msg is-assistant is-busy">
+                <p className="muted">Thinking…</p>
+              </li>
+            )}
+          </ol>
+          {error && (
+            <Notice fades bad onDismiss={() => setError(undefined)}>
+              {error}
+            </Notice>
           )}
-        </ol>
-        {error && (
-          <Notice fades bad onDismiss={() => setError(undefined)}>
-            {error}
-          </Notice>
-        )}
-        <form
-          className="tools-chat-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            void send(message);
-          }}
-        >
-          <textarea
-            className="rpg-search-input"
-            rows={4}
-            placeholder="Ask, or say what happened"
-            aria-label="Message to the assistant"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                void send(message);
-              }
+          <form
+            className="tools-chat-form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              void send(message);
             }}
-          />
-          {/* Send, as a paper plane in the message box's bottom right corner */}
-          <button type="submit" className="tools-chat-send" disabled={busy || !message.trim()} aria-busy={busy}>
-            <Icon name="send" label="Send" />
-          </button>
-        </form>
+          >
+            <textarea
+              ref={input}
+              className="rpg-search-input"
+              rows={1}
+              placeholder="Ask, or say what happened"
+              aria-label="Message to the assistant"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  void send(message);
+                }
+              }}
+            />
+            {/* Send, as a paper plane in the message box's right corner */}
+            <button type="submit" className="tools-chat-send" disabled={busy || !message.trim()} aria-busy={busy}>
+              <Icon name="send" label="Send" />
+            </button>
+          </form>
+        </div>
       </section>
     </>
   );
