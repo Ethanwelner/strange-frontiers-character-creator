@@ -735,11 +735,13 @@
       image-rendering: pixelated;
       filter: drop-shadow(0 0 4px color-mix(in srgb, var(--frontiers-green) 70%, transparent));
       transition: filter 200ms;
-      /* Floating: a smooth rise and fall, and on a longer loop a slow turn
-         one way and back. They move translate and rotate separately, so
-         the two loops run on their own clocks. */
+      /* Floating: a smooth rise and fall, a slower drift side to side, and
+         on a longer loop a slow turn one way and back. They move translate,
+         transform and rotate separately, and their lengths don't divide
+         into each other, so the three loops drift in and out of step. */
       animation:
         tools-die-bob 3.2s ease-in-out infinite alternate,
+        tools-die-sway 5.1s ease-in-out infinite alternate,
         tools-die-turn 14s ease-in-out infinite alternate;
 
       @media (prefers-reduced-motion: reduce) {
@@ -1214,6 +1216,15 @@
   }
   to {
     translate: 0 -10px;
+  }
+}
+
+@keyframes tools-die-sway {
+  from {
+    transform: translateX(-8px);
+  }
+  to {
+    transform: translateX(8px);
   }
 }
 
