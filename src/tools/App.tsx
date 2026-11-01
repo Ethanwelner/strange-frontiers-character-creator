@@ -10,7 +10,6 @@ import { Chat } from "./components/Chat.js";
 import { Tracker } from "./components/Tracker.js";
 import { LooksLine } from "./components/LooksLine.js";
 
-
 export function ToolsApp() {
   const [play, setPlay] = useState<Play | undefined>(load);
   // A passing notice fades on its own; an error stays.
@@ -77,56 +76,6 @@ export function ToolsApp() {
       </header>
 
       <div className="section unlimited white-bg builder-panel">
-        {/* 24px from the top of the panel: the rules problems chip at the left, and Download
-            character and Switch character, as gray badges, over the right column. They scroll
-            away with the page; the assistant under them sticks. */}
-        {play && result && (
-          <div className="container tools-actions-bar">
-            {/* Any rules problems, as the creator's red error chip, which opens them as a list */}
-            {!result.ok && (
-              <ul className="issues step-issues tools-issues">
-                <li>
-                  <button type="button" onClick={() => setShowingIssues(true)}>
-                    {result.errors.length} rules {result.errors.length === 1 ? "problem" : "problems"}
-                  </button>
-                </li>
-              </ul>
-            )}
-            <div className="hero-bar tools-actions">
-              <button type="button" onClick={exportBuild}>
-                <Icon name="download" />
-                Download character
-              </button>
-              <button type="button" onClick={() => setConfirmingSwitch(true)}>
-                <Icon name="switch" />
-                Switch character
-              </button>
-            </div>
-            {confirmingSwitch && (
-              <LorePopup label="Switch character" onClose={closeSwitch} className="tools-switch-popup">
-                <h3 className="lore-modal-title">Switch character</h3>
-                <p>Put {play.draft.name || "this character"} away? Their tracker, items and chat are cleared.</p>
-                <div className="tools-switch-actions">
-                  <button
-                    type="button"
-                    className="primary"
-                    onClick={() => {
-                      setPlay(undefined);
-                      setLevelDraft(undefined);
-                      setConfirmingSwitch(false);
-                      setNotice(undefined);
-                    }}
-                  >
-                    Switch character
-                  </button>
-                  <button type="button" onClick={closeSwitch}>
-                    Cancel
-                  </button>
-                </div>
-              </LorePopup>
-            )}
-          </div>
-        )}
         <div className={`container builder-body tools-body${play ? "" : " no-side"}`}>
           {/* The character and the tracker, in a box like the creator's sheet once a character is in,
               with the level in a blob over its top left corner */}
@@ -149,8 +98,8 @@ export function ToolsApp() {
                 <section className="tools-start">
                   <h2>Bring in a character</h2>
                   <p className="lede">
-                    Player Tools runs a character you already have during play: HP and the other resources, items, Conditions, leveling up, and an assistant you can
-                    ask about the rules or tell what just happened.
+                    Player Tools runs a character you already have during play: HP and the other resources, items, Conditions, leveling up, and an assistant you
+                    can ask about the rules or tell what just happened.
                   </p>
                   <div className="tools-start-options">
                     {fromCreator && (
@@ -181,10 +130,10 @@ export function ToolsApp() {
                   head={
                     <header className="step-head tools-character">
                       <div className="tools-character-main">
-                        {/* The name, with the creator's pen to edit it, and Level up at the right as a
-                            green badge, which turns into Cancel while the level up is open and throws
-                            its points away. Points the character already has to place come first, so
-                            it waits while there are any. */}
+                        {/* The name, with the creator's pen to edit it, and the badges at the right: Level
+                            up in green, which turns into Cancel while the level up is open and throws its
+                            points away (points the character already has to place come first, so it waits
+                            while there are any), then Download, Switch and any rules problems. */}
                         <div className="tools-character-head">
                           <NameField
                             className="sheet-name tools-name"
@@ -192,20 +141,64 @@ export function ToolsApp() {
                             name={play.draft.name}
                             onChange={(name) => setPlay({ ...play, draft: { ...play.draft, name } })}
                           />
-                          {levelDraft && levelDraft.level > play.draft.level ? (
-                            <button type="button" className="tools-level-up" onClick={() => setLevelDraft(undefined)}>
-                              Cancel
+                          {/* Level up, then Download character and Switch character as gray badges, then
+                              any rules problems as the creator's red chip, which opens them as a list */}
+                          <div className="hero-bar tools-actions">
+                            {levelDraft && levelDraft.level > play.draft.level ? (
+                              <button type="button" className="tools-level-up" onClick={() => setLevelDraft(undefined)}>
+                                Cancel
+                              </button>
+                            ) : (
+                              <button
+                                type="button"
+                                className="tools-level-up"
+                                disabled={Boolean(levelDraft) || pointsToPlace(play.draft, content)}
+                                onClick={() => setLevelDraft({ ...play.draft, level: play.draft.level + 1 })}
+                              >
+                                <Icon name="plus" />
+                                Level up
+                              </button>
+                            )}
+                            <button type="button" onClick={exportBuild}>
+                              <Icon name="download" />
+                              Download character
                             </button>
-                          ) : (
-                            <button
-                              type="button"
-                              className="tools-level-up"
-                              disabled={Boolean(levelDraft) || pointsToPlace(play.draft, content)}
-                              onClick={() => setLevelDraft({ ...play.draft, level: play.draft.level + 1 })}
-                            >
-                              <Icon name="plus" />
-                              Level up
+                            <button type="button" onClick={() => setConfirmingSwitch(true)}>
+                              <Icon name="switch" />
+                              Switch character
                             </button>
+                            {!result.ok && (
+                              <ul className="issues step-issues tools-issues">
+                                <li>
+                                  <button type="button" onClick={() => setShowingIssues(true)}>
+                                    {result.errors.length} rules {result.errors.length === 1 ? "problem" : "problems"}
+                                  </button>
+                                </li>
+                              </ul>
+                            )}
+                          </div>
+                          {confirmingSwitch && (
+                            <LorePopup label="Switch character" onClose={closeSwitch} className="tools-switch-popup">
+                              <h3 className="lore-modal-title">Switch character</h3>
+                              <p>Put {play.draft.name || "this character"} away? Their tracker, items and chat are cleared.</p>
+                              <div className="tools-switch-actions">
+                                <button
+                                  type="button"
+                                  className="primary"
+                                  onClick={() => {
+                                    setPlay(undefined);
+                                    setLevelDraft(undefined);
+                                    setConfirmingSwitch(false);
+                                    setNotice(undefined);
+                                  }}
+                                >
+                                  Switch character
+                                </button>
+                                <button type="button" onClick={closeSwitch}>
+                                  Cancel
+                                </button>
+                              </div>
+                            </LorePopup>
                           )}
                         </div>
                         {/* Kind, then age and gender, then Origin, Profession and Past: each a plain label
@@ -246,7 +239,15 @@ export function ToolsApp() {
           </div>
           {play && result && (
             <aside className="tools-chat-side">
-              <Chat play={play} result={result} content={content} create={create} model={__SF_AI__.model} onChange={setPlay} check={(p) => checkPlay(p.draft, content)} />
+              <Chat
+                play={play}
+                result={result}
+                content={content}
+                create={create}
+                model={__SF_AI__.model}
+                onChange={setPlay}
+                check={(p) => checkPlay(p.draft, content)}
+              />
             </aside>
           )}
         </div>
