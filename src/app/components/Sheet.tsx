@@ -282,14 +282,6 @@ export function Sheet({
             ) : (
               <p className="empty">None yet.</p>
             )}
-            {summary && (
-              <>
-                <h4 className="rule">Banked picks</h4>
-                <p>
-                  {summary.picks.universal.banked} universal, {summary.picks.background.banked} background
-                </p>
-              </>
-            )}
           </div>
           {onItems && onConditions && (
             // The last column: the Conditions, then the Items
@@ -309,6 +301,13 @@ export function Sheet({
             </div>
           ) : (
             <h3 className="subhead">Traits</h3>
+          )}
+          {/* The picks the character still has to spend on Traits */}
+          {summary && (
+            <p className="sheet-banked">
+              {summary.picks.universal.banked} universal and {summary.picks.background.banked} background{" "}
+              {summary.picks.universal.banked + summary.picks.background.banked === 1 ? "pick" : "picks"} available
+            </p>
           )}
           {others.length > 0 ? (
             <ul className="sheet-traits">

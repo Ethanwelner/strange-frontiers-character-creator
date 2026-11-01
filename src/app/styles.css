@@ -1940,6 +1940,11 @@
     margin-top: 0;
   }
 
+  /* The picks left to spend, a line under the Traits title */
+  .sheet-banked {
+    margin: 0 0 16px;
+  }
+
   /* The site's .level-badge and .stat-badge, at a fixed size. The level is
      a 96px blob (.level-blob) centered between the corner of the creator's
      sheet (or Player Tools' box) and the corner of the box inside it: half
