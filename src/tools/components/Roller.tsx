@@ -41,12 +41,28 @@ function drawNumber(ctx: CanvasRenderingContext2D, n: number, x: number, y: numb
   });
 }
 
+// While it rests, the die tips slowly in 3D: around the horizontal and vertical
+// axes, by up to these angles (radians), over these loops (ms), which don't
+// divide into each other. It eases in over WOBBLE_IN after each roll.
+const WOBBLE = [
+  { axis: [1, 0, 0] as Vec, angle: 0.18, ms: 7000 },
+  { axis: [0, 1, 0] as Vec, angle: 0.26, ms: 9700 },
+];
+const WOBBLE_IN = 1500;
+
+function wobble(base: Quat, now: number, strength: number): Quat {
+  return WOBBLE.reduce((q, w) => mul(axisAngle(w.axis, w.angle * strength * Math.sin((now / w.ms) * Math.PI * 2)), q), base);
+}
+
+// The site's green, read once
+let green: string | undefined;
+
 // The die at rotation `q`, `lift` canvas pixels up from the middle. The
 // landed face's number, when there is one, is lit: dark on a green block.
 function draw(canvas: HTMLCanvasElement, q: Quat, lift: number, landed?: number) {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
-  const green = getComputedStyle(canvas).getPropertyValue("--frontiers-green").trim() || "#2dfc64";
+  green ??= getComputedStyle(canvas).getPropertyValue("--frontiers-green").trim() || "#2dfc64";
   const dark = "#1a1a1a";
   const { width: w, height: h } = canvas;
   ctx.clearRect(0, 0, w, h);
@@ -80,7 +96,7 @@ function draw(canvas: HTMLCanvasElement, q: Quat, lift: number, landed?: number)
   }
 }
 
-// A d20 on a little green CRT. Clicking it rolls; `show` makes it roll to a
+// A floating green d20. Clicking it rolls; `show` makes it roll to a
 // number picked somewhere else (the assistant's rolls). The number is picked
 // before the die moves, and the die lands showing it.
 // `children` ride along on the die's layer, like the chat's Clear badge.
@@ -102,10 +118,30 @@ export function Roller({
       0.4,
     ),
   );
+  // The rotation as last drawn, wobble and all, which a roll starts from
+  const shown = useRef<Quat>(q.current);
   const frame = useRef(0);
   const [rolling, setRolling] = useState(false);
+  const rollingRef = useRef(false);
+  const restingSince = useRef(performance.now());
   const [landed, setLanded] = useState<number>();
   const landedRef = useRef<number>(undefined);
+
+  // At rest, a slow 3D wobble around the face it shows (none with reduced motion)
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let id = 0;
+    const tick = (now: number) => {
+      const el = canvas.current;
+      if (el && !rollingRef.current) {
+        shown.current = wobble(q.current, now, Math.min(1, (now - restingSince.current) / WOBBLE_IN));
+        draw(el, shown.current, 0, landedRef.current);
+      }
+      id = requestAnimationFrame(tick);
+    };
+    id = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   const redraw = useCallback(() => {
     if (canvas.current) draw(canvas.current, q.current, 0, landedRef.current);
@@ -135,18 +171,22 @@ export function Roller({
       const face = DIE.faces.find((f) => f.number === value);
       if (!el || !face) return;
       cancelAnimationFrame(frame.current);
-      const from = q.current;
+      const from = shown.current;
       const to = facing(face);
       const land = () => {
         q.current = to;
+        shown.current = to;
         landedRef.current = value;
         setLanded(value);
         setRolling(false);
+        rollingRef.current = false;
+        restingSince.current = performance.now();
         redraw();
         done?.();
       };
       landedRef.current = undefined;
       setRolling(true);
+      rollingRef.current = true;
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return land();
       // Tumble around a random axis, slowing down, while easing into the face it lands on
       const axis: Vec = [Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5];
