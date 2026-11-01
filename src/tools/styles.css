@@ -164,7 +164,6 @@
   /* The first box, dark like the sheet's boxes, with the name 24px above
      the resources */
   .tools-head {
-    position: relative;
     background-color: var(--panel);
     border-color: rgb(255 255 255 / 12%);
   }
@@ -682,12 +681,12 @@
 
   /* Level up, Download character, Switch character and the rules problems
      chip, in a row at the right of the name, 8px apart */
-  /* Download character, Switch character and any rules problems, right
-     aligned in the top right corner of the sheet's first box, 1rem in */
+  /* Download character, Switch character and any rules problems, above the
+     sheet (.tools-box) at its right edge, right aligned, 1rem clear of it */
   .tools-actions {
     position: absolute;
-    top: 1rem;
-    right: 1rem;
+    bottom: calc(100% + 1rem);
+    right: 0;
     z-index: 1;
     flex-wrap: wrap;
     justify-content: flex-end;
