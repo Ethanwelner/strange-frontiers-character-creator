@@ -2166,8 +2166,11 @@
     gap: 36px;
   }
 
+  /* Each centered in its column */
   .tools-resource {
+    width: 100%;
     max-width: 360px;
+    justify-self: center;
   }
 
   .tools-resource-value {
@@ -2211,11 +2214,16 @@
   }
 
   /* On the creator's sheet: no bars, each value right after its name, in a
-     row that wraps */
+     centered row that wraps */
   .tools-resources.sheet-resources {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 16px 48px;
+
+    .tools-resource {
+      width: auto;
+    }
 
     .num {
       flex: none;
