@@ -101,7 +101,8 @@ export function App() {
     setSaved((s) => ({
       ...s,
       // A portrait added before building stays; the AI doesn't look at it.
-      draft: { ...built, portrait: s.draft.portrait },
+      // The builder's summary becomes the character's description.
+      draft: { ...built, portrait: s.draft.portrait, description: result.summary?.trim() || undefined },
       campaign: { startingLevel: built.level },
       step: "sheet",
       ai: {
@@ -246,6 +247,7 @@ export function App() {
                   onName={(name) => setDraft({ ...draft, name })}
                   onLooks={(looks) => setDraft({ ...draft, ...looks })}
                   onPortrait={(portrait) => setDraft({ ...draft, portrait })}
+                  onDescription={(description) => setDraft({ ...draft, description })}
                   items={draft.items}
                   onItems={(items) => setDraft({ ...draft, items })}
                   conditions={draft.conditions}

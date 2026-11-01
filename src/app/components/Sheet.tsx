@@ -101,6 +101,7 @@ export function Sheet({
   onName,
   onLooks,
   onPortrait,
+  onDescription,
   embedded = false,
   statsSlot,
   traitsAction,
@@ -123,6 +124,8 @@ export function Sheet({
   onLooks?: (looks: Pick<Draft, "age" | "gender" | "customGender">) => void;
   // Changes the portrait from the sheet; without it the sheet only shows it.
   onPortrait?: (portrait?: string) => void;
+  // Edits the description; without it the sheet shows the description as text.
+  onDescription?: (description?: string) => void;
   // The last column, after the Knowledges: the Conditions, then the Items,
   // with the current HP the Conditions go by (full if not given)
   items?: Item[];
@@ -131,7 +134,6 @@ export function Sheet({
   onConditions?: (conditions: HeldCondition[]) => void;
   hp?: number;
 }) {
-  const kind = draft.kind ? kindById.get(draft.kind) : undefined;
   const packages = [draft.origin, draft.profession, draft.past].map((id) => (id ? packageById.get(id) : undefined));
   const base = baseStats(draft);
   const summary = result.summary;
@@ -203,16 +205,26 @@ export function Sheet({
                   </span>
                 ))}
               </p>
-              {kind && kind.features.length > 0 && (
-                <ul className="features kind-features">
-                  {kind.features.map((f) => (
-                    <li key={f.name}>
-                      <strong>{f.name}.</strong> {f.description}
-                    </li>
-                  ))}
-                </ul>
-              )}
             </div>
+            {/* The description, editable at any time; an AI build fills it with its summary */}
+            {onDescription ? (
+              <label className="sheet-description">
+                <span className="field-label">Description</span>
+                <textarea
+                  value={draft.description ?? ""}
+                  maxLength={4000}
+                  placeholder="Who they are, how they look, what they want."
+                  onChange={(e) => onDescription(e.target.value || undefined)}
+                />
+              </label>
+            ) : (
+              draft.description && (
+                <div className="sheet-description">
+                  <span className="field-label">Description</span>
+                  <p>{draft.description}</p>
+                </div>
+              )
+            )}
           </div>
         )}
 

@@ -25,6 +25,9 @@ export interface Draft {
   // The character's picture, shrunk in the browser and kept in the build as a
   // data URL, so the JSON file carries it (see portrait.ts).
   portrait?: string;
+  // Who the character is, in the player's words, or the AI builder's summary
+  // after a build. Free text on the sheet; the rules don't read it.
+  description?: string;
   kind?: string;
   origin?: string;
   profession?: string;
@@ -175,6 +178,7 @@ export function fromBuild(input: unknown): Draft {
     gender: readGender(b.gender),
     customGender: b.gender === "custom" ? text(b.customGender) : undefined,
     portrait: readPortrait(b.portrait),
+    description: text(b.description),
     kind,
     origin: text(b.origin),
     profession: text(b.profession),

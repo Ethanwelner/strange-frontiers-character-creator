@@ -1991,7 +1991,36 @@
   }
 
   .sheet-head-main {
-    flex: 1 1 24rem;
+    flex: 2 1 24rem;
+  }
+
+  /* The description, the third column after the portrait and the name's
+     column: a label over a box that grows with its text */
+  .sheet-description {
+    flex: 1 1 16rem;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-self: stretch;
+
+    textarea {
+      flex: 1;
+      width: 100%;
+      min-height: 10rem;
+      field-sizing: content;
+      padding: 0.6rem 0.75rem;
+      font: inherit;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      resize: vertical;
+    }
+
+    p {
+      margin: 0;
+      white-space: pre-line;
+    }
   }
 
   /* The name, with the pen that edits it at the right end of its line, on
@@ -2064,11 +2093,6 @@
     height: 18px;
     background-color: currentColor;
     mask: url("./img/pen.svg") center / contain no-repeat;
-  }
-
-  /* The Kind's features, under HP | VP | SP */
-  .kind-features {
-    margin: 1rem 0 0;
   }
 
   /* HP | VP | SP, like the site's sample sheet */
@@ -2348,7 +2372,8 @@
      shows as a light ring inside. Dropdowns draw their own chevron, 12px in
      from the right. */
   @media screen {
-    .builder-panel :is(input:not([type="checkbox"], [type="radio"], [type="range"], [type="file"]), select) {
+    .builder-panel :is(input:not([type="checkbox"], [type="radio"], [type="range"], [type="file"]), select),
+    .sheet-description textarea {
       color-scheme: dark;
       background-color: var(--portfolio-black);
       color: var(--panel-text);
