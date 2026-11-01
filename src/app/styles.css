@@ -1748,18 +1748,21 @@
 
   /* Sheet: the site's sample character sheet (.c-sheet, .c-sheet-box) */
 
-  /* 2rem around the boxes, like Player Tools' box (1.25rem on phones) */
+  /* 1rem around the boxes, like Player Tools' box, with 12px corners (the
+     site's sample sheet keeps its own 16px) */
   .c-sheet {
     position: relative;
     display: flex;
     flex-direction: column;
     gap: 24px;
     margin-top: 2.5rem;
-    padding: 2rem;
+    padding: 1rem;
+    border-radius: 12px;
+  }
 
-    @media (max-width: 767px) {
-      padding: 1.25rem;
-    }
+  /* The darker boxes inside, with 12px corners like the sheet's */
+  .c-sheet-box {
+    border-radius: 12px;
   }
 
   .c-sheet-box > .subhead:first-child {
@@ -1769,11 +1772,11 @@
   /* The site's .level-badge and .stat-badge, at a fixed size. The level is
      a 96px blob (.level-blob) centered between the corner of the creator's
      sheet (or Player Tools' box) and the corner of the box inside it: half
-     their 2rem padding in. */
+     their 1rem padding in. */
   .level-badge {
     z-index: 1;
-    top: calc(1rem - 48px);
-    left: calc(1rem - 48px);
+    top: calc(0.5rem - 48px);
+    left: calc(0.5rem - 48px);
     width: 96px;
     height: 96px;
     padding: 0;
@@ -1946,16 +1949,17 @@
     }
   }
 
+  /* 24px between rows when the columns stack */
   .sheet-body {
     display: grid;
     grid-template-columns: minmax(0, 5fr) minmax(0, 3fr);
-    gap: 48px;
+    gap: 24px 48px;
   }
 
   /* With Items (components/Items.tsx) as a third column after the Knowledges */
   .sheet-body:has(> .tools-items) {
     grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 4fr);
-    gap: 40px;
+    gap: 24px 40px;
   }
 
   @media (max-width: 1199px) {
@@ -2304,7 +2308,7 @@
 
     .sheet-body {
       grid-template-columns: minmax(0, 1fr);
-      gap: 32px;
+      gap: 24px;
     }
 
     .level-badge {
