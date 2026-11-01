@@ -11,6 +11,7 @@ import { runTool, ToolError } from "../ai/tools.js";
 import type { Content } from "../engine/parse.js";
 import type { BuildResult } from "../engine/validate.js";
 import { STAT_GROUPS, TraitCategory } from "../schema/index.js";
+import { roll } from "./dice.js";
 import {
   addCondition,
   addItem,
@@ -44,6 +45,7 @@ Numbers come from the tracker, never from memory:
 How to help:
 - Answer from the sheet and the game's content. Look Traits up with search_traits and get_trait rather than guessing what they do. If the rules don't say, say so, and that it's the GM's call.
 - When the player says something happened to their character (they took damage, healed, spent VP, picked up or used an item, caught or shook off a Condition), change the tracker with the tools. Only change what they told you about. Damage comes off HP after resistances the player mentions; you don't know the character's armor unless it's in their items.
+- Rolls: skill checks are a d20 plus the focus stat they use, and meeting or beating the target succeeds. When the player asks you to roll, roll with roll_d20 (pass the stat as the modifier) and report the number it returns. Never make up a roll. The player's own rolls on the page show up in the chat as "Rolled a d20: 14".
 - Never level the character up or change their Traits or stats: the player does that on the page.
 - Keep answers short: a sentence or two, or a short list. Say what you changed.
 - Write plain text: the chat shows Markdown as typed, so no asterisks or other formatting.`;
@@ -134,6 +136,19 @@ export const CHAT_TOOLS: Tool[] = [
     },
   },
   {
+    name: "roll_d20",
+    description:
+      "Roll a d20 for the player, on the page's die. Pass `modifier` to add a stat or bonus to each roll, `count` for more than one roll, and `for` to say what it's for. Returns each roll and its total.",
+    input_schema: {
+      type: "object",
+      properties: {
+        count: { type: "integer", minimum: 1, maximum: 5 },
+        modifier: { type: "integer" },
+        for: { type: "string", description: 'What the roll is for, e.g. "Shoot".' },
+      },
+    },
+  },
+  {
     name: "remove_condition",
     description: "Take a temporary Condition off the character, by Trait id.",
     input_schema: { type: "object", properties: { trait: { type: "string" } }, required: ["trait"] },
@@ -214,6 +229,8 @@ interface Applied {
   play: Play;
   result: unknown;
   change?: string;
+  // The d20s rolled, for the page's die to show
+  rolls?: number[];
 }
 
 // One tool call against the character. Throws ToolError for bad input.
@@ -287,6 +304,19 @@ export function applyTool(
       if (!play.conditions.some((c) => c.trait === id)) throw new ToolError(`The character doesn't have "${String(input.trait)}".`);
       return { play: removeCondition(play, id!), result: { conditions: removeCondition(play, id!).conditions }, change: `No longer ${name(content, id!)}` };
     }
+    case "roll_d20": {
+      const count = Math.min(5, Math.max(1, int(input.count) ?? 1));
+      const modifier = int(input.modifier) ?? 0;
+      const reason = str(input.for);
+      const rolls = Array.from({ length: count }, () => roll(20));
+      const shown = (n: number) => (modifier ? `${n} ${modifier < 0 ? "−" : "+"} ${Math.abs(modifier)} = ${n + modifier}` : String(n));
+      return {
+        play,
+        result: { rolls: rolls.map((n) => ({ roll: n, total: n + modifier })), modifier },
+        change: `Rolled ${count > 1 ? `${count} d20s` : "a d20"}${reason ? ` for ${reason}` : ""}: ${rolls.map(shown).join(", ")}`,
+        rolls,
+      };
+    }
     default:
       throw new ToolError(`No tool named ${tool}.`);
   }
@@ -307,6 +337,8 @@ export async function ask(opts: {
   content: Content;
   create: CreateMessage;
   model: string;
+  // Called with each roll_d20's rolls as it's made
+  onRoll?: (rolls: number[]) => void;
 }): Promise<ChatReply> {
   let play = opts.play;
   const changes: string[] = [];
@@ -319,10 +351,18 @@ export async function ask(opts: {
   while (history[0]?.role === "assistant") history.shift();
   // The tracker's current values ride on the player's message, so the
   // numbers Claude starts from are never the history's.
-  const messages: MessageParam[] = [
-    ...history.map((m): MessageParam => ({ role: m.role, content: m.changes?.length ? `${m.text}\n(Changed then: ${m.changes.join("; ")})` : m.text })),
-    { role: "user", content: `${opts.message}\n\n(Tracker now: ${trackerLine(play, opts.check(play), opts.content)})` },
+  // Rolls made on the page come in as player messages, so messages from the
+  // same side in a row are joined into one.
+  const said = [
+    ...history.map((m) => ({ role: m.role, text: m.changes?.length ? `${m.text}\n(Changed then: ${m.changes.join("; ")})` : m.text })),
+    { role: "user" as const, text: `${opts.message}\n\n(Tracker now: ${trackerLine(play, opts.check(play), opts.content)})` },
   ];
+  const messages: MessageParam[] = [];
+  for (const m of said) {
+    const last = messages.at(-1);
+    if (last?.role === m.role) last.content = `${String(last.content)}\n\n${m.text}`;
+    else messages.push({ role: m.role, content: m.text });
+  }
 
   for (let turn = 0; turn < MAX_TURNS; turn++) {
     const reply = await opts.create({ model: opts.model, max_tokens: 2048, system, tools: CHAT_TOOLS, messages });
@@ -341,6 +381,7 @@ export async function ask(opts: {
         const applied = applyTool(call.name, (call.input ?? {}) as Record<string, unknown>, play, opts.check(play), opts.content);
         play = applied.play;
         if (applied.change) changes.push(applied.change);
+        if (applied.rolls) opts.onRoll?.(applied.rolls);
         return { type: "tool_result", tool_use_id: call.id, content: JSON.stringify(applied.result) };
       } catch (err) {
         if (!(err instanceof ToolError)) throw err;

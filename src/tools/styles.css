@@ -536,23 +536,147 @@
     }
   }
 
-  /* The assistant, at the top of the right column, stays in view while the
+  /* The d20 and the assistant, in the right column, stay in view while the
      tools scroll, like the creator's character box. The column never
-     scrolls on its own: the conversation scrolls inside the chat, and when
-     the column is taller than the window it stops sticking (.is-tall, set
-     in App.tsx) and scrolls with the page. */
+     scrolls on its own: the conversation takes the column's leftover
+     height and scrolls inside.
+
+     The column is always the window's height less 16px above and below, so
+     nothing in it is laid out again as the page scrolls. Before it sticks,
+     its bottom is below the window, so the conversation, any error and the
+     message box slide up by that much, ending 16px above the bottom of the
+     window, and run under the d20 and the Assistant title, which cover them
+     in the panel's color. At the end of the page the panel pushes the
+     column up, so the d20 and the title slide down by that much instead.
+     Only transforms move, on two scroll-driven animations that follow the
+     tools body (the column's top and bottom are the body's) through the
+     window, inset 16px top and bottom, so the browser moves them in step
+     with the scroll. Browsers without scroll-driven animations just get the
+     column. */
+  .tools-body {
+    view-timeline: --tools-body block;
+    view-timeline-inset: 16px;
+  }
+
   .tools-chat-side {
     grid-column: 2;
     grid-row: 1;
     position: sticky;
-    top: 1rem;
+    top: 16px;
     align-self: start;
-    display: grid;
+    display: flex;
+    flex-direction: column;
     gap: 24px;
+    height: calc(100dvh - 32px);
+    /* What slides past the column's top or bottom is hidden */
+    overflow-y: clip;
+  }
 
-    &.is-tall {
-      position: static;
+  /* The d20 and the title stay over the conversation, covering the gaps
+     under them too */
+  .tools-roller,
+  .tools-chat-head {
+    position: relative;
+    z-index: 1;
+    background: var(--panel);
+    box-shadow: 0 24px 0 var(--panel);
+  }
+
+  /* The conversation box's top edge and rounded corners, drawn 24px under
+     the title, where the box's top shows while the box itself has slid up
+     under it. Once the column sticks, it sits right on the box's own edge. */
+  .tools-chat-head::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 24px);
+    height: 24px;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 100% 100%, transparent 22.5px, var(--card-border) 23px 23.5px, var(--panel) 24px) left top / 24px 24px no-repeat,
+      radial-gradient(circle at 0 100%, transparent 22.5px, var(--card-border) 23px 23.5px, var(--panel) 24px) right top / 24px 24px no-repeat,
+      linear-gradient(var(--card-border), var(--card-border)) center top / calc(100% - 48px) 1px no-repeat;
+  }
+
+  @supports (animation-timeline: view()) {
+    /* Up while the body's top crosses the window */
+    .tools-chat-log,
+    .tools-chat > .notice,
+    .tools-chat-form {
+      animation: tools-side-lift linear both;
+      animation-timeline: --tools-body;
+      animation-range: entry-crossing 0% exit-crossing 0%;
     }
+
+    /* Down while its bottom does */
+    .tools-roller,
+    .tools-chat-head {
+      animation: tools-side-drop linear both;
+      animation-timeline: --tools-body;
+      animation-range: entry-crossing 100% exit-crossing 100%;
+    }
+  }
+
+  /* The d20, over the assistant: a green die on a little CRT, drawn in
+     chunky pixels (Roller.tsx) under scanlines and a dark vignette. The
+     whole screen is the roll button. */
+  .tools-roller-screen {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 184px;
+    padding: 0;
+    border: 1px solid color-mix(in srgb, var(--frontiers-green) 35%, #1c1c1c);
+    border-radius: 18px / 24px;
+    overflow: hidden;
+    background: radial-gradient(ellipse at center, #1f241f 0%, #141414 75%);
+    cursor: pointer;
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      image-rendering: pixelated;
+      filter: drop-shadow(0 0 4px color-mix(in srgb, var(--frontiers-green) 70%, transparent));
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        repeating-linear-gradient(to bottom, rgb(0 0 0 / 0%) 0 2px, rgb(0 0 0 / 28%) 2px 3px),
+        radial-gradient(ellipse at center, transparent 55%, rgb(0 0 0 / 55%) 100%);
+    }
+
+    &:hover:not(:disabled) {
+      border-color: var(--frontiers-green);
+    }
+
+    /* Inside, since the column clips above it */
+    &:focus-visible {
+      outline: 2px solid var(--frontiers-green);
+      outline-offset: -4px;
+    }
+
+    &:disabled {
+      cursor: default;
+    }
+  }
+
+  .tools-roller-caption {
+    position: absolute;
+    left: 14px;
+    bottom: 10px;
+    z-index: 1;
+    font-family: monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--frontiers-green);
+    text-shadow: 0 0 6px var(--frontiers-green);
   }
 
   /* The sheet under the first box: its columns and Traits keep their own
@@ -631,33 +755,53 @@
     margin-top: 24px;
   }
 
-  /* Title, conversation, then the message box and Send, 24px apart */
+  /* Title, the conversation in its box, then the message box and Send,
+     filling the column under the d20. The title is 24px over the
+     conversation; the rest are 20px apart. */
   .tools-chat {
-    display: grid;
-    gap: 24px;
+    flex: 1 1 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .tools-roller {
+    flex: none;
   }
 
   .tools-chat-head {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
+    margin-bottom: 4px;
 
     .subhead {
       margin: 0;
     }
   }
 
+  /* The conversation, suggestions and all, in a darker box */
   .tools-chat-log {
     list-style: none;
-    padding: 0;
+    padding: 16px;
     margin: 0;
+    background-color: #212121;
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
     overflow-y: auto;
-    /* The room the rest of the column leaves in the window (App.tsx sets it) */
+    /* The room the rest of the column leaves */
+    flex: 1 1 0;
     min-height: 120px;
-    max-height: var(--chat-log-max, calc(100vh - 440px));
     display: flex;
     flex-direction: column;
     gap: 8px;
+
+    /* Messages settle at the bottom, by the message box, so they're the
+       part in view while the d20 covers the top */
+    > :first-child {
+      margin-top: auto;
+    }
   }
 
   /* Before the first message: what to ask, then the examples */
@@ -738,20 +882,68 @@
     margin: 0;
   }
 
+  /* A chat error, like the assistant being out of credits: light text on a
+     dark red, fading after 3 seconds */
+  .tools-chat .notice.bad {
+    background: color-mix(in srgb, var(--portfolio-red) 25%, #1c1c1c);
+    border-color: var(--portfolio-red);
+    color: var(--portfolio-white);
+
+    button.link {
+      color: inherit;
+    }
+  }
+
+  /* The message box, with Send inside it at the bottom right */
   .tools-chat-form {
-    display: grid;
-    gap: 24px;
+    position: relative;
 
     textarea.rpg-search-input {
+      display: block;
       width: 100%;
       height: auto;
       min-height: 120px;
-      padding: 12px 16px;
+      padding: 12px 56px 12px 16px;
       resize: vertical;
     }
+  }
 
-    .build-button {
-      justify-self: end;
+  /* A green round button with the paper plane centered in it, like the
+     creator's green buttons. It stays green while there's nothing to send,
+     and glitches once there is (the small glitch in src/app/styles.css). */
+  button.tools-chat-send {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: var(--frontiers-green);
+    color: var(--portfolio-black);
+    cursor: pointer;
+
+    .icon {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    &:hover:not(:disabled) {
+      background-color: color-mix(in srgb, var(--frontiers-green) 75%, var(--portfolio-white));
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--frontiers-green);
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      cursor: default;
     }
   }
 
@@ -773,6 +965,34 @@
     }
   }
 
+  /* A window too short for the column (the conversation would get less than
+     120px): it stops sticking and scrolls with the page, with a set height
+     for the conversation */
+  @media (min-width: 992px) and (max-height: 620px) {
+    .tools-chat-side {
+      position: static;
+      height: auto;
+      overflow-y: visible;
+    }
+
+    .tools-chat {
+      flex: none;
+    }
+
+    .tools-chat-log {
+      flex: none;
+      height: 360px;
+    }
+
+    .tools-chat-log,
+    .tools-chat > .notice,
+    .tools-chat-form,
+    .tools-roller,
+    .tools-chat-head {
+      animation: none;
+    }
+  }
+
   @media (max-width: 991px) {
     .tools-body {
       grid-template-columns: minmax(0, 1fr);
@@ -785,7 +1005,27 @@
 
     .tools-chat-side {
       position: static;
-      max-height: none;
+      height: auto;
+      overflow-y: visible;
+    }
+
+    .tools-chat-log,
+    .tools-chat > .notice,
+    .tools-chat-form,
+    .tools-roller,
+    .tools-chat-head {
+      animation: none;
+    }
+
+    /* Stacked under the tracker, the conversation keeps a set height
+       instead of following the scroll */
+    .tools-chat {
+      flex: none;
+    }
+
+    .tools-chat-log {
+      flex: none;
+      height: 50vh;
     }
 
     /* Stacked, the panel's top padding is too short for them, so the chip
@@ -799,5 +1039,26 @@
       position: static;
       margin-bottom: 24px;
     }
+  }
+}
+
+/* The right column's conversation and message box rising to the bottom of
+   the window, and its d20 and title dropping at the end of the page
+   (.tools-chat-side) */
+@keyframes tools-side-lift {
+  from {
+    transform: translateY(calc(32px - 100dvh));
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes tools-side-drop {
+  from {
+    transform: none;
+  }
+  to {
+    transform: translateY(calc(100dvh - 32px));
   }
 }

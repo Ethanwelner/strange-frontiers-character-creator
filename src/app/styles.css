@@ -2357,12 +2357,12 @@
    (.frontiers-glitch in css/rpg.css), on the things waiting for the player:
    Player Tools' Traits available and rules problems chip, the stats' +
    while it has a point to place, and the creator's next step button once
-   its step is finished (green) and Build it once there's something to
-   build. The same rhythm, but a faint green glow, a
+   its step is finished (green), Build it once there's something to
+   build, and Player Tools' Send once there's a message. The same rhythm, but a faint green glow, a
    cyan and red split that widens on the flares, and a slight skew instead of the title's slices and
    lurches. Every frame has the same three shadows (green, cyan to the left,
    red to the right), so they blend from one to the next. */
-.sf-creator :is(.tools-traits-available button, .tools-issues li, .is-plus:not(:disabled), .pager .step-next.is-done, .describe .build-button:not(:disabled)) {
+.sf-creator :is(.tools-traits-available button, .tools-issues li, .is-plus:not(:disabled), .pager .step-next.is-done, .describe .build-button:not(:disabled), .tools-chat-send:not(:disabled)) {
   animation:
     sf-glitch-small-shift 4s ease-in-out infinite alternate,
     sf-glitch-small-glow 8s ease-in-out infinite alternate;
@@ -2394,7 +2394,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sf-creator :is(.tools-traits-available button, .tools-issues li, .is-plus:not(:disabled), .pager .step-next.is-done, .describe .build-button:not(:disabled)) {
+  .sf-creator :is(.tools-traits-available button, .tools-issues li, .is-plus:not(:disabled), .pager .step-next.is-done, .describe .build-button:not(:disabled), .tools-chat-send:not(:disabled)) {
     animation: none;
   }
 }
