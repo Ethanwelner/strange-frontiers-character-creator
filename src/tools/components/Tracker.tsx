@@ -6,7 +6,7 @@ import { Sheet } from "../../app/components/Sheet.js";
 import { StatsStep } from "../../app/components/StatsStep.js";
 import { TraitsStep } from "../../app/components/TraitsStep.js";
 import { Items } from "../../app/components/Items.js";
-import { LorePopup, Sign } from "../../app/components/ui.js";
+import { Icon, LorePopup, Sign } from "../../app/components/ui.js";
 import {
   addCondition,
   checkPlay,
@@ -60,7 +60,6 @@ export function Tracker({
     set(r, currentOf(play, result, r) + sign * n);
     setAmounts({ ...amounts, [r]: "" });
   };
-  const full = shown.every((r) => currentOf(play, result, r) >= maxOf(result, r));
 
   const [traitDraft, setTraitDraft] = useState<Draft>();
   const closeTraits = useCallback(() => setTraitDraft(undefined), []);
@@ -107,7 +106,8 @@ export function Tracker({
             const pct = max > 0 ? Math.max(0, Math.min(100, (cur / max) * 100)) : 0;
             return (
               <div key={r} className="tools-resource">
-                {/* HP, then −, the value and +, on one line; the full name shows on hover */}
+                {/* HP, then −, the value, + and restore to full, on one line; the full name
+                    shows on hover */}
                 <div className="tools-resource-value">
                   <strong className={`tools-resource-name resource-${r}`} title={NAMES[r]}>
                     {r.toUpperCase()}
@@ -121,6 +121,9 @@ export function Tracker({
                   </span>
                   <button type="button" onClick={() => set(r, cur + 1)} disabled={cur >= max} aria-label={`1 more ${r.toUpperCase()}`}>
                     <Sign is="plus" />
+                  </button>
+                  <button type="button" onClick={() => set(r, max)} disabled={cur >= max} aria-label={`Restore ${r.toUpperCase()} to full`} title="Restore to full">
+                    <Icon name="restore" />
                   </button>
                 </div>
                 <div className={`tools-meter tools-meter-${r}`} aria-hidden="true">
@@ -148,11 +151,6 @@ export function Tracker({
             );
           })}
         </div>
-        <p className="tools-restore">
-          <button type="button" onClick={() => onChange({ ...play, current: {} })} disabled={full}>
-            Restore all
-          </button>
-        </p>
       </div>
 
       {/* The rest of the character sheet: stats, Knowledges, Conditions and Items, and Traits */}

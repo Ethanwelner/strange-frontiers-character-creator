@@ -374,7 +374,12 @@
     align-items: center;
     gap: 8px;
 
-    /* − and +, round */
+    /* −, + and restore, round, with their icons the same size */
+    .icon {
+      width: 0.75em;
+      height: 0.75em;
+    }
+
     button {
       flex: none;
       width: 32px;
@@ -472,10 +477,6 @@
     &:not(:has(.sheet-stats)) {
       grid-template-columns: minmax(0, 3fr) minmax(0, 4fr);
     }
-  }
-
-  .tools-restore {
-    margin: 0;
   }
 
   .tools-tracker > .sheet-embedded {
@@ -806,9 +807,8 @@
   }
 
   /* Gray badges, shaped like the rules problems chip: Download character,
-     Switch character with its Yes and Cancel, and Restore all */
-  .tools-actions > button,
-  .tools-restore button {
+     Switch character with its Yes and Cancel */
+  .tools-actions > button {
     padding: 0.5rem 1rem;
     border-radius: 999px;
     font-family: inherit;
