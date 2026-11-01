@@ -2117,8 +2117,15 @@
 
   /* The line under the character's name, the same on the creator's Sheet
      and in Player Tools (components/CharacterLine.tsx) */
-  /* Kind, age, gender and background, stacked 8px apart, each a label over
-     its value */
+  /* Kind, age and gender on one row, Origin, Profession and Past on the
+     next, 8px apart; each a label over its value, 24px apart in its row */
+  .tools-line-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    margin: 0;
+  }
+
   .tools-line {
     display: flex;
     flex-direction: column;
