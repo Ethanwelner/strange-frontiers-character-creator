@@ -1613,21 +1613,23 @@
     }
   }
 
-  /* Character step: the name (up to 640px wide) with the starting level right
-     beside it, their controls level */
+  /* Character step: the portrait, with the starting level, the name (up to
+     640px wide) and the age and gender row stacked at the top beside it */
   .character-fields {
     display: grid;
-    grid-template-columns: auto minmax(0, 640px) auto;
+    grid-template-columns: auto minmax(0, 640px);
+    grid-template-rows: auto auto auto 1fr;
     grid-template-areas:
-      "portrait name level"
-      "portrait looks looks";
+      "portrait level"
+      "portrait name"
+      "portrait looks"
+      "portrait .";
     justify-content: start;
-    align-items: end;
-    gap: 0 24px;
+    align-items: start;
+    gap: 16px 24px;
 
     .character-portrait {
       grid-area: portrait;
-      align-self: start;
     }
 
     > .name-field {
@@ -1639,15 +1641,13 @@
     }
 
     @media (max-width: 599.98px) {
-      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: none;
       grid-template-areas:
-        "portrait portrait"
-        "name level"
-        "looks looks";
-
-      .character-portrait {
-        margin-bottom: 16px;
-      }
+        "portrait"
+        "level"
+        "name"
+        "looks";
     }
 
     .name-field {
@@ -1661,7 +1661,6 @@
     flex-wrap: wrap;
     align-items: end;
     gap: 16px 24px;
-    margin-top: 16px;
 
     .age-field {
       width: 6.5rem;

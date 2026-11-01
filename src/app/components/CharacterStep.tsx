@@ -19,12 +19,12 @@ export function CharacterStep({ draft, startingLevel, onChange, onStartingLevel 
       </StepHeader>
       <div className="tech-fields tech-fields-light step-box character-fields">
         <Portrait className="character-portrait" portrait={draft.portrait} onChange={(portrait) => onChange({ ...draft, portrait })} />
+        {/* The describe box's Level control, above the name */}
+        <LevelStepper label="Starting Level" level={startingLevel} onChange={onStartingLevel} />
         <label className="field name-field">
           <span className="field-label">Character Name</span>
           <input value={draft.name ?? ""} placeholder="Unnamed character" onChange={(e) => onChange({ ...draft, name: e.target.value || undefined })} />
         </label>
-        {/* The describe box's Level control */}
-        <LevelStepper label="Starting Level" level={startingLevel} onChange={onStartingLevel} />
         <div className="looks-fields">
           <LooksFields looks={draft} onChange={(looks) => onChange({ ...draft, ...looks })} fieldClass="field name-field" />
         </div>
