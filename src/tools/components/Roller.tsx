@@ -183,7 +183,7 @@ export function Roller({
       >
         <canvas ref={canvas} aria-hidden="true" />
         <span className="tools-roller-caption" aria-live="polite">
-          {rolling ? "Rolling…" : landed ? `d20: ${landed}` : "Click to roll"}
+          {rolling ? "Rolling…" : landed ? `Rolled ${landed}` : ""}
         </span>
       </button>
       {children}
