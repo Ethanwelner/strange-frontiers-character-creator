@@ -106,8 +106,8 @@ function draw(canvas: HTMLCanvasElement, nums: HTMLCanvasElement, q: Quat, lift:
   // so it tilts and narrows with its triangle. (The die has no perspective,
   // so that's exact.) Every face turned toward you shows its number, however
   // tilted. The current face (the one rolled, or before any roll the one
-  // most toward you) is at full strength; the rest are at 0.4, so they don't
-  // compete with it.
+  // most toward you) is at full size and strength; the rest are a little
+  // smaller and at 0.4, so they don't compete with it.
   numCtx.setTransform(1, 0, 0, 1, 0, 0);
   numCtx.clearRect(0, 0, nums.width, nums.height);
   const sx = nums.width / w;
@@ -121,7 +121,9 @@ function draw(canvas: HTMLCanvasElement, nums: HTMLCanvasElement, q: Quat, lift:
     const right: Vec = [up[1] * n[2] - up[2] * n[1], up[2] * n[0] - up[0] * n[2], up[0] * n[1] - up[1] * n[0]];
     // One die pixel along right, and one down the face, in the numbers canvas
     numCtx.setTransform(right[0] * sx, -right[1] * sy, -up[0] * sx, up[1] * sy, x * sx, y * sy);
-    drawNumber(numCtx, f.number, lit ? dark : green, lit ? green : dark, lit ? 2 : 1, f.number === current ? 1 : 0.4);
+    const main = f.number === current;
+    if (!main) numCtx.scale(0.8, 0.8);
+    drawNumber(numCtx, f.number, lit ? dark : green, lit ? green : dark, lit ? 2 : 1, main ? 1 : 0.4);
   }
   numCtx.setTransform(1, 0, 0, 1, 0, 0);
 }
