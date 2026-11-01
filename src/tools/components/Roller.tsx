@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { axisAngle, facing, icosahedron, mul, roll, rotate, slerp, type Quat, type Vec } from "../dice.js";
 
 // Screen pixels per canvas pixel: the die is drawn small and scaled up blocky.
@@ -82,7 +82,18 @@ function draw(canvas: HTMLCanvasElement, q: Quat, lift: number, landed?: number)
 // A d20 on a little green CRT. Clicking it rolls; `show` makes it roll to a
 // number picked somewhere else (the assistant's rolls). The number is picked
 // before the die moves, and the die lands showing it.
-export function Roller({ show, disabled, onRolled }: { show?: { value: number; key: number }; disabled?: boolean; onRolled: (value: number) => void }) {
+// `children` ride along on the die's layer, like the chat's Clear badge.
+export function Roller({
+  show,
+  disabled,
+  onRolled,
+  children,
+}: {
+  show?: { value: number; key: number };
+  disabled?: boolean;
+  onRolled: (value: number) => void;
+  children?: ReactNode;
+}) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const q = useRef<Quat>(
     facing(
@@ -175,6 +186,7 @@ export function Roller({ show, disabled, onRolled }: { show?: { value: number; k
           {rolling ? "Rolling…" : landed ? `d20: ${landed}` : "Click to roll"}
         </span>
       </button>
+      {children}
     </section>
   );
 }
