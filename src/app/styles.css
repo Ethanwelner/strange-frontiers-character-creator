@@ -2004,8 +2004,8 @@
   }
 
   /* From 1200px, where the body has its three columns, the head takes the
-     same ones: the portrait and name over the stats and Knowledges, the
-     description over the Conditions and Items */
+     same ones: the portrait and name over the stats, the description over
+     the Knowledges and the Conditions and Items */
   @media (min-width: 1200px) {
     :is(.sheet-head, .tools-character):has(> .sheet-description) {
       display: grid;
@@ -2013,13 +2013,23 @@
       gap: 24px 40px;
     }
 
+    /* The name and info keep to the portrait's side as long as there's 10rem
+       left beside it */
     .sheet-head-who {
-      grid-column: 1 / 3;
+      grid-column: 1;
+
+      > :is(.sheet-head-main, .tools-character-main) {
+        flex: 1 1 10rem;
+      }
+    }
+
+    .sheet-head-who + .sheet-description {
+      grid-column: 2 / 4;
     }
   }
 
-  /* The description, the third column after the portrait and the name's
-     column: a label over a box that grows with its text */
+  /* The description, after the portrait and the name's column: a box that
+     grows with its text */
   .sheet-description {
     flex: 1 1 16rem;
     display: flex;
