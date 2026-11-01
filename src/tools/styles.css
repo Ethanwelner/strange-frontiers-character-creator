@@ -201,9 +201,62 @@
     margin: 0 0 8px;
   }
 
-  /* Age and gender, under the Kind and background line */
+  /* Age and gender, under the Kind and background line, each with a small
+     pen that opens its field in place (LooksLine.tsx) */
   .tools-looks {
+    align-items: center;
     margin: 0 0 8px;
+  }
+
+  .tools-look {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  button.tools-look-value {
+    all: unset;
+    cursor: text;
+
+    &:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
+    }
+  }
+
+  button.tools-look-edit {
+    width: 24px;
+    height: 24px;
+
+    .pen-icon {
+      width: 13px;
+      height: 13px;
+    }
+  }
+
+  .tools-look-gender {
+    display: inline-flex;
+    gap: 8px;
+  }
+
+  /* The fields, in the line's own type, with a line under them like the
+     name's */
+  .tools-look-input {
+    font: inherit;
+    font-weight: 700;
+    color: inherit;
+    background: none;
+    border: 0;
+    border-bottom: 2px solid currentColor;
+    padding: 0;
+  }
+
+  .tools-look-age {
+    width: 4.5rem;
+  }
+
+  select.tools-look-input option {
+    color: var(--portfolio-black);
   }
 
   /* The rules problems chip, at the top left of the panel; it opens the list */
