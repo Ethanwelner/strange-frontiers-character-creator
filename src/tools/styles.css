@@ -76,6 +76,13 @@
     gap: 24px;
   }
 
+  /* With the description as a third column; it drops under the portrait
+     and name when there isn't room (from 1200px it lines up with the
+     Conditions and Items, src/app) */
+  .tools-character:has(> .sheet-description) {
+    flex-wrap: wrap;
+  }
+
   /* Level up, a green + (Cancel while leveling), round like the rules
      problems chip, in the top right corner of the level blob's 96px square
      (the blob sits half its padding in from the box's corner, src/app) */

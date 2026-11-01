@@ -336,6 +336,30 @@ export function Portrait({
   );
 }
 
+// The character's description, the head's third column on the creator's
+// sheet and in Player Tools, lined up over the Conditions and Items. Editable
+// at any time with onChange; an AI build fills it with its summary.
+export function DescriptionBox({ description, onChange }: { description?: string; onChange?: (description?: string) => void }) {
+  if (!onChange) {
+    return description ? (
+      <div className="sheet-description">
+        <p>{description}</p>
+      </div>
+    ) : null;
+  }
+  return (
+    <div className="sheet-description">
+      <textarea
+        aria-label="Description"
+        value={description ?? ""}
+        maxLength={4000}
+        placeholder="Who they are, how they look, what they want."
+        onChange={(e) => onChange(e.target.value || undefined)}
+      />
+    </div>
+  );
+}
+
 export type Looks = Pick<Draft, "age" | "gender" | "customGender">;
 
 // Age and gender, cosmetic details the rules never read. Gender is a dropdown,

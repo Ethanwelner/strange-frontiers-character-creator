@@ -2007,7 +2007,7 @@
      same ones: the portrait and name over the stats and Knowledges, the
      description over the Conditions and Items */
   @media (min-width: 1200px) {
-    .sheet-head:has(> .sheet-description) {
+    :is(.sheet-head, .tools-character):has(> .sheet-description) {
       display: grid;
       grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 4fr);
       gap: 24px 40px;

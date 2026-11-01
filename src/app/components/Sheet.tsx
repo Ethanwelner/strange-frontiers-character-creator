@@ -9,7 +9,7 @@ import type { HeldCondition } from "../conditions.js";
 import { CharacterLine } from "./CharacterLine.js";
 import { Conditions } from "./Conditions.js";
 import { Items } from "./Items.js";
-import { askerName, baseStats, Chip, CoreLine, Icon, LorePopup, NameField, Portrait, SettingIcon, StatLine, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
+import { askerName, baseStats, Chip, CoreLine, DescriptionBox, Icon, LorePopup, NameField, Portrait, SettingIcon, StatLine, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
 
 const SOURCE = /^(kind|origin|profession|past) ([a-z0-9-]+)( choice)?$/;
 const TRAIT_CHOICE = /^trait ([a-z0-9-]+) choice$/;
@@ -210,23 +210,7 @@ export function Sheet({
               </div>
             </div>
             {/* The description, editable at any time and lined up over the Conditions and Items; an AI build fills it with its summary */}
-            {onDescription ? (
-              <div className="sheet-description">
-                <textarea
-                  aria-label="Description"
-                  value={draft.description ?? ""}
-                  maxLength={4000}
-                  placeholder="Who they are, how they look, what they want."
-                  onChange={(e) => onDescription(e.target.value || undefined)}
-                />
-              </div>
-            ) : (
-              draft.description && (
-                <div className="sheet-description">
-                  <p>{draft.description}</p>
-                </div>
-              )
-            )}
+            <DescriptionBox description={draft.description} onChange={onDescription} />
           </div>
         )}
 

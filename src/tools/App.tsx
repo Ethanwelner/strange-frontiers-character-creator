@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent } f
 import { endpointCreate } from "../ai/remote.js";
 import { content, contentErrors } from "../app/content.js";
 import { slug, toBuild, type Draft } from "../app/draft.js";
-import { Icon, LorePopup, NameField, Notice, Portrait } from "../app/components/ui.js";
+import { DescriptionBox, Icon, LorePopup, NameField, Notice, Portrait } from "../app/components/ui.js";
 import { describe } from "../app/check.js";
 import { checkPlay, creatorDraft, load, playBuild, pointsToPlace, save, startPlay, type Play } from "./play.js";
 import { Chat } from "./components/Chat.js";
@@ -166,58 +166,65 @@ export function ToolsApp() {
                           </ul>
                         )}
                       </div>
-                      <Portrait
-                        className="tools-portrait"
-                        portrait={play.draft.portrait}
-                        name={play.draft.name}
-                        onChange={(portrait) => setPlay({ ...play, draft: { ...play.draft, portrait } })}
-                      />
-                      <div className="tools-character-main">
-                        {/* The name, with the creator's pen to edit it */}
-                        <div className="tools-character-head">
-                          <NameField
-                            className="sheet-name tools-name"
-                            heading="h2"
-                            name={play.draft.name}
-                            onChange={(name) => setPlay({ ...play, draft: { ...play.draft, name } })}
-                          />
-                          {confirmingSwitch && (
-                            <LorePopup label="Switch character" onClose={closeSwitch} className="tools-switch-popup">
-                              <h3 className="lore-modal-title">Switch character</h3>
-                              <p>Put {play.draft.name || "this character"} away? Their tracker, items and chat are cleared.</p>
-                              <div className="tools-switch-actions">
-                                <button
-                                  type="button"
-                                  className="primary"
-                                  onClick={() => {
-                                    setPlay(undefined);
-                                    setLevelDraft(undefined);
-                                    setConfirmingSwitch(false);
-                                    setNotice(undefined);
-                                  }}
-                                >
-                                  Switch character
-                                </button>
-                                <button type="button" onClick={closeSwitch}>
-                                  Cancel
-                                </button>
-                              </div>
+                      {/* The portrait and the name's column, then the description, as on the creator's sheet */}
+                      <div className="sheet-head-who">
+                        <Portrait
+                          className="tools-portrait"
+                          portrait={play.draft.portrait}
+                          name={play.draft.name}
+                          onChange={(portrait) => setPlay({ ...play, draft: { ...play.draft, portrait } })}
+                        />
+                        <div className="tools-character-main">
+                          {/* The name, with the creator's pen to edit it */}
+                          <div className="tools-character-head">
+                            <NameField
+                              className="sheet-name tools-name"
+                              heading="h2"
+                              name={play.draft.name}
+                              onChange={(name) => setPlay({ ...play, draft: { ...play.draft, name } })}
+                            />
+                            {confirmingSwitch && (
+                              <LorePopup label="Switch character" onClose={closeSwitch} className="tools-switch-popup">
+                                <h3 className="lore-modal-title">Switch character</h3>
+                                <p>Put {play.draft.name || "this character"} away? Their tracker, items and chat are cleared.</p>
+                                <div className="tools-switch-actions">
+                                  <button
+                                    type="button"
+                                    className="primary"
+                                    onClick={() => {
+                                      setPlay(undefined);
+                                      setLevelDraft(undefined);
+                                      setConfirmingSwitch(false);
+                                      setNotice(undefined);
+                                    }}
+                                  >
+                                    Switch character
+                                  </button>
+                                  <button type="button" onClick={closeSwitch}>
+                                    Cancel
+                                  </button>
+                                </div>
+                              </LorePopup>
+                            )}
+                          </div>
+                          {/* Kind, age, gender, Origin, Profession and Past, as on the creator's sheet */}
+                          <CharacterLine draft={play.draft} onLooks={(looks) => setPlay({ ...play, draft: { ...play.draft, ...looks } })} />
+                          {showingIssues && !result.ok && (
+                            <LorePopup label="Rules problems" onClose={closeIssues} className="tools-issues-popup">
+                              <h3 className="lore-modal-title">Rules problems</h3>
+                              <ul className="tools-issue-list">
+                                {result.errors.map((e, i) => (
+                                  <li key={i}>{describe(e, play.draft)}</li>
+                                ))}
+                              </ul>
                             </LorePopup>
                           )}
                         </div>
-                        {/* Kind, age, gender, Origin, Profession and Past, as on the creator's sheet */}
-                        <CharacterLine draft={play.draft} onLooks={(looks) => setPlay({ ...play, draft: { ...play.draft, ...looks } })} />
-                        {showingIssues && !result.ok && (
-                          <LorePopup label="Rules problems" onClose={closeIssues} className="tools-issues-popup">
-                            <h3 className="lore-modal-title">Rules problems</h3>
-                            <ul className="tools-issue-list">
-                              {result.errors.map((e, i) => (
-                                <li key={i}>{describe(e, play.draft)}</li>
-                              ))}
-                            </ul>
-                          </LorePopup>
-                        )}
                       </div>
+                      <DescriptionBox
+                        description={play.draft.description}
+                        onChange={(description) => setPlay({ ...play, draft: { ...play.draft, description } })}
+                      />
                     </header>
                   }
                 />
