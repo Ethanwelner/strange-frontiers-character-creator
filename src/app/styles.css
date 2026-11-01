@@ -1741,8 +1741,62 @@
     margin-bottom: 1rem;
   }
 
-  .portrait-remove {
-    font-size: 0.75rem;
+  /* A filled frame darkens on hover and shows the pen in the middle */
+  .portrait-filled {
+    position: relative;
+  }
+
+  .portrait-edit {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgb(0 0 0 / 0.55);
+    color: var(--portfolio-white);
+    opacity: 0;
+    transition: opacity 0.15s ease;
+
+    .pen-icon {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  .portrait-filled:is(:hover, :focus-visible) .portrait-edit {
+    opacity: 1;
+  }
+
+  /* The portrait popup: the picture, then Replace image and Remove */
+  .portrait-popup .lore-modal-panel {
+    max-width: 480px;
+  }
+
+  .portrait-large {
+    display: block;
+    width: 100%;
+    max-height: 60vh;
+    object-fit: contain;
+    border-radius: 4px;
+  }
+
+  .portrait-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+
+    button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .icon {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+    }
   }
 
   .portrait-error {

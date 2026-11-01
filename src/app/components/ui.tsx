@@ -228,10 +228,11 @@ export function StatRanges({ stats }: { stats: StatBlock }) {
   );
 }
 
-// The character's picture in a square frame. With onChange, clicking the
-// frame picks an image (shrunk in the browser, see portrait.ts) and Remove
-// clears it; without it, the frame only shows the picture, and nothing when
-// there isn't one.
+// The character's picture in a square frame. With onChange, an empty frame
+// picks an image when clicked (shrunk in the browser, see portrait.ts); a
+// filled one darkens and shows the pen on hover, and opens the picture in a
+// popup with Replace image and Remove. Without onChange the frame only shows
+// the picture, and nothing when there isn't one.
 export function Portrait({
   portrait,
   name,
@@ -246,36 +247,50 @@ export function Portrait({
   const input = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string>();
   const [busy, setBusy] = useState(false);
+  const [open, setOpen] = useState(false);
+  const alt = name ? `Portrait of ${name}` : "Character portrait";
   if (!onChange) {
     return portrait ? (
       <div className={`portrait ${className}`}>
-        <img src={portrait} alt={name ? `Portrait of ${name}` : "Character portrait"} />
+        <img src={portrait} alt={alt} />
       </div>
     ) : null;
   }
+  const close = () => {
+    setOpen(false);
+    setError(undefined);
+  };
+  // A picked image replaces the portrait and closes the popup; cancelling the picker leaves it open.
   const pick = async (file: File | undefined) => {
     if (!file) return;
     setBusy(true);
     setError(undefined);
     try {
       onChange(await toPortrait(file));
+      setOpen(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
     } finally {
       setBusy(false);
     }
   };
+  const choose = () => input.current?.click();
   return (
     <div className={`portrait-field ${className}`}>
       <button
         type="button"
-        className={`portrait${portrait ? "" : " portrait-empty"}`}
-        onClick={() => input.current?.click()}
+        className={`portrait${portrait ? " portrait-filled" : " portrait-empty"}`}
+        onClick={() => (portrait ? setOpen(true) : choose())}
         disabled={busy}
-        aria-label={portrait ? "Change the portrait" : "Add a portrait"}
+        aria-label={portrait ? "Edit the portrait" : "Add a portrait"}
       >
         {portrait ? (
-          <img src={portrait} alt="" />
+          <>
+            <img src={portrait} alt="" />
+            <span className="portrait-edit" aria-hidden="true">
+              <span className="pen-icon" />
+            </span>
+          </>
         ) : (
           <span className="portrait-prompt">
             <Icon name="upload" />
@@ -293,12 +308,30 @@ export function Portrait({
           e.target.value = "";
         }}
       />
-      {portrait && (
-        <button type="button" className="link portrait-remove" onClick={() => onChange(undefined)}>
-          Remove
-        </button>
+      {error && !open && <p className="portrait-error">{error}</p>}
+      {open && portrait && (
+        <LorePopup label="Portrait" onClose={close} className="portrait-popup">
+          <h3 className="lore-modal-title">Portrait</h3>
+          <img className="portrait-large" src={portrait} alt={alt} />
+          {error && <p className="portrait-error">{error}</p>}
+          <div className="portrait-actions">
+            <button type="button" className="primary" onClick={choose} disabled={busy}>
+              <Icon name="upload" />
+              {busy ? "Shrinking…" : "Replace image"}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                onChange(undefined);
+                close();
+              }}
+              disabled={busy}
+            >
+              Remove
+            </button>
+          </div>
+        </LorePopup>
       )}
-      {error && <p className="portrait-error">{error}</p>}
     </div>
   );
 }
