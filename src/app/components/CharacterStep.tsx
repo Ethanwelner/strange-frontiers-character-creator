@@ -13,7 +13,7 @@ interface Props {
 export function CharacterStep({ draft, startingLevel, onChange, onStartingLevel }: Props) {
   return (
     <section>
-      <StepHeader step="character" title="Character">
+      <StepHeader title="Character">
         Name your character, set the level your campaign starts at, and choose a Kind. Age, gender and a portrait are up to you; the rules don't use them. Your GM sets the level; most campaigns start at 3.
         A Kind adds a bonus to each stat and sets how far each can go; numbers show bonus/max.
       </StepHeader>

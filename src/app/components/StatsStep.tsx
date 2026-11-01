@@ -90,7 +90,7 @@ export function StatsStep({ draft, onChange, floor }: Props) {
   if (!base) {
     return (
       <section>
-        <StepHeader step="stats" title="Stats" />
+        <StepHeader title="Stats" />
         <p className="empty">Choose a Kind first; it adds a bonus to each stat and sets how far each can go.</p>
       </section>
     );
@@ -98,7 +98,7 @@ export function StatsStep({ draft, onChange, floor }: Props) {
 
   return (
     <section>
-      <StepHeader step="stats" title="Stats">
+      <StepHeader title="Stats">
         Each level gives a core point. Level a group's core stat with the + beside its number to unlock {POINTS_PER_LEVEL} focus points for its
         stats, then spend them with each stat's +. A group's stats can't take points until its core stat is leveled. Your stats start at 0, and your Kind's bonus
         is added on top, in purple; your points show in green.

@@ -817,22 +817,12 @@
     background: color-mix(in srgb, var(--portfolio-red) 6%, var(--portfolio-white));
   }
 
-  /* Step title, then the stinger, then the step's description */
+  /* Step title in the titles' Bebas, then the step's description */
   .step-head h2 {
     margin-bottom: 1rem;
-  }
-
-  /* The site's black .copy.stinger */
-  .stinger-row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem 24px;
-    margin-bottom: 1rem;
-
-    .stinger {
-      flex-shrink: 0;
-    }
+    font-family: var(--title);
+    font-weight: normal;
+    letter-spacing: 1px;
   }
 
   .step-head .lede {

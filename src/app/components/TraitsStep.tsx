@@ -73,7 +73,7 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom }:
   if (!options || !summary) {
     return (
       <section>
-        <StepHeader step="traits" title="Traits" />
+        <StepHeader title="Traits" />
         <p className="empty">Finish the Kind and Background steps first; the engine needs a complete build to check picks against.</p>
       </section>
     );
@@ -109,7 +109,7 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom }:
 
   return (
     <section>
-      <StepHeader step="traits" title="Traits">
+      <StepHeader title="Traits">
         Spend picks on Traits. Unspent picks are banked for later.
       </StepHeader>
 

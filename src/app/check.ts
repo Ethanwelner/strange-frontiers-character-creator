@@ -113,7 +113,7 @@ export function traitOptions(draft: Draft, content: Content, campaign: Campaign,
     // Non-ranked Traits are only ever bought at rank 1; the engine explains a duplicate.
     const rank = trait.ranked ? (held.get(trait.id) ?? 0) + 1 : 1;
     const trial = check(addPick(draft, trait.id, rank, pick), content, campaign);
-    const ownChoice = `${trait.name} asks for `;
+    const ownChoice = `${trait.name} gives a choice of `;
     const added = trial.errors.filter((e) => !before.has(e.message) && !(e.code === "choice" && e.message.startsWith(ownChoice)));
     // A Conveyed Trait can't be picked at all, and the wrong kind of pick is the other tab's.
     if (added.some((e) => e.code === "pick-type" || e.code === "conveyed")) continue;
@@ -161,10 +161,17 @@ const MISSING: Record<string, string> = {
 };
 
 // Schema errors for a field that hasn't been picked yet read as "expected
-// string, received undefined"; say what to do instead.
+// string, received undefined"; say what to do instead. A choice nobody has
+// picked yet is just "Language choice needed"; the engine's full message, which
+// names the package, is for the AI builder.
 export function describe(issue: Issue, draft: Draft): string {
   if (issue.code === "schema" && issue.path && issue.path in MISSING && !draft[issue.path as keyof Draft]) {
     return MISSING[issue.path]!;
+  }
+  // A choice nobody has picked yet, by the last word of its pool: "Language choice needed"
+  if (issue.pool) {
+    const noun = issue.pool.split("-").pop()!;
+    return `${noun[0]!.toUpperCase()}${noun.slice(1)} choice needed`;
   }
   return issue.message;
 }
