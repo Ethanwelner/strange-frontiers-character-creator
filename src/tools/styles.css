@@ -572,20 +572,19 @@
     overflow-y: clip;
   }
 
-  /* The d20 and the title stay over the conversation, covering the gaps
-     under them too */
-  .tools-roller,
-  .tools-chat-head {
+  /* The d20 stays over the chat box, covering the gap under it too */
+  .tools-roller {
     position: relative;
     z-index: 1;
+    flex: none;
     background: var(--panel);
     box-shadow: 0 24px 0 var(--panel);
   }
 
-  /* The conversation box's top edge and rounded corners, drawn 24px under
-     the title, where the box's top shows while the box itself has slid up
-     under it. Once the column sticks, it sits right on the box's own edge. */
-  .tools-chat-head::after {
+  /* The chat box's top edge and rounded corners, drawn 24px under the d20,
+     where the box's top shows while the box itself has slid up under it.
+     Once the column sticks, it sits right on the box's own edge. */
+  .tools-roller::after {
     content: "";
     position: absolute;
     left: 0;
@@ -608,27 +607,26 @@
     }
 
     /* Down while its bottom does */
-    .tools-roller,
-    .tools-chat-head {
+    .tools-roller {
       animation: tools-side-drop linear both;
       animation-timeline: --tools-body;
       animation-range: entry-crossing 100% exit-crossing 100%;
     }
   }
 
-  /* The d20, over the assistant: a green die on a little CRT, drawn in
-     chunky pixels (Roller.tsx) under scanlines and a dark vignette. The
-     whole screen is the roll button. */
+  /* The d20, over the chat: a green die drawn in chunky pixels (Roller.tsx)
+     under faint scanlines, on the gray of the other boxes. The whole screen
+     is the roll button. */
   .tools-roller-screen {
     position: relative;
     display: block;
     width: 100%;
     height: 184px;
     padding: 0;
-    border: 1px solid color-mix(in srgb, var(--frontiers-green) 35%, #1c1c1c);
+    border: 1px solid var(--card-border);
     border-radius: 18px / 24px;
     overflow: hidden;
-    background: radial-gradient(ellipse at center, #1f241f 0%, #141414 75%);
+    background: var(--panel-box);
     cursor: pointer;
 
     canvas {
@@ -644,9 +642,7 @@
       position: absolute;
       inset: 0;
       pointer-events: none;
-      background:
-        repeating-linear-gradient(to bottom, rgb(0 0 0 / 0%) 0 2px, rgb(0 0 0 / 28%) 2px 3px),
-        radial-gradient(ellipse at center, transparent 55%, rgb(0 0 0 / 55%) 100%);
+      background: repeating-linear-gradient(to bottom, rgb(0 0 0 / 0%) 0 2px, rgb(0 0 0 / 12%) 2px 3px);
     }
 
     &:hover:not(:disabled) {
@@ -753,30 +749,13 @@
     margin-top: 24px;
   }
 
-  /* Title, the conversation in its box, then the message box and Send,
-     filling the column under the d20. The title is 24px over the
-     conversation; the rest are 20px apart. */
+  /* The chat box, filling the column under the d20 */
   .tools-chat {
     flex: 1 1 0;
     min-height: 0;
     display: flex;
     flex-direction: column;
     gap: 20px;
-  }
-
-  .tools-roller {
-    flex: none;
-  }
-
-  .tools-chat-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 4px;
-
-    .subhead {
-      margin: 0;
-    }
   }
 
   /* The conversation, suggestions and all, then any error and the message
@@ -901,33 +880,40 @@
     }
   }
 
-  /* The message box, with Send inside it at the right: borderless, in the
-     card headers' black, a line tall to start. It grows with what's typed
-     up to 256px, then scrolls (field-sizing; Chat.tsx sizes it in browsers
-     without it). */
+  /* The message box: borderless, in the card headers' black, a line tall
+     (44px) to start. The text and Send sit side by side inside it, 7px from
+     its edges, so the text's scrollbar never runs under Send. The text grows
+     with what's typed until the box is 256px, then scrolls (field-sizing;
+     Chat.tsx sizes it in browsers without it). */
   .tools-chat-form {
     flex: none;
-    position: relative;
+    display: flex;
+    align-items: flex-end;
+    gap: 7px;
+    padding: 7px;
+    border-radius: 16px;
+    background: #181818;
+
+    /* No border to turn green, so a green ring while typing */
+    &:focus-within {
+      box-shadow: 0 0 0 1px var(--frontiers-green);
+    }
 
     textarea.rpg-search-input {
       display: block;
-      width: 100%;
+      flex: 1;
+      min-width: 0;
       height: auto;
       min-height: 0;
-      max-height: 256px;
+      max-height: 242px;
       field-sizing: content;
       overflow-y: auto;
-      padding: 10px 48px 10px 14px;
+      padding: 3px 0 3px 7px;
       line-height: 24px;
       border: 0;
-      border-radius: 16px;
-      background: #181818;
+      border-radius: 0;
+      background: none;
       resize: none;
-
-      /* No border to turn green, so a green ring while typing */
-      &:focus {
-        box-shadow: 0 0 0 1px var(--frontiers-green);
-      }
     }
   }
 
@@ -935,14 +921,12 @@
      creator's green buttons. It stays green while there's nothing to send,
      and glitches once there is (the small glitch in src/app/styles.css). */
   button.tools-chat-send {
-    position: absolute;
-    right: 4px;
-    bottom: 4px;
+    flex: none;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
+    width: 30px;
+    height: 30px;
     padding: 0;
     border: 0;
     border-radius: 50%;
@@ -951,8 +935,8 @@
     cursor: pointer;
 
     .icon {
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
       fill: currentColor;
     }
 
@@ -968,6 +952,29 @@
     &:disabled {
       cursor: default;
     }
+  }
+
+  /* Clear, a gray badge like Download character in the chat box's top right
+     corner, 8px in. It's on the d20's layer (Roller.tsx), placed where the
+     box's top shows, so it stays in view while the box slides under the d20.
+     The conversation starts under it, so neither it nor the conversation's
+     scrollbar runs under the badge. */
+  button.tools-chat-clear {
+    position: absolute;
+    top: calc(100% + 24px + 8px);
+    right: 8px;
+    z-index: 1;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: normal;
+  }
+
+  .tools-chat-side:has(.tools-chat-clear) .tools-chat-box {
+    padding-top: 44px;
   }
 
   @media (max-width: 1199px) {
@@ -1008,8 +1015,7 @@
     }
 
     .tools-chat-box,
-    .tools-roller,
-    .tools-chat-head {
+    .tools-roller {
       animation: none;
     }
   }
@@ -1031,8 +1037,7 @@
     }
 
     .tools-chat-box,
-    .tools-roller,
-    .tools-chat-head {
+    .tools-roller {
       animation: none;
     }
 

@@ -35,14 +35,15 @@ export function Chat({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string>();
   const log = useRef<HTMLOListElement>(null);
-  // The message box starts a line tall and grows with what's typed, up to
-  // 256px (styles.css). Browsers without field-sizing get its height here.
+  // The message box starts a line tall and grows with what's typed, its text
+  // up to 242px (256px with the box's padding, styles.css). Browsers without
+  // field-sizing get its height here.
   const input = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
     const el = input.current;
     if (!el || CSS.supports("field-sizing", "content")) return;
     el.style.height = "auto";
-    el.style.height = `${Math.min(el.scrollHeight + el.offsetHeight - el.clientHeight, 256)}px`;
+    el.style.height = `${Math.min(el.scrollHeight + el.offsetHeight - el.clientHeight, 242)}px`;
   }, [message]);
   // The assistant's latest roll, for the die to land on
   const [shown, setShown] = useState<{ value: number; key: number }>();
@@ -89,16 +90,17 @@ export function Chat({
         show={shown}
         disabled={busy}
         onRolled={(value) => onChange({ ...latest.current, chat: [...latest.current.chat, { role: "user", text: `Rolled a d20: ${value}` }] })}
-      />
+      >
+        {/* Clear, as a badge in the chat box's top right corner. It's on the
+            die's layer so it stays at the box's visible top while the box
+            slides under the die (styles.css). */}
+        {play.chat.length > 0 && (
+          <button type="button" className="tools-chat-clear" onClick={() => onChange({ ...play, chat: [] })} disabled={busy}>
+            Clear
+          </button>
+        )}
+      </Roller>
       <section className="tools-chat" aria-label="Assistant">
-        <div className="tools-chat-head">
-          <h2 className="subhead">Assistant</h2>
-          {play.chat.length > 0 && (
-            <button type="button" className="link small" onClick={() => onChange({ ...play, chat: [] })} disabled={busy}>
-              Clear
-            </button>
-          )}
-        </div>
         {/* The conversation and the message box under it, in one box */}
         <div className="tools-chat-box">
           <ol className="tools-chat-log" ref={log} aria-live="polite">
@@ -159,7 +161,7 @@ export function Chat({
                 }
               }}
             />
-            {/* Send, as a paper plane in the message box's right corner */}
+            {/* Send, as a paper plane beside the text, at the bottom right */}
             <button type="submit" className="tools-chat-send" disabled={busy || !message.trim()} aria-busy={busy}>
               <Icon name="send" label="Send" />
             </button>
