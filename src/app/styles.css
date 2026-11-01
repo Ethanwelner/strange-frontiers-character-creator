@@ -1688,7 +1688,8 @@
 
   .portrait {
     display: block;
-    width: 136px;
+    width: 256px;
+    max-width: 100%;
     aspect-ratio: 1;
     padding: 0;
     border: 1px solid rgb(255 255 255 / 0.2);
