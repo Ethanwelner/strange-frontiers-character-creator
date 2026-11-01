@@ -3,6 +3,7 @@ import { MAX_LEVEL } from "../../ai/level.js";
 import { STAT_GROUPS, type StatBlock, type StatId } from "../../schema/index.js";
 import { kindById, packageById, traitById } from "../content.js";
 import { GENDERS, MAX_AGE, STEPS, type Draft, type Step } from "../draft.js";
+import { toPortrait } from "../portrait.js";
 
 export const GROUPS = Object.keys(STAT_GROUPS) as (keyof typeof STAT_GROUPS)[];
 // The core stats with focus stats: every one but Magic.
@@ -223,6 +224,81 @@ export function StatRanges({ stats }: { stats: StatBlock }) {
           ))}
         </div>
       ))}
+    </div>
+  );
+}
+
+// The character's picture in a square frame. With onChange, clicking the
+// frame picks an image (shrunk in the browser, see portrait.ts) and Remove
+// clears it; without it, the frame only shows the picture, and nothing when
+// there isn't one.
+export function Portrait({
+  portrait,
+  name,
+  onChange,
+  className = "",
+}: {
+  portrait?: string;
+  name?: string;
+  onChange?: (portrait?: string) => void;
+  className?: string;
+}) {
+  const input = useRef<HTMLInputElement>(null);
+  const [error, setError] = useState<string>();
+  const [busy, setBusy] = useState(false);
+  if (!onChange) {
+    return portrait ? (
+      <div className={`portrait ${className}`}>
+        <img src={portrait} alt={name ? `Portrait of ${name}` : "Character portrait"} />
+      </div>
+    ) : null;
+  }
+  const pick = async (file: File | undefined) => {
+    if (!file) return;
+    setBusy(true);
+    setError(undefined);
+    try {
+      onChange(await toPortrait(file));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setBusy(false);
+    }
+  };
+  return (
+    <div className={`portrait-field ${className}`}>
+      <button
+        type="button"
+        className={`portrait${portrait ? "" : " portrait-empty"}`}
+        onClick={() => input.current?.click()}
+        disabled={busy}
+        aria-label={portrait ? "Change the portrait" : "Add a portrait"}
+      >
+        {portrait ? (
+          <img src={portrait} alt="" />
+        ) : (
+          <span className="portrait-prompt">
+            <Icon name="upload" />
+            {busy ? "Shrinking…" : "Add a portrait"}
+          </span>
+        )}
+      </button>
+      <input
+        ref={input}
+        type="file"
+        accept="image/png,image/jpeg,image/webp,image/gif,image/avif"
+        hidden
+        onChange={(e) => {
+          void pick(e.target.files?.[0]);
+          e.target.value = "";
+        }}
+      />
+      {portrait && (
+        <button type="button" className="link portrait-remove" onClick={() => onChange(undefined)}>
+          Remove
+        </button>
+      )}
+      {error && <p className="portrait-error">{error}</p>}
     </div>
   );
 }

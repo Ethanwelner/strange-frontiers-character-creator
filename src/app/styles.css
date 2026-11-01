@@ -1617,10 +1617,38 @@
      beside it, their controls level */
   .character-fields {
     display: grid;
-    grid-template-columns: minmax(0, 640px) auto;
+    grid-template-columns: auto minmax(0, 640px) auto;
+    grid-template-areas:
+      "portrait name level"
+      "portrait looks looks";
     justify-content: start;
     align-items: end;
     gap: 0 24px;
+
+    .character-portrait {
+      grid-area: portrait;
+      align-self: start;
+    }
+
+    > .name-field {
+      grid-area: name;
+    }
+
+    > .level-stepper {
+      grid-area: level;
+    }
+
+    @media (max-width: 599.98px) {
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-areas:
+        "portrait portrait"
+        "name level"
+        "looks looks";
+
+      .character-portrait {
+        margin-bottom: 16px;
+      }
+    }
 
     .name-field {
       margin-bottom: 0;
@@ -1628,7 +1656,7 @@
   }
 
   .looks-fields {
-    grid-column: 1 / -1;
+    grid-area: looks;
     display: flex;
     flex-wrap: wrap;
     align-items: end;
@@ -1647,6 +1675,81 @@
       flex: 1 1 12rem;
       max-width: 20rem;
     }
+  }
+
+  /* The character's portrait: a square frame, dashed and empty until a picture
+     is added, with Remove under it */
+  .portrait-field {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .portrait {
+    display: block;
+    width: 136px;
+    aspect-ratio: 1;
+    padding: 0;
+    border: 1px solid rgb(255 255 255 / 0.2);
+    border-radius: 4px;
+    background: rgb(0 0 0 / 0.35);
+    overflow: hidden;
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  button.portrait {
+    cursor: pointer;
+
+    &:hover,
+    &:focus-visible {
+      border-color: var(--frontiers-green);
+    }
+  }
+
+  .portrait-empty {
+    border-style: dashed;
+  }
+
+  .portrait-prompt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 100%;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: inherit;
+
+    .icon {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+  }
+
+  /* The character box shows the picture across its width, above the name */
+  .panel-portrait {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .portrait-remove {
+    font-size: 0.75rem;
+  }
+
+  .portrait-error {
+    max-width: 200px;
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--portfolio-red);
   }
 
   .field-label {

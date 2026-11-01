@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent } f
 import { endpointCreate } from "../ai/remote.js";
 import { content, contentErrors } from "../app/content.js";
 import { slug, toBuild, type Draft } from "../app/draft.js";
-import { Icon, LorePopup, NameField, Notice } from "../app/components/ui.js";
+import { Icon, LorePopup, NameField, Notice, Portrait } from "../app/components/ui.js";
 import { describe } from "../app/check.js";
 import { checkPlay, creatorDraft, load, playBuild, pointsToPlace, save, startPlay, type Play } from "./play.js";
 import { Chat } from "./components/Chat.js";
@@ -144,6 +144,12 @@ export function ToolsApp() {
                   onLevelDraft={setLevelDraft}
                   head={
                     <header className="step-head tools-character">
+                      <Portrait
+                        className="tools-portrait"
+                        portrait={play.draft.portrait}
+                        name={play.draft.name}
+                        onChange={(portrait) => setPlay({ ...play, draft: { ...play.draft, portrait } })}
+                      />
                       <div className="tools-character-main">
                         {/* The name, with the creator's pen to edit it, and the badges at the right:
                             Download, Switch and any rules problems */}
