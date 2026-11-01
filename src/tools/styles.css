@@ -67,12 +67,12 @@
     padding-bottom: var(--sf-creator-top, 24px);
   }
 
-  /* The character's name and background at the top of the first box, the
-     resources under them; the assistant has the right column from the top,
-     like the creator's character box. */
+  /* The first box: the portrait, then beside it the name, the character
+     line and the resources under them; the assistant has the right column
+     from the top, like the creator's character box. */
   .tools-character {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 24px;
   }
 
@@ -164,12 +164,9 @@
   /* The first box, dark like the sheet's boxes, with the name 24px above
      the resources */
   .tools-head {
+    position: relative;
     background-color: var(--panel);
     border-color: rgb(255 255 255 / 12%);
-
-    > .tools-character {
-      margin-bottom: 24px;
-    }
   }
 
   /* The name and its pen, from the creator's Sheet, in the tab title style */
@@ -287,7 +284,7 @@
        each at most 360px, right on the panel without boxes */
     grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
     gap: 36px;
-    margin-bottom: 16px;
+    margin-top: 16px;
   }
 
   .tools-resource {
@@ -685,10 +682,22 @@
 
   /* Level up, Download character, Switch character and the rules problems
      chip, in a row at the right of the name, 8px apart */
+  /* Download character, Switch character and any rules problems, right
+     aligned in the top right corner of the sheet's first box, 1rem in */
   .tools-actions {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1;
     flex-wrap: wrap;
     justify-content: flex-end;
     gap: 8px;
+
+    /* On phones there's no room beside the name, so they sit in the flow */
+    @media (max-width: 767px) {
+      position: static;
+      margin-bottom: 16px;
+    }
   }
 
   /* Switch character asks in a small popup: the question, then Switch

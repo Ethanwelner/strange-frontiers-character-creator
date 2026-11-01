@@ -6,16 +6,7 @@ import { Sheet } from "../../app/components/Sheet.js";
 import { StatsStep } from "../../app/components/StatsStep.js";
 import { TraitsStep } from "../../app/components/TraitsStep.js";
 import { Icon, LorePopup, Sign } from "../../app/components/ui.js";
-import {
-  checkPlay,
-  currentOf,
-  maxOf,
-  pointsToPlace,
-  RESOURCES,
-  withResource,
-  type Play,
-  type ResourceKey,
-} from "../play.js";
+import { checkPlay, currentOf, maxOf, pointsToPlace, RESOURCES, withResource, type Play, type ResourceKey } from "../play.js";
 
 const NAMES: Record<ResourceKey, string> = { hp: "Hit Points", vp: "Vibe Points", sp: "Savvy Points", mp: "Mana Points" };
 
@@ -43,7 +34,9 @@ export function Tracker({
   onChange: (p: Play) => void;
   levelDraft?: Draft;
   onLevelDraft: (d?: Draft) => void;
-  head?: ReactNode;
+  // The box's header, given the resources to place (beside the portrait,
+  // under the name and the character line)
+  head: (resources: ReactNode) => ReactNode;
 }) {
   // MP shows once the character has any.
   const shown = RESOURCES.filter((r) => r !== "mp" || maxOf(result, r) > 0);
@@ -91,61 +84,68 @@ export function Tracker({
     <section className="tools-tracker">
       {!result.summary && <div className="notice bad">The engine couldn't read this character, so its maximums aren't known. Check the sheet below.</div>}
 
-      {/* The character's name, standing in for this tab's title, over the resources, in a box like the sheet's head */}
+      {/* The character's header, with the resources in it, in a box like the sheet's head */}
       <div className="c-sheet-box tools-head">
-        {head}
-        <div className="tools-resources">
-          {shown.map((r) => {
-            const cur = currentOf(play, result, r);
-            const max = maxOf(result, r);
-            const pct = max > 0 ? Math.max(0, Math.min(100, (cur / max) * 100)) : 0;
-            return (
-              <div key={r} className="tools-resource">
-                {/* HP, then −, the value, + and restore to full, on one line; the full name
+        {head(
+          <div className="tools-resources">
+            {shown.map((r) => {
+              const cur = currentOf(play, result, r);
+              const max = maxOf(result, r);
+              const pct = max > 0 ? Math.max(0, Math.min(100, (cur / max) * 100)) : 0;
+              return (
+                <div key={r} className="tools-resource">
+                  {/* HP, then −, the value, + and restore to full, on one line; the full name
                     shows on hover */}
-                <div className="tools-resource-value">
-                  <strong className={`tools-resource-name resource-${r}`} title={NAMES[r]}>
-                    {r.toUpperCase()}
-                  </strong>
-                  <button type="button" onClick={() => set(r, cur - 1)} aria-label={`1 less ${r.toUpperCase()}`}>
-                    <Sign is="minus" />
-                  </button>
-                  <span className="num" aria-live="polite">
-                    {cur}
-                    <span className="muted"> / {max}</span>
-                  </span>
-                  <button type="button" onClick={() => set(r, cur + 1)} disabled={cur >= max} aria-label={`1 more ${r.toUpperCase()}`}>
-                    <Sign is="plus" />
-                  </button>
-                  <button type="button" onClick={() => set(r, max)} disabled={cur >= max} aria-label={`Restore ${r.toUpperCase()} to full`} title="Restore to full">
-                    <Icon name="restore" />
-                  </button>
+                  <div className="tools-resource-value">
+                    <strong className={`tools-resource-name resource-${r}`} title={NAMES[r]}>
+                      {r.toUpperCase()}
+                    </strong>
+                    <button type="button" onClick={() => set(r, cur - 1)} aria-label={`1 less ${r.toUpperCase()}`}>
+                      <Sign is="minus" />
+                    </button>
+                    <span className="num" aria-live="polite">
+                      {cur}
+                      <span className="muted"> / {max}</span>
+                    </span>
+                    <button type="button" onClick={() => set(r, cur + 1)} disabled={cur >= max} aria-label={`1 more ${r.toUpperCase()}`}>
+                      <Sign is="plus" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => set(r, max)}
+                      disabled={cur >= max}
+                      aria-label={`Restore ${r.toUpperCase()} to full`}
+                      title="Restore to full"
+                    >
+                      <Icon name="restore" />
+                    </button>
+                  </div>
+                  <div className={`tools-meter tools-meter-${r}`} aria-hidden="true">
+                    <span style={{ width: `${pct}%` }} />
+                  </div>
+                  <div className="tools-resource-apply">
+                    <input
+                      type="number"
+                      min={1}
+                      inputMode="numeric"
+                      placeholder="#"
+                      aria-label={`Amount of ${r.toUpperCase()}`}
+                      value={amounts[r] ?? ""}
+                      onChange={(e) => setAmounts({ ...amounts, [r]: e.target.value })}
+                      onKeyDown={(e) => e.key === "Enter" && apply(r, -1)}
+                    />
+                    <button type="button" onClick={() => apply(r, -1)}>
+                      {r === "hp" ? "Damage" : "Spend"}
+                    </button>
+                    <button type="button" onClick={() => apply(r, 1)}>
+                      {r === "hp" ? "Heal" : "Gain"}
+                    </button>
+                  </div>
                 </div>
-                <div className={`tools-meter tools-meter-${r}`} aria-hidden="true">
-                  <span style={{ width: `${pct}%` }} />
-                </div>
-                <div className="tools-resource-apply">
-                  <input
-                    type="number"
-                    min={1}
-                    inputMode="numeric"
-                    placeholder="#"
-                    aria-label={`Amount of ${r.toUpperCase()}`}
-                    value={amounts[r] ?? ""}
-                    onChange={(e) => setAmounts({ ...amounts, [r]: e.target.value })}
-                    onKeyDown={(e) => e.key === "Enter" && apply(r, -1)}
-                  />
-                  <button type="button" onClick={() => apply(r, -1)}>
-                    {r === "hp" ? "Damage" : "Spend"}
-                  </button>
-                  <button type="button" onClick={() => apply(r, 1)}>
-                    {r === "hp" ? "Heal" : "Gain"}
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>,
+        )}
       </div>
 
       {/* The rest of the character sheet: stats, Knowledges, Conditions and Items, and Traits */}
