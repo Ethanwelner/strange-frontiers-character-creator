@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import { endpointCreate } from "../ai/remote.js";
 import { content, contentErrors } from "../app/content.js";
-import { slug, toBuild, type Draft } from "../app/draft.js";
+import { genderText, slug, toBuild, type Draft } from "../app/draft.js";
 import { Icon, LorePopup, NameField, Notice } from "../app/components/ui.js";
 import { describe } from "../app/check.js";
 import { checkPlay, creatorDraft, load, playBuild, pointsToPlace, save, startPlay, type Play } from "./play.js";
@@ -221,6 +221,21 @@ export function ToolsApp() {
                             ) : null,
                           )}
                         </p>
+                        {/* Age and gender, as the creator's sheet shows them, when the player set them */}
+                        {(play.draft.age !== undefined || genderText(play.draft)) && (
+                          <p className="sheet-looks tools-looks">
+                            {play.draft.age !== undefined && (
+                              <span>
+                                Age <strong>{play.draft.age}</strong>
+                              </span>
+                            )}
+                            {genderText(play.draft) && (
+                              <span>
+                                Gender <strong>{genderText(play.draft)}</strong>
+                              </span>
+                            )}
+                          </p>
+                        )}
                         {showing && <BackgroundPopup id={showing} onClose={closePopup} />}
                         {showingIssues && !result.ok && (
                           <LorePopup label="Rules problems" onClose={closeIssues} className="tools-issues-popup">

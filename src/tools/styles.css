@@ -201,6 +201,11 @@
     margin: 0 0 8px;
   }
 
+  /* Age and gender, under the Kind and background line */
+  .tools-looks {
+    margin: 0 0 8px;
+  }
+
   /* The rules problems chip, at the top left of the panel; it opens the list */
   .tools-issues {
     justify-content: flex-start;
