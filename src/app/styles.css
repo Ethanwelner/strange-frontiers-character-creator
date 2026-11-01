@@ -1780,7 +1780,9 @@
     line-height: 1;
   }
 
+  /* 4px down, so Level and the number sit centered together in the blob */
   .level-badge-label {
+    margin-top: 4px;
     font-size: 0.875rem;
     font-weight: 400;
     text-transform: uppercase;
