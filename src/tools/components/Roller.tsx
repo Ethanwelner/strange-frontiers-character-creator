@@ -41,12 +41,13 @@ function drawNumber(ctx: CanvasRenderingContext2D, n: number, x: number, y: numb
   });
 }
 
-// While it rests, the die tips slowly in 3D: around the horizontal and vertical
-// axes, by up to these angles (radians), over these loops (ms), which don't
-// divide into each other. It eases in over WOBBLE_IN after each roll.
+// While it rests, the die tips slowly and slightly in 3D: around the
+// horizontal and vertical axes, by up to these angles (radians, about 4° and
+// 6°), over these loops (ms), which don't divide into each other. It eases in
+// over WOBBLE_IN after each roll.
 const WOBBLE = [
-  { axis: [1, 0, 0] as Vec, angle: 0.18, ms: 7000 },
-  { axis: [0, 1, 0] as Vec, angle: 0.26, ms: 9700 },
+  { axis: [1, 0, 0] as Vec, angle: 0.07, ms: 11000 },
+  { axis: [0, 1, 0] as Vec, angle: 0.1, ms: 15300 },
 ];
 const WOBBLE_IN = 1500;
 
