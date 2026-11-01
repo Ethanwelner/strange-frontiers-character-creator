@@ -157,6 +157,11 @@
   .tools-name {
     margin-bottom: 8px;
 
+    /* The pen 4px from the name */
+    &.name-field-line {
+      gap: 4px;
+    }
+
     h2 {
       margin: 0;
     }
@@ -227,9 +232,9 @@
     }
   }
 
-  /* The pens beside the name, age and gender, at half strength */
+  /* The pens beside the name, age and gender, faded */
   .tools-character .pen-icon {
-    opacity: 0.5;
+    opacity: 0.4;
   }
 
   button.tools-look-edit {
