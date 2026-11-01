@@ -16,6 +16,10 @@ export interface DescribeOptions {
   description: string;
   // A name the player chose; the model is told to use it.
   name?: string;
+  // Age and gender the player set. They're cosmetic: the model writes with
+  // them but doesn't build around them.
+  age?: number;
+  gender?: string;
   content: Content;
   provider: Provider;
   campaign?: Campaign;
@@ -87,6 +91,17 @@ function parseReasons(v: unknown): Reason[] {
 // Skipped Traits for the model, without the "no picks left" tail.
 const compactSkipped = (skipped: SkippedTrait[]) => skipped.filter((s) => s.reason !== "no picks left");
 
+// The player's age and gender for the character, as a line for the first
+// message. They shape how the model writes about the character, not what it picks.
+export function looksLine({ age, gender }: Pick<DescribeOptions, "age" | "gender">): string {
+  const set = [age !== undefined ? `age ${age}` : "", gender?.trim() ? `gender ${gender.trim()}` : ""].filter(Boolean);
+  if (!set.length) return "";
+  return (
+    `The player set this character's ${set.join(" and ")}. These are cosmetic. Respect them in the name, summary and reasons ` +
+    `(use pronouns and a name that fit), but don't let them decide the Kind, packages, Traits, stats or choices.\n\n`
+  );
+}
+
 const asBuild = (v: unknown) => (typeof v === "object" && v !== null && !Array.isArray(v) ? (v as Record<string, unknown>) : undefined);
 
 export async function describeCharacter(opts: DescribeOptions): Promise<DescribeResult> {
@@ -115,6 +130,7 @@ export async function describeCharacter(opts: DescribeOptions): Promise<Describe
     user:
       `The campaign starts characters at level ${campaign.startingLevel}.\n\n` +
       (opts.name?.trim() ? `The player has named this character "${opts.name.trim()}". Use that name.\n\n` : "") +
+      looksLine(opts) +
       `<player_description>\n${opts.description.trim()}\n</player_description>`,
   });
 

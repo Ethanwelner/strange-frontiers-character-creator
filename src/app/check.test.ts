@@ -3,7 +3,7 @@ import { loadContent, type Content } from "../engine/content.js";
 import { Trait } from "../schema/index.js";
 import { check, stepOf, traitOptions } from "./check.js";
 import { content as appContent, contentErrors } from "./content.js";
-import { addPick, fromBuild, levelsToPool, poolToLevels, toBuild, withCore, withLevel, type Draft } from "./draft.js";
+import { addPick, fromBuild, genderText, levelsToPool, poolToLevels, toBuild, withCore, withLevel, type Draft } from "./draft.js";
 
 const campaign = { startingLevel: 1 };
 
@@ -148,6 +148,16 @@ describe("drafts", () => {
 
   it("round-trips through an exported Build", () => {
     expect(fromBuild(JSON.parse(JSON.stringify(toBuild(human))))).toEqual(human);
+  });
+
+  it("keeps age and gender through an export, and drops values it can't read", () => {
+    const looks = { ...human, age: 34, gender: "custom" as const, customGender: "Agender" };
+    expect(fromBuild(JSON.parse(JSON.stringify(toBuild(looks))))).toEqual(looks);
+    expect(genderText(looks)).toBe("Agender");
+    expect(genderText({ gender: "fluid" })).toBe("Fluid");
+    expect(genderText({})).toBeUndefined();
+    const odd = fromBuild({ ...toBuild(human), age: -3, gender: "unlisted", customGender: "Agender" });
+    expect([odd.age, odd.gender, odd.customGender]).toEqual([undefined, undefined, undefined]);
   });
 
   it("splits the stats pool into one allocation per level, and back", () => {

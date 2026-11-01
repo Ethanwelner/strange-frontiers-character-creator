@@ -8,7 +8,7 @@ import { Items } from "./components/Items.js";
 import { StatsStep } from "./components/StatsStep.js";
 import { Sheet } from "./components/Sheet.js";
 import { TraitsStep } from "./components/TraitsStep.js";
-import { Arrow, Notice } from "./components/ui.js";
+import { Arrow, Notice, type Looks } from "./components/ui.js";
 import { ValidationPanel } from "./components/ValidationPanel.js";
 import { content, contentErrors } from "./content.js";
 import type { DescribeResult } from "../ai/types.js";
@@ -96,7 +96,7 @@ export function App() {
 
   // The model's build replaces the draft, then stays editable like any other.
   // The build's level becomes the starting level, since the description can ask for one.
-  const applyDescribed = (result: DescribeResult, description: string, seconds: number, name?: string) => {
+  const applyDescribed = (result: DescribeResult, description: string, seconds: number, name?: string, looks?: Looks) => {
     const built = fromBuild(result.build);
     setJustBuilt(true);
     setSaved((s) => ({
@@ -107,6 +107,7 @@ export function App() {
       ai: {
         description,
         name,
+        ...looks,
         model: result.model,
         status: result.status,
         summary: result.summary,

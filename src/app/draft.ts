@@ -10,8 +10,17 @@ import { STAT_GROUPS, type StatId } from "../schema/index.js";
 import { FOCUS_POINTS_PER_LEVEL } from "../engine/validate.js";
 import { readItems, type Item } from "./items.js";
 
+// Gender, a cosmetic detail like age. Unlisted, the default, is left out of the build.
+export const GENDERS = ["unlisted", "male", "female", "indeterminate", "none", "fluid", "custom"] as const;
+export type Gender = (typeof GENDERS)[number];
+
 export interface Draft {
   name?: string;
+  // Cosmetic details, kept apart from Traits and stats; nothing in the rules reads them.
+  age?: number;
+  gender?: Exclude<Gender, "unlisted">;
+  // What the player wrote when gender is custom
+  customGender?: string;
   kind?: string;
   origin?: string;
   profession?: string;
@@ -35,8 +44,11 @@ export type Step = (typeof STEPS)[number];
 // What the builder keeps from the last AI build, so the reasons survive a reload.
 export interface AiNotes {
   description: string;
-  // The name the player gave the builder, if any
+  // The name, age and gender the player gave the builder, if any
   name?: string;
+  age?: number;
+  gender?: Draft["gender"];
+  customGender?: string;
   model?: string;
   status: DescribeResult["status"];
   summary?: string;
@@ -121,6 +133,19 @@ export function toBuild(draft: Draft): Record<string, unknown> {
 const array = <T>(v: unknown): T[] => (Array.isArray(v) ? (v as T[]) : []);
 const text = (v: unknown) => (typeof v === "string" && v !== "" ? v : undefined);
 
+// An age as a whole number of years, or nothing.
+export const readAge = (v: unknown) => (typeof v === "number" && Number.isInteger(v) && v >= 0 && v <= MAX_AGE ? v : undefined);
+export const MAX_AGE = 9999;
+const readGender = (v: unknown) => (GENDERS.includes(v as Gender) && v !== "unlisted" ? (v as Draft["gender"]) : undefined);
+
+// Gender as the sheet and the builder write it: "Female", or the player's own
+// word. Unlisted, and custom with nothing written, give nothing.
+export function genderText(d: Pick<Draft, "gender" | "customGender">): string | undefined {
+  if (!d.gender) return undefined;
+  if (d.gender === "custom") return d.customGender?.trim() || undefined;
+  return d.gender[0]!.toUpperCase() + d.gender.slice(1);
+}
+
 // Takes any object shaped roughly like a Build. Fields are kept as they are,
 // so the engine can report what's wrong with them.
 export function fromBuild(input: unknown): Draft {
@@ -134,6 +159,9 @@ export function fromBuild(input: unknown): Draft {
   const kind = b.kind === "tatot" && (b.form === "orcoid" || b.form === "goblinoid") ? `tatot-${b.form}` : text(b.kind);
   return {
     name: text(b.name),
+    age: readAge(b.age),
+    gender: readGender(b.gender),
+    customGender: b.gender === "custom" ? text(b.customGender) : undefined,
     kind,
     origin: text(b.origin),
     profession: text(b.profession),

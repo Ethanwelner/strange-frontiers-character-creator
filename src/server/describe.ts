@@ -21,6 +21,9 @@ const Request = z.object({
   // The player set the level by hand, so a level in the description doesn't override it.
   exactLevel: z.boolean().default(false),
   name: z.string().trim().max(80).optional(),
+  // Cosmetic; the model writes with them but doesn't build around them.
+  age: z.number().int().min(0).max(9999).optional(),
+  gender: z.string().trim().max(40).optional(),
 });
 
 export interface Reply {
@@ -107,6 +110,8 @@ export async function handleDescribe(body: unknown, deps: Deps, onProgress?: (p:
     const result = await describeCharacter({
       description: parsed.data.description,
       name: parsed.data.name,
+      age: parsed.data.age,
+      gender: parsed.data.gender,
       content: deps.content,
       // A level the description asks for wins over the campaign's starting level.
       campaign: {

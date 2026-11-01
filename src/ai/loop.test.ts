@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 import { loadContent } from "../engine/content.js";
 import type { ConceptInput } from "../engine/solve.js";
 import { anthropicProvider, CLAUDE_MODEL as MODEL, type CreateMessage } from "./anthropic.js";
-import { describeCharacter } from "./loop.js";
+import { describeCharacter, looksLine } from "./loop.js";
 import { DescribeFailure } from "./model.js";
 import type { Reason } from "./types.js";
 import type { Provider } from "./model.js";
@@ -113,6 +113,13 @@ describe("describeCharacter", () => {
     const { create } = script(message([submit(goblinoid)]), message([submit({ ...goblinoid, name: "Someone Else" })]));
     const result = await describeCharacter({ description: "A goblin mage.", name: "Tibb", content, provider: anthropicProvider(create), campaign: L1 });
     expect(result.build?.name).toBe("Tibb");
+  });
+
+  it("tells the model the player's age and gender as cosmetic details, and nothing when neither is set", () => {
+    expect(looksLine({ age: 34, gender: "Female" })).toMatch(/age 34 and gender Female\. These are cosmetic\..*don't let them decide/);
+    expect(looksLine({ gender: "Fluid" })).toContain("character's gender Fluid.");
+    expect(looksLine({ gender: " " })).toBe("");
+    expect(looksLine({})).toBe("");
   });
 
   it("builds with another Claude model when told to, without a refusal fallback for Haiku", async () => {
