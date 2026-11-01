@@ -9,7 +9,7 @@ import type { HeldCondition } from "../conditions.js";
 import { CharacterLine } from "./CharacterLine.js";
 import { Conditions } from "./Conditions.js";
 import { Items } from "./Items.js";
-import { askerName, baseStats, Chip, CoreLine, Icon, LorePopup, NameField, Portrait, SettingIcon, StatLine, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
+import { askerName, baseStats, Chip, CoreLine, DescriptionBox, Icon, LorePopup, NameField, Portrait, SettingIcon, StatLine, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
 
 const SOURCE = /^(kind|origin|profession|past) ([a-z0-9-]+)( choice)?$/;
 const TRAIT_CHOICE = /^trait ([a-z0-9-]+) choice$/;
@@ -101,6 +101,7 @@ export function Sheet({
   onName,
   onLooks,
   onPortrait,
+  onDescription,
   embedded = false,
   statsSlot,
   traitsAction,
@@ -123,6 +124,8 @@ export function Sheet({
   onLooks?: (looks: Pick<Draft, "age" | "gender" | "customGender">) => void;
   // Changes the portrait from the sheet; without it the sheet only shows it.
   onPortrait?: (portrait?: string) => void;
+  // Edits the description; without it the sheet shows the description as text.
+  onDescription?: (description?: string) => void;
   // The last column, after the Knowledges: the Conditions, then the Items,
   // with the current HP the Conditions go by (full if not given)
   items?: Item[];
@@ -131,7 +134,6 @@ export function Sheet({
   onConditions?: (conditions: HeldCondition[]) => void;
   hp?: number;
 }) {
-  const kind = draft.kind ? kindById.get(draft.kind) : undefined;
   const packages = [draft.origin, draft.profession, draft.past].map((id) => (id ? packageById.get(id) : undefined));
   const base = baseStats(draft);
   const summary = result.summary;
@@ -191,28 +193,24 @@ export function Sheet({
 
         {!embedded && (
           <div className="c-sheet-box sheet-head">
-            <Portrait className="sheet-portrait" portrait={draft.portrait} name={draft.name} onChange={onPortrait} />
-            <div className="sheet-head-main">
-              <NameField className="sheet-name" heading="h2" name={draft.name} onChange={onName ?? (() => {})} />
-              {/* Kind, age, gender, Origin, Profession and Past, as in Player Tools */}
-              <CharacterLine draft={draft} onLooks={onLooks ?? (() => {})} />
-              <p className="sheet-resources">
-                {resources.map((r) => (
-                  <span key={r}>
-                    <i>{summary?.resources[r] ?? "–"}</i> <strong className={`resource-${r}`}>{r.toUpperCase()}</strong>
-                  </span>
-                ))}
-              </p>
-              {kind && kind.features.length > 0 && (
-                <ul className="features kind-features">
-                  {kind.features.map((f) => (
-                    <li key={f.name}>
-                      <strong>{f.name}.</strong> {f.description}
-                    </li>
+            {/* The portrait and the name's column, together as wide as the sheet's first two columns */}
+            <div className="sheet-head-who">
+              <Portrait className="sheet-portrait" portrait={draft.portrait} name={draft.name} onChange={onPortrait} />
+              <div className="sheet-head-main">
+                <NameField className="sheet-name" heading="h2" name={draft.name} onChange={onName ?? (() => {})} />
+                {/* Kind, age, gender, Origin, Profession and Past, as in Player Tools */}
+                <CharacterLine draft={draft} onLooks={onLooks ?? (() => {})} />
+                <p className="sheet-resources">
+                  {resources.map((r) => (
+                    <span key={r}>
+                      <i>{summary?.resources[r] ?? "–"}</i> <strong className={`resource-${r}`}>{r.toUpperCase()}</strong>
+                    </span>
                   ))}
-                </ul>
-              )}
+                </p>
+              </div>
             </div>
+            {/* The description, editable at any time and lined up over the Conditions and Items; an AI build fills it with its summary */}
+            <DescriptionBox description={draft.description} onChange={onDescription} />
           </div>
         )}
 

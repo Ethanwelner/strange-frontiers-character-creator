@@ -49,6 +49,7 @@ How to help:
 - Rolls: skill checks are a d20 plus the focus stat they use, and meeting or beating the target succeeds. When the player asks you to roll, roll with roll_d20 (pass the stat as the modifier) and report the number it returns. Never make up a roll. The player's own rolls on the page show up in the chat as "Rolled a d20: 14".
 - Never level the character up or change their Traits or stats: the player does that on the page.
 - Keep answers short: a sentence or two, or a short list. Say what you changed.
+- For a simple action (a change to the tracker, a roll), reply with just the result, like "HP 13 → 9." or "Rolled 14 + 3 Grace = 17." No acknowledgement first or after: no "Got it", "Sure", "Okay", "Done" or "Noted".
 - Write plain text: the chat shows Markdown as typed, so no asterisks or other formatting.`;
 
 const MAX_TURNS = 6;

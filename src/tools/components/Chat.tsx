@@ -91,9 +91,9 @@ export function Chat({
         disabled={busy}
         onRolled={(value) => onChange({ ...latest.current, chat: [...latest.current.chat, { role: "user", text: `Rolled a d20: ${value}` }] })}
       >
-        {/* Clear, as a round restore button like the resources' on the chat box's top
-            right corner. It's on the die's layer so it stays at the box's visible top
-            while the box slides under the die (styles.css). */}
+        {/* Clear, as a round restore button like the resources', in the chat box's top
+            right corner beside the die. It's on the die's layer so it stays over the
+            conversation as it slides under the die (styles.css). */}
         {play.chat.length > 0 && (
           <button
             type="button"
@@ -123,18 +123,31 @@ export function Chat({
                 </div>
               </li>
             )}
-            {play.chat.map((m, i) => (
-              <li key={i} className={`tools-chat-msg is-${m.role}`}>
-                <p>{m.text}</p>
-                {m.changes && (
-                  <ul className="tools-chat-changes">
-                    {m.changes.map((c, j) => (
-                      <li key={j}>{c}</li>
-                    ))}
-                  </ul>
-                )}
-              </li>
-            ))}
+            {play.chat.map((m, i) => {
+              const body = (
+                <>
+                  <p>{m.text}</p>
+                  {m.changes && (
+                    <ul className="tools-chat-changes">
+                      {m.changes.map((c, j) => (
+                        <li key={j}>{c}</li>
+                      ))}
+                    </ul>
+                  )}
+                </>
+              );
+              // The player's messages have the character's portrait to their right, when there is one.
+              return m.role === "user" && play.draft.portrait ? (
+                <li key={i} className="tools-chat-row">
+                  <div className="tools-chat-msg is-user">{body}</div>
+                  <img className="tools-chat-avatar" src={play.draft.portrait} alt="" />
+                </li>
+              ) : (
+                <li key={i} className={`tools-chat-msg is-${m.role}`}>
+                  {body}
+                </li>
+              );
+            })}
             {busy && (
               <li className="tools-chat-msg is-assistant is-busy">
                 <p className="muted">Thinking…</p>

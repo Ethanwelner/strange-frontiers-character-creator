@@ -160,6 +160,12 @@ describe("drafts", () => {
     expect([odd.age, odd.gender, odd.customGender]).toEqual([undefined, undefined, undefined]);
   });
 
+  it("keeps the description through an export", () => {
+    const described = { ...human, description: "A goblin hedge witch.\n\nShe hates boats." };
+    expect(fromBuild(JSON.parse(JSON.stringify(toBuild(described))))).toEqual(described);
+    expect(toBuild({ ...human, description: "" })).not.toHaveProperty("description");
+  });
+
   it("keeps a portrait data URL through an export, and drops anything else", () => {
     const portrait = "data:image/webp;base64,UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAcQERGIiP4HAA==";
     const pictured = { ...human, portrait };
