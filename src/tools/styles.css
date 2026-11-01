@@ -781,12 +781,12 @@
     }
   }
 
-  /* The conversation, suggestions and all, in a box like the tracker's */
+  /* The conversation, suggestions and all, in a darker box */
   .tools-chat-log {
     list-style: none;
     padding: 16px;
     margin: 0;
-    background-color: var(--panel-box);
+    background-color: #212121;
     border: 1px solid var(--card-border);
     border-radius: 24px;
     overflow-y: auto;
