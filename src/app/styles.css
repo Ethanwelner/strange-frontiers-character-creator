@@ -1780,16 +1780,19 @@
     line-height: 1;
   }
 
+  /* 4px down, so Level and the number sit centered together in the blob */
   .level-badge-label {
+    margin-top: 4px;
     font-size: 0.875rem;
     font-weight: 400;
     text-transform: uppercase;
     letter-spacing: 0.08em;
   }
 
+  /* Bebas has one weight (.level-blob sets it) */
   .level-badge-number {
     font-size: 3rem;
-    font-weight: 600;
+    font-weight: 400;
   }
 
   .stat-badge {
@@ -2479,7 +2482,7 @@
 
 /* The character's level as a blob at the corner of the creator's sheet and
    Player Tools' box (.level-badge). A tiny "Level" over the number, in
-   the panel's light text. The blob, in the site's black behind them, slowly
+   Bebas and the panel's light text. The blob, in the site's black behind them, slowly
    morphs between two lopsided shapes while it turns, after
    codepen.io/myjessijess/pen/MWWgMwL, and its purple glow slowly pulses.
    It's a pseudo-element so the number stays upright. With reduced motion it
@@ -2494,6 +2497,7 @@
   border-radius: 0;
   background: none;
   color: var(--panel-text);
+  font-family: var(--title);
   line-height: 1;
 
   &::before {
