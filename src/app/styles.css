@@ -1443,6 +1443,29 @@
     }
   }
 
+  /* The sheet's Trait cards: the name at the left of the bar and, at the
+     right, where it came from (Kind, Origin...) and its category (Skill,
+     Language...) as badges */
+  .trait-name-with-chip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+
+    > span:first-child {
+      min-width: 0;
+    }
+  }
+
+  .trait-name-chips {
+    flex: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 4px;
+  }
+
   /* Isekai Traits get the Dreft Kind cards' green bar */
   .trait-box.region-dreft > .trait-name {
     background-color: var(--frontiers-dreft);

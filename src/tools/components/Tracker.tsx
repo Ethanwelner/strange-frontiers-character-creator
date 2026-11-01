@@ -6,7 +6,7 @@ import { Sheet } from "../../app/components/Sheet.js";
 import { StatsStep } from "../../app/components/StatsStep.js";
 import { TraitsStep } from "../../app/components/TraitsStep.js";
 import { Items } from "../../app/components/Items.js";
-import { Icon, LorePopup, Sign } from "../../app/components/ui.js";
+import { Chip, Icon, LorePopup, Sign } from "../../app/components/ui.js";
 import {
   addCondition,
   checkPlay,
@@ -232,7 +232,14 @@ export function Conditions({ play, result, onChange }: { play: Play; result: Bui
           const t = traitById.get(id);
           return (
             <li key={id} className="trait-box">
-              <div className="trait-name">{t?.name ?? id}</div>
+              {/* Badges at the right of the bar, like the sheet's Trait cards: where it came from, and that it's a Condition */}
+              <div className="trait-name trait-name-with-chip">
+                <span>{t?.name ?? id}</span>
+                <span className="trait-name-chips">
+                  <Chip>HP</Chip>
+                  <Chip>Condition</Chip>
+                </span>
+              </div>
               <p className="muted small">From HP. {t?.temporary}</p>
               {t && <p className="effect">{t.effect}</p>}
             </li>
@@ -244,17 +251,21 @@ export function Conditions({ play, result, onChange }: { play: Play; result: Bui
             onChange({ ...play, conditions: play.conditions.map((x) => (x === c ? { ...x, rank } : x)) });
           return (
             <li key={c.trait} className="trait-box">
-              {/* The name, with an ✕ at the right of its bar that takes the Condition off */}
+              {/* The name, then at the right of its bar a Condition badge and an ✕ that takes
+                  the Condition off */}
               <div className="trait-name tools-condition-head">
                 <span>
                   {t?.name ?? c.trait}
                   {t?.ranked ? ` (${c.rank})` : ""}
                 </span>
-                <button type="button" className="tools-condition-remove" aria-label={`Remove ${t?.name ?? c.trait}`} onClick={() => onChange(removeCondition(play, c.trait))}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 20 20" aria-hidden="true">
-                    <path d="M2 2l16 16M18 2L2 18" fill="none" stroke="currentColor" strokeWidth="2.5" />
-                  </svg>
-                </button>
+                <span className="trait-name-chips">
+                  <Chip>Condition</Chip>
+                  <button type="button" className="tools-condition-remove" aria-label={`Remove ${t?.name ?? c.trait}`} onClick={() => onChange(removeCondition(play, c.trait))}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 20 20" aria-hidden="true">
+                      <path d="M2 2l16 16M18 2L2 18" fill="none" stroke="currentColor" strokeWidth="2.5" />
+                    </svg>
+                  </button>
+                </span>
               </div>
               {t?.ranked && (
                 <div className="stepper tools-rank">
