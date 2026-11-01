@@ -255,10 +255,6 @@
     width: 4.5rem;
   }
 
-  select.tools-look-input option {
-    color: var(--portfolio-black);
-  }
-
   /* The rules problems chip, at the top left of the panel; it opens the list */
   .tools-issues {
     justify-content: flex-start;
