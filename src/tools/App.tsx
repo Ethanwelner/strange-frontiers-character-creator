@@ -22,44 +22,6 @@ export function ToolsApp() {
   const closePopup = useCallback(() => setShowing(undefined), []);
   // The list of rules problems, opened from their chip
   const [showingIssues, setShowingIssues] = useState(false);
-  // The right column never scrolls itself. The chat's conversation fills the
-  // column down to 16px above the bottom of the window (at least 120px) and
-  // scrolls inside, so it grows as the hero scrolls away and the column
-  // rises to stick at the top, and shrinks at the end of the page. If even the stuck column doesn't fit (a short
-  // window), the column stops sticking and scrolls with the page.
-  const side = useRef<HTMLElement>(null);
-  const [tallSide, setTallSide] = useState(false);
-  useEffect(() => {
-    const el = side.current;
-    if (!el) return;
-    let frame = 0;
-    const fit = () => {
-      const log = el.querySelector<HTMLElement>(".tools-chat-log");
-      const rest = el.offsetHeight - (log?.offsetHeight ?? 0);
-      // Stuck at the top, and where the column is right now
-      const stuck = window.innerHeight - 32 - rest;
-      // At the end of the page it stops at the bottom of the panel instead.
-      const bottom = Math.min(window.innerHeight - 16, el.parentElement?.getBoundingClientRect().bottom ?? Infinity);
-      const room = bottom - Math.max(16, el.getBoundingClientRect().top) - rest;
-      el.style.setProperty("--chat-log-height", `${Math.max(120, room)}px`);
-      setTallSide(stuck < 120);
-    };
-    const onScroll = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(fit);
-    };
-    const observer = new ResizeObserver(fit);
-    observer.observe(el);
-    window.addEventListener("resize", fit);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    fit();
-    return () => {
-      cancelAnimationFrame(frame);
-      observer.disconnect();
-      window.removeEventListener("resize", fit);
-      window.removeEventListener("scroll", onScroll);
-    };
-  }, [Boolean(play)]);
   const closeIssues = useCallback(() => setShowingIssues(false), []);
   // The character one level up, while Level up is open on the Tracker
   const [levelDraft, setLevelDraft] = useState<Draft>();
@@ -278,7 +240,7 @@ export function ToolsApp() {
             </main>
           </div>
           {play && result && (
-            <aside ref={side} className={`tools-chat-side${tallSide ? " is-tall" : ""}`}>
+            <aside className="tools-chat-side">
               <Chat play={play} result={result} content={content} create={create} model={__SF_AI__.model} onChange={setPlay} check={(p) => checkPlay(p.draft, content)} />
             </aside>
           )}
