@@ -125,10 +125,10 @@ function draw(canvas: HTMLCanvasElement, nums: HTMLCanvasElement, q: Quat, lift:
     const lit = f.number === landed;
     if (n[2] < 0.5 && !lit) continue;
     const [x, y] = at([n[0] * FACE_DEPTH, n[1] * FACE_DEPTH, 0]);
-    // The other faces' numbers at about half size, so they stay inside their
-    // tilted, narrower-looking faces, and at half strength
+    // The other faces' numbers at about three quarters size, so they stay
+    // inside their tilted, narrower-looking faces, and at half strength
     const main = f.number === current;
-    drawNumber(numCtx, f.number, x, y, lit ? dark : green, lit ? green : dark, lit ? 2 : 1, sx, sy, main ? 1 : 0.55, main ? 1 : 0.5);
+    drawNumber(numCtx, f.number, x, y, lit ? dark : green, lit ? green : dark, lit ? 2 : 1, sx, sy, main ? 1 : 0.75, main ? 1 : 0.5);
   }
 }
 
