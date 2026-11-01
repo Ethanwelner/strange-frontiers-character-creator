@@ -636,6 +636,12 @@
       image-rendering: pixelated;
       filter: drop-shadow(0 0 4px color-mix(in srgb, var(--frontiers-green) 70%, transparent));
       transition: filter 200ms;
+      /* Floating: a slow rise and fall with a slight sway */
+      animation: tools-die-hover 6s ease-in-out infinite;
+
+      @media (prefers-reduced-motion: reduce) {
+        animation: none;
+      }
     }
 
     &:hover:not(:disabled) {
@@ -1078,5 +1084,24 @@
   }
   to {
     transform: translateY(calc(100dvh - 32px));
+  }
+}
+
+/* The d20 floating over the chat (.tools-roller-screen canvas): up and down
+   a few pixels, tipping a little each way, out of step so it doesn't feel
+   mechanical */
+@keyframes tools-die-hover {
+  0%,
+  100% {
+    transform: translateY(4px) rotate(-1.5deg);
+  }
+  30% {
+    transform: translateY(-5px) rotate(0.5deg);
+  }
+  55% {
+    transform: translateY(-7px) rotate(1.5deg);
+  }
+  80% {
+    transform: translateY(0) rotate(0deg);
   }
 }
