@@ -914,7 +914,8 @@
     scrollbar-color: auto;
     scrollbar-width: auto;
 
-    /* A 16px lane with the 6px handle in its middle, 5px clear all round */
+    /* A 16px lane with the 6px handle at its right edge: 10px clear of the
+       content, and 5px in from the ends */
     &::-webkit-scrollbar {
       width: 16px;
     }
@@ -931,7 +932,10 @@
     &::-webkit-scrollbar-thumb {
       background: rgb(255 255 255 / 25%) padding-box;
       border: 5px solid transparent;
-      border-radius: 999px;
+      border-width: 5px 0 5px 10px;
+      /* Each corner's radius is its border plus 3px, so the visible handle
+         is a 6px pill with round ends whatever the borders are */
+      border-radius: 13px 3px 3px 13px / 8px;
     }
 
     &::-webkit-scrollbar-thumb:hover {
