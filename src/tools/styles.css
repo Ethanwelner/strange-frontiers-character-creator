@@ -884,6 +884,43 @@
     }
   }
 
+  /* The chat's scrollbars (the conversation and the message box) are just
+     a slim rounded handle: no track and no arrows. Chrome and Safari take
+     the -webkit- parts; Firefox, which has no such parts, a thin bar in the
+     same colors. The site sets scrollbar-color on the page, which makes
+     Chrome skip -webkit- parts, so it's reset here. */
+  :is(.tools-chat-log, .tools-chat-form textarea) {
+    scrollbar-color: auto;
+    scrollbar-width: auto;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track,
+    &::-webkit-scrollbar-corner {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-button {
+      display: none;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgb(255 255 255 / 25%);
+      border-radius: 999px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: rgb(255 255 255 / 40%);
+    }
+
+    @supports not selector(::-webkit-scrollbar) {
+      scrollbar-width: thin;
+      scrollbar-color: rgb(255 255 255 / 25%) transparent;
+    }
+  }
+
   /* Before the first message: what to ask, then the examples */
   .tools-chat-empty {
     display: grid;
