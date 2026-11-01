@@ -52,6 +52,11 @@ export type BuildItem = z.infer<typeof BuildItem>;
 
 export const Build = z.object({
   name: z.string().optional(),
+  // Cosmetic details; no rule reads them. Gender left out is Unlisted, and a
+  // custom gender is in the player's own words.
+  age: z.number().int().min(0).optional(),
+  gender: z.enum(["male", "female", "indeterminate", "none", "fluid", "custom"]).optional(),
+  customGender: z.string().optional(),
   kind: Id,
   origin: Id,
   profession: Id,
