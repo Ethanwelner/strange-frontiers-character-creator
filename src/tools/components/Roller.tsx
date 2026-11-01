@@ -27,40 +27,27 @@ const smooth = (a: number, b: number, x: number) => {
   return t * t * (3 - 2 * t);
 };
 
-// A number centered on (x, y) in the die's canvas pixels, drawn on the
-// full-resolution numbers canvas, `sx` × `sy` of its pixels per die pixel.
-// The digits keep the die's chunky pixels, `scale` die pixels big (whole
-// device pixels, so every block is the same size), but sit on whole screen
-// pixels rather than whole die pixels, so they move as smoothly as the die's
-// lines. Its backing is `pad` digit pixels around it.
-function drawNumber(
-  ctx: CanvasRenderingContext2D,
-  n: number,
-  x: number,
-  y: number,
-  fg: string,
-  bg: string,
-  pad: number,
-  sx: number,
-  sy: number,
-  scale = 1,
-  alpha = 1,
-) {
+// A number drawn flat on its face, through `ctx`'s current transform: one
+// unit is one of the die's pixels in the face's own plane, x reading right
+// and y down, with the number centered on the origin. Its blocks are filled
+// as one shape each, so the slanted edges between them don't show seams.
+// Its backing is `pad` pixels around it.
+function drawNumber(ctx: CanvasRenderingContext2D, n: number, fg: string, bg: string, pad: number, alpha: number) {
   const text = String(n);
   const w = text.length * 4 - 1;
-  const bx = Math.max(1, Math.round(scale * sx));
-  const by = Math.max(1, Math.round(scale * sy));
-  const left = Math.round(x * sx - (w * bx) / 2);
-  const top = Math.round(y * sy - (5 * by) / 2);
+  const left = -w / 2;
+  const top = -2.5;
   ctx.fillStyle = bg;
-  ctx.fillRect(left - pad * bx, top - pad * by, (w + pad * 2) * bx, (5 + pad * 2) * by);
+  ctx.fillRect(left - pad, top - pad, w + pad * 2, 5 + pad * 2);
   // The digits at `alpha`, over their solid backing
   ctx.globalAlpha = alpha;
   ctx.fillStyle = fg;
+  ctx.beginPath();
   [...text].forEach((d, i) => {
     const bits = DIGITS[Number(d)];
-    for (let p = 0; p < 15; p++) if (bits[p] === "1") ctx.fillRect(left + (i * 4 + (p % 3)) * bx, top + Math.floor(p / 3) * by, bx, by);
+    for (let p = 0; p < 15; p++) if (bits[p] === "1") ctx.rect(left + i * 4 + (p % 3), top + Math.floor(p / 3), 1, 1);
   });
+  ctx.fill();
   ctx.globalAlpha = 1;
 }
 
@@ -114,9 +101,13 @@ function draw(canvas: HTMLCanvasElement, nums: HTMLCanvasElement, q: Quat, lift:
     ctx.fill();
     ctx.stroke();
   }
-  // Numbers on the faces turned toward you, flat to the screen. The current
-  // face (the one rolled, or before any roll the one most toward you) is at
-  // full strength; the rest are at half, so they don't compete with it.
+  // Numbers on the faces turned toward you, lying in their faces: each is
+  // drawn through its face's up and right directions as the die turns them,
+  // so it tilts and narrows with its triangle. (The die has no perspective,
+  // so that's exact.) The current face (the one rolled, or before any roll
+  // the one most toward you) is at full strength; the rest are at half, so
+  // they don't compete with it.
+  numCtx.setTransform(1, 0, 0, 1, 0, 0);
   numCtx.clearRect(0, 0, nums.width, nums.height);
   const sx = nums.width / w;
   const sy = nums.height / h;
@@ -125,11 +116,14 @@ function draw(canvas: HTMLCanvasElement, nums: HTMLCanvasElement, q: Quat, lift:
     const lit = f.number === landed;
     if (n[2] < 0.5 && !lit) continue;
     const [x, y] = at([n[0] * FACE_DEPTH, n[1] * FACE_DEPTH, 0]);
-    // The other faces' numbers at about three quarters size, so they stay
-    // inside their tilted, narrower-looking faces, and at half strength
-    const main = f.number === current;
-    drawNumber(numCtx, f.number, x, y, lit ? dark : green, lit ? green : dark, lit ? 2 : 1, sx, sy, main ? 1 : 0.75, main ? 1 : 0.5);
+    const up = rotate(q, f.up);
+    // Right, as you'd read the face from outside: up × normal
+    const right: Vec = [up[1] * n[2] - up[2] * n[1], up[2] * n[0] - up[0] * n[2], up[0] * n[1] - up[1] * n[0]];
+    // One die pixel along right, and one down the face, in the numbers canvas
+    numCtx.setTransform(right[0] * sx, -right[1] * sy, -up[0] * sx, up[1] * sy, x * sx, y * sy);
+    drawNumber(numCtx, f.number, lit ? dark : green, lit ? green : dark, lit ? 2 : 1, f.number === current ? 1 : 0.5);
   }
+  numCtx.setTransform(1, 0, 0, 1, 0, 0);
 }
 
 // A floating green d20. Clicking it rolls; `show` makes it roll to a
@@ -149,12 +143,7 @@ export function Roller({
 }) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const nums = useRef<HTMLCanvasElement>(null);
-  const q = useRef<Quat>(
-    facing(
-      DIE.faces.find((f) => f.number === 20)!,
-      0.4,
-    ),
-  );
+  const q = useRef<Quat>(facing(DIE.faces.find((f) => f.number === 20)!));
   // The rotation as last drawn, wobble and all, which a roll starts from
   const shown = useRef<Quat>(q.current);
   const frame = useRef(0);

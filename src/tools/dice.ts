@@ -18,6 +18,9 @@ export interface Face {
   corners: [number, number, number];
   // Outward unit normal, which is also the direction of the face's center
   normal: Vec;
+  // Unit vector in the face, from its center toward its first corner: the
+  // way its number reads up
+  up: Vec;
   number: number;
 }
 
@@ -41,7 +44,8 @@ export function icosahedron(): { vertices: Vec[]; faces: Face[] } {
       for (let k = j + 1; k < 12; k++) {
         if (!near(i, j) || !near(j, k) || !near(i, k)) continue;
         const c: Vec = [0, 1, 2].map((n) => (vertices[i][n] + vertices[j][n] + vertices[k][n]) / 3) as Vec;
-        faces.push({ corners: [i, j, k], normal: c.map((x) => x / len(c)) as Vec, number: 0 });
+        const up: Vec = [0, 1, 2].map((n) => vertices[i][n] - c[n]) as Vec;
+        faces.push({ corners: [i, j, k], normal: c.map((x) => x / len(c)) as Vec, up: up.map((x) => x / len(up)) as Vec, number: 0 });
       }
   let next = 1;
   for (const f of faces) {
@@ -95,12 +99,16 @@ export function slerp(a: Quat, b: Quat, t: number): Quat {
   return a.map((x, i) => x * wa + to[i] * wb) as Quat;
 }
 
-// A rotation that turns `face` toward the viewer (+z), spun a random amount
-// around the view and tipped back a little so the die still looks solid.
-export function facing(face: Face, spin = Math.random() * Math.PI * 2): Quat {
+// A rotation that turns `face` toward the viewer (+z), spun around the view so
+// its number reads upright (or by `spin`, if given), and tipped back a little
+// so the die still looks solid.
+export function facing(face: Face, spin?: number): Quat {
   const n = face.normal;
   const z: Vec = [0, 0, 1];
   const axis: Vec = [n[1] * z[2] - n[2] * z[1], n[2] * z[0] - n[0] * z[2], n[0] * z[1] - n[1] * z[0]];
   const align = len(axis) < 1e-6 ? (dot(n, z) > 0 ? ([1, 0, 0, 0] as Quat) : axisAngle([1, 0, 0], Math.PI)) : axisAngle(axis, Math.acos(dot(n, z)));
-  return mul(axisAngle([1, 0, 0], -0.2), mul(axisAngle(z, spin), align));
+  // Turned toward you, the face's up points this way on screen; spin it to +y
+  const up = rotate(align, face.up);
+  const upright = Math.PI / 2 - Math.atan2(up[1], up[0]);
+  return mul(axisAngle([1, 0, 0], -0.2), mul(axisAngle(z, spin ?? upright), align));
 }

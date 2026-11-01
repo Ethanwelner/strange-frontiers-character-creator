@@ -28,6 +28,14 @@ describe("the d20", () => {
     }
   });
 
+  it("lands with the rolled face's number reading upright", () => {
+    for (const f of icosahedron().faces) {
+      const up = rotate(facing(f), f.up);
+      expect(up[1]).toBeGreaterThan(0.9);
+      expect(Math.abs(up[0])).toBeLessThan(1e-6);
+    }
+  });
+
   it("rolls whole numbers from 1 to 20", () => {
     const rolls = Array.from({ length: 2000 }, () => roll(20));
     expect(Math.min(...rolls)).toBe(1);
