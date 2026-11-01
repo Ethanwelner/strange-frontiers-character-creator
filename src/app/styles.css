@@ -2083,7 +2083,7 @@
   /* On the Sheet the pen follows the name, 16px after it; the field takes the
      line while it's open */
   .sheet-name {
-    margin-bottom: 16px;
+    margin-bottom: 20px;
     gap: 16px;
 
     h2 {
@@ -2155,9 +2155,9 @@
   }
 
   /* HP, VP, SP and MP: the name, the value and a meter in its color, as many
-     across as fit. Player Tools adds -, + and restore beside the value and
-     an amount field under the meter; the creator's sheet shows just these,
-     at full. */
+     across as fit, with -, + and restore beside the value and an amount
+     field under the meter in Player Tools. The creator's sheet shows just
+     the names and values, at full (.sheet-resources). */
   .tools-resources {
     display: grid;
     /* As many as fit, all four (HP, VP, SP, MP) across on most screens,
@@ -2210,6 +2210,19 @@
     }
   }
 
+  /* On the creator's sheet: no bars, each value right after its name, in a
+     row that wraps */
+  .tools-resources.sheet-resources {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 48px;
+
+    .num {
+      flex: none;
+      text-align: left;
+    }
+  }
+
   .tools-meter {
     height: 6px;
     margin: 12px 0;
@@ -2221,11 +2234,6 @@
       background: var(--frontiers-green);
       transition: width 200ms;
     }
-  }
-
-  /* With nothing under it (the creator's sheet), no margin below */
-  .tools-meter:last-child {
-    margin-bottom: 0;
   }
 
   .tools-meter-hp > span {

@@ -210,10 +210,10 @@ export function Sheet({
           </div>
         )}
 
-        {/* HP, VP, SP and MP at full, laid out like Player Tools' tracker without its controls */}
+        {/* HP, VP, SP and MP at full, like Player Tools' tracker without its controls or bars */}
         {!embedded && (
           <div className="c-sheet-box">
-            <div className="tools-resources">
+            <div className="tools-resources sheet-resources">
               {resources.map((r) => (
                 <div key={r} className="tools-resource">
                   <div className="tools-resource-value">
@@ -224,9 +224,6 @@ export function Sheet({
                       {summary?.resources[r] ?? "–"}
                       <span className="muted"> / {summary?.resources[r] ?? "–"}</span>
                     </span>
-                  </div>
-                  <div className={`tools-meter tools-meter-${r}`} aria-hidden="true">
-                    <span style={{ width: summary ? "100%" : "0%" }} />
                   </div>
                 </div>
               ))}
