@@ -712,9 +712,10 @@
     padding: 0;
     margin: 0;
     overflow-y: auto;
-    /* The room the rest of the column leaves in the window (App.tsx sets it) */
+    /* The room the rest of the column leaves on screen, down to the bottom
+       of the window (App.tsx sets it as the page scrolls) */
+    height: var(--chat-log-height, calc(100vh - 440px));
     min-height: 120px;
-    max-height: var(--chat-log-max, calc(100vh - 440px));
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -858,6 +859,12 @@
     .tools-chat-side {
       position: static;
       max-height: none;
+    }
+
+    /* Stacked under the tracker, the conversation keeps a set height
+       instead of following the scroll */
+    .tools-chat-log {
+      height: 50vh;
     }
 
     /* Stacked, the panel's top padding is too short for them, so the chip
