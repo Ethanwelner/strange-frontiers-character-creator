@@ -76,7 +76,7 @@
     gap: 24px;
   }
 
-  /* "+ Level" (Cancel while leveling): a green badge, shaped like the rules
+  /* Level up, a green + (Cancel while leveling), round like the rules
      problems chip, in the top right corner of the level blob's 96px square
      (the blob sits half its padding in from the box's corner, src/app) */
   .tools-level-up {
@@ -87,7 +87,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.4em;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem;
     border: 0;
     border-radius: 999px;
     background: var(--frontiers-green);
@@ -109,6 +109,11 @@
     &:disabled {
       opacity: 0.45;
       cursor: default;
+    }
+
+    .icon {
+      width: 1rem;
+      height: 1rem;
     }
 
     /* The 56px blob on narrower screens, at -24px / -8px */

@@ -86,7 +86,7 @@ export function ToolsApp() {
                 <span className="level-badge-number">{play.draft.level}</span>
               </div>
             )}
-            {/* "+ Level" in the blob's top right corner: a green badge that turns into Cancel
+            {/* Level up, as a green + in the blob's top right corner, that turns into Cancel
                 while the level up is open and throws its points away. Points the character
                 already has to place come first, so it waits while there are any. */}
             {play &&
@@ -103,7 +103,6 @@ export function ToolsApp() {
                   onClick={() => setLevelDraft({ ...play.draft, level: play.draft.level + 1 })}
                 >
                   <Icon name="plus" />
-                  Level
                 </button>
               ))}
             <main>
