@@ -2158,19 +2158,18 @@
      across as fit, with -, + and restore beside the value and an amount
      field under the meter in Player Tools. The creator's sheet shows just
      the names and values, at full (.sheet-resources). */
+  /* As many across as fit, right on the panel without boxes, the row
+     centered: each grows from 210px to at most 360px */
   .tools-resources {
-    display: grid;
-    /* As many as fit, all four (HP, VP, SP, MP) across on most screens,
-       each at most 360px, right on the panel without boxes */
-    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 36px;
   }
 
-  /* Each centered in its column */
   .tools-resource {
-    width: 100%;
+    flex: 1 1 210px;
     max-width: 360px;
-    justify-self: center;
   }
 
   .tools-resource-value {
@@ -2222,7 +2221,7 @@
     gap: 16px 48px;
 
     .tools-resource {
-      width: auto;
+      flex: none;
     }
 
     .num {
