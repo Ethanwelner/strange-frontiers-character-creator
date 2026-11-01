@@ -2198,24 +2198,28 @@
 
   /* A card on its own in the popup (.lore-modal-card: a Trait, Knowledge,
      Kind or background package): the card is the popup's edge, with no
-     panel around it, and the close button sits in its top right corner, in
-     its header bar, which keeps room for it after the badges */
+     panel around it, and the close button floats outside its top right
+     corner. The panel lets it overflow, so a long card scrolls itself. On
+     phones, with no room at the side, the button sits above the card's
+     right edge. */
   .lore-modal-card {
     .lore-modal-panel {
       max-width: 560px;
       padding: 0;
       border-radius: 12px;
       background: none;
+      overflow: visible;
     }
 
     .lore-modal-panel > :is(.trait-box, .card) {
       margin: 0;
+      max-height: calc(100dvh - 128px);
+      overflow-y: auto;
     }
 
     .lore-modal-close {
-      top: 7px;
-      right: 8px;
-      z-index: 1;
+      top: -36px;
+      right: -36px;
       width: 28px;
       height: 28px;
 
@@ -2223,10 +2227,10 @@
         width: 12px;
         height: 12px;
       }
-    }
 
-    :is(.trait-name, .card-head) {
-      padding-right: 48px;
+      @media (max-width: 767px) {
+        right: 0;
+      }
     }
   }
 
