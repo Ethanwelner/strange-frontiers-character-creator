@@ -127,7 +127,7 @@
     padding: 2rem;
     background-color: var(--panel-box);
     border: 1px solid var(--card-border);
-    border-radius: 24px;
+    border-radius: 16px;
 
     @media (max-width: 767px) {
       padding: 1.25rem;
@@ -590,12 +590,12 @@
     left: 0;
     right: 0;
     top: calc(100% + 24px);
-    height: 24px;
+    height: 16px;
     pointer-events: none;
     background:
-      radial-gradient(circle at 100% 100%, transparent 22.5px, var(--card-border) 23px 23.5px, var(--panel) 24px) left top / 24px 24px no-repeat,
-      radial-gradient(circle at 0 100%, transparent 22.5px, var(--card-border) 23px 23.5px, var(--panel) 24px) right top / 24px 24px no-repeat,
-      linear-gradient(var(--card-border), var(--card-border)) center top / calc(100% - 48px) 1px no-repeat;
+      radial-gradient(circle at 100% 100%, transparent 14.5px, var(--card-border) 15px 15.5px, var(--panel) 16px) left top / 16px 16px no-repeat,
+      radial-gradient(circle at 0 100%, transparent 14.5px, var(--card-border) 15px 15.5px, var(--panel) 16px) right top / 16px 16px no-repeat,
+      linear-gradient(var(--card-border), var(--card-border)) center top / calc(100% - 32px) 1px no-repeat;
   }
 
   @supports (animation-timeline: view()) {
@@ -624,7 +624,7 @@
     height: 184px;
     padding: 0;
     border: 1px solid var(--card-border);
-    border-radius: 18px / 24px;
+    border-radius: 16px;
     overflow: hidden;
     background: var(--panel-box);
     cursor: pointer;
@@ -769,7 +769,7 @@
     padding: 16px;
     background-color: #212121;
     border: 1px solid var(--card-border);
-    border-radius: 24px;
+    border-radius: 16px;
   }
 
   .tools-chat-log {
