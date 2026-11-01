@@ -1940,6 +1940,11 @@
     margin-top: 0;
   }
 
+  /* The picks left to spend, a line under the Traits title */
+  .sheet-banked {
+    margin: 0 0 16px;
+  }
+
   /* The site's .level-badge and .stat-badge, at a fixed size. The level is
      a 96px blob (.level-blob) centered between the corner of the creator's
      sheet (or Player Tools' box) and the corner of the box inside it: half
@@ -2117,12 +2122,25 @@
 
   /* The line under the character's name, the same on the creator's Sheet
      and in Player Tools (components/CharacterLine.tsx) */
-  /* Kind, age, gender and background, 24px apart, each a label over its
-     value */
-  .tools-line {
+  /* Kind, age and gender on one row, 24px apart, then Origin, Profession
+     and Past stacked under it; everything 8px apart down the column, each a
+     label over its value */
+  .tools-line-row {
     display: flex;
     flex-wrap: wrap;
-    gap: 24px;
+    gap: 8px 24px;
+    margin: 0;
+  }
+
+  .tools-line-stack {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .tools-line {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
     margin: 0 0 8px;
   }
 
@@ -2446,10 +2464,10 @@
     }
   }
 
-  /* On the sheet (and Player Tools' sheet), the core stat and its title line
-     sit slightly outside the stats' left edge */
-  .sheet-stats .sheet-group-head {
-    margin-left: -15px;
+  /* On the sheet (and Player Tools' sheet), the focus stats and their
+     bubbles sit 15px in from the core stat and its title line */
+  .sheet-stats .sheet-stat {
+    padding-left: 15px;
   }
 
   .sheet-side .rule {

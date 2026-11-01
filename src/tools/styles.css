@@ -67,12 +67,12 @@
     padding-bottom: var(--sf-creator-top, 24px);
   }
 
-  /* The character's name and background at the top of the first box, the
-     resources under them; the assistant has the right column from the top,
-     like the creator's character box. */
+  /* The first box: the portrait, then beside it the name, the character
+     line and the resources under them; the assistant has the right column
+     from the top, like the creator's character box. */
   .tools-character {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 24px;
   }
 
@@ -163,13 +163,11 @@
 
   /* The first box, dark like the sheet's boxes, with the name 24px above
      the resources */
-  .tools-head {
+  /* The header box, and the resources' box under it, dark like the sheet's */
+  .tools-head,
+  .tools-resources-box {
     background-color: var(--panel);
     border-color: rgb(255 255 255 / 12%);
-
-    > .tools-character {
-      margin-bottom: 24px;
-    }
   }
 
   /* The name and its pen, from the creator's Sheet, in the tab title style */
@@ -249,6 +247,8 @@
   /* The tool, then the assistant beside it */
   .tools-body {
     grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+    /* 36px between the sheet and the d20 and chat column */
+    column-gap: 36px;
   }
 
   /* Before a character is in, the same column as the site's Strange
@@ -287,7 +287,6 @@
        each at most 360px, right on the panel without boxes */
     grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
     gap: 36px;
-    margin-bottom: 16px;
   }
 
   .tools-resource {
@@ -507,20 +506,22 @@
     align-self: start;
     display: flex;
     flex-direction: column;
+    gap: 12px;
     height: calc(100dvh - 32px);
     /* What slides past the column's top or bottom is hidden */
     overflow-y: clip;
   }
 
-  /* The d20 stays over the chat box, right on top of it */
+  /* The d20 stays over the chat box, covering the 12px gap under it too */
   .tools-roller {
     position: relative;
     z-index: 1;
     flex: none;
     background: var(--panel);
+    box-shadow: 0 12px 0 var(--panel);
   }
 
-  /* The chat box's top edge and rounded corners, drawn right under the d20,
+  /* The chat box's top edge and rounded corners, drawn 12px under the d20,
      where the box's top shows while the box itself has slid up under it.
      Once the column sticks, it sits right on the box's own edge. */
   .tools-roller::after {
@@ -528,7 +529,7 @@
     position: absolute;
     left: 0;
     right: 0;
-    top: 100%;
+    top: calc(100% + 12px);
     height: 16px;
     pointer-events: none;
     background:
@@ -619,21 +620,24 @@
       image-rendering: auto;
     }
 
-    &:hover:not(:disabled) {
+    /* No box ever shows around the die: no focus outline or tap highlight,
+       and it stays at full strength while it rolls (disabled). Under the
+       pointer or keyboard focus, the die glows brighter instead. */
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+
+    &:hover:not(:disabled),
+    &:focus-visible {
       background: none;
+      outline: none;
 
       .tools-roller-die {
         filter: drop-shadow(0 0 8px var(--frontiers-green));
       }
     }
 
-    /* Inside, since the column clips above it */
-    &:focus-visible {
-      outline: 2px solid var(--frontiers-green);
-      outline-offset: -4px;
-    }
-
     &:disabled {
+      opacity: 1;
       cursor: default;
     }
   }
@@ -680,10 +684,22 @@
 
   /* Level up, Download character, Switch character and the rules problems
      chip, in a row at the right of the name, 8px apart */
+  /* Download character, Switch character and any rules problems, above the
+     sheet (.tools-box) at its right edge, right aligned, 1rem clear of it */
   .tools-actions {
+    position: absolute;
+    bottom: calc(100% + 1rem);
+    right: 0;
+    z-index: 1;
     flex-wrap: wrap;
     justify-content: flex-end;
     gap: 8px;
+
+    /* On phones there's no room beside the name, so they sit in the flow */
+    @media (max-width: 767px) {
+      position: static;
+      margin-bottom: 16px;
+    }
   }
 
   /* Switch character asks in a small popup: the question, then Switch
@@ -955,7 +971,7 @@
      the box slides under the d20, over the conversation and its scrollbar. */
   button.tools-chat-clear {
     position: absolute;
-    top: calc(100% - 16px);
+    top: calc(100% + 12px - 16px);
     right: -16px;
     z-index: 1;
     display: inline-flex;

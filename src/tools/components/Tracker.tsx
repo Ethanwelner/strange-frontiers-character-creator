@@ -6,16 +6,7 @@ import { Sheet } from "../../app/components/Sheet.js";
 import { StatsStep } from "../../app/components/StatsStep.js";
 import { TraitsStep } from "../../app/components/TraitsStep.js";
 import { Icon, LorePopup, Sign } from "../../app/components/ui.js";
-import {
-  checkPlay,
-  currentOf,
-  maxOf,
-  pointsToPlace,
-  RESOURCES,
-  withResource,
-  type Play,
-  type ResourceKey,
-} from "../play.js";
+import { checkPlay, currentOf, maxOf, pointsToPlace, RESOURCES, withResource, type Play, type ResourceKey } from "../play.js";
 
 const NAMES: Record<ResourceKey, string> = { hp: "Hit Points", vp: "Vibe Points", sp: "Savvy Points", mp: "Mana Points" };
 
@@ -43,7 +34,8 @@ export function Tracker({
   onChange: (p: Play) => void;
   levelDraft?: Draft;
   onLevelDraft: (d?: Draft) => void;
-  head?: ReactNode;
+  // The first box: the portrait, name and character line
+  head: ReactNode;
 }) {
   // MP shows once the character has any.
   const shown = RESOURCES.filter((r) => r !== "mp" || maxOf(result, r) > 0);
@@ -91,9 +83,11 @@ export function Tracker({
     <section className="tools-tracker">
       {!result.summary && <div className="notice bad">The engine couldn't read this character, so its maximums aren't known. Check the sheet below.</div>}
 
-      {/* The character's name, standing in for this tab's title, over the resources, in a box like the sheet's head */}
-      <div className="c-sheet-box tools-head">
-        {head}
+      {/* The character's header, in a box like the sheet's head */}
+      <div className="c-sheet-box tools-head">{head}</div>
+
+      {/* HP, VP, SP and MP, in their own box under it */}
+      <div className="c-sheet-box tools-resources-box">
         <div className="tools-resources">
           {shown.map((r) => {
             const cur = currentOf(play, result, r);
@@ -117,7 +111,13 @@ export function Tracker({
                   <button type="button" onClick={() => set(r, cur + 1)} disabled={cur >= max} aria-label={`1 more ${r.toUpperCase()}`}>
                     <Sign is="plus" />
                   </button>
-                  <button type="button" onClick={() => set(r, max)} disabled={cur >= max} aria-label={`Restore ${r.toUpperCase()} to full`} title="Restore to full">
+                  <button
+                    type="button"
+                    onClick={() => set(r, max)}
+                    disabled={cur >= max}
+                    aria-label={`Restore ${r.toUpperCase()} to full`}
+                    title="Restore to full"
+                  >
                     <Icon name="restore" />
                   </button>
                 </div>

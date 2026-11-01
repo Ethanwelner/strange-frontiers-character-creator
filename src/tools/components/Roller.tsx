@@ -68,11 +68,11 @@ function wobble(base: Quat, now: number, strength: number): Quat {
 // The site's green, read once
 let green: string | undefined;
 
-// The die at rotation `q`, `lift` canvas pixels up from the middle: its
-// faces on the small `canvas`, its numbers on the full-resolution `nums` over
-// it. The landed face's number, when there is one, is lit: dark on a green
-// block.
-function draw(canvas: HTMLCanvasElement, nums: HTMLCanvasElement, q: Quat, lift: number, landed?: number) {
+// The die at rotation `q`, at `size` times its resting size (a roll's bounce
+// shrinks it, so it never outgrows its area and gets clipped): its faces on
+// the small `canvas`, its numbers on the full-resolution `nums` over it. The
+// landed face's number, when there is one, is lit: dark on a green block.
+function draw(canvas: HTMLCanvasElement, nums: HTMLCanvasElement, q: Quat, size: number, landed?: number) {
   const ctx = canvas.getContext("2d");
   const numCtx = nums.getContext("2d");
   if (!ctx || !numCtx) return;
@@ -81,9 +81,9 @@ function draw(canvas: HTMLCanvasElement, nums: HTMLCanvasElement, q: Quat, lift:
   const { width: w, height: h } = canvas;
   ctx.clearRect(0, 0, w, h);
   // Room above and below for it to float (styles.css)
-  const r = h * 0.38;
+  const r = h * 0.38 * size;
   const cx = w / 2;
-  const cy = h / 2 - lift;
+  const cy = h / 2;
   const at = (v: Vec) => [cx + v[0] * r, cy - v[1] * r] as const;
   const points = DIE.vertices.map((v) => at(rotate(q, v)));
   const front = DIE.faces
@@ -120,7 +120,7 @@ function draw(canvas: HTMLCanvasElement, nums: HTMLCanvasElement, q: Quat, lift:
     // Right, as you'd read the face from outside: up × normal
     const right: Vec = [up[1] * n[2] - up[2] * n[1], up[2] * n[0] - up[0] * n[2], up[0] * n[1] - up[1] * n[0]];
     // One die pixel along right, and one down the face, in the numbers canvas
-    numCtx.setTransform(right[0] * sx, -right[1] * sy, -up[0] * sx, up[1] * sy, x * sx, y * sy);
+    numCtx.setTransform(right[0] * sx * size, -right[1] * sy * size, -up[0] * sx * size, up[1] * sy * size, x * sx, y * sy);
     const main = f.number === current;
     if (!main) numCtx.scale(0.8, 0.8);
     drawNumber(numCtx, f.number, lit ? dark : green, lit ? green : dark, lit ? 2 : 1, main ? 1 : 0.4);
@@ -163,7 +163,7 @@ export function Roller({
       const el = canvas.current;
       if (el && nums.current && !rollingRef.current) {
         shown.current = wobble(q.current, now, Math.min(1, (now - restingSince.current) / WOBBLE_IN));
-        draw(el, nums.current, shown.current, 0, landedRef.current);
+        draw(el, nums.current, shown.current, 1, landedRef.current);
       }
       id = requestAnimationFrame(tick);
     };
@@ -172,7 +172,7 @@ export function Roller({
   }, []);
 
   const redraw = useCallback(() => {
-    if (canvas.current && nums.current) draw(canvas.current, nums.current, q.current, 0, landedRef.current);
+    if (canvas.current && nums.current) draw(canvas.current, nums.current, q.current, 1, landedRef.current);
   }, []);
 
   // The die's canvas keeps one canvas pixel per PIXEL screen pixels as its
@@ -229,8 +229,9 @@ export function Roller({
         const u = Math.min(1, (now - start) / ROLL_MS);
         const spun = mul(axisAngle(axis, turns * (1 - (1 - u) ** 3)), from);
         q.current = slerp(spun, to, smooth(0.35, 1, u));
-        const bounce = Math.abs(Math.sin(u * Math.PI * 2.5)) * (1 - u) ** 2 * el.height * 0.3;
-        draw(el, numEl, q.current, bounce);
+        // Bouncing: shrinking as it's tossed and coming back as it lands, fading out
+        const bounce = Math.abs(Math.sin(u * Math.PI * 2.5)) * (1 - u) ** 2 * 0.35;
+        draw(el, numEl, q.current, 1 - bounce);
         if (u < 1) frame.current = requestAnimationFrame(step);
         else land();
       };

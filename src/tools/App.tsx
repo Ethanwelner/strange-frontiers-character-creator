@@ -144,6 +144,28 @@ export function ToolsApp() {
                   onLevelDraft={setLevelDraft}
                   head={
                     <header className="step-head tools-character">
+                      {/* Download character and Switch character as gray badges, then any rules
+                              problems as the creator's red chip, which opens them as a list,
+                              in the box's top right corner */}
+                      <div className="hero-bar tools-actions">
+                        <button type="button" onClick={exportBuild}>
+                          <Icon name="download" />
+                          Download character
+                        </button>
+                        <button type="button" onClick={() => setConfirmingSwitch(true)}>
+                          <Icon name="switch" />
+                          Switch character
+                        </button>
+                        {!result.ok && (
+                          <ul className="issues step-issues tools-issues">
+                            <li>
+                              <button type="button" onClick={() => setShowingIssues(true)}>
+                                {result.errors.length} rules {result.errors.length === 1 ? "problem" : "problems"}
+                              </button>
+                            </li>
+                          </ul>
+                        )}
+                      </div>
                       <Portrait
                         className="tools-portrait"
                         portrait={play.draft.portrait}
@@ -151,8 +173,7 @@ export function ToolsApp() {
                         onChange={(portrait) => setPlay({ ...play, draft: { ...play.draft, portrait } })}
                       />
                       <div className="tools-character-main">
-                        {/* The name, with the creator's pen to edit it, and the badges at the right:
-                            Download, Switch and any rules problems */}
+                        {/* The name, with the creator's pen to edit it */}
                         <div className="tools-character-head">
                           <NameField
                             className="sheet-name tools-name"
@@ -160,27 +181,6 @@ export function ToolsApp() {
                             name={play.draft.name}
                             onChange={(name) => setPlay({ ...play, draft: { ...play.draft, name } })}
                           />
-                          {/* Download character and Switch character as gray badges, then any rules
-                              problems as the creator's red chip, which opens them as a list */}
-                          <div className="hero-bar tools-actions">
-                            <button type="button" onClick={exportBuild}>
-                              <Icon name="download" />
-                              Download character
-                            </button>
-                            <button type="button" onClick={() => setConfirmingSwitch(true)}>
-                              <Icon name="switch" />
-                              Switch character
-                            </button>
-                            {!result.ok && (
-                              <ul className="issues step-issues tools-issues">
-                                <li>
-                                  <button type="button" onClick={() => setShowingIssues(true)}>
-                                    {result.errors.length} rules {result.errors.length === 1 ? "problem" : "problems"}
-                                  </button>
-                                </li>
-                              </ul>
-                            )}
-                          </div>
                           {confirmingSwitch && (
                             <LorePopup label="Switch character" onClose={closeSwitch} className="tools-switch-popup">
                               <h3 className="lore-modal-title">Switch character</h3>
