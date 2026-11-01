@@ -247,6 +247,8 @@
   /* The tool, then the assistant beside it */
   .tools-body {
     grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+    /* 36px between the sheet and the d20 and chat column */
+    column-gap: 36px;
   }
 
   /* Before a character is in, the same column as the site's Strange
