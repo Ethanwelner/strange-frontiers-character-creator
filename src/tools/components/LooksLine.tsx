@@ -5,8 +5,8 @@ type Looks = Pick<Draft, "age" | "gender" | "customGender">;
 
 const label = (g: string) => g[0]!.toUpperCase() + g.slice(1);
 
-// Age and gender under the character's name, as the creator's sheet shows
-// them, each with the name's pen. The pen (or the value) opens its field in
+// Age and gender, two of the blocks on the line under the character's name
+// (after Kind): each a label over its value and the name's pen. The pen (or the value) opens its field in
 // place: a number for the age, the creator's gender dropdown for the gender,
 // with a field for the player's own word under Custom. Enter or leaving the
 // field keeps it; Escape puts it back.
@@ -53,93 +53,97 @@ export function LooksLine({ looks, onChange }: { looks: Looks; onChange: (looks:
   };
 
   return (
-    <p className="sheet-looks tools-looks">
-      <span className="tools-look">
-        Age{" "}
-        {editing === "age" ? (
-          <input
-            className="tools-look-input tools-look-age"
-            type="number"
-            inputMode="numeric"
-            min={0}
-            max={MAX_AGE}
-            step={1}
-            aria-label="Age"
-            placeholder="—"
-            autoFocus
-            value={age}
-            onChange={(e) => setAge(e.target.value)}
-            onBlur={() => finishAge(true)}
-            onKeyDown={keys(finishAge)}
-          />
-        ) : (
-          <button type="button" className="tools-look-value" onClick={startAge}>
-            <strong>{looks.age ?? "—"}</strong>
-          </button>
-        )}
-        <button
-          type="button"
-          className="name-edit tools-look-edit"
-          aria-label="Edit the age"
-          onMouseDown={(e) => editing === "age" && e.preventDefault()}
-          onClick={() => (editing === "age" ? finishAge(true) : startAge())}
-        >
-          <span className="pen-icon" aria-hidden="true" />
-        </button>
-      </span>
-      <span className="tools-look">
-        Gender{" "}
-        {editing === "gender" ? (
-          <span className="tools-look-gender" onBlur={leaveGender}>
-            <select
-              className="tools-look-input"
-              aria-label="Gender"
+    <>
+      <span className="tools-line-item tools-look">
+        <span className="field-label">Age</span>
+        <span className="tools-look-row">
+          {editing === "age" ? (
+            <input
+              className="tools-look-input tools-look-age"
+              type="number"
+              inputMode="numeric"
+              min={0}
+              max={MAX_AGE}
+              step={1}
+              aria-label="Age"
+              placeholder="—"
               autoFocus
-              value={gender}
-              onChange={(e) => {
-                setGender(e.target.value);
-                // Anything but Custom is the whole answer
-                if (e.target.value !== "custom") {
-                  keepGender(e.target.value, "");
-                  setEditing(undefined);
-                }
-              }}
-              onKeyDown={(e) => e.key === "Escape" && finishGender(false)}
-            >
-              {GENDERS.map((g) => (
-                <option key={g} value={g}>
-                  {label(g)}
-                </option>
-              ))}
-            </select>
-            {gender === "custom" && (
-              <input
-                className="tools-look-input"
-                aria-label="Custom gender"
-                maxLength={40}
-                placeholder="In your own words"
-                autoFocus
-                value={custom}
-                onChange={(e) => setCustom(e.target.value)}
-                onKeyDown={keys(finishGender)}
-              />
-            )}
-          </span>
-        ) : (
-          <button type="button" className="tools-look-value" onClick={startGender}>
-            <strong>{genderText(looks) ?? "Unlisted"}</strong>
+              value={age}
+              onChange={(e) => setAge(e.target.value)}
+              onBlur={() => finishAge(true)}
+              onKeyDown={keys(finishAge)}
+            />
+          ) : (
+            <button type="button" className="tools-look-value" onClick={startAge}>
+              <strong>{looks.age ?? "—"}</strong>
+            </button>
+          )}
+          <button
+            type="button"
+            className="name-edit tools-look-edit"
+            aria-label="Edit the age"
+            onMouseDown={(e) => editing === "age" && e.preventDefault()}
+            onClick={() => (editing === "age" ? finishAge(true) : startAge())}
+          >
+            <span className="pen-icon" aria-hidden="true" />
           </button>
-        )}
-        <button
-          type="button"
-          className="name-edit tools-look-edit"
-          aria-label="Edit the gender"
-          onMouseDown={(e) => editing === "gender" && e.preventDefault()}
-          onClick={() => (editing === "gender" ? finishGender(true) : startGender())}
-        >
-          <span className="pen-icon" aria-hidden="true" />
-        </button>
+        </span>
       </span>
-    </p>
+      <span className="tools-line-item tools-look">
+        <span className="field-label">Gender</span>
+        <span className="tools-look-row">
+          {editing === "gender" ? (
+            <span className="tools-look-gender" onBlur={leaveGender}>
+              <select
+                className="tools-look-input"
+                aria-label="Gender"
+                autoFocus
+                value={gender}
+                onChange={(e) => {
+                  setGender(e.target.value);
+                  // Anything but Custom is the whole answer
+                  if (e.target.value !== "custom") {
+                    keepGender(e.target.value, "");
+                    setEditing(undefined);
+                  }
+                }}
+                onKeyDown={(e) => e.key === "Escape" && finishGender(false)}
+              >
+                {GENDERS.map((g) => (
+                  <option key={g} value={g}>
+                    {label(g)}
+                  </option>
+                ))}
+              </select>
+              {gender === "custom" && (
+                <input
+                  className="tools-look-input"
+                  aria-label="Custom gender"
+                  maxLength={40}
+                  placeholder="In your own words"
+                  autoFocus
+                  value={custom}
+                  onChange={(e) => setCustom(e.target.value)}
+                  onKeyDown={keys(finishGender)}
+                />
+              )}
+            </span>
+          ) : (
+            <button type="button" className="tools-look-value" onClick={startGender}>
+              <strong>{genderText(looks) ?? "Unlisted"}</strong>
+            </button>
+          )}
+          <button
+            type="button"
+            className="name-edit tools-look-edit"
+            aria-label="Edit the gender"
+            onMouseDown={(e) => editing === "gender" && e.preventDefault()}
+            onClick={() => (editing === "gender" ? finishGender(true) : startGender())}
+          >
+            <span className="pen-icon" aria-hidden="true" />
+          </button>
+        </span>
+      </span>
+    </>
   );
 }

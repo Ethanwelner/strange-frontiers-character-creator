@@ -76,10 +76,18 @@
     gap: 24px;
   }
 
-  /* Level up (Cancel while leveling): a green badge, shaped like the rules
-     problems chip */
+  /* Level up, a green + (Cancel while leveling), round like the rules
+     problems chip, in the top right corner of the level blob's 96px square
+     (the blob sits half its padding in from the box's corner, src/app) */
   .tools-level-up {
-    padding: 0.5rem 1rem;
+    position: absolute;
+    z-index: 2;
+    top: calc(0.5rem - 48px);
+    left: calc(0.5rem + 48px - 20px);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.5rem;
     border: 0;
     border-radius: 999px;
     background: var(--frontiers-green);
@@ -101,6 +109,17 @@
     &:disabled {
       opacity: 0.45;
       cursor: default;
+    }
+
+    .icon {
+      width: 1rem;
+      height: 1rem;
+    }
+
+    /* The 56px blob on narrower screens, at -24px / -8px */
+    @media (max-width: 991px) {
+      top: -24px;
+      left: calc(-8px + 56px - 14px);
     }
   }
 
@@ -157,6 +176,11 @@
   .tools-name {
     margin-bottom: 8px;
 
+    /* The pen 4px from the name */
+    &.name-field-line {
+      gap: 4px;
+    }
+
     h2 {
       margin: 0;
     }
@@ -179,7 +203,8 @@
     }
   }
 
-  /* The name, with Level up at the right end of its line */
+  /* The name, with the badges (Level up and the rest) at the right end of
+     its line */
   .tools-character-head {
     display: flex;
     flex-wrap: wrap;
@@ -193,18 +218,25 @@
     }
   }
 
+  /* Kind, age, gender and background, 24px apart, each a label over its
+     value */
   .tools-line {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
     margin: 0 0 8px;
   }
 
-  /* Age and gender, under the Kind and background line, each with a small
-     pen that opens its field in place (LooksLine.tsx) */
-  .tools-looks {
-    align-items: center;
-    margin: 0 0 8px;
+  .tools-line-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
   }
 
-  .tools-look {
+  /* Age and gender's value with a small pen that opens its field in place
+     (LooksLine.tsx), under their labels */
+  .tools-look-row {
     display: inline-flex;
     align-items: center;
     gap: 4px;
@@ -220,9 +252,14 @@
     }
   }
 
+  /* The pens beside the name, age and gender, faded */
+  .tools-character .pen-icon {
+    opacity: 0.4;
+  }
+
   button.tools-look-edit {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
 
     .pen-icon {
       width: 13px;
@@ -616,22 +653,20 @@
     align-self: start;
     display: flex;
     flex-direction: column;
-    gap: 24px;
     height: calc(100dvh - 32px);
     /* What slides past the column's top or bottom is hidden */
     overflow-y: clip;
   }
 
-  /* The d20 stays over the chat box, covering the gap under it too */
+  /* The d20 stays over the chat box, right on top of it */
   .tools-roller {
     position: relative;
     z-index: 1;
     flex: none;
     background: var(--panel);
-    box-shadow: 0 24px 0 var(--panel);
   }
 
-  /* The chat box's top edge and rounded corners, drawn 24px under the d20,
+  /* The chat box's top edge and rounded corners, drawn right under the d20,
      where the box's top shows while the box itself has slid up under it.
      Once the column sticks, it sits right on the box's own edge. */
   .tools-roller::after {
@@ -639,7 +674,7 @@
     position: absolute;
     left: 0;
     right: 0;
-    top: calc(100% + 24px);
+    top: 100%;
     height: 16px;
     pointer-events: none;
     background:
@@ -649,16 +684,31 @@
   }
 
   @supports (animation-timeline: view()) {
-    /* Up while the body's top crosses the window */
+    /* Up while the body's top crosses the window. The part that slides
+       under the d20 is added to the box's top padding at the same time, so
+       the conversation is only as tall as what shows of it and scrolls to
+       reach the rest. That edge is under the d20, so the padding (laid out,
+       not composited) can trail the scroll without showing. */
     .tools-chat-box {
-      animation: tools-side-lift linear both;
-      animation-timeline: --tools-body;
-      animation-range: entry-crossing 0% exit-crossing 0%;
+      animation:
+        tools-side-lift linear both,
+        tools-chat-uncover linear both;
+      animation-timeline: --tools-body, --tools-body;
+      animation-range:
+        entry-crossing 0% exit-crossing 0%,
+        entry-crossing 0% exit-crossing 0%;
     }
 
-    /* Down while its bottom does */
+    /* Down while its bottom does, and the conversation starts that much
+       lower, under it, for the same reason */
     .tools-roller {
       animation: tools-side-drop linear both;
+      animation-timeline: --tools-body;
+      animation-range: entry-crossing 100% exit-crossing 100%;
+    }
+
+    .tools-chat-log {
+      animation: tools-chat-uncover-end linear both;
       animation-timeline: --tools-body;
       animation-range: entry-crossing 100% exit-crossing 100%;
     }
@@ -755,7 +805,7 @@
 
   /* Gray badges, shaped like the rules problems chip: Download character,
      Switch character with its Yes and Cancel, and Restore all */
-  .tools-actions button,
+  .tools-actions > button,
   .tools-restore button {
     padding: 0.5rem 1rem;
     border-radius: 999px;
@@ -767,26 +817,12 @@
     white-space: nowrap;
   }
 
-  /* 24px from the top of the panel: the rules problems chip at the content's
-     left edge, and Download character and Switch character at the right edge
-     of the assistant's column. They aren't in the sticky column, so they
-     scroll away with the page. */
-  .tools-actions-bar {
-    position: absolute;
-    top: 24px;
-    left: 0;
-    right: 0;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    gap: 12px 24px;
-  }
-
+  /* Level up, Download character, Switch character and the rules problems
+     chip, in a row at the right of the name, 8px apart */
   .tools-actions {
     flex-wrap: wrap;
     justify-content: flex-end;
-    max-width: 380px;
-    margin-left: auto;
+    gap: 8px;
   }
 
   /* Switch character asks in a small popup: the question, then Switch
@@ -814,12 +850,15 @@
   /* The conversation, suggestions and all, then any error and the message
      box, in a darker box with the room the rest of the column leaves */
   .tools-chat-box {
+    /* Its top padding, 44px with the Clear badge (the scroll animations add
+       to it) */
+    --chat-pad-top: 16px;
     flex: 1 1 0;
     min-height: 160px;
     display: flex;
     flex-direction: column;
     gap: 16px;
-    padding: 16px;
+    padding: var(--chat-pad-top) 16px 16px;
     background-color: #212121;
     border: 1px solid var(--card-border);
     border-radius: 16px;
@@ -840,6 +879,43 @@
        part in view while the d20 covers the top */
     > :first-child {
       margin-top: auto;
+    }
+  }
+
+  /* The chat's scrollbars (the conversation and the message box) are just
+     a slim rounded handle: no track and no arrows. Chrome and Safari take
+     the -webkit- parts; Firefox, which has no such parts, a thin bar in the
+     same colors. The site sets scrollbar-color on the page, which makes
+     Chrome skip -webkit- parts, so it's reset here. */
+  :is(.tools-chat-log, .tools-chat-form textarea) {
+    scrollbar-color: auto;
+    scrollbar-width: auto;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track,
+    &::-webkit-scrollbar-corner {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-button {
+      display: none;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgb(255 255 255 / 25%);
+      border-radius: 999px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: rgb(255 255 255 / 40%);
+    }
+
+    @supports not selector(::-webkit-scrollbar) {
+      scrollbar-width: thin;
+      scrollbar-color: rgb(255 255 255 / 25%) transparent;
     }
   }
 
@@ -1014,7 +1090,7 @@
      scrollbar runs under the badge. */
   button.tools-chat-clear {
     position: absolute;
-    top: calc(100% + 24px + 8px);
+    top: calc(100% + 8px);
     right: 8px;
     z-index: 1;
     padding: 0.35rem 0.75rem;
@@ -1027,7 +1103,7 @@
   }
 
   .tools-chat-side:has(.tools-chat-clear) .tools-chat-box {
-    padding-top: 44px;
+    --chat-pad-top: 44px;
   }
 
   @media (max-width: 1199px) {
@@ -1068,6 +1144,7 @@
     }
 
     .tools-chat-box,
+    .tools-chat-log,
     .tools-roller {
       animation: none;
     }
@@ -1090,6 +1167,7 @@
     }
 
     .tools-chat-box,
+    .tools-chat-log,
     .tools-roller {
       animation: none;
     }
@@ -1103,18 +1181,6 @@
     .tools-chat-box {
       flex: none;
       height: 50vh;
-    }
-
-    /* Stacked, the panel's top padding is too short for them, so the chip
-       and Download and Switch character sit in the flow, still 24px from the
-       top, with the character's name 24px under them */
-    .builder-panel:has(> .tools-actions-bar) {
-      padding-top: 24px;
-    }
-
-    .tools-actions-bar {
-      position: static;
-      margin-bottom: 24px;
     }
   }
 }
@@ -1157,5 +1223,26 @@
   }
   to {
     rotate: 9deg;
+  }
+}
+
+/* The chat box's top padding while it's slid under the d20: the hidden part
+   plus its own padding (.tools-chat-box) */
+@keyframes tools-chat-uncover {
+  from {
+    padding-top: calc(var(--chat-pad-top) + 100dvh - 32px);
+  }
+  to {
+    padding-top: var(--chat-pad-top);
+  }
+}
+
+/* The conversation's start, under the d20 as it drops at the end of the page */
+@keyframes tools-chat-uncover-end {
+  from {
+    margin-top: 0;
+  }
+  to {
+    margin-top: calc(100dvh - 32px);
   }
 }
