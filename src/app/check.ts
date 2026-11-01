@@ -113,7 +113,7 @@ export function traitOptions(draft: Draft, content: Content, campaign: Campaign,
     // Non-ranked Traits are only ever bought at rank 1; the engine explains a duplicate.
     const rank = trait.ranked ? (held.get(trait.id) ?? 0) + 1 : 1;
     const trial = check(addPick(draft, trait.id, rank, pick), content, campaign);
-    const ownChoice = `${trait.name} asks for `;
+    const ownChoice = `${trait.name} gives a choice of `;
     const added = trial.errors.filter((e) => !before.has(e.message) && !(e.code === "choice" && e.message.startsWith(ownChoice)));
     // A Conveyed Trait can't be picked at all, and the wrong kind of pick is the other tab's.
     if (added.some((e) => e.code === "pick-type" || e.code === "conveyed")) continue;

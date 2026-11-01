@@ -543,7 +543,7 @@ describe("rule 6: Trait choices", () => {
   it("asks a held Trait's choice, and holds the answer", () => {
     const unanswered = check(withTraits(language));
     expect(unanswered.errors).toEqual([
-      expect.objectContaining({ code: "choice", message: `Additional Language asks for 1 from "language", but the build doesn't answer it` }),
+      expect.objectContaining({ code: "choice", message: `Additional Language gives a choice of 1 language: pick it on the Choices step` }),
     ]);
     expect(unanswered.summary!.questions).toEqual([
       { by: "trait", id: "additional-language", name: "Additional Language", from: "language", count: 1, notes: ["+1 Language per rank"] },

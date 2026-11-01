@@ -336,6 +336,8 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     questions.push(q);
     const { name, from, count } = q;
     const noun = FREE_TEXT_POOLS[from];
+    // The pool in plain words: "spoken-and-written-language" as "spoken and written language"
+    const poolWords = `${from.replace(/-/g, " ")}${count > 1 ? "s" : ""}`;
     const i = build.choices.findIndex((a) => !answered.has(build.choices.indexOf(a)) && answers(a, q));
     const given = i < 0 ? 0 : build.choices[i]!.traits.length;
     // A Contact or Place the player hasn't recorded yet is a reminder, not an error.
@@ -345,14 +347,14 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
       warn("choice", `${name} gives ${count} ${noun}${count > 1 ? "s" : ""}: record ${left > 1 ? `${left} more` : given ? "one more" : which} on the Choices step`, i < 0 ? "choices" : `choices[${i}]`);
     }
     if (i < 0) {
-      if (!noun) error("choice", `${name} asks for ${count} from "${from}", but the build doesn't answer it`, "choices");
+      if (!noun) error("choice", `${name} gives a choice of ${count} ${poolWords}: pick ${count > 1 ? "them" : "it"} on the Choices step`, "choices");
       return;
     }
     answered.add(i);
     const a = build.choices[i]!;
     const path = `choices[${i}]`;
     if (noun ? given > count : given !== count) {
-      error("choice", `${name} asks for ${count} from "${from}", but the build gives ${given}`, path);
+      error("choice", `${name} gives a choice of ${count} ${poolWords}, but the build picks ${given}`, path);
     }
     if (new Set(a.traits).size !== a.traits.length) {
       error("choice", `${name}'s "${from}" answer lists the same ${noun ?? "Trait"} twice`, path);
