@@ -208,13 +208,15 @@ export function ToolsApp() {
                             </button>
                           )}
                         </div>
-                        {/* "Isek • Dreft • Licensed Mage • Expelled from the Mage Schools", each of the
-                            Kind and background a link to its card */}
+                        {/* "Kind Isek • Origin Dreft • Profession Licensed Mage • Past Expelled from the
+                            Mage Schools", labeled like the creator's sheet. The labels are plain text; each
+                            Kind and background is a link to its card. */}
                         <p className="tools-line">
                           {[play.draft.kind, play.draft.origin, play.draft.profession, play.draft.past].map((id, n, ids) =>
                             id ? (
                               <span key={n}>
                                 {ids.slice(0, n).some(Boolean) && " • "}
+                                <span className="tools-line-label">{["Kind", "Origin", "Profession", "Past"][n]}</span>{" "}
                                 <button type="button" className="link" onClick={() => setShowing(id)}>
                                   {(n === 0 ? content.kinds.find((k) => k.id === id)?.name : content.packages.find((p) => p.id === id)?.name) ?? id}
                                 </button>
