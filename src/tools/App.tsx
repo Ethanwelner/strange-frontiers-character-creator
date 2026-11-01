@@ -8,6 +8,7 @@ import { checkPlay, creatorDraft, load, playBuild, pointsToPlace, save, startPla
 import { BackgroundPopup } from "../app/components/BackgroundPopup.js";
 import { Chat } from "./components/Chat.js";
 import { Tracker } from "./components/Tracker.js";
+import { LooksLine } from "./components/LooksLine.js";
 
 
 export function ToolsApp() {
@@ -221,6 +222,8 @@ export function ToolsApp() {
                             ) : null,
                           )}
                         </p>
+                        {/* Age and gender, as the creator's sheet shows them, each with a pen to edit it */}
+                        <LooksLine looks={play.draft} onChange={(looks) => setPlay({ ...play, draft: { ...play.draft, ...looks } })} />
                         {showing && <BackgroundPopup id={showing} onClose={closePopup} />}
                         {showingIssues && !result.ok && (
                           <LorePopup label="Rules problems" onClose={closeIssues} className="tools-issues-popup">

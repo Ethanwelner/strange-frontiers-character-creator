@@ -113,7 +113,7 @@
   .tools-column {
     display: flex;
     flex-direction: column;
-    gap: 48px;
+    gap: 24px;
     min-width: 0;
   }
 
@@ -124,14 +124,10 @@
      and the Traits */
   .tools-box {
     position: relative;
-    padding: 2rem;
+    padding: 1rem;
     background-color: var(--panel-box);
     border: 1px solid var(--card-border);
-    border-radius: 16px;
-
-    @media (max-width: 767px) {
-      padding: 1.25rem;
-    }
+    border-radius: 12px;
   }
 
   /* Items take the darker gray of the HP, VP and SP boxes there */
@@ -139,21 +135,21 @@
     background: var(--panel);
   }
 
-  /* 48px between the boxes */
+  /* 24px between the boxes */
   .tools-tracker {
     display: flex;
     flex-direction: column;
-    gap: 48px;
+    gap: 24px;
   }
 
-  /* The first box, dark like the sheet's boxes, with the name 48px above
-     the resources, as when it sat above the box */
+  /* The first box, dark like the sheet's boxes, with the name 24px above
+     the resources */
   .tools-head {
     background-color: var(--panel);
     border-color: rgb(255 255 255 / 12%);
 
     > .tools-character {
-      margin-bottom: 48px;
+      margin-bottom: 24px;
     }
   }
 
@@ -199,6 +195,60 @@
 
   .tools-line {
     margin: 0 0 8px;
+  }
+
+  /* Age and gender, under the Kind and background line, each with a small
+     pen that opens its field in place (LooksLine.tsx) */
+  .tools-looks {
+    align-items: center;
+    margin: 0 0 8px;
+  }
+
+  .tools-look {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  button.tools-look-value {
+    all: unset;
+    cursor: text;
+
+    &:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
+    }
+  }
+
+  button.tools-look-edit {
+    width: 24px;
+    height: 24px;
+
+    .pen-icon {
+      width: 13px;
+      height: 13px;
+    }
+  }
+
+  .tools-look-gender {
+    display: inline-flex;
+    gap: 8px;
+  }
+
+  /* The fields, in the line's own type, with a line under them like the
+     name's */
+  .tools-look-input {
+    font: inherit;
+    font-weight: 700;
+    color: inherit;
+    background: none;
+    border: 0;
+    border-bottom: 2px solid currentColor;
+    padding: 0;
+  }
+
+  .tools-look-age {
+    width: 4.5rem;
   }
 
   /* The rules problems chip, at the top left of the panel; it opens the list */
@@ -380,7 +430,7 @@
      Knowledges and Items while Level up shows the stats editable above) */
   .sheet-embedded .sheet-body {
     grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 4fr);
-    gap: 40px;
+    gap: 24px 40px;
 
     &:not(:has(.sheet-stats)) {
       grid-template-columns: minmax(0, 3fr) minmax(0, 4fr);
@@ -680,7 +730,7 @@
      boxes, without the sheet's outer one, which the left column's box
      stands in for */
   .builder-panel .sheet-embedded .c-sheet {
-    gap: 48px;
+    gap: 24px;
     margin-top: 0;
     background: none;
     border: none;

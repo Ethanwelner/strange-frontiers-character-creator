@@ -131,6 +131,14 @@ describe("the assistant's tools", () => {
     expect(text).toMatch(/HP \d+\/\d+/);
   });
 
+  it("gives the character's age and gender as cosmetic, and leaves them out when unset", () => {
+    const play = fresh();
+    const result = checkPlay(play.draft, content);
+    expect(sheetText(play, result, content)).not.toMatch(/Age|Gender/);
+    const set = { ...play, draft: { ...play.draft, age: 34, gender: "custom" as const, customGender: "Two-spirit" } };
+    expect(sheetText(set, result, content)).toContain("Age 34, Gender Two-spirit (cosmetic, no rules effect)");
+  });
+
   it("runs tool calls until Claude answers, and reports what changed", async () => {
     const replies = [
       { stop_reason: "tool_use", content: [{ type: "tool_use", id: "t1", name: "change_resources", input: { changes: [{ resource: "hp", by: -2 }] } }] },

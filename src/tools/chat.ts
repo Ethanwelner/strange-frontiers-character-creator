@@ -10,6 +10,7 @@ import type { CreateMessage } from "../ai/anthropic.js";
 import { runTool, ToolError } from "../ai/tools.js";
 import type { Content } from "../engine/parse.js";
 import type { BuildResult } from "../engine/validate.js";
+import { genderText } from "../app/draft.js";
 import { STAT_GROUPS, TraitCategory } from "../schema/index.js";
 import { roll } from "./dice.js";
 import {
@@ -189,6 +190,9 @@ export function sheetText(play: Play, result: BuildResult, content: Content): st
     `Name: ${d.name ?? "unnamed"}`,
     `Level ${d.level} ${kind?.name ?? d.kind ?? "no Kind"}; Origin ${pkg(d.origin)}, Profession ${pkg(d.profession)}, Past ${pkg(d.past)}`,
   ];
+  // Cosmetic: no rules depend on them
+  const looks = [d.age !== undefined ? `Age ${d.age}` : "", genderText(d) ? `Gender ${genderText(d)}` : ""].filter(Boolean);
+  if (looks.length) lines.push(`${looks.join(", ")} (cosmetic, no rules effect)`);
   if (kind?.features.length) lines.push(`Kind features: ${kind.features.map((f) => `${f.name}: ${f.description}`).join(" | ")}`);
   if (s) {
     lines.push(
