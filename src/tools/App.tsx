@@ -142,7 +142,7 @@ export function ToolsApp() {
                   onChange={setPlay}
                   levelDraft={levelDraft}
                   onLevelDraft={setLevelDraft}
-                  head={(resources) => (
+                  head={
                     <header className="step-head tools-character">
                       {/* Download character and Switch character as gray badges, then any rules
                               problems as the creator's red chip, which opens them as a list,
@@ -207,8 +207,6 @@ export function ToolsApp() {
                         </div>
                         {/* Kind, age, gender, Origin, Profession and Past, as on the creator's sheet */}
                         <CharacterLine draft={play.draft} onLooks={(looks) => setPlay({ ...play, draft: { ...play.draft, ...looks } })} />
-                        {/* HP, VP, SP and MP, from the Tracker, under the name and line */}
-                        {resources}
                         {showingIssues && !result.ok && (
                           <LorePopup label="Rules problems" onClose={closeIssues} className="tools-issues-popup">
                             <h3 className="lore-modal-title">Rules problems</h3>
@@ -221,7 +219,7 @@ export function ToolsApp() {
                         )}
                       </div>
                     </header>
-                  )}
+                  }
                 />
               )}
             </main>

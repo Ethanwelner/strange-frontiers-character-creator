@@ -163,7 +163,9 @@
 
   /* The first box, dark like the sheet's boxes, with the name 24px above
      the resources */
-  .tools-head {
+  /* The header box, and the resources' box under it, dark like the sheet's */
+  .tools-head,
+  .tools-resources-box {
     background-color: var(--panel);
     border-color: rgb(255 255 255 / 12%);
   }
@@ -283,7 +285,6 @@
        each at most 360px, right on the panel without boxes */
     grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
     gap: 36px;
-    margin-top: 16px;
   }
 
   .tools-resource {
