@@ -282,12 +282,6 @@
     margin: 24px 0 16px;
   }
 
-  /* The step header without the creator's "Step n of 6" stinger, which the
-     reused Traits step and Sheet bring along */
-  .step-head .stinger-row {
-    display: none;
-  }
-
   /* HP, VP, SP and MP's name, value and meter are in src/app/styles.css,
      shared with the creator's sheet; the amount field and its buttons are here */
   .tools-resource-apply {

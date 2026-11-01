@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 
 import { MAX_LEVEL } from "../../ai/level.js";
 import { STAT_GROUPS, type StatBlock, type StatId } from "../../schema/index.js";
 import { kindById, packageById, traitById } from "../content.js";
-import { GENDERS, MAX_AGE, STEPS, type Draft, type Step } from "../draft.js";
+import { GENDERS, MAX_AGE, type Draft } from "../draft.js";
 import { toPortrait } from "../portrait.js";
 
 export const GROUPS = Object.keys(STAT_GROUPS) as (keyof typeof STAT_GROUPS)[];
@@ -47,15 +47,10 @@ export function baseStats(draft: Draft): StatBlock | undefined {
 
 // A step's title, then the site's black stinger, then what the step is for.
 // What's wrong on the step shows beside the next step button (App.tsx).
-export function StepHeader({ step, title, children }: { step: Step; title: string; children?: ReactNode }) {
+export function StepHeader({ title, children }: { title: string; children?: ReactNode }) {
   return (
     <header className="step-head">
       <h2>{title}</h2>
-      <div className="stinger-row">
-        <div className="copy stinger black">
-          Step {STEPS.indexOf(step) + 1} of {STEPS.length}
-        </div>
-      </div>
       {children && <p className="lede">{children}</p>}
     </header>
   );

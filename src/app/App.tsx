@@ -59,7 +59,8 @@ export function App() {
   }, [result]);
 
   // The current step's errors, shown beside the next step button.
-  const stepErrors = useMemo(() => result.errors.filter((e) => stepOf(e) === step).map((e) => describe(e, draft)), [result, step, draft]);
+  // Each once: two packages can both need a language
+  const stepErrors = useMemo(() => [...new Set(result.errors.filter((e) => stepOf(e) === step).map((e) => describe(e, draft)))], [result, step, draft]);
 
   const setDraft = (d: Draft) => setSaved((s) => ({ ...s, draft: d }));
   // Changing steps keeps the page where it is.

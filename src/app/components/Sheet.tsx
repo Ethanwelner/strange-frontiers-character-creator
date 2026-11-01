@@ -167,7 +167,7 @@ export function Sheet({
     <section className={`sheet${embedded ? " sheet-embedded" : ""}`}>
       {!embedded && (
         <>
-          <StepHeader step="sheet" title="Sheet" />
+          <StepHeader title="Sheet" />
           {/* Whether the build is legal, then Download, Import and Print, above the sheet */}
           <div className="sheet-actions">
             <span className={`status ${result.ok ? "good" : "bad"}`}>{result.ok ? "Legal" : `${result.errors.length} ${result.errors.length === 1 ? "error" : "errors"}`}</span>

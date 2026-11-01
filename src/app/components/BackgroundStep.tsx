@@ -176,7 +176,7 @@ export function BackgroundStep({ draft, onChange }: { draft: Draft; onChange: (d
   };
   return (
     <section>
-      <StepHeader step="background" title="Background">
+      <StepHeader title="Background">
         Pick an Origin, a Profession and a Past. Their Traits come free and don't use picks.
       </StepHeader>
       <div className="tech-fields tech-fields-light step-box">

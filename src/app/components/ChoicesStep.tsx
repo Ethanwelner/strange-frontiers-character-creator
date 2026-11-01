@@ -40,7 +40,7 @@ export function ChoicesStep({ draft, result, onChange }: { draft: Draft; result:
 
   return (
     <section>
-      <StepHeader step="choices" title="Choices">
+      <StepHeader title="Choices">
         Packages and some Traits ask you to choose, like who a Contact is, which language you speak, or which seas you've sailed.
       </StepHeader>
       <div className="tech-fields tech-fields-light step-box">

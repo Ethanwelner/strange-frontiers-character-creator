@@ -161,10 +161,17 @@ const MISSING: Record<string, string> = {
 };
 
 // Schema errors for a field that hasn't been picked yet read as "expected
-// string, received undefined"; say what to do instead.
+// string, received undefined"; say what to do instead. A choice nobody has
+// picked yet is just "Language choice needed"; the engine's full message, which
+// names the package, is for the AI builder.
 export function describe(issue: Issue, draft: Draft): string {
   if (issue.code === "schema" && issue.path && issue.path in MISSING && !draft[issue.path as keyof Draft]) {
     return MISSING[issue.path]!;
+  }
+  // A choice nobody has picked yet, by the last word of its pool: "Language choice needed"
+  if (issue.pool) {
+    const noun = issue.pool.split("-").pop()!;
+    return `${noun[0]!.toUpperCase()}${noun.slice(1)} choice needed`;
   }
   return issue.message;
 }

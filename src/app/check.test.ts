@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { loadContent, type Content } from "../engine/content.js";
 import { Trait } from "../schema/index.js";
-import { check, stepOf, traitOptions } from "./check.js";
+import { check, describe as describeIssue, stepOf, traitOptions } from "./check.js";
 import { content as appContent, contentErrors } from "./content.js";
 import { addPick, fromBuild, genderText, levelsToPool, poolToLevels, toBuild, withCore, withLevel, type Draft } from "./draft.js";
 
@@ -128,6 +128,11 @@ describe("traitOptions", () => {
 });
 
 describe("stat pool errors", () => {
+  it("shortens a choice nobody has picked yet", () => {
+    const issue = { code: "choice" as const, message: "Tetra gives a choice of 1 spoken and written language: pick it on the Choices step", path: "choices", pool: "spoken-and-written-language" };
+    expect(describeIssue(issue, human)).toBe("Language choice needed");
+  });
+
   it("asks for the core points still to place", () => {
     const errors = check(withLevel(human, 3), bundled, { startingLevel: 3 }).errors;
     expect(errors.map((e) => e.message)).toContain("Place 2 more core points");
