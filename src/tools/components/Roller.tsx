@@ -104,9 +104,10 @@ function draw(canvas: HTMLCanvasElement, nums: HTMLCanvasElement, q: Quat, lift:
   // Numbers on the faces turned toward you, lying in their faces: each is
   // drawn through its face's up and right directions as the die turns them,
   // so it tilts and narrows with its triangle. (The die has no perspective,
-  // so that's exact.) The current face (the one rolled, or before any roll
-  // the one most toward you) is at full strength; the rest are at half, so
-  // they don't compete with it.
+  // so that's exact.) Every face turned toward you shows its number, however
+  // tilted. The current face (the one rolled, or before any roll the one
+  // most toward you) is at full strength; the rest are at 0.4, so they don't
+  // compete with it.
   numCtx.setTransform(1, 0, 0, 1, 0, 0);
   numCtx.clearRect(0, 0, nums.width, nums.height);
   const sx = nums.width / w;
@@ -114,14 +115,13 @@ function draw(canvas: HTMLCanvasElement, nums: HTMLCanvasElement, q: Quat, lift:
   const current = landed ?? front.at(-1)?.f.number;
   for (const { f, n } of front) {
     const lit = f.number === landed;
-    if (n[2] < 0.5 && !lit) continue;
     const [x, y] = at([n[0] * FACE_DEPTH, n[1] * FACE_DEPTH, 0]);
     const up = rotate(q, f.up);
     // Right, as you'd read the face from outside: up × normal
     const right: Vec = [up[1] * n[2] - up[2] * n[1], up[2] * n[0] - up[0] * n[2], up[0] * n[1] - up[1] * n[0]];
     // One die pixel along right, and one down the face, in the numbers canvas
     numCtx.setTransform(right[0] * sx, -right[1] * sy, -up[0] * sx, up[1] * sy, x * sx, y * sy);
-    drawNumber(numCtx, f.number, lit ? dark : green, lit ? green : dark, lit ? 2 : 1, f.number === current ? 1 : 0.5);
+    drawNumber(numCtx, f.number, lit ? dark : green, lit ? green : dark, lit ? 2 : 1, f.number === current ? 1 : 0.4);
   }
   numCtx.setTransform(1, 0, 0, 1, 0, 0);
 }
