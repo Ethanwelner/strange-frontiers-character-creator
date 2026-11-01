@@ -2,13 +2,11 @@ import { useCallback, useMemo, useState, type ReactNode } from "react";
 import type { BuildResult } from "../../engine/validate.js";
 import { content } from "../../app/content.js";
 import type { Draft } from "../../app/draft.js";
-import { Sheet } from "../../app/components/Sheet.js";
+import { RESOURCE_NAMES, Sheet } from "../../app/components/Sheet.js";
 import { StatsStep } from "../../app/components/StatsStep.js";
 import { TraitsStep } from "../../app/components/TraitsStep.js";
 import { Icon, LorePopup, Sign } from "../../app/components/ui.js";
 import { checkPlay, currentOf, maxOf, pointsToPlace, RESOURCES, withResource, type Play, type ResourceKey } from "../play.js";
-
-const NAMES: Record<ResourceKey, string> = { hp: "Hit Points", vp: "Vibe Points", sp: "Savvy Points", mp: "Mana Points" };
 
 // The character's name (`head`, from the app) over HP, VP, SP and MP, each
 // with its current value against the max the engine works out, in the first
@@ -98,7 +96,7 @@ export function Tracker({
                 {/* HP, then −, the value, + and restore to full, on one line; the full name
                     shows on hover */}
                 <div className="tools-resource-value">
-                  <strong className={`tools-resource-name resource-${r}`} title={NAMES[r]}>
+                  <strong className={`tools-resource-name resource-${r}`} title={RESOURCE_NAMES[r]}>
                     {r.toUpperCase()}
                   </strong>
                   <button type="button" onClick={() => set(r, cur - 1)} aria-label={`1 less ${r.toUpperCase()}`}>

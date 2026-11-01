@@ -2004,8 +2004,8 @@
   }
 
   /* From 1200px, where the body has its three columns, the head takes the
-     same ones: the portrait and name over the stats and Knowledges, the
-     description over the Conditions and Items */
+     same ones: the portrait and name over the stats, the description over
+     the Knowledges and the Conditions and Items */
   @media (min-width: 1200px) {
     :is(.sheet-head, .tools-character):has(> .sheet-description) {
       display: grid;
@@ -2013,13 +2013,23 @@
       gap: 24px 40px;
     }
 
+    /* The name and info keep to the portrait's side as long as there's 10rem
+       left beside it */
     .sheet-head-who {
-      grid-column: 1 / 3;
+      grid-column: 1;
+
+      > :is(.sheet-head-main, .tools-character-main) {
+        flex: 1 1 10rem;
+      }
+    }
+
+    .sheet-head-who + .sheet-description {
+      grid-column: 2 / 4;
     }
   }
 
-  /* The description, the third column after the portrait and the name's
-     column: a label over a box that grows with its text */
+  /* The description, after the portrait and the name's column: a box that
+     grows with its text */
   .sheet-description {
     flex: 1 1 16rem;
     display: flex;
@@ -2073,7 +2083,7 @@
   /* On the Sheet the pen follows the name, 16px after it; the field takes the
      line while it's open */
   .sheet-name {
-    margin-bottom: 0.5rem;
+    margin-bottom: 20px;
     gap: 16px;
 
     h2 {
@@ -2127,7 +2137,6 @@
     mask: url("./img/pen.svg") center / contain no-repeat;
   }
 
-  /* HP | VP | SP, like the site's sample sheet */
   /* HP, VP, SP and MP in their colors (css/tokens.css): red, purple, yellow, blue */
   .resource-hp {
     color: var(--frontiers-hp);
@@ -2145,16 +2154,109 @@
     color: var(--frontiers-mp);
   }
 
-  .sheet-resources {
+  /* HP, VP, SP and MP: the name, the value and a meter in its color, as many
+     across as fit, with -, + and restore beside the value and an amount
+     field under the meter in Player Tools. The creator's sheet shows just
+     the names and values, at full (.sheet-resources). */
+  /* As many across as fit, right on the panel without boxes, the row
+     centered: each grows from 210px to at most 360px */
+  .tools-resources {
     display: flex;
-    margin: 0.5rem 0 0;
-    font-size: 1.1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 36px;
+  }
 
-    span + span {
-      margin-left: 0.75rem;
-      padding-left: 0.75rem;
-      border-left: 1px solid var(--rule);
+  .tools-resource {
+    flex: 1 1 210px;
+    max-width: 360px;
+  }
+
+  .tools-resource-value {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    /* −, + and restore, round, with their icons the same size */
+    .icon {
+      width: 0.75em;
+      height: 0.75em;
     }
+
+    button {
+      flex: none;
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .tools-resource-name {
+      font-family: var(--title);
+      font-size: 1.5rem;
+      font-weight: normal;
+      line-height: 1;
+      min-width: 2ch;
+    }
+
+    .num {
+      font-family: var(--title);
+      font-size: 2rem;
+      line-height: 1;
+      white-space: nowrap;
+      flex: 1;
+      text-align: center;
+    }
+  }
+
+  /* On the creator's sheet: no bars, each value right after its name, in a
+     centered row that wraps */
+  .tools-resources.sheet-resources {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px 48px;
+
+    .tools-resource {
+      flex: none;
+    }
+
+    .num {
+      flex: none;
+      text-align: left;
+    }
+  }
+
+  .tools-meter {
+    height: 6px;
+    margin: 12px 0;
+    background: rgb(255 255 255 / 12%);
+
+    > span {
+      display: block;
+      height: 100%;
+      background: var(--frontiers-green);
+      transition: width 200ms;
+    }
+  }
+
+  .tools-meter-hp > span {
+    background: var(--frontiers-hp);
+  }
+
+  .tools-meter-vp > span {
+    background: var(--frontiers-vp);
+  }
+
+  .tools-meter-sp > span {
+    background: var(--frontiers-sp);
+  }
+
+  .tools-meter-mp > span {
+    background: var(--frontiers-mp);
   }
 
   /* Above the sheet, on the right, clear of the level badge on its left corner */
