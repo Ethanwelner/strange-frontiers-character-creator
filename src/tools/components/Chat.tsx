@@ -3,6 +3,7 @@ import type { CreateMessage } from "../../ai/anthropic.js";
 import { EndpointError } from "../../ai/remote.js";
 import type { Content } from "../../engine/parse.js";
 import type { BuildResult } from "../../engine/validate.js";
+import { Notice } from "../../app/components/ui.js";
 import { ask } from "../chat.js";
 import type { Play } from "../play.js";
 import { Roller } from "./Roller.js";
@@ -120,7 +121,11 @@ export function Chat({
             </li>
           )}
         </ol>
-        {error && <div className="notice bad">{error}</div>}
+        {error && (
+          <Notice fades bad onDismiss={() => setError(undefined)}>
+            {error}
+          </Notice>
+        )}
         <form
           className="tools-chat-form"
           onSubmit={(e) => {

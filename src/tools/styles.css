@@ -798,6 +798,18 @@
     margin: 0;
   }
 
+  /* A chat error, like the assistant being out of credits: light text on a
+     dark red, fading after 3 seconds */
+  .tools-chat .notice.bad {
+    background: color-mix(in srgb, var(--portfolio-red) 25%, #1c1c1c);
+    border-color: var(--portfolio-red);
+    color: var(--portfolio-white);
+
+    button.link {
+      color: inherit;
+    }
+  }
+
   .tools-chat-form {
     display: grid;
     gap: 24px;
