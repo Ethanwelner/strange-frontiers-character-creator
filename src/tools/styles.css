@@ -915,8 +915,9 @@
     scrollbar-color: auto;
     scrollbar-width: auto;
 
+    /* A 14px lane: 6px clear of the content, the 6px handle, then 2px */
     &::-webkit-scrollbar {
-      width: 6px;
+      width: 14px;
     }
 
     &::-webkit-scrollbar-track,
@@ -929,12 +930,14 @@
     }
 
     &::-webkit-scrollbar-thumb {
-      background: rgb(255 255 255 / 25%);
+      background: rgb(255 255 255 / 25%) padding-box;
+      border: solid transparent;
+      border-width: 0 2px 0 6px;
       border-radius: 999px;
     }
 
     &::-webkit-scrollbar-thumb:hover {
-      background: rgb(255 255 255 / 40%);
+      background: rgb(255 255 255 / 40%) padding-box;
     }
 
     @supports not selector(::-webkit-scrollbar) {
