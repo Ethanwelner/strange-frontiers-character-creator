@@ -492,8 +492,8 @@
      nothing in it is laid out again as the page scrolls. Before it sticks,
      its bottom is below the window, so the conversation, any error and the
      message box slide up by that much, ending 16px above the bottom of the
-     window, and run under the d20 and the Assistant title, which cover them
-     in the panel's color. At the end of the page the panel pushes the
+     window, and run under the d20, which sits in the chat box's top and
+     covers them in the box's color. At the end of the page the panel pushes the
      column up, so the d20 and the title slide down by that much instead.
      Only transforms move, on two scroll-driven animations that follow the
      tools body (the column's top and bottom are the body's) through the
@@ -513,36 +513,23 @@
     align-self: start;
     display: flex;
     flex-direction: column;
-    gap: 12px;
     height: calc(100dvh - 32px);
     /* What slides past the column's top or bottom is hidden */
     overflow-y: clip;
   }
 
-  /* The d20 stays over the chat box, covering the 12px gap under it too */
+  /* The d20, inside the chat box's top: the box's darker fill and the top
+     of its border, joined to the rest of the box (.tools-chat-box) under
+     it. It stays over the conversation, which slides up under it and is
+     cut off at the die's bottom edge. */
   .tools-roller {
     position: relative;
     z-index: 1;
     flex: none;
-    background: var(--panel);
-    box-shadow: 0 12px 0 var(--panel);
-  }
-
-  /* The chat box's top edge and rounded corners, drawn 12px under the d20,
-     where the box's top shows while the box itself has slid up under it.
-     Once the column sticks, it sits right on the box's own edge. */
-  .tools-roller::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: calc(100% + 12px);
-    height: 16px;
-    pointer-events: none;
-    background:
-      radial-gradient(circle at 100% 100%, transparent 14.5px, var(--card-border) 15px 15.5px, var(--panel) 16px) left top / 16px 16px no-repeat,
-      radial-gradient(circle at 0 100%, transparent 14.5px, var(--card-border) 15px 15.5px, var(--panel) 16px) right top / 16px 16px no-repeat,
-      linear-gradient(var(--card-border), var(--card-border)) center top / calc(100% - 32px) 1px no-repeat;
+    background-color: #212121;
+    border: 1px solid var(--card-border);
+    border-bottom: 0;
+    border-radius: 16px 16px 0 0;
   }
 
   @supports (animation-timeline: view()) {
@@ -744,7 +731,9 @@
     padding: var(--chat-pad-top) 16px 16px;
     background-color: #212121;
     border: 1px solid var(--card-border);
-    border-radius: 16px;
+    /* Its top edge is the d20's (.tools-roller) */
+    border-top: 0;
+    border-radius: 0 0 16px 16px;
   }
 
   .tools-chat-log {
@@ -973,13 +962,12 @@
   }
 
   /* Clear, a round gray button with the restore arrow like the resources',
-     centered on the chat box's top right corner. It's on the d20's layer
-     (Roller.tsx), placed where the box's top shows, so it stays in view while
-     the box slides under the d20, over the conversation and its scrollbar. */
+     in the chat box's top right corner beside the d20. It's on the d20's
+     layer (Roller.tsx), so it stays over the conversation as it slides under. */
   button.tools-chat-clear {
     position: absolute;
-    top: calc(100% + 12px - 16px);
-    right: -16px;
+    top: 12px;
+    right: 12px;
     z-index: 1;
     display: inline-flex;
     align-items: center;

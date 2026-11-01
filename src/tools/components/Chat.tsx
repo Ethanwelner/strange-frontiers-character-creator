@@ -91,9 +91,9 @@ export function Chat({
         disabled={busy}
         onRolled={(value) => onChange({ ...latest.current, chat: [...latest.current.chat, { role: "user", text: `Rolled a d20: ${value}` }] })}
       >
-        {/* Clear, as a round restore button like the resources' on the chat box's top
-            right corner. It's on the die's layer so it stays at the box's visible top
-            while the box slides under the die (styles.css). */}
+        {/* Clear, as a round restore button like the resources', in the chat box's top
+            right corner beside the die. It's on the die's layer so it stays over the
+            conversation as it slides under the die (styles.css). */}
         {play.chat.length > 0 && (
           <button
             type="button"
