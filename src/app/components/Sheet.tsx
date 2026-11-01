@@ -11,6 +11,9 @@ import { Conditions } from "./Conditions.js";
 import { Items } from "./Items.js";
 import { askerName, baseStats, Chip, CoreLine, DescriptionBox, Icon, LorePopup, NameField, Portrait, SettingIcon, StatLine, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
 
+// Each resource's full name, shown on hover, as in Player Tools
+export const RESOURCE_NAMES = { hp: "Hit Points", vp: "Vibe Points", sp: "Savvy Points", mp: "Mana Points" } as const;
+
 const SOURCE = /^(kind|origin|profession|past) ([a-z0-9-]+)( choice)?$/;
 const TRAIT_CHOICE = /^trait ([a-z0-9-]+) choice$/;
 const TRAIT_GRANT = /^trait ([a-z0-9-]+)$/;
@@ -200,17 +203,34 @@ export function Sheet({
                 <NameField className="sheet-name" heading="h2" name={draft.name} onChange={onName ?? (() => {})} />
                 {/* Kind, age, gender, Origin, Profession and Past, as in Player Tools */}
                 <CharacterLine draft={draft} onLooks={onLooks ?? (() => {})} />
-                <p className="sheet-resources">
-                  {resources.map((r) => (
-                    <span key={r}>
-                      <i>{summary?.resources[r] ?? "–"}</i> <strong className={`resource-${r}`}>{r.toUpperCase()}</strong>
-                    </span>
-                  ))}
-                </p>
               </div>
             </div>
             {/* The description, editable at any time and lined up over the Conditions and Items; an AI build fills it with its summary */}
             <DescriptionBox description={draft.description} onChange={onDescription} />
+          </div>
+        )}
+
+        {/* HP, VP, SP and MP at full, laid out like Player Tools' tracker without its controls */}
+        {!embedded && (
+          <div className="c-sheet-box">
+            <div className="tools-resources">
+              {resources.map((r) => (
+                <div key={r} className="tools-resource">
+                  <div className="tools-resource-value">
+                    <strong className={`tools-resource-name resource-${r}`} title={RESOURCE_NAMES[r]}>
+                      {r.toUpperCase()}
+                    </strong>
+                    <span className="num">
+                      {summary?.resources[r] ?? "–"}
+                      <span className="muted"> / {summary?.resources[r] ?? "–"}</span>
+                    </span>
+                  </div>
+                  <div className={`tools-meter tools-meter-${r}`} aria-hidden="true">
+                    <span style={{ width: summary ? "100%" : "0%" }} />
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 

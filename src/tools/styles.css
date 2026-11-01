@@ -179,7 +179,7 @@
 
   /* The name and its pen, from the creator's Sheet, in the tab title style */
   .tools-name {
-    margin-bottom: 8px;
+    margin-bottom: 16px;
 
     h2 {
       margin: 0;
@@ -288,87 +288,8 @@
     display: none;
   }
 
-  .tools-resources {
-    display: grid;
-    /* As many as fit, all four (HP, VP, SP, MP) across on most screens,
-       each at most 360px, right on the panel without boxes */
-    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-    gap: 36px;
-  }
-
-  .tools-resource {
-    max-width: 360px;
-  }
-
-  .tools-resource-value {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-
-    /* −, + and restore, round, with their icons the same size */
-    .icon {
-      width: 0.75em;
-      height: 0.75em;
-    }
-
-    button {
-      flex: none;
-      width: 32px;
-      height: 32px;
-      padding: 0;
-      border-radius: 50%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .tools-resource-name {
-      font-family: var(--title);
-      font-size: 1.5rem;
-      font-weight: normal;
-      line-height: 1;
-      min-width: 2ch;
-    }
-
-    .num {
-      font-family: var(--title);
-      font-size: 2rem;
-      line-height: 1;
-      white-space: nowrap;
-      flex: 1;
-      text-align: center;
-    }
-  }
-
-  .tools-meter {
-    height: 6px;
-    margin: 12px 0;
-    background: rgb(255 255 255 / 12%);
-
-    > span {
-      display: block;
-      height: 100%;
-      background: var(--frontiers-green);
-      transition: width 200ms;
-    }
-  }
-
-  .tools-meter-hp > span {
-    background: var(--frontiers-hp);
-  }
-
-  .tools-meter-vp > span {
-    background: var(--frontiers-vp);
-  }
-
-  .tools-meter-sp > span {
-    background: var(--frontiers-sp);
-  }
-
-  .tools-meter-mp > span {
-    background: var(--frontiers-mp);
-  }
-
+  /* HP, VP, SP and MP's name, value and meter are in src/app/styles.css,
+     shared with the creator's sheet; the amount field and its buttons are here */
   .tools-resource-apply {
     display: flex;
     flex-wrap: wrap;
