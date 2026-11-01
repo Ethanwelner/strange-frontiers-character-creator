@@ -193,34 +193,36 @@ export function Sheet({
 
         {!embedded && (
           <div className="c-sheet-box sheet-head">
-            <Portrait className="sheet-portrait" portrait={draft.portrait} name={draft.name} onChange={onPortrait} />
-            <div className="sheet-head-main">
-              <NameField className="sheet-name" heading="h2" name={draft.name} onChange={onName ?? (() => {})} />
-              {/* Kind, age, gender, Origin, Profession and Past, as in Player Tools */}
-              <CharacterLine draft={draft} onLooks={onLooks ?? (() => {})} />
-              <p className="sheet-resources">
-                {resources.map((r) => (
-                  <span key={r}>
-                    <i>{summary?.resources[r] ?? "–"}</i> <strong className={`resource-${r}`}>{r.toUpperCase()}</strong>
-                  </span>
-                ))}
-              </p>
+            {/* The portrait and the name's column, together as wide as the sheet's first two columns */}
+            <div className="sheet-head-who">
+              <Portrait className="sheet-portrait" portrait={draft.portrait} name={draft.name} onChange={onPortrait} />
+              <div className="sheet-head-main">
+                <NameField className="sheet-name" heading="h2" name={draft.name} onChange={onName ?? (() => {})} />
+                {/* Kind, age, gender, Origin, Profession and Past, as in Player Tools */}
+                <CharacterLine draft={draft} onLooks={onLooks ?? (() => {})} />
+                <p className="sheet-resources">
+                  {resources.map((r) => (
+                    <span key={r}>
+                      <i>{summary?.resources[r] ?? "–"}</i> <strong className={`resource-${r}`}>{r.toUpperCase()}</strong>
+                    </span>
+                  ))}
+                </p>
+              </div>
             </div>
-            {/* The description, editable at any time; an AI build fills it with its summary */}
+            {/* The description, editable at any time and lined up over the Conditions and Items; an AI build fills it with its summary */}
             {onDescription ? (
-              <label className="sheet-description">
-                <span className="field-label">Description</span>
+              <div className="sheet-description">
                 <textarea
+                  aria-label="Description"
                   value={draft.description ?? ""}
                   maxLength={4000}
                   placeholder="Who they are, how they look, what they want."
                   onChange={(e) => onDescription(e.target.value || undefined)}
                 />
-              </label>
+              </div>
             ) : (
               draft.description && (
                 <div className="sheet-description">
-                  <span className="field-label">Description</span>
                   <p>{draft.description}</p>
                 </div>
               )
