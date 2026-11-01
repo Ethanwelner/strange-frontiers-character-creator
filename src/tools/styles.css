@@ -877,6 +877,29 @@
     }
   }
 
+  /* A player's message with the character's portrait as its avatar, on the
+     right, level with the message's last line */
+  .tools-chat-row {
+    align-self: flex-end;
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    max-width: 90%;
+
+    .tools-chat-msg {
+      max-width: none;
+      min-width: 0;
+    }
+  }
+
+  .tools-chat-avatar {
+    flex: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
   .tools-chat-changes {
     margin: 6px 0 0;
     padding-left: 1rem;
