@@ -445,6 +445,7 @@
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas:
       "name level"
+      "looks looks"
       "text text";
     align-items: end;
     gap: 16px 24px;
@@ -473,6 +474,33 @@
 
   .describe-level {
     grid-area: level;
+  }
+
+  /* Age, gender and a custom gender, in a row */
+  .describe-looks {
+    grid-area: looks;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 16px 24px;
+
+    .age-field {
+      width: 6.5rem;
+    }
+
+    .gender-field {
+      width: 11rem;
+    }
+
+    .custom-gender-field {
+      flex: 1 1 12rem;
+    }
+
+    input.rpg-search-input,
+    select.rpg-search-input {
+      padding: 0 16px;
+      font-size: inherit;
+    }
   }
 
   .describe-text {
@@ -1573,6 +1601,37 @@
 
     .name-field {
       margin-bottom: 0;
+    }
+  }
+
+  /* Age, gender and a custom gender, in a row under the name */
+  /* The sheet's age and gender, under the name */
+  .sheet-looks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 24px;
+    margin: 4px 0 0;
+  }
+
+  .looks-fields {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 16px 24px;
+    margin-top: 16px;
+
+    .age-field {
+      width: 6.5rem;
+    }
+
+    .gender-field {
+      width: 11rem;
+    }
+
+    .custom-gender-field {
+      flex: 1 1 12rem;
+      max-width: 20rem;
     }
   }
 

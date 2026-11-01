@@ -3,7 +3,7 @@ import { FREE_TEXT_POOLS, MP_PER_MAGIC, type BuildResult } from "../../engine/va
 import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { coreStatsShown } from "../check.js";
 import { content, kindById, packageById, traitById } from "../content.js";
-import type { Draft } from "../draft.js";
+import { genderText, type Draft } from "../draft.js";
 import { BackgroundPopup } from "./BackgroundPopup.js";
 import { askerName, baseStats, Chip, CoreLine, Icon, LorePopup, NameField, SettingIcon, StatLine, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
 
@@ -161,6 +161,21 @@ export function Sheet({
           <div className="c-sheet-box sheet-head">
             <div className="sheet-head-main">
               <NameField className="sheet-name" heading="h2" name={draft.name} onChange={onName ?? (() => {})} />
+              {/* Age and gender, when the player set them */}
+              {(draft.age !== undefined || genderText(draft)) && (
+                <p className="sheet-looks">
+                  {draft.age !== undefined && (
+                    <span>
+                      Age <strong>{draft.age}</strong>
+                    </span>
+                  )}
+                  {genderText(draft) && (
+                    <span>
+                      Gender <strong>{genderText(draft)}</strong>
+                    </span>
+                  )}
+                </p>
+              )}
               <p className="sheet-resources">
                 {resources.map((r) => (
                   <span key={r}>

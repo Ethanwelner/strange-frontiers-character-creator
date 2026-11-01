@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 
 import { MAX_LEVEL } from "../../ai/level.js";
 import { STAT_GROUPS, type StatBlock, type StatId } from "../../schema/index.js";
 import { kindById, packageById, traitById } from "../content.js";
-import { STEPS, type Draft, type Step } from "../draft.js";
+import { GENDERS, MAX_AGE, STEPS, type Draft, type Step } from "../draft.js";
 
 export const GROUPS = Object.keys(STAT_GROUPS) as (keyof typeof STAT_GROUPS)[];
 // The core stats with focus stats: every one but Magic.
@@ -224,6 +224,76 @@ export function StatRanges({ stats }: { stats: StatBlock }) {
         </div>
       ))}
     </div>
+  );
+}
+
+export type Looks = Pick<Draft, "age" | "gender" | "customGender">;
+
+// Age and gender, cosmetic details the rules never read. Gender is a dropdown,
+// Unlisted by default; Custom opens a field for the player's own word. The
+// Character step and the describe box both use it, each with its own field styles.
+export function LooksFields({
+  looks,
+  onChange,
+  disabled,
+  fieldClass,
+  inputClass,
+}: {
+  looks: Looks;
+  onChange: (looks: Looks) => void;
+  disabled?: boolean;
+  fieldClass: string;
+  inputClass?: string;
+}) {
+  const setAge = (raw: string) => {
+    const n = Number(raw);
+    onChange({ ...looks, age: raw === "" || !Number.isFinite(n) ? undefined : Math.min(MAX_AGE, Math.max(0, Math.floor(n))) });
+  };
+  const setGender = (g: string) => {
+    const gender = g === "unlisted" ? undefined : (g as Looks["gender"]);
+    onChange({ ...looks, gender, customGender: gender === "custom" ? looks.customGender : undefined });
+  };
+  return (
+    <>
+      <label className={`${fieldClass} age-field`}>
+        <span className="field-label">Age</span>
+        <input
+          className={inputClass}
+          type="number"
+          inputMode="numeric"
+          min={0}
+          max={MAX_AGE}
+          step={1}
+          value={looks.age ?? ""}
+          placeholder="—"
+          onChange={(e) => setAge(e.target.value)}
+          disabled={disabled}
+        />
+      </label>
+      <label className={`${fieldClass} gender-field`}>
+        <span className="field-label">Gender</span>
+        <select className={inputClass} value={looks.gender ?? "unlisted"} onChange={(e) => setGender(e.target.value)} disabled={disabled}>
+          {GENDERS.map((g) => (
+            <option key={g} value={g}>
+              {title(g)}
+            </option>
+          ))}
+        </select>
+      </label>
+      {looks.gender === "custom" && (
+        <label className={`${fieldClass} custom-gender-field`}>
+          <span className="field-label">Custom Gender</span>
+          <input
+            className={inputClass}
+            value={looks.customGender ?? ""}
+            maxLength={40}
+            placeholder="In your own words"
+            onChange={(e) => onChange({ ...looks, customGender: e.target.value || undefined })}
+            disabled={disabled}
+          />
+        </label>
+      )}
+    </>
   );
 }
 
