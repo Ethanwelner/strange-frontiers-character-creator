@@ -76,9 +76,17 @@
     gap: 24px;
   }
 
-  /* Level up (Cancel while leveling): a green badge, shaped like the rules
-     problems chip */
+  /* "+ Level" (Cancel while leveling): a green badge, shaped like the rules
+     problems chip, in the top right corner of the level blob's 96px square
+     (the blob sits half its padding in from the box's corner, src/app) */
   .tools-level-up {
+    position: absolute;
+    z-index: 2;
+    top: calc(0.5rem - 48px);
+    left: calc(0.5rem + 48px - 20px);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
     padding: 0.5rem 1rem;
     border: 0;
     border-radius: 999px;
@@ -101,6 +109,12 @@
     &:disabled {
       opacity: 0.45;
       cursor: default;
+    }
+
+    /* The 56px blob on narrower screens, at -24px / -8px */
+    @media (max-width: 991px) {
+      top: -24px;
+      left: calc(-8px + 56px - 14px);
     }
   }
 

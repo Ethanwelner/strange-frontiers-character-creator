@@ -86,6 +86,26 @@ export function ToolsApp() {
                 <span className="level-badge-number">{play.draft.level}</span>
               </div>
             )}
+            {/* "+ Level" in the blob's top right corner: a green badge that turns into Cancel
+                while the level up is open and throws its points away. Points the character
+                already has to place come first, so it waits while there are any. */}
+            {play &&
+              (levelDraft && levelDraft.level > play.draft.level ? (
+                <button type="button" className="tools-level-up" onClick={() => setLevelDraft(undefined)}>
+                  Cancel
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="tools-level-up"
+                  aria-label="Level up"
+                  disabled={Boolean(levelDraft) || pointsToPlace(play.draft, content)}
+                  onClick={() => setLevelDraft({ ...play.draft, level: play.draft.level + 1 })}
+                >
+                  <Icon name="plus" />
+                  Level
+                </button>
+              ))}
             <main>
               {contentErrors.length > 0 && <div className="notice bad">Content failed to load: {contentErrors.join("; ")}</div>}
               {notice && (
@@ -130,10 +150,8 @@ export function ToolsApp() {
                   head={
                     <header className="step-head tools-character">
                       <div className="tools-character-main">
-                        {/* The name, with the creator's pen to edit it, and the badges at the right: Level
-                            up in green, which turns into Cancel while the level up is open and throws its
-                            points away (points the character already has to place come first, so it waits
-                            while there are any), then Download, Switch and any rules problems. */}
+                        {/* The name, with the creator's pen to edit it, and the badges at the right:
+                            Download, Switch and any rules problems */}
                         <div className="tools-character-head">
                           <NameField
                             className="sheet-name tools-name"
@@ -141,24 +159,9 @@ export function ToolsApp() {
                             name={play.draft.name}
                             onChange={(name) => setPlay({ ...play, draft: { ...play.draft, name } })}
                           />
-                          {/* Level up, then Download character and Switch character as gray badges, then
-                              any rules problems as the creator's red chip, which opens them as a list */}
+                          {/* Download character and Switch character as gray badges, then any rules
+                              problems as the creator's red chip, which opens them as a list */}
                           <div className="hero-bar tools-actions">
-                            {levelDraft && levelDraft.level > play.draft.level ? (
-                              <button type="button" className="tools-level-up" onClick={() => setLevelDraft(undefined)}>
-                                Cancel
-                              </button>
-                            ) : (
-                              <button
-                                type="button"
-                                className="tools-level-up"
-                                disabled={Boolean(levelDraft) || pointsToPlace(play.draft, content)}
-                                onClick={() => setLevelDraft({ ...play.draft, level: play.draft.level + 1 })}
-                              >
-                                <Icon name="plus" />
-                                Level up
-                              </button>
-                            )}
                             <button type="button" onClick={exportBuild}>
                               <Icon name="download" />
                               Download character
