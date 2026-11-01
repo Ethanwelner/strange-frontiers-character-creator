@@ -193,8 +193,19 @@
     }
   }
 
+  /* Kind and background, 12px apart, each a label over its link */
   .tools-line {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
     margin: 0 0 8px;
+  }
+
+  .tools-line-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
   }
 
   /* Age and gender, under the Kind and background line, each with a small
