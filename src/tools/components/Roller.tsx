@@ -29,27 +29,37 @@ const smooth = (a: number, b: number, x: number) => {
 
 // A number centered on (x, y) in the die's canvas pixels, drawn on the
 // full-resolution numbers canvas, `sx` × `sy` of its pixels per die pixel.
-// The digits keep the die's chunky pixels, but sit on whole screen pixels
-// rather than whole die pixels, so they move as smoothly as the die's lines.
-function drawNumber(ctx: CanvasRenderingContext2D, n: number, x: number, y: number, fg: string, bg: string, pad: number, sx: number, sy: number, alpha = 1) {
+// The digits keep the die's chunky pixels, `scale` die pixels big (whole
+// device pixels, so every block is the same size), but sit on whole screen
+// pixels rather than whole die pixels, so they move as smoothly as the die's
+// lines. Its backing is `pad` digit pixels around it.
+function drawNumber(
+  ctx: CanvasRenderingContext2D,
+  n: number,
+  x: number,
+  y: number,
+  fg: string,
+  bg: string,
+  pad: number,
+  sx: number,
+  sy: number,
+  scale = 1,
+  alpha = 1,
+) {
   const text = String(n);
   const w = text.length * 4 - 1;
-  const left = x - w / 2;
-  const top = y - 2.5;
-  // A block from die pixel (u, v), u2 × v2 die pixels big, snapped edge to edge
-  const block = (u: number, v: number, du: number, dv: number) => {
-    const x0 = Math.round(u * sx);
-    const y0 = Math.round(v * sy);
-    ctx.fillRect(x0, y0, Math.round((u + du) * sx) - x0, Math.round((v + dv) * sy) - y0);
-  };
+  const bx = Math.max(1, Math.round(scale * sx));
+  const by = Math.max(1, Math.round(scale * sy));
+  const left = Math.round(x * sx - (w * bx) / 2);
+  const top = Math.round(y * sy - (5 * by) / 2);
   ctx.fillStyle = bg;
-  block(left - pad, top - pad, w + pad * 2, 5 + pad * 2);
+  ctx.fillRect(left - pad * bx, top - pad * by, (w + pad * 2) * bx, (5 + pad * 2) * by);
   // The digits at `alpha`, over their solid backing
   ctx.globalAlpha = alpha;
   ctx.fillStyle = fg;
   [...text].forEach((d, i) => {
     const bits = DIGITS[Number(d)];
-    for (let p = 0; p < 15; p++) if (bits[p] === "1") block(left + i * 4 + (p % 3), top + Math.floor(p / 3), 1, 1);
+    for (let p = 0; p < 15; p++) if (bits[p] === "1") ctx.fillRect(left + (i * 4 + (p % 3)) * bx, top + Math.floor(p / 3) * by, bx, by);
   });
   ctx.globalAlpha = 1;
 }
@@ -115,7 +125,10 @@ function draw(canvas: HTMLCanvasElement, nums: HTMLCanvasElement, q: Quat, lift:
     const lit = f.number === landed;
     if (n[2] < 0.5 && !lit) continue;
     const [x, y] = at([n[0] * FACE_DEPTH, n[1] * FACE_DEPTH, 0]);
-    drawNumber(numCtx, f.number, x, y, lit ? dark : green, lit ? green : dark, lit ? 2 : 1, sx, sy, f.number === current ? 1 : 0.5);
+    // The other faces' numbers at about half size, so they stay inside their
+    // tilted, narrower-looking faces, and at half strength
+    const main = f.number === current;
+    drawNumber(numCtx, f.number, x, y, lit ? dark : green, lit ? green : dark, lit ? 2 : 1, sx, sy, main ? 1 : 0.55, main ? 1 : 0.5);
   }
 }
 
