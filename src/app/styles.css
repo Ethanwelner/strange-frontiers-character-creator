@@ -2211,10 +2211,16 @@
       overflow: visible;
     }
 
+    /* View only: no pointer, and no hover border like the cards to pick */
     .lore-modal-panel > :is(.trait-box, .card) {
       margin: 0;
       max-height: calc(100dvh - 128px);
       overflow-y: auto;
+      cursor: default;
+
+      &:hover {
+        border-color: var(--card-edge, var(--card-border));
+      }
     }
 
     .lore-modal-close {
