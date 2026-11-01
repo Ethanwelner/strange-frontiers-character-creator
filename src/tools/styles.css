@@ -193,11 +193,12 @@
     }
   }
 
-  /* Kind and background, 12px apart, each a label over its link */
+  /* Kind, age, gender and background, 24px apart, each a label over its
+     value */
   .tools-line {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 24px;
     margin: 0 0 8px;
   }
 
@@ -224,6 +225,11 @@
       outline: 2px solid currentColor;
       outline-offset: 2px;
     }
+  }
+
+  /* The pens beside the name, age and gender, at half strength */
+  .tools-character .pen-icon {
+    opacity: 0.5;
   }
 
   button.tools-look-edit {
