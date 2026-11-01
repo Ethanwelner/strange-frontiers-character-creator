@@ -91,12 +91,19 @@ export function Chat({
         disabled={busy}
         onRolled={(value) => onChange({ ...latest.current, chat: [...latest.current.chat, { role: "user", text: `Rolled a d20: ${value}` }] })}
       >
-        {/* Clear, as a badge in the chat box's top right corner. It's on the
-            die's layer so it stays at the box's visible top while the box
-            slides under the die (styles.css). */}
+        {/* Clear, as a round restore button like the resources' on the chat box's top
+            right corner. It's on the die's layer so it stays at the box's visible top
+            while the box slides under the die (styles.css). */}
         {play.chat.length > 0 && (
-          <button type="button" className="tools-chat-clear" onClick={() => onChange({ ...play, chat: [] })} disabled={busy}>
-            Clear
+          <button
+            type="button"
+            className="tools-chat-clear"
+            onClick={() => onChange({ ...play, chat: [] })}
+            disabled={busy}
+            aria-label="Clear the conversation"
+            title="Clear the conversation"
+          >
+            <Icon name="restore" />
           </button>
         )}
       </Roller>

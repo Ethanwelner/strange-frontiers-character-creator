@@ -1112,22 +1112,27 @@
     }
   }
 
-  /* Clear, a gray badge like Download character in the chat box's top right
-     corner, 8px in. It's on the d20's layer (Roller.tsx), placed where the
-     box's top shows, so it stays in view while the box slides under the d20.
-     It floats over the top of the conversation and its scrollbar. */
+  /* Clear, a round gray button with the restore arrow like the resources',
+     centered on the chat box's top right corner. It's on the d20's layer
+     (Roller.tsx), placed where the box's top shows, so it stays in view while
+     the box slides under the d20, over the conversation and its scrollbar. */
   button.tools-chat-clear {
     position: absolute;
-    top: calc(100% + 8px);
-    right: 8px;
+    top: calc(100% - 16px);
+    right: -16px;
     z-index: 1;
-    padding: 0.35rem 0.75rem;
-    border-radius: 999px;
-    font-family: inherit;
-    font-size: 0.75rem;
-    font-weight: 600;
-    line-height: 1.2;
-    letter-spacing: normal;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border-radius: 50%;
+
+    .icon {
+      width: 0.75em;
+      height: 0.75em;
+    }
   }
 
   @media (max-width: 1199px) {
