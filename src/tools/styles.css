@@ -908,14 +908,16 @@
     }
   }
 
-  /* A green round button with the paper plane, like the creator's green
-     buttons */
-  .tools-chat-send {
+  /* A green round button with the paper plane centered in it, like the
+     creator's green buttons. It stays green while there's nothing to send,
+     and glitches once there is (the small glitch in src/app/styles.css). */
+  button.tools-chat-send {
     position: absolute;
     right: 10px;
     bottom: 10px;
-    display: grid;
-    place-items: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 36px;
     height: 36px;
     padding: 0;
@@ -941,7 +943,6 @@
     }
 
     &:disabled {
-      opacity: 0.35;
       cursor: default;
     }
   }
