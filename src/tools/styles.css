@@ -874,8 +874,7 @@
   /* The conversation, suggestions and all, then any error and the message
      box, in a darker box with the room the rest of the column leaves */
   .tools-chat-box {
-    /* Its top padding, 44px with the Clear badge (the scroll animations add
-       to it) */
+    /* Its top padding (the scroll animations add to it) */
     --chat-pad-top: 16px;
     flex: 1 1 0;
     min-height: 160px;
@@ -915,9 +914,9 @@
     scrollbar-color: auto;
     scrollbar-width: auto;
 
-    /* A 14px lane: 6px clear of the content, the 6px handle, then 2px */
+    /* A 16px lane with the 6px handle in its middle, 5px clear all round */
     &::-webkit-scrollbar {
-      width: 14px;
+      width: 16px;
     }
 
     &::-webkit-scrollbar-track,
@@ -931,8 +930,7 @@
 
     &::-webkit-scrollbar-thumb {
       background: rgb(255 255 255 / 25%) padding-box;
-      border: solid transparent;
-      border-width: 0 2px 0 6px;
+      border: 5px solid transparent;
       border-radius: 999px;
     }
 
@@ -1113,8 +1111,7 @@
   /* Clear, a gray badge like Download character in the chat box's top right
      corner, 8px in. It's on the d20's layer (Roller.tsx), placed where the
      box's top shows, so it stays in view while the box slides under the d20.
-     The conversation starts under it, so neither it nor the conversation's
-     scrollbar runs under the badge. */
+     It floats over the top of the conversation and its scrollbar. */
   button.tools-chat-clear {
     position: absolute;
     top: calc(100% + 8px);
@@ -1127,10 +1124,6 @@
     font-weight: 600;
     line-height: 1.2;
     letter-spacing: normal;
-  }
-
-  .tools-chat-side:has(.tools-chat-clear) .tools-chat-box {
-    --chat-pad-top: 44px;
   }
 
   @media (max-width: 1199px) {
