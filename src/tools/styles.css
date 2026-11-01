@@ -653,22 +653,20 @@
     align-self: start;
     display: flex;
     flex-direction: column;
-    gap: 24px;
     height: calc(100dvh - 32px);
     /* What slides past the column's top or bottom is hidden */
     overflow-y: clip;
   }
 
-  /* The d20 stays over the chat box, covering the gap under it too */
+  /* The d20 stays over the chat box, right on top of it */
   .tools-roller {
     position: relative;
     z-index: 1;
     flex: none;
     background: var(--panel);
-    box-shadow: 0 24px 0 var(--panel);
   }
 
-  /* The chat box's top edge and rounded corners, drawn 24px under the d20,
+  /* The chat box's top edge and rounded corners, drawn right under the d20,
      where the box's top shows while the box itself has slid up under it.
      Once the column sticks, it sits right on the box's own edge. */
   .tools-roller::after {
@@ -676,7 +674,7 @@
     position: absolute;
     left: 0;
     right: 0;
-    top: calc(100% + 24px);
+    top: 100%;
     height: 16px;
     pointer-events: none;
     background:
@@ -1092,7 +1090,7 @@
      scrollbar runs under the badge. */
   button.tools-chat-clear {
     position: absolute;
-    top: calc(100% + 24px + 8px);
+    top: calc(100% + 8px);
     right: 8px;
     z-index: 1;
     padding: 0.35rem 0.75rem;
