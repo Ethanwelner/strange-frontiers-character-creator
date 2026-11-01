@@ -176,11 +176,6 @@
   .tools-name {
     margin-bottom: 8px;
 
-    /* The pen 4px from the name */
-    &.name-field-line {
-      gap: 4px;
-    }
-
     h2 {
       margin: 0;
     }
@@ -216,82 +211,6 @@
       flex: 1;
       min-width: 0;
     }
-  }
-
-  /* Kind, age, gender and background, 24px apart, each a label over its
-     value */
-  .tools-line {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 24px;
-    margin: 0 0 8px;
-  }
-
-  .tools-line-item {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 2px;
-  }
-
-  /* The Kind and background links in the sheet's lighter purple, like the
-     Knowledges', which reads better on the dark box */
-  .tools-line button.link {
-    color: var(--frontiers-lore-on-black);
-  }
-
-  /* Age and gender's value with a small pen that opens its field in place
-     (LooksLine.tsx), under their labels */
-  .tools-look-row {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-  }
-
-  button.tools-look-value {
-    all: unset;
-    cursor: text;
-
-    &:focus-visible {
-      outline: 2px solid currentColor;
-      outline-offset: 2px;
-    }
-  }
-
-  /* The pens beside the name, age and gender, faded */
-  .tools-character .pen-icon {
-    opacity: 0.4;
-  }
-
-  button.tools-look-edit {
-    width: 20px;
-    height: 20px;
-
-    .pen-icon {
-      width: 13px;
-      height: 13px;
-    }
-  }
-
-  .tools-look-gender {
-    display: inline-flex;
-    gap: 8px;
-  }
-
-  /* The fields, in the line's own type, with a line under them like the
-     name's */
-  .tools-look-input {
-    font: inherit;
-    font-weight: 700;
-    color: inherit;
-    background: none;
-    border: 0;
-    border-bottom: 2px solid currentColor;
-    padding: 0;
-  }
-
-  .tools-look-age {
-    width: 4.5rem;
   }
 
   /* The rules problems chip, at the top left of the panel; it opens the list */
@@ -461,19 +380,6 @@
     }
   }
 
-  .tools-conditions {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 12px;
-    margin: 0;
-  }
-
-  .tools-rank {
-    margin: 4px 0;
-  }
-
   /* The sheet's columns on the Tracker: stats, Knowledges, then Items (just
      Knowledges and Items while Level up shows the stats editable above) */
   .sheet-embedded .sheet-body {
@@ -569,65 +475,6 @@
     padding: 16px 32px;
     background: var(--panel);
     border-top: 1px solid var(--card-border);
-  }
-
-  /* The sheet's last column: the Conditions, then the Items, 40px apart */
-  .tools-sheet-extra {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    align-content: start;
-    gap: 40px;
-    min-width: 0;
-  }
-
-  .tools-conditions-side {
-    .rule {
-      margin-top: 0;
-    }
-
-    .tools-add {
-      margin-bottom: 12px;
-    }
-  }
-
-  /* A Condition the player added: an ✕ at the right of its name bar */
-  .tools-condition-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-  }
-
-  button.tools-condition-remove {
-    flex: none;
-    display: grid;
-    place-items: center;
-    width: 24px;
-    height: 24px;
-    margin: -4px -6px -4px 0;
-    padding: 0;
-    background: none;
-    border: 0;
-    color: inherit;
-    cursor: pointer;
-    opacity: 0.75;
-
-    &:hover:not(:disabled),
-    &:focus-visible {
-      background: none;
-      color: inherit;
-      opacity: 1;
-    }
-  }
-
-  /* Add a Condition: the dropdown takes the column's width */
-  .tools-conditions-side .tools-add {
-    flex-wrap: nowrap;
-
-    select {
-      flex: 1;
-      min-width: 0;
-    }
   }
 
   /* The d20 and the assistant, in the right column, stay in view while the
@@ -811,16 +658,6 @@
     border: none;
     border-radius: 0;
     padding: 0;
-  }
-
-  /* The character's Trait and Condition cards only show what they are: no
-     pointer or hover border, unlike the creator's cards, which pick a Trait */
-  :is(.sheet-embedded, .tools-conditions-side) .trait-box {
-    cursor: default;
-
-    &:hover {
-      border-color: var(--card-edge, var(--card-border));
-    }
   }
 
   /* The character's Traits, at least 360px wide each */

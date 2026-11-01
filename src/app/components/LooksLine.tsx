@@ -1,5 +1,5 @@
 import { useState, type FocusEvent, type KeyboardEvent } from "react";
-import { GENDERS, MAX_AGE, genderText, type Draft } from "../../app/draft.js";
+import { GENDERS, MAX_AGE, genderText, type Draft } from "../draft.js";
 
 type Looks = Pick<Draft, "age" | "gender" | "customGender">;
 

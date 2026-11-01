@@ -3,8 +3,12 @@ import { FREE_TEXT_POOLS, MP_PER_MAGIC, type BuildResult } from "../../engine/va
 import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { coreStatsShown } from "../check.js";
 import { content, kindById, packageById, traitById } from "../content.js";
-import { genderText, type Draft } from "../draft.js";
-import { BackgroundPopup } from "./BackgroundPopup.js";
+import type { Draft } from "../draft.js";
+import type { Item } from "../items.js";
+import type { HeldCondition } from "../conditions.js";
+import { CharacterLine } from "./CharacterLine.js";
+import { Conditions } from "./Conditions.js";
+import { Items } from "./Items.js";
 import { askerName, baseStats, Chip, CoreLine, Icon, LorePopup, NameField, SettingIcon, StatLine, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
 
 const SOURCE = /^(kind|origin|profession|past) ([a-z0-9-]+)( choice)?$/;
@@ -95,10 +99,15 @@ export function Sheet({
   onExport,
   onImport,
   onName,
+  onLooks,
   embedded = false,
   statsSlot,
   traitsAction,
-  extraColumn,
+  items,
+  onItems,
+  conditions,
+  onConditions,
+  hp,
 }: {
   draft: Draft;
   result: BuildResult;
@@ -110,8 +119,14 @@ export function Sheet({
   statsSlot?: ReactNode;
   // Shown at the right end of the Traits title's line, like Player Tools' "Traits available"
   traitsAction?: ReactNode;
-  // A third column after the Knowledges, like Game Tools' Items
-  extraColumn?: ReactNode;
+  onLooks?: (looks: Pick<Draft, "age" | "gender" | "customGender">) => void;
+  // The last column, after the Knowledges: the Conditions, then the Items,
+  // with the current HP the Conditions go by (full if not given)
+  items?: Item[];
+  onItems?: (items: Item[]) => void;
+  conditions?: HeldCondition[];
+  onConditions?: (conditions: HeldCondition[]) => void;
+  hp?: number;
 }) {
   const kind = draft.kind ? kindById.get(draft.kind) : undefined;
   const packages = [draft.origin, draft.profession, draft.past].map((id) => (id ? packageById.get(id) : undefined));
@@ -135,18 +150,9 @@ export function Sheet({
   const [open, setOpen] = useState<string>();
   const closeModal = useCallback(() => setOpen(undefined), []);
   const opened = held.find((h) => h.trait === open);
-  // The Kind or background package whose card is open, from the list beside the name
-  const [showing, setShowing] = useState<string>();
-  const closeShowing = useCallback(() => setShowing(undefined), []);
   // The Kind's features sit at the top, under HP, VP and SP; the packages' at the bottom.
   const features = [
     ...packages.flatMap((p) => (p?.features ?? []).map((f) => ({ ...f, from: p!.name }))),
-  ];
-  const background: [string, string | undefined, string | undefined][] = [
-    ["Kind", draft.kind, kind?.name],
-    ["Origin", draft.origin, packages[0]?.name],
-    ["Profession", draft.profession, packages[1]?.name],
-    ["Past", draft.past, packages[2]?.name],
   ];
 
   return (
@@ -184,21 +190,8 @@ export function Sheet({
           <div className="c-sheet-box sheet-head">
             <div className="sheet-head-main">
               <NameField className="sheet-name" heading="h2" name={draft.name} onChange={onName ?? (() => {})} />
-              {/* Age and gender, when the player set them */}
-              {(draft.age !== undefined || genderText(draft)) && (
-                <p className="sheet-looks">
-                  {draft.age !== undefined && (
-                    <span>
-                      Age <strong>{draft.age}</strong>
-                    </span>
-                  )}
-                  {genderText(draft) && (
-                    <span>
-                      Gender <strong>{genderText(draft)}</strong>
-                    </span>
-                  )}
-                </p>
-              )}
+              {/* Kind, age, gender, Origin, Profession and Past, as in Player Tools */}
+              <CharacterLine draft={draft} onLooks={onLooks ?? (() => {})} />
               <p className="sheet-resources">
                 {resources.map((r) => (
                   <span key={r}>
@@ -216,24 +209,6 @@ export function Sheet({
                 </ul>
               )}
             </div>
-            {/* Kind, Origin, Profession and Past, beside the name, each a link to its card */}
-            <ul className="call-response sheet-background">
-              {background.map(([label, id, name]) => (
-                <li key={label}>
-                  <span>{label}</span>
-                  <strong>
-                    {id ? (
-                      <button type="button" className="link" onClick={() => setShowing(id)}>
-                        {name ?? id}
-                      </button>
-                    ) : (
-                      "—"
-                    )}
-                  </strong>
-                </li>
-              ))}
-            </ul>
-            {showing && <BackgroundPopup id={showing} onClose={closeShowing} />}
           </div>
         )}
 
@@ -312,7 +287,13 @@ export function Sheet({
               </>
             )}
           </div>
-          {extraColumn}
+          {onItems && onConditions && (
+            // The last column: the Conditions, then the Items
+            <div className="tools-sheet-extra">
+              <Conditions conditions={conditions ?? []} hp={hp ?? summary?.resources.hp ?? 0} maxHp={summary?.resources.hp ?? 0} onChange={onConditions} />
+              <Items items={items ?? []} onChange={onItems} />
+            </div>
+          )}
         </div>
 
         <div className="c-sheet-box">

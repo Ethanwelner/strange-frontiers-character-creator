@@ -50,6 +50,15 @@ export const BuildItem = z.object({
 });
 export type BuildItem = z.infer<typeof BuildItem>;
 
+// A temporary Condition the character has, like Severe Bleeding or
+// Irradiated (2), with the player's note. Cosmetic to the rules check.
+export const BuildCondition = z.object({
+  trait: z.string().trim().min(1),
+  rank: z.number().int().min(1).default(1),
+  note: z.string().optional(),
+});
+export type BuildCondition = z.infer<typeof BuildCondition>;
+
 export const Build = z.object({
   name: z.string().optional(),
   // Cosmetic details; no rule reads them. Gender left out is Unlisted, and a
@@ -69,6 +78,7 @@ export const Build = z.object({
   traits: z.array(TraitPick).default([]),
   choices: z.array(ChoiceAnswer).default([]),
   items: z.array(BuildItem).default([]),
+  conditions: z.array(BuildCondition).default([]),
 });
 export type Build = z.infer<typeof Build>;
 export type BuildInput = z.input<typeof Build>;

@@ -77,6 +77,19 @@ describe("a character in play", () => {
     expect(playBuild(fresh())).not.toHaveProperty("items");
   });
 
+  it("carries the build's Conditions into play, and the play's back out, like the items", () => {
+    const plain = playConditions(content).find((t) => !t.ranked)!;
+    const play = startPlay({ ...grosh, conditions: [{ trait: plain.id, rank: 1, note: "from the creator" }, { rank: 2 }] });
+    expect(play.conditions).toEqual([{ trait: plain.id, rank: 1, note: "from the creator" }]);
+    expect(play.draft.conditions).toBeUndefined();
+    const out = playBuild(play);
+    expect(out.conditions).toEqual([{ trait: plain.id, rank: 1, note: "from the creator" }]);
+    expect(checkPlay(fromBuild(out), content).errors.filter((e) => e.code === "schema")).toEqual([]);
+    // No Conditions, no conditions field, and the creator's draft keeps them.
+    expect(playBuild(fresh())).not.toHaveProperty("conditions");
+    expect(fromBuild(out).conditions).toEqual(play.conditions);
+  });
+
   it("raises a ranked Condition taken again, and ignores an unranked one", () => {
     const ranked = playConditions(content).find((t) => t.ranked);
     const plain = playConditions(content).find((t) => !t.ranked)!;

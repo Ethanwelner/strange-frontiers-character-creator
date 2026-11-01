@@ -1,0 +1,58 @@
+// The temporary Conditions a character has, shared by the Character
+// Creator's sheet and Player Tools. They travel in the build as
+// `conditions` (BuildCondition in engine/build.ts), like the items.
+import type { Content } from "../engine/parse.js";
+
+// A temporary Condition Trait the character has picked up, like Severe
+// Bleeding or Irradiated (2).
+export interface HeldCondition {
+  trait: string;
+  rank: number;
+  note?: string;
+}
+
+// The Conditions HP decides on its own, in the order they're shown.
+export const HP_CONDITIONS = ["healthy", "injured", "severely-injured", "incapacitated", "dead"] as const;
+
+// The HP Conditions that apply at `hp` of `max`, following their Traits'
+// own wording: Healthy at max, Injured below it, Severely Injured below
+// half, Incapacitated below a quarter, Dead at 0 or less.
+export function hpConditions(hp: number, max: number): string[] {
+  if (hp <= 0) return ["dead"];
+  if (hp >= max) return ["healthy"];
+  return ["injured", ...(hp < max / 2 ? ["severely-injured"] : []), ...(hp < max / 4 ? ["incapacitated"] : [])];
+}
+
+// Temporary Conditions a character can pick up: conveyed Condition Traits
+// that end, minus the ones HP decides and the ones for objects.
+export function playConditions(content: Content) {
+  return content.traits
+    .filter((t) => t.category === "condition" && t.temporary && !(HP_CONDITIONS as readonly string[]).includes(t.id))
+    .filter((t) => !/\bobject\b/i.test(t.temporary ?? "") || /\bcharacter\b/i.test(t.temporary ?? ""))
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+// Taking a Condition again raises its rank if it's ranked, or does nothing.
+export function withCondition(conditions: HeldCondition[], content: Content, trait: string, rank = 1, note?: string): HeldCondition[] {
+  const t = content.traits.find((x) => x.id === trait);
+  const held = conditions.find((c) => c.trait === trait);
+  if (held) {
+    if (!t?.ranked) return conditions;
+    return conditions.map((c) => (c === held ? { ...c, rank: c.rank + rank, note: note ?? c.note } : c));
+  }
+  return [...conditions, { trait, rank: t?.ranked ? rank : 1, ...(note ? { note } : {}) }];
+}
+
+export function withoutCondition(conditions: HeldCondition[], trait: string): HeldCondition[] {
+  return conditions.filter((c) => c.trait !== trait);
+}
+
+// Conditions read from a saved build or session, keeping only well-formed ones.
+export function readConditions(v: unknown): HeldCondition[] {
+  if (!Array.isArray(v)) return [];
+  return v.flatMap((c) => {
+    if (!c || typeof c !== "object" || typeof (c as HeldCondition).trait !== "string") return [];
+    const { trait, rank, note } = c as HeldCondition;
+    return [{ trait, rank: typeof rank === "number" && rank >= 1 ? Math.floor(rank) : 1, ...(typeof note === "string" && note ? { note } : {}) }];
+  });
+}
