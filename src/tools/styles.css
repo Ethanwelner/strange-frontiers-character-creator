@@ -582,6 +582,23 @@
     box-shadow: 0 24px 0 var(--panel);
   }
 
+  /* The conversation box's top edge and rounded corners, drawn 24px under
+     the title, where the box's top shows while the box itself has slid up
+     under it. Once the column sticks, it sits right on the box's own edge. */
+  .tools-chat-head::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 24px);
+    height: 24px;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 100% 100%, transparent 22.5px, var(--card-border) 23px 23.5px, var(--panel) 24px) left top / 24px 24px no-repeat,
+      radial-gradient(circle at 0 100%, transparent 22.5px, var(--card-border) 23px 23.5px, var(--panel) 24px) right top / 24px 24px no-repeat,
+      linear-gradient(var(--card-border), var(--card-border)) center top / calc(100% - 48px) 1px no-repeat;
+  }
+
   @supports (animation-timeline: view()) {
     /* Up while the body's top crosses the window */
     .tools-chat-log,
