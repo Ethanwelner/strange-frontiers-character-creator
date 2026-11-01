@@ -507,20 +507,22 @@
     align-self: start;
     display: flex;
     flex-direction: column;
+    gap: 12px;
     height: calc(100dvh - 32px);
     /* What slides past the column's top or bottom is hidden */
     overflow-y: clip;
   }
 
-  /* The d20 stays over the chat box, right on top of it */
+  /* The d20 stays over the chat box, covering the 12px gap under it too */
   .tools-roller {
     position: relative;
     z-index: 1;
     flex: none;
     background: var(--panel);
+    box-shadow: 0 12px 0 var(--panel);
   }
 
-  /* The chat box's top edge and rounded corners, drawn right under the d20,
+  /* The chat box's top edge and rounded corners, drawn 12px under the d20,
      where the box's top shows while the box itself has slid up under it.
      Once the column sticks, it sits right on the box's own edge. */
   .tools-roller::after {
@@ -528,7 +530,7 @@
     position: absolute;
     left: 0;
     right: 0;
-    top: 100%;
+    top: calc(100% + 12px);
     height: 16px;
     pointer-events: none;
     background:
@@ -619,21 +621,24 @@
       image-rendering: auto;
     }
 
-    &:hover:not(:disabled) {
+    /* No box ever shows around the die: no focus outline or tap highlight,
+       and it stays at full strength while it rolls (disabled). Under the
+       pointer or keyboard focus, the die glows brighter instead. */
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+
+    &:hover:not(:disabled),
+    &:focus-visible {
       background: none;
+      outline: none;
 
       .tools-roller-die {
         filter: drop-shadow(0 0 8px var(--frontiers-green));
       }
     }
 
-    /* Inside, since the column clips above it */
-    &:focus-visible {
-      outline: 2px solid var(--frontiers-green);
-      outline-offset: -4px;
-    }
-
     &:disabled {
+      opacity: 1;
       cursor: default;
     }
   }
@@ -955,7 +960,7 @@
      the box slides under the d20, over the conversation and its scrollbar. */
   button.tools-chat-clear {
     position: absolute;
-    top: calc(100% - 16px);
+    top: calc(100% + 12px - 16px);
     right: -16px;
     z-index: 1;
     display: inline-flex;
