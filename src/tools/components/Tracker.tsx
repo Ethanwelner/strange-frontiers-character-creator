@@ -1,21 +1,16 @@
 import { useCallback, useMemo, useState, type ReactNode } from "react";
 import type { BuildResult } from "../../engine/validate.js";
-import { content, traitById } from "../../app/content.js";
+import { content } from "../../app/content.js";
 import type { Draft } from "../../app/draft.js";
 import { Sheet } from "../../app/components/Sheet.js";
 import { StatsStep } from "../../app/components/StatsStep.js";
 import { TraitsStep } from "../../app/components/TraitsStep.js";
-import { Items } from "../../app/components/Items.js";
-import { Chip, Icon, LorePopup, Sign } from "../../app/components/ui.js";
+import { Icon, LorePopup, Sign } from "../../app/components/ui.js";
 import {
-  addCondition,
   checkPlay,
   currentOf,
-  hpConditions,
   maxOf,
-  playConditions,
   pointsToPlace,
-  removeCondition,
   RESOURCES,
   withResource,
   type Play,
@@ -159,12 +154,11 @@ export function Tracker({
         result={result}
         embedded
         statsSlot={stats}
-        extraColumn={
-          <div className="tools-sheet-extra">
-            <Conditions play={play} result={result} onChange={onChange} />
-            <Items items={play.items} onChange={(items) => onChange({ ...play, items })} />
-          </div>
-        }
+        items={play.items}
+        onItems={(items) => onChange({ ...play, items })}
+        conditions={play.conditions}
+        onConditions={(conditions) => onChange({ ...play, conditions })}
+        hp={currentOf(play, result, "hp")}
         traitsAction={
           banked > 0 && (
             <p className="tools-traits-available">
@@ -201,97 +195,6 @@ export function Tracker({
           </div>
         </LorePopup>
       )}
-    </section>
-  );
-}
-
-// The Conditions: the ones HP decides, and the temporary ones the player
-// adds, with Add a Condition above them. They sit in the sheet's last
-// column, above the Items.
-export function Conditions({ play, result, onChange }: { play: Play; result: BuildResult; onChange: (p: Play) => void }) {
-  const options = useMemo(() => playConditions(content), []);
-  const hp = hpConditions(currentOf(play, result, "hp"), maxOf(result, "hp"));
-
-  return (
-    <section className="tools-conditions-side" aria-label="Conditions">
-      <h4 className="rule">Conditions</h4>
-      {/* Add a Condition, above the ones the character has: picking one adds it, and the
-          dropdown goes back to its prompt */}
-      <div className="tools-add">
-        <select aria-label="Condition to add" value="" onChange={(e) => e.target.value && onChange(addCondition(play, content, e.target.value))}>
-          <option value="">Add a Condition…</option>
-          {options.map((t) => (
-            <option key={t.id} value={t.id}>
-              {t.name}
-            </option>
-          ))}
-        </select>
-      </div>
-      <ul className="tools-conditions">
-        {hp.map((id) => {
-          const t = traitById.get(id);
-          return (
-            <li key={id} className="trait-box">
-              {/* Badges at the right of the bar, like the sheet's Trait cards: where it came from, and that it's a Condition */}
-              <div className="trait-name trait-name-with-chip">
-                <span>{t?.name ?? id}</span>
-                <span className="trait-name-chips">
-                  <Chip>HP</Chip>
-                  <Chip>Condition</Chip>
-                </span>
-              </div>
-              <p className="muted small">From HP. {t?.temporary}</p>
-              {t && <p className="effect">{t.effect}</p>}
-            </li>
-          );
-        })}
-        {play.conditions.map((c) => {
-          const t = traitById.get(c.trait);
-          const setRank = (rank: number) =>
-            onChange({ ...play, conditions: play.conditions.map((x) => (x === c ? { ...x, rank } : x)) });
-          return (
-            <li key={c.trait} className="trait-box">
-              {/* The name, then at the right of its bar a Condition badge and an ✕ that takes
-                  the Condition off */}
-              <div className="trait-name tools-condition-head">
-                <span>
-                  {t?.name ?? c.trait}
-                  {t?.ranked ? ` (${c.rank})` : ""}
-                </span>
-                <span className="trait-name-chips">
-                  <Chip>Condition</Chip>
-                  <button type="button" className="tools-condition-remove" aria-label={`Remove ${t?.name ?? c.trait}`} onClick={() => onChange(removeCondition(play, c.trait))}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 20 20" aria-hidden="true">
-                      <path d="M2 2l16 16M18 2L2 18" fill="none" stroke="currentColor" strokeWidth="2.5" />
-                    </svg>
-                  </button>
-                </span>
-              </div>
-              {t?.ranked && (
-                <div className="stepper tools-rank">
-                  <button type="button" onClick={() => setRank(c.rank - 1)} disabled={c.rank <= 1} aria-label="Lower rank">
-                    <Sign is="minus" />
-                  </button>
-                  <span className="num">{c.rank}</span>
-                  <button type="button" onClick={() => setRank(c.rank + 1)} aria-label="Raise rank">
-                    <Sign is="plus" />
-                  </button>
-                </div>
-              )}
-              {t?.temporary && <p className="muted small">{t.temporary}.</p>}
-              {t && <p className="effect">{t.effect}</p>}
-              <input
-                className="tools-note"
-                type="text"
-                placeholder="Note, like where or from what"
-                aria-label={`Note for ${t?.name ?? c.trait}`}
-                value={c.note ?? ""}
-                onChange={(e) => onChange({ ...play, conditions: play.conditions.map((x) => (x === c ? { ...x, note: e.target.value || undefined } : x)) })}
-              />
-            </li>
-          );
-        })}
-      </ul>
     </section>
   );
 }

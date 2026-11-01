@@ -1,14 +1,13 @@
-import { Fragment, useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import { endpointCreate } from "../ai/remote.js";
 import { content, contentErrors } from "../app/content.js";
 import { slug, toBuild, type Draft } from "../app/draft.js";
 import { Icon, LorePopup, NameField, Notice } from "../app/components/ui.js";
 import { describe } from "../app/check.js";
 import { checkPlay, creatorDraft, load, playBuild, pointsToPlace, save, startPlay, type Play } from "./play.js";
-import { BackgroundPopup } from "../app/components/BackgroundPopup.js";
 import { Chat } from "./components/Chat.js";
 import { Tracker } from "./components/Tracker.js";
-import { LooksLine } from "./components/LooksLine.js";
+import { CharacterLine } from "../app/components/CharacterLine.js";
 
 export function ToolsApp() {
   const [play, setPlay] = useState<Play | undefined>(load);
@@ -17,9 +16,6 @@ export function ToolsApp() {
   // Switching characters asks in a popup; native confirm() dialogs are blocked in some browsers.
   const [confirmingSwitch, setConfirmingSwitch] = useState(false);
   const closeSwitch = useCallback(() => setConfirmingSwitch(false), []);
-  // The Kind or background package whose card is open, from the line under the name
-  const [showing, setShowing] = useState<string>();
-  const closePopup = useCallback(() => setShowing(undefined), []);
   // The list of rules problems, opened from their chip
   const [showingIssues, setShowingIssues] = useState(false);
   const closeIssues = useCallback(() => setShowingIssues(false), []);
@@ -203,25 +199,8 @@ export function ToolsApp() {
                             </LorePopup>
                           )}
                         </div>
-                        {/* Kind, then age and gender, then Origin, Profession and Past: each a plain label
-                            in the builder's field label style over its value, side by side. The Kind and
-                            background link to their cards; age and gender have pens to edit them. */}
-                        <p className="tools-line">
-                          {[play.draft.kind, play.draft.origin, play.draft.profession, play.draft.past].map((id, n) => (
-                            <Fragment key={n}>
-                              {id && (
-                                <span className="tools-line-item">
-                                  <span className="field-label">{["Kind", "Origin", "Profession", "Past"][n]}</span>
-                                  <button type="button" className="link" onClick={() => setShowing(id)}>
-                                    {(n === 0 ? content.kinds.find((k) => k.id === id)?.name : content.packages.find((p) => p.id === id)?.name) ?? id}
-                                  </button>
-                                </span>
-                              )}
-                              {n === 0 && <LooksLine looks={play.draft} onChange={(looks) => setPlay({ ...play, draft: { ...play.draft, ...looks } })} />}
-                            </Fragment>
-                          ))}
-                        </p>
-                        {showing && <BackgroundPopup id={showing} onClose={closePopup} />}
+                        {/* Kind, age, gender, Origin, Profession and Past, as on the creator's sheet */}
+                        <CharacterLine draft={play.draft} onLooks={(looks) => setPlay({ ...play, draft: { ...play.draft, ...looks } })} />
                         {showingIssues && !result.ok && (
                           <LorePopup label="Rules problems" onClose={closeIssues} className="tools-issues-popup">
                             <h3 className="lore-modal-title">Rules problems</h3>

@@ -9,6 +9,7 @@ import type { DescribeResult, OpenChoice, Reason } from "../ai/types.js";
 import { STAT_GROUPS, type StatId } from "../schema/index.js";
 import { FOCUS_POINTS_PER_LEVEL } from "../engine/validate.js";
 import { readItems, type Item } from "./items.js";
+import { readConditions, type HeldCondition } from "./conditions.js";
 
 // Gender, a cosmetic detail like age. Unlisted, the default, is left out of the build.
 export const GENDERS = ["unlisted", "male", "female", "indeterminate", "none", "fluid", "custom"] as const;
@@ -36,6 +37,8 @@ export interface Draft {
   choices: ChoiceAnswer[];
   // What the character carries, from the sheet's Items column.
   items?: Item[];
+  // Temporary Conditions, like the items, shared with Player Tools
+  conditions?: HeldCondition[];
 }
 
 export const STEPS = ["character", "background", "stats", "traits", "choices", "sheet"] as const;
@@ -124,7 +127,7 @@ export function toBuild(draft: Draft): Record<string, unknown> {
   const { core, points, ...rest } = draft;
   const out: Record<string, unknown> = {};
   for (const [key, value] of Object.entries({ ...rest, levels: poolToLevels(core, points) })) {
-    if (value === undefined || value === "" || (key === "items" && Array.isArray(value) && !value.length)) continue;
+    if (value === undefined || value === "" || ((key === "items" || key === "conditions") && Array.isArray(value) && !value.length)) continue;
     out[key] = value;
   }
   return out;
@@ -174,6 +177,7 @@ export function fromBuild(input: unknown): Draft {
     traits: array<TraitPick>(b.traits).map((t) => ({ ...t, rank: t.rank ?? 1 })),
     choices: array<ChoiceAnswer>(b.choices),
     ...(Array.isArray(b.items) && b.items.length ? { items: readItems(b.items) } : {}),
+    ...(Array.isArray(b.conditions) && b.conditions.length ? { conditions: readConditions(b.conditions) } : {}),
   };
 }
 

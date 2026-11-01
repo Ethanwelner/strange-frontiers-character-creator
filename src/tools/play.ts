@@ -7,19 +7,13 @@ import { bonusPointsOf, FOCUS_POINTS_PER_LEVEL, validateBuild, type BuildResult 
 import { STAT_GROUPS } from "../schema/index.js";
 import { fromBuild, toBuild, type Draft } from "../app/draft.js";
 import { readItems, withItem, withoutItem, type Item } from "../app/items.js";
+import { readConditions, withCondition, withoutCondition, type HeldCondition } from "../app/conditions.js";
 
 export { ITEM_CATEGORIES, type Item, type ItemCategory } from "../app/items.js";
+export { HP_CONDITIONS, hpConditions, playConditions, type HeldCondition } from "../app/conditions.js";
 
 export const RESOURCES = ["hp", "vp", "sp", "mp"] as const;
 export type ResourceKey = (typeof RESOURCES)[number];
-
-// A temporary Condition Trait the character has picked up in play, like
-// Severe Bleeding or Irradiated (2).
-export interface HeldCondition {
-  trait: string;
-  rank: number;
-  note?: string;
-}
 
 export interface ChatMessage {
   role: "user" | "assistant";
@@ -35,27 +29,6 @@ export interface Play {
   items: Item[];
   conditions: HeldCondition[];
   chat: ChatMessage[];
-}
-
-// The Conditions HP decides on its own, in the order they're shown.
-export const HP_CONDITIONS = ["healthy", "injured", "severely-injured", "incapacitated", "dead"] as const;
-
-// The HP Conditions that apply at `hp` of `max`, following their Traits'
-// own wording: Healthy at max, Injured below it, Severely Injured below
-// half, Incapacitated below a quarter, Dead at 0 or less.
-export function hpConditions(hp: number, max: number): string[] {
-  if (hp <= 0) return ["dead"];
-  if (hp >= max) return ["healthy"];
-  return ["injured", ...(hp < max / 2 ? ["severely-injured"] : []), ...(hp < max / 4 ? ["incapacitated"] : [])];
-}
-
-// Temporary Conditions a character can pick up in play: conveyed Condition
-// Traits that end, minus the ones HP decides and the ones for objects.
-export function playConditions(content: Content) {
-  return content.traits
-    .filter((t) => t.category === "condition" && t.temporary && !(HP_CONDITIONS as readonly string[]).includes(t.id))
-    .filter((t) => !/\bobject\b/i.test(t.temporary ?? "") || /\bcharacter\b/i.test(t.temporary ?? ""))
-    .sort((a, b) => a.name.localeCompare(b.name));
 }
 
 // An established character's build is checked at its own level: the
@@ -112,31 +85,26 @@ export function removeItem(play: Play, name: string, qty?: number): Play {
   return { ...play, items: withoutItem(play.items, name, qty) };
 }
 
-// The build as a file, with the items the character carries now.
+// The build as a file, with the items and Conditions the character has now.
 export function playBuild(play: Play): Record<string, unknown> {
-  return toBuild({ ...play.draft, items: play.items });
+  return toBuild({ ...play.draft, items: play.items, conditions: play.conditions });
 }
 
 // Taking a Condition again raises its rank if it's ranked, or does nothing.
 export function addCondition(play: Play, content: Content, trait: string, rank = 1, note?: string): Play {
-  const t = content.traits.find((x) => x.id === trait);
-  const held = play.conditions.find((c) => c.trait === trait);
-  if (held) {
-    if (!t?.ranked) return play;
-    return { ...play, conditions: play.conditions.map((c) => (c === held ? { ...c, rank: c.rank + rank, note: note ?? c.note } : c)) };
-  }
-  return { ...play, conditions: [...play.conditions, { trait, rank: t?.ranked ? rank : 1, ...(note ? { note } : {}) }] };
+  const conditions = withCondition(play.conditions, content, trait, rank, note);
+  return conditions === play.conditions ? play : { ...play, conditions };
 }
 
 export function removeCondition(play: Play, trait: string): Play {
-  return { ...play, conditions: play.conditions.filter((c) => c.trait !== trait) };
+  return { ...play, conditions: withoutCondition(play.conditions, trait) };
 }
 
 // A new session for an imported build: full resources, carrying the build's
-// items. From then on the play's own items are the ones that count.
+// items and Conditions. From then on the play's own are the ones that count.
 export function startPlay(build: unknown): Play {
-  const { items = [], ...draft } = fromBuild(build);
-  return { draft, current: {}, items, conditions: [], chat: [] };
+  const { items = [], conditions = [], ...draft } = fromBuild(build);
+  return { draft, current: {}, items, conditions, chat: [] };
 }
 
 const KEY = "sf-game-tools:v1";
@@ -153,7 +121,7 @@ export function load(): Play | undefined {
       draft: fromBuild(saved.draft),
       current: saved.current && typeof saved.current === "object" ? saved.current : {},
       items: readItems(saved.items),
-      conditions: Array.isArray(saved.conditions) ? saved.conditions : [],
+      conditions: readConditions(saved.conditions),
       chat: Array.isArray(saved.chat) ? saved.chat : [],
     };
   } catch {
