@@ -894,20 +894,55 @@
     }
   }
 
+  /* The message box, with Send inside it at the bottom right */
   .tools-chat-form {
-    display: grid;
-    gap: 24px;
+    position: relative;
 
     textarea.rpg-search-input {
+      display: block;
       width: 100%;
       height: auto;
       min-height: 120px;
-      padding: 12px 16px;
+      padding: 12px 56px 12px 16px;
       resize: vertical;
     }
+  }
 
-    .build-button {
-      justify-self: end;
+  /* A green round button with the paper plane, like the creator's green
+     buttons */
+  .tools-chat-send {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: var(--frontiers-green);
+    color: var(--portfolio-black);
+    cursor: pointer;
+
+    .icon {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    &:hover:not(:disabled) {
+      background-color: color-mix(in srgb, var(--frontiers-green) 75%, var(--portfolio-white));
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--frontiers-green);
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: default;
     }
   }
 

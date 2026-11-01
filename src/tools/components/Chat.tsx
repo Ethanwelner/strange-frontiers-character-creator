@@ -3,7 +3,7 @@ import type { CreateMessage } from "../../ai/anthropic.js";
 import { EndpointError } from "../../ai/remote.js";
 import type { Content } from "../../engine/parse.js";
 import type { BuildResult } from "../../engine/validate.js";
-import { Notice } from "../../app/components/ui.js";
+import { Icon, Notice } from "../../app/components/ui.js";
 import { ask } from "../chat.js";
 import type { Play } from "../play.js";
 import { Roller } from "./Roller.js";
@@ -147,8 +147,9 @@ export function Chat({
               }
             }}
           />
-          <button type="submit" className="build-button" disabled={busy || !message.trim()} aria-busy={busy}>
-            Send
+          {/* Send, as a paper plane in the message box's bottom right corner */}
+          <button type="submit" className="tools-chat-send" disabled={busy || !message.trim()} aria-busy={busy}>
+            <Icon name="send" label="Send" />
           </button>
         </form>
       </section>
