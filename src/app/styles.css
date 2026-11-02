@@ -2564,7 +2564,12 @@
     }
   }
 
-  /* The Items' box in a warm dark gray, under the olive cards */
+  /* The stats' box in a cool dark gray, and the Items' in a warm one under
+     the olive cards */
+  .builder-panel .c-sheet .c-sheet-box.sheet-body {
+    background-color: #292b2e;
+  }
+
   .builder-panel .c-sheet .c-sheet-box.sheet-items {
     background-color: #2f2e2a;
   }
