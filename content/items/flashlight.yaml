@@ -1,0 +1,10 @@
+id: flashlight
+name: "Flashlight"
+status: draft
+plane: earth
+summary: "A rechargeable electric torch."
+tags: [light, electronic]
+type: equipment
+category: gear
+value: 30
+currency: "ERC"

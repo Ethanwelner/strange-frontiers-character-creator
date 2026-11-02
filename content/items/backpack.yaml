@@ -1,0 +1,11 @@
+id: backpack
+name: "Backpack"
+status: draft
+plane: any
+summary: "A sturdy pack for carrying gear."
+tags: [travel, storage]
+type: equipment
+category: gear
+slot: "Back"
+value: 80
+currency: "ERC"

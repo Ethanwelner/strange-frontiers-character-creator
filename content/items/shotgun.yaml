@@ -1,0 +1,11 @@
+id: shotgun
+name: "Shotgun"
+status: draft
+plane: earth
+summary: "A smoothbore gun firing shot or slugs, brutal at short range."
+tags: [ranged, firearm, two-handed]
+type: weapon
+category: weapon
+damageTypes: ["Piercing"]
+value: 700
+currency: "ERC"

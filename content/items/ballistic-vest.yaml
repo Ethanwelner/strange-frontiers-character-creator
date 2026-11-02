@@ -1,0 +1,12 @@
+id: ballistic-vest
+name: "Ballistic Vest"
+status: draft
+plane: earth
+summary: "A modern vest with armor plates, made to stop bullets."
+tags: [armor, modern]
+type: wearable
+category: armor
+resistances: "Piercing, Blunt"
+slot: "Body Armor"
+value: 800
+currency: "ERC"

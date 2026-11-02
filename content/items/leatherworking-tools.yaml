@@ -1,0 +1,10 @@
+id: leatherworking-tools
+name: "Leatherworking Tools"
+status: draft
+plane: any
+summary: "Knives, awls, punches and waxed thread."
+tags: [craft, tools]
+type: equipment
+category: gear
+value: 150
+currency: "ERC"

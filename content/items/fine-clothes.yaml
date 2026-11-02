@@ -1,0 +1,11 @@
+id: fine-clothes
+name: "Fine Clothes"
+status: draft
+plane: any
+summary: "Clothing good enough for a noble court or a corporate gala."
+tags: [social, clothing]
+type: wearable
+category: gear
+slot: "Clothing"
+value: 800
+currency: "ERC"

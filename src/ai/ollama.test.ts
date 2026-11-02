@@ -18,9 +18,10 @@ const goblinoid: ConceptInput = {
     "tinkerer", "herbalism", "appraisal", "smooth-talker", "vigilance", "tracker", "survivalist",
     "ambusher", "haggler", "streetwise", "sleight-of-hand", "teamster", "relic-handling", "schemer",
   ],
+  items: ["quarterstaff", "potion-kit", "writing-kit"],
 };
 
-const reasons = ["kind", "origin", "profession", "past", "levels", ...goblinoid.traits!].map((target) => ({ target, reason: "fits" }));
+const reasons = ["kind", "origin", "profession", "past", "levels", ...goblinoid.traits!, ...goblinoid.items!.map((i) => `item:${i}`)].map((target) => ({ target, reason: "fits" }));
 
 const reply = (toolCalls: { name: string; arguments: unknown }[], extra: object = {}) =>
   Response.json({

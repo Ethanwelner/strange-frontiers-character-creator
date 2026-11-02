@@ -1,0 +1,10 @@
+id: portable-computer
+name: "Portable Computer"
+status: draft
+plane: earth
+summary: "A rugged laptop or tablet for real computing work."
+tags: [electronic, computing]
+type: equipment
+category: gear
+value: 1500
+currency: "ERC"

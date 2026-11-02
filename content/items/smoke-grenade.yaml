@@ -1,0 +1,11 @@
+id: smoke-grenade
+name: "Smoke Grenade"
+status: draft
+plane: earth
+summary: "A grenade that fills an area with thick smoke."
+tags: [thrown, cover, military]
+type: equipment
+category: consumable
+uses: "uses 1: when thrown"
+value: 40
+currency: "ERC"

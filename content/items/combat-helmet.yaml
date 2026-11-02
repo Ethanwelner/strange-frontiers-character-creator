@@ -1,0 +1,12 @@
+id: combat-helmet
+name: "Combat Helmet"
+status: draft
+plane: earth
+summary: "A modern helmet with a radio mount. Protects the head only."
+tags: [armor, helmet, military]
+type: wearable
+category: armor
+resistances: "Blunt, Piercing (head)"
+slot: "Headwear"
+value: 500
+currency: "ERC"

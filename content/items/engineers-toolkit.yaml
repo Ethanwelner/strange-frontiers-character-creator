@@ -1,0 +1,10 @@
+id: engineers-toolkit
+name: "Engineer’s Toolkit"
+status: draft
+plane: earth
+summary: "Power tools, meters and spares for fixing machines and ship systems."
+tags: [tools, engineering]
+type: equipment
+category: gear
+value: 2000
+currency: "ERC"

@@ -1,0 +1,11 @@
+id: quarterstaff
+name: "Quarterstaff"
+status: draft
+plane: any
+summary: "A long wooden staff, as useful on the road as in a fight."
+tags: [melee, blunt, two-handed]
+type: weapon
+category: weapon
+damageTypes: ["Blunt"]
+value: 40
+currency: "ERC"

@@ -1,0 +1,12 @@
+id: insulated-gloves
+name: "Insulated Gloves"
+status: draft
+plane: earth
+summary: "Heavy rubber gloves for live wiring."
+tags: [tool, electrical]
+type: wearable
+category: armor
+resistances: "Electrical (hands)"
+slot: "Gloves"
+value: 50
+currency: "ERC"

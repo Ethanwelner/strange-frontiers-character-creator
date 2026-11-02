@@ -1,0 +1,10 @@
+id: rope
+name: "Rope"
+status: draft
+plane: any
+summary: "Fifteen meters of strong rope."
+tags: [climbing, utility]
+type: equipment
+category: gear
+value: 30
+currency: "ERC"

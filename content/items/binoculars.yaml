@@ -1,0 +1,10 @@
+id: binoculars
+name: "Binoculars"
+status: draft
+plane: earth
+summary: "Electronic binoculars with a rangefinder."
+tags: [optics, scouting]
+type: equipment
+category: gear
+value: 500
+currency: "ERC"

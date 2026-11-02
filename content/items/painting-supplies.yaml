@@ -1,0 +1,10 @@
+id: painting-supplies
+name: "Painting Supplies"
+status: draft
+plane: any
+summary: "Brushes, pigments and canvas."
+tags: [art]
+type: equipment
+category: gear
+value: 100
+currency: "ERC"

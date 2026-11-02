@@ -1,0 +1,11 @@
+id: ration-pack
+name: "Ration Pack"
+status: draft
+plane: earth
+summary: "A sealed, self-heating meal for one day."
+tags: [food, military]
+type: misc
+category: consumable
+uses: "uses 1: when eaten"
+value: 12
+currency: "ERC"

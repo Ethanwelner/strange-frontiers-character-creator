@@ -1,0 +1,10 @@
+id: fighter
+name: "Fighter"
+status: draft
+plane: earth
+summary: "A single-seat combat spacecraft. Occupants: 1."
+tags: [vehicle, space, military]
+type: vehicle
+category: other
+value: 30000000
+currency: "ERC"

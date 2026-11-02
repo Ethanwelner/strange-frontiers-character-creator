@@ -1,0 +1,10 @@
+id: waterskin
+name: "Waterskin"
+status: draft
+plane: any
+summary: "A leather skin or canteen that holds a day’s water."
+tags: [travel, survival]
+type: equipment
+category: gear
+value: 15
+currency: "ERC"

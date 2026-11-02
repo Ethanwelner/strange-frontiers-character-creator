@@ -37,6 +37,13 @@ const CONCEPT_SCHEMA = {
         "Trait ids that fit the character, best fit first. List more than the picks will cover (12 to 20): the engine buys them in order " +
         "and skips any the build can't take. List a ranked Trait twice to ask for rank 2. Don't list Traits the packages already grant.",
     },
+    items: {
+      type: "array",
+      items: { type: "string" },
+      description:
+        "Item ids the character carries, most needed first (about 3 to 8): the weapon and armor they'd fight in, the tools and kits of their " +
+        "trade and Traits, and gear for how they live and travel. Only items from the character's own plane or any plane. List an item twice to carry two.",
+    },
     choices: {
       type: "array",
       description:
@@ -54,7 +61,7 @@ const CONCEPT_SCHEMA = {
       },
     },
   },
-  required: ["name", "kind", "origin", "profession", "past", "focus", "traits"],
+  required: ["name", "kind", "origin", "profession", "past", "focus", "traits", "items"],
 } as const;
 
 export const TOOLS: Tool[] = [
@@ -122,7 +129,7 @@ export const TOOLS: Tool[] = [
           type: "array",
           description:
             "One short line per choice. Targets: kind, origin, profession, past, levels (why the priority stats), " +
-            "and each listed Trait's id.",
+            "each listed Trait's id, and item:<id> for each item.",
           items: {
             type: "object",
             properties: { target: { type: "string" }, reason: { type: "string" } },
@@ -192,6 +199,11 @@ export function unknownIds(build: unknown, content: Content): IdIssue[] {
   list(b.traits).forEach((p, i) => {
     const id = obj(p)?.trait;
     if (isText(id) && !traitIds.has(id)) issues.push({ path: `traits[${i}]`, message: `Trait "${id}" doesn't exist` });
+  });
+  const itemIds = new Set(content.items.map((i) => i.id));
+  list(b.items).forEach((x, i) => {
+    const id = obj(x)?.item;
+    if (isText(id) && !itemIds.has(id)) issues.push({ path: `items[${i}]`, message: `Item "${id}" doesn't exist` });
   });
   const open = openChoices(b, content);
   list(b.choices).forEach((a, i) => {

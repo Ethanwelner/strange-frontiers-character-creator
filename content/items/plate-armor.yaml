@@ -1,0 +1,12 @@
+id: plate-armor
+name: "Plate Armor"
+status: draft
+plane: any
+summary: "A full suit of fitted steel plates. Heavy, loud and very hard to get through."
+tags: [armor, heavy]
+type: wearable
+category: armor
+resistances: "Slashing, Piercing, Blunt"
+slot: "Body Armor"
+value: 5000
+currency: "ERC"

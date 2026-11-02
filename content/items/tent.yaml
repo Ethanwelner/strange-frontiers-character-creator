@@ -1,0 +1,10 @@
+id: tent
+name: "Tent"
+status: draft
+plane: any
+summary: "A canvas or synthetic tent for two."
+tags: [travel, camping, shelter]
+type: structure
+category: gear
+value: 200
+currency: "ERC"

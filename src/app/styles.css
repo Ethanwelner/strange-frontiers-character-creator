@@ -2653,6 +2653,16 @@
     align-items: center;
   }
 
+  /* A stock item's description and rules, under its row */
+  .tools-item-stock {
+    margin: 8px 0;
+    font-size: 0.875rem;
+  }
+
+  .tools-item-details {
+    color: var(--panel-soft);
+  }
+
   .sheet-stats {
     display: flex;
     flex-direction: column;

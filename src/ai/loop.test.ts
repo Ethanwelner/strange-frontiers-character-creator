@@ -59,13 +59,14 @@ const goblinoid: ConceptInput = {
     "tinkerer", "herbalism", "appraisal", "smooth-talker", "vigilance", "tracker", "survivalist",
     "ambusher", "haggler", "streetwise", "sleight-of-hand", "teamster", "relic-handling", "schemer",
   ],
+  items: ["quarterstaff", "potion-kit", "writing-kit"],
 };
 
 // Known ids, but a profession in the past slot: the engine sends it back.
 const misslotted: ConceptInput = { ...goblinoid, past: "licensed-mage" };
 
 const reasonsFor = (c: ConceptInput): Reason[] =>
-  ["kind", "origin", "profession", "past", "levels", ...(c.traits ?? [])].map((target) => ({ target, reason: `fits: ${target}` }));
+  ["kind", "origin", "profession", "past", "levels", ...(c.traits ?? []), ...(c.items ?? []).map((i) => `item:${typeof i === "string" ? i : i.item}`)].map((target) => ({ target, reason: `fits: ${target}` }));
 
 const submit = (concept: unknown, reasons: Reason[] = reasonsFor(concept as ConceptInput)) =>
   toolUse("submit_build", { concept, summary: "A goblinoid mage from the caravan town.", reasons });
@@ -149,7 +150,8 @@ describe("describeCharacter", () => {
     // Reasons are kept for what the build holds, and dropped for Traits it didn't take.
     const picked = new Set(result.build!.traits!.map((t) => t.trait));
     const fixed = ["kind", "origin", "profession", "past", "levels"];
-    for (const r of result.reasons) expect(fixed.includes(r.target) || picked.has(r.target)).toBe(true);
+    const carried = new Set(result.build!.items!.map((i) => `item:${i.item}`));
+    for (const r of result.reasons) expect(fixed.includes(r.target) || picked.has(r.target) || carried.has(r.target)).toBe(true);
     expect(result.reasons.map((r) => r.target)).toEqual(expect.arrayContaining(fixed));
     expect(result.usage).toEqual({ inputTokens: 200, outputTokens: 100, cacheReadTokens: 6000, cacheWriteTokens: 0 });
 
@@ -207,6 +209,16 @@ describe("describeCharacter", () => {
     // Only once: the second submit is accepted as it is.
     expect(result.status).toBe("accepted");
     expect(result.turns).toBe(2);
+  });
+
+  it("asks once for items when a legal build carries nothing", async () => {
+    const bare = { ...goblinoid, items: [] };
+    const { create, calls } = script(message([submit(bare)]), message([submit(goblinoid)]));
+    const result = await describeCharacter({ description: "A goblin mage.", content, provider: noReview(anthropicProvider(create)), campaign: L1 });
+    expect(bodyOf(calls[1]!).items).toMatch(/^The engine built a legal character, but it carries nothing\./);
+    expect(result.status).toBe("accepted");
+    expect(result.build?.items?.map((i) => i.item)).toEqual(["quarterstaff", "potion-kit", "writing-kit"]);
+    expect(result.reasons.find((r) => r.target === "item:potion-kit")?.reason).toBe("fits: item:potion-kit");
   });
 
   it("reports progress in plain words", async () => {

@@ -1,0 +1,12 @@
+id: frag-grenade
+name: "Frag Grenade"
+status: draft
+plane: earth
+summary: "A hand grenade that bursts into a blast of fragments."
+tags: [explosive, thrown, military]
+type: weapon
+category: consumable
+damageTypes: ["Blunt", "Piercing"]
+uses: "uses 1: when thrown"
+value: 50
+currency: "ERC"

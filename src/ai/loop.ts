@@ -63,6 +63,7 @@ function reasonTargets(build: Record<string, unknown>): Set<string> {
   targets.add("levels");
   for (const p of Array.isArray(build.traits) ? build.traits : []) if (typeof p?.trait === "string") targets.add(p.trait);
   for (const a of Array.isArray(build.choices) ? build.choices : []) targets.add(`choice:${a?.package ?? a?.trait}/${a?.from}`);
+  for (const i of Array.isArray(build.items) ? build.items : []) if (typeof i?.item === "string") targets.add(`item:${i.item}`);
   return targets;
 }
 
@@ -141,6 +142,8 @@ export async function describeCharacter(opts: DescribeOptions): Promise<Describe
   let picksPushUsed = false;
   let reviewed = false;
   let reasonsAsked = false;
+  // A legal build carrying nothing gets asked once for items.
+  let itemsAsked = false;
   // Reasons by target, so a resubmission that skips some keeps the earlier ones.
   const reasonsSoFar = new Map<string, Reason>();
   // The player's name always wins; otherwise the last name the model gave,
@@ -205,7 +208,11 @@ export async function describeCharacter(opts: DescribeOptions): Promise<Describe
         const check = checkBuild(solved.build, content, campaign);
         for (const r of reasons) reasonsSoFar.set(r.target, r);
         last = { build: solved.build, check, summary: summary ?? last?.summary, reasons: [...reasonsSoFar.values()] };
-        const report = { taken: solved.taken, skipped: compactSkipped(solved.skipped) };
+        const report = {
+          taken: solved.taken,
+          skipped: compactSkipped(solved.skipped),
+          ...(solved.skippedItems.length ? { skippedItems: solved.skippedItems } : {}),
+        };
         const unspent = check.accepted ? unspentPicks(check) : undefined;
         if (check.accepted && provider.review && !reviewed) {
           progress("Build is legal; reviewing it against the description");
@@ -213,7 +220,7 @@ export async function describeCharacter(opts: DescribeOptions): Promise<Describe
           const review =
             "The engine built a legal character. Before it's final, check it against the player's description: drop any Trait that doesn't belong in this character's life, " +
             "and spend unspent picks on Traits that do: skills of their trade, knowledge of their home and past, things the description implies. " +
-            "Leave a pick banked only when nothing else plausibly fits. Give every choice a reason. " +
+            "Leave a pick banked only when nothing else plausibly fits. Check the items too: what this character would carry for their work, fights and travels. Give every choice a reason. " +
             "Then call submit_build with the final concept, summary and reasons.";
           results.push({ call, isError: true, content: JSON.stringify({ rejected: true, review, ...(unspent ? { banked: unspent } : {}), ...report }) });
           continue;
@@ -223,6 +230,13 @@ export async function describeCharacter(opts: DescribeOptions): Promise<Describe
           picksPushUsed = true;
           const picks = `The engine built a legal character, but ${unspent}: the Trait list ran out. Submit again with the same concept and more Traits that fit added to the list.`;
           results.push({ call, isError: true, content: JSON.stringify({ rejected: true, picks, ...report }) });
+          continue;
+        }
+        if (check.accepted && !solved.build.items.length && !itemsAsked) {
+          progress("Build is legal; asking for items");
+          itemsAsked = true;
+          const items = "The engine built a legal character, but it carries nothing. Submit again with the same concept and the items it would carry (from the Items in the index), with a reason for each.";
+          results.push({ call, isError: true, content: JSON.stringify({ rejected: true, items, ...report }) });
           continue;
         }
         // A legal build missing reasons gets asked once more, by name. Choices

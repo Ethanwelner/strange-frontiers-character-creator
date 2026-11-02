@@ -1,0 +1,11 @@
+id: dagger
+name: "Dagger"
+status: draft
+plane: any
+summary: "A short double-edged blade, easy to hide and quick in close quarters."
+tags: [melee, blade, concealable]
+type: weapon
+category: weapon
+damageTypes: ["Piercing", "Slashing"]
+value: 60
+currency: "ERC"

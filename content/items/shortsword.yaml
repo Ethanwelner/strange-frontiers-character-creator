@@ -1,0 +1,11 @@
+id: shortsword
+name: "Shortsword"
+status: draft
+plane: any
+summary: "A one-handed sword, light enough to carry everywhere."
+tags: [melee, blade, sword]
+type: weapon
+category: weapon
+damageTypes: ["Slashing", "Piercing"]
+value: 250
+currency: "ERC"

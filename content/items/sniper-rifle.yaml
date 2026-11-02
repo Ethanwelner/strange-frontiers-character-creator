@@ -1,0 +1,11 @@
+id: sniper-rifle
+name: "Sniper Rifle"
+status: draft
+plane: earth
+summary: "A long-range precision rifle with a powerful scope."
+tags: [ranged, firearm, military, two-handed]
+type: weapon
+category: weapon
+damageTypes: ["Piercing"]
+value: 4000
+currency: "ERC"

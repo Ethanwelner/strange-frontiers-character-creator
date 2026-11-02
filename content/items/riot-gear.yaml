@@ -1,0 +1,12 @@
+id: riot-gear
+name: "Riot Gear"
+status: draft
+plane: earth
+summary: "Padded armor, helmet and shield for crowd control."
+tags: [armor, police]
+type: wearable
+category: armor
+resistances: "Blunt, Slashing, Piercing"
+slot: "Body Armor"
+value: 1500
+currency: "ERC"

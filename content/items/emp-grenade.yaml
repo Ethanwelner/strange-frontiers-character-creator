@@ -1,0 +1,12 @@
+id: emp-grenade
+name: "EMP Grenade"
+status: draft
+plane: earth
+summary: "A grenade that releases an electromagnetic pulse, harming only machines."
+tags: [explosive, thrown, anti-machine]
+type: weapon
+category: consumable
+damageTypes: ["EMP"]
+uses: "uses 1: when thrown"
+value: 400
+currency: "ERC"

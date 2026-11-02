@@ -1,0 +1,10 @@
+id: comm-unit
+name: "Comm Unit"
+status: draft
+plane: earth
+summary: "A personal communicator and computer. Doesn’t reach across a switch gate without a relay."
+tags: [electronic, communication]
+type: equipment
+category: gear
+value: 800
+currency: "ERC"

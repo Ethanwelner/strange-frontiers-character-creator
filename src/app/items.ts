@@ -1,14 +1,17 @@
 // What a character carries, shared by the Character Creator's sheet and
-// Player Tools. Item rules aren't settled yet, so an item is what the player
-// writes: a name, a count, a rough category and notes. It travels in the
-// build as `items` (BuildItem in engine/build.ts).
+// Player Tools: a name, a count, a rough category and notes. A stock item from
+// content/items also names its id (`item`); anything else is what the player
+// writes. It travels in the build as `items` (BuildItem in engine/build.ts).
 import { ITEM_CATEGORIES } from "../engine/build.js";
+import type { Item as StockItem } from "../schema/index.js";
 
 export { ITEM_CATEGORIES };
 export type ItemCategory = (typeof ITEM_CATEGORIES)[number];
 
 export interface Item {
   id: string;
+  // The stock item's id, for an item from content/items.
+  item?: string;
   name: string;
   qty: number;
   category: ItemCategory;
@@ -45,6 +48,7 @@ export function readItems(input: unknown): Item[] {
     return [
       {
         id: typeof i.id === "string" && i.id ? i.id : newId(),
+        ...(typeof i.item === "string" && i.item ? { item: i.item } : {}),
         name: i.name,
         qty: typeof i.qty === "number" && i.qty >= 0 ? Math.round(i.qty) : 1,
         category,
@@ -53,4 +57,25 @@ export function readItems(input: unknown): Item[] {
       },
     ];
   });
+}
+
+// A stock item's rules in a line, like "Piercing, Slashing damage; 60 ERC".
+export function itemDetails(stock: StockItem): string {
+  const line = [
+    stock.damageTypes.length ? `${stock.damageTypes.join(", ")} damage` : "",
+    stock.resistances ? `resists ${stock.resistances}` : "",
+    stock.uses ?? "",
+    stock.slot ? `${stock.slot} slot` : "",
+    stock.value !== undefined && stock.currency ? `${stock.value.toLocaleString("en-US")} ${stock.currency}` : "",
+  ]
+    .filter(Boolean)
+    .join("; ");
+  return line.charAt(0).toUpperCase() + line.slice(1);
+}
+
+// The stock item with this name, if there is one, so a written-in "dagger"
+// becomes the Dagger.
+export function stockItemNamed(stock: StockItem[], name: string): StockItem | undefined {
+  const n = name.trim().toLowerCase();
+  return stock.find((s) => s.name.toLowerCase() === n);
 }

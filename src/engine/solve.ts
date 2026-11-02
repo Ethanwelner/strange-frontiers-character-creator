@@ -4,10 +4,11 @@
 // spreads each level's stat points (adding any stats the requested ranks
 // need to the priority stats), answers package and Trait choices it can resolve, and
 // buys Traits from the list in order, asking validateBuild about each one
-// and skipping any the engine rejects. Deterministic and browser-safe.
+// and skipping any the engine rejects. It also packs the stock items the
+// concept lists. Deterministic and browser-safe.
 import { z } from "zod";
 import { STAT_CAP, STAT_GROUPS, StatId, type StatBlock, type Trait } from "../schema/index.js";
-import { Build, ChoiceAnswer, DEFAULT_CAMPAIGN, type Campaign, type LevelAllocation, type PickKind, type StatGroup } from "./build.js";
+import { Build, ChoiceAnswer, DEFAULT_CAMPAIGN, type BuildItem, type Campaign, type LevelAllocation, type PickKind, type StatGroup } from "./build.js";
 import type { Content } from "./content.js";
 import { answers, bonusPointsOf, choicePool, coreAccessOf, isFreeTextPool, FOCUS_POINTS_PER_LEVEL, validateBuild, type BuildResult } from "./validate.js";
 
@@ -32,6 +33,9 @@ export const Concept = z.object({
   traits: z.array(z.string()).default([]),
   // Answers to package or Trait choices the engine can check, like languages.
   choices: z.array(ChoiceAnswer).default([]),
+  // Stock item ids the character carries, most needed first. Listing one
+  // twice, or giving a count, carries more of it.
+  items: z.array(z.union([z.string(), z.object({ item: z.string(), qty: z.number().int().min(1).default(1) })])).default([]),
 });
 export type Concept = z.infer<typeof Concept>;
 export type ConceptInput = z.input<typeof Concept>;
@@ -41,11 +45,17 @@ export interface SkippedTrait {
   reason: string;
 }
 
+export interface SkippedItem {
+  item: string;
+  reason: string;
+}
+
 export interface Solution {
   build: Build;
   // Trait ids from the list the solver bought, in order (repeats are ranks).
   taken: string[];
   skipped: SkippedTrait[];
+  skippedItems: SkippedItem[];
   // validateBuild on the finished build, with open choices set aside.
   result: BuildResult;
 }
@@ -229,6 +239,41 @@ export function rankFocus(concept: Concept, content: Content): string[] {
   return focus;
 }
 
+// The concept's items as the build carries them. Unknown items, money (until
+// wealth has rules) and items from the other plane are skipped: a character
+// from Dreft doesn't start with a pistol. Weapons are equipped, and so is the
+// first item listed for each slot, like Body Armor.
+export function solveItems(concept: Concept, content: Content): { items: BuildItem[]; skipped: SkippedItem[] } {
+  const plane = content.packages.find((p) => p.id === concept.origin && p.type === "origin")?.plane;
+  const items: BuildItem[] = [];
+  const skipped: SkippedItem[] = [];
+  const slots = new Set<string>();
+  for (const entry of concept.items) {
+    const { item: id, qty } = typeof entry === "string" ? { item: entry, qty: 1 } : entry;
+    const item = content.items.find((i) => i.id === id);
+    const reason = !item
+      ? `Item "${id}" doesn't exist`
+      : item.category === "currency"
+        ? "money isn't handed out yet"
+        : plane && item.plane !== "any" && item.plane !== plane
+          ? `${item.name} is from ${item.plane === "earth" ? "Earth" : "Isekai"}, and this character isn't`
+          : undefined;
+    if (reason || !item) {
+      skipped.push({ item: id, reason: reason! });
+      continue;
+    }
+    const held = items.find((i) => i.item === item.id);
+    if (held) {
+      held.qty += qty;
+      continue;
+    }
+    const equipped = item.category === "weapon" || (!!item.slot && !slots.has(item.slot));
+    if (item.slot) slots.add(item.slot);
+    items.push({ item: item.id, name: item.name, qty, category: item.category, equipped });
+  }
+  return { items, skipped };
+}
+
 const remaining = (r: BuildResult, kind: PickKind) => r.summary?.picks[kind].banked ?? 0;
 
 export function solveConcept(input: unknown, content: Content, campaign: Campaign = DEFAULT_CAMPAIGN): Solution | { error: string } {
@@ -261,6 +306,7 @@ export function solveConcept(input: unknown, content: Content, campaign: Campaig
     content,
   ).includes("magic");
   const magicLevels = canMagic ? Math.min(concept.magic, campaign.startingLevel) : 0;
+  const solved = solveItems(concept, content);
 
   let build: Build = Build.parse({
     ...(concept.name ? { name: concept.name } : {}),
@@ -276,6 +322,7 @@ export function solveConcept(input: unknown, content: Content, campaign: Campaig
     ],
     traits: [],
     choices: answerChoices(concept, content),
+    items: solved.items,
   });
   let open = openPlaceholders(build, content);
   const check = (b: Build) => validateBuild({ ...b, choices: [...b.choices, ...open] }, content, campaign);
@@ -312,7 +359,7 @@ export function solveConcept(input: unknown, content: Content, campaign: Campaig
   const taken: string[] = [];
   const skipped: SkippedTrait[] = [];
   // Kind, packages or stats are wrong: there's nothing to buy Traits for.
-  if (!result.ok) return { build, taken, skipped, result };
+  if (!result.ok) return { build, taken, skipped, skippedItems: solved.skipped, result };
 
   // Buys the next rank of a Trait if the engine allows it, or says why not.
   const buy = (id: string): string | undefined => {
@@ -348,5 +395,5 @@ export function solveConcept(input: unknown, content: Content, campaign: Campaig
   // Picks the list didn't use stay banked, as the rules allow: filling them
   // from the Background Trait list in order gave every character the same
   // alphabetical Traits whatever they were described as.
-  return { build, taken, skipped, result };
+  return { build, taken, skipped, skippedItems: solved.skipped, result };
 }

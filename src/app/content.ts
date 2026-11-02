@@ -14,3 +14,4 @@ export const { content, errors: contentErrors } = parseContent(files);
 export const traitById = new Map(content.traits.map((t) => [t.id, t]));
 export const packageById = new Map(content.packages.map((p) => [p.id, p]));
 export const kindById = new Map(content.kinds.map((k) => [k.id, k]));
+export const itemById = new Map(content.items.map((i) => [i.id, i]));

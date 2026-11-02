@@ -1,0 +1,10 @@
+id: lantern
+name: "Lantern"
+status: draft
+plane: any
+summary: "A shuttered oil lantern."
+tags: [light]
+type: equipment
+category: gear
+value: 30
+currency: "ERC"

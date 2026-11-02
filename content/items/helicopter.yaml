@@ -1,0 +1,10 @@
+id: helicopter
+name: "Helicopter"
+status: draft
+plane: earth
+summary: "A light utility helicopter. Occupants: 6."
+tags: [vehicle, air]
+type: vehicle
+category: other
+value: 1500000
+currency: "ERC"

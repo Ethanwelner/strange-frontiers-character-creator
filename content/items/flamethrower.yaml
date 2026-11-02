@@ -1,0 +1,11 @@
+id: flamethrower
+name: "Flamethrower"
+status: draft
+plane: earth
+summary: "A backpack fuel tank and nozzle that projects burning fuel."
+tags: [ranged, heavy, fire]
+type: weapon
+category: weapon
+damageTypes: ["Heat"]
+value: 3000
+currency: "ERC"

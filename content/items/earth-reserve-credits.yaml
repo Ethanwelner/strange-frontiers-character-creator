@@ -1,0 +1,10 @@
+id: earth-reserve-credits
+name: "Earth Reserve Credits (ERC)"
+status: draft
+plane: earth
+summary: "The common currency of most of the systems, held in accounts and chips."
+tags: [currency]
+type: misc
+category: currency
+value: 1
+currency: "ERC"

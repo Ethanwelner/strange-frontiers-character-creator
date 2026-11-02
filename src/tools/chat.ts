@@ -11,6 +11,7 @@ import { runTool, ToolError } from "../ai/tools.js";
 import type { Content } from "../engine/parse.js";
 import type { BuildResult } from "../engine/validate.js";
 import { genderText } from "../app/draft.js";
+import { itemDetails, stockItemNamed } from "../app/items.js";
 import { STAT_GROUPS, TraitCategory } from "../schema/index.js";
 import { roll } from "./dice.js";
 import {
@@ -106,7 +107,8 @@ export const CHAT_TOOLS: Tool[] = [
   },
   {
     name: "add_item",
-    description: "Add an item to the character's inventory. Items with the same name stack.",
+    description:
+      "Add an item to the character's inventory. Items with the same name stack. An item named like one of the game's stock items (Dagger, Rope, Medkit) becomes that item, with its category and details.",
     input_schema: {
       type: "object",
       properties: {
@@ -169,7 +171,17 @@ export function stateOf(play: Play, result: BuildResult, content: Content) {
     resources,
     hpConditions: hpConditions(currentOf(play, result, "hp"), maxOf(result, "hp")).map((id) => name(content, id)),
     conditions: play.conditions.map((c) => ({ id: c.trait, name: name(content, c.trait), rank: c.rank, ...(c.note ? { note: c.note } : {}) })),
-    items: play.items.map((i) => ({ name: i.name, qty: i.qty, category: i.category, equipped: i.equipped, ...(i.notes ? { notes: i.notes } : {}) })),
+    items: play.items.map((i) => {
+      const stock = content.items.find((x) => x.id === i.item);
+      return {
+        name: i.name,
+        qty: i.qty,
+        category: i.category,
+        equipped: i.equipped,
+        ...(i.notes ? { notes: i.notes } : {}),
+        ...(stock ? { description: stock.summary, details: itemDetails(stock) } : {}),
+      };
+    }),
   };
 }
 
@@ -221,7 +233,13 @@ export function sheetText(play: Play, result: BuildResult, content: Content): st
       ? `Temporary Conditions: ${play.conditions.map((c) => `${name(content, c.trait)} [${c.trait}]${c.rank > 1 ? ` rank ${c.rank}` : ""}${c.note ? ` (${c.note})` : ""}`).join(", ")}`
       : "Temporary Conditions: none",
     play.items.length
-      ? `Items: ${play.items.map((i) => `${i.qty > 1 ? `${i.qty}× ` : ""}${i.name} (${i.category}${i.equipped ? ", equipped" : ""}${i.notes ? `; ${i.notes}` : ""})`).join(", ")}`
+      ? `Items: ${play.items
+          .map((i) => {
+            const stock = content.items.find((x) => x.id === i.item);
+            const details = stock ? itemDetails(stock) : "";
+            return `${i.qty > 1 ? `${i.qty}× ` : ""}${i.name} (${i.category}${i.equipped ? ", equipped" : ""}${details ? `; ${details}` : ""}${i.notes ? `; ${i.notes}` : ""})`;
+          })
+          .join(", ")}`
       : "Items: none",
   );
   return lines.join("\n");
@@ -283,9 +301,10 @@ export function applyTool(
     case "add_item": {
       const itemName = str(input.name);
       if (!itemName) throw new ToolError("An item needs a name.");
-      const category = (ITEM_CATEGORIES as readonly string[]).includes(String(input.category)) ? (input.category as ItemCategory) : "gear";
+      const stock = stockItemNamed(content.items, itemName);
+      const category = stock?.category ?? ((ITEM_CATEGORIES as readonly string[]).includes(String(input.category)) ? (input.category as ItemCategory) : "gear");
       const qty = Math.max(1, int(input.qty) ?? 1);
-      const next = addItem(play, { name: itemName, qty, category, equipped: false, notes: str(input.notes) });
+      const next = addItem(play, { ...(stock ? { item: stock.id } : {}), name: stock?.name ?? itemName, qty, category, equipped: false, notes: str(input.notes) });
       return { play: next, result: { items: next.items }, change: `Added ${qty > 1 ? `${qty}× ` : ""}${itemName}` };
     }
     case "remove_item": {

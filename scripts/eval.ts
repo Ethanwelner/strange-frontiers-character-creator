@@ -122,14 +122,16 @@ for (const [i, p] of prompts.entries()) {
   const kind = result.build ? name(b.kind, content.kinds) : "no build proposed";
   const packages = result.build ? ["origin", "profession", "past"].map((s) => name(b[s], content.packages)).join(" · ") : "";
   const traits = (Array.isArray(b.traits) ? b.traits : []).map((t) => `${name(t.trait, content.traits)}${t.rank > 1 ? ` ${t.rank}` : ""}`);
+  const items = (Array.isArray(b.items) ? b.items : []).map((i) => `${i.qty > 1 ? `${i.qty}× ` : ""}${i.name}`);
   console.log(`  ${b.name ? `${String(b.name)}: ` : ""}${kind} · ${packages}`);
   if (result.summary) console.log(`  ${result.summary}`);
+  console.log(`  Items: ${items.join(", ") || "none"}`);
 
   report.push(`## ${verdict} · ${p.title}`, "", `> ${p.description.replace(/\n/g, "\n> ")}`, "");
   if (!kindMatches) report.push(`**Kind mismatch:** expected ${p.expect!.kind}, got ${kind}.`, "");
   report.push(`**${b.name ? `${String(b.name)}, ` : ""}${kind}** · ${packages}`, "");
   if (result.summary) report.push(result.summary, "");
-  report.push(`Traits: ${traits.join(", ") || "none"}`, "");
+  report.push(`Traits: ${traits.join(", ") || "none"}`, "", `Items: ${items.join(", ") || "none"}`, "");
   for (const r of result.reasons) report.push(`- **${r.target}**: ${r.reason}`);
   if (!ok && check) {
     report.push("", "Still wrong:");

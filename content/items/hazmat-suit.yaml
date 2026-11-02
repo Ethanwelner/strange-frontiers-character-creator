@@ -1,0 +1,12 @@
+id: hazmat-suit
+name: "Hazmat Suit"
+status: draft
+plane: earth
+summary: "A sealed suit for chemical, biological and radiation hazards."
+tags: [hazard, survival]
+type: wearable
+category: armor
+resistances: "Acidic/Corrosive, Radiation"
+slot: "Body Armor"
+value: 400
+currency: "ERC"

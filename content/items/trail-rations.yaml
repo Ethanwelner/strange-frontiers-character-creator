@@ -1,0 +1,11 @@
+id: trail-rations
+name: "Trail Rations"
+status: draft
+plane: any
+summary: "Dried meat, hard bread and fruit for one day."
+tags: [food, travel]
+type: misc
+category: consumable
+uses: "uses 1: when eaten"
+value: 15
+currency: "ERC"

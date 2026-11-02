@@ -1,0 +1,10 @@
+id: handcuffs
+name: "Handcuffs"
+status: draft
+plane: earth
+summary: "Steel or polymer restraints."
+tags: [police, restraint]
+type: equipment
+category: gear
+value: 30
+currency: "ERC"

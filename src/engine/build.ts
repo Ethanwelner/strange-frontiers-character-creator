@@ -1,5 +1,7 @@
 import { z } from "zod";
-import { Id, StatId, STAT_GROUPS } from "../schema/index.js";
+import { Id, ITEM_CATEGORIES, StatId, STAT_GROUPS } from "../schema/index.js";
+
+export { ITEM_CATEGORIES };
 
 export const StatGroup = z.enum(Object.keys(STAT_GROUPS) as [keyof typeof STAT_GROUPS]);
 export type StatGroup = z.infer<typeof StatGroup>;
@@ -37,11 +39,12 @@ export const ChoiceAnswer = z
   .refine((a) => (a.package === undefined) !== (a.trait === undefined), "an answer names either a package or a Trait");
 export type ChoiceAnswer = z.infer<typeof ChoiceAnswer>;
 
-// What the character carries. Item rules aren't settled yet, so an item is
-// what the player writes: a name, a count, a rough category and notes.
-export const ITEM_CATEGORIES = ["weapon", "armor", "gear", "consumable", "currency", "other"] as const;
+// What the character carries: a name, a count, a rough category and notes.
+// `item` names the stock item it is, from content/items, if it's one; the
+// player can write in anything else.
 export const BuildItem = z.object({
   id: z.string().optional(),
+  item: Id.optional(),
   name: z.string().trim().min(1),
   qty: z.number().int().min(0).default(1),
   category: z.enum(ITEM_CATEGORIES).default("gear"),

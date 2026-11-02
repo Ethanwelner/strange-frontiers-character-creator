@@ -1,0 +1,10 @@
+id: grappling-hook
+name: "Grappling Hook"
+status: draft
+plane: any
+summary: "A folding hook for catching ledges and walls."
+tags: [climbing, utility]
+type: equipment
+category: gear
+value: 50
+currency: "ERC"

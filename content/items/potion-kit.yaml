@@ -1,0 +1,10 @@
+id: potion-kit
+name: "Potion Kit"
+status: draft
+plane: isekai
+summary: "Vials, a mortar and pestle, a burner and a few common reagents."
+tags: [alchemy, potions]
+type: equipment
+category: gear
+value: 50
+currency: "Luras"

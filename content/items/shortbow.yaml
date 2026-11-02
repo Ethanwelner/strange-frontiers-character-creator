@@ -1,0 +1,11 @@
+id: shortbow
+name: "Shortbow"
+status: draft
+plane: any
+summary: "A compact bow, easy to carry and to shoot from horseback."
+tags: [ranged, archery, two-handed]
+type: weapon
+category: weapon
+damageTypes: ["Piercing"]
+value: 200
+currency: "ERC"

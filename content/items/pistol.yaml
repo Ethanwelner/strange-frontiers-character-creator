@@ -1,0 +1,11 @@
+id: pistol
+name: "Pistol"
+status: draft
+plane: earth
+summary: "A modern handgun."
+tags: [ranged, firearm, sidearm, concealable]
+type: weapon
+category: weapon
+damageTypes: ["Piercing"]
+value: 600
+currency: "ERC"

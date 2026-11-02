@@ -1,0 +1,10 @@
+id: lockpicks
+name: "Lockpicks"
+status: draft
+plane: any
+summary: "A roll of picks and tension wrenches."
+tags: [crime, utility]
+type: equipment
+category: gear
+value: 40
+currency: "ERC"

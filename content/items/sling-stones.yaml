@@ -1,0 +1,11 @@
+id: sling-stones
+name: "Sling Stones"
+status: draft
+plane: any
+summary: "A pouch of smooth stones or lead shot."
+tags: [ammunition]
+type: misc
+category: consumable
+uses: "uses 20: when fired"
+value: 5
+currency: "ERC"

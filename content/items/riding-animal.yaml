@@ -1,0 +1,10 @@
+id: riding-animal
+name: "Riding Animal"
+status: draft
+plane: any
+summary: "A common saddle animal trained to carry a rider."
+tags: [mount, animal, travel]
+type: animal
+category: other
+value: 5000
+currency: "ERC"

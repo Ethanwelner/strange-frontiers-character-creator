@@ -1,0 +1,10 @@
+id: geiger-counter
+name: "Geiger Counter"
+status: draft
+plane: earth
+summary: "Detects and measures radiation."
+tags: [detector, radiation, science]
+type: equipment
+category: gear
+value: 300
+currency: "ERC"

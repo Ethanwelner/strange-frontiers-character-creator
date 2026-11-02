@@ -1,0 +1,11 @@
+id: halberd
+name: "Halberd"
+status: draft
+plane: any
+summary: "An axe blade, spike and hook on a long haft."
+tags: [melee, polearm, reach, two-handed]
+type: weapon
+category: weapon
+damageTypes: ["Slashing", "Piercing"]
+value: 500
+currency: "ERC"
