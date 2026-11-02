@@ -1,0 +1,12 @@
+id: travelers-cloak
+name: "Traveler’s Cloak"
+status: draft
+plane: any
+summary: "A hooded wool cloak against wind and rain."
+tags: [travel, clothing]
+type: wearable
+category: gear
+resistances: "Cold"
+slot: "Outerwear"
+value: 60
+currency: "ERC"

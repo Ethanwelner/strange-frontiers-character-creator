@@ -1,0 +1,11 @@
+id: missile-launcher
+name: "Missile Launcher"
+status: draft
+plane: earth
+summary: "A shoulder-fired tube for rockets and guided missiles."
+tags: [ranged, heavy, explosive, military]
+type: weapon
+category: weapon
+damageTypes: ["Blunt", "Heat"]
+value: 25000
+currency: "ERC"

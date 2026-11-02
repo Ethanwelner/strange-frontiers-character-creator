@@ -1,0 +1,10 @@
+id: spyglass
+name: "Spyglass"
+status: draft
+plane: any
+summary: "A brass telescope that folds to pocket size."
+tags: [optics, scouting]
+type: equipment
+category: gear
+value: 150
+currency: "ERC"

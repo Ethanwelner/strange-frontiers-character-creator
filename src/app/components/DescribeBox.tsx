@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "rea
 import type { DescribeError, DescribeEvent, DescribeResult, Progress } from "../../ai/types.js";
 import { levelFromDescription } from "../../ai/level.js";
 import { describeRemote } from "../../ai/remote.js";
-import { content, kindById, packageById } from "../content.js";
+import { content, itemById, kindById, packageById } from "../content.js";
 import { genderText, type AiNotes, type Draft } from "../draft.js";
 import { askerName, choiceLabel, LevelStepper, LooksFields, title, traitName, type Looks } from "./ui.js";
 
@@ -52,6 +52,10 @@ function targetLabel(target: string, draft: Draft): string {
     return `${title(target)}: ${packageById.get(id ?? "")?.name ?? id}`;
   }
   if (target === "levels") return "Stats";
+  if (target.startsWith("item:")) {
+    const id = target.slice("item:".length);
+    return `Item: ${itemById.get(id)?.name ?? id}`;
+  }
   if (target.startsWith("choice:")) {
     const [asker, from] = target.slice("choice:".length).split("/");
     const name = packageById.get(asker ?? "")?.name ?? traitName(asker ?? "");

@@ -1,0 +1,12 @@
+id: steel-helm
+name: "Steel Helm"
+status: draft
+plane: any
+summary: "A steel helmet. Protects the head only."
+tags: [armor, helmet]
+type: wearable
+category: armor
+resistances: "Blunt, Slashing, Piercing (head)"
+slot: "Headwear"
+value: 250
+currency: "ERC"

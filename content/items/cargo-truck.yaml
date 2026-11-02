@@ -1,0 +1,10 @@
+id: cargo-truck
+name: "Cargo Truck"
+status: draft
+plane: earth
+summary: "A flying cargo truck for hauling between stations, ships and planetary surfaces."
+tags: [vehicle, cargo, space]
+type: vehicle
+category: other
+value: 900000
+currency: "ERC"

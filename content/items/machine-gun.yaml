@@ -1,0 +1,11 @@
+id: machine-gun
+name: "Machine Gun"
+status: draft
+plane: earth
+summary: "A heavy automatic gun fired from the hip, a bipod or a mount."
+tags: [ranged, firearm, military, heavy]
+type: weapon
+category: weapon
+damageTypes: ["Piercing"]
+value: 9000
+currency: "ERC"

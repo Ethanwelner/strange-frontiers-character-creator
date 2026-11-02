@@ -1,0 +1,12 @@
+id: rebreather
+name: "Rebreather"
+status: draft
+plane: earth
+summary: "A mask and small tank for bad air, smoke or water."
+tags: [survival, breathing]
+type: equipment
+category: gear
+uses: "uses 1: per tank, about an hour"
+slot: "Face"
+value: 600
+currency: "ERC"

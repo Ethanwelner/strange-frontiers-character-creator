@@ -1,0 +1,10 @@
+id: field-sample-kit
+name: "Field Sample Kit"
+status: draft
+plane: earth
+summary: "Sealed vials, swabs, sample bags and a portable cold box."
+tags: [science, exploration]
+type: equipment
+category: gear
+value: 400
+currency: "ERC"

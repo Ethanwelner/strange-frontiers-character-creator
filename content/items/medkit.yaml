@@ -1,0 +1,11 @@
+id: medkit
+name: "Medkit"
+status: draft
+plane: earth
+summary: "A modern trauma kit: dressings, tourniquets, injectors and a diagnostic scanner."
+tags: [medical, electronic]
+type: equipment
+category: gear
+uses: "uses 10: per treatment"
+value: 250
+currency: "ERC"

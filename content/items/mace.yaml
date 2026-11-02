@@ -1,0 +1,11 @@
+id: mace
+name: "Mace"
+status: draft
+plane: any
+summary: "A heavy flanged head on a short haft, made to crush through armor."
+tags: [melee, blunt]
+type: weapon
+category: weapon
+damageTypes: ["Blunt"]
+value: 250
+currency: "ERC"

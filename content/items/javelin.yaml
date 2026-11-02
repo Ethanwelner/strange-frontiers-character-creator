@@ -1,0 +1,12 @@
+id: javelin
+name: "Javelin"
+status: draft
+plane: any
+summary: "A light spear made for throwing."
+tags: [ranged, thrown]
+type: weapon
+category: weapon
+damageTypes: ["Piercing"]
+uses: "uses 1: when thrown, until recovered"
+value: 50
+currency: "ERC"

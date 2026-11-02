@@ -1,0 +1,11 @@
+id: night-vision-goggles
+name: "Night Vision Goggles"
+status: draft
+plane: earth
+summary: "Goggles that let the wearer see in near darkness."
+tags: [optics, electronic, military]
+type: wearable
+category: gear
+slot: "Eyewear"
+value: 3000
+currency: "ERC"

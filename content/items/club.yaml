@@ -1,0 +1,11 @@
+id: club
+name: "Club"
+status: draft
+plane: any
+summary: "A stout length of wood, or anything else heavy enough to swing."
+tags: [melee, blunt, improvised]
+type: weapon
+category: weapon
+damageTypes: ["Blunt"]
+value: 20
+currency: "ERC"

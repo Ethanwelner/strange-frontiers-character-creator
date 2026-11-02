@@ -1,0 +1,10 @@
+id: disguise-kit
+name: "Disguise Kit"
+status: draft
+plane: any
+summary: "Makeup, wigs, false hair and a few changes of clothes."
+tags: [crime, social]
+type: equipment
+category: gear
+value: 150
+currency: "ERC"

@@ -1,0 +1,11 @@
+id: pistol-magazine
+name: "Pistol Magazine"
+status: draft
+plane: earth
+summary: "A loaded magazine for a pistol."
+tags: [ammunition, firearm]
+type: misc
+category: consumable
+uses: "uses 1: per reload"
+value: 30
+currency: "ERC"

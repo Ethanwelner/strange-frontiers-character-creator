@@ -1,0 +1,11 @@
+id: shotgun-shells
+name: "Shotgun Shells"
+status: draft
+plane: earth
+summary: "A box of shotgun shells."
+tags: [ammunition, firearm]
+type: misc
+category: consumable
+uses: "uses 25: when fired"
+value: 25
+currency: "ERC"

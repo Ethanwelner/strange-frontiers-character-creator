@@ -1,0 +1,10 @@
+id: surgical-kit
+name: "Surgical Kit"
+status: draft
+plane: any
+summary: "Scalpels, clamps, sutures and the rest of a surgeon’s tools."
+tags: [medical]
+type: equipment
+category: gear
+value: 600
+currency: "ERC"

@@ -1,0 +1,12 @@
+id: chainmail
+name: "Chainmail"
+status: draft
+plane: any
+summary: "A shirt of interlocking iron rings."
+tags: [armor, medium]
+type: wearable
+category: armor
+resistances: "Slashing, Piercing"
+slot: "Body Armor"
+value: 1200
+currency: "ERC"

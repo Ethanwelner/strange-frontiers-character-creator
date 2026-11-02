@@ -1,0 +1,11 @@
+id: war-hammer
+name: "War Hammer"
+status: draft
+plane: any
+summary: "A hammer with a spike on its back, for denting plate or punching through it."
+tags: [melee, blunt]
+type: weapon
+category: weapon
+damageTypes: ["Blunt", "Piercing"]
+value: 300
+currency: "ERC"

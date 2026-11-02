@@ -1,0 +1,11 @@
+id: stun-baton
+name: "Stun Baton"
+status: draft
+plane: earth
+summary: "A police baton that delivers a disabling electric shock."
+tags: [melee, blunt, nonlethal, police]
+type: weapon
+category: weapon
+damageTypes: ["Blunt", "Electrical"]
+value: 150
+currency: "ERC"

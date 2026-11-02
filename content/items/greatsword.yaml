@@ -1,0 +1,11 @@
+id: greatsword
+name: "Greatsword"
+status: draft
+plane: any
+summary: "A heavy two-handed sword built to cleave through armor and ranks."
+tags: [melee, blade, sword, two-handed]
+type: weapon
+category: weapon
+damageTypes: ["Slashing"]
+value: 1000
+currency: "ERC"

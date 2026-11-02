@@ -1,0 +1,10 @@
+id: pack-animal
+name: "Pack Animal"
+status: draft
+plane: any
+summary: "A sturdy animal for carrying loads or pulling a cart."
+tags: [animal, travel, cargo]
+type: animal
+category: other
+value: 2500
+currency: "ERC"

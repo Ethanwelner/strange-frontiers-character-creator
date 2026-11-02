@@ -1,0 +1,10 @@
+id: wagon
+name: "Wagon"
+status: draft
+plane: any
+summary: "A four-wheeled wagon pulled by draft animals. Occupants: 2, plus cargo."
+tags: [vehicle, cargo, travel]
+type: vehicle
+category: other
+value: 3000
+currency: "ERC"

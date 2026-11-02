@@ -1,0 +1,11 @@
+id: luras
+name: "Luras"
+status: draft
+plane: isekai
+region: dreft
+summary: "The currency of Dreft."
+tags: [currency]
+type: misc
+category: currency
+value: 1
+currency: "Luras"

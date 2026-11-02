@@ -1,0 +1,10 @@
+id: flint-and-steel
+name: "Flint and Steel"
+status: draft
+plane: any
+summary: "For striking sparks to start a fire."
+tags: [fire, survival]
+type: equipment
+category: gear
+value: 10
+currency: "ERC"

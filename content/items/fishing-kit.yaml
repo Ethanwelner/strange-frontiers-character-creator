@@ -1,0 +1,10 @@
+id: fishing-kit
+name: "Fishing Kit"
+status: draft
+plane: any
+summary: "Line, hooks and lures."
+tags: [food, survival]
+type: equipment
+category: gear
+value: 40
+currency: "ERC"

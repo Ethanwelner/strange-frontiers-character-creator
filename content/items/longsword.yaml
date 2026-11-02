@@ -1,0 +1,11 @@
+id: longsword
+name: "Longsword"
+status: draft
+plane: any
+summary: "A long straight sword wielded in one or two hands."
+tags: [melee, blade, sword]
+type: weapon
+category: weapon
+damageTypes: ["Slashing", "Piercing"]
+value: 600
+currency: "ERC"

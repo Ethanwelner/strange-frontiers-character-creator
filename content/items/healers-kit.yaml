@@ -1,0 +1,11 @@
+id: healers-kit
+name: "Healer’s Kit"
+status: draft
+plane: any
+summary: "Bandages, salves, splints and needle and thread."
+tags: [medical]
+type: equipment
+category: gear
+uses: "uses 10: per treatment"
+value: 80
+currency: "ERC"

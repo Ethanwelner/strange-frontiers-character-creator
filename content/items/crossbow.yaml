@@ -1,0 +1,11 @@
+id: crossbow
+name: "Crossbow"
+status: draft
+plane: any
+summary: "A bow mounted on a stock, slow to load but easy to aim."
+tags: [ranged, archery, two-handed]
+type: weapon
+category: weapon
+damageTypes: ["Piercing"]
+value: 500
+currency: "ERC"

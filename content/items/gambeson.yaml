@@ -1,0 +1,12 @@
+id: gambeson
+name: "Gambeson"
+status: draft
+plane: any
+summary: "A thick quilted jacket worn alone or under mail."
+tags: [armor, light]
+type: wearable
+category: armor
+resistances: "Blunt, Slashing"
+slot: "Body Armor"
+value: 150
+currency: "ERC"

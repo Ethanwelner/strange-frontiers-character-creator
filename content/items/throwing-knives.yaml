@@ -1,0 +1,12 @@
+id: throwing-knives
+name: "Throwing Knives"
+status: draft
+plane: any
+summary: "A set of balanced knives made for throwing."
+tags: [ranged, thrown, concealable]
+type: weapon
+category: weapon
+damageTypes: ["Piercing"]
+uses: "uses 6: when thrown, until recovered"
+value: 80
+currency: "ERC"

@@ -1,0 +1,11 @@
+id: fuel-canister
+name: "Fuel Canister"
+status: draft
+plane: earth
+summary: "A refill tank for a flamethrower."
+tags: [ammunition, fire]
+type: misc
+category: consumable
+uses: "uses 1: per refill"
+value: 150
+currency: "ERC"

@@ -8,7 +8,7 @@ const BONUS_TOTAL = 9;
 const MAX_TOTAL = 135;
 
 const { content, errors } = loadContent();
-const { kinds, packages, traits } = content;
+const { kinds, packages, traits, items } = content;
 const warnings: string[] = [];
 
 // A Kind's free bonus points count toward its bonus total. A Kind that's
@@ -45,7 +45,12 @@ for (const trait of traits) {
   }
 }
 
-console.log(`${kinds.length} Kinds, ${packages.length} packages, ${traits.length} Traits`);
+// An item's value needs a currency to be read in.
+for (const item of items) {
+  if (item.value !== undefined && !item.currency) errors.push(`items/${item.id}: value ${item.value} has no currency`);
+}
+
+console.log(`${kinds.length} Kinds, ${packages.length} packages, ${traits.length} Traits, ${items.length} items`);
 for (const w of warnings) console.log(`warning: ${w}`);
 for (const e of errors) console.log(`error: ${e}`);
 if (errors.length) process.exit(1);

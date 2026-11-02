@@ -8,7 +8,7 @@ export const INSTRUCTIONS = `You build player characters for Strange Frontiers, 
 
 How you work:
 1. Read the description for the concept: who this person is, what they're good at, where they come from. If the player names a Kind, use it. If they don't, choose the Kind that fits best.
-2. Choose from the content index below, which lists every Kind, package and Trait by id with its stats, grants and tags. It has what you need, so go straight to submit_build. The lookup tools (get_kind, get_package, list_packages, search_traits) are there only if something in the index is unclear.
+2. Choose from the content index below, which lists every Kind, package, Trait and item by id with its stats, grants and tags. It has what you need, so go straight to submit_build. The lookup tools (get_kind, get_package, list_packages, search_traits) are there only if something in the index is unclear.
 3. Call submit_build with the concept, a one- or two-sentence summary of the character for the player, and a reason for each choice. If the engine sends problems back, fix them and submit again.
 
 The concept:
@@ -17,14 +17,15 @@ The concept:
 - focus: the two to four stats that matter most for this character (its priority stats), most important first. The engine puts most of each level's stat points into these, and spreads a few into the other stats as the level rises, so a high-level character isn't helpless outside their specialty.
 - magic: optional. How many levels go to the Magic core stat. Only a character holding a Trait that opens Magic can level it: Magic Access, which every Kind of Dreft but the Orcoid Tatot gets through its Magical Heritage. Each Magic level gives 3 MP (Mana Points) but no focus points, so it buys no Traits: give a spellcaster or a magical character one or two, and leave it at 0 for anyone else.
 - traits: Trait ids that fit the character, best fit first. List 12 to 20, more than the picks will cover; the engine buys them in order and skips any the build can't take, so put the ones that matter most at the top. A Trait fits when it belongs in this character's life: what the description says or implies, and their Kind, home, work and past. Background picks only buy Traits from the packages' Background Traits (in the index), so include the ones there that fit. Picks left over are banked for later, so don't pad the list with Traits that don't belong. Don't list Traits the packages already grant (their Grants in the index). List a ranked Trait twice only if rank 2 matters.
+- items: item ids the character starts with, from the Items in the index, most needed first. Pick what this person would really carry: a weapon and armor if they fight (matching their weapon skills), the kits and tools of their trade and Traits, travel or survival gear if they live on the road, ammunition for a bow or gun. About 3 to 8; a scholar may carry little, a soldier more. Only items from the character's own plane (their origin's: Earth or Isekai) or any plane: a character from Dreft doesn't start with an Earth pistol. Money isn't handed out yet, so leave currency out. List an item twice to carry two.
 - choices: optional. Package and Trait choices with a pool, like languages (an Additional Language asks which one), are filled in for you; answer one only to pick a specific Trait from its pool, naming the package or the Trait that asks. Contacts and Places (like which seas Seafaring covers) are written in by the player, so never answer a Contact or Place choice.
 
 Rules you must follow:
-- Use only ids that exist in the content. Never invent a Kind, package or Trait. Unknown ids are rejected in code.
+- Use only ids that exist in the content. Never invent a Kind, package, Trait or item. Unknown ids are rejected in code.
 - Don't work out stat points or pick counts yourself. That's the engine's job.
 - A Trait on a list (marked "magic list" in the index) can only be taken by a character holding a Trait that opens that list (marked "opens the magic list", like Magic Access, which most Kinds of Dreft get through their Magical Heritage; a Trait that grants an opener counts too). Don't list them for anyone else.
 
-Reasons: give one short line per choice, in plain words a player would use, tied to what they asked for. Targets are kind, origin, profession, past, levels (one line on why the priority stats), and each listed Trait's id.
+Reasons: give one short line per choice, in plain words a player would use, tied to what they asked for. Targets are kind, origin, profession, past, levels (one line on why the priority stats), each listed Trait's id, and item:<id> for each item.
 
 Most content is early and its effect text is placeholder, so judge fit by names, summaries and tags.`;
 
@@ -75,6 +76,19 @@ export function contentIndex(content: Content): string {
       t.choices.length ? `choices ${t.choices.map((c) => `${c.choose} from ${c.from}${t.ranked && c.perRank !== false ? " per rank" : ""}`).join(", ")}` : "",
     ].filter(Boolean);
     lines.push(`- ${t.id}: ${t.name} [${[t.category, ...flags].join("; ")}] ${t.summary} Tags: ${t.tags.join(", ") || "none"}.`);
+  }
+  lines.push("", "## Items", "Format: id: name [category; plane; slot; damage or resistances] summary. Any-plane items suit everyone.");
+  for (const i of content.items) {
+    if (i.category === "currency") continue;
+    const flags = [
+      i.category,
+      i.plane,
+      i.slot ? `slot ${i.slot}` : "",
+      i.damageTypes.length ? `damage ${i.damageTypes.join(", ")}` : "",
+      i.resistances ? `resists ${i.resistances}` : "",
+      i.uses ?? "",
+    ].filter(Boolean);
+    lines.push(`- ${i.id}: ${i.name} [${flags.join("; ")}] ${i.summary} Tags: ${i.tags.join(", ") || "none"}.`);
   }
   return lines.join("\n");
 }

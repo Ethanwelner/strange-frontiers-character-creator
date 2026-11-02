@@ -1,0 +1,10 @@
+id: bedroll
+name: "Bedroll"
+status: draft
+plane: any
+summary: "A rolled blanket and pad for sleeping rough."
+tags: [travel, camping]
+type: equipment
+category: gear
+value: 60
+currency: "ERC"

@@ -2,12 +2,13 @@
 // access, so the browser build can use it with files bundled at build time.
 import { parse } from "yaml";
 import type { ZodType } from "zod";
-import { BackgroundPackage, Kind, Trait } from "../schema/index.js";
+import { BackgroundPackage, Item, Kind, Trait } from "../schema/index.js";
 
 export interface Content {
   kinds: Kind[];
   packages: BackgroundPackage[];
   traits: Trait[];
+  items: Item[];
 }
 
 export interface LoadResult {
@@ -51,5 +52,6 @@ export function parseContent(files: ContentFile[]): LoadResult {
   const kinds = load(files, "kinds", Kind, errors);
   const packages = ["origins", "professions", "pasts"].flatMap((f) => load(files, f, BackgroundPackage, errors));
   const traits = load(files, "traits", Trait, errors);
-  return { content: { kinds, packages, traits }, errors };
+  const items = load(files, "items", Item, errors);
+  return { content: { kinds, packages, traits, items }, errors };
 }

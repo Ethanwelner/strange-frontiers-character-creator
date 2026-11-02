@@ -1,0 +1,10 @@
+id: renminbi
+name: "Rénmínbì (RMB)"
+status: draft
+plane: earth
+region: chinese-empire
+summary: "The currency of the Empire of China."
+tags: [currency]
+type: misc
+category: currency
+notes: "Exchange rate to ERC not set yet."

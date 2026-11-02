@@ -1,0 +1,11 @@
+id: anti-radiation-pills
+name: "Anti-Radiation Pills"
+status: draft
+plane: earth
+summary: "Pills that limit the harm of radiation exposure."
+tags: [medical, radiation]
+type: misc
+category: consumable
+uses: "uses 4: when taken"
+value: 30
+currency: "ERC"

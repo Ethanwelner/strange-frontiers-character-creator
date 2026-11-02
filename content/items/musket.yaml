@@ -1,0 +1,11 @@
+id: musket
+name: "Musket"
+status: draft
+plane: any
+summary: "A muzzle-loading smoothbore gun, loud, slow and devastating."
+tags: [ranged, firearm, two-handed]
+type: weapon
+category: weapon
+damageTypes: ["Piercing"]
+value: 1500
+currency: "ERC"

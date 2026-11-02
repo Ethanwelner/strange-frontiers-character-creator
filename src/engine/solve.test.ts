@@ -261,3 +261,27 @@ describe("rank stats among the priority stats", () => {
     expect(out.build.traits).toContainEqual({ trait: "dreftian-law", rank: 2, pick: expect.any(String) });
   });
 });
+
+describe("solveItems", () => {
+  it("packs the listed items, stacking repeats and equipping weapons and the first item for each slot", () => {
+    const s = solve({ ...hunter, items: ["longbow", "arrows", "arrows", "leather-armor", "gambeson", { item: "trail-rations", qty: 3 }] });
+    expect(s.build.items).toEqual([
+      { item: "longbow", name: "Longbow", qty: 1, category: "weapon", equipped: true },
+      { item: "arrows", name: "Arrows", qty: 2, category: "consumable", equipped: false },
+      { item: "leather-armor", name: "Leather Armor", qty: 1, category: "armor", equipped: true },
+      { item: "gambeson", name: "Gambeson", qty: 1, category: "armor", equipped: false },
+      { item: "trail-rations", name: "Trail Rations", qty: 3, category: "consumable", equipped: false },
+    ]);
+    expect(s.skippedItems).toEqual([]);
+  });
+
+  it("skips unknown items, money and items from the other plane", () => {
+    const s = solve({ ...hunter, items: ["dagger", "pistol", "luras", "lightsaber"] });
+    expect(s.build.items.map((i) => i.item)).toEqual(["dagger"]);
+    expect(s.skippedItems).toEqual([
+      { item: "pistol", reason: "Pistol is from Earth, and this character isn't" },
+      { item: "luras", reason: "money isn't handed out yet" },
+      { item: "lightsaber", reason: 'Item "lightsaber" doesn\'t exist' },
+    ]);
+  });
+});

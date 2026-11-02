@@ -191,3 +191,29 @@ export const Trait = BaseEntry.extend({
   grants: z.array(TraitGrant).default([]),
 });
 export type Trait = z.infer<typeof Trait>;
+
+// The creator's rough item categories, as the sheet's Items column sorts them.
+export const ITEM_CATEGORIES = ["weapon", "armor", "gear", "consumable", "currency", "other"] as const;
+
+// The site's Items page categories.
+export const ItemType = z.enum(["weapon", "wearable", "equipment", "structure", "vehicle", "animal", "misc"]);
+
+// A stock item, from the Sheet's Items tab. No item needs a Trait: a related
+// Trait only removes the penalty for unfamiliarity. Combat values aren't
+// written yet, so damage and resistances are types only.
+export const Item = BaseEntry.extend({
+  type: ItemType,
+  category: z.enum(ITEM_CATEGORIES),
+  damageTypes: z.array(z.string()).default([]),
+  // What it resists, as the Sheet words it, like "Slashing, Piercing (head)".
+  resistances: z.string().optional(),
+  // Limited uses, like "uses 1: when thrown".
+  uses: z.string().optional(),
+  // The slot only one item can fill at a time, like Body Armor or Headwear.
+  slot: z.string().optional(),
+  // One value, in the currency of the item's plane of origin.
+  value: z.number().int().min(0).optional(),
+  currency: z.string().optional(),
+  notes: z.string().optional(),
+});
+export type Item = z.infer<typeof Item>;

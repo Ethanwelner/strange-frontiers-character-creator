@@ -1,0 +1,11 @@
+id: rifle-magazine
+name: "Rifle Magazine"
+status: draft
+plane: earth
+summary: "A loaded magazine for a rifle."
+tags: [ammunition, firearm]
+type: misc
+category: consumable
+uses: "uses 1: per reload"
+value: 40
+currency: "ERC"

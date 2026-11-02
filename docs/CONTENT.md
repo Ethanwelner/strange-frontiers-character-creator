@@ -10,11 +10,14 @@ content/
   professions/<region>/  Profession packages
   pasts/<region>/        Past packages
   traits/<category>/     Traits, one per file
+  items/                 Stock items, from the Sheet's Items tab
 ```
+
+Stock items are what the AI builder packs for a character (from their own plane or any plane, never money until wealth has rules), and what the sheet's Items column suggests while typing a name. A stock item on the sheet shows its description and details; players can still write in anything else.
 
 ## Steps
 
-1. Draft it as a row on its tab of the "Strange frontiers traits" Google Sheet (Kinds, Origins, Professions, Pasts, or the Trait's category).
+1. Draft it as a row on its tab of the "Strange frontiers traits" Google Sheet (Kinds, Origins, Professions, Pasts, Items, or the Trait's category).
 2. Copy the closest existing file, rename it to the entry's `id` (`kebab-case.yaml`), and fill it in.
 3. Set `status`: `placeholder` (names and numbers will change), `draft` (mostly settled) or `final`.
 4. Run `npm run validate` and fix what it reports.
@@ -42,6 +45,9 @@ Every tab's Description is `summary`, Tags is `tags`, and Notes is for anything 
 | Traits: Ranked, Conveyed | `ranked`, `conveyed` |
 | Traits: Effect | `effect` |
 | Traits: Stat Requirements | stats go in `minStats` (focus or core: "Power 3", "Physical 5"), a Trait's name in `prerequisites`, "Any Pilot skill" in `prerequisiteTags: [pilot]`, anything else in `rpRequirement` |
+| Items: Category, Creator Category | `type` (the site's Items page categories, lowercase: weapon, wearable, equipment, structure, vehicle, animal, misc) and `category` (the creator's: weapon, armor, gear, consumable, currency, other) |
+| Items: Damage Types, Resistances, Uses, Exclusive | `damageTypes` (a list), `resistances`, `uses` and `slot`, as the Sheet words them. Combat values aren't written yet, so these are types only |
+| Items: Value, Currency | `value` and `currency`: one value per item, in the currency of its plane of origin (Luras for Isekai, ERC for Earth and Any) |
 | Traits: Notes | "Mastery" is `mastery`, "Background-only" is `background`, "Type: X" is `types`, "Temporary (…)" is `temporary`, "Choice: which seas" is a `place` choice (below) |
 
 ## Fields every entry has

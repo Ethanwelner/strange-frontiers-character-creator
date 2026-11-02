@@ -1,0 +1,10 @@
+id: masonry-tools
+name: "Masonry Tools"
+status: draft
+plane: any
+summary: "Chisels, mallets, trowels and a level."
+tags: [craft, tools]
+type: equipment
+category: gear
+value: 200
+currency: "ERC"

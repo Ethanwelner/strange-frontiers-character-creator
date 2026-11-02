@@ -1,0 +1,11 @@
+id: sling
+name: "Sling"
+status: draft
+plane: any
+summary: "A strap of leather or cord that hurls stones."
+tags: [ranged, cheap]
+type: weapon
+category: weapon
+damageTypes: ["Blunt"]
+value: 15
+currency: "ERC"

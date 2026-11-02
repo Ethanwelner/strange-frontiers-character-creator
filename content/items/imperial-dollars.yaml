@@ -1,0 +1,10 @@
+id: imperial-dollars
+name: "Imperial Dollars (ID)"
+status: draft
+plane: earth
+region: american-empire
+summary: "The currency of the American Empire, also used by the Union of Texas and the Free American States."
+tags: [currency]
+type: misc
+category: currency
+notes: "Exchange rate to ERC not set yet."
