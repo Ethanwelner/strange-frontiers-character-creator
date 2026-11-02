@@ -143,7 +143,7 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom }:
         <p className="hint">
           {typeof tab === "string"
             ? PICK_HELP[tab]
-            : `${title(tab.list)} Traits, open to this character through ${openersOf(tab.list)}. Background Traits here take background picks; the rest take universal picks.`}
+            : `${title(tab.list)} Traits, open to this character through ${openersOf(tab.list)}. Background Traits here take Background picks; the rest take Universal picks.`}
         </p>
 
         <div className="filters">
@@ -159,7 +159,7 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom }:
         </div>
 
         {options.length === 0 && tab === "background" && (
-          <p className="empty">This character's Background Trait list is empty. It grows from package background Traits and the Kind's Trait access.</p>
+          <p className="empty">This character's Background Trait list is empty. It grows from package Background Traits and the Kind's Trait access.</p>
         )}
         {options.length > 0 && shown.length === 0 && (
           <p className="empty">{hideRejected ? "No available Traits match. Turn off Hide unavailable to see why the rest are out." : "No Traits match."}</p>

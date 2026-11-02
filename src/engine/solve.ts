@@ -374,7 +374,7 @@ export function solveConcept(input: unknown, content: Content, campaign: Campaig
     // Background picks are the narrower kind, so spend them where they fit.
     const pick: PickKind | undefined =
       onList && background > 0 ? "background" : !t.background && universal > 0 ? "universal" : undefined;
-    if (!pick) return t.background ? `${t.name} needs a background pick, and none fit` : "no universal picks left";
+    if (!pick) return t.background ? `${t.name} needs a Background pick, and none fit` : "no Universal picks left";
     const before = open;
     const next = answerTraitChoices({ ...build, traits: [...build.traits, { trait: id, rank: (held?.rank ?? 0) + 1, pick }] });
     const verdict = check(next);

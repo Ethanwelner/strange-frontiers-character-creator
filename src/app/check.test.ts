@@ -123,7 +123,7 @@ describe("traitOptions", () => {
     };
     const after = traitOptions(spent, bundled, campaign, "background")!;
     expect(after.length).toBeGreaterThan(0);
-    for (const o of after) expect(o.reasons.join()).toMatch(/spends 4 background picks/);
+    for (const o of after) expect(o.reasons.join()).toMatch(/spends 4 Background picks/);
   });
 });
 
