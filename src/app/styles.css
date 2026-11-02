@@ -2015,6 +2015,7 @@
      the Knowledges and the Conditions and Items */
   @media (min-width: 1200px) {
     :is(.sheet-head, .tools-character):has(> .sheet-description) {
+      container: sheet-head / inline-size;
       display: grid;
       grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 4fr);
       gap: 24px 40px;
@@ -2032,6 +2033,20 @@
 
     .sheet-head-who + .sheet-description {
       grid-column: 2 / 4;
+    }
+
+    /* Where the first column is too narrow for the name beside the portrait
+       (256px, the 2rem gap and 10rem: 448px, so a head under 1156px), the
+       portrait and name take the first two columns and the description
+       just the third */
+    @container sheet-head (width < 1156px) {
+      .sheet-head-who {
+        grid-column: 1 / 3;
+      }
+
+      .sheet-head-who + .sheet-description {
+        grid-column: 3;
+      }
     }
   }
 
