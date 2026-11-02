@@ -1,5 +1,5 @@
 import { useId, useState } from "react";
-import { Chip, title } from "./ui.js";
+import { Chip, LorePopup, title } from "./ui.js";
 import { content, itemById } from "../content.js";
 import { ITEM_CATEGORIES, itemDetails, stockItemNamed, withItem, type Item, type ItemCategory } from "../items.js";
 
@@ -14,6 +14,8 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
   const [name, setName] = useState("");
   const [qty, setQty] = useState("1");
   const [category, setCategory] = useState<ItemCategory>("gear");
+  // Add item's popup, open or not
+  const [adding, setAdding] = useState(false);
   const listId = useId();
   // Items whose notes field the player opened or closed with the note
   // button; the rest show it only when they have notes.
@@ -52,48 +54,60 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
     );
     setName("");
     setQty("1");
+    setAdding(false);
   };
 
   return (
     <section className="tools-items">
-      <h4 className="rule">Items</h4>
-
-      <form
-        className="tools-add"
-        onSubmit={(e) => {
-          e.preventDefault();
-          add();
-        }}
-      >
-        <input
-          type="text"
-          placeholder="Item name"
-          aria-label="Item name"
-          list={listId}
-          value={name}
-          onChange={(e) => {
-            setName(e.target.value);
-            const stock = stockItemNamed(content.items, e.target.value);
-            if (stock) setCategory(stock.category);
-          }}
-        />
-        <datalist id={listId}>
-          {STOCK.map((i) => (
-            <option key={i.id} value={i.name} />
-          ))}
-        </datalist>
-        <input type="number" min={1} aria-label="Count" className="tools-qty" value={qty} onChange={(e) => setQty(e.target.value)} />
-        <select aria-label="Category" value={category} onChange={(e) => setCategory(e.target.value as ItemCategory)}>
-          {ITEM_CATEGORIES.map((c) => (
-            <option key={c} value={c}>
-              {title(c)}
-            </option>
-          ))}
-        </select>
-        <button type="submit" disabled={!name.trim()}>
-          Add
+      {/* Add item at the right end of the title's line, opening the add form in a popup */}
+      <div className="sheet-section-head">
+        <h4 className="rule">Items</h4>
+        <button type="button" className="sheet-section-add" onClick={() => setAdding(true)}>
+          Add item
         </button>
-      </form>
+      </div>
+
+      {adding && (
+        <LorePopup label="Add an item" onClose={() => setAdding(false)} className="sheet-add-popup">
+          <h3 className="subhead">Add an item</h3>
+          <form
+            className="tools-add"
+            onSubmit={(e) => {
+              e.preventDefault();
+              add();
+            }}
+          >
+            <input
+              type="text"
+              placeholder="Item name"
+              aria-label="Item name"
+              list={listId}
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value);
+                const stock = stockItemNamed(content.items, e.target.value);
+                if (stock) setCategory(stock.category);
+              }}
+            />
+            <datalist id={listId}>
+              {STOCK.map((i) => (
+                <option key={i.id} value={i.name} />
+              ))}
+            </datalist>
+            <input type="number" min={1} aria-label="Count" className="tools-qty" value={qty} onChange={(e) => setQty(e.target.value)} />
+            <select aria-label="Category" value={category} onChange={(e) => setCategory(e.target.value as ItemCategory)}>
+              {ITEM_CATEGORIES.map((c) => (
+                <option key={c} value={c}>
+                  {title(c)}
+                </option>
+              ))}
+            </select>
+            <button type="submit" disabled={!name.trim()}>
+              Add
+            </button>
+          </form>
+        </LorePopup>
+      )}
 
       {items.length === 0 ? (
         <p className="empty">No Items yet.</p>

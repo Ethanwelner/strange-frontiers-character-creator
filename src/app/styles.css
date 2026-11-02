@@ -2563,6 +2563,48 @@
       }
     }
   }
+  /* Items' and Conditions' titles, with Add item or Add Condition at the
+     right end of the line, a small green button like Traits available */
+  .sheet-section-head {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 0 0 16px;
+
+    .rule {
+      flex: 1;
+      margin: 0;
+    }
+  }
+
+  button.sheet-section-add {
+    flex: none;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.875rem;
+    background: var(--frontiers-green);
+    color: var(--portfolio-black);
+    border: 0;
+
+    &:hover,
+    &:focus-visible {
+      background-color: color-mix(in srgb, var(--frontiers-green) 75%, var(--portfolio-white));
+      color: var(--portfolio-black);
+    }
+  }
+
+  /* The add form on its own in a small popup, its title over it */
+  .sheet-add-popup .lore-modal-panel {
+    max-width: 520px;
+
+    .subhead {
+      margin: 0 0 24px;
+    }
+
+    .tools-add {
+      margin: 0;
+    }
+  }
+
   /* The add row (Items' and Player Tools' Add a Condition), item notes, and
      the count */
   .tools-add {
