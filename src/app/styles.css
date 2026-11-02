@@ -962,6 +962,7 @@
   .tech-fields-light {
     background: var(--panel-box);
     border-color: rgb(255 255 255 / 22%);
+    box-shadow: 0 4px 10px #00000030;
   }
 
   .tech-fields.step-box {
@@ -1575,6 +1576,7 @@
     background: var(--panel);
     border: 1px solid rgb(255 255 255 / 15%);
     border-radius: 16px;
+    box-shadow: 0 4px 10px #00000030;
     max-height: calc(100vh - 2rem);
     overflow-y: auto;
 
