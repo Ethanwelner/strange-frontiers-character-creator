@@ -2518,11 +2518,11 @@
     gap: 24px 48px;
   }
 
-  /* Under it, the Knowledges' box to the left of the Traits', stacked on
-     narrow screens */
+  /* Under it, the Knowledges' box to the left of the Traits', only as wide
+     as its longest name (up to 20rem), stacked on narrow screens */
   .sheet-lower {
     display: grid;
-    grid-template-columns: minmax(12rem, 1fr) minmax(0, 3fr);
+    grid-template-columns: fit-content(20rem) minmax(0, 1fr);
     align-items: start;
     gap: 24px;
 
