@@ -263,6 +263,12 @@
     grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
     /* 36px between the sheet and the d20 and chat column */
     column-gap: 36px;
+
+    /* On smaller screens, before the column drops under the sheet at 991px,
+       it narrows to 256px so the sheet keeps its room */
+    @media (min-width: 992px) and (max-width: 1399px) {
+      grid-template-columns: minmax(0, 1fr) 256px;
+    }
   }
 
   /* Before a character is in, the same column as the site's Strange
