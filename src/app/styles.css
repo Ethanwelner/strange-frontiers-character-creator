@@ -2525,33 +2525,41 @@
     }
   }
 
-  /* The stats', Conditions' and Items' boxes, as tall as each other, by
-     the sheet's own width (so Player Tools' chat column counts): the stats
-     only as wide as they need, then the Conditions and Items in 3 and 4
-     parts of the rest in a sheet 1400px wide; the stats and Conditions over
-     the Items, which lay their cards side by side, from 880px; stacked
-     below that */
+  /* The stats', Conditions' and Items' boxes, as tall as each other on a
+     line. The stats take only the width they need, and the Conditions sit
+     beside them whenever 13rem is left, taking the rest; otherwise each
+     fills its own line. The Items take a line of their own (laying their
+     cards side by side) until the sheet is 1400px wide, then share the
+     stats' line with the Conditions, 4 parts to 3. By the sheet's own
+     width, so Player Tools' chat column counts. */
   .sheet-row {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
+    display: flex;
+    flex-wrap: wrap;
     align-items: stretch;
     gap: 24px;
 
-    &:has(> .sheet-items) {
-      @container sheet (width >= 880px) {
-        grid-template-columns: max-content minmax(0, 1fr);
+    > * {
+      flex: 1 1 100%;
+      min-width: 0;
+    }
 
-        > .sheet-items {
-          grid-column: 1 / -1;
-        }
+    /* Its own width, or the whole line when nothing fits beside it (the
+       Conditions' far larger grow keeps the extra off it otherwise) */
+    > .sheet-body {
+      flex: 1 1 auto;
+    }
+
+    > .sheet-conditions {
+      flex: 1000 1 13rem;
+    }
+
+    @container sheet (width >= 1400px) {
+      > .sheet-conditions {
+        flex: 3000 1 0;
       }
 
-      @container sheet (width >= 1400px) {
-        grid-template-columns: max-content minmax(0, 3fr) minmax(0, 4fr);
-
-        > .sheet-items {
-          grid-column: auto;
-        }
+      > .sheet-items {
+        flex: 4000 1 0;
       }
     }
   }
