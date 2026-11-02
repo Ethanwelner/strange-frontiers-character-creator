@@ -2523,9 +2523,10 @@
     }
   }
 
-  /* The stats', Conditions' and Items' boxes, as tall as each other: in
-     the head's columns (5, 3 and 4 parts) from 1200px, the stats and
-     Conditions over the Items from 768px, and stacked below that */
+  /* The stats', Conditions' and Items' boxes, as tall as each other: the
+     stats only as wide as they need, then the Conditions and Items in 3
+     and 4 parts of the rest from 1200px; the stats and Conditions over the
+     Items from 768px; stacked below that */
   .sheet-row {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -2534,7 +2535,7 @@
 
     &:has(> .sheet-items) {
       @media (min-width: 768px) {
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-columns: max-content minmax(0, 1fr);
 
         > .sheet-items {
           grid-column: 1 / -1;
@@ -2542,7 +2543,7 @@
       }
 
       @media (min-width: 1200px) {
-        grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 4fr);
+        grid-template-columns: max-content minmax(0, 3fr) minmax(0, 4fr);
 
         > .sheet-items {
           grid-column: auto;
@@ -2742,6 +2743,12 @@
     display: flex;
     flex-direction: column;
     gap: 24px;
+
+    /* What's left to place wraps to the stat lines' width instead of
+       widening the stats' box (sized to its content, .sheet-row) */
+    .pool-summary {
+      contain: inline-size;
+    }
   }
 
   .sheet-group {
