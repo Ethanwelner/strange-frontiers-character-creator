@@ -823,7 +823,7 @@ describe("rule 13: Magic", () => {
   it("rejects Magic for a character without the Trait that opens it", () => {
     const humanMage = { ...human, level: 2, levels: [...human.levels!, { group: "magic" as const, points: {} }] };
     expect(check(humanMage, content, { startingLevel: 2 }).errors).toEqual([
-      expect.objectContaining({ code: "core-access", message: "1 level goes to Magic, which this character can't level without Magic Access", path: "levels" }),
+      expect.objectContaining({ code: "core-access", message: "1 Level goes to Magic, which this character can't Level without Magic Access", path: "levels" }),
     ]);
   });
 
@@ -861,7 +861,7 @@ describe("rule 13: Magic", () => {
   it("rejects focus points on a Magic level", () => {
     const r = check({ ...mage, levels: [...isek.levels!, { group: "magic", points: { logic: 1 } }, { group: "magic", points: {} }] }, content, L3);
     expect(r.errors).toEqual([
-      expect.objectContaining({ code: "allocation", message: "Level 2 puts points in logic, which isn't a magic stat; magic has no focus stats" }),
+      expect.objectContaining({ code: "allocation", message: "Level 2 puts points in logic, which isn't a magic Stat; magic has no focus Stats" }),
     ]);
   });
 });

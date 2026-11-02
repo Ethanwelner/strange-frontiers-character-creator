@@ -91,7 +91,7 @@ export function StatsStep({ draft, onChange, floor }: Props) {
     return (
       <section>
         <StepHeader title="Stats" />
-        <p className="empty">Choose a Kind first; it adds a bonus to each stat and sets how far each can go.</p>
+        <p className="empty">Choose a Kind first; it adds a bonus to each Stat and sets how far each can go.</p>
       </section>
     );
   }
@@ -109,14 +109,14 @@ export function StatsStep({ draft, onChange, floor }: Props) {
           <ul className="pool-summary pool-left">
             {coreLeft > 0 && (
               <li>
-                <span className="num">{coreLeft}</span> core {coreLeft === 1 ? "point" : "points"} to place: level a core stat with the + beside its number.
+                <span className="num">{coreLeft}</span> core {coreLeft === 1 ? "point" : "points"} to place: Level a core Stat with the + beside its number.
               </li>
             )}
             {FOCUS_GROUPS.map((g) => {
               const left = draft.core[g] * POINTS_PER_LEVEL - spentIn(g);
               return left > 0 ? (
                 <li key={g}>
-                  <span className="num">{left}</span> {title(g)} focus {left === 1 ? "point" : "points"} to spend with the + beside each {title(g)} stat.
+                  <span className="num">{left}</span> {title(g)} focus {left === 1 ? "point" : "points"} to spend with the + beside each {title(g)} Stat.
                 </li>
               ) : null;
             })}
@@ -131,7 +131,7 @@ export function StatsStep({ draft, onChange, floor }: Props) {
             })}
             {anyLeft > 0 && (
               <li>
-                <span className="num">{anyLeft}</span> free bonus {anyLeft === 1 ? "point" : "points"} to place with the + beside any stat.
+                <span className="num">{anyLeft}</span> free bonus {anyLeft === 1 ? "point" : "points"} to place with the + beside any Stat.
               </li>
             )}
             {coreLeft <= 0 && FOCUS_GROUPS.every((g) => spentIn(g) >= draft.core[g] * POINTS_PER_LEVEL) && bonus.groups.every((b) => placedIn(b.group) >= b.count) && anyLeft <= 0 && (
@@ -162,7 +162,7 @@ export function StatsStep({ draft, onChange, floor }: Props) {
                   {bonus.any - anyLeft}/{bonus.any}
                 </span>{" "}
                 free bonus points placed
-                <span className="muted"> (spent first, on any stat)</span>
+                <span className="muted"> (spent first, on any Stat)</span>
               </>
             )}
           </p>
@@ -181,7 +181,7 @@ export function StatsStep({ draft, onChange, floor }: Props) {
                 <div key={g} className={`sheet-group${core === 0 && !canLevel ? " locked" : ""}`}>
                   <div className="sheet-group-head">
                     <div className="core-control">
-                      <span className="stat-badge" title="Core stat">
+                      <span className="stat-badge" title="Core Stat">
                         {core + extra}
                       </span>
                       <button aria-label={`Take a core point from ${g}`} onClick={() => takeCore(g)} disabled={core <= coreFloor(g)}>
@@ -190,7 +190,7 @@ export function StatsStep({ draft, onChange, floor }: Props) {
                       <button
                         className="is-plus"
                         aria-label={`Put a core point in ${g}`}
-                        title={coreLeft > 0 && !open.includes(g) ? `This character can't level ${title(g)}` : undefined}
+                        title={coreLeft > 0 && !open.includes(g) ? `This character can't Level ${title(g)}` : undefined}
                         onClick={() => onChange(withCore(draft, g, core + 1))}
                         disabled={!canLevel}
                       >
@@ -209,7 +209,7 @@ export function StatsStep({ draft, onChange, floor }: Props) {
                     </div>
                     <CoreLine bonus={extra} value={core + extra} />
                   </div>
-                  {!open.includes(g) && <p className="hint">This character can't level {title(g)}; take these points back.</p>}
+                  {!open.includes(g) && <p className="hint">This character can't Level {title(g)}; take these points back.</p>}
                 </div>
               );
             }
@@ -225,7 +225,7 @@ export function StatsStep({ draft, onChange, floor }: Props) {
               <div key={g} className={`sheet-group${locked ? " locked" : ""}`}>
                 <div className="sheet-group-head">
                   <div className="core-control">
-                    <span className="stat-badge" title="Core stat">
+                    <span className="stat-badge" title="Core Stat">
                       {core}
                     </span>
                     <button
@@ -239,7 +239,7 @@ export function StatsStep({ draft, onChange, floor }: Props) {
                     <button
                       className="is-plus"
                       aria-label={`Put a core point in ${g}`}
-                      title={coreLeft > 0 && !canLevel ? `${title(g)}'s stats have no room for ${POINTS_PER_LEVEL} more points` : undefined}
+                      title={coreLeft > 0 && !canLevel ? `${title(g)}'s Stats have no room for ${POINTS_PER_LEVEL} more points` : undefined}
                       onClick={() => onChange(withCore(draft, g, core + 1))}
                       disabled={!canLevel}
                     >
@@ -251,7 +251,7 @@ export function StatsStep({ draft, onChange, floor }: Props) {
                     {spent}/{room}
                   </span>
                 </div>
-                {core === 0 && !canLevel && headroom < POINTS_PER_LEVEL && <p className="hint">These stats have no room for points.</p>}
+                {core === 0 && !canLevel && headroom < POINTS_PER_LEVEL && <p className="hint">These Stats have no room for points.</p>}
                 {STAT_GROUPS[g].map((s: StatId) => {
                   const value = valueOf(s);
                   const max = base[s]?.max ?? 0;

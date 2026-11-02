@@ -71,7 +71,7 @@ function poolErrors(errors: Issue[], draft: Draft): Issue[] {
       message:
         spent < room
           ? `Place ${n} more ${name} ${n === 1 ? "point" : "points"}`
-          : `${name} has ${n} more ${n === 1 ? "point" : "points"} than its core stat unlocks`,
+          : `${name} has ${n} more ${n === 1 ? "point" : "points"} than its core Stat unlocks`,
     });
   }
   return out;

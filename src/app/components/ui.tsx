@@ -571,13 +571,13 @@ export function LevelStepper({
     <div className={`level-stepper ${className}`}>
       <span className="field-label">{label}</span>
       <div className="stepper">
-        <button type="button" onClick={() => onChange(Math.max(1, level - 1))} disabled={disabled || level <= 1} aria-label="Lower level">
+        <button type="button" onClick={() => onChange(Math.max(1, level - 1))} disabled={disabled || level <= 1} aria-label="Lower Level">
           <Sign is="minus" />
         </button>
         <span className="num" aria-live="polite">
           {level}
         </span>
-        <button type="button" onClick={() => onChange(Math.min(MAX_LEVEL, level + 1))} disabled={disabled || level >= MAX_LEVEL} aria-label="Raise level">
+        <button type="button" onClick={() => onChange(Math.min(MAX_LEVEL, level + 1))} disabled={disabled || level >= MAX_LEVEL} aria-label="Raise Level">
           <Sign is="plus" />
         </button>
       </div>

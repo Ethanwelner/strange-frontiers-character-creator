@@ -286,14 +286,14 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     let total = 0;
     for (const [stat, points = 0] of Object.entries(lvl.points)) {
       if (!groupStats.includes(stat)) {
-        const which = groupStats.length ? ` (${groupStats.join(", ")})` : `; ${lvl.group} has no focus stats`;
-        error("allocation", `Level ${i + 1} puts points in ${stat}, which isn't a ${lvl.group} stat${which}`, path);
+        const which = groupStats.length ? ` (${groupStats.join(", ")})` : `; ${lvl.group} has no focus Stats`;
+        error("allocation", `Level ${i + 1} puts points in ${stat}, which isn't a ${lvl.group} Stat${which}`, path);
       }
       stats[stat as StatId] += points;
       total += points;
     }
     if (total !== perLevel && perLevel) {
-      error("allocation", `Level ${i + 1} spends ${total} focus points; each level gives exactly ${FOCUS_POINTS_PER_LEVEL}`, path);
+      error("allocation", `Level ${i + 1} spends ${total} focus points; each Level gives exactly ${FOCUS_POINTS_PER_LEVEL}`, path);
     }
   });
 
@@ -423,10 +423,10 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     // Rules 7 and 9: universal picks take any non-background Trait (knowledge
     // included, at creation); background picks come from the Background list.
     if (p.pick === "universal" && t.background) {
-      error("pick-type", `${label(t)} is a Background Trait and needs a background pick`, path);
+      error("pick-type", `${label(t)} is a Background Trait and needs a Background pick`, path);
     }
     if (p.pick === "background" && !backgroundList.has(t.id)) {
-      error("pick-type", `${label(t)} isn't on this character's Background Trait list, so it needs a universal pick`, path);
+      error("pick-type", `${label(t)} isn't on this character's Background Trait list, so it needs a Universal pick`, path);
     }
     if (!byTrait.has(t.id)) byTrait.set(t.id, []);
     byTrait.get(t.id)!.push({ rank: p.rank, index });
@@ -520,7 +520,7 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     const name = g.charAt(0).toUpperCase() + g.slice(1);
     error(
       "core-access",
-      `${coreStats[g]} ${coreStats[g] === 1 ? "level goes" : "levels go"} to ${name}, which this character can't level${openers.length ? ` without ${openers.join(" or ")}` : ""}`,
+      `${coreStats[g]} ${coreStats[g] === 1 ? "Level goes" : "Levels go"} to ${name}, which this character can't Level${openers.length ? ` without ${openers.join(" or ")}` : ""}`,
       "levels",
     );
   }
@@ -569,7 +569,7 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     const p = picks[kindOfPick];
     p.banked = Math.max(0, p.available - p.spent);
     if (p.spent > p.available) {
-      error("picks-overspent", `The build spends ${p.spent} ${kindOfPick} picks but its stats give only ${p.available}`, "traits");
+      error("picks-overspent", `The build spends ${p.spent} ${kindOfPick === "universal" ? "Universal" : "Background"} picks but its Stats give only ${p.available}`, "traits");
     }
   }
 

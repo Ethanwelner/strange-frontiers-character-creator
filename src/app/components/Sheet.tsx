@@ -241,7 +241,7 @@ export function Sheet({
                 {groups.map((g) => (
                   <div key={g} className="sheet-group">
                     <div className="sheet-group-head">
-                      <span className="stat-badge" title="Core stat">
+                      <span className="stat-badge" title="Core Stat">
                         {summary?.coreStats[g] ?? "–"}
                       </span>
                       <h4 className="rule">{title(g)}</h4>

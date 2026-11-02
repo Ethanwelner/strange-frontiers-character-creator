@@ -88,7 +88,7 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
       </form>
 
       {items.length === 0 ? (
-        <p className="empty">No items yet.</p>
+        <p className="empty">No Items yet.</p>
       ) : (
         <ul className="tools-item-list">
           {items.map((item) => {
