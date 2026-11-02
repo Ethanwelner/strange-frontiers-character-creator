@@ -429,35 +429,22 @@
     display: flex;
     flex-direction: column;
     height: calc(100dvh - 32px);
-    /* What slides past the column's top or bottom is hidden */
-    overflow-y: clip;
+    /* The column is the chat box: the darker fill and the rounded border,
+       with the d20 at its top and the conversation under it. What slides
+       past its edges is hidden, rounded corners included. */
+    background-color: #212121;
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    overflow: clip;
   }
 
-  /* The d20, inside the chat box's top: the box's darker fill and the top
-     of its border, joined to the rest of the box (.tools-chat-box) under
-     it. It stays over the conversation, which slides up under it and is
-     cut off at the die's bottom edge. */
+  /* The d20, in the chat box's top. It stays over the conversation, which
+     slides up under it and is cut off at the die's bottom edge. */
   .tools-roller {
     position: relative;
     z-index: 1;
     flex: none;
-    /* Outside its rounded top corners, the panel's color, so the box's
-       square sides sliding up underneath don't show there */
-    background:
-      radial-gradient(circle at 100% 100%, #212121 15.5px, var(--panel) 16px) left top / 16px 16px no-repeat,
-      radial-gradient(circle at 0 100%, #212121 15.5px, var(--panel) 16px) right top / 16px 16px no-repeat,
-      #212121;
-  }
-
-  /* Its border: the top and sides of the box's, rounded at the top */
-  .tools-roller::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border: 1px solid var(--card-border);
-    border-bottom: 0;
-    border-radius: 16px 16px 0 0;
-    pointer-events: none;
+    background-color: #212121;
   }
 
   @supports (animation-timeline: view()) {
@@ -647,7 +634,7 @@
   }
 
   /* The conversation, suggestions and all, then any error and the message
-     box, in a darker box with the room the rest of the column leaves */
+     box, with the room the rest of the column (the box) leaves */
   .tools-chat-box {
     /* Its top padding (the scroll animations add to it) */
     --chat-pad-top: 16px;
@@ -657,11 +644,6 @@
     flex-direction: column;
     gap: 16px;
     padding: var(--chat-pad-top) 16px 16px;
-    background-color: #212121;
-    border: 1px solid var(--card-border);
-    /* Its top edge is the d20's (.tools-roller) */
-    border-top: 0;
-    border-radius: 0 0 16px 16px;
   }
 
   .tools-chat-log {
@@ -959,7 +941,6 @@
     .tools-chat-side {
       position: static;
       height: auto;
-      overflow-y: visible;
     }
 
     .tools-chat {
@@ -991,7 +972,6 @@
     .tools-chat-side {
       position: static;
       height: auto;
-      overflow-y: visible;
     }
 
     .tools-chat-box,

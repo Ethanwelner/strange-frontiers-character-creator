@@ -589,8 +589,24 @@
     --rule: rgb(255 255 255 / 18%);
     /* Card edges fade into the dark box instead of outlining it in light gray */
     --card-border: #5e5e5e;
-    background: var(--panel);
+    position: relative;
+    /* Clear of the site's .white-bg; the gray is the layer below */
+    background: none;
     color: var(--panel-text);
+  }
+
+  /* The panel's gray, on a layer under its content that lightens what's
+     behind it: everywhere it's the gray, except where the night sky's
+     stars are lighter, which show through. Not a stacking context itself,
+     so it sits just above the sky (z-index -1, earlier in the page). */
+  .builder-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--panel);
+    mix-blend-mode: lighten;
+    pointer-events: none;
   }
 
   /* The site's .section.unlimited:last-child drops the bottom padding */
@@ -817,8 +833,9 @@
     background: color-mix(in srgb, var(--portfolio-red) 6%, var(--portfolio-white));
   }
 
-  /* Step title in the titles' Bebas, then the step's description */
-  .step-head h2 {
+  /* Step title in the titles' Bebas, then the step's description. Only the
+     header's own title: Player Tools' header holds the character's name. */
+  .step-head > h2 {
     margin-bottom: 1rem;
     font-family: var(--title);
     font-weight: normal;
