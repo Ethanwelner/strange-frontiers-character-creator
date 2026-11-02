@@ -440,6 +440,10 @@
        corners clip the conversation sliding up under the d20's */
     border-radius: 16px;
     overflow: clip;
+    /* The sheet's shadow (.tools-box), as a filter so it follows the d20
+       and the chat box where they show, not the column's own box, which
+       runs past the window at the top and end of the page */
+    filter: drop-shadow(0 4px 10px #00000030);
   }
 
   /* The d20, the top of the chat box: its darker fill and the top of its
