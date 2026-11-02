@@ -162,11 +162,6 @@
     box-shadow: none;
   }
 
-  /* Items take the darker gray of the HP, VP and SP boxes there */
-  .tools-box .tools-item {
-    background: var(--panel);
-  }
-
   /* 24px between the boxes */
   .tools-tracker {
     display: flex;
