@@ -758,8 +758,8 @@
     color: var(--panel-good);
   }
 
-  /* The sheet goes dark on screen too: the step box's gray around darker inner
-     boxes, light text, and the Stats step's badges and bars, with the Kind's
+  /* The sheet goes dark on screen too: the step box's gray around darker,
+     borderless inner boxes, with the Trait cards' shadow under the whole sheet, light text, and the Stats step's badges and bars, with the Kind's
      bonus in purple and the player's points in green. Its Trait cards go
      dark like every card. Printing keeps the light sheet's gray and black. */
   @media screen {
@@ -767,10 +767,11 @@
       --rule: rgb(255 255 255 / 18%);
       color: var(--panel-text);
       background-color: var(--panel-box);
+      box-shadow: 0 4px 10px #00000030;
 
       .c-sheet-box {
         background-color: var(--panel);
-        border-color: rgb(255 255 255 / 12%);
+        border-color: transparent;
       }
 
       :is(.muted, .hint, .empty, .tags) {
@@ -961,6 +962,7 @@
   .tech-fields-light {
     background: var(--panel-box);
     border-color: rgb(255 255 255 / 22%);
+    box-shadow: 0 4px 10px #00000030;
   }
 
   .tech-fields.step-box {
@@ -1574,6 +1576,7 @@
     background: var(--panel);
     border: 1px solid rgb(255 255 255 / 15%);
     border-radius: 16px;
+    box-shadow: 0 4px 10px #00000030;
     max-height: calc(100vh - 2rem);
     overflow-y: auto;
 

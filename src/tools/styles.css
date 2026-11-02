@@ -154,6 +154,12 @@
     background-color: var(--panel-box);
     border: 1px solid var(--card-border);
     border-radius: 12px;
+    box-shadow: 0 4px 10px #00000030;
+  }
+
+  /* The sheet inside it has the shadow already, from the box */
+  .builder-panel .tools-box .c-sheet {
+    box-shadow: none;
   }
 
   /* Items take the darker gray of the HP, VP and SP boxes there */
@@ -170,11 +176,12 @@
 
   /* The first box, dark like the sheet's boxes, with the name 24px above
      the resources */
-  /* The header box, and the resources' box under it, dark like the sheet's */
+  /* The header box, and the resources' box under it, dark and borderless like
+     the sheet's */
   .tools-head,
   .tools-resources-box {
     background-color: var(--panel);
-    border-color: rgb(255 255 255 / 12%);
+    border-color: transparent;
   }
 
   /* The name and its pen, from the creator's Sheet, in the tab title style */
@@ -433,6 +440,10 @@
        corners clip the conversation sliding up under the d20's */
     border-radius: 16px;
     overflow: clip;
+    /* The sheet's shadow (.tools-box), as a filter so it follows the d20
+       and the chat box where they show, not the column's own box, which
+       runs past the window at the top and end of the page */
+    filter: drop-shadow(0 4px 10px #00000030);
   }
 
   /* The d20, the top of the chat box: its darker fill and the top of its
