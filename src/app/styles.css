@@ -2656,9 +2656,10 @@
   }
 
   /* Remove, a trash can faded like the sheet's pens, full strength under
-     the pointer */
+     the pointer, 12px further from Equipped to keep it from misclicks */
   .tools-item-remove {
     flex: none;
+    margin-left: 12px;
     display: grid;
     place-items: center;
     width: 24px;
