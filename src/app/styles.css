@@ -1421,9 +1421,11 @@
     margin: 0;
   }
 
+  /* Every row as tall as the tallest card in the list */
   .trait-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(256px, 100%), 1fr));
+    grid-auto-rows: 1fr;
     gap: 1rem;
   }
 
@@ -2015,6 +2017,7 @@
      the Knowledges and the Conditions and Items */
   @media (min-width: 1200px) {
     :is(.sheet-head, .tools-character):has(> .sheet-description) {
+      container: sheet-head / inline-size;
       display: grid;
       grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 4fr);
       gap: 24px 40px;
@@ -2027,6 +2030,36 @@
 
       > :is(.sheet-head-main, .tools-character-main) {
         flex: 1 1 10rem;
+      }
+    }
+
+    .sheet-head-who + .sheet-description {
+      grid-column: 2 / 4;
+    }
+
+    /* Where the first column is too narrow for the name beside the portrait
+       (256px, the 2rem gap and 10rem: 448px, so a head under 1156px), the
+       portrait and name take the first two columns and the description
+       just the third */
+    @container sheet-head (width < 1156px) {
+      .sheet-head-who {
+        grid-column: 1 / 3;
+      }
+
+      .sheet-head-who + .sheet-description {
+        grid-column: 3;
+      }
+    }
+  }
+
+  /* Up to 1360px the name and info go under the portrait, and the
+     description has the last two columns again */
+  @media (min-width: 1200px) and (max-width: 1359.98px) {
+    .sheet-head-who {
+      grid-column: 1;
+
+      > :is(.sheet-head-main, .tools-character-main) {
+        flex-basis: 100%;
       }
     }
 
@@ -2770,10 +2803,21 @@
     margin-bottom: 0.5rem;
   }
 
+  /* Every row as tall as the tallest card, like the Traits step */
   .sheet-traits {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(256px, 1fr));
+    grid-auto-rows: 1fr;
     gap: 1rem;
+
+    > li {
+      display: flex;
+      flex-direction: column;
+
+      > .trait-box {
+        flex: 1;
+      }
+    }
   }
 
   .effect {
