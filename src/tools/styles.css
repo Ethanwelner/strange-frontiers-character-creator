@@ -429,22 +429,31 @@
     display: flex;
     flex-direction: column;
     height: calc(100dvh - 32px);
-    /* The column is the chat box: the darker fill and the rounded border,
-       with the d20 at its top and the conversation under it. What slides
-       past its edges is hidden, rounded corners included. */
-    background-color: #212121;
-    border: 1px solid var(--card-border);
+    /* What slides past the column's edges is hidden, and its rounded
+       corners clip the conversation sliding up under the d20's */
     border-radius: 16px;
     overflow: clip;
   }
 
-  /* The d20, in the chat box's top. It stays over the conversation, which
-     slides up under it and is cut off at the die's bottom edge. */
+  /* The d20, the top of the chat box: its darker fill and the top of its
+     border, rounded. It stays over the conversation, which slides up under
+     it and is cut off at the die's bottom edge. */
   .tools-roller {
     position: relative;
     z-index: 1;
     flex: none;
     background-color: #212121;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .tools-roller::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--card-border);
+    border-bottom: 0;
+    border-radius: inherit;
+    pointer-events: none;
   }
 
   @supports (animation-timeline: view()) {
@@ -456,11 +465,13 @@
     .tools-chat-box {
       animation:
         tools-side-lift linear both,
-        tools-chat-uncover linear both;
-      animation-timeline: --tools-body, --tools-body;
+        tools-chat-uncover linear both,
+        tools-chat-clip-end linear both;
+      animation-timeline: --tools-body, --tools-body, --tools-body;
       animation-range:
         entry-crossing 0% exit-crossing 0%,
-        entry-crossing 0% exit-crossing 0%;
+        entry-crossing 0% exit-crossing 0%,
+        entry-crossing 100% exit-crossing 100%;
     }
 
     /* Down while its bottom does, and the conversation starts that much
@@ -644,6 +655,12 @@
     flex-direction: column;
     gap: 16px;
     padding: var(--chat-pad-top) 16px 16px;
+    /* The rest of the chat box: its sides and rounded bottom, which move
+       with it, so its bottom edge shows wherever it is */
+    background-color: #212121;
+    border: 1px solid var(--card-border);
+    border-top: 0;
+    border-radius: 0 0 16px 16px;
   }
 
   .tools-chat-log {
@@ -1055,6 +1072,17 @@
 }
 
 /* The conversation's start, under the d20 as it drops at the end of the page */
+/* At the end of the page, the box cut off at the dropping d20's top, so
+   none of it shows beside the die's rounded corners */
+@keyframes tools-chat-clip-end {
+  from {
+    clip-path: inset(0);
+  }
+  to {
+    clip-path: inset(calc(100dvh - 32px) 0 0 0);
+  }
+}
+
 @keyframes tools-chat-uncover-end {
   from {
     margin-top: 0;
