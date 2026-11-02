@@ -1127,7 +1127,7 @@
 
   /* Kind cards run wider than the other steps' cards */
   .kind-group .cards {
-    grid-template-columns: repeat(auto-fill, minmax(min(400px, 100%), 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr));
   }
 
   .card-head {
@@ -1944,6 +1944,7 @@
   /* 1rem around the boxes, like Player Tools' box, with 12px corners (the
      site's sample sheet keeps its own 16px) */
   .c-sheet {
+    container: sheet / inline-size;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -2509,49 +2510,59 @@
     gap: 24px;
   }
 
-  /* Under it, the Knowledges' box to the left of the Traits', only as wide
-     as its longest name (up to 20rem) and as tall as the Traits', stacked
-     on narrow screens */
+  /* Under it, the Knowledges' box above the Traits', until the sheet is
+     1400px wide, where the Items join the stats' row (.sheet-row); then to
+     their left, only as wide as its longest name (up to 20rem) and as tall
+     as the Traits' */
   .sheet-lower {
-    display: grid;
-    grid-template-columns: fit-content(20rem) minmax(0, 1fr);
-    align-items: stretch;
-    gap: 24px;
-
-    @media (max-width: 767px) {
-      grid-template-columns: minmax(0, 1fr);
-    }
-  }
-
-  /* The stats', Conditions' and Items' boxes, as tall as each other: the
-     stats only as wide as they need, then the Conditions and Items in 3
-     and 4 parts of the rest from 1200px; the stats and Conditions over the
-     Items from 768px; stacked below that */
-  .sheet-row {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     align-items: stretch;
     gap: 24px;
 
-    &:has(> .sheet-items) {
-      @media (min-width: 768px) {
-        grid-template-columns: max-content minmax(0, 1fr);
-
-        > .sheet-items {
-          grid-column: 1 / -1;
-        }
-      }
-
-      @media (min-width: 1200px) {
-        grid-template-columns: max-content minmax(0, 3fr) minmax(0, 4fr);
-
-        > .sheet-items {
-          grid-column: auto;
-        }
-      }
+    @container sheet (width >= 1400px) {
+      grid-template-columns: fit-content(20rem) minmax(0, 1fr);
     }
   }
 
+  /* The stats', Conditions' and Items' boxes, as tall as each other on a
+     line. The stats take only the width they need, and the Conditions sit
+     beside them whenever 13rem is left, taking the rest; otherwise each
+     fills its own line. The Items take a line of their own (laying their
+     cards side by side) until the sheet is 1400px wide, then share the
+     stats' line with the Conditions, 4 parts to 3. By the sheet's own
+     width, so Player Tools' chat column counts. */
+  .sheet-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 24px;
+
+    > * {
+      flex: 1 1 100%;
+      min-width: 0;
+    }
+
+    /* Its own width, or the whole line when nothing fits beside it (the
+       Conditions' far larger grow keeps the extra off it otherwise) */
+    > .sheet-body {
+      flex: 1 1 auto;
+    }
+
+    > .sheet-conditions {
+      flex: 1000 1 13rem;
+    }
+
+    @container sheet (width >= 1400px) {
+      > .sheet-conditions {
+        flex: 3000 1 0;
+      }
+
+      > .sheet-items {
+        flex: 4000 1 0;
+      }
+    }
+  }
   /* The add row (Items' and Player Tools' Add a Condition), item notes, and
      the count */
   .tools-add {
@@ -2645,10 +2656,13 @@
     }
   }
 
+  /* The cards side by side, at least 360px each, when the Items' box is
+     wide enough (under the stats and Conditions); one column otherwise */
   .tools-item-list {
     list-style: none;
     padding: 0;
     display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr));
     gap: 12px;
     margin: 0 0 16px;
   }
@@ -2657,6 +2671,7 @@
      lighter edge, the same in the creator and Player Tools (the sheet's
      boxes otherwise have no border) */
   .builder-panel .c-sheet-box.tools-item {
+    container: item / inline-size;
     background-color: #3f3d33;
     border: 1px solid #6d6a5a !important;
     padding: 12px;
@@ -2673,18 +2688,34 @@
     background-color: #25241e;
   }
 
+  /* One line once the card has the room for the name at its smallest and
+     the category shrunk to 5.5rem (357px); wrapping in narrower cards */
   .tools-item-row {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
     align-items: center;
+
+    @container item (width >= 357px) {
+      flex-wrap: nowrap;
+    }
+
+    select {
+      flex: 0 1 auto;
+      min-width: 5.5rem;
+
+      /* In a tight card the category gives the name its room first */
+      @container item (width < 440px) {
+        flex-basis: 6rem;
+      }
+    }
   }
 
   /* The name on the same line as the count, category, Equip and Remove,
      taking what room they leave */
   .tools-item-name {
     flex: 1 1 0;
-    min-width: 4rem;
+    min-width: 3rem;
   }
 
   .tools-equipped {
