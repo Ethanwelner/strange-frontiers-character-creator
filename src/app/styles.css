@@ -2644,6 +2644,11 @@
     }
   }
 
+  /* The add form's fields match the cards' */
+  .builder-panel .tools-items .tools-add :is(input, select) {
+    background-color: #25241e;
+  }
+
   .tools-item-row {
     display: flex;
     flex-wrap: wrap;
