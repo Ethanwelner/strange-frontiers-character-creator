@@ -1,7 +1,7 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { content, traitById } from "../content.js";
 import { hpConditions, playConditions, withCondition, withoutCondition, type HeldCondition } from "../conditions.js";
-import { Chip, Sign } from "./ui.js";
+import { Chip, LorePopup, Sign } from "./ui.js";
 
 // The Conditions, the same on the Character Creator's sheet and in Player
 // Tools: the ones HP decides (from `hp` of `maxHp`), and the temporary ones
@@ -20,23 +20,43 @@ export function Conditions({
 }) {
   const options = useMemo(() => playConditions(content), []);
   const fromHp = hpConditions(hp, maxHp);
+  // Add Condition's popup, open or not
+  const [adding, setAdding] = useState(false);
   const update = (c: HeldCondition, change: Partial<HeldCondition>) => onChange(conditions.map((x) => (x === c ? { ...x, ...change } : x)));
 
   return (
     <section className="tools-conditions-side" aria-label="Conditions">
-      <h4 className="rule">Conditions</h4>
-      {/* Add a Condition, above the ones the character has: picking one adds it, and the
-          dropdown goes back to its prompt */}
-      <div className="tools-add">
-        <select aria-label="Condition to add" value="" onChange={(e) => e.target.value && onChange(withCondition(conditions, content, e.target.value))}>
-          <option value="">Add a Condition…</option>
-          {options.map((t) => (
-            <option key={t.id} value={t.id}>
-              {t.name}
-            </option>
-          ))}
-        </select>
+      {/* Add Condition at the right end of the title's line, opening the dropdown in a popup */}
+      <div className="sheet-section-head">
+        <h4 className="rule">Conditions</h4>
+        <button type="button" className="sheet-section-add" onClick={() => setAdding(true)}>
+          Add Condition
+        </button>
       </div>
+      {adding && (
+        <LorePopup label="Add a Condition" onClose={() => setAdding(false)} className="sheet-add-popup">
+          <h3 className="subhead">Add a Condition</h3>
+          {/* Picking one adds it and closes the popup */}
+          <div className="tools-add">
+            <select
+              aria-label="Condition to add"
+              value=""
+              onChange={(e) => {
+                if (!e.target.value) return;
+                onChange(withCondition(conditions, content, e.target.value));
+                setAdding(false);
+              }}
+            >
+              <option value="">Pick a Condition…</option>
+              {options.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </LorePopup>
+      )}
       <ul className="tools-conditions">
         {fromHp.map((id) => {
           const t = traitById.get(id);

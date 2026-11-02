@@ -1,5 +1,5 @@
 import { useId, useState } from "react";
-import { title } from "./ui.js";
+import { Chip, LorePopup, title } from "./ui.js";
 import { content, itemById } from "../content.js";
 import { ITEM_CATEGORIES, itemDetails, stockItemNamed, withItem, type Item, type ItemCategory } from "../items.js";
 
@@ -14,6 +14,8 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
   const [name, setName] = useState("");
   const [qty, setQty] = useState("1");
   const [category, setCategory] = useState<ItemCategory>("gear");
+  // Add item's popup, open or not
+  const [adding, setAdding] = useState(false);
   const listId = useId();
   // Items whose notes field the player opened or closed with the note
   // button; the rest show it only when they have notes.
@@ -21,6 +23,14 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
   const showsNotes = (item: Item) => notesShown.get(item.id) ?? Boolean(item.notes);
   const toggleNotes = (item: Item) => setNotesShown(new Map(notesShown).set(item.id, !showsNotes(item)));
   const [focusNote, setFocusNote] = useState<string>();
+  // Items opened to their full card, with the fields to edit them; the rest
+  // show as one line
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  const toggleExpanded = (item: Item) => {
+    const next = new Set(expanded);
+    if (!next.delete(item.id)) next.add(item.id);
+    setExpanded(next);
+  };
 
   const update = (item: Item, change: Partial<Item>) => onChange(items.map((i) => (i === item ? { ...i, ...change } : i)));
   const remove = (item: Item) => onChange(items.filter((i) => i !== item));
@@ -44,48 +54,60 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
     );
     setName("");
     setQty("1");
+    setAdding(false);
   };
 
   return (
     <section className="tools-items">
-      <h4 className="rule">Items</h4>
-
-      <form
-        className="tools-add"
-        onSubmit={(e) => {
-          e.preventDefault();
-          add();
-        }}
-      >
-        <input
-          type="text"
-          placeholder="Item name"
-          aria-label="Item name"
-          list={listId}
-          value={name}
-          onChange={(e) => {
-            setName(e.target.value);
-            const stock = stockItemNamed(content.items, e.target.value);
-            if (stock) setCategory(stock.category);
-          }}
-        />
-        <datalist id={listId}>
-          {STOCK.map((i) => (
-            <option key={i.id} value={i.name} />
-          ))}
-        </datalist>
-        <input type="number" min={1} aria-label="Count" className="tools-qty" value={qty} onChange={(e) => setQty(e.target.value)} />
-        <select aria-label="Category" value={category} onChange={(e) => setCategory(e.target.value as ItemCategory)}>
-          {ITEM_CATEGORIES.map((c) => (
-            <option key={c} value={c}>
-              {title(c)}
-            </option>
-          ))}
-        </select>
-        <button type="submit" disabled={!name.trim()}>
-          Add
+      {/* Add item at the right end of the title's line, opening the add form in a popup */}
+      <div className="sheet-section-head">
+        <h4 className="rule">Items</h4>
+        <button type="button" className="sheet-section-add" onClick={() => setAdding(true)}>
+          Add item
         </button>
-      </form>
+      </div>
+
+      {adding && (
+        <LorePopup label="Add an item" onClose={() => setAdding(false)} className="sheet-add-popup">
+          <h3 className="subhead">Add an item</h3>
+          <form
+            className="tools-add"
+            onSubmit={(e) => {
+              e.preventDefault();
+              add();
+            }}
+          >
+            <input
+              type="text"
+              placeholder="Item name"
+              aria-label="Item name"
+              list={listId}
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value);
+                const stock = stockItemNamed(content.items, e.target.value);
+                if (stock) setCategory(stock.category);
+              }}
+            />
+            <datalist id={listId}>
+              {STOCK.map((i) => (
+                <option key={i.id} value={i.name} />
+              ))}
+            </datalist>
+            <input type="number" min={1} aria-label="Count" className="tools-qty" value={qty} onChange={(e) => setQty(e.target.value)} />
+            <select aria-label="Category" value={category} onChange={(e) => setCategory(e.target.value as ItemCategory)}>
+              {ITEM_CATEGORIES.map((c) => (
+                <option key={c} value={c}>
+                  {title(c)}
+                </option>
+              ))}
+            </select>
+            <button type="submit" disabled={!name.trim()}>
+              Add
+            </button>
+          </form>
+        </LorePopup>
+      )}
 
       {items.length === 0 ? (
         <p className="empty">No Items yet.</p>
@@ -94,6 +116,41 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
           {items.map((item) => {
             const stock = item.item ? itemById.get(item.item) : undefined;
             const details = stock ? itemDetails(stock) : "";
+            const open = expanded.has(item.id);
+            // The chevron that opens the card to its fields, or closes it back to a line
+            const expand = (
+              <button
+                type="button"
+                className="tools-item-icon tools-item-expand"
+                aria-label={`${open ? "Collapse" : "Expand"} ${item.name}`}
+                aria-expanded={open}
+                title={open ? "Collapse" : "Expand"}
+                onClick={() => toggleExpanded(item)}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 8" aria-hidden="true">
+                  <path d="M1 1.5l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                </svg>
+              </button>
+            );
+            if (!open) {
+              return (
+                <li key={item.id} className="c-sheet-box tools-item">
+                  {/* Closed, the card is one line: count, name, then category and Equip at the right */}
+                  <div className="tools-item-row tools-item-summary">
+                    <span className="tools-item-count">{item.qty}×</span>
+                    <span className="tools-item-title">{item.name}</span>
+                    {/* The category as a badge, like a Trait card's */}
+                    <span className="tools-item-category">
+                      <Chip>{title(item.category)}</Chip>
+                    </span>
+                    <label className="tools-equipped">
+                      <input type="checkbox" checked={item.equipped} onChange={(e) => update(item, { equipped: e.target.checked })} /> Equip
+                    </label>
+                    {expand}
+                  </div>
+                </li>
+              );
+            }
             return (
               <li key={item.id} className="c-sheet-box tools-item">
                 <div className="tools-item-row">
@@ -150,6 +207,7 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                       <path d="M135.2 17.69C140.6 6.848 151.7 0 163.8 0H284.2C296.3 0 307.4 6.848 312.8 17.69L320 32H416C433.7 32 448 46.33 448 64C448 81.67 433.7 96 416 96H32C14.33 96 0 81.67 0 64C0 46.33 14.33 32 32 32H128L135.2 17.69zM394.8 466.1C393.2 492.3 372.3 512 346.9 512H101.1C75.75 512 54.77 492.3 53.19 466.1L31.1 128H416L394.8 466.1z" />
                     </svg>
                   </button>
+                  {expand}
                 </div>
                 {stock && (
                   <p className="tools-item-stock">

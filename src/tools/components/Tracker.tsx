@@ -158,12 +158,11 @@ export function Tracker({
         onConditions={(conditions) => onChange({ ...play, conditions })}
         hp={currentOf(play, result, "hp")}
         traitsAction={
+          // Add traits, like Items' and Conditions' add buttons; the picks left show under the title
           banked > 0 && (
-            <p className="tools-traits-available">
-              <button type="button" className="build-button" onClick={() => setTraitDraft(play.draft)}>
-                {banked} {banked === 1 ? "Trait" : "Traits"} available
-              </button>
-            </p>
+            <button type="button" className="sheet-section-add" onClick={() => setTraitDraft(play.draft)}>
+              Add traits
+            </button>
           )
         }
       />

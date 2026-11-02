@@ -2563,6 +2563,48 @@
       }
     }
   }
+  /* Items' and Conditions' titles, with Add item or Add Condition at the
+     right end of the line, a small green button like the Traits' Add traits */
+  .sheet-section-head {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 0 0 16px;
+
+    .rule {
+      flex: 1;
+      margin: 0;
+    }
+  }
+
+  button.sheet-section-add {
+    flex: none;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.875rem;
+    background: var(--frontiers-green);
+    color: var(--portfolio-black);
+    border: 0;
+
+    &:hover,
+    &:focus-visible {
+      background-color: color-mix(in srgb, var(--frontiers-green) 75%, var(--portfolio-white));
+      color: var(--portfolio-black);
+    }
+  }
+
+  /* The add form on its own in a small popup, its title over it */
+  .sheet-add-popup .lore-modal-panel {
+    max-width: 520px;
+
+    .subhead {
+      margin: 0 0 24px;
+    }
+
+    .tools-add {
+      margin: 0;
+    }
+  }
+
   /* The add row (Items' and Player Tools' Add a Condition), item notes, and
      the count */
   .tools-add {
@@ -2665,6 +2707,8 @@
     grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr));
     gap: 12px;
     margin: 0 0 16px;
+    /* An open card doesn't stretch the closed one beside it */
+    align-items: start;
   }
 
   /* Each item a card with the Traits' shadow, in a warm olive gray with a
@@ -2757,6 +2801,96 @@
 
     & + & {
       margin-left: 1rem;
+    }
+  }
+
+  /* A closed card's line: the count, then the name, then at the right the
+     category's badge, Equip, and the chevron that opens it */
+  .tools-item-summary {
+    flex-wrap: nowrap;
+
+    .tools-item-category {
+      margin-left: auto;
+    }
+  }
+
+  .tools-item-title {
+    flex: 0 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 600;
+  }
+
+  .tools-item-count {
+    flex: none;
+  }
+
+  .tools-item-category {
+    flex: none;
+    display: flex;
+  }
+
+  /* The category's badge in the card's olive: the fields' dark olive with
+     the card's lighter edge and a pale olive text */
+  .tools-item .tools-item-category .chip {
+    background-color: #25241e;
+    border: 1px solid #6d6a5a;
+    color: #d6d1b4;
+  }
+
+  /* Equip's box, 18px, in the fields' dark olive with the card's lighter
+     edge, filling with a pale olive and a dark check when it's on */
+  .tools-item .tools-equipped input[type="checkbox"] {
+    appearance: none;
+    flex: none;
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    background-color: #25241e;
+    border: 1px solid #6d6a5a;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 150ms, border-color 150ms;
+
+    &:hover {
+      border-color: #a29d82;
+    }
+
+    &:focus-visible {
+      outline: 2px solid #a29d82;
+      outline-offset: 2px;
+    }
+
+    &:checked {
+      background-color: #b5ae86;
+      border-color: #b5ae86;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='%2325241e' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-size: 14px;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+  }
+
+  .tools-item .tools-equipped {
+    gap: 6px;
+    cursor: pointer;
+  }
+
+  /* The chevron, a little apart from the rest, pointing up while open */
+  .tools-item-icon.tools-item-expand {
+    margin-left: 4px;
+
+    svg {
+      width: 12px;
+      height: 8px;
+      fill: none;
+      transition: transform 200ms;
+    }
+
+    &[aria-expanded="true"] svg {
+      transform: rotate(180deg);
     }
   }
 
@@ -3163,7 +3297,7 @@
 
 /* A much smaller take on the site's glitching Strange Frontiers title
    (.frontiers-glitch in css/rpg.css), on the things waiting for the player:
-   Player Tools' Traits available and rules problems chip, the stats' +
+   Player Tools' rules problems chip, the stats' +
    while it has a point to place, and the creator's next step button once
    its step is finished (green), Build it once there's something to
    build, Player Tools' Send once there's a message, and its level up's
@@ -3171,7 +3305,7 @@
    cyan and red split that widens on the flares, and a slight skew instead of the title's slices and
    lurches. Every frame has the same three shadows (green, cyan to the left,
    red to the right), so they blend from one to the next. */
-.sf-creator :is(.tools-traits-available button, .tools-issues li, .is-plus:not(:disabled), .pager .step-next.is-done, .describe .build-button:not(:disabled), .tools-chat-send:not(:disabled), .tools-level-actions button:not(:disabled)) {
+.sf-creator :is(.tools-issues li, .is-plus:not(:disabled), .pager .step-next.is-done, .describe .build-button:not(:disabled), .tools-chat-send:not(:disabled), .tools-level-actions button:not(:disabled)) {
   animation:
     sf-glitch-small-shift 4s ease-in-out infinite alternate,
     sf-glitch-small-glow 8s ease-in-out infinite alternate;
@@ -3203,7 +3337,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sf-creator :is(.tools-traits-available button, .tools-issues li, .is-plus:not(:disabled), .pager .step-next.is-done, .describe .build-button:not(:disabled), .tools-chat-send:not(:disabled), .tools-level-actions button:not(:disabled)) {
+  .sf-creator :is(.tools-issues li, .is-plus:not(:disabled), .pager .step-next.is-done, .describe .build-button:not(:disabled), .tools-chat-send:not(:disabled), .tools-level-actions button:not(:disabled)) {
     animation: none;
   }
 }
