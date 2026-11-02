@@ -2791,6 +2791,52 @@
     display: flex;
   }
 
+  /* The category's badge in the card's olive: the fields' dark olive with
+     the card's lighter edge and a pale olive text */
+  .tools-item .tools-item-category .chip {
+    background-color: #25241e;
+    border: 1px solid #6d6a5a;
+    color: #d6d1b4;
+  }
+
+  /* Equip's box, 18px, in the fields' dark olive with the card's lighter
+     edge, filling with a pale olive and a dark check when it's on */
+  .tools-item .tools-equipped input[type="checkbox"] {
+    appearance: none;
+    flex: none;
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    background-color: #25241e;
+    border: 1px solid #6d6a5a;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 150ms, border-color 150ms;
+
+    &:hover {
+      border-color: #a29d82;
+    }
+
+    &:focus-visible {
+      outline: 2px solid #a29d82;
+      outline-offset: 2px;
+    }
+
+    &:checked {
+      background-color: #b5ae86;
+      border-color: #b5ae86;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='%2325241e' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-size: 14px;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+  }
+
+  .tools-item .tools-equipped {
+    gap: 6px;
+    cursor: pointer;
+  }
+
   /* The chevron, a little apart from the rest, pointing up while open */
   .tools-item-icon.tools-item-expand {
     margin-left: 4px;
