@@ -263,6 +263,13 @@
     grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
     /* 36px between the sheet and the d20 and chat column */
     column-gap: 36px;
+
+    /* On smaller screens, before the column drops under the sheet at 991px,
+       it narrows to 256px, 24px from the sheet, so the sheet keeps its room */
+    @media (min-width: 992px) and (max-width: 1399px) {
+      grid-template-columns: minmax(0, 1fr) 256px;
+      column-gap: 24px;
+    }
   }
 
   /* Before a character is in, the same column as the site's Strange
@@ -956,6 +963,18 @@
 
     .tools-items {
       grid-column: 1 / -1;
+    }
+  }
+
+  /* At the same widths the sheet's sections sit 24px apart side to side:
+     its columns, the character box's matching columns, and HP, VP and SP */
+  @media (min-width: 992px) and (max-width: 1399px) {
+    .sheet-embedded .sheet-body,
+    .sheet-embedded .sheet-body:not(:has(.sheet-stats)),
+    .sheet-body:has(> .tools-sheet-extra),
+    .tools-character:has(> .sheet-description),
+    .tools-resources {
+      column-gap: 24px;
     }
   }
 
