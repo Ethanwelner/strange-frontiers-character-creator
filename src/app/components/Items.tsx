@@ -1,5 +1,5 @@
 import { useId, useState } from "react";
-import { title } from "./ui.js";
+import { Chip, title } from "./ui.js";
 import { content, itemById } from "../content.js";
 import { ITEM_CATEGORIES, itemDetails, stockItemNamed, withItem, type Item, type ItemCategory } from "../items.js";
 
@@ -125,7 +125,10 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                   <div className="tools-item-row tools-item-summary">
                     <span className="tools-item-title">{item.name}</span>
                     <span className="tools-item-count">×{item.qty}</span>
-                    <span className="tools-item-category">{title(item.category)}</span>
+                    {/* The category as a badge, like a Trait card's */}
+                    <span className="tools-item-category">
+                      <Chip>{title(item.category)}</Chip>
+                    </span>
                     <label className="tools-equipped">
                       <input type="checkbox" checked={item.equipped} onChange={(e) => update(item, { equipped: e.target.checked })} /> Equip
                     </label>

@@ -2762,8 +2762,8 @@
     }
   }
 
-  /* A closed card's line: the name, with the count and the category in the
-     soft color right after it, then Equip and the chevron that opens it at
+  /* A closed card's line: the name, with the count and the category's
+     badge right after it, then Equip and the chevron that opens it at
      the right */
   .tools-item-summary {
     flex-wrap: nowrap;
@@ -2788,8 +2788,7 @@
 
   .tools-item-category {
     flex: none;
-    color: var(--panel-soft);
-    font-size: 0.875rem;
+    display: flex;
   }
 
   /* The chevron, a little apart from the rest, pointing up while open */
