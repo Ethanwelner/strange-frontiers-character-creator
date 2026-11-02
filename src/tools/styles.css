@@ -337,6 +337,7 @@
       background: none;
       border: 0;
       border-radius: 0;
+      box-shadow: none;
       padding: 0;
       overflow: visible;
     }
@@ -453,6 +454,9 @@
     position: relative;
     z-index: 1;
     flex: none;
+    /* The die sits 12px down from the top, which the chat box's top padding
+       gives back */
+    padding-top: 12px;
     background-color: #212121;
     border-radius: 16px 16px 0 0;
   }
@@ -659,7 +663,7 @@
      box, with the room the rest of the column (the box) leaves */
   .tools-chat-box {
     /* Its top padding (the scroll animations add to it) */
-    --chat-pad-top: 16px;
+    --chat-pad-top: 4px;
     flex: 1 1 0;
     min-height: 160px;
     display: flex;
