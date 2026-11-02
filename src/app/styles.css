@@ -2027,7 +2027,7 @@
 
   /* From 1200px, where the body has its three columns, the head takes the
      same ones: the portrait and name over the stats, the description over
-     the Knowledges and the Conditions and Items */
+     the Conditions and the Items */
   @media (min-width: 1200px) {
     :is(.sheet-head, .tools-character):has(> .sheet-description) {
       container: sheet-head / inline-size;
@@ -2518,8 +2518,21 @@
     gap: 24px 48px;
   }
 
-  /* With the Conditions and Items (.tools-sheet-extra) as a third column
-     after the Knowledges */
+  /* Under it, the Knowledges' box to the left of the Traits', stacked on
+     narrow screens */
+  .sheet-lower {
+    display: grid;
+    grid-template-columns: minmax(12rem, 1fr) minmax(0, 3fr);
+    align-items: start;
+    gap: 24px;
+
+    @media (max-width: 767px) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  /* With the Conditions beside the stats and the Items (.tools-sheet-extra)
+     as a third column */
   .sheet-body:has(> .tools-sheet-extra) {
     grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 4fr);
     gap: 24px 40px;

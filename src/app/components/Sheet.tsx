@@ -129,7 +129,7 @@ export function Sheet({
   onPortrait?: (portrait?: string) => void;
   // Edits the description; without it the sheet shows the description as text.
   onDescription?: (description?: string) => void;
-  // The last column, after the Knowledges: the Conditions, then the Items,
+  // The Conditions, beside the stats, and the Items, in the last column,
   // with the current HP the Conditions go by (full if not given)
   items?: Item[];
   onItems?: (items: Item[]) => void;
@@ -277,8 +277,21 @@ export function Sheet({
             </div>
           )}
 
-          <div className="sheet-side">
-            <h4 className="rule">Knowledges</h4>
+          {onItems && onConditions && (
+            // The Conditions beside the stats, then the Items in the last column
+            <>
+              <Conditions conditions={conditions ?? []} hp={hp ?? summary?.resources.hp ?? 0} maxHp={summary?.resources.hp ?? 0} onChange={onConditions} />
+              <div className="tools-sheet-extra">
+                <Items items={items ?? []} onChange={onItems} />
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* The Knowledges in their own box, to the left of the Traits */}
+        <div className="sheet-lower">
+          <div className="c-sheet-box sheet-side">
+            <h3 className="subhead">Knowledges</h3>
             {knowledges.length > 0 ? (
               <ul className="knowledge-list">
                 {knowledges.map((h) => {
@@ -298,69 +311,61 @@ export function Sheet({
               <p className="empty">None yet.</p>
             )}
           </div>
-          {onItems && onConditions && (
-            // The last column: the Conditions, then the Items
-            <div className="tools-sheet-extra">
-              <Conditions conditions={conditions ?? []} hp={hp ?? summary?.resources.hp ?? 0} maxHp={summary?.resources.hp ?? 0} onChange={onConditions} />
-              <Items items={items ?? []} onChange={onItems} />
-            </div>
-          )}
-        </div>
-
-        <div className="c-sheet-box">
-          {traitsAction ? (
-            // The action at the right end of the Traits title's line
-            <div className="sheet-traits-head">
+          <div className="c-sheet-box">
+            {traitsAction ? (
+              // The action at the right end of the Traits title's line
+              <div className="sheet-traits-head">
+                <h3 className="subhead">Traits</h3>
+                {traitsAction}
+              </div>
+            ) : (
               <h3 className="subhead">Traits</h3>
-              {traitsAction}
-            </div>
-          ) : (
-            <h3 className="subhead">Traits</h3>
-          )}
-          {/* The picks the character still has to spend on Traits */}
-          {summary && (
-            <p className="sheet-banked">
-              {summary.picks.universal.banked} universal and {summary.picks.background.banked} background{" "}
-              {summary.picks.universal.banked + summary.picks.background.banked === 1 ? "pick" : "picks"} available
-            </p>
-          )}
-          {others.length > 0 ? (
-            <ul className="sheet-traits">
-              {others.map((h) => (
-                <li key={h.trait}>
-                  <TraitCard held={h} places={places(h.trait)} draft={draft} />
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="empty">{held.length ? "No Traits besides Knowledges." : "No Traits yet."}</p>
-          )}
-
-          {records.length > 0 && (
-            <>
-              <h3 className="subhead">Contacts</h3>
-              <ul className="features">
-                {records.map((r, i) => (
-                  <li key={i}>
-                    <strong>{r.text}</strong> <span className="muted">({r.noun} from {r.from})</span>
+            )}
+            {/* The picks the character still has to spend on Traits */}
+            {summary && (
+              <p className="sheet-banked">
+                {summary.picks.universal.banked} universal and {summary.picks.background.banked} background{" "}
+                {summary.picks.universal.banked + summary.picks.background.banked === 1 ? "pick" : "picks"} available
+              </p>
+            )}
+            {others.length > 0 ? (
+              <ul className="sheet-traits">
+                {others.map((h) => (
+                  <li key={h.trait}>
+                    <TraitCard held={h} places={places(h.trait)} draft={draft} />
                   </li>
                 ))}
               </ul>
-            </>
-          )}
+            ) : (
+              <p className="empty">{held.length ? "No Traits besides Knowledges." : "No Traits yet."}</p>
+            )}
 
-          {features.length > 0 && (
-            <>
-              <h3 className="subhead">Features</h3>
-              <ul className="features">
-                {features.map((f, i) => (
-                  <li key={i}>
-                    <strong>{f.name}</strong> <span className="muted">({f.from})</span>. {f.description}
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
+            {records.length > 0 && (
+              <>
+                <h3 className="subhead">Contacts</h3>
+                <ul className="features">
+                  {records.map((r, i) => (
+                    <li key={i}>
+                      <strong>{r.text}</strong> <span className="muted">({r.noun} from {r.from})</span>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+
+            {features.length > 0 && (
+              <>
+                <h3 className="subhead">Features</h3>
+                <ul className="features">
+                  {features.map((f, i) => (
+                    <li key={i}>
+                      <strong>{f.name}</strong> <span className="muted">({f.from})</span>. {f.description}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </div>
         </div>
       </div>
       {opened && <TraitModal held={opened} places={places(opened.trait)} draft={draft} onClose={closeModal} />}

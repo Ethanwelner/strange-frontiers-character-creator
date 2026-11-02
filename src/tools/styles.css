@@ -146,8 +146,8 @@
   /* With a character in, it's laid out like the creator's sheet: the sheet's
      lighter gray, its border and round corners, with the level's blob
      (.level-badge) over the top left corner and the zones in darker boxes:
-     the name over the resources, the stats, Knowledges and Items columns,
-     and the Traits */
+     the name over the resources, the stats, Conditions and Items columns,
+     and the Knowledges beside the Traits */
   .tools-box {
     position: relative;
     padding: 1rem;
@@ -310,8 +310,8 @@
     }
   }
 
-  /* The sheet's columns on the Tracker: stats, Knowledges, then Items (just
-     Knowledges and Items while Level up shows the stats editable above) */
+  /* The sheet's columns on the Tracker: stats, Conditions, then Items (just
+     Conditions and Items while Level up shows the stats editable above) */
   .sheet-embedded .sheet-body {
     grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 4fr);
     gap: 24px 40px;
