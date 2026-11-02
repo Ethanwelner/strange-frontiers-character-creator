@@ -121,10 +121,10 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
             if (!open) {
               return (
                 <li key={item.id} className="c-sheet-box tools-item">
-                  {/* Closed, the card is one line: name, count, category, and Equip */}
+                  {/* Closed, the card is one line: count, name, then category and Equip at the right */}
                   <div className="tools-item-row tools-item-summary">
+                    <span className="tools-item-count">{item.qty}×</span>
                     <span className="tools-item-title">{item.name}</span>
-                    <span className="tools-item-count">×{item.qty}</span>
                     {/* The category as a badge, like a Trait card's */}
                     <span className="tools-item-category">
                       <Chip>{title(item.category)}</Chip>
