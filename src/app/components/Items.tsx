@@ -122,7 +122,7 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                     ))}
                   </select>
                   <label className="tools-equipped">
-                    <input type="checkbox" checked={item.equipped} onChange={(e) => update(item, { equipped: e.target.checked })} /> Equipped
+                    <input type="checkbox" checked={item.equipped} onChange={(e) => update(item, { equipped: e.target.checked })} /> Equip
                   </label>
                   <button type="button" className="tools-item-remove" aria-label={`Remove ${item.name}`} title="Remove" onClick={() => remove(item)}>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" aria-hidden="true">
