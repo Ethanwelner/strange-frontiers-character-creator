@@ -2511,15 +2511,15 @@
   }
 
   /* Under it, the Knowledges' box to the left of the Traits', only as wide
-     as its longest name (up to 20rem) and as tall as the Traits', stacked
-     on narrow screens */
+     as its longest name (up to 20rem) and as tall as the Traits'; above
+     them in a sheet under 720px (Player Tools' beside the chat too) */
   .sheet-lower {
     display: grid;
     grid-template-columns: fit-content(20rem) minmax(0, 1fr);
     align-items: stretch;
     gap: 24px;
 
-    @media (max-width: 767px) {
+    @container sheet (width < 720px) {
       grid-template-columns: minmax(0, 1fr);
     }
   }
