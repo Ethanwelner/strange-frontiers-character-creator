@@ -310,16 +310,6 @@
     }
   }
 
-  /* The sheet's columns on the Tracker: the stats, then the Conditions
-     (just the Conditions while Level up shows the stats editable above) */
-  .sheet-embedded .sheet-body {
-    grid-template-columns: minmax(0, 5fr) minmax(0, 3fr);
-    gap: 24px 40px;
-
-    &:not(:has(.sheet-stats)) {
-      grid-template-columns: minmax(0, 1fr);
-    }
-  }
 
   .tools-tracker > .sheet-embedded {
     margin-top: 0;
@@ -950,27 +940,12 @@
     }
   }
 
-  @media (max-width: 1199px) {
-    .sheet-embedded .sheet-body {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    }
-  }
-
   /* At the same widths the sheet's sections sit 24px apart side to side:
      its columns, the character box's matching columns, and HP, VP and SP */
   @media (min-width: 992px) and (max-width: 1399px) {
-    .sheet-embedded .sheet-body,
-    .sheet-embedded .sheet-body:not(:has(.sheet-stats)),
     .tools-character:has(> .sheet-description),
     .tools-resources {
       column-gap: 24px;
-    }
-  }
-
-  @media (max-width: 767px) {
-    .sheet-embedded .sheet-body,
-    .sheet-embedded .sheet-body:not(:has(.sheet-stats)) {
-      grid-template-columns: minmax(0, 1fr);
     }
   }
 

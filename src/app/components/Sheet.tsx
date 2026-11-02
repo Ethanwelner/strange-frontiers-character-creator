@@ -231,7 +231,7 @@ export function Sheet({
           </div>
         )}
 
-        {/* The stats and Conditions, and the Items in a box of their own beside them */}
+        {/* The stats, the Conditions and the Items, each in a box of its own */}
         <div className="sheet-row">
           <div className="c-sheet-box sheet-body">
             {statsSlot ? (
@@ -278,17 +278,17 @@ export function Sheet({
                 ))}
               </div>
             )}
-
-            {onItems && onConditions && (
-              // The Conditions beside the stats
-              <Conditions conditions={conditions ?? []} hp={hp ?? summary?.resources.hp ?? 0} maxHp={summary?.resources.hp ?? 0} onChange={onConditions} />
-            )}
           </div>
           {onItems && onConditions && (
-            // The Items in their own box at the end of the row
-            <div className="c-sheet-box sheet-items">
-              <Items items={items ?? []} onChange={onItems} />
-            </div>
+            // The Conditions and the Items, each in its own box along the row
+            <>
+              <div className="c-sheet-box sheet-conditions">
+                <Conditions conditions={conditions ?? []} hp={hp ?? summary?.resources.hp ?? 0} maxHp={summary?.resources.hp ?? 0} onChange={onConditions} />
+              </div>
+              <div className="c-sheet-box sheet-items">
+                <Items items={items ?? []} onChange={onItems} />
+              </div>
+            </>
           )}
         </div>
 

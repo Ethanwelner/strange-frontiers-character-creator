@@ -2502,11 +2502,11 @@
     }
   }
 
-  /* 24px between rows when the columns stack */
+  /* The stats' box */
   .sheet-body {
     display: grid;
-    grid-template-columns: minmax(0, 5fr) minmax(0, 3fr);
-    gap: 24px 48px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
   }
 
   /* Under it, the Knowledges' box to the left of the Traits', only as wide
@@ -2523,9 +2523,9 @@
     }
   }
 
-  /* The stats and Conditions' box, with the Items' box beside it from
-     1200px (in the head's columns: 5 and 3 parts, then 4) and as tall, and
-     under it below that */
+  /* The stats', Conditions' and Items' boxes, as tall as each other: in
+     the head's columns (5, 3 and 4 parts) from 1200px, the stats and
+     Conditions over the Items from 768px, and stacked below that */
   .sheet-row {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -2533,8 +2533,20 @@
     gap: 24px;
 
     &:has(> .sheet-items) {
+      @media (min-width: 768px) {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+
+        > .sheet-items {
+          grid-column: 1 / -1;
+        }
+      }
+
       @media (min-width: 1200px) {
-        grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+        grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 4fr);
+
+        > .sheet-items {
+          grid-column: auto;
+        }
       }
     }
   }
