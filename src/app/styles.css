@@ -2590,23 +2590,30 @@
     }
   }
 
-  /* Items as a column: its heading like Knowledges', then the name on its
-     own line with count, category and Add under it, then each item in a box
-     on the dark panel with its fields wrapping to fit */
+  /* Items as a column: its heading like Knowledges', then the name, count,
+     category and Add on one line, then each item in a card with its fields
+     wrapping to fit */
   .tools-items {
+    container: items / inline-size;
+
     .rule {
       margin-top: 0;
     }
 
-    /* The count and category stretch to the Add button's height, like the
-       HP boxes' fields, and the name on its own line matches them (2.35rem
-       is the button's height) */
+    /* The fields stretch to the Add button's height, like the HP boxes'
+       fields; the name takes the room left, and the category gives some up
+       before Add wraps, which it only does in a column under 300px */
     .tools-add {
       align-items: stretch;
+      flex-wrap: nowrap;
+
+      @container items (width < 300px) {
+        flex-wrap: wrap;
+      }
 
       input[type="text"] {
-        flex: 1 1 100%;
-        min-height: 2.35rem;
+        flex: 1 1 0;
+        min-width: 4rem;
       }
 
       .tools-qty,
@@ -2615,8 +2622,8 @@
       }
 
       select {
-        flex: 1;
-        min-width: 0;
+        flex: 0 1 auto;
+        min-width: 5.5rem;
       }
     }
   }
