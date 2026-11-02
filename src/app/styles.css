@@ -2442,15 +2442,6 @@
     margin: 4px 0;
   }
 
-  /* The sheet's last column: the Conditions, then the Items, 40px apart */
-  .tools-sheet-extra {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    align-content: start;
-    gap: 40px;
-    min-width: 0;
-  }
-
   .tools-conditions-side {
     .rule {
       margin-top: 0;
@@ -2531,20 +2522,19 @@
     }
   }
 
-  /* With the Conditions beside the stats and the Items (.tools-sheet-extra)
-     as a third column */
-  .sheet-body:has(> .tools-sheet-extra) {
-    grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 4fr);
-    gap: 24px 40px;
-  }
+  /* The stats and Conditions' box, with the Items' box beside it from
+     1200px (in the head's columns: 5 and 3 parts, then 4) and under it
+     below that */
+  .sheet-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 24px;
 
-  @media (max-width: 1199px) {
-    .sheet-body:has(> .tools-sheet-extra) {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    }
-
-    .sheet-body > .tools-sheet-extra {
-      grid-column: 1 / -1;
+    &:has(> .sheet-items) {
+      @media (min-width: 1200px) {
+        grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+      }
     }
   }
 

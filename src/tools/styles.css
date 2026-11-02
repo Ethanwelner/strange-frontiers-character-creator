@@ -310,14 +310,14 @@
     }
   }
 
-  /* The sheet's columns on the Tracker: stats, Conditions, then Items (just
-     Conditions and Items while Level up shows the stats editable above) */
+  /* The sheet's columns on the Tracker: the stats, then the Conditions
+     (just the Conditions while Level up shows the stats editable above) */
   .sheet-embedded .sheet-body {
-    grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 4fr);
+    grid-template-columns: minmax(0, 5fr) minmax(0, 3fr);
     gap: 24px 40px;
 
     &:not(:has(.sheet-stats)) {
-      grid-template-columns: minmax(0, 3fr) minmax(0, 4fr);
+      grid-template-columns: minmax(0, 1fr);
     }
   }
 
@@ -951,13 +951,8 @@
   }
 
   @media (max-width: 1199px) {
-    .sheet-embedded .sheet-body,
-    .sheet-embedded .sheet-body:not(:has(.sheet-stats)) {
+    .sheet-embedded .sheet-body {
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    }
-
-    .tools-items {
-      grid-column: 1 / -1;
     }
   }
 
@@ -966,7 +961,6 @@
   @media (min-width: 992px) and (max-width: 1399px) {
     .sheet-embedded .sheet-body,
     .sheet-embedded .sheet-body:not(:has(.sheet-stats)),
-    .sheet-body:has(> .tools-sheet-extra),
     .tools-character:has(> .sheet-description),
     .tools-resources {
       column-gap: 24px;

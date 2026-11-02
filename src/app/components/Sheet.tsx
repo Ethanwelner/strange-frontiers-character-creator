@@ -231,60 +231,64 @@ export function Sheet({
           </div>
         )}
 
-        <div className="c-sheet-box sheet-body">
-          {statsSlot ? (
-            <div className="sheet-stats">{statsSlot}</div>
-          ) : (
-            <div className="sheet-stats">
-              {groups.map((g) => (
-                <div key={g} className="sheet-group">
-                  <div className="sheet-group-head">
-                    <span className="stat-badge" title="Core stat">
-                      {summary?.coreStats[g] ?? "–"}
-                    </span>
-                    <h4 className="rule">{title(g)}</h4>
-                  </div>
-                  {/* Magic: a diamond per point, under its number */}
-                  {!STAT_GROUPS[g].length && (
-                    <div className="sheet-stat">
-                      <div className="tiny-text">
-                        <strong>
-                          Each point in {title(g)} adds {MP_PER_MAGIC} MP (Mana Points)
-                        </strong>
-                      </div>
-                      <CoreLine bonus={summary?.coreBonus[g] ?? 0} value={summary?.coreStats[g] ?? draft.core[g]} />
+        {/* The stats and Conditions, and the Items in a box of their own beside them */}
+        <div className="sheet-row">
+          <div className="c-sheet-box sheet-body">
+            {statsSlot ? (
+              <div className="sheet-stats">{statsSlot}</div>
+            ) : (
+              <div className="sheet-stats">
+                {groups.map((g) => (
+                  <div key={g} className="sheet-group">
+                    <div className="sheet-group-head">
+                      <span className="stat-badge" title="Core stat">
+                        {summary?.coreStats[g] ?? "–"}
+                      </span>
+                      <h4 className="rule">{title(g)}</h4>
                     </div>
-                  )}
-                  {STAT_GROUPS[g].map((s: StatId) => {
-                    const value = summary?.stats[s];
-                    // The Kind's bonus, with any free bonus points placed, shows gray.
-                    const bonus = (base?.[s]?.bonus ?? 0) + (draft.startPoints?.[s] ?? 0);
-                    const max = base?.[s]?.max ?? 0;
-                    return (
-                      <div key={s} className="sheet-stat">
+                    {/* Magic: a diamond per point, under its number */}
+                    {!STAT_GROUPS[g].length && (
+                      <div className="sheet-stat">
                         <div className="tiny-text">
                           <strong>
-                            {title(s)} - {value ?? "–"}
+                            Each point in {title(g)} adds {MP_PER_MAGIC} MP (Mana Points)
                           </strong>
-                          <span className="muted"> max {base?.[s]?.max ?? "–"}</span>
                         </div>
-                        <StatLine bonus={bonus} value={value ?? bonus} max={max} />
+                        <CoreLine bonus={summary?.coreBonus[g] ?? 0} value={summary?.coreStats[g] ?? draft.core[g]} />
                       </div>
-                    );
-                  })}
-                </div>
-              ))}
-            </div>
-          )}
-
-          {onItems && onConditions && (
-            // The Conditions beside the stats, then the Items in the last column
-            <>
-              <Conditions conditions={conditions ?? []} hp={hp ?? summary?.resources.hp ?? 0} maxHp={summary?.resources.hp ?? 0} onChange={onConditions} />
-              <div className="tools-sheet-extra">
-                <Items items={items ?? []} onChange={onItems} />
+                    )}
+                    {STAT_GROUPS[g].map((s: StatId) => {
+                      const value = summary?.stats[s];
+                      // The Kind's bonus, with any free bonus points placed, shows gray.
+                      const bonus = (base?.[s]?.bonus ?? 0) + (draft.startPoints?.[s] ?? 0);
+                      const max = base?.[s]?.max ?? 0;
+                      return (
+                        <div key={s} className="sheet-stat">
+                          <div className="tiny-text">
+                            <strong>
+                              {title(s)} - {value ?? "–"}
+                            </strong>
+                            <span className="muted"> max {base?.[s]?.max ?? "–"}</span>
+                          </div>
+                          <StatLine bonus={bonus} value={value ?? bonus} max={max} />
+                        </div>
+                      );
+                    })}
+                  </div>
+                ))}
               </div>
-            </>
+            )}
+
+            {onItems && onConditions && (
+              // The Conditions beside the stats
+              <Conditions conditions={conditions ?? []} hp={hp ?? summary?.resources.hp ?? 0} maxHp={summary?.resources.hp ?? 0} onChange={onConditions} />
+            )}
+          </div>
+          {onItems && onConditions && (
+            // The Items in their own box at the end of the row
+            <div className="c-sheet-box sheet-items">
+              <Items items={items ?? []} onChange={onItems} />
+            </div>
           )}
         </div>
 
