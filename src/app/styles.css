@@ -2632,7 +2632,7 @@
   .tools-item {
     background: var(--panel-box);
     border: 1px solid var(--card-border);
-    padding: 12px;
+    padding: 0;
   }
 
   .tools-item-row {
@@ -2653,6 +2653,33 @@
     display: inline-flex;
     gap: 4px;
     align-items: center;
+  }
+
+  /* Remove, a trash can faded like the sheet's pens, full strength under
+     the pointer */
+  .tools-item-remove {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: inherit;
+    cursor: pointer;
+    opacity: 0.4;
+    transition: opacity 200ms;
+
+    &:is(:hover, :focus-visible) {
+      opacity: 1;
+    }
+
+    svg {
+      width: 14px;
+      height: 16px;
+      fill: currentColor;
+    }
   }
 
   /* A stock item's description and rules, under its row */
