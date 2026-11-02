@@ -2564,6 +2564,11 @@
     }
   }
 
+  /* The Items' box in a warm dark gray, under the olive cards */
+  .builder-panel .c-sheet .c-sheet-box.sheet-items {
+    background-color: #2f2e2a;
+  }
+
   /* The add row (Items' and Player Tools' Add a Condition), item notes, and
      the count */
   .tools-add {
