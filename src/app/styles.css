@@ -2637,6 +2637,11 @@
     border: 1px solid #6d6a5a !important;
     padding: 12px;
     box-shadow: 0 4px 10px #00000030;
+
+    /* Its fields in a darker olive to match */
+    :is(input:not([type="checkbox"]), select) {
+      background-color: #25241e;
+    }
   }
 
   .tools-item-row {
