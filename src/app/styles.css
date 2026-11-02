@@ -2629,10 +2629,16 @@
     margin: 0 0 16px;
   }
 
+  /* Each item a card like the Traits: their 2px dark border and shadow
+     (the sheet's boxes otherwise have no border) */
   .tools-item {
     background: var(--panel-box);
-    border: 1px solid var(--card-border);
-    padding: 0;
+  }
+
+  .builder-panel .c-sheet-box.tools-item {
+    border: 2px solid #181818;
+    padding: 12px;
+    box-shadow: 0 4px 10px #00000030;
   }
 
   .tools-item-row {
@@ -2642,7 +2648,7 @@
     align-items: center;
   }
 
-  /* The name on the same line as the count, category, Equipped and Remove,
+  /* The name on the same line as the count, category, Equip and Remove,
      taking what room they leave */
   .tools-item-name {
     flex: 1 1 0;
@@ -2655,11 +2661,11 @@
     align-items: center;
   }
 
-  /* Remove, a trash can faded like the sheet's pens, full strength under
-     the pointer, 12px further from Equipped to keep it from misclicks */
-  .tools-item-remove {
+  /* Notes, a pen on a line, and Remove, a trash can, faded like the sheet's
+     pens and full strength under the pointer (the pen too while its notes
+     show). The trash can is 1rem further out, away from misclicks. */
+  .tools-item-icon {
     flex: none;
-    margin-left: 12px;
     display: grid;
     place-items: center;
     width: 24px;
@@ -2672,7 +2678,7 @@
     opacity: 0.4;
     transition: opacity 200ms;
 
-    &:is(:hover, :focus-visible) {
+    &:is(:hover, :focus-visible, [aria-expanded="true"]) {
       opacity: 1;
     }
 
@@ -2680,6 +2686,14 @@
       width: 14px;
       height: 16px;
       fill: currentColor;
+    }
+
+    &.tools-item-notes svg {
+      width: 18px;
+    }
+
+    & + & {
+      margin-left: 1rem;
     }
   }
 
