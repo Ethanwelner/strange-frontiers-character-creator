@@ -129,7 +129,7 @@ export function Sheet({
   onPortrait?: (portrait?: string) => void;
   // Edits the description; without it the sheet shows the description as text.
   onDescription?: (description?: string) => void;
-  // The last column, after the Knowledges: the Conditions, then the Items,
+  // The Conditions, beside the stats, and the Items, in the last column,
   // with the current HP the Conditions go by (full if not given)
   items?: Item[];
   onItems?: (items: Item[]) => void;
@@ -231,54 +231,71 @@ export function Sheet({
           </div>
         )}
 
-        <div className="c-sheet-box sheet-body">
-          {statsSlot ? (
-            <div className="sheet-stats">{statsSlot}</div>
-          ) : (
-            <div className="sheet-stats">
-              {groups.map((g) => (
-                <div key={g} className="sheet-group">
-                  <div className="sheet-group-head">
-                    <span className="stat-badge" title="Core stat">
-                      {summary?.coreStats[g] ?? "–"}
-                    </span>
-                    <h4 className="rule">{title(g)}</h4>
-                  </div>
-                  {/* Magic: a diamond per point, under its number */}
-                  {!STAT_GROUPS[g].length && (
-                    <div className="sheet-stat">
-                      <div className="tiny-text">
-                        <strong>
-                          Each point in {title(g)} adds {MP_PER_MAGIC} MP (Mana Points)
-                        </strong>
-                      </div>
-                      <CoreLine bonus={summary?.coreBonus[g] ?? 0} value={summary?.coreStats[g] ?? draft.core[g]} />
+        {/* The stats, the Conditions and the Items, each in a box of its own */}
+        <div className="sheet-row">
+          <div className="c-sheet-box sheet-body">
+            {statsSlot ? (
+              <div className="sheet-stats">{statsSlot}</div>
+            ) : (
+              <div className="sheet-stats">
+                {groups.map((g) => (
+                  <div key={g} className="sheet-group">
+                    <div className="sheet-group-head">
+                      <span className="stat-badge" title="Core stat">
+                        {summary?.coreStats[g] ?? "–"}
+                      </span>
+                      <h4 className="rule">{title(g)}</h4>
                     </div>
-                  )}
-                  {STAT_GROUPS[g].map((s: StatId) => {
-                    const value = summary?.stats[s];
-                    // The Kind's bonus, with any free bonus points placed, shows gray.
-                    const bonus = (base?.[s]?.bonus ?? 0) + (draft.startPoints?.[s] ?? 0);
-                    const max = base?.[s]?.max ?? 0;
-                    return (
-                      <div key={s} className="sheet-stat">
+                    {/* Magic: a diamond per point, under its number */}
+                    {!STAT_GROUPS[g].length && (
+                      <div className="sheet-stat">
                         <div className="tiny-text">
                           <strong>
-                            {title(s)} - {value ?? "–"}
+                            Each point in {title(g)} adds {MP_PER_MAGIC} MP (Mana Points)
                           </strong>
-                          <span className="muted"> max {base?.[s]?.max ?? "–"}</span>
                         </div>
-                        <StatLine bonus={bonus} value={value ?? bonus} max={max} />
+                        <CoreLine bonus={summary?.coreBonus[g] ?? 0} value={summary?.coreStats[g] ?? draft.core[g]} />
                       </div>
-                    );
-                  })}
-                </div>
-              ))}
-            </div>
+                    )}
+                    {STAT_GROUPS[g].map((s: StatId) => {
+                      const value = summary?.stats[s];
+                      // The Kind's bonus, with any free bonus points placed, shows gray.
+                      const bonus = (base?.[s]?.bonus ?? 0) + (draft.startPoints?.[s] ?? 0);
+                      const max = base?.[s]?.max ?? 0;
+                      return (
+                        <div key={s} className="sheet-stat">
+                          <div className="tiny-text">
+                            <strong>
+                              {title(s)} - {value ?? "–"}
+                            </strong>
+                            <span className="muted"> max {base?.[s]?.max ?? "–"}</span>
+                          </div>
+                          <StatLine bonus={bonus} value={value ?? bonus} max={max} />
+                        </div>
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          {onItems && onConditions && (
+            // The Conditions and the Items, each in its own box along the row
+            <>
+              <div className="c-sheet-box sheet-conditions">
+                <Conditions conditions={conditions ?? []} hp={hp ?? summary?.resources.hp ?? 0} maxHp={summary?.resources.hp ?? 0} onChange={onConditions} />
+              </div>
+              <div className="c-sheet-box sheet-items">
+                <Items items={items ?? []} onChange={onItems} />
+              </div>
+            </>
           )}
+        </div>
 
-          <div className="sheet-side">
-            <h4 className="rule">Knowledges</h4>
+        {/* The Knowledges in their own box, to the left of the Traits */}
+        <div className="sheet-lower">
+          <div className="c-sheet-box sheet-side">
+            <h3 className="subhead">Knowledges</h3>
             {knowledges.length > 0 ? (
               <ul className="knowledge-list">
                 {knowledges.map((h) => {
@@ -298,69 +315,61 @@ export function Sheet({
               <p className="empty">None yet.</p>
             )}
           </div>
-          {onItems && onConditions && (
-            // The last column: the Conditions, then the Items
-            <div className="tools-sheet-extra">
-              <Conditions conditions={conditions ?? []} hp={hp ?? summary?.resources.hp ?? 0} maxHp={summary?.resources.hp ?? 0} onChange={onConditions} />
-              <Items items={items ?? []} onChange={onItems} />
-            </div>
-          )}
-        </div>
-
-        <div className="c-sheet-box">
-          {traitsAction ? (
-            // The action at the right end of the Traits title's line
-            <div className="sheet-traits-head">
+          <div className="c-sheet-box">
+            {traitsAction ? (
+              // The action at the right end of the Traits title's line
+              <div className="sheet-traits-head">
+                <h3 className="subhead">Traits</h3>
+                {traitsAction}
+              </div>
+            ) : (
               <h3 className="subhead">Traits</h3>
-              {traitsAction}
-            </div>
-          ) : (
-            <h3 className="subhead">Traits</h3>
-          )}
-          {/* The picks the character still has to spend on Traits */}
-          {summary && (
-            <p className="sheet-banked">
-              {summary.picks.universal.banked} universal and {summary.picks.background.banked} background{" "}
-              {summary.picks.universal.banked + summary.picks.background.banked === 1 ? "pick" : "picks"} available
-            </p>
-          )}
-          {others.length > 0 ? (
-            <ul className="sheet-traits">
-              {others.map((h) => (
-                <li key={h.trait}>
-                  <TraitCard held={h} places={places(h.trait)} draft={draft} />
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="empty">{held.length ? "No Traits besides Knowledges." : "No Traits yet."}</p>
-          )}
-
-          {records.length > 0 && (
-            <>
-              <h3 className="subhead">Contacts</h3>
-              <ul className="features">
-                {records.map((r, i) => (
-                  <li key={i}>
-                    <strong>{r.text}</strong> <span className="muted">({r.noun} from {r.from})</span>
+            )}
+            {/* The picks the character still has to spend on Traits */}
+            {summary && (
+              <p className="sheet-banked">
+                {summary.picks.universal.banked} universal and {summary.picks.background.banked} background{" "}
+                {summary.picks.universal.banked + summary.picks.background.banked === 1 ? "pick" : "picks"} available
+              </p>
+            )}
+            {others.length > 0 ? (
+              <ul className="sheet-traits">
+                {others.map((h) => (
+                  <li key={h.trait}>
+                    <TraitCard held={h} places={places(h.trait)} draft={draft} />
                   </li>
                 ))}
               </ul>
-            </>
-          )}
+            ) : (
+              <p className="empty">{held.length ? "No Traits besides Knowledges." : "No Traits yet."}</p>
+            )}
 
-          {features.length > 0 && (
-            <>
-              <h3 className="subhead">Features</h3>
-              <ul className="features">
-                {features.map((f, i) => (
-                  <li key={i}>
-                    <strong>{f.name}</strong> <span className="muted">({f.from})</span>. {f.description}
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
+            {records.length > 0 && (
+              <>
+                <h3 className="subhead">Contacts</h3>
+                <ul className="features">
+                  {records.map((r, i) => (
+                    <li key={i}>
+                      <strong>{r.text}</strong> <span className="muted">({r.noun} from {r.from})</span>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+
+            {features.length > 0 && (
+              <>
+                <h3 className="subhead">Features</h3>
+                <ul className="features">
+                  {features.map((f, i) => (
+                    <li key={i}>
+                      <strong>{f.name}</strong> <span className="muted">({f.from})</span>. {f.description}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </div>
         </div>
       </div>
       {opened && <TraitModal held={opened} places={places(opened.trait)} draft={draft} onClose={closeModal} />}

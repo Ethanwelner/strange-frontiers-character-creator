@@ -146,8 +146,8 @@
   /* With a character in, it's laid out like the creator's sheet: the sheet's
      lighter gray, its border and round corners, with the level's blob
      (.level-badge) over the top left corner and the zones in darker boxes:
-     the name over the resources, the stats, Knowledges and Items columns,
-     and the Traits */
+     the name over the resources, the stats, Conditions and Items columns,
+     and the Knowledges beside the Traits */
   .tools-box {
     position: relative;
     padding: 1rem;
@@ -160,11 +160,6 @@
   /* The sheet inside it has the shadow already, from the box */
   .builder-panel .tools-box .c-sheet {
     box-shadow: none;
-  }
-
-  /* Items take the darker gray of the HP, VP and SP boxes there */
-  .tools-box .tools-item {
-    background: var(--panel);
   }
 
   /* 24px between the boxes */
@@ -315,16 +310,6 @@
     }
   }
 
-  /* The sheet's columns on the Tracker: stats, Knowledges, then Items (just
-     Knowledges and Items while Level up shows the stats editable above) */
-  .sheet-embedded .sheet-body {
-    grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 4fr);
-    gap: 24px 40px;
-
-    &:not(:has(.sheet-stats)) {
-      grid-template-columns: minmax(0, 3fr) minmax(0, 4fr);
-    }
-  }
 
   .tools-tracker > .sheet-embedded {
     margin-top: 0;
@@ -955,33 +940,12 @@
     }
   }
 
-  @media (max-width: 1199px) {
-    .sheet-embedded .sheet-body,
-    .sheet-embedded .sheet-body:not(:has(.sheet-stats)) {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    }
-
-    .tools-items {
-      grid-column: 1 / -1;
-    }
-  }
-
   /* At the same widths the sheet's sections sit 24px apart side to side:
      its columns, the character box's matching columns, and HP, VP and SP */
   @media (min-width: 992px) and (max-width: 1399px) {
-    .sheet-embedded .sheet-body,
-    .sheet-embedded .sheet-body:not(:has(.sheet-stats)),
-    .sheet-body:has(> .tools-sheet-extra),
     .tools-character:has(> .sheet-description),
     .tools-resources {
       column-gap: 24px;
-    }
-  }
-
-  @media (max-width: 767px) {
-    .sheet-embedded .sheet-body,
-    .sheet-embedded .sheet-body:not(:has(.sheet-stats)) {
-      grid-template-columns: minmax(0, 1fr);
     }
   }
 

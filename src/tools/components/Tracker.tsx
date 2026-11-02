@@ -146,7 +146,7 @@ export function Tracker({
         </div>
       </div>
 
-      {/* The rest of the character sheet: stats, Knowledges, Conditions and Items, and Traits */}
+      {/* The rest of the character sheet: stats, Conditions and Items, then Knowledges beside the Traits */}
       <Sheet
         draft={play.draft}
         result={result}

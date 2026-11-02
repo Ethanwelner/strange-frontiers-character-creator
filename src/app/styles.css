@@ -2027,7 +2027,7 @@
 
   /* From 1200px, where the body has its three columns, the head takes the
      same ones: the portrait and name over the stats, the description over
-     the Knowledges and the Conditions and Items */
+     the Conditions and the Items */
   @media (min-width: 1200px) {
     :is(.sheet-head, .tools-character):has(> .sheet-description) {
       container: sheet-head / inline-size;
@@ -2442,15 +2442,6 @@
     margin: 4px 0;
   }
 
-  /* The sheet's last column: the Conditions, then the Items, 40px apart */
-  .tools-sheet-extra {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    align-content: start;
-    gap: 40px;
-    min-width: 0;
-  }
-
   .tools-conditions-side {
     .rule {
       margin-top: 0;
@@ -2511,27 +2502,53 @@
     }
   }
 
-  /* 24px between rows when the columns stack */
+  /* The stats' box */
   .sheet-body {
     display: grid;
-    grid-template-columns: minmax(0, 5fr) minmax(0, 3fr);
-    gap: 24px 48px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
   }
 
-  /* With the Conditions and Items (.tools-sheet-extra) as a third column
-     after the Knowledges */
-  .sheet-body:has(> .tools-sheet-extra) {
-    grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 4fr);
-    gap: 24px 40px;
-  }
+  /* Under it, the Knowledges' box to the left of the Traits', only as wide
+     as its longest name (up to 20rem) and as tall as the Traits', stacked
+     on narrow screens */
+  .sheet-lower {
+    display: grid;
+    grid-template-columns: fit-content(20rem) minmax(0, 1fr);
+    align-items: stretch;
+    gap: 24px;
 
-  @media (max-width: 1199px) {
-    .sheet-body:has(> .tools-sheet-extra) {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    @media (max-width: 767px) {
+      grid-template-columns: minmax(0, 1fr);
     }
+  }
 
-    .sheet-body > .tools-sheet-extra {
-      grid-column: 1 / -1;
+  /* The stats', Conditions' and Items' boxes, as tall as each other: the
+     stats only as wide as they need, then the Conditions and Items in 3
+     and 4 parts of the rest from 1200px; the stats and Conditions over the
+     Items from 768px; stacked below that */
+  .sheet-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: stretch;
+    gap: 24px;
+
+    &:has(> .sheet-items) {
+      @media (min-width: 768px) {
+        grid-template-columns: max-content minmax(0, 1fr);
+
+        > .sheet-items {
+          grid-column: 1 / -1;
+        }
+      }
+
+      @media (min-width: 1200px) {
+        grid-template-columns: max-content minmax(0, 3fr) minmax(0, 4fr);
+
+        > .sheet-items {
+          grid-column: auto;
+        }
+      }
     }
   }
 
@@ -2590,23 +2607,30 @@
     }
   }
 
-  /* Items as a column: its heading like Knowledges', then the name on its
-     own line with count, category and Add under it, then each item in a box
-     on the dark panel with its fields wrapping to fit */
+  /* Items as a column: its heading like Knowledges', then the name, count,
+     category and Add on one line, then each item in a card with its fields
+     wrapping to fit */
   .tools-items {
+    container: items / inline-size;
+
     .rule {
       margin-top: 0;
     }
 
-    /* The count and category stretch to the Add button's height, like the
-       HP boxes' fields, and the name on its own line matches them (2.35rem
-       is the button's height) */
+    /* The fields stretch to the Add button's height, like the HP boxes'
+       fields; the name takes the room left, and the category gives some up
+       before Add wraps, which it only does in a column under 300px */
     .tools-add {
       align-items: stretch;
+      flex-wrap: nowrap;
+
+      @container items (width < 300px) {
+        flex-wrap: wrap;
+      }
 
       input[type="text"] {
-        flex: 1 1 100%;
-        min-height: 2.35rem;
+        flex: 1 1 0;
+        min-width: 4rem;
       }
 
       .tools-qty,
@@ -2615,8 +2639,8 @@
       }
 
       select {
-        flex: 1;
-        min-width: 0;
+        flex: 0 1 auto;
+        min-width: 5.5rem;
       }
     }
   }
@@ -2629,16 +2653,24 @@
     margin: 0 0 16px;
   }
 
-  /* Each item a card like the Traits: their 2px dark border and shadow
-     (the sheet's boxes otherwise have no border) */
-  .tools-item {
-    background: var(--panel-box);
-  }
-
+  /* Each item a card with the Traits' shadow, in a warm olive gray with a
+     lighter edge, the same in the creator and Player Tools (the sheet's
+     boxes otherwise have no border) */
   .builder-panel .c-sheet-box.tools-item {
-    border: 2px solid #181818;
+    background-color: #3f3d33;
+    border: 1px solid #6d6a5a !important;
     padding: 12px;
     box-shadow: 0 4px 10px #00000030;
+
+    /* Its fields in a darker olive to match */
+    :is(input:not([type="checkbox"]), select) {
+      background-color: #25241e;
+    }
+  }
+
+  /* The add form's fields match the cards' */
+  .builder-panel .tools-items .tools-add :is(input, select) {
+    background-color: #25241e;
   }
 
   .tools-item-row {
@@ -2711,6 +2743,12 @@
     display: flex;
     flex-direction: column;
     gap: 24px;
+
+    /* What's left to place wraps to the stat lines' width instead of
+       widening the stats' box (sized to its content, .sheet-row) */
+    .pool-summary {
+      contain: inline-size;
+    }
   }
 
   .sheet-group {
