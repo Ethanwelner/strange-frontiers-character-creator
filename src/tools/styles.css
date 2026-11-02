@@ -188,9 +188,8 @@
     }
   }
 
-  /* The creator's green, like Build it: Traits available, and the stats'
-     Submit once every point is placed (gray until then) */
-  .tools-traits-available button,
+  /* The creator's green, like Build it: the stats' Submit once every point
+     is placed (gray until then) */
   .tools-level-actions button:not(:disabled) {
     background: var(--frontiers-green);
     color: var(--portfolio-black);
@@ -362,7 +361,7 @@
     margin-top: 24px;
   }
 
-  /* Traits available, at the right end of the Traits title's line */
+  /* Add traits, at the right end of the Traits title's line */
   .sheet-traits-head {
     display: flex;
     align-items: center;
@@ -373,10 +372,6 @@
       flex: 1;
       margin: 0;
     }
-  }
-
-  .tools-traits-available {
-    margin: 0;
   }
 
   /* The creator's Traits step in a wide popup on the panel's dark gray, with
