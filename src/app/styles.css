@@ -1127,7 +1127,7 @@
 
   /* Kind cards run wider than the other steps' cards */
   .kind-group .cards {
-    grid-template-columns: repeat(auto-fill, minmax(min(400px, 100%), 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr));
   }
 
   .card-head {
@@ -1944,6 +1944,7 @@
   /* 1rem around the boxes, like Player Tools' box, with 12px corners (the
      site's sample sheet keeps its own 16px) */
   .c-sheet {
+    container: sheet / inline-size;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -2523,10 +2524,12 @@
     }
   }
 
-  /* The stats', Conditions' and Items' boxes, as tall as each other: the
-     stats only as wide as they need, then the Conditions and Items in 3
-     and 4 parts of the rest from 1200px; the stats and Conditions over the
-     Items from 768px; stacked below that */
+  /* The stats', Conditions' and Items' boxes, as tall as each other, by
+     the sheet's own width (so Player Tools' chat column counts): the stats
+     only as wide as they need, then the Conditions and Items in 3 and 4
+     parts of the rest in a sheet 1400px wide; the stats and Conditions over
+     the Items, which lay their cards side by side, from 880px; stacked
+     below that */
   .sheet-row {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -2534,7 +2537,7 @@
     gap: 24px;
 
     &:has(> .sheet-items) {
-      @media (min-width: 768px) {
+      @container sheet (width >= 880px) {
         grid-template-columns: max-content minmax(0, 1fr);
 
         > .sheet-items {
@@ -2542,7 +2545,7 @@
         }
       }
 
-      @media (min-width: 1200px) {
+      @container sheet (width >= 1400px) {
         grid-template-columns: max-content minmax(0, 3fr) minmax(0, 4fr);
 
         > .sheet-items {
@@ -2645,10 +2648,13 @@
     }
   }
 
+  /* The cards side by side, at least 360px each, when the Items' box is
+     wide enough (under the stats and Conditions); one column otherwise */
   .tools-item-list {
     list-style: none;
     padding: 0;
     display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr));
     gap: 12px;
     margin: 0 0 16px;
   }
@@ -2657,6 +2663,7 @@
      lighter edge, the same in the creator and Player Tools (the sheet's
      boxes otherwise have no border) */
   .builder-panel .c-sheet-box.tools-item {
+    container: item / inline-size;
     background-color: #3f3d33;
     border: 1px solid #6d6a5a !important;
     padding: 12px;
@@ -2673,18 +2680,34 @@
     background-color: #25241e;
   }
 
+  /* One line once the card has the room for the name at its smallest and
+     the category shrunk to 5.5rem (357px); wrapping in narrower cards */
   .tools-item-row {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
     align-items: center;
+
+    @container item (width >= 357px) {
+      flex-wrap: nowrap;
+    }
+
+    select {
+      flex: 0 1 auto;
+      min-width: 5.5rem;
+
+      /* In a tight card the category gives the name its room first */
+      @container item (width < 440px) {
+        flex-basis: 6rem;
+      }
+    }
   }
 
   /* The name on the same line as the count, category, Equip and Remove,
      taking what room they leave */
   .tools-item-name {
     flex: 1 1 0;
-    min-width: 4rem;
+    min-width: 3rem;
   }
 
   .tools-equipped {
