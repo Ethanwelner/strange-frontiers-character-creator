@@ -2563,17 +2563,6 @@
       }
     }
   }
-
-  /* The stats' box in a cool dark gray, and the Items' in a warm one under
-     the olive cards */
-  .builder-panel .c-sheet .c-sheet-box.sheet-body {
-    background-color: #292b2e;
-  }
-
-  .builder-panel .c-sheet .c-sheet-box.sheet-items {
-    background-color: #2f2e2a;
-  }
-
   /* The add row (Items' and Player Tools' Add a Condition), item notes, and
      the count */
   .tools-add {
