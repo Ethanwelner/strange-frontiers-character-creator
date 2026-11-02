@@ -2510,11 +2510,12 @@
   }
 
   /* Under it, the Knowledges' box to the left of the Traits', only as wide
-     as its longest name (up to 20rem), stacked on narrow screens */
+     as its longest name (up to 20rem) and as tall as the Traits', stacked
+     on narrow screens */
   .sheet-lower {
     display: grid;
     grid-template-columns: fit-content(20rem) minmax(0, 1fr);
-    align-items: start;
+    align-items: stretch;
     gap: 24px;
 
     @media (max-width: 767px) {
@@ -2523,12 +2524,12 @@
   }
 
   /* The stats and Conditions' box, with the Items' box beside it from
-     1200px (in the head's columns: 5 and 3 parts, then 4) and under it
-     below that */
+     1200px (in the head's columns: 5 and 3 parts, then 4) and as tall, and
+     under it below that */
   .sheet-row {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    align-items: start;
+    align-items: stretch;
     gap: 24px;
 
     &:has(> .sheet-items) {
