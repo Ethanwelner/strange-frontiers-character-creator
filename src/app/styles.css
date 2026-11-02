@@ -2665,6 +2665,8 @@
     grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr));
     gap: 12px;
     margin: 0 0 16px;
+    /* An open card doesn't stretch the closed one beside it */
+    align-items: start;
   }
 
   /* Each item a card with the Traits' shadow, in a warm olive gray with a
@@ -2757,6 +2759,47 @@
 
     & + & {
       margin-left: 1rem;
+    }
+  }
+
+  /* A closed card's line: the name taking the room, then the count, the
+     category in the soft color, Equip, and the chevron that opens it */
+  .tools-item-summary {
+    flex-wrap: nowrap;
+  }
+
+  .tools-item-title {
+    flex: 1 1 0;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 600;
+  }
+
+  .tools-item-count {
+    flex: none;
+  }
+
+  .tools-item-category {
+    flex: none;
+    color: var(--panel-soft);
+    font-size: 0.875rem;
+  }
+
+  /* The chevron, a little apart from the rest, pointing up while open */
+  .tools-item-icon.tools-item-expand {
+    margin-left: 4px;
+
+    svg {
+      width: 12px;
+      height: 8px;
+      fill: none;
+      transition: transform 200ms;
+    }
+
+    &[aria-expanded="true"] svg {
+      transform: rotate(180deg);
     }
   }
 
