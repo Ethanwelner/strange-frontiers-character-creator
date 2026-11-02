@@ -127,9 +127,6 @@
   --rule-on-black: rgb(255 255 255 / 25%);
   /* The dark builder panel and the box each step sits in */
   --panel: #2b2b2b;
-  /* The panel's gray at half strength, behind the builder and Player Tools,
-     so the night sky shows through where nothing else covers it */
-  --panel-see: rgb(43 43 43 / 50%);
   --panel-box: #363636;
   --panel-text: #e8e8e8;
   --panel-soft: #b3b3b3;
@@ -346,11 +343,11 @@
     font-size: 1.25rem;
   }
 
-  /* The active tab in the panel's see-through gray, joining the panel */
   .rpg-tab.is-active {
-    background: var(--panel-see);
+    background: var(--panel);
     /* The site's active tab is black on white, with !important */
     color: var(--portfolio-white) !important;
+    box-shadow: 0 1px 0 var(--panel);
   }
 
   .step-n {
@@ -592,8 +589,24 @@
     --rule: rgb(255 255 255 / 18%);
     /* Card edges fade into the dark box instead of outlining it in light gray */
     --card-border: #5e5e5e;
-    background: var(--panel-see);
+    position: relative;
+    /* Clear of the site's .white-bg; the gray is the layer below */
+    background: none;
     color: var(--panel-text);
+  }
+
+  /* The panel's gray, on a layer under its content that lightens what's
+     behind it: everywhere it's the gray, except where the night sky's
+     stars are lighter, which show through. Not a stacking context itself,
+     so it sits just above the sky (z-index -1, earlier in the page). */
+  .builder-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--panel);
+    mix-blend-mode: lighten;
+    pointer-events: none;
   }
 
   /* The site's .section.unlimited:last-child drops the bottom padding */
