@@ -2661,11 +2661,11 @@
     align-items: center;
   }
 
-  /* Remove, a trash can faded like the sheet's pens, full strength under
-     the pointer, 1rem further from Equip to keep it from misclicks */
-  .tools-item-remove {
+  /* Notes, a pen on a line, and Remove, a trash can, faded like the sheet's
+     pens and full strength under the pointer (the pen too while its notes
+     show). The trash can is 1rem further out, away from misclicks. */
+  .tools-item-icon {
     flex: none;
-    margin-left: 1rem;
     display: grid;
     place-items: center;
     width: 24px;
@@ -2678,7 +2678,7 @@
     opacity: 0.4;
     transition: opacity 200ms;
 
-    &:is(:hover, :focus-visible) {
+    &:is(:hover, :focus-visible, [aria-expanded="true"]) {
       opacity: 1;
     }
 
@@ -2686,6 +2686,14 @@
       width: 14px;
       height: 16px;
       fill: currentColor;
+    }
+
+    &.tools-item-notes svg {
+      width: 18px;
+    }
+
+    & + & {
+      margin-left: 1rem;
     }
   }
 
