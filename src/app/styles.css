@@ -2510,17 +2510,18 @@
     gap: 24px;
   }
 
-  /* Under it, the Knowledges' box to the left of the Traits', only as wide
-     as its longest name (up to 20rem) and as tall as the Traits'; above
-     them in a sheet under 720px (Player Tools' beside the chat too) */
+  /* Under it, the Knowledges' box above the Traits', until the sheet is
+     1400px wide, where the Items join the stats' row (.sheet-row); then to
+     their left, only as wide as its longest name (up to 20rem) and as tall
+     as the Traits' */
   .sheet-lower {
     display: grid;
-    grid-template-columns: fit-content(20rem) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
     align-items: stretch;
     gap: 24px;
 
-    @container sheet (width < 720px) {
-      grid-template-columns: minmax(0, 1fr);
+    @container sheet (width >= 1400px) {
+      grid-template-columns: fit-content(20rem) minmax(0, 1fr);
     }
   }
 
