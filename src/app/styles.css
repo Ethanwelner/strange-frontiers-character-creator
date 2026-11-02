@@ -2050,6 +2050,22 @@
     }
   }
 
+  /* Up to 1360px the name and info go under the portrait, and the
+     description has the last two columns again */
+  @media (min-width: 1200px) and (max-width: 1359.98px) {
+    .sheet-head-who {
+      grid-column: 1;
+
+      > :is(.sheet-head-main, .tools-character-main) {
+        flex-basis: 100%;
+      }
+    }
+
+    .sheet-head-who + .sheet-description {
+      grid-column: 2 / 4;
+    }
+  }
+
   /* The description, after the portrait and the name's column: a box that
      grows with its text */
   .sheet-description {
