@@ -2642,9 +2642,11 @@
     align-items: center;
   }
 
+  /* The name on the same line as the count, category, Equipped and Remove,
+     taking what room they leave */
   .tools-item-name {
-    flex: 1 1 100%;
-    min-width: 0;
+    flex: 1 1 0;
+    min-width: 4rem;
   }
 
   .tools-equipped {
