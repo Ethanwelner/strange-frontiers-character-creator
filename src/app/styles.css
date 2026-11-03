@@ -2727,6 +2727,15 @@
     }
   }
 
+  /* Bites scooped out of the cards' corners, like the site's item cards
+     (corner-shape; browsers without it keep the plain corners) */
+  @supports (corner-shape: scoop) {
+    .builder-panel .c-sheet-box.tools-item {
+      border-radius: 10px;
+      corner-shape: scoop;
+    }
+  }
+
   /* The add form's fields match the cards' */
   .builder-panel .tools-items .tools-add :is(input, select) {
     background-color: #25241e;
