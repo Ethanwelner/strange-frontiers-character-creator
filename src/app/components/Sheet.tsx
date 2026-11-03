@@ -89,6 +89,18 @@ function TraitModal({ held, places, draft, onClose }: { held: Held; places: stri
   );
 }
 
+// The Conditions' and Items' boxes, straight into the stats' row, or, with a
+// box to go over them, in a column with it beside the stats.
+function MaybeStack({ top, children }: { top?: ReactNode; children: ReactNode }) {
+  if (!top) return <>{children}</>;
+  return (
+    <div className="sheet-side-stack">
+      {top}
+      <div className="sheet-side-row">{children}</div>
+    </div>
+  );
+}
+
 // Laid out like the sample character sheet on the site's Mechanics tab.
 // Knowledges and Languages are a list of links, as on that sheet, each opening
 // its card; the other Traits are cards.
@@ -107,6 +119,7 @@ export function Sheet({
   onDescription,
   embedded = false,
   statsSlot,
+  resistancesSlot,
   traitsAction,
   items,
   onItems,
@@ -122,6 +135,8 @@ export function Sheet({
   embedded?: boolean;
   // Stands in for the stats column, as Player Tools' stats editor does
   statsSlot?: ReactNode;
+  // A box over the Conditions and Items, beside the stats, like Player Tools' resistances
+  resistancesSlot?: ReactNode;
   // Shown at the right end of the Traits title's line, like Player Tools' "Traits available"
   traitsAction?: ReactNode;
   onLooks?: (looks: Pick<Draft, "age" | "gender" | "customGender">) => void;
@@ -280,15 +295,16 @@ export function Sheet({
             )}
           </div>
           {onItems && onConditions && (
-            // The Conditions and the Items, each in its own box along the row
-            <>
+            // The Conditions and the Items, each in its own box along the row;
+            // with resistances, under them, together beside the stats
+            <MaybeStack top={resistancesSlot && <div className="c-sheet-box sheet-resistances">{resistancesSlot}</div>}>
               <div className="c-sheet-box sheet-conditions">
                 <Conditions conditions={conditions ?? []} hp={hp ?? summary?.resources.hp ?? 0} maxHp={summary?.resources.hp ?? 0} onChange={onConditions} />
               </div>
               <div className="c-sheet-box sheet-items">
                 <Items items={items ?? []} onChange={onItems} />
               </div>
-            </>
+            </MaybeStack>
           )}
         </div>
 

@@ -2559,6 +2559,70 @@
         flex: 4000 1 0;
       }
     }
+
+    /* Player Tools' resistances over the Conditions and Items, the three
+       together beside the stats, taking the rest of the line as the
+       Conditions would. Under it, the Conditions and the Items share a line
+       4 parts to 3 once there's room for both, or each takes its own. */
+    > .sheet-side-stack {
+      flex: 1000 1 13rem;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+  }
+
+  .sheet-side-row {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 24px;
+
+    > .sheet-conditions {
+      flex: 3 1 13rem;
+      min-width: 0;
+    }
+
+    > .sheet-items {
+      flex: 4 1 20rem;
+      min-width: 0;
+    }
+  }
+
+  /* Each damage type's icon, then the total, along a line that wraps */
+  .tools-resistances .subhead {
+    margin: 0 0 12px;
+  }
+
+  .tools-resistance-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .tools-resistance {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: default;
+
+    .icon {
+      width: 1.4em;
+      height: 1.4em;
+      fill: currentColor;
+    }
+
+    .num {
+      font-weight: 700;
+    }
+
+    &.is-zero {
+      opacity: 0.45;
+    }
   }
   /* Items' and Conditions' titles, with Add item or Add Condition at the
      right end of the line, a small green button like the Traits' Add traits */
