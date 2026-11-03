@@ -139,7 +139,11 @@ function SlotCards({ slot, picked, onChoose }: { slot: Slot; picked?: string; on
                   <SettingIcon plane={p.plane} />
                   {p.name}
                 </h3>
-                <Chip tone="muted">{p.plane}</Chip>
+                {/* Origin, Profession or Past, then its setting, like the card opened from under the name */}
+                <span className="trait-name-chips">
+                  <Chip>{title(p.type)}</Chip>
+                  <Chip tone="muted">{p.plane}</Chip>
+                </span>
               </div>
               <p>{p.summary}</p>
               <PackageGrants pkg={p} />

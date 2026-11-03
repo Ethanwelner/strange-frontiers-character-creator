@@ -26,7 +26,11 @@ export function KindCards({ draft, onChange }: { draft: Draft; onChange: (d: Dra
                       <SettingIcon plane={k.plane} />
                       {k.name}
                     </h3>
-                    <Chip tone="muted">{k.plane}</Chip>
+                    {/* That it's a Kind, then its setting, like the card opened from under the name */}
+                    <span className="trait-name-chips">
+                      <Chip>Kind</Chip>
+                      <Chip tone="muted">{k.plane}</Chip>
+                    </span>
                   </div>
                   <p>{k.summary}</p>
                   {/* Bonus and max for every stat, then the grants and features */}
