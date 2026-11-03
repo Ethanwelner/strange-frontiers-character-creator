@@ -239,7 +239,7 @@ export function Sheet({
             ) : (
               <div className="sheet-stats">
                 {groups.map((g) => (
-                  <div key={g} className="sheet-group">
+                  <div key={g} className={`sheet-group stat-group-${g}`}>
                     <div className="sheet-group-head">
                       <span className="stat-badge" title="Core Stat">
                         {summary?.coreStats[g] ?? "–"}

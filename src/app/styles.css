@@ -736,9 +736,10 @@
     }
   }
 
-  /* The Stats step's bars sit on the dark box: core badges light, the Kind's
-     bonus in the game's purple at the left, the player's points after it in
-     green, and open slots a lighter outline. */
+  /* The Stats step's bars sit on the dark box: core badges light, the bonus
+     points in a dark shade of the group's color at the left, the player's
+     points after them in the full color (.stat-group-*), and open slots a
+     lighter outline. */
   .builder-panel .pool-stats {
     .stat-badge {
       background-color: var(--portfolio-near-white);
@@ -746,11 +747,11 @@
     }
 
     .stat.filled {
-      background-color: var(--frontiers-green);
+      background-color: var(--stat-color, var(--frontiers-green));
     }
 
     .stat.default {
-      background-color: var(--frontiers-lore-on-black);
+      background-color: var(--stat-bonus, var(--frontiers-lore-on-black));
     }
 
     .stat:is(.empty, .unavailable) {
@@ -817,11 +818,11 @@
       }
 
       .stat.filled {
-        background-color: var(--frontiers-green);
+        background-color: var(--stat-color, var(--frontiers-green));
       }
 
       .stat.default {
-        background-color: var(--frontiers-lore-on-black);
+        background-color: var(--stat-bonus, var(--frontiers-lore-on-black));
       }
 
       .stat:is(.empty, .unavailable) {
@@ -3077,6 +3078,30 @@
     border-color: var(--portfolio-gray);
     background-color: var(--portfolio-gray);
     opacity: 0.25;
+  }
+
+  /* On screen each group's points take its resource's color, as in the HP,
+     VP, SP and MP trackers: Physical red, Social purple, Mental yellow and
+     Magic blue, with the Kind's and packages' bonus points a darker shade.
+     Open and over-max slots keep their gray. */
+  .stat-group-physical {
+    --stat-color: var(--frontiers-hp);
+  }
+
+  .stat-group-social {
+    --stat-color: var(--frontiers-vp);
+  }
+
+  .stat-group-mental {
+    --stat-color: var(--frontiers-sp);
+  }
+
+  .stat-group-magic {
+    --stat-color: var(--frontiers-mp);
+  }
+
+  [class*="stat-group-"] {
+    --stat-bonus: color-mix(in srgb, var(--stat-color) 50%, black);
   }
 
   /* A point past the stat's maximum */
