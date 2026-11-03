@@ -757,6 +757,10 @@
       border-color: #8a8a8a;
     }
 
+    .stat.unavailable {
+      background-color: #8a8a8a;
+    }
+
     /* A locked group's row is already faded */
     .sheet-group.locked .stat.unavailable {
       opacity: 1;
@@ -822,6 +826,10 @@
 
       .stat:is(.empty, .unavailable) {
         border-color: #8a8a8a;
+      }
+
+      .stat.unavailable {
+        background-color: #8a8a8a;
       }
 
       button.link {
@@ -3063,10 +3071,11 @@
     transform: rotate(45deg) scale(0.72);
   }
 
-  /* Slots past a stat's maximum: the open slots' gray outline, faded, on the
-     Stats step and the Sheet */
+  /* Slots past a stat's maximum: filled and outlined in the open slots'
+     gray, faded, on the Stats step and the Sheet */
   .sheet-stat .stat.unavailable {
     border-color: var(--portfolio-gray);
+    background-color: var(--portfolio-gray);
     opacity: 0.25;
   }
 
