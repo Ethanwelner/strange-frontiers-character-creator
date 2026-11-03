@@ -2590,9 +2590,14 @@
     }
   }
 
-  /* Each damage type's icon, then the total, along a line that wraps */
+  /* Each damage type resisted: its icon, then the total, along a line that
+     wraps, with its sources in a popover above it on hover or focus */
   .tools-resistances .subhead {
     margin: 0 0 12px;
+  }
+
+  .tools-resistances .empty {
+    margin: 0;
   }
 
   .tools-resistance-list {
@@ -2605,23 +2610,71 @@
   }
 
   .tools-resistance {
+    position: relative;
     display: inline-flex;
     align-items: center;
     gap: 6px;
     cursor: default;
+    border-radius: 4px;
 
-    .icon {
+    > .icon {
       width: 1.4em;
       height: 1.4em;
       fill: currentColor;
     }
 
-    .num {
+    > .num {
       font-weight: 700;
     }
 
-    &.is-zero {
-      opacity: 0.45;
+    &:focus-visible {
+      outline: 2px solid var(--panel-soft);
+      outline-offset: 3px;
+    }
+
+    &:is(:hover, :focus-visible) > .tools-resistance-pop {
+      display: block;
+    }
+  }
+
+  .tools-resistance-pop {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    z-index: 20;
+    width: max-content;
+    max-width: 16rem;
+    padding: 10px 12px;
+    transform: translateX(-50%);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    background-color: var(--panel-box);
+    color: var(--panel-text);
+    font-size: 0.8rem;
+    box-shadow: 0 4px 16px rgb(0 0 0 / 40%);
+
+    .tools-resistance-pop-title {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    ul {
+      display: grid;
+      gap: 4px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .num {
+      font-weight: 700;
     }
   }
   /* Items' and Conditions' titles, with Add item or Add Condition at the
