@@ -714,6 +714,16 @@
       }
     }
 
+    /* Condition cards in a mid gray, border and header bar, so they read
+       apart from Traits */
+    :is(.builder-panel, .lore-modal) .tools-conditions > .trait-box {
+      --card-edge: #646464;
+
+      > .trait-name {
+        background-color: #646464;
+      }
+    }
+
     .builder-panel .notice {
       background: var(--card-bg);
       border-color: var(--card-border);
@@ -2693,7 +2703,7 @@
   .builder-panel .c-sheet-box.tools-item {
     container: item / inline-size;
     background-color: var(--card-bg);
-    border: 1px solid #6d6a5a !important;
+    border: 2px solid #6d6a5a !important;
     padding: 12px;
     box-shadow: 0 4px 10px #00000030;
 
