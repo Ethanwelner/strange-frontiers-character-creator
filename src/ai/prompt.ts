@@ -2,6 +2,7 @@
 // only from content, with no dates or per-request values, so the prefix is
 // byte-identical across requests and stays cached.
 import type { Content } from "../engine/parse.js";
+import { damageText } from "../engine/damage.js";
 import { STAT_GROUPS, type StatBlock } from "../schema/index.js";
 
 export const INSTRUCTIONS = `You build player characters for Strange Frontiers, a tabletop RPG. A player describes the character they want; you choose who they are from the game's real content and explain each choice in one line. The rules engine does the bookkeeping: it spreads the stat points, buys Traits and checks that the result is legal.
@@ -84,7 +85,7 @@ export function contentIndex(content: Content): string {
       i.category,
       i.plane,
       i.slot ? `slot ${i.slot}` : "",
-      i.damageTypes.length ? `damage ${i.damageTypes.join(", ")}` : "",
+      i.damage ? `damage ${damageText(i.damage)}` : "",
       i.resistances ? `resists ${i.resistances}` : "",
       i.uses ?? "",
     ].filter(Boolean);

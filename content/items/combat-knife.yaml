@@ -1,0 +1,11 @@
+id: combat-knife
+name: "Combat Knife"
+status: draft
+plane: earth
+summary: "A sturdy military knife for fighting and field work."
+tags: [melee, blade, military, concealable]
+type: weapon
+category: weapon
+damage: "3 Slashing / 4 Piercing"
+value: 120
+currency: "ERC"

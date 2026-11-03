@@ -4,6 +4,7 @@
 // writes. It travels in the build as `items` (BuildItem in engine/build.ts).
 import { ITEM_CATEGORIES } from "../engine/build.js";
 import type { Item as StockItem } from "../schema/index.js";
+import { damageText } from "../engine/damage.js";
 
 export { ITEM_CATEGORIES };
 export type ItemCategory = (typeof ITEM_CATEGORIES)[number];
@@ -59,10 +60,10 @@ export function readItems(input: unknown): Item[] {
   });
 }
 
-// A stock item's rules in a line, like "Piercing, Slashing damage; 60 ERC".
+// A stock item's rules in a line, like "3 Slashing or 4 Piercing damage; 120 ERC".
 export function itemDetails(stock: StockItem): string {
   const line = [
-    stock.damageTypes.length ? `${stock.damageTypes.join(", ")} damage` : "",
+    stock.damage ? `${damageText(stock.damage)} damage` : "",
     stock.resistances ? `resists ${stock.resistances}` : "",
     stock.uses ?? "",
     stock.slot ? `${stock.slot} slot` : "",

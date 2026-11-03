@@ -6,6 +6,6 @@ summary: "A muzzle-loading smoothbore gun, loud, slow and devastating."
 tags: [ranged, firearm, two-handed]
 type: weapon
 category: weapon
-damageTypes: ["Piercing"]
+damage: "7 Piercing"
 value: 1500
 currency: "ERC"

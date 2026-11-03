@@ -6,6 +6,6 @@ summary: "A modern rifle, the standard arm of soldiers across the systems."
 tags: [ranged, firearm, military, two-handed]
 type: weapon
 category: weapon
-damageTypes: ["Piercing"]
+damage: "7 Piercing"
 value: 1200
 currency: "ERC"

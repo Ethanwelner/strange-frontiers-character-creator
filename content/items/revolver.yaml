@@ -1,0 +1,11 @@
+id: revolver
+name: "Revolver"
+status: draft
+plane: earth
+summary: "A heavy six-shot handgun with a rotating cylinder."
+tags: [ranged, firearm, sidearm]
+type: weapon
+category: weapon
+damage: "8 Piercing"
+value: 800
+currency: "ERC"

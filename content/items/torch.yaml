@@ -6,7 +6,7 @@ summary: "A pitch-soaked torch that burns for about an hour."
 tags: [light, fire]
 type: equipment
 category: consumable
-damageTypes: ["Heat"]
+damage: "Heat"
 uses: "uses 1: burns about an hour"
 value: 5
 currency: "ERC"

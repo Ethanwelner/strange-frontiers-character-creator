@@ -6,6 +6,6 @@ summary: "A backpack fuel tank and nozzle that projects burning fuel."
 tags: [ranged, heavy, fire]
 type: weapon
 category: weapon
-damageTypes: ["Heat"]
+damage: "7 Heat"
 value: 3000
 currency: "ERC"

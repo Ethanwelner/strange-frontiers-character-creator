@@ -6,6 +6,6 @@ summary: "A modern handgun."
 tags: [ranged, firearm, sidearm, concealable]
 type: weapon
 category: weapon
-damageTypes: ["Piercing"]
+damage: "7 Piercing"
 value: 600
 currency: "ERC"

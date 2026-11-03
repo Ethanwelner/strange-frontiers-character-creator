@@ -6,6 +6,6 @@ summary: "A long straight sword wielded in one or two hands."
 tags: [melee, blade, sword]
 type: weapon
 category: weapon
-damageTypes: ["Slashing", "Piercing"]
+damage: "6 Slashing, 4 Piercing"
 value: 600
 currency: "ERC"

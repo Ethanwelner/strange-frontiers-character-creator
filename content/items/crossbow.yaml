@@ -6,6 +6,6 @@ summary: "A bow mounted on a stock, slow to load but easy to aim."
 tags: [ranged, archery, two-handed]
 type: weapon
 category: weapon
-damageTypes: ["Piercing"]
+damage: "5 Piercing"
 value: 500
 currency: "ERC"

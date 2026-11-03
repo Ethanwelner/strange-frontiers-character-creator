@@ -6,6 +6,6 @@ summary: "A heavy automatic gun fired from the hip, a bipod or a mount."
 tags: [ranged, firearm, military, heavy]
 type: weapon
 category: weapon
-damageTypes: ["Piercing"]
+damage: "7 Piercing"
 value: 9000
 currency: "ERC"

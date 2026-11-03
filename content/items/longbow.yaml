@@ -6,6 +6,6 @@ summary: "A tall bow with a heavy draw and a long reach."
 tags: [ranged, archery, two-handed]
 type: weapon
 category: weapon
-damageTypes: ["Piercing"]
+damage: "4 Piercing"
 value: 400
 currency: "ERC"

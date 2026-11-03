@@ -6,6 +6,6 @@ summary: "A police baton that delivers a disabling electric shock."
 tags: [melee, blunt, nonlethal, police]
 type: weapon
 category: weapon
-damageTypes: ["Blunt", "Electrical"]
+damage: "2 Blunt, 2 Electrical"
 value: 150
 currency: "ERC"

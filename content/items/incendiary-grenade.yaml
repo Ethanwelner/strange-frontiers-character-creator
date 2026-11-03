@@ -1,0 +1,12 @@
+id: incendiary-grenade
+name: "Incendiary Grenade"
+status: draft
+plane: earth
+summary: "A grenade that bursts into burning chemical fire."
+tags: [explosive, thrown, fire, military]
+type: weapon
+category: consumable
+damage: "2 Blunt, 6 Heat"
+uses: "uses 1: when thrown"
+value: 150
+currency: "ERC"

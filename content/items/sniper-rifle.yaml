@@ -6,6 +6,6 @@ summary: "A long-range precision rifle with a powerful scope."
 tags: [ranged, firearm, military, two-handed]
 type: weapon
 category: weapon
-damageTypes: ["Piercing"]
+damage: "9 Piercing"
 value: 4000
 currency: "ERC"

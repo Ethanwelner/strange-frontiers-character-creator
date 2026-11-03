@@ -6,6 +6,6 @@ summary: "A long shaft with a sharpened head, cheap to make and deadly in a line
 tags: [melee, polearm, reach]
 type: weapon
 category: weapon
-damageTypes: ["Piercing"]
+damage: "5 Piercing"
 value: 150
 currency: "ERC"

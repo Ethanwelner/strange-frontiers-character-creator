@@ -6,6 +6,6 @@ summary: "A broad-headed axe made for fighting rather than firewood."
 tags: [melee, axe]
 type: weapon
 category: weapon
-damageTypes: ["Slashing"]
+damage: "7 Slashing"
 value: 300
 currency: "ERC"
