@@ -165,6 +165,13 @@ describe("drafts", () => {
     expect([odd.age, odd.gender, odd.customGender]).toEqual([undefined, undefined, undefined]);
   });
 
+  it("keeps height and weight through an export, trimmed and kept short", () => {
+    const sized = { ...human, height: "6′1″", weight: "85 kg" };
+    expect(fromBuild(JSON.parse(JSON.stringify(toBuild(sized))))).toEqual(sized);
+    const odd = fromBuild({ ...toBuild(human), height: "  ", weight: ` ${"9".repeat(30)} ` });
+    expect([odd.height, odd.weight]).toEqual([undefined, "9".repeat(20)]);
+  });
+
   it("keeps the description through an export", () => {
     const described = { ...human, description: "A goblin hedge witch.\n\nShe hates boats." };
     expect(fromBuild(JSON.parse(JSON.stringify(toBuild(described))))).toEqual(described);

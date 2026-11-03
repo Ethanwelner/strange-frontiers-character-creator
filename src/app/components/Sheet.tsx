@@ -3,7 +3,7 @@ import { FREE_TEXT_POOLS, MP_PER_MAGIC, type BuildResult } from "../../engine/va
 import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { coreStatsShown } from "../check.js";
 import { content, kindById, packageById, traitById } from "../content.js";
-import type { Draft } from "../draft.js";
+import type { Draft, Looks } from "../draft.js";
 import type { Item } from "../items.js";
 import type { HeldCondition } from "../conditions.js";
 import { CharacterLine } from "./CharacterLine.js";
@@ -141,7 +141,7 @@ export function Sheet({
   resistancesSlot?: ReactNode;
   // Shown at the right end of the Traits title's line, like Player Tools' "Traits available"
   traitsAction?: ReactNode;
-  onLooks?: (looks: Pick<Draft, "age" | "gender" | "customGender">) => void;
+  onLooks?: (looks: Looks) => void;
   // Changes the portrait from the sheet; without it the sheet only shows it.
   onPortrait?: (portrait?: string) => void;
   // Edits the description; without it the sheet shows the description as text.
@@ -238,7 +238,7 @@ export function Sheet({
               <Portrait className="sheet-portrait" portrait={draft.portrait} name={draft.name} onChange={onPortrait} />
               <div className="sheet-head-main">
                 <NameField className="sheet-name" heading="h2" name={draft.name} onChange={onName ?? (() => {})} />
-                {/* Kind, age, gender, Origin, Profession and Past, as in Player Tools */}
+                {/* Kind, age, gender, height, weight, Origin, Profession and Past, as in Player Tools */}
                 <CharacterLine draft={draft} onLooks={onLooks ?? (() => {})} />
               </div>
             </div>

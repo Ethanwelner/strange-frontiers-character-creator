@@ -22,6 +22,9 @@ export interface Draft {
   gender?: Exclude<Gender, "unlisted">;
   // What the player wrote when gender is custom
   customGender?: string;
+  // Height and weight in the player's own words and units, like 6′1″ or 85 kg
+  height?: string;
+  weight?: string;
   // The character's picture, shrunk in the browser and kept in the build as a
   // data URL, so the JSON file carries it (see portrait.ts).
   portrait?: string;
@@ -53,11 +56,13 @@ export type Step = (typeof STEPS)[number];
 // What the builder keeps from the last AI build, so the reasons survive a reload.
 export interface AiNotes {
   description: string;
-  // The name, age and gender the player gave the builder, if any
+  // The name, age, gender, height and weight the player gave the builder, if any
   name?: string;
   age?: number;
   gender?: Draft["gender"];
   customGender?: string;
+  height?: string;
+  weight?: string;
   model?: string;
   status: DescribeResult["status"];
   summary?: string;
@@ -151,7 +156,13 @@ export const readPortrait = (v: unknown) =>
 
 export const readAge = (v: unknown) => (typeof v === "number" && Number.isInteger(v) && v >= 0 && v <= MAX_AGE ? v : undefined);
 export const MAX_AGE = 9999;
+// A height or weight: free text, trimmed and kept short.
+export const MAX_SIZE_LENGTH = 20;
+const readSize = (v: unknown) => (typeof v === "string" && v.trim() !== "" ? v.trim().slice(0, MAX_SIZE_LENGTH) : undefined);
 const readGender = (v: unknown) => (GENDERS.includes(v as Gender) && v !== "unlisted" ? (v as Draft["gender"]) : undefined);
+
+// The cosmetic details the player sets: age, gender, height and weight.
+export type Looks = Pick<Draft, "age" | "gender" | "customGender" | "height" | "weight">;
 
 // Gender as the sheet and the builder write it: "Female", or the player's own
 // word. Unlisted, and custom with nothing written, give nothing.
@@ -177,6 +188,8 @@ export function fromBuild(input: unknown): Draft {
     age: readAge(b.age),
     gender: readGender(b.gender),
     customGender: b.gender === "custom" ? text(b.customGender) : undefined,
+    height: readSize(b.height),
+    weight: readSize(b.weight),
     portrait: readPortrait(b.portrait),
     description: text(b.description),
     kind,

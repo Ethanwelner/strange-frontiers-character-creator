@@ -123,6 +123,13 @@ describe("describeCharacter", () => {
     expect(looksLine({})).toBe("");
   });
 
+  it("lists height and weight with the other looks", () => {
+    expect(looksLine({ age: 34, gender: "Female", height: "1.7 m", weight: "60 kg" })).toContain(
+      "character's age 34, gender Female, height 1.7 m and weight 60 kg.",
+    );
+    expect(looksLine({ weight: " 300 lb " })).toContain("character's weight 300 lb.");
+  });
+
   it("builds with another Claude model when told to, without a refusal fallback for Haiku", async () => {
     const opus = script(message([submit(goblinoid)]));
     await describeCharacter({ description: "A goblin mage.", content, provider: noReview(anthropicProvider(opus.create)), campaign: L1 });

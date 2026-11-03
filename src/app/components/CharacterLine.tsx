@@ -1,18 +1,16 @@
 import { useCallback, useState } from "react";
 import { kindById, packageById } from "../content.js";
-import type { Draft } from "../draft.js";
+import type { Draft, Looks } from "../draft.js";
 import { BackgroundPopup } from "./BackgroundPopup.js";
 import { LooksLine } from "./LooksLine.js";
-
-type Looks = Pick<Draft, "age" | "gender" | "customGender">;
 
 const LABELS = ["Kind", "Origin", "Profession", "Past"];
 
 // The line under the character's name, the same on the Character Creator's
-// sheet and in Player Tools: Kind, age and gender on one row, then Origin,
+// sheet and in Player Tools: Kind, age, gender, height and weight on one row, then Origin,
 // Profession and Past stacked under it, each a plain label in the builder's
 // field label style over its value. The Kind and background link to their cards;
-// age and gender have pens to edit them in place.
+// the looks have pens to edit them in place.
 export function CharacterLine({ draft, onLooks }: { draft: Draft; onLooks: (looks: Looks) => void }) {
   // The Kind or background package whose card is open
   const [showing, setShowing] = useState<string>();

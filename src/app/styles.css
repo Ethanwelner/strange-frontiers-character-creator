@@ -476,7 +476,7 @@
     grid-area: level;
   }
 
-  /* Age, gender and a custom gender, in a row */
+  /* Age, gender, a custom gender, height and weight, in a row */
   .describe-looks {
     grid-area: looks;
     display: flex;
@@ -494,6 +494,11 @@
 
     .custom-gender-field {
       flex: 1 1 12rem;
+    }
+
+    .height-field,
+    .weight-field {
+      width: 8rem;
     }
 
     input.rpg-search-input,
@@ -1657,7 +1662,7 @@
   }
 
   /* Character step: the portrait, with the starting level, the name (up to
-     640px wide) and the age and gender row stacked at the top beside it */
+     640px wide) and the looks row (age, gender, height, weight) stacked at the top beside it */
   .character-fields {
     display: grid;
     grid-template-columns: auto minmax(0, 640px);
@@ -1716,6 +1721,11 @@
     .custom-gender-field {
       flex: 1 1 12rem;
       max-width: 20rem;
+    }
+
+    .height-field,
+    .weight-field {
+      width: 8rem;
     }
   }
 
@@ -2331,7 +2341,7 @@
 
   /* The line under the character's name, the same on the creator's Sheet
      and in Player Tools (components/CharacterLine.tsx) */
-  /* Kind, age and gender on one row, 24px apart, then Origin, Profession
+  /* Kind, age, gender, height and weight on one row, 24px apart, then Origin, Profession
      and Past stacked under it; everything 8px apart down the column, each a
      label over its value */
   .tools-line-row {
@@ -2366,7 +2376,7 @@
     color: var(--frontiers-lore-on-black);
   }
 
-  /* Age and gender's value with a small pen that opens its field in place
+  /* Age, gender, height and weight's value with a small pen that opens its field in place
      (components/LooksLine.tsx), under their labels */
   .tools-look-row {
     display: inline-flex;
@@ -2423,6 +2433,10 @@
 
   .tools-look-age {
     width: 4.5rem;
+  }
+
+  .tools-look-size {
+    width: 6rem;
   }
 
   /* The Conditions, the same on the creator's Sheet and in Player Tools

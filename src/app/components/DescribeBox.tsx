@@ -69,19 +69,21 @@ interface BuildRequest {
   // The level the player set; a level in the description doesn't override it.
   level: number;
   name?: string;
-  // Age and gender as the builder should write them; it doesn't build around them.
+  // Age, gender, height and weight as the builder should write them; it doesn't build around them.
   age?: number;
   gender?: string;
+  height?: string;
+  weight?: string;
 }
 
 // Ollama builds run on the local AI server, which streams progress back.
-async function describeOnServer({ description, level, name, age, gender }: BuildRequest, onProgress: (p: Progress) => void) {
+async function describeOnServer({ description, level, name, age, gender, height, weight }: BuildRequest, onProgress: (p: Progress) => void) {
   let res: Response;
   try {
     res = await fetch("api/describe", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ description, startingLevel: level, exactLevel: true, name, age, gender }),
+      body: JSON.stringify({ description, startingLevel: level, exactLevel: true, name, age, gender, height, weight }),
     });
   } catch {
     throw new Error("Couldn't reach the AI server. Start it with npm run dev.");
@@ -102,6 +104,8 @@ const requestBuild = (request: BuildRequest, onProgress: (p: Progress) => void) 
         name: request.name,
         age: request.age,
         gender: request.gender,
+        height: request.height,
+        weight: request.weight,
         content,
         endpoint: __SF_AI__.endpoint,
         model: __SF_AI__.model,
@@ -136,7 +140,13 @@ export function DescribeBox({ notes, showNotes, startingLevel, hasBuild, onBuilt
   // A name for the builder to use, and the level to build at. Writing a level
   // in the description ("level 10") sets the stepper; the stepper has the last word.
   const [name, setName] = useState(notes?.name ?? "");
-  const [looks, setLooks] = useState<Looks>({ age: notes?.age, gender: notes?.gender, customGender: notes?.customGender });
+  const [looks, setLooks] = useState<Looks>({
+    age: notes?.age,
+    gender: notes?.gender,
+    customGender: notes?.customGender,
+    height: notes?.height,
+    weight: notes?.weight,
+  });
   const [level, setLevel] = useState(startingLevel);
   const [example] = useState(() => EXAMPLES[Math.floor(Math.random() * EXAMPLES.length)]);
   useEffect(() => setLevel(startingLevel), [startingLevel]);
@@ -176,10 +186,12 @@ export function DescribeBox({ notes, showNotes, startingLevel, hasBuild, onBuilt
     setProgress(undefined);
     try {
       const named = name.trim() || undefined;
-      const body = await requestBuild({ description: text, level, name: named, age: looks.age, gender: genderText(looks) }, setProgress);
+      const body = await requestBuild({ description: text, level, name: named, age: looks.age, gender: genderText(looks), height: looks.height?.trim() || undefined, weight: looks.weight?.trim() || undefined },
+        setProgress,
+      );
       if ("error" in body) throw new Error(body.message);
       if (!body.build) throw new Error("The model didn't propose a build. Try again, or describe the character differently.");
-      // The player's name stands, whatever the model wrote, and the age and gender go on the build as set.
+      // The player's name stands, whatever the model wrote, and the looks go on the build as set.
       const build = { ...body.build, ...(named ? { name: named } : {}), ...looks };
       onBuilt({ ...body, build }, text, secondsSince(), named, looks);
     } catch (err) {
@@ -202,7 +214,7 @@ export function DescribeBox({ notes, showNotes, startingLevel, hasBuild, onBuilt
           </p>
         </div>
         <div className="describe-controls">
-          {/* Name with Level to its right, age and gender, then Description under them */}
+          {/* Name with Level to its right, age, gender, height and weight, then Description under them */}
           <div className="describe-fields">
             <label className="describe-field describe-name">
               <span className="field-label">Character Name</span>

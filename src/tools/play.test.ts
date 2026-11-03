@@ -150,6 +150,8 @@ describe("the assistant's tools", () => {
     expect(sheetText(play, result, content)).not.toMatch(/Age|Gender/);
     const set = { ...play, draft: { ...play.draft, age: 34, gender: "custom" as const, customGender: "Two-spirit" } };
     expect(sheetText(set, result, content)).toContain("Age 34, Gender Two-spirit (cosmetic, no rules effect)");
+    const sized = { ...play, draft: { ...play.draft, height: "6′1″", weight: "85 kg" } };
+    expect(sheetText(sized, result, content)).toContain("Height 6′1″, Weight 85 kg (cosmetic, no rules effect)");
   });
 
   it("runs tool calls until Claude answers, and reports what changed", async () => {
