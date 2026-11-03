@@ -207,7 +207,7 @@ export function ToolsApp() {
                               </LorePopup>
                             )}
                           </div>
-                          {/* Kind, age, gender, Origin, Profession and Past, as on the creator's sheet */}
+                          {/* Kind, age, gender, height, weight, Origin, Profession and Past, as on the creator's sheet */}
                           <CharacterLine draft={play.draft} onLooks={(looks) => setPlay({ ...play, draft: { ...play.draft, ...looks } })} />
                           {showingIssues && !result.ok && (
                             <LorePopup label="Rules problems" onClose={closeIssues} className="tools-issues-popup">

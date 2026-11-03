@@ -1,0 +1,11 @@
+id: flail
+name: "Flail"
+status: draft
+plane: any
+summary: "A spiked iron ball on a chain, swung from a wooden haft."
+tags: [melee, blunt]
+type: weapon
+category: weapon
+damage: "6 Blunt"
+value: 350
+currency: "ERC"

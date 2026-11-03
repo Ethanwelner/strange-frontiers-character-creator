@@ -1,0 +1,12 @@
+id: taser
+name: "Taser"
+status: draft
+plane: earth
+summary: "A handheld stun gun that fires two barbed electrodes on wires."
+tags: [ranged, nonlethal, police]
+type: weapon
+category: weapon
+damage: "4 Electrical"
+uses: "uses 1: per cartridge"
+value: 300
+currency: "ERC"

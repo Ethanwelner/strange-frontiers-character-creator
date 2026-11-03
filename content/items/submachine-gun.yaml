@@ -1,0 +1,11 @@
+id: submachine-gun
+name: "Submachine Gun"
+status: draft
+plane: earth
+summary: "A compact automatic weapon that fires pistol rounds."
+tags: [ranged, firearm, military]
+type: weapon
+category: weapon
+damage: "6 Piercing"
+value: 2500
+currency: "ERC"

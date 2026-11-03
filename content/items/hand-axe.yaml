@@ -1,0 +1,11 @@
+id: hand-axe
+name: "Hand Axe"
+status: draft
+plane: any
+summary: "A small one-handed axe, as useful for chopping wood as for fighting."
+tags: [melee, axe]
+type: weapon
+category: weapon
+damage: "4 Slashing"
+value: 80
+currency: "ERC"

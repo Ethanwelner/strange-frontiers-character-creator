@@ -16,10 +16,12 @@ export interface DescribeOptions {
   description: string;
   // A name the player chose; the model is told to use it.
   name?: string;
-  // Age and gender the player set. They're cosmetic: the model writes with
-  // them but doesn't build around them.
+  // Age, gender, height and weight the player set. They're cosmetic: the
+  // model writes with them but doesn't build around them.
   age?: number;
   gender?: string;
+  height?: string;
+  weight?: string;
   content: Content;
   provider: Provider;
   campaign?: Campaign;
@@ -92,13 +94,20 @@ function parseReasons(v: unknown): Reason[] {
 // Skipped Traits for the model, without the "no picks left" tail.
 const compactSkipped = (skipped: SkippedTrait[]) => skipped.filter((s) => s.reason !== "no picks left");
 
-// The player's age and gender for the character, as a line for the first
-// message. They shape how the model writes about the character, not what it picks.
-export function looksLine({ age, gender }: Pick<DescribeOptions, "age" | "gender">): string {
-  const set = [age !== undefined ? `age ${age}` : "", gender?.trim() ? `gender ${gender.trim()}` : ""].filter(Boolean);
+// The player's age, gender, height and weight for the character, as a line
+// for the first message. They shape how the model writes about the
+// character, not what it picks.
+export function looksLine({ age, gender, height, weight }: Pick<DescribeOptions, "age" | "gender" | "height" | "weight">): string {
+  const set = [
+    age !== undefined ? `age ${age}` : "",
+    gender?.trim() ? `gender ${gender.trim()}` : "",
+    height?.trim() ? `height ${height.trim()}` : "",
+    weight?.trim() ? `weight ${weight.trim()}` : "",
+  ].filter(Boolean);
   if (!set.length) return "";
+  const listed = set.length > 1 ? `${set.slice(0, -1).join(", ")} and ${set.at(-1)}` : set[0];
   return (
-    `The player set this character's ${set.join(" and ")}. These are cosmetic. Respect them in the name, summary and reasons ` +
+    `The player set this character's ${listed}. These are cosmetic. Respect them in the name, summary and reasons ` +
     `(use pronouns and a name that fit), but don't let them decide the Kind, packages, Traits, stats or choices.\n\n`
   );
 }

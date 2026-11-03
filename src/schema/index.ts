@@ -199,12 +199,14 @@ export const ITEM_CATEGORIES = ["weapon", "armor", "gear", "consumable", "curren
 export const ItemType = z.enum(["weapon", "wearable", "equipment", "structure", "vehicle", "animal", "misc"]);
 
 // A stock item, from the Sheet's Items tab. No item needs a Trait: a related
-// Trait only removes the penalty for unfamiliarity. Damage values aren't
-// written yet, so damage is types only.
+// Trait only removes the penalty for unfamiliarity.
 export const Item = BaseEntry.extend({
   type: ItemType,
   category: z.enum(ITEM_CATEGORIES),
-  damageTypes: z.array(z.string()).default([]),
+  // The damage it deals, as the Sheet words it: types separated by commas are
+  // all dealt at once, options separated by a slash are a choice, like
+  // "5 Slashing / 4 Piercing" (app/damage.ts reads it).
+  damage: z.string().optional(),
   // What it resists and by how much, as the Sheet words it, in the Items
 // page's damage type order, like "3 Blunt, 4 Slashing, 2 Piercing (head)".
   resistances: z.string().optional(),

@@ -6,6 +6,6 @@ summary: "A long wooden staff, as useful on the road as in a fight."
 tags: [melee, blunt, two-handed]
 type: weapon
 category: weapon
-damageTypes: ["Blunt"]
+damage: "3 Blunt"
 value: 40
 currency: "ERC"

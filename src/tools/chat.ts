@@ -204,7 +204,12 @@ export function sheetText(play: Play, result: BuildResult, content: Content): st
     `Level ${d.level} ${kind?.name ?? d.kind ?? "no Kind"}; Origin ${pkg(d.origin)}, Profession ${pkg(d.profession)}, Past ${pkg(d.past)}`,
   ];
   // Cosmetic: no rules depend on them
-  const looks = [d.age !== undefined ? `Age ${d.age}` : "", genderText(d) ? `Gender ${genderText(d)}` : ""].filter(Boolean);
+  const looks = [
+    d.age !== undefined ? `Age ${d.age}` : "",
+    genderText(d) ? `Gender ${genderText(d)}` : "",
+    d.height ? `Height ${d.height}` : "",
+    d.weight ? `Weight ${d.weight}` : "",
+  ].filter(Boolean);
   if (looks.length) lines.push(`${looks.join(", ")} (cosmetic, no rules effect)`);
   if (kind?.features.length) lines.push(`Kind features: ${kind.features.map((f) => `${f.name}: ${f.description}`).join(" | ")}`);
   if (s) {

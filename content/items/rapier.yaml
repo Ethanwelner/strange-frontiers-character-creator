@@ -1,0 +1,11 @@
+id: rapier
+name: "Rapier"
+status: draft
+plane: any
+summary: "A slender sword built for thrusting, with a swept hilt."
+tags: [melee, blade, sword]
+type: weapon
+category: weapon
+damage: "3 Slashing / 5 Piercing"
+value: 450
+currency: "ERC"

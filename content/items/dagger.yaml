@@ -6,6 +6,6 @@ summary: "A short double-edged blade, easy to hide and quick in close quarters."
 tags: [melee, blade, concealable]
 type: weapon
 category: weapon
-damageTypes: ["Piercing", "Slashing"]
+damage: "3 Slashing / 3 Piercing"
 value: 60
 currency: "ERC"

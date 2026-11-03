@@ -6,6 +6,6 @@ summary: "A hammer with a spike on its back, for denting plate or punching throu
 tags: [melee, blunt]
 type: weapon
 category: weapon
-damageTypes: ["Blunt", "Piercing"]
+damage: "5 Blunt / 4 Piercing"
 value: 300
 currency: "ERC"

@@ -6,6 +6,6 @@ summary: "A stout length of wood, or anything else heavy enough to swing."
 tags: [melee, blunt, improvised]
 type: weapon
 category: weapon
-damageTypes: ["Blunt"]
+damage: "3 Blunt"
 value: 20
 currency: "ERC"

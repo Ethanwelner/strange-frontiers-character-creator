@@ -49,6 +49,8 @@ export interface RemoteOptions {
   name?: string;
   age?: number;
   gender?: string;
+  height?: string;
+  weight?: string;
   content: Content;
   endpoint: string;
   model: string;
@@ -64,6 +66,8 @@ export async function describeRemote(opts: RemoteOptions): Promise<DescribeResul
       name: opts.name,
       age: opts.age,
       gender: opts.gender,
+      height: opts.height,
+      weight: opts.weight,
       content: opts.content,
       // A level the description asks for wins over the campaign's starting level.
       campaign: { startingLevel: (opts.levelFromText === false ? undefined : levelFromDescription(opts.description)) ?? opts.startingLevel },

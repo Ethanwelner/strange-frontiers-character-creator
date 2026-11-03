@@ -69,6 +69,9 @@ export const Build = z.object({
   age: z.number().int().min(0).optional(),
   gender: z.enum(["male", "female", "indeterminate", "none", "fluid", "custom"]).optional(),
   customGender: z.string().optional(),
+  // Height and weight in the player's own words and units, like 6′1″ or 85 kg.
+  height: z.string().optional(),
+  weight: z.string().optional(),
   // The character's picture as an image data URL; cosmetic too.
   portrait: z.string().optional(),
   // A free-text description of the character; cosmetic too.

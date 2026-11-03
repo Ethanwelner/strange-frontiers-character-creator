@@ -24,6 +24,8 @@ const Request = z.object({
   // Cosmetic; the model writes with them but doesn't build around them.
   age: z.number().int().min(0).max(9999).optional(),
   gender: z.string().trim().max(40).optional(),
+  height: z.string().trim().max(20).optional(),
+  weight: z.string().trim().max(20).optional(),
 });
 
 export interface Reply {
@@ -112,6 +114,8 @@ export async function handleDescribe(body: unknown, deps: Deps, onProgress?: (p:
       name: parsed.data.name,
       age: parsed.data.age,
       gender: parsed.data.gender,
+      height: parsed.data.height,
+      weight: parsed.data.weight,
       content: deps.content,
       // A level the description asks for wins over the campaign's starting level.
       campaign: {

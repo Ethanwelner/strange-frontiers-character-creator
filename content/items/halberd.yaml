@@ -6,6 +6,6 @@ summary: "An axe blade, spike and hook on a long haft."
 tags: [melee, polearm, reach, two-handed]
 type: weapon
 category: weapon
-damageTypes: ["Slashing", "Piercing"]
+damage: "5 Slashing / 4 Piercing"
 value: 500
 currency: "ERC"

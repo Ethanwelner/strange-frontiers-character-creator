@@ -6,6 +6,6 @@ summary: "A strap of leather or cord that hurls stones."
 tags: [ranged, cheap]
 type: weapon
 category: weapon
-damageTypes: ["Blunt"]
+damage: "3 Blunt"
 value: 15
 currency: "ERC"

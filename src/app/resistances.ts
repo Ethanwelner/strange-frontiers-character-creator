@@ -7,17 +7,9 @@
 import type { Content } from "../engine/parse.js";
 import type { Item } from "./items.js";
 import { stockItemNamed } from "./items.js";
+import { DAMAGE_TYPE_GROUPS, DAMAGE_TYPES, type DamageType } from "../engine/damage.js";
 
-// In the Mechanics page's order: Physical, Elemental, Supernatural, then the
-// other common elemental effects.
-export const DAMAGE_TYPE_GROUPS = {
-  Physical: ["Blunt", "Slashing", "Piercing"],
-  Elemental: ["Heat", "Cold", "Electrical", "EMP"],
-  Supernatural: ["Metaphysical", "Death", "Psychic"],
-  Other: ["Radiation", "Acidic/Corrosive"],
-} as const;
-export const DAMAGE_TYPES = Object.values(DAMAGE_TYPE_GROUPS).flat();
-export type DamageType = (typeof DAMAGE_TYPES)[number];
+export { DAMAGE_TYPE_GROUPS, DAMAGE_TYPES, type DamageType };
 
 export interface Resistance {
   type: DamageType;

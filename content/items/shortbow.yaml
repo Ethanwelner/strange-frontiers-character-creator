@@ -6,6 +6,6 @@ summary: "A compact bow, easy to carry and to shoot from horseback."
 tags: [ranged, archery, two-handed]
 type: weapon
 category: weapon
-damageTypes: ["Piercing"]
+damage: "3 Piercing"
 value: 200
 currency: "ERC"

@@ -1,18 +1,19 @@
 import { useState, type FocusEvent, type KeyboardEvent } from "react";
-import { GENDERS, MAX_AGE, genderText, type Draft } from "../draft.js";
-
-type Looks = Pick<Draft, "age" | "gender" | "customGender">;
+import { GENDERS, MAX_AGE, MAX_SIZE_LENGTH, genderText, type Looks } from "../draft.js";
 
 const label = (g: string) => g[0]!.toUpperCase() + g.slice(1);
 
-// Age and gender, two of the blocks on the line under the character's name
-// (after Kind): each a label over its value and the name's pen. The pen (or the value) opens its field in
-// place: a number for the age, the creator's gender dropdown for the gender,
-// with a field for the player's own word under Custom. Enter or leaving the
-// field keeps it; Escape puts it back.
+// Age, gender, height and weight, blocks on the line under the character's
+// name (after Kind): each a label over its value and the name's pen. The pen
+// (or the value) opens its field in place: a number for the age, the
+// creator's gender dropdown for the gender, with a field for the player's own
+// word under Custom, and free text for height and weight. Enter or leaving
+// the field keeps it; Escape puts it back.
 export function LooksLine({ looks, onChange }: { looks: Looks; onChange: (looks: Looks) => void }) {
-  const [editing, setEditing] = useState<"age" | "gender">();
+  const [editing, setEditing] = useState<"age" | "gender" | "height" | "weight">();
   const [age, setAge] = useState("");
+  // The height or weight being edited
+  const [size, setSize] = useState("");
   const [gender, setGender] = useState<string>("unlisted");
   const [custom, setCustom] = useState("");
 
@@ -51,6 +52,49 @@ export function LooksLine({ looks, onChange }: { looks: Looks; onChange: (looks:
     if (keep) keepGender(gender, custom);
     setEditing(undefined);
   };
+  const startSize = (key: "height" | "weight") => {
+    setSize(looks[key] ?? "");
+    setEditing(key);
+  };
+  const finishSize = (key: "height" | "weight") => (keep: boolean) => {
+    if (keep) onChange({ ...looks, [key]: size.trim() || undefined });
+    setEditing(undefined);
+  };
+
+  // Height or weight: its value, or a free-text field while it's edited
+  const sizeItem = (key: "height" | "weight", label: string) => (
+    <span className="tools-line-item tools-look">
+      <span className="field-label">{label}</span>
+      <span className="tools-look-row">
+        {editing === key ? (
+          <input
+            className="tools-look-input tools-look-size"
+            aria-label={label}
+            maxLength={MAX_SIZE_LENGTH}
+            placeholder="—"
+            autoFocus
+            value={size}
+            onChange={(e) => setSize(e.target.value)}
+            onBlur={() => finishSize(key)(true)}
+            onKeyDown={keys(finishSize(key))}
+          />
+        ) : (
+          <button type="button" className="tools-look-value" onClick={() => startSize(key)}>
+            <strong>{looks[key] ?? "—"}</strong>
+          </button>
+        )}
+        <button
+          type="button"
+          className="name-edit tools-look-edit"
+          aria-label={`Edit the ${key}`}
+          onMouseDown={(e) => editing === key && e.preventDefault()}
+          onClick={() => (editing === key ? finishSize(key)(true) : startSize(key))}
+        >
+          <span className="pen-icon" aria-hidden="true" />
+        </button>
+      </span>
+    </span>
+  );
 
   return (
     <>
@@ -144,6 +188,8 @@ export function LooksLine({ looks, onChange }: { looks: Looks; onChange: (looks:
           </button>
         </span>
       </span>
+      {sizeItem("height", "Height")}
+      {sizeItem("weight", "Weight")}
     </>
   );
 }

@@ -1,6 +1,7 @@
 // Checks every file under content/ against its schema and the cross-file rules
 // in docs/CONTENT.md. Exits non-zero on errors; warnings are reported only.
 import { loadContent } from "../src/engine/content.js";
+import { parseDamage } from "../src/engine/damage.js";
 import type { StatBlock } from "../src/schema/index.js";
 
 // Human's budget, which every Kind is balanced against.
@@ -48,6 +49,7 @@ for (const trait of traits) {
 // An item's value needs a currency to be read in.
 for (const item of items) {
   if (item.value !== undefined && !item.currency) errors.push(`items/${item.id}: value ${item.value} has no currency`);
+  if (item.damage && !parseDamage(item.damage)) errors.push(`items/${item.id}: damage "${item.damage}" isn't amounts and damage types`);
 }
 
 console.log(`${kinds.length} Kinds, ${packages.length} packages, ${traits.length} Traits, ${items.length} items`);

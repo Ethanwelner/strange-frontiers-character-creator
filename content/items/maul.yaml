@@ -1,0 +1,11 @@
+id: maul
+name: "Maul"
+status: draft
+plane: any
+summary: "A heavy two-handed hammer that crushes armor and bone alike."
+tags: [melee, blunt, two-handed]
+type: weapon
+category: weapon
+damage: "7 Blunt"
+value: 400
+currency: "ERC"

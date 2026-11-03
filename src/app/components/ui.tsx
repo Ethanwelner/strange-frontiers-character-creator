@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 
 import { MAX_LEVEL } from "../../ai/level.js";
 import { STAT_GROUPS, type StatBlock, type StatId } from "../../schema/index.js";
 import { kindById, packageById, traitById } from "../content.js";
-import { GENDERS, MAX_AGE, type Draft } from "../draft.js";
+import { GENDERS, MAX_AGE, MAX_SIZE_LENGTH, type Draft, type Looks } from "../draft.js";
 import { toPortrait } from "../portrait.js";
 
 export const GROUPS = Object.keys(STAT_GROUPS) as (keyof typeof STAT_GROUPS)[];
@@ -355,10 +355,11 @@ export function DescriptionBox({ description, onChange }: { description?: string
   );
 }
 
-export type Looks = Pick<Draft, "age" | "gender" | "customGender">;
+export type { Looks };
 
-// Age and gender, cosmetic details the rules never read. Gender is a dropdown,
-// Unlisted by default; Custom opens a field for the player's own word. The
+// Age, gender, height and weight, cosmetic details the rules never read.
+// Gender is a dropdown, Unlisted by default; Custom opens a field for the
+// player's own word. Height and weight are free text in any units. The
 // Character step and the describe box both use it, each with its own field styles.
 export function LooksFields({
   looks,
@@ -421,6 +422,28 @@ export function LooksFields({
           />
         </label>
       )}
+      <label className={`${fieldClass} height-field`}>
+        <span className="field-label">Height</span>
+        <input
+          className={inputClass}
+          value={looks.height ?? ""}
+          maxLength={MAX_SIZE_LENGTH}
+          placeholder="—"
+          onChange={(e) => onChange({ ...looks, height: e.target.value || undefined })}
+          disabled={disabled}
+        />
+      </label>
+      <label className={`${fieldClass} weight-field`}>
+        <span className="field-label">Weight</span>
+        <input
+          className={inputClass}
+          value={looks.weight ?? ""}
+          maxLength={MAX_SIZE_LENGTH}
+          placeholder="—"
+          onChange={(e) => onChange({ ...looks, weight: e.target.value || undefined })}
+          disabled={disabled}
+        />
+      </label>
     </>
   );
 }
