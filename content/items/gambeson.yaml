@@ -6,7 +6,7 @@ summary: "A thick quilted jacket worn alone or under mail."
 tags: [armor, light]
 type: wearable
 category: armor
-resistances: "Blunt, Slashing"
+resistances: "2 Blunt, 1 Slashing, 2 Cold"
 slot: "Body Armor"
 value: 150
 currency: "ERC"

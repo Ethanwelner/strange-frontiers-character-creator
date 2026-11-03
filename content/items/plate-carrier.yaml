@@ -1,0 +1,12 @@
+id: plate-carrier
+name: "Plate Carrier"
+status: draft
+plane: earth
+summary: "A vest of heavy ceramic trauma plates, made to stop rifle rounds."
+tags: [armor, modern, heavy]
+type: wearable
+category: armor
+resistances: "3 Blunt, 2 Slashing, 7 Piercing"
+slot: "Body Armor"
+value: 2500
+currency: "ERC"

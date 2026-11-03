@@ -1,0 +1,12 @@
+id: buckler
+name: "Buckler"
+status: draft
+plane: any
+summary: "A small round fist shield, quick to raise."
+tags: [shield]
+type: equipment
+category: armor
+resistances: "2 Blunt, 2 Slashing, 1 Piercing (when raised)"
+slot: "Off Hand"
+value: 60
+currency: "ERC"

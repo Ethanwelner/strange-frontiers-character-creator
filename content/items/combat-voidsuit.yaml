@@ -1,0 +1,13 @@
+id: combat-voidsuit
+name: "Combat Voidsuit"
+status: draft
+plane: earth
+summary: "An armored voidsuit for boarding actions and fighting in space."
+tags: [space, armor, modern]
+type: wearable
+category: armor
+resistances: "3 Blunt, 2 Slashing, 4 Piercing, 4 Cold, 2 Radiation"
+uses: "uses 1: per air tank"
+slot: "Body Armor"
+value: 120000
+currency: "ERC"

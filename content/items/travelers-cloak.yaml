@@ -6,7 +6,7 @@ summary: "A hooded wool cloak against wind and rain."
 tags: [travel, clothing]
 type: wearable
 category: gear
-resistances: "Cold"
+resistances: "2 Cold"
 slot: "Outerwear"
 value: 60
 currency: "ERC"

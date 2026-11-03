@@ -1,0 +1,12 @@
+id: brigandine
+name: "Brigandine"
+status: draft
+plane: any
+summary: "A cloth or leather coat lined with riveted steel plates."
+tags: [armor, medium]
+type: wearable
+category: armor
+resistances: "2 Blunt, 3 Slashing, 2 Piercing"
+slot: "Body Armor"
+value: 900
+currency: "ERC"

@@ -6,7 +6,7 @@ summary: "A full suit of fitted steel plates. Heavy, loud and very hard to get t
 tags: [armor, heavy]
 type: wearable
 category: armor
-resistances: "Slashing, Piercing, Blunt"
+resistances: "4 Blunt, 4 Slashing, 2 Piercing, 2 Heat"
 slot: "Body Armor"
 value: 5000
 currency: "ERC"

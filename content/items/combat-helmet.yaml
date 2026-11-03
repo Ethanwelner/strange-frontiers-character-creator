@@ -6,7 +6,7 @@ summary: "A modern helmet with a radio mount. Protects the head only."
 tags: [armor, helmet, military]
 type: wearable
 category: armor
-resistances: "Blunt, Piercing (head)"
+resistances: "4 Blunt, 2 Slashing, 5 Piercing (head)"
 slot: "Headwear"
 value: 500
 currency: "ERC"

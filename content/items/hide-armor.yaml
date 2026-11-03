@@ -1,0 +1,12 @@
+id: hide-armor
+name: "Hide Armor"
+status: draft
+plane: isekai
+summary: "Cured furs and hides, layered and laced together."
+tags: [armor, light]
+type: wearable
+category: armor
+resistances: "1 Blunt, 2 Slashing, 2 Cold"
+slot: "Body Armor"
+value: 80
+currency: "Luras"

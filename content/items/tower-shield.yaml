@@ -1,0 +1,12 @@
+id: tower-shield
+name: "Tower Shield"
+status: draft
+plane: any
+summary: "A tall shield that covers a body from shin to chin. Heavy and slow."
+tags: [shield, heavy]
+type: equipment
+category: armor
+resistances: "5 Blunt, 5 Slashing, 5 Piercing (when raised)"
+slot: "Off Hand"
+value: 300
+currency: "ERC"

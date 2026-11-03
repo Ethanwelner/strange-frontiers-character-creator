@@ -1,0 +1,14 @@
+id: warded-robes
+name: "Warded Robes"
+status: draft
+plane: isekai
+region: dreft
+summary: "Robes stitched with protective wards against hostile magic."
+tags: [magic, clothing]
+type: wearable
+category: armor
+resistances: "3 Metaphysical, 1 Cold"
+slot: "Body Armor"
+value: 400
+currency: "Luras"
+notes: "Suggested by Claude; check with the magic pass."

@@ -1,0 +1,12 @@
+id: faraday-shroud
+name: "Faraday Shroud"
+status: draft
+plane: earth
+summary: "A wire-mesh cloak that shields the machines under it from electromagnetic pulses."
+tags: [machine, emp]
+type: wearable
+category: armor
+resistances: "4 EMP, 2 Electrical"
+slot: "Outerwear"
+value: 2000
+currency: "ERC"

@@ -6,7 +6,7 @@ summary: "Heavy rubber gloves for live wiring."
 tags: [tool, electrical]
 type: wearable
 category: armor
-resistances: "Electrical (hands)"
+resistances: "2 Cold, 4 Electrical (hands)"
 slot: "Gloves"
 value: 50
 currency: "ERC"

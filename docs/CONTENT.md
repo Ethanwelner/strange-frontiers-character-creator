@@ -46,7 +46,7 @@ Every tab's Description is `summary`, Tags is `tags`, and Notes is for anything 
 | Traits: Effect | `effect` |
 | Traits: Stat Requirements | stats go in `minStats` (focus or core: "Power 3", "Physical 5"), a Trait's name in `prerequisites`, "Any Pilot skill" in `prerequisiteTags: [pilot]`, anything else in `rpRequirement` |
 | Items: Category, Creator Category | `type` (the site's Items page categories, lowercase: weapon, wearable, equipment, structure, vehicle, animal, misc) and `category` (the creator's: weapon, armor, gear, consumable, currency, other) |
-| Items: Damage Types, Resistances, Uses, Exclusive | `damageTypes` (a list), `resistances`, `uses` and `slot`, as the Sheet words them. Combat values aren't written yet, so these are types only |
+| Items: Damage Types, Resistances, Uses, Exclusive | `damageTypes` (a list), `resistances`, `uses` and `slot`, as the Sheet words them. Resistances carry amounts, like `3 Blunt, 4 Slashing, 2 Piercing (head)`, in the Items page's damage type order; damage values aren't written yet, so damage types are types only |
 | Items: Value, Currency | `value` and `currency`: one value per item, in the currency of its plane of origin (Luras for Isekai, ERC for Earth and Any) |
 | Traits: Notes | "Mastery" is `mastery`, "Background-only" is `background`, "Type: X" is `types`, "Temporary (…)" is `temporary`, "Choice: which seas" is a `place` choice (below) |
 

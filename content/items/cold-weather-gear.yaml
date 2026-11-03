@@ -6,7 +6,7 @@ summary: "Furs, layers or an insulated parka for freezing climates."
 tags: [survival, cold]
 type: wearable
 category: armor
-resistances: "Cold"
+resistances: "3 Cold"
 slot: "Outerwear"
 value: 300
 currency: "ERC"
