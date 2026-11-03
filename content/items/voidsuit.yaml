@@ -6,7 +6,7 @@ summary: "A sealed, pressurized suit with its own air, for working in space."
 tags: [space, survival]
 type: wearable
 category: armor
-resistances: "Cold, Blunt (decompression)"
+resistances: "2 Blunt (decompression), 4 Cold"
 uses: "uses 1: per air tank"
 slot: "Body Armor"
 value: 50000

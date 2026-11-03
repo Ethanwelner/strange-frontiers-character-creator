@@ -1,0 +1,12 @@
+id: power-armor
+name: "Power Armor"
+status: draft
+plane: earth
+summary: "A powered, sealed suit of heavy armor plates, worn like a small vehicle."
+tags: [armor, heavy, powered, modern]
+type: wearable
+category: armor
+resistances: "6 Blunt, 6 Slashing, 6 Piercing, 2 Heat, 2 Cold, 2 Radiation"
+slot: "Body Armor"
+value: 250000
+currency: "ERC"

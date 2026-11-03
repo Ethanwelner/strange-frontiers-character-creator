@@ -6,7 +6,7 @@ summary: "A modern vest with armor plates, made to stop bullets."
 tags: [armor, modern]
 type: wearable
 category: armor
-resistances: "Piercing, Blunt"
+resistances: "2 Blunt, 1 Slashing, 5 Piercing, 1 Cold"
 slot: "Body Armor"
 value: 800
 currency: "ERC"

@@ -1,0 +1,12 @@
+id: leather-jacket
+name: "Leather Jacket"
+status: draft
+plane: any
+summary: "A heavy leather jacket. Turns a scrape or a cold wind, not much more."
+tags: [clothing, light]
+type: wearable
+category: armor
+resistances: "1 Blunt, 1 Slashing, 1 Cold"
+slot: "Outerwear"
+value: 200
+currency: "ERC"

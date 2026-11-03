@@ -6,7 +6,7 @@ summary: "A shirt of interlocking iron rings."
 tags: [armor, medium]
 type: wearable
 category: armor
-resistances: "Slashing, Piercing"
+resistances: "1 Blunt, 3 Slashing, 1 Piercing"
 slot: "Body Armor"
 value: 1200
 currency: "ERC"

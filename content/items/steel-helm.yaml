@@ -6,7 +6,7 @@ summary: "A steel helmet. Protects the head only."
 tags: [armor, helmet]
 type: wearable
 category: armor
-resistances: "Blunt, Slashing, Piercing (head)"
+resistances: "3 Blunt, 4 Slashing, 2 Piercing (head)"
 slot: "Headwear"
 value: 250
 currency: "ERC"

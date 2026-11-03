@@ -6,7 +6,7 @@ summary: "Hardened leather over the chest and shoulders."
 tags: [armor, light]
 type: wearable
 category: armor
-resistances: "Slashing, Blunt"
+resistances: "2 Blunt, 1 Slashing, 1 Cold"
 slot: "Body Armor"
 value: 300
 currency: "ERC"
