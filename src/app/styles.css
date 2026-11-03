@@ -2731,7 +2731,7 @@
      (corner-shape; browsers without it keep the plain corners) */
   @supports (corner-shape: scoop) {
     .builder-panel .c-sheet-box.tools-item {
-      border-radius: 10px;
+      border-radius: 8px;
       corner-shape: scoop;
     }
   }
