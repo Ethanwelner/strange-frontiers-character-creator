@@ -76,9 +76,8 @@
     gap: 24px;
   }
 
-  /* With the description as a third column; it drops under the portrait
-     and name when there isn't room (from 1200px it lines up with the
-     Conditions and Items, src/app) */
+  /* With the description as the other half; it drops under the portrait
+     and name when there isn't room (src/app) */
   .tools-character:has(> .sheet-description) {
     flex-wrap: wrap;
   }

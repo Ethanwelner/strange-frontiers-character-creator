@@ -714,6 +714,17 @@
       }
     }
 
+    /* Condition cards in grays, so they read apart from Traits: a mid gray
+       border and a light gray header bar with dark text */
+    :is(.builder-panel, .lore-modal) .tools-conditions > .trait-box {
+      --card-edge: #646464;
+
+      > .trait-name {
+        background-color: #b7b4b4;
+        color: var(--portfolio-black);
+      }
+    }
+
     .builder-panel .notice {
       background: var(--card-bg);
       border-color: var(--card-border);
@@ -742,8 +753,12 @@
       background-color: var(--frontiers-lore-on-black);
     }
 
-    .stat.empty {
+    .stat:is(.empty, .unavailable) {
       border-color: #8a8a8a;
+    }
+
+    .stat.unavailable {
+      background-color: #8a8a8a;
     }
 
     /* A locked group's row is already faded */
@@ -809,8 +824,12 @@
         background-color: var(--frontiers-lore-on-black);
       }
 
-      .stat.empty {
+      .stat:is(.empty, .unavailable) {
         border-color: #8a8a8a;
+      }
+
+      .stat.unavailable {
+        background-color: #8a8a8a;
       }
 
       button.link {
@@ -2017,23 +2036,22 @@
     flex: 1 1 24rem;
   }
 
-  /* The portrait and the name's column, side by side */
+  /* The portrait and the name's column, side by side, taking half the head
+     beside the description */
   .sheet-head-who {
-    flex: 2 1 40rem;
+    flex: 1 1 26rem;
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
     gap: 0.75rem 2rem;
   }
 
-  /* From 1200px, where the body has its three columns, the head takes the
-     same ones: the portrait and name over the stats, the description over
-     the Conditions and the Items */
+  /* From 1200px the head is two equal columns: the portrait and name, then
+     the description */
   @media (min-width: 1200px) {
     :is(.sheet-head, .tools-character):has(> .sheet-description) {
-      container: sheet-head / inline-size;
       display: grid;
-      grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 4fr);
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       gap: 24px 40px;
     }
 
@@ -2048,44 +2066,21 @@
     }
 
     .sheet-head-who + .sheet-description {
-      grid-column: 2 / 4;
-    }
-
-    /* Where the first column is too narrow for the name beside the portrait
-       (256px, the 2rem gap and 10rem: 448px, so a head under 1156px), the
-       portrait and name take the first two columns and the description
-       just the third */
-    @container sheet-head (width < 1156px) {
-      .sheet-head-who {
-        grid-column: 1 / 3;
-      }
-
-      .sheet-head-who + .sheet-description {
-        grid-column: 3;
-      }
+      grid-column: 2;
     }
   }
 
-  /* Up to 1360px the name and info go under the portrait, and the
-     description has the last two columns again */
+  /* Up to 1360px the name and info go under the portrait */
   @media (min-width: 1200px) and (max-width: 1359.98px) {
-    .sheet-head-who {
-      grid-column: 1;
-
-      > :is(.sheet-head-main, .tools-character-main) {
-        flex-basis: 100%;
-      }
-    }
-
-    .sheet-head-who + .sheet-description {
-      grid-column: 2 / 4;
+    .sheet-head-who > :is(.sheet-head-main, .tools-character-main) {
+      flex-basis: 100%;
     }
   }
 
   /* The description, after the portrait and the name's column: a box that
      grows with its text */
   .sheet-description {
-    flex: 1 1 16rem;
+    flex: 1 1 26rem;
     display: flex;
     flex-direction: column;
     align-self: stretch;
@@ -2577,19 +2572,29 @@
     }
   }
 
+  /* In green, or the section's own --add-color: the Conditions' header
+     gray, the Items' Equip olive */
   button.sheet-section-add {
     flex: none;
     padding: 0.35rem 0.75rem;
     font-size: 0.875rem;
-    background: var(--frontiers-green);
+    background: var(--add-color, var(--frontiers-green));
     color: var(--portfolio-black);
     border: 0;
 
     &:hover,
     &:focus-visible {
-      background-color: color-mix(in srgb, var(--frontiers-green) 75%, var(--portfolio-white));
+      background-color: color-mix(in srgb, var(--add-color, var(--frontiers-green)) 75%, var(--portfolio-white));
       color: var(--portfolio-black);
     }
+  }
+
+  .tools-conditions-side {
+    --add-color: #b7b4b4;
+  }
+
+  .tools-items {
+    --add-color: #b5ae86;
   }
 
   /* The add form on its own in a small popup, its title over it */
@@ -2711,19 +2716,28 @@
     align-items: start;
   }
 
-  /* Each item a card with the Traits' shadow, in a warm olive gray with a
-     lighter edge, the same in the creator and Player Tools (the sheet's
-     boxes otherwise have no border) */
+  /* Each item a card with the Traits' shadow and background, with a warm
+     olive edge, the same in the creator and Player Tools (the sheet's boxes
+     otherwise have no border) */
   .builder-panel .c-sheet-box.tools-item {
     container: item / inline-size;
-    background-color: #3f3d33;
-    border: 1px solid #6d6a5a !important;
+    background-color: var(--card-bg);
+    border: 2px solid #6d6a5a !important;
     padding: 12px;
     box-shadow: 0 4px 10px #00000030;
 
     /* Its fields in a darker olive to match */
     :is(input:not([type="checkbox"]), select) {
       background-color: #25241e;
+    }
+  }
+
+  /* Bites scooped out of the cards' corners, like the site's item cards
+     (corner-shape; browsers without it keep the plain corners) */
+  @supports (corner-shape: scoop) {
+    .builder-panel .c-sheet-box.tools-item {
+      border-radius: 6px;
+      corner-shape: scoop;
     }
   }
 
@@ -3057,9 +3071,12 @@
     transform: rotate(45deg) scale(0.72);
   }
 
-  /* Slots past a stat's maximum stay faded, on the Stats step and the Sheet */
+  /* Slots past a stat's maximum: filled and outlined in the open slots'
+     gray, faded, on the Stats step and the Sheet */
   .sheet-stat .stat.unavailable {
-    opacity: 0.45;
+    border-color: var(--portfolio-gray);
+    background-color: var(--portfolio-gray);
+    opacity: 0.25;
   }
 
   /* A point past the stat's maximum */
