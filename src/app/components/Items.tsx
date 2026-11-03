@@ -143,8 +143,9 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                     <span className="tools-item-category">
                       <Chip>{title(item.category)}</Chip>
                     </span>
-                    <label className="tools-equipped">
-                      <input type="checkbox" checked={item.equipped} onChange={(e) => update(item, { equipped: e.target.checked })} /> Equip
+                    <label className="tools-equipped" title="Equip">
+                      <input type="checkbox" aria-label="Equip" checked={item.equipped} onChange={(e) => update(item, { equipped: e.target.checked })} />
+                      <span className="tools-equipped-label">Equip</span>
                     </label>
                     {expand}
                   </div>
@@ -184,8 +185,9 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                       </option>
                     ))}
                   </select>
-                  <label className="tools-equipped">
-                    <input type="checkbox" checked={item.equipped} onChange={(e) => update(item, { equipped: e.target.checked })} /> Equip
+                  <label className="tools-equipped" title="Equip">
+                    <input type="checkbox" aria-label="Equip" checked={item.equipped} onChange={(e) => update(item, { equipped: e.target.checked })} />
+                    <span className="tools-equipped-label">Equip</span>
                   </label>
                   <button
                     type="button"

@@ -3011,6 +3011,13 @@
     cursor: pointer;
   }
 
+  /* On small screens the checkbox stands alone; its title still says Equip */
+  @media (max-width: 767px) {
+    .tools-equipped-label {
+      display: none;
+    }
+  }
+
   /* The chevron, a little apart from the rest, pointing up while open */
   .tools-item-icon.tools-item-expand {
     margin-left: 4px;
