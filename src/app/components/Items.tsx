@@ -1,10 +1,63 @@
-import { useId, useState } from "react";
-import { Chip, LorePopup, title } from "./ui.js";
+import { Fragment, useId, useState } from "react";
+import { Chip, Icon, LorePopup, title } from "./ui.js";
+import { damageIcon } from "./Resistances.js";
 import { content, itemById } from "../content.js";
-import { ITEM_CATEGORIES, itemDetails, stockItemNamed, withItem, type Item, type ItemCategory } from "../items.js";
+import { ITEM_CATEGORIES, itemUses, stockItemNamed, withItem, type Item, type ItemCategory } from "../items.js";
+import { parseDamage } from "../../engine/damage.js";
+import { parseResistances } from "../resistances.js";
+import type { Item as StockItem } from "../../schema/index.js";
 
 // Stock items to suggest while typing a name, money left out until wealth has rules.
 const STOCK = content.items.filter((i) => i.category !== "currency").sort((a, b) => a.name.localeCompare(b.name));
+
+// A stock item's damage and resistances as badges, each its damage type's icon
+// and number (a damage choice split by "or", a resistance that covers only
+// part of the body with where it applies), under the card's top line.
+function ItemStats({ stock }: { stock: StockItem }) {
+  const damage = stock.damage ? parseDamage(stock.damage) : undefined;
+  const resists = stock.resistances ? parseResistances(stock.resistances, stock.name) : [];
+  if (!stock.damage && !resists.length) return null;
+  // Where they all apply, like a helmet's (head), said once after the badges
+  const where = resists.length > 0 && resists.every((r) => r.where === resists[0]!.where) ? resists[0]!.where : undefined;
+  return (
+    <div className="tools-item-stats">
+      {stock.damage && (
+        <span className="tools-item-stat-group">
+          <span className="tools-item-stat-label">Damage</span>
+          {damage ? (
+            damage.map((option, i) => (
+              <Fragment key={i}>
+                {i > 0 && <span className="tools-item-stat-label">or</span>}
+                {option.map((d) => (
+                  <span key={d.type} className="chip tools-item-stat">
+                    <Icon name={damageIcon(d.type)} label={d.type} />
+                    {d.amount}
+                  </span>
+                ))}
+              </Fragment>
+            ))
+          ) : (
+            // Damage the badges can't read stays as written
+            <span className="chip tools-item-stat">{stock.damage}</span>
+          )}
+        </span>
+      )}
+      {resists.length > 0 && (
+        <span className="tools-item-stat-group">
+          <span className="tools-item-stat-label">Resists</span>
+          {resists.map((r, i) => (
+            <span key={i} className="chip tools-item-stat">
+              <Icon name={damageIcon(r.type)} label={r.type} />
+              {r.amount}
+              {r.where && !where && <span className="tools-item-stat-where">({r.where})</span>}
+            </span>
+          ))}
+          {where && <span className="tools-item-stat-label">({where})</span>}
+        </span>
+      )}
+    </div>
+  );
+}
 
 // The character's inventory, a column of the sheet after the Knowledges, in
 // the Character Creator and on Player Tools' Tracker. A name the game's stock
@@ -115,7 +168,7 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
         <ul className="tools-item-list">
           {items.map((item) => {
             const stock = item.item ? itemById.get(item.item) : undefined;
-            const details = stock ? itemDetails(stock) : "";
+            const details = stock ? itemUses(stock) : "";
             const open = expanded.has(item.id);
             // The chevron that opens the card to its fields, or closes it back to a line
             const expand = (
@@ -149,6 +202,7 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                     </label>
                     {expand}
                   </div>
+                  {stock && <ItemStats stock={stock} />}
                 </li>
               );
             }
@@ -189,21 +243,6 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                     <input type="checkbox" aria-label="Equip" checked={item.equipped} onChange={(e) => update(item, { equipped: e.target.checked })} />
                     <span className="tools-equipped-label">Equip</span>
                   </label>
-                  <button
-                    type="button"
-                    className="tools-item-icon tools-item-notes"
-                    aria-label={`Notes for ${item.name}`}
-                    aria-expanded={showsNotes(item)}
-                    title="Notes"
-                    onClick={() => {
-                      if (!showsNotes(item)) setFocusNote(item.id);
-                      toggleNotes(item);
-                    }}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" aria-hidden="true">
-                      <path d="M492.7 58.75C517.7 83.74 517.7 124.3 492.7 149.3L444.3 197.7L314.3 67.72L362.7 19.32C387.7-5.678 428.3-5.678 453.3 19.32L492.7 58.75zM58.57 323.5L291.7 90.34L421.7 220.3L188.5 453.4C178.1 463.8 165.2 471.5 151.1 475.6L30.77 511C22.35 513.5 13.24 511.2 7.03 504.1C.8198 498.8-1.502 489.7 .976 481.2L36.37 360.9C40.53 346.8 48.16 333.9 58.57 323.5L58.57 323.5zM552 464C565.3 464 576 474.7 576 488C576 501.3 565.3 512 552 512H248C234.7 512 224 501.3 224 488C224 474.7 234.7 464 248 464H552z" />
-                    </svg>
-                  </button>
                   <button type="button" className="tools-item-icon" aria-label={`Remove ${item.name}`} title="Remove" onClick={() => remove(item)}>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" aria-hidden="true">
                       <path d="M135.2 17.69C140.6 6.848 151.7 0 163.8 0H284.2C296.3 0 307.4 6.848 312.8 17.69L320 32H416C433.7 32 448 46.33 448 64C448 81.67 433.7 96 416 96H32C14.33 96 0 81.67 0 64C0 46.33 14.33 32 32 32H128L135.2 17.69zM394.8 466.1C393.2 492.3 372.3 512 346.9 512H101.1C75.75 512 54.77 492.3 53.19 466.1L31.1 128H416L394.8 466.1z" />
@@ -211,12 +250,36 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                   </button>
                   {expand}
                 </div>
+                {stock && <ItemStats stock={stock} />}
                 {stock && (
                   <p className="tools-item-stock">
                     {stock.summary}
                     {details && <span className="tools-item-details"> {details}</span>}
                   </p>
                 )}
+                {/* What it's worth, as a badge */}
+                {stock?.value !== undefined && stock.currency && (
+                  <p className="tools-item-cost">
+                    <Chip>
+                      {stock.value.toLocaleString("en-US")} {stock.currency}
+                    </Chip>
+                  </p>
+                )}
+                {/* Note, a pen and its label on a line of its own, opening the notes field */}
+                <button
+                  type="button"
+                  className="tools-item-note-toggle"
+                  aria-expanded={showsNotes(item)}
+                  onClick={() => {
+                    if (!showsNotes(item)) setFocusNote(item.id);
+                    toggleNotes(item);
+                  }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" aria-hidden="true">
+                      <path d="M492.7 58.75C517.7 83.74 517.7 124.3 492.7 149.3L444.3 197.7L314.3 67.72L362.7 19.32C387.7-5.678 428.3-5.678 453.3 19.32L492.7 58.75zM58.57 323.5L291.7 90.34L421.7 220.3L188.5 453.4C178.1 463.8 165.2 471.5 151.1 475.6L30.77 511C22.35 513.5 13.24 511.2 7.03 504.1C.8198 498.8-1.502 489.7 .976 481.2L36.37 360.9C40.53 346.8 48.16 333.9 58.57 323.5L58.57 323.5zM552 464C565.3 464 576 474.7 576 488C576 501.3 565.3 512 552 512H248C234.7 512 224 501.3 224 488C224 474.7 234.7 464 248 464H552z" />
+                  </svg>
+                  Note
+                </button>
                 {showsNotes(item) && (
                   <input
                     type="text"
