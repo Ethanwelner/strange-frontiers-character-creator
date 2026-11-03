@@ -3044,12 +3044,13 @@
     }
   }
 
-  /* Equip's box sits on the card's right border, centered top to bottom and
-     half outside the card; its title and label still say Equip */
+  /* Equip's box sits on the card's left border, centered top to bottom and
+     half outside the card, clear of the chevron; its title and label still
+     say Equip */
   .tools-item .tools-equipped {
     position: absolute;
     top: 50%;
-    right: -10px;
+    left: -10px;
     transform: translateY(-50%);
     cursor: pointer;
 
@@ -3086,6 +3087,40 @@
     flex-wrap: wrap;
     gap: 8px 20px;
     margin-top: 10px;
+  }
+
+  /* In a closed card's line, they sit at the right before the category,
+     on one line, and the category follows them */
+  .tools-item-summary {
+    .tools-item-stats {
+      flex: none;
+      flex-wrap: nowrap;
+      margin: 0 0 0 auto;
+    }
+
+    .tools-item-stat-group {
+      flex-wrap: nowrap;
+    }
+
+    .tools-item-stats + .tools-item-category {
+      margin-left: 0;
+    }
+
+    /* In a narrow card they drop to their own line under it instead */
+    @container item (width < 420px) {
+      flex-wrap: wrap;
+
+      .tools-item-stats {
+        order: 1;
+        flex-basis: 100%;
+        flex-wrap: wrap;
+        margin: 2px 0 0;
+      }
+
+      .tools-item-stats + .tools-item-category {
+        margin-left: auto;
+      }
+    }
   }
 
   .tools-item-stat-group {

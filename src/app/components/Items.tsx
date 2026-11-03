@@ -10,7 +10,8 @@ import type { Item as StockItem } from "../../schema/index.js";
 // Stock items to suggest while typing a name, money left out until wealth has rules.
 const STOCK = content.items.filter((i) => i.category !== "currency").sort((a, b) => a.name.localeCompare(b.name));
 
-// A stock item's damage and resistances as badges under the card's top line:
+// A stock item's damage and resistances as badges, in a closed card's line
+// before its category, and under an open card's fields:
 // each damage type's icon and number, all in one badge, except a damage
 // choice, whose options get a badge each split by "or". A resistance that
 // covers only part of the body says where it applies.
@@ -197,6 +198,7 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                   <div className="tools-item-row tools-item-summary">
                     <span className="tools-item-count">{item.qty}×</span>
                     <span className="tools-item-title">{item.name}</span>
+                    {stock && <ItemStats stock={stock} />}
                     {/* The category as a badge, like a Trait card's */}
                     <span className="tools-item-category">
                       <Chip>{title(item.category)}</Chip>
@@ -207,7 +209,6 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                     </label>
                     {expand}
                   </div>
-                  {stock && <ItemStats stock={stock} />}
                 </li>
               );
             }
