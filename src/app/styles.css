@@ -739,10 +739,11 @@
   /* The Stats step's bars sit on the dark box: core badges dark, the bonus
      points in a dark shade of the group's color at the left, the player's
      points after them in the full color (.stat-group-*), and open slots a
-     lighter outline. Core badges are dark with white numbers. */
+     lighter outline. Core badges take the group's dark shade, with white
+     numbers. */
   .builder-panel .pool-stats {
     .stat-badge {
-      background-color: var(--portfolio-black);
+      background-color: var(--stat-bonus, var(--portfolio-black));
       color: var(--portfolio-white);
     }
 
@@ -813,7 +814,7 @@
       }
 
       .stat-badge {
-        background-color: var(--portfolio-black);
+        background-color: var(--stat-bonus, var(--portfolio-black));
         color: var(--portfolio-white);
       }
 
