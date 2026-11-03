@@ -1219,7 +1219,7 @@
     border-radius: 4px;
     padding: 0.2rem 0.5rem;
     margin: 0.15rem 0.25rem 0.15rem 0;
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     font-weight: 600;
     white-space: nowrap;
   }
@@ -2880,10 +2880,11 @@
      olive edge, the same in the creator and Player Tools (the sheet's boxes
      otherwise have no border) */
   .builder-panel .c-sheet-box.tools-item {
+    position: relative;
     container: item / inline-size;
     background-color: var(--card-bg);
     border: 2px solid #6d6a5a !important;
-    padding: 12px;
+    padding: 12px 12px 12px 22px;
     box-shadow: 0 4px 10px #00000030;
 
     /* Its fields in a darker olive to match */
@@ -2942,9 +2943,9 @@
     align-items: center;
   }
 
-  /* Notes, a pen on a line, and Remove, a trash can, faded like the sheet's
-     pens and full strength under the pointer (the pen too while its notes
-     show). The trash can is 1rem further out, away from misclicks. */
+  /* Remove, a trash can, and the chevron, faded like the sheet's pens and
+     full strength under the pointer (the chevron too while the card is
+     open). The trash can is 1rem out from the fields, away from misclicks. */
   .tools-item-icon {
     flex: none;
     display: grid;
@@ -2969,11 +2970,7 @@
       fill: currentColor;
     }
 
-    &.tools-item-notes svg {
-      width: 18px;
-    }
-
-    & + & {
+    :is(select, .tools-equipped) + & {
       margin-left: 1rem;
     }
   }
@@ -2997,8 +2994,25 @@
     font-weight: 600;
   }
 
+  /* How many, in a circle centered on the card's left border, in the card's
+     own color and edge */
   .tools-item-count {
-    flex: none;
+    position: absolute;
+    top: 50%;
+    left: -14px;
+    transform: translateY(-50%);
+    display: grid;
+    place-items: center;
+    box-sizing: border-box;
+    min-width: 26px;
+    height: 26px;
+    padding: 0 5px;
+    background-color: var(--card-bg);
+    border: 2px solid #6d6a5a;
+    border-radius: 13px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1;
   }
 
   .tools-item-category {
@@ -3008,7 +3022,7 @@
 
   /* The category's badge in the card's olive: the fields' dark olive with
      the card's lighter edge and a pale olive text */
-  .tools-item .tools-item-category .chip {
+  .tools-item .chip {
     background-color: #25241e;
     border: 1px solid #6d6a5a;
     color: #d6d1b4;
@@ -3047,16 +3061,19 @@
     }
   }
 
+  /* Equip's box starts a closed card's line, after the count's circle; its
+     title and label still say Equip */
   .tools-item .tools-equipped {
-    gap: 6px;
+    flex: none;
     cursor: pointer;
-  }
 
-  /* Below 1400px, where Player Tools' d20 column narrows, the checkbox
-     stands alone; its title still says Equip */
-  @media (max-width: 1399px) {
     .tools-equipped-label {
-      display: none;
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
     }
   }
 
@@ -3073,6 +3090,125 @@
 
     &[aria-expanded="true"] svg {
       transform: rotate(180deg);
+    }
+  }
+
+  /* A stock item's damage and resistances under the card's top line: a soft
+     label, then a badge of damage type icons and numbers */
+  .tools-item-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    margin-top: 10px;
+  }
+
+  /* In a closed card's line, they sit at the right before the category,
+     on one line, and the category follows them */
+  .tools-item-summary {
+    .tools-item-stats {
+      flex: none;
+      flex-wrap: nowrap;
+      margin: 0 0 0 auto;
+    }
+
+    .tools-item-stat-group {
+      flex-wrap: nowrap;
+    }
+
+    .tools-item-stats + .tools-item-category {
+      margin-left: 0;
+    }
+
+    /* In a narrow card they drop to their own line under it instead */
+    @container item (width < 420px) {
+      flex-wrap: wrap;
+
+      .tools-item-stats {
+        order: 1;
+        flex-basis: 100%;
+        flex-wrap: wrap;
+        margin: 2px 0 0;
+      }
+
+      .tools-item-stats + .tools-item-category {
+        margin-left: auto;
+      }
+    }
+  }
+
+  .tools-item-stat-group {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .tools-item-stat-label {
+    color: var(--panel-soft);
+    font-size: 0.8125rem;
+  }
+
+  /* One badge holds each value, an icon then its number, 10px apart */
+  .tools-item .chip.tools-item-stat {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2px 10px;
+  }
+
+  .tools-item-stat-value {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+
+    .icon {
+      width: 1.1em;
+      height: 1.1em;
+      fill: currentColor;
+    }
+  }
+
+  /* "or" between a damage choice's options, inside the badge */
+  .tools-item-stat-or {
+    color: #a29d82;
+    font-weight: 400;
+  }
+
+  .tools-item-stat-where {
+    color: #a29d82;
+  }
+
+  /* The cost's badge, under the description */
+  .tools-item-cost {
+    margin: 0 0 8px;
+  }
+
+  /* Note: the pen and its label on a line of their own at the bottom of the
+     open card, faded like the other icons until pointed at or open */
+  button.tools-item-note-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: inherit;
+    font-size: 0.875rem;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 200ms;
+
+    &:is(:hover, :focus-visible, [aria-expanded="true"]) {
+      background: none;
+      color: inherit;
+      opacity: 1;
+    }
+
+    svg {
+      width: 16px;
+      height: 14px;
+      fill: currentColor;
     }
   }
 

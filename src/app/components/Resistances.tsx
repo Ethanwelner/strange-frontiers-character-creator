@@ -4,7 +4,8 @@ import { Icon } from "./ui.js";
 import { DAMAGE_TYPES, resistancesOf, type DamageType } from "../resistances.js";
 import type { Item } from "../items.js";
 
-const icon = (t: DamageType) => (t === "Acidic/Corrosive" ? "acidic" : (t.toLowerCase() as Lowercase<Exclude<DamageType, "Acidic/Corrosive">>));
+// A damage type's icon, also used by the item cards' damage and resistance badges
+export const damageIcon = (t: DamageType) => (t === "Acidic/Corrosive" ? "acidic" : (t.toLowerCase() as Lowercase<Exclude<DamageType, "Acidic/Corrosive">>));
 
 // The damage types from the Mechanics page that the character resists (or is
 // weak to), in a line, each its icon then the total from everything in
@@ -25,7 +26,7 @@ export function Resistances({ items, held }: { items: Item[]; held: { trait: str
         <ul className="sheet-resistance-list">
           {shown.map(({ type, own, total }, i) => (
             <li key={type} className="sheet-resistance" tabIndex={0} aria-describedby={`${id}-${i}`}>
-              <Icon name={icon(type)} label={type} />
+              <Icon name={damageIcon(type)} label={type} />
               <span className="num">{total}</span>
               <div className="sheet-resistance-pop" role="tooltip" id={`${id}-${i}`}>
                 <strong className="sheet-resistance-pop-title">

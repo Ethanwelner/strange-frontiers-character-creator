@@ -74,6 +74,13 @@ export function itemDetails(stock: StockItem): string {
   return line.charAt(0).toUpperCase() + line.slice(1);
 }
 
+// What a stock item's damage and resistance badges and its cost badge leave
+// out of the line: its uses and the slot it takes, like "Single use; Hands slot".
+export function itemUses(stock: StockItem): string {
+  const line = [stock.uses ?? "", stock.slot ? `${stock.slot} slot` : ""].filter(Boolean).join("; ");
+  return line.charAt(0).toUpperCase() + line.slice(1);
+}
+
 // The stock item with this name, if there is one, so a written-in "dagger"
 // becomes the Dagger.
 export function stockItemNamed(stock: StockItem[], name: string): StockItem | undefined {
