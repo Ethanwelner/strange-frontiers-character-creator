@@ -35,12 +35,13 @@ function source(s: string) {
 
 type Held = NonNullable<BuildResult["summary"]>["traits"][number];
 
-// Where a held Trait came from, as badges: Kind for a Trait the Kind gives,
-// and Origin, Profession or Past for a Background Trait picked from that
-// package's list. A package's own grants (a Farmer's Teamster) get none.
+// Where a held Trait came from, as badges: Origin, Profession or Past for a
+// Background Trait picked from that package's list. A Trait the Kind gives
+// isn't a Kind (Kinds are their own cards), and a package's own grants (a
+// Farmer's Teamster) get none.
 const PACKAGE_SLOTS = ["origin", "profession", "past"] as const;
 function sourceBadges(held: Held, draft: Draft): string[] {
-  const badges = held.sources.some((s) => SOURCE.exec(s)?.[1] === "kind") ? ["Kind"] : [];
+  const badges: string[] = [];
   if (held.sources.includes("background pick")) {
     for (const slot of PACKAGE_SLOTS) {
       if (packageById.get(draft[slot] ?? "")?.backgroundTraits.includes(held.trait)) badges.push(title(slot));
@@ -50,8 +51,8 @@ function sourceBadges(held: Held, draft: Draft): string[] {
 }
 
 // A held Trait, drawn like the site's Traits page cards (.trait-box), with
-// badges at the right of the name's bar: where it came from (Kind, or the
-// package of a Background Trait pick), then its category
+// badges at the right of the name's bar: where it came from (the package of
+// a Background Trait pick), then its category
 function TraitCard({ held, places, draft }: { held: Held; places: string[]; draft: Draft }) {
   const t = traitById.get(held.trait);
   return (
