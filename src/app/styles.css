@@ -3011,8 +3011,9 @@
     cursor: pointer;
   }
 
-  /* On small screens the checkbox stands alone; its title still says Equip */
-  @media (max-width: 767px) {
+  /* Below 1400px, where Player Tools' d20 column narrows, the checkbox
+     stands alone; its title still says Equip */
+  @media (max-width: 1399px) {
     .tools-equipped-label {
       display: none;
     }
