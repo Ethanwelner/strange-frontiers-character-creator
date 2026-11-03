@@ -714,13 +714,14 @@
       }
     }
 
-    /* Condition cards in a mid gray, border and header bar, so they read
-       apart from Traits */
+    /* Condition cards in grays, so they read apart from Traits: a mid gray
+       border and a light gray header bar with dark text */
     :is(.builder-panel, .lore-modal) .tools-conditions > .trait-box {
       --card-edge: #646464;
 
       > .trait-name {
-        background-color: #646464;
+        background-color: #b7b4b4;
+        color: var(--portfolio-black);
       }
     }
 
@@ -2563,19 +2564,29 @@
     }
   }
 
+  /* In green, or the section's own --add-color: the Conditions' header
+     gray, the Items' Equip olive */
   button.sheet-section-add {
     flex: none;
     padding: 0.35rem 0.75rem;
     font-size: 0.875rem;
-    background: var(--frontiers-green);
+    background: var(--add-color, var(--frontiers-green));
     color: var(--portfolio-black);
     border: 0;
 
     &:hover,
     &:focus-visible {
-      background-color: color-mix(in srgb, var(--frontiers-green) 75%, var(--portfolio-white));
+      background-color: color-mix(in srgb, var(--add-color, var(--frontiers-green)) 75%, var(--portfolio-white));
       color: var(--portfolio-black);
     }
+  }
+
+  .tools-conditions-side {
+    --add-color: #b7b4b4;
+  }
+
+  .tools-items {
+    --add-color: #b5ae86;
   }
 
   /* The add form on its own in a small popup, its title over it */
