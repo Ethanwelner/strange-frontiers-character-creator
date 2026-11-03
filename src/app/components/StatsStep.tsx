@@ -178,7 +178,7 @@ export function StatsStep({ draft, onChange, floor }: Props) {
               // A package's bonus, like the Licensed Mage's 1 Magic, on top of the levels
               const extra = open.includes(g) ? packages.reduce((n, p) => n + (p.coreBonus[g as "magic"] ?? 0), 0) : 0;
               return (
-                <div key={g} className={`sheet-group${core === 0 && !canLevel ? " locked" : ""}`}>
+                <div key={g} className={`sheet-group stat-group-${g}${core === 0 && !canLevel ? " locked" : ""}`}>
                   <div className="sheet-group-head">
                     <div className="core-control">
                       <span className="stat-badge" title="Core Stat">
@@ -222,7 +222,7 @@ export function StatsStep({ draft, onChange, floor }: Props) {
             // Focus points that taking a core point back also takes back
             const stranded = Math.max(0, spent - (core - 1) * POINTS_PER_LEVEL);
             return (
-              <div key={g} className={`sheet-group${locked ? " locked" : ""}`}>
+              <div key={g} className={`sheet-group stat-group-${g}${locked ? " locked" : ""}`}>
                 <div className="sheet-group-head">
                   <div className="core-control">
                     <span className="stat-badge" title="Core Stat">
