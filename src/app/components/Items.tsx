@@ -10,9 +10,10 @@ import type { Item as StockItem } from "../../schema/index.js";
 // Stock items to suggest while typing a name, money left out until wealth has rules.
 const STOCK = content.items.filter((i) => i.category !== "currency").sort((a, b) => a.name.localeCompare(b.name));
 
-// A stock item's damage and resistances as badges, each its damage type's icon
-// and number (a damage choice split by "or", a resistance that covers only
-// part of the body with where it applies), under the card's top line.
+// A stock item's damage and resistances as badges under the card's top line:
+// each damage type's icon and number, all in one badge, except a damage
+// choice, whose options get a badge each split by "or". A resistance that
+// covers only part of the body says where it applies.
 function ItemStats({ stock }: { stock: StockItem }) {
   const damage = stock.damage ? parseDamage(stock.damage) : undefined;
   const resists = stock.resistances ? parseResistances(stock.resistances, stock.name) : [];
@@ -28,12 +29,14 @@ function ItemStats({ stock }: { stock: StockItem }) {
             damage.map((option, i) => (
               <Fragment key={i}>
                 {i > 0 && <span className="tools-item-stat-label">or</span>}
-                {option.map((d) => (
-                  <span key={d.type} className="chip tools-item-stat">
-                    <Icon name={damageIcon(d.type)} label={d.type} />
-                    {d.amount}
-                  </span>
-                ))}
+                <span className="chip tools-item-stat">
+                  {option.map((d) => (
+                    <span key={d.type} className="tools-item-stat-value">
+                      <Icon name={damageIcon(d.type)} label={d.type} />
+                      {d.amount}
+                    </span>
+                  ))}
+                </span>
               </Fragment>
             ))
           ) : (
@@ -45,13 +48,15 @@ function ItemStats({ stock }: { stock: StockItem }) {
       {resists.length > 0 && (
         <span className="tools-item-stat-group">
           <span className="tools-item-stat-label">Resists</span>
-          {resists.map((r, i) => (
-            <span key={i} className="chip tools-item-stat">
-              <Icon name={damageIcon(r.type)} label={r.type} />
-              {r.amount}
-              {r.where && !where && <span className="tools-item-stat-where">({r.where})</span>}
-            </span>
-          ))}
+          <span className="chip tools-item-stat">
+            {resists.map((r, i) => (
+              <span key={i} className="tools-item-stat-value">
+                <Icon name={damageIcon(r.type)} label={r.type} />
+                {r.amount}
+                {r.where && !where && <span className="tools-item-stat-where">({r.where})</span>}
+              </span>
+            ))}
+          </span>
           {where && <span className="tools-item-stat-label">({where})</span>}
         </span>
       )}

@@ -3073,7 +3073,7 @@
   }
 
   /* A stock item's damage and resistances under the card's top line: a soft
-     label, then a badge per damage type with its icon and number */
+     label, then a badge of damage type icons and numbers */
   .tools-item-stats {
     display: flex;
     flex-wrap: wrap;
@@ -3093,7 +3093,15 @@
     font-size: 0.8125rem;
   }
 
+  /* One badge holds each value, an icon then its number, 10px apart */
   .tools-item .chip.tools-item-stat {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2px 10px;
+  }
+
+  .tools-item-stat-value {
     display: inline-flex;
     align-items: center;
     gap: 4px;
