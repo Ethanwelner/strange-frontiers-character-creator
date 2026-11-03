@@ -1,4 +1,4 @@
-import { useCallback, useState, type ReactNode } from "react";
+import { useCallback, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { FREE_TEXT_POOLS, MP_PER_MAGIC, type BuildResult } from "../../engine/validate.js";
 import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { coreStatsShown } from "../check.js";
@@ -89,6 +89,20 @@ function TraitModal({ held, places, draft, onClose }: { held: Held; places: stri
   );
 }
 
+// The Conditions' and Items' boxes, straight into the stats' row, or, with a
+// box to go over them (`stack`), in a column with it beside the stats. The
+// box (`top`) leaves the column for the top of the row when the row is a
+// single column.
+function MaybeStack({ stack, top, children }: { stack: boolean; top?: ReactNode; children: ReactNode }) {
+  if (!stack) return <>{children}</>;
+  return (
+    <div className="sheet-side-stack">
+      {top}
+      <div className="sheet-side-row">{children}</div>
+    </div>
+  );
+}
+
 // Laid out like the sample character sheet on the site's Mechanics tab.
 // Knowledges and Languages are a list of links, as on that sheet, each opening
 // its card; the other Traits are cards.
@@ -107,6 +121,7 @@ export function Sheet({
   onDescription,
   embedded = false,
   statsSlot,
+  resistancesSlot,
   traitsAction,
   items,
   onItems,
@@ -122,6 +137,8 @@ export function Sheet({
   embedded?: boolean;
   // Stands in for the stats column, as Player Tools' stats editor does
   statsSlot?: ReactNode;
+  // A box over the Conditions and Items, beside the stats, like Player Tools' resistances
+  resistancesSlot?: ReactNode;
   // Shown at the right end of the Traits title's line, like Player Tools' "Traits available"
   traitsAction?: ReactNode;
   onLooks?: (looks: Pick<Draft, "age" | "gender" | "customGender">) => void;
@@ -157,6 +174,26 @@ export function Sheet({
   const others = held.filter((h) => !isKnowledge(h));
   const [open, setOpen] = useState<string>();
   const closeModal = useCallback(() => setOpen(undefined), []);
+  // Whether the Conditions and Items have wrapped under the stats, leaving a
+  // single column: then the resistances go first, under HP and over the stats.
+  // Moving them doesn't change where the row wraps, so this settles.
+  const row = useRef<HTMLDivElement>(null);
+  const [singleColumn, setSingleColumn] = useState(false);
+  const hasResistances = Boolean(resistancesSlot);
+  useLayoutEffect(() => {
+    const el = row.current;
+    if (!el || !hasResistances) return;
+    const check = () => {
+      const stats = el.querySelector(":scope > .sheet-body");
+      const side = el.querySelector(":scope > .sheet-side-stack");
+      if (stats && side) setSingleColumn(side.getBoundingClientRect().top > stats.getBoundingClientRect().top + 1);
+    };
+    check();
+    const observer = new ResizeObserver(check);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [hasResistances]);
+  const resistancesBox = resistancesSlot && <div className="c-sheet-box sheet-resistances">{resistancesSlot}</div>;
   const opened = held.find((h) => h.trait === open);
   // The Kind's features sit at the top, under HP, VP and SP; the packages' at the bottom.
   const features = [
@@ -232,7 +269,8 @@ export function Sheet({
         )}
 
         {/* The stats, the Conditions and the Items, each in a box of its own */}
-        <div className="sheet-row">
+        <div className="sheet-row" ref={row}>
+          {singleColumn && resistancesBox}
           <div className="c-sheet-box sheet-body">
             {statsSlot ? (
               <div className="sheet-stats">{statsSlot}</div>
@@ -280,15 +318,16 @@ export function Sheet({
             )}
           </div>
           {onItems && onConditions && (
-            // The Conditions and the Items, each in its own box along the row
-            <>
+            // The Conditions and the Items, each in its own box along the row;
+            // with resistances, under them, together beside the stats
+            <MaybeStack stack={hasResistances} top={!singleColumn && resistancesBox}>
               <div className="c-sheet-box sheet-conditions">
                 <Conditions conditions={conditions ?? []} hp={hp ?? summary?.resources.hp ?? 0} maxHp={summary?.resources.hp ?? 0} onChange={onConditions} />
               </div>
               <div className="c-sheet-box sheet-items">
                 <Items items={items ?? []} onChange={onItems} />
               </div>
-            </>
+            </MaybeStack>
           )}
         </div>
 

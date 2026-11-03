@@ -6,6 +6,7 @@ import { RESOURCE_NAMES, Sheet } from "../../app/components/Sheet.js";
 import { StatsStep } from "../../app/components/StatsStep.js";
 import { TraitsStep } from "../../app/components/TraitsStep.js";
 import { Icon, LorePopup, Sign } from "../../app/components/ui.js";
+import { Resistances } from "../../app/components/Resistances.js";
 import { checkPlay, currentOf, maxOf, pointsToPlace, RESOURCES, withResource, type Play, type ResourceKey } from "../play.js";
 
 // The character's name (`head`, from the app) over HP, VP, SP and MP, each
@@ -50,7 +51,9 @@ export function Tracker({
   const closeTraits = useCallback(() => setTraitDraft(undefined), []);
   const traitResult = useMemo(() => (traitDraft ? checkPlay(traitDraft, content) : undefined), [traitDraft]);
   const banked = (result.summary?.picks.universal.banked ?? 0) + (result.summary?.picks.background.banked ?? 0);
-  const held = useMemo(() => new Set(result.summary?.traits.map((h) => h.trait) ?? []), [result]);
+  const heldIds = useMemo(() => new Set(result.summary?.traits.map((h) => h.trait) ?? []), [result]);
+  // The Traits and Conditions the character has now, for their resistances
+  const held = useMemo(() => [...(result.summary?.traits ?? []), ...play.conditions], [result, play.conditions]);
 
   // The stats are always the creator's Stats step. Its + and − and Submit
   // show only while there are points to add: after Level up, or when the
@@ -152,6 +155,7 @@ export function Tracker({
         result={result}
         embedded
         statsSlot={stats}
+        resistancesSlot={<Resistances items={play.items} held={held} />}
         items={play.items}
         onItems={(items) => onChange({ ...play, items })}
         conditions={play.conditions}
@@ -175,7 +179,7 @@ export function Tracker({
             campaign={{ startingLevel: traitDraft.level }}
             result={traitResult}
             onChange={setTraitDraft}
-            hide={held}
+            hide={heldIds}
             newFrom={play.draft.traits.length}
           />
           <div className="tools-traits-submit">

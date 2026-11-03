@@ -2559,6 +2559,124 @@
         flex: 4000 1 0;
       }
     }
+
+    /* Player Tools' resistances over the Conditions and Items, the three
+       together beside the stats, taking the rest of the line as the
+       Conditions would. Under it, the Conditions and the Items share a line
+       4 parts to 3 once there's room for both, or each takes its own. */
+    > .sheet-side-stack {
+      flex: 1000 1 13rem;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+  }
+
+  .sheet-side-row {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 24px;
+
+    > .sheet-conditions {
+      flex: 3 1 13rem;
+      min-width: 0;
+    }
+
+    > .sheet-items {
+      flex: 4 1 20rem;
+      min-width: 0;
+    }
+  }
+
+  /* Each damage type resisted: its icon, then the total, along a line that
+     wraps, with its sources in a popover above it on hover or focus */
+  .sheet-resistances .subhead {
+    margin: 0 0 12px;
+  }
+
+  .sheet-resistances .empty {
+    margin: 0;
+  }
+
+  .sheet-resistance-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sheet-resistance {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.375rem;
+    cursor: default;
+    border-radius: 4px;
+
+    > .icon {
+      width: 1.5em;
+      height: 1.5em;
+      fill: currentColor;
+    }
+
+    > .num {
+      font-weight: 700;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--panel-soft);
+      outline-offset: 3px;
+    }
+
+    &:is(:hover, :focus-visible) > .sheet-resistance-pop {
+      display: block;
+    }
+  }
+
+  .sheet-resistance-pop {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    z-index: 20;
+    width: max-content;
+    max-width: 16rem;
+    padding: 10px 12px;
+    transform: translateX(-50%);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    background-color: var(--panel-box);
+    color: var(--panel-text);
+    font-size: 0.8rem;
+    box-shadow: 0 4px 16px rgb(0 0 0 / 40%);
+
+    .sheet-resistance-pop-title {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    ul {
+      display: grid;
+      gap: 4px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .num {
+      font-weight: 700;
+    }
   }
   /* Items' and Conditions' titles, with Add item or Add Condition at the
      right end of the line, a small green button like the Traits' Add traits */
@@ -2892,6 +3010,14 @@
   .tools-item .tools-equipped {
     gap: 6px;
     cursor: pointer;
+  }
+
+  /* Below 1400px, where Player Tools' d20 column narrows, the checkbox
+     stands alone; its title still says Equip */
+  @media (max-width: 1399px) {
+    .tools-equipped-label {
+      display: none;
+    }
   }
 
   /* The chevron, a little apart from the rest, pointing up while open */
