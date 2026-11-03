@@ -13,6 +13,9 @@ features:
     description: An AI Core’s central core is an item with 10 HP, and it must be destroyed separately from its chassis for the character to be killed.
   - name: Machine Mind
     description: An AI Core can interface directly with other machines through the cabled port interfaces on its core.
+# A machine mind: harmed by EMP, usually immune to Death damage.
+grants:
+  - trait: mechanical
 # Bodiless keeps Physical at 0, so the maximums total 120, not Human's 135.
 maxTotal: 120
 stats:
