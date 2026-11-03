@@ -1,8 +1,8 @@
 import { useId, useMemo } from "react";
-import { content } from "../../app/content.js";
-import { Icon } from "../../app/components/ui.js";
-import { DAMAGE_TYPES, resistancesOf, type DamageType } from "../../app/resistances.js";
-import type { Item } from "../../app/items.js";
+import { content } from "../content.js";
+import { Icon } from "./ui.js";
+import { DAMAGE_TYPES, resistancesOf, type DamageType } from "../resistances.js";
+import type { Item } from "../items.js";
 
 const icon = (t: DamageType) => (t === "Acidic/Corrosive" ? "acidic" : (t.toLowerCase() as Lowercase<Exclude<DamageType, "Acidic/Corrosive">>));
 
@@ -19,16 +19,16 @@ export function Resistances({ items, held }: { items: Item[]; held: { trait: str
     return { type, own, total: own.filter((r) => !r.where).reduce((n, r) => n + r.amount, 0) };
   }).filter((t) => t.total !== 0 || t.own.some((r) => r.where && r.amount !== 0));
   return (
-    <div className="tools-resistances">
+    <div className="sheet-resistances">
       <h3 className="subhead">Resistances</h3>
       {shown.length ? (
-        <ul className="tools-resistance-list">
+        <ul className="sheet-resistance-list">
           {shown.map(({ type, own, total }, i) => (
-            <li key={type} className="tools-resistance" tabIndex={0} aria-describedby={`${id}-${i}`}>
+            <li key={type} className="sheet-resistance" tabIndex={0} aria-describedby={`${id}-${i}`}>
               <Icon name={icon(type)} label={type} />
               <span className="num">{total}</span>
-              <div className="tools-resistance-pop" role="tooltip" id={`${id}-${i}`}>
-                <strong className="tools-resistance-pop-title">
+              <div className="sheet-resistance-pop" role="tooltip" id={`${id}-${i}`}>
+                <strong className="sheet-resistance-pop-title">
                   {type} {total}
                 </strong>
                 <ul>

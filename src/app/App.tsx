@@ -5,6 +5,7 @@ import { CharacterStep } from "./components/CharacterStep.js";
 import { ChoicesStep } from "./components/ChoicesStep.js";
 import { DescribeBox } from "./components/DescribeBox.js";
 import { StatsStep } from "./components/StatsStep.js";
+import { Resistances } from "./components/Resistances.js";
 import { Sheet } from "./components/Sheet.js";
 import { TraitsStep } from "./components/TraitsStep.js";
 import { Arrow, Notice, type Looks } from "./components/ui.js";
@@ -253,6 +254,7 @@ export function App() {
                   onItems={(items) => setDraft({ ...draft, items })}
                   conditions={draft.conditions}
                   onConditions={(conditions) => setDraft({ ...draft, conditions })}
+                  resistancesSlot={<Resistances items={draft.items ?? []} held={[...(result.summary?.traits ?? []), ...(draft.conditions ?? [])]} />}
                 />
               )}
 

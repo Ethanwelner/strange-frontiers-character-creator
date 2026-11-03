@@ -2592,15 +2592,15 @@
 
   /* Each damage type resisted: its icon, then the total, along a line that
      wraps, with its sources in a popover above it on hover or focus */
-  .tools-resistances .subhead {
+  .sheet-resistances .subhead {
     margin: 0 0 12px;
   }
 
-  .tools-resistances .empty {
+  .sheet-resistances .empty {
     margin: 0;
   }
 
-  .tools-resistance-list {
+  .sheet-resistance-list {
     display: flex;
     flex-wrap: wrap;
     gap: 12px 24px;
@@ -2609,7 +2609,7 @@
     list-style: none;
   }
 
-  .tools-resistance {
+  .sheet-resistance {
     position: relative;
     display: inline-flex;
     align-items: center;
@@ -2633,12 +2633,12 @@
       outline-offset: 3px;
     }
 
-    &:is(:hover, :focus-visible) > .tools-resistance-pop {
+    &:is(:hover, :focus-visible) > .sheet-resistance-pop {
       display: block;
     }
   }
 
-  .tools-resistance-pop {
+  .sheet-resistance-pop {
     display: none;
     position: absolute;
     bottom: calc(100% + 8px);
@@ -2655,7 +2655,7 @@
     font-size: 0.8rem;
     box-shadow: 0 4px 16px rgb(0 0 0 / 40%);
 
-    .tools-resistance-pop-title {
+    .sheet-resistance-pop-title {
       display: block;
       margin-bottom: 6px;
     }

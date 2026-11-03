@@ -6,7 +6,7 @@ import { RESOURCE_NAMES, Sheet } from "../../app/components/Sheet.js";
 import { StatsStep } from "../../app/components/StatsStep.js";
 import { TraitsStep } from "../../app/components/TraitsStep.js";
 import { Icon, LorePopup, Sign } from "../../app/components/ui.js";
-import { Resistances } from "./Resistances.js";
+import { Resistances } from "../../app/components/Resistances.js";
 import { checkPlay, currentOf, maxOf, pointsToPlace, RESOURCES, withResource, type Play, type ResourceKey } from "../play.js";
 
 // The character's name (`head`, from the app) over HP, VP, SP and MP, each
