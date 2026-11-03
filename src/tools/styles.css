@@ -1002,19 +1002,16 @@
   }
 
   /* Below 1400px, where the d20 column narrows, the sections tighten: 1rem
-     between the boxes and the column beside them, and inside each box */
+     between the boxes and the column beside them, as the sheet's own boxes
+     do (src/app/styles.css) */
   @media (max-width: 1399px) {
     .tools-body {
       column-gap: 1rem;
     }
 
-    :is(.tools-tracker, .sheet-row, .sheet-side-stack, .sheet-side-row, .sheet-lower),
+    .tools-tracker,
     .builder-panel .sheet-embedded .c-sheet {
       gap: 1rem;
-    }
-
-    .builder-panel .c-sheet-box {
-      padding: 1rem;
     }
   }
 }

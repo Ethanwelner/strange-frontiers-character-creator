@@ -2590,6 +2590,19 @@
     }
   }
 
+  /* Below 1400px, where Player Tools' d20 column narrows, the sheet's
+     sections tighten: 1rem between its boxes and inside each one (an
+     Item's card keeps its own) */
+  @media (max-width: 1399px) {
+    :is(.c-sheet, .sheet-row, .sheet-row > .sheet-side-stack, .sheet-side-row, .sheet-lower) {
+      gap: 1rem;
+    }
+
+    .builder-panel .c-sheet-box:not(.tools-item) {
+      padding: 1rem;
+    }
+  }
+
   /* Each damage type resisted: its icon, then the total, along a line that
      wraps, with its sources in a popover above it on hover or focus */
   .sheet-resistances .subhead {
