@@ -2880,6 +2880,7 @@
      olive edge, the same in the creator and Player Tools (the sheet's boxes
      otherwise have no border) */
   .builder-panel .c-sheet-box.tools-item {
+    position: relative;
     container: item / inline-size;
     background-color: var(--card-bg);
     border: 2px solid #6d6a5a !important;
@@ -2944,7 +2945,7 @@
 
   /* Remove, a trash can, and the chevron, faded like the sheet's pens and
      full strength under the pointer (the chevron too while the card is
-     open). The trash can is 1rem out from Equip, away from misclicks. */
+     open). The trash can is 1rem out from the fields, away from misclicks. */
   .tools-item-icon {
     flex: none;
     display: grid;
@@ -2969,7 +2970,7 @@
       fill: currentColor;
     }
 
-    .tools-equipped + & {
+    :is(select, .tools-equipped) + & {
       margin-left: 1rem;
     }
   }
@@ -3043,16 +3044,22 @@
     }
   }
 
+  /* Equip's box sits on the card's right border, centered top to bottom and
+     half outside the card; its title and label still say Equip */
   .tools-item .tools-equipped {
-    gap: 6px;
+    position: absolute;
+    top: 50%;
+    right: -10px;
+    transform: translateY(-50%);
     cursor: pointer;
-  }
 
-  /* Below 1400px, where Player Tools' d20 column narrows, the checkbox
-     stands alone; its title still says Equip */
-  @media (max-width: 1399px) {
     .tools-equipped-label {
-      display: none;
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
     }
   }
 
