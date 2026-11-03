@@ -3168,6 +3168,12 @@
     }
   }
 
+  /* "or" between a damage choice's options, inside the badge */
+  .tools-item-stat-or {
+    color: #a29d82;
+    font-weight: 400;
+  }
+
   .tools-item-stat-where {
     color: #a29d82;
   }

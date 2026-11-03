@@ -12,8 +12,8 @@ const STOCK = content.items.filter((i) => i.category !== "currency").sort((a, b)
 
 // A stock item's damage and resistances as badges, in a closed card's line
 // before its category, and under an open card's fields:
-// each damage type's icon and number, all in one badge, except a damage
-// choice, whose options get a badge each split by "or". A resistance that
+// each damage type's icon and number, all in one badge, with "or" between a
+// damage choice's options. A resistance that
 // covers only part of the body says where it applies.
 function ItemStats({ stock }: { stock: StockItem }) {
   const damage = stock.damage ? parseDamage(stock.damage) : undefined;
@@ -27,19 +27,19 @@ function ItemStats({ stock }: { stock: StockItem }) {
         <span className="tools-item-stat-group">
           <span className="tools-item-stat-label">Damage</span>
           {damage ? (
-            damage.map((option, i) => (
-              <Fragment key={i}>
-                {i > 0 && <span className="tools-item-stat-label">or</span>}
-                <span className="chip tools-item-stat">
+            <span className="chip tools-item-stat">
+              {damage.map((option, i) => (
+                <Fragment key={i}>
+                  {i > 0 && <span className="tools-item-stat-or">or</span>}
                   {option.map((d) => (
                     <span key={d.type} className="tools-item-stat-value">
                       <Icon name={damageIcon(d.type)} label={d.type} />
                       {d.amount}
                     </span>
                   ))}
-                </span>
-              </Fragment>
-            ))
+                </Fragment>
+              ))}
+            </span>
           ) : (
             // Damage the badges can't read stays as written
             <span className="chip tools-item-stat">{stock.damage}</span>
