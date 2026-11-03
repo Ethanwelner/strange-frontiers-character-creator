@@ -753,7 +753,7 @@
       background-color: var(--frontiers-lore-on-black);
     }
 
-    .stat.empty {
+    .stat:is(.empty, .unavailable) {
       border-color: #8a8a8a;
     }
 
@@ -820,7 +820,7 @@
         background-color: var(--frontiers-lore-on-black);
       }
 
-      .stat.empty {
+      .stat:is(.empty, .unavailable) {
         border-color: #8a8a8a;
       }
 
@@ -3063,9 +3063,11 @@
     transform: rotate(45deg) scale(0.72);
   }
 
-  /* Slots past a stat's maximum stay faded, on the Stats step and the Sheet */
+  /* Slots past a stat's maximum: the open slots' gray outline, faded, on the
+     Stats step and the Sheet */
   .sheet-stat .stat.unavailable {
-    opacity: 0.45;
+    border-color: var(--portfolio-gray);
+    opacity: 0.25;
   }
 
   /* A point past the stat's maximum */
