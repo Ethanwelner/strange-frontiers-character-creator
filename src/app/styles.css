@@ -2711,12 +2711,12 @@
     align-items: start;
   }
 
-  /* Each item a card with the Traits' shadow, in a warm olive gray with a
-     lighter edge, the same in the creator and Player Tools (the sheet's
-     boxes otherwise have no border) */
+  /* Each item a card with the Traits' shadow and background, with a warm
+     olive edge, the same in the creator and Player Tools (the sheet's boxes
+     otherwise have no border) */
   .builder-panel .c-sheet-box.tools-item {
     container: item / inline-size;
-    background-color: #3f3d33;
+    background-color: var(--card-bg);
     border: 1px solid #6d6a5a !important;
     padding: 12px;
     box-shadow: 0 4px 10px #00000030;
