@@ -2884,7 +2884,7 @@
     container: item / inline-size;
     background-color: var(--card-bg);
     border: 2px solid #6d6a5a !important;
-    padding: 12px;
+    padding: 12px 12px 12px 22px;
     box-shadow: 0 4px 10px #00000030;
 
     /* Its fields in a darker olive to match */
@@ -2994,8 +2994,25 @@
     font-weight: 600;
   }
 
+  /* How many, in a circle centered on the card's left border, in the card's
+     own color and edge */
   .tools-item-count {
-    flex: none;
+    position: absolute;
+    top: 50%;
+    left: -14px;
+    transform: translateY(-50%);
+    display: grid;
+    place-items: center;
+    box-sizing: border-box;
+    min-width: 26px;
+    height: 26px;
+    padding: 0 5px;
+    background-color: var(--card-bg);
+    border: 2px solid #6d6a5a;
+    border-radius: 13px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1;
   }
 
   .tools-item-category {
@@ -3044,14 +3061,10 @@
     }
   }
 
-  /* Equip's box sits on the card's left border, centered top to bottom and
-     half outside the card, clear of the chevron; its title and label still
-     say Equip */
+  /* Equip's box starts a closed card's line, after the count's circle; its
+     title and label still say Equip */
   .tools-item .tools-equipped {
-    position: absolute;
-    top: 50%;
-    left: -10px;
-    transform: translateY(-50%);
+    flex: none;
     cursor: pointer;
 
     .tools-equipped-label {

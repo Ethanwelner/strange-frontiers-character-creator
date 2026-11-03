@@ -191,22 +191,28 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                 </svg>
               </button>
             );
+            // How many, in a circle on the card's left edge, open or closed
+            const count = (
+              <span className="tools-item-count" aria-label={`${item.qty} of ${item.name}`}>
+                {item.qty}
+              </span>
+            );
             if (!open) {
               return (
                 <li key={item.id} className="c-sheet-box tools-item">
-                  {/* Closed, the card is one line: count, name, then category and Equip at the right */}
+                  {count}
+                  {/* Closed, the card is one line: Equip, the name, then its damage, resistances and category at the right */}
                   <div className="tools-item-row tools-item-summary">
-                    <span className="tools-item-count">{item.qty}×</span>
+                    <label className="tools-equipped" title="Equip">
+                      <input type="checkbox" aria-label="Equip" checked={item.equipped} onChange={(e) => update(item, { equipped: e.target.checked })} />
+                      <span className="tools-equipped-label">Equip</span>
+                    </label>
                     <span className="tools-item-title">{item.name}</span>
                     {stock && <ItemStats stock={stock} />}
                     {/* The category as a badge, like a Trait card's */}
                     <span className="tools-item-category">
                       <Chip>{title(item.category)}</Chip>
                     </span>
-                    <label className="tools-equipped" title="Equip">
-                      <input type="checkbox" aria-label="Equip" checked={item.equipped} onChange={(e) => update(item, { equipped: e.target.checked })} />
-                      <span className="tools-equipped-label">Equip</span>
-                    </label>
                     {expand}
                   </div>
                 </li>
@@ -214,6 +220,7 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
             }
             return (
               <li key={item.id} className="c-sheet-box tools-item">
+                {count}
                 <div className="tools-item-row">
                   <input
                     type="text"
