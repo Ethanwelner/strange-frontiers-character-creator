@@ -29,8 +29,8 @@ export function Conditions({
       {/* Add Condition at the right end of the title's line, opening the dropdown in a popup */}
       <div className="sheet-section-head">
         <h4 className="rule">Conditions</h4>
-        <button type="button" className="sheet-section-add" onClick={() => setAdding(true)}>
-          Add Condition
+        <button type="button" className="sheet-section-add" aria-label="Add Condition" onClick={() => setAdding(true)}>
+          Add<span className="sheet-section-add-noun"> Condition</span>
         </button>
       </div>
       {adding && (

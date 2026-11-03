@@ -164,8 +164,8 @@ export function Tracker({
         traitsAction={
           // Add traits, like Items' and Conditions' add buttons; the picks left show under the title
           banked > 0 && (
-            <button type="button" className="sheet-section-add" onClick={() => setTraitDraft(play.draft)}>
-              Add traits
+            <button type="button" className="sheet-section-add" aria-label="Add traits" onClick={() => setTraitDraft(play.draft)}>
+              Add<span className="sheet-section-add-noun"> traits</span>
             </button>
           )
         }

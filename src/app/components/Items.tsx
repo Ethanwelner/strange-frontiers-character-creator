@@ -62,8 +62,8 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
       {/* Add item at the right end of the title's line, opening the add form in a popup */}
       <div className="sheet-section-head">
         <h4 className="rule">Items</h4>
-        <button type="button" className="sheet-section-add" onClick={() => setAdding(true)}>
-          Add item
+        <button type="button" className="sheet-section-add" aria-label="Add item" onClick={() => setAdding(true)}>
+          Add<span className="sheet-section-add-noun"> item</span>
         </button>
       </div>
 

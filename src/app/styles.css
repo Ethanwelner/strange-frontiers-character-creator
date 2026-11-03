@@ -2736,6 +2736,19 @@
     }
   }
 
+  /* When the title's line gets too narrow for the whole button, it keeps
+     just "Add" (the full name stays as its label) instead of pushing out of
+     the box */
+  :is(.sheet-section-head, .sheet-traits-head) {
+    container: section-head / inline-size;
+  }
+
+  @container section-head (width < 260px) {
+    .sheet-section-add-noun {
+      display: none;
+    }
+  }
+
   .tools-conditions-side {
     --add-color: #b7b4b4;
   }
