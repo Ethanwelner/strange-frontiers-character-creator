@@ -3093,12 +3093,13 @@
     }
   }
 
-  /* A stock item's damage and resistances under the card's top line: a soft
-     label, then a badge of damage type icons and numbers */
+  /* A stock item's badges under the card's top line: its damage or
+     resistances at the left, then, in an open card, its cost and the like */
   .tools-item-stats {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px 20px;
+    align-items: center;
+    gap: 8px;
     margin-top: 10px;
   }
 
@@ -3198,11 +3199,6 @@
   .tools-item-stat-or {
     color: #a29d82;
     font-weight: 400;
-  }
-
-  /* The cost's badge, under the description */
-  .tools-item-cost {
-    margin: 0 0 8px;
   }
 
   /* Note: the pen and its label on a line of their own at the bottom of the
