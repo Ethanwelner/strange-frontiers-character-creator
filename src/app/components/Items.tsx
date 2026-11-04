@@ -268,16 +268,10 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                     Edit
                   </button>
                 </div>
-                {/* Edit's fields: the name, how many, the category, and Remove */}
+                {/* Edit's fields where the top line shows them: how many at the left, then
+                    the name, the category, and Remove */}
                 {edit && (
                   <div className="tools-item-row tools-item-fields">
-                    <input
-                      type="text"
-                      className="tools-item-name"
-                      aria-label="Item name"
-                      value={item.name}
-                      onChange={(e) => update(item, { name: e.target.value })}
-                    />
                     <input
                       type="number"
                       min={0}
@@ -289,6 +283,13 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                           qty: Math.max(0, Math.round(Number(e.target.value)) || 0),
                         })
                       }
+                    />
+                    <input
+                      type="text"
+                      className="tools-item-name"
+                      aria-label="Item name"
+                      value={item.name}
+                      onChange={(e) => update(item, { name: e.target.value })}
                     />
                     <select
                       aria-label={`${item.name} category`}
