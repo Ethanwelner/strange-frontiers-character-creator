@@ -258,7 +258,7 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                     top to bottom, like the count on the left */}
                 <button
                   type="button"
-                  className="tools-item-edit-toggle"
+                  className="tools-item-edge tools-item-edit-toggle"
                   aria-label={`Edit ${item.name}`}
                   title="Edit"
                   aria-expanded={edit}
@@ -266,6 +266,14 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                 >
                   <span className="pen-icon" aria-hidden="true" />
                 </button>
+                {/* In edit mode, Remove, a trash can in a circle under Edit's */}
+                {edit && (
+                  <button type="button" className="tools-item-edge tools-item-remove" aria-label={`Remove ${item.name}`} title="Remove" onClick={() => remove(item)}>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" aria-hidden="true">
+                      <path d="M135.2 17.69C140.6 6.848 151.7 0 163.8 0H284.2C296.3 0 307.4 6.848 312.8 17.69L320 32H416C433.7 32 448 46.33 448 64C448 81.67 433.7 96 416 96H32C14.33 96 0 81.67 0 64C0 46.33 14.33 32 32 32H128L135.2 17.69zM394.8 466.1C393.2 492.3 372.3 512 346.9 512H101.1C75.75 512 54.77 492.3 53.19 466.1L31.1 128H416L394.8 466.1z" />
+                    </svg>
+                  </button>
+                )}
                 {/* Under the top line, the badges it leaves out: the cost, and
                     later keywords and the like */}
                 {cost && (
@@ -274,7 +282,7 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                   </div>
                 )}
                 {/* Edit's fields where the top line shows them: how many at the left, then
-                    the name, the category, and Remove */}
+                    the name and the category */}
                 {edit && (
                   <div className="tools-item-row tools-item-fields">
                     <input
@@ -307,11 +315,6 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                         </option>
                       ))}
                     </select>
-                    <button type="button" className="tools-item-icon" aria-label={`Remove ${item.name}`} title="Remove" onClick={() => remove(item)}>
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" aria-hidden="true">
-                        <path d="M135.2 17.69C140.6 6.848 151.7 0 163.8 0H284.2C296.3 0 307.4 6.848 312.8 17.69L320 32H416C433.7 32 448 46.33 448 64C448 81.67 433.7 96 416 96H32C14.33 96 0 81.67 0 64C0 46.33 14.33 32 32 32H128L135.2 17.69zM394.8 466.1C393.2 492.3 372.3 512 346.9 512H101.1C75.75 512 54.77 492.3 53.19 466.1L31.1 128H416L394.8 466.1z" />
-                      </svg>
-                    </button>
                   </div>
                 )}
                 {stock && (

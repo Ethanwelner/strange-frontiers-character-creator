@@ -2943,9 +2943,8 @@
     align-items: center;
   }
 
-  /* Remove, a trash can, and the chevron, faded like the sheet's pens and
-     full strength under the pointer (the chevron too while the card is
-     open). The trash can is 1rem out from the fields, away from misclicks. */
+  /* The chevron, faded like the sheet's pens and full strength under the
+     pointer or while the card is open */
   .tools-item-icon {
     flex: none;
     display: grid;
@@ -2968,10 +2967,6 @@
       width: 14px;
       height: 16px;
       fill: currentColor;
-    }
-
-    select + & {
-      margin-left: 1rem;
     }
   }
 
@@ -3210,14 +3205,13 @@
     margin-top: 10px;
   }
 
-  /* Edit: a circle half outside the card's right border, centered top to
-     bottom, in the checkbox's pale olive with a dark olive pen. It lightens
-     under the pointer and while the fields are showing. */
-  button.tools-item-edit-toggle {
+  /* Edit, and Remove in edit mode: circles half outside the card's right
+     border, in the checkbox's pale olive with a dark olive icon, lighter
+     under the pointer. Edit is centered top to bottom and stays lighter
+     while the fields are showing; Remove sits 6px under it. */
+  button.tools-item-edge {
     position: absolute;
-    top: 50%;
     right: -14px;
-    transform: translateY(-50%);
     display: grid;
     place-items: center;
     width: 26px;
@@ -3230,9 +3224,24 @@
     cursor: pointer;
     transition: background-color 200ms;
 
-    &:is(:hover, :focus-visible, [aria-expanded="true"]) {
+    &:is(:hover, :focus-visible) {
       background-color: #d6d1b4;
       color: #25241e;
+    }
+
+    svg {
+      width: 11px;
+      height: 13px;
+      fill: currentColor;
+    }
+  }
+
+  button.tools-item-edit-toggle {
+    top: 50%;
+    transform: translateY(-50%);
+
+    &[aria-expanded="true"] {
+      background-color: #d6d1b4;
     }
 
     .pen-icon {
@@ -3242,8 +3251,11 @@
     }
   }
 
-  /* Edit's fields under it, with Remove 1rem out from them and clear of
-     Edit's circle at the card's edge */
+  button.tools-item-remove {
+    top: calc(50% + 13px + 6px);
+  }
+
+  /* Edit's fields under it, clear of the circles at the card's edge */
   .tools-item-fields {
     margin-top: 10px;
     padding-right: 12px;
