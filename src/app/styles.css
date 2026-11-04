@@ -3201,9 +3201,34 @@
     font-weight: 400;
   }
 
-  /* Note: the pen and its label on a line of their own at the bottom of the
-     open card, faded like the other icons until pointed at or open */
-  button.tools-item-note-toggle {
+  /* An open card's second line: the badges the top line leaves out at the
+     left, and Edit at the right, under the chevron */
+  .tools-item-more {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .tools-item-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  button.tools-item-edit-toggle {
+    margin: 0 0 0 auto;
+  }
+
+  /* Edit's fields under it, with Remove 1rem out from them */
+  .tools-item-fields {
+    margin-top: 10px;
+  }
+
+  /* Edit and Note: a pen and its label, faded like the other icons until
+     pointed at or open. Note sits on a line of its own at the card's bottom. */
+  button.tools-item-text-toggle {
     display: inline-flex;
     align-items: center;
     gap: 6px;
