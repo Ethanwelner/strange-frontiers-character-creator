@@ -2994,13 +2994,14 @@
     font-weight: 600;
   }
 
-  /* How many, in a circle centered on the card's left border, in the card's
+  /* How many, in a circle on the card's left border, in the card's
      own color and edge */
   .tools-item-count {
     position: absolute;
-    top: 50%;
+    /* A set distance down, centered on the top line, so it stays put
+       when the card opens */
+    top: 14.15px;
     left: -14px;
-    transform: translateY(-50%);
     display: grid;
     place-items: center;
     box-sizing: border-box;
