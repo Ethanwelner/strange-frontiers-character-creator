@@ -13,8 +13,8 @@ const STOCK = content.items.filter((i) => i.category !== "currency").sort((a, b)
 // A stock item's damage and resistances as badges, in a closed card's line
 // before its category, and under an open card's fields:
 // each damage type's icon and number, all in one badge, with "or" between a
-// damage choice's options. A resistance that
-// covers only part of the body says where it applies.
+// damage choice's options. Resistances' badge starts with a shield in a
+// circle. A resistance that covers only part of the body says where it applies.
 function ItemStats({ stock }: { stock: StockItem }) {
   const damage = stock.damage ? parseDamage(stock.damage) : undefined;
   const resists = stock.resistances ? parseResistances(stock.resistances, stock.name) : [];
@@ -48,8 +48,10 @@ function ItemStats({ stock }: { stock: StockItem }) {
       )}
       {resists.length > 0 && (
         <span className="tools-item-stat-group">
-          <span className="tools-item-stat-label">Resists</span>
           <span className="chip tools-item-stat">
+            <span className="tools-item-stat-shield">
+              <Icon name="shield" label="Resists" />
+            </span>
             {resists.map((r, i) => (
               <span key={i} className="tools-item-stat-value">
                 <Icon name={damageIcon(r.type)} label={r.type} />

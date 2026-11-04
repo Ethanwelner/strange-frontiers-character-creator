@@ -3168,6 +3168,25 @@
     }
   }
 
+  /* Resists: a shield at the badge's left, in a circle of the checkbox's
+     pale olive with the fields' dark olive icon */
+  .tools-item-stat-shield {
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    width: 1.5em;
+    height: 1.5em;
+    margin: -2px -4px -2px -4px;
+    background-color: #b5ae86;
+    border-radius: 50%;
+
+    .icon {
+      width: 0.85em;
+      height: 0.85em;
+      fill: #25241e;
+    }
+  }
+
   /* "or" between a damage choice's options, inside the badge */
   .tools-item-stat-or {
     color: #a29d82;
