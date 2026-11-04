@@ -2943,9 +2943,8 @@
     align-items: center;
   }
 
-  /* Remove, a trash can, and the chevron, faded like the sheet's pens and
-     full strength under the pointer (the chevron too while the card is
-     open). The trash can is 1rem out from the fields, away from misclicks. */
+  /* The chevron, faded like the sheet's pens and full strength under the
+     pointer or while the card is open */
   .tools-item-icon {
     flex: none;
     display: grid;
@@ -2969,10 +2968,6 @@
       height: 16px;
       fill: currentColor;
     }
-
-    select + & {
-      margin-left: 1rem;
-    }
   }
 
   /* A closed card's line: the count, then the name, then at the right the
@@ -2994,13 +2989,14 @@
     font-weight: 600;
   }
 
-  /* How many, in a circle centered on the card's left border, in the card's
+  /* How many, in a circle on the card's left border, in the card's
      own color and edge */
   .tools-item-count {
     position: absolute;
-    top: 50%;
+    /* A set distance down, centered on the top line, so it stays put
+       when the card opens */
+    top: 14.15px;
     left: -14px;
-    transform: translateY(-50%);
     display: grid;
     place-items: center;
     box-sizing: border-box;
@@ -3201,8 +3197,72 @@
     font-weight: 400;
   }
 
-  /* Note: the pen and its label on a line of their own at the bottom of the
-     open card, faded like the other icons until pointed at or open */
+  /* An open card's badges the top line leaves out, under it */
+  .tools-item-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  /* Edit, and Remove in edit mode: circles half outside the card's right
+     border, in the checkbox's pale olive with a dark olive icon, lighter
+     under the pointer. Each is a set distance down, so they stay put as the
+     card changes: Edit centered on the badges' line under the top line, and
+     lighter while the fields are showing; Remove 8px under it. */
+  button.tools-item-edge {
+    position: absolute;
+    right: -14px;
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    background-color: #b5ae86;
+    border: 2px solid #6d6a5a;
+    border-radius: 50%;
+    color: #25241e;
+    cursor: pointer;
+    transition: background-color 200ms;
+
+    &:is(:hover, :focus-visible) {
+      background-color: #d6d1b4;
+      color: #25241e;
+    }
+
+    svg {
+      width: 11px;
+      height: 13px;
+      fill: currentColor;
+    }
+  }
+
+  button.tools-item-edit-toggle {
+    top: 54.45px;
+
+    &[aria-expanded="true"] {
+      background-color: #d6d1b4;
+    }
+
+    .pen-icon {
+      width: 13px;
+      height: 13px;
+      opacity: 1;
+    }
+  }
+
+  button.tools-item-remove {
+    top: calc(54.45px + 26px + 8px);
+  }
+
+  /* Edit's fields under it, clear of the circles at the card's edge */
+  .tools-item-fields {
+    margin-top: 10px;
+    padding-right: 12px;
+  }
+
+  /* Note: a pen and its label at the card's bottom, faded like the other
+     icons until pointed at or open */
   button.tools-item-note-toggle {
     display: inline-flex;
     align-items: center;
@@ -3230,14 +3290,16 @@
     }
   }
 
-  /* A stock item's description and rules, under its row */
+  /* A stock item's description, in italics, and its rules, under its row */
   .tools-item-stock {
     margin: 8px 0;
     font-size: 0.875rem;
+    font-style: italic;
   }
 
   .tools-item-details {
     color: var(--panel-soft);
+    font-style: normal;
   }
 
   .sheet-stats {
