@@ -3143,11 +3143,6 @@
     gap: 6px;
   }
 
-  .tools-item-stat-label {
-    color: var(--panel-soft);
-    font-size: 0.8125rem;
-  }
-
   /* One badge holds each value, an icon then its number, 10px apart */
   .tools-item .chip.tools-item-stat {
     display: inline-flex;
@@ -3168,14 +3163,41 @@
     }
   }
 
+  /* A damage or resistances badge's lead: a circle of the checkbox's pale
+     olive with a dark olive bow, sword or shield, standing in for the
+     badge's left edge. The badge rounds its left side to match, and the
+     circle runs flush with its edge, top and bottom. */
+  .tools-item .chip.tools-item-stat:has(> .tools-item-stat-lead) {
+    flex-wrap: nowrap;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    border-radius: calc((1lh + 0.4rem + 2px) / 2) 4px 4px calc((1lh + 0.4rem + 2px) / 2);
+  }
+
+  /* As tall as a plain badge (its line, padding and border), sitting over
+     the border on the top, bottom and left */
+  .tools-item-stat-lead {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: calc(1lh + 0.4rem + 2px);
+    height: calc(1lh + 0.4rem + 2px);
+    margin: -1px -4px -1px -1px;
+    background-color: #b5ae86;
+    border-radius: 50%;
+
+    .icon {
+      width: 1rem;
+      height: 1rem;
+      fill: #25241e;
+    }
+  }
+
   /* "or" between a damage choice's options, inside the badge */
   .tools-item-stat-or {
     color: #a29d82;
     font-weight: 400;
-  }
-
-  .tools-item-stat-where {
-    color: #a29d82;
   }
 
   /* The cost's badge, under the description */
