@@ -15,8 +15,8 @@ const STOCK = content.items.filter((i) => i.category !== "currency").sort((a, b)
 // with a circle on its left edge: a bow for a ranged or thrown weapon's
 // damage, a sword for any other's, a shield for resistances. Then each damage
 // type's icon and number, all in one badge, with "or" between a damage
-// choice's options. A resistance that covers only part of the body says
-// where it applies.
+// choice's options. Where a resistance applies, like a helmet's (head), is
+// left to the item's description.
 function ItemStats({ stock }: { stock: StockItem }) {
   const damage = stock.damage ? parseDamage(stock.damage) : undefined;
   const resists = stock.resistances ? parseResistances(stock.resistances, stock.name) : [];
@@ -27,8 +27,6 @@ function ItemStats({ stock }: { stock: StockItem }) {
       <Icon name={ranged ? "bow-arrow" : "sword"} label={ranged ? "Ranged damage" : "Melee damage"} />
     </span>
   );
-  // Where they all apply, like a helmet's (head), said once after the badges
-  const where = resists.length > 0 && resists.every((r) => r.where === resists[0]!.where) ? resists[0]!.where : undefined;
   return (
     <div className="tools-item-stats">
       {stock.damage && (
@@ -67,11 +65,9 @@ function ItemStats({ stock }: { stock: StockItem }) {
               <span key={i} className="tools-item-stat-value">
                 <Icon name={damageIcon(r.type)} label={r.type} />
                 {r.amount}
-                {r.where && !where && <span className="tools-item-stat-where">({r.where})</span>}
               </span>
             ))}
           </span>
-          {where && <span className="tools-item-stat-label">({where})</span>}
         </span>
       )}
     </div>

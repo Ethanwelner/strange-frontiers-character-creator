@@ -3143,11 +3143,6 @@
     gap: 6px;
   }
 
-  .tools-item-stat-label {
-    color: var(--panel-soft);
-    font-size: 0.8125rem;
-  }
-
   /* One badge holds each value, an icon then its number, 10px apart */
   .tools-item .chip.tools-item-stat {
     display: inline-flex;
@@ -3177,7 +3172,7 @@
     padding-top: 0;
     padding-bottom: 0;
     padding-left: 0;
-    border-radius: 999px 4px 4px 999px;
+    border-radius: calc((1lh + 0.4rem + 2px) / 2) 4px 4px calc((1lh + 0.4rem + 2px) / 2);
   }
 
   /* As tall as a plain badge (its line, padding and border), sitting over
@@ -3193,8 +3188,8 @@
     border-radius: 50%;
 
     .icon {
-      width: 0.85em;
-      height: 0.85em;
+      width: 1rem;
+      height: 1rem;
       fill: #25241e;
     }
   }
@@ -3203,10 +3198,6 @@
   .tools-item-stat-or {
     color: #a29d82;
     font-weight: 400;
-  }
-
-  .tools-item-stat-where {
-    color: #a29d82;
   }
 
   /* The cost's badge, under the description */
