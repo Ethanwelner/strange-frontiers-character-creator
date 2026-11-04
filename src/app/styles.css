@@ -3280,14 +3280,16 @@
     }
   }
 
-  /* A stock item's description and rules, under its row */
+  /* A stock item's description, in italics, and its rules, under its row */
   .tools-item-stock {
     margin: 8px 0;
     font-size: 0.875rem;
+    font-style: italic;
   }
 
   .tools-item-details {
     color: var(--panel-soft);
+    font-style: normal;
   }
 
   .sheet-stats {
