@@ -3207,8 +3207,9 @@
 
   /* Edit, and Remove in edit mode: circles half outside the card's right
      border, in the checkbox's pale olive with a dark olive icon, lighter
-     under the pointer. Edit is centered top to bottom and stays lighter
-     while the fields are showing; Remove sits 8px under it. */
+     under the pointer. Each is a set distance down, so they stay put as the
+     card changes: Edit centered on the badges' line under the top line, and
+     lighter while the fields are showing; Remove 8px under it. */
   button.tools-item-edge {
     position: absolute;
     right: -14px;
@@ -3237,8 +3238,7 @@
   }
 
   button.tools-item-edit-toggle {
-    top: 50%;
-    transform: translateY(-50%);
+    top: 54.45px;
 
     &[aria-expanded="true"] {
       background-color: #d6d1b4;
@@ -3252,7 +3252,7 @@
   }
 
   button.tools-item-remove {
-    top: calc(50% + 21px);
+    top: calc(54.45px + 26px + 8px);
   }
 
   /* Edit's fields under it, clear of the circles at the card's edge */
