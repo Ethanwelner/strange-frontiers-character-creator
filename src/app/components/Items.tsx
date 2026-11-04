@@ -1,4 +1,4 @@
-import { Fragment, useId, useState } from "react";
+import { Fragment, useId, useState, type ReactNode } from "react";
 import { Chip, Icon, LorePopup, title } from "./ui.js";
 import { damageIcon } from "./Resistances.js";
 import { content, itemById } from "../content.js";
@@ -16,11 +16,12 @@ const STOCK = content.items.filter((i) => i.category !== "currency").sort((a, b)
 // damage, a sword for any other's, a shield for resistances. Then each damage
 // type's icon and number, all in one badge, with "or" between a damage
 // choice's options. Where a resistance applies, like a helmet's (head), is
-// left to the item's description.
-function ItemStats({ stock }: { stock: StockItem }) {
+// left to the item's description. An open card passes its other badges, like
+// the cost, as children: they follow the damage and resistances in the row.
+function ItemStats({ stock, children }: { stock: StockItem; children?: ReactNode }) {
   const damage = stock.damage ? parseDamage(stock.damage) : undefined;
   const resists = stock.resistances ? parseResistances(stock.resistances, stock.name) : [];
-  if (!stock.damage && !resists.length) return null;
+  if (!stock.damage && !resists.length && !children) return null;
   const ranged = stock.tags?.some((t) => t === "ranged" || t === "thrown");
   const damageLead = (
     <span className="tools-item-stat-lead">
@@ -70,6 +71,7 @@ function ItemStats({ stock }: { stock: StockItem }) {
           </span>
         </span>
       )}
+      {children}
     </div>
   );
 }
@@ -272,19 +274,21 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                   </button>
                   {expand}
                 </div>
-                {stock && <ItemStats stock={stock} />}
+                {/* The badges: damage or resistances at the left, then the
+                    cost, and later keywords and the like */}
+                {stock && (
+                  <ItemStats stock={stock}>
+                    {stock.value !== undefined && stock.currency && (
+                      <Chip>
+                        {stock.value.toLocaleString("en-US")} {stock.currency}
+                      </Chip>
+                    )}
+                  </ItemStats>
+                )}
                 {stock && (
                   <p className="tools-item-stock">
                     {stock.summary}
                     {details && <span className="tools-item-details"> {details}</span>}
-                  </p>
-                )}
-                {/* What it's worth, as a badge */}
-                {stock?.value !== undefined && stock.currency && (
-                  <p className="tools-item-cost">
-                    <Chip>
-                      {stock.value.toLocaleString("en-US")} {stock.currency}
-                    </Chip>
                   </p>
                 )}
                 {/* Note, a pen and its label on a line of its own, opening the notes field */}
