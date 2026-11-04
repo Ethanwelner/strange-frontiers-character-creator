@@ -3202,59 +3202,56 @@
     font-weight: 400;
   }
 
-  /* An open card's second line: the badges the top line leaves out at the
-     left, and Edit at the right, under the chevron */
-  .tools-item-more {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 8px;
-    margin-top: 10px;
-  }
-
+  /* An open card's badges the top line leaves out, under it */
   .tools-item-badges {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-  }
-
-  button.tools-item-edit-toggle {
-    margin: 0 0 0 auto;
-
-    /* The sheet's pen, as by the name and age */
-    .pen-icon {
-      width: 16px;
-      height: 16px;
-    }
-  }
-
-  /* Note at the card's bottom, its field to the right of it */
-  .tools-item-note-line {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 4px;
-
-    button.tools-item-note-toggle {
-      flex: none;
-      margin: 0;
-    }
-
-    .tools-note {
-      flex: 1 1 auto;
-      min-width: 0;
-      margin: 0;
-    }
-  }
-
-  /* Edit's fields under it, with Remove 1rem out from them */
-  .tools-item-fields {
     margin-top: 10px;
   }
 
-  /* Edit and Note: a pen and its label, faded like the other icons until
-     pointed at or open. Note sits on a line of its own at the card's bottom. */
-  button.tools-item-text-toggle {
+  /* Edit: a circle half outside the card's right border, centered top to
+     bottom, in the checkbox's pale olive with a dark olive pen. It lightens
+     under the pointer and while the fields are showing. */
+  button.tools-item-edit-toggle {
+    position: absolute;
+    top: 50%;
+    right: -14px;
+    transform: translateY(-50%);
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    background-color: #b5ae86;
+    border: 2px solid #6d6a5a;
+    border-radius: 50%;
+    color: #25241e;
+    cursor: pointer;
+    transition: background-color 200ms;
+
+    &:is(:hover, :focus-visible, [aria-expanded="true"]) {
+      background-color: #d6d1b4;
+      color: #25241e;
+    }
+
+    .pen-icon {
+      width: 13px;
+      height: 13px;
+      opacity: 1;
+    }
+  }
+
+  /* Edit's fields under it, with Remove 1rem out from them and clear of
+     Edit's circle at the card's edge */
+  .tools-item-fields {
+    margin-top: 10px;
+    padding-right: 12px;
+  }
+
+  /* Note: a pen and its label at the card's bottom, faded like the other
+     icons until pointed at or open */
+  button.tools-item-note-toggle {
     display: inline-flex;
     align-items: center;
     gap: 6px;

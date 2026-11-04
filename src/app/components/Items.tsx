@@ -254,20 +254,25 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
               <li key={item.id} className="c-sheet-box tools-item">
                 {count}
                 {topLine}
-                {/* Under it, the badges the top line leaves out (the cost, and
-                    later keywords and the like), with Edit at the right under
-                    the chevron */}
-                <div className="tools-item-more">
-                  {cost && (
-                    <span className="tools-item-badges">
-                      <Chip>{cost}</Chip>
-                    </span>
-                  )}
-                  <button type="button" className="tools-item-text-toggle tools-item-edit-toggle" aria-expanded={edit} onClick={() => toggleEditing(item)}>
-                    <span className="pen-icon" aria-hidden="true" />
-                    Edit
-                  </button>
-                </div>
+                {/* Edit, a pen in a circle on the card's right edge, centered
+                    top to bottom, like the count on the left */}
+                <button
+                  type="button"
+                  className="tools-item-edit-toggle"
+                  aria-label={`Edit ${item.name}`}
+                  title="Edit"
+                  aria-expanded={edit}
+                  onClick={() => toggleEditing(item)}
+                >
+                  <span className="pen-icon" aria-hidden="true" />
+                </button>
+                {/* Under the top line, the badges it leaves out: the cost, and
+                    later keywords and the like */}
+                {cost && (
+                  <div className="tools-item-badges">
+                    <Chip>{cost}</Chip>
+                  </div>
+                )}
                 {/* Edit's fields where the top line shows them: how many at the left, then
                     the name, the category, and Remove */}
                 {edit && (
@@ -319,7 +324,7 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                   {/* Note, a pen and its label, opening the notes field at its right */}
                   <button
                     type="button"
-                    className="tools-item-text-toggle tools-item-note-toggle"
+                    className="tools-item-note-toggle"
                     aria-expanded={showsNotes(item)}
                     onClick={() => {
                       if (!showsNotes(item)) setFocusNote(item.id);
