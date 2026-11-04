@@ -11,23 +11,31 @@ import type { Item as StockItem } from "../../schema/index.js";
 const STOCK = content.items.filter((i) => i.category !== "currency").sort((a, b) => a.name.localeCompare(b.name));
 
 // A stock item's damage and resistances as badges, in a closed card's line
-// before its category, and under an open card's fields:
-// each damage type's icon and number, all in one badge, with "or" between a
-// damage choice's options. Resistances' badge starts with a shield in a
-// circle. A resistance that covers only part of the body says where it applies.
+// before its category, and under an open card's fields. Each badge starts
+// with a circle on its left edge: a bow for a ranged or thrown weapon's
+// damage, a sword for any other's, a shield for resistances. Then each damage
+// type's icon and number, all in one badge, with "or" between a damage
+// choice's options. A resistance that covers only part of the body says
+// where it applies.
 function ItemStats({ stock }: { stock: StockItem }) {
   const damage = stock.damage ? parseDamage(stock.damage) : undefined;
   const resists = stock.resistances ? parseResistances(stock.resistances, stock.name) : [];
   if (!stock.damage && !resists.length) return null;
+  const ranged = stock.tags?.some((t) => t === "ranged" || t === "thrown");
+  const damageLead = (
+    <span className="tools-item-stat-lead">
+      <Icon name={ranged ? "bow-arrow" : "sword"} label={ranged ? "Ranged damage" : "Melee damage"} />
+    </span>
+  );
   // Where they all apply, like a helmet's (head), said once after the badges
   const where = resists.length > 0 && resists.every((r) => r.where === resists[0]!.where) ? resists[0]!.where : undefined;
   return (
     <div className="tools-item-stats">
       {stock.damage && (
         <span className="tools-item-stat-group">
-          <span className="tools-item-stat-label">Damage</span>
           {damage ? (
             <span className="chip tools-item-stat">
+              {damageLead}
               {damage.map((option, i) => (
                 <Fragment key={i}>
                   {i > 0 && <span className="tools-item-stat-or">or</span>}
@@ -42,14 +50,17 @@ function ItemStats({ stock }: { stock: StockItem }) {
             </span>
           ) : (
             // Damage the badges can't read stays as written
-            <span className="chip tools-item-stat">{stock.damage}</span>
+            <span className="chip tools-item-stat">
+              {damageLead}
+              {stock.damage}
+            </span>
           )}
         </span>
       )}
       {resists.length > 0 && (
         <span className="tools-item-stat-group">
           <span className="chip tools-item-stat">
-            <span className="tools-item-stat-shield">
+            <span className="tools-item-stat-lead">
               <Icon name="shield" label="Resists" />
             </span>
             {resists.map((r, i) => (
