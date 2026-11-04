@@ -208,16 +208,20 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                 {item.qty}
               </span>
             );
+            // Equip, a checkbox at the start of the card's first line, open or closed
+            const equip = (
+              <label className="tools-equipped" title="Equip">
+                <input type="checkbox" aria-label="Equip" checked={item.equipped} onChange={(e) => update(item, { equipped: e.target.checked })} />
+                <span className="tools-equipped-label">Equip</span>
+              </label>
+            );
             if (!open) {
               return (
                 <li key={item.id} className="c-sheet-box tools-item">
                   {count}
                   {/* Closed, the card is one line: Equip, the name, then its damage, resistances and category at the right */}
                   <div className="tools-item-row tools-item-summary">
-                    <label className="tools-equipped" title="Equip">
-                      <input type="checkbox" aria-label="Equip" checked={item.equipped} onChange={(e) => update(item, { equipped: e.target.checked })} />
-                      <span className="tools-equipped-label">Equip</span>
-                    </label>
+                    {equip}
                     <span className="tools-item-title">{item.name}</span>
                     {stock && <ItemStats stock={stock} />}
                     {/* The category as a badge, like a Trait card's */}
@@ -232,7 +236,9 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
             return (
               <li key={item.id} className="c-sheet-box tools-item">
                 {count}
+                {/* Open, Equip still starts the line, then the fields */}
                 <div className="tools-item-row">
+                  {equip}
                   <input
                     type="text"
                     className="tools-item-name"
@@ -263,10 +269,6 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                       </option>
                     ))}
                   </select>
-                  <label className="tools-equipped" title="Equip">
-                    <input type="checkbox" aria-label="Equip" checked={item.equipped} onChange={(e) => update(item, { equipped: e.target.checked })} />
-                    <span className="tools-equipped-label">Equip</span>
-                  </label>
                   <button type="button" className="tools-item-icon" aria-label={`Remove ${item.name}`} title="Remove" onClick={() => remove(item)}>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" aria-hidden="true">
                       <path d="M135.2 17.69C140.6 6.848 151.7 0 163.8 0H284.2C296.3 0 307.4 6.848 312.8 17.69L320 32H416C433.7 32 448 46.33 448 64C448 81.67 433.7 96 416 96H32C14.33 96 0 81.67 0 64C0 46.33 14.33 32 32 32H128L135.2 17.69zM394.8 466.1C393.2 492.3 372.3 512 346.9 512H101.1C75.75 512 54.77 492.3 53.19 466.1L31.1 128H416L394.8 466.1z" />

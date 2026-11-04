@@ -2970,7 +2970,7 @@
       fill: currentColor;
     }
 
-    :is(select, .tools-equipped) + & {
+    select + & {
       margin-left: 1rem;
     }
   }
