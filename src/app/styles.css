@@ -3219,6 +3219,31 @@
 
   button.tools-item-edit-toggle {
     margin: 0 0 0 auto;
+
+    /* The sheet's pen, as by the name and age */
+    .pen-icon {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  /* Note at the card's bottom, its field to the right of it */
+  .tools-item-note-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
+
+    button.tools-item-note-toggle {
+      flex: none;
+      margin: 0;
+    }
+
+    .tools-note {
+      flex: 1 1 auto;
+      min-width: 0;
+      margin: 0;
+    }
   }
 
   /* Edit's fields under it, with Remove 1rem out from them */
