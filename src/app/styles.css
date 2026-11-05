@@ -2646,6 +2646,11 @@
     > .num {
       font-weight: 700;
     }
+
+    .sheet-movement-unit {
+      font-family: var(--title);
+      font-weight: normal;
+    }
   }
 
   .sheet-resistances .subhead {

@@ -106,11 +106,22 @@ function MaybeStack({ stack, top, children }: { stack: boolean; top?: ReactNode;
 
 // Movement, from the Kind, in a small box of its own to the left of HP, VP
 // and SP's, a running figure in place of a label. Player Tools' tracker uses it too.
-export function MovementBox({ movement }: { movement?: string | number }) {
+// The number runs into its unit, "10m", with the m in the titles' Bebas.
+export function MovementBox({ movement }: { movement?: string }) {
+  const parts = movement?.match(/^\s*([\d.]+)\s*([a-z]+)\s*$/i);
   return (
     <div className="c-sheet-box sheet-movement" title="Movement">
       <Icon name="person-running" label="Movement" />
-      <span className="num">{movement ?? "–"}</span>
+      <span className="num">
+        {parts ? (
+          <>
+            {parts[1]}
+            <span className="sheet-movement-unit">{parts[2]}</span>
+          </>
+        ) : (
+          (movement ?? "–")
+        )}
+      </span>
     </div>
   );
 }
