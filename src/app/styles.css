@@ -2398,15 +2398,10 @@
     margin: 0;
   }
 
-  .tools-line-stack {
-    flex-direction: column;
-    gap: 8px;
-  }
-
   .tools-line {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 16px;
     margin: 0 0 8px;
   }
 
@@ -3084,13 +3079,18 @@
     }
   }
 
-  /* A closed card's line: the count, then the name, then at the right the
-     category's badge, Equip, and the chevron that opens it */
+  /* A card's top line: Equip, the name, then at the right its stat badges
+     and the chevron that opens it. With no badges, the chevron takes the
+     right on its own. */
   .tools-item-summary {
     flex-wrap: nowrap;
 
-    .tools-item-category {
+    > .tools-item-icon.tools-item-expand {
       margin-left: auto;
+    }
+
+    > .tools-item-stats ~ .tools-item-icon.tools-item-expand {
+      margin-left: 4px;
     }
   }
 
@@ -3123,11 +3123,6 @@
     font-size: 0.8125rem;
     font-weight: 600;
     line-height: 1;
-  }
-
-  .tools-item-category {
-    flex: none;
-    display: flex;
   }
 
   /* The category's badge in the card's olive: the fields' dark olive with
@@ -3226,10 +3221,6 @@
       flex-wrap: nowrap;
     }
 
-    .tools-item-stats + .tools-item-category {
-      margin-left: 0;
-    }
-
     /* In a narrow card they drop to their own line under it instead */
     @container item (width < 420px) {
       flex-wrap: wrap;
@@ -3241,7 +3232,7 @@
         margin: 2px 0 0;
       }
 
-      .tools-item-stats + .tools-item-category {
+      > .tools-item-stats ~ .tools-item-icon.tools-item-expand {
         margin-left: auto;
       }
     }
@@ -3255,7 +3246,7 @@
   }
 
   /* One badge holds each value, an icon then its number, 10px apart */
-  .tools-item .chip.tools-item-stat {
+  :is(.tools-item, .trait-action-stats) .chip.tools-item-stat {
     display: inline-flex;
     flex-wrap: wrap;
     align-items: center;
@@ -3278,7 +3269,7 @@
      olive with a dark olive bow, sword or shield, standing in for the
      badge's left edge. The badge rounds its left side to match, and the
      circle runs flush with its edge, top and bottom. */
-  .tools-item .chip.tools-item-stat:has(> .tools-item-stat-lead) {
+  :is(.tools-item, .trait-action-stats) .chip.tools-item-stat:has(> .tools-item-stat-lead) {
     flex-wrap: nowrap;
     padding-top: 0;
     padding-bottom: 0;
@@ -3645,6 +3636,15 @@
   .trait-action {
     padding-left: 10px;
     border-left: 2px solid var(--portfolio-medium-gray);
+
+    > p {
+      margin: 0;
+    }
+
+    /* A temporary weapon's badges, between the Action's lines */
+    > .trait-action-stats {
+      margin: 8px 0;
+    }
   }
 
   /* Below 1300px the tabs share a narrower hero column with the character box,

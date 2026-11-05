@@ -113,7 +113,7 @@ function TraitCard({
             <span className="muted small trait-card-from">From {held.sources.map(source).join(", ")}</span>
           </div>
           {!keepEffect && t && <p className="effect">{t.effect}</p>}
-          <TraitAction action={t?.action} />
+          <TraitAction action={t?.action} rank={held.rank} />
           {places.length > 0 && (
             <p className="small">
               <strong>{t?.choices.find((c) => c.from === "place")?.note ?? "Place"}:</strong> {places.join(", ")}

@@ -28,11 +28,12 @@ export function CharacterLine({ draft, onLooks }: { draft: Draft; onLooks: (look
   return (
     <>
       <div className="tools-line">
+        {/* Age, gender, height and weight on one line, then the Kind and the background packages on the next, each wrapping when it runs out of room */}
         <p className="tools-line-row">
-          {item(0, draft.kind)}
           <LooksLine looks={draft} onChange={onLooks} />
         </p>
-        <p className="tools-line-row tools-line-stack">
+        <p className="tools-line-row">
+          {item(0, draft.kind)}
           {item(1, draft.origin)}
           {item(2, draft.profession)}
           {item(3, draft.past)}

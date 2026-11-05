@@ -9,6 +9,7 @@ import type { Item as StockItem } from "../../schema/index.js";
 
 // How itemBadges words a weapon's reach, like "Max Range: 30 m"
 const MAX_RANGE = "Max Range: ";
+const AREA = "Area of Effect: ";
 
 // Stock items to suggest while typing a name, money left out until wealth has rules.
 const STOCK = content.items.filter((i) => i.category !== "currency").sort((a, b) => a.name.localeCompare(b.name));
@@ -16,15 +17,15 @@ const STOCK = content.items.filter((i) => i.category !== "currency").sort((a, b)
 // A stock item's damage and resistances as badges, in a closed card's line
 // before its category, and under an open card's fields. Each badge starts
 // with a circle on its left edge: crosshairs for a ranged or thrown weapon's
-// damage, a sword for any other's, an arc for its Max Range (after the
-// damage), a shield for resistances. Then each damage
+// damage, a sword for any other's, an arc for its Max Range and a burst
+// for its Area of Effect (after the damage), a shield for resistances. Then each damage
 // type's icon and number, all in one badge, with "or" between a damage
 // choice's options. Where a resistance applies, like a helmet's (head), is
 // left to the item's description.
 function ItemStats({ stock }: { stock: StockItem }) {
   const damage = stock.damage ? parseDamage(stock.damage) : undefined;
   const resists = stock.resistances ? parseResistances(stock.resistances, stock.name) : [];
-  if (!stock.damage && !resists.length && !stock.maxRange) return null;
+  if (!stock.damage && !resists.length && !stock.maxRange && !stock.areaOfEffect) return null;
   const ranged = stock.tags?.some((t) => t === "ranged" || t === "thrown");
   const damageLead = (
     <span className="tools-item-stat-lead">
@@ -67,6 +68,17 @@ function ItemStats({ stock }: { stock: StockItem }) {
               <Icon name="range" label="Max Range" />
             </span>
             <span className="tools-item-stat-value">{stock.maxRange}</span>
+          </span>
+        </span>
+      )}
+      {stock.areaOfEffect && (
+        // Its blast's reach, after the range: a burst in a tan circle, then the radius
+        <span className="tools-item-stat-group">
+          <span className="chip tools-item-stat" title="Area of Effect">
+            <span className="tools-item-stat-lead">
+              <Icon name="burst" label="Area of Effect" />
+            </span>
+            <span className="tools-item-stat-value">{stock.areaOfEffect}</span>
           </span>
         </span>
       )}
@@ -243,16 +255,13 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
             );
             const edit = editing.has(item.id);
             // The top line, the same open or closed: Equip, the name, then its
-            // damage, resistances and category at the right, and the chevron
+            // damage, range and resistances at the right, and the chevron. The
+            // category waits in the open card, so it doesn't crowd the line.
             const topLine = (
               <div className="tools-item-row tools-item-summary">
                 {equip}
                 <span className="tools-item-title">{item.name}</span>
                 {stock && <ItemStats stock={stock} />}
-                {/* The category as a badge, like a Trait card's */}
-                <span className="tools-item-category">
-                  <Chip>{title(item.category)}</Chip>
-                </span>
                 {expand}
               </div>
             );
@@ -264,7 +273,7 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                 </li>
               );
             }
-            const badges = stock ? itemBadges(stock).filter((b) => !b.startsWith(MAX_RANGE)) : [];
+            const badges = stock ? itemBadges(stock).filter((b) => !b.startsWith(MAX_RANGE) && !b.startsWith(AREA)) : [];
             return (
               <li key={item.id} className="c-sheet-box tools-item">
                 {count}
@@ -289,15 +298,15 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                     </svg>
                   </button>
                 )}
-                {/* Under the top line, the badges it leaves out: the cost, how
-                    it Attacks, and the slot it takes (Max Range is on the top line) */}
-                {badges.length > 0 && (
-                  <div className="tools-item-badges">
-                    {badges.map((b) => (
-                      <Chip key={b}>{b}</Chip>
-                    ))}
-                  </div>
-                )}
+                {/* Under the top line, the badges it leaves out: the category,
+                    like a Trait card's, then the cost, how it Attacks, and the
+                    slot it takes (Max Range and Area of Effect are on the top line) */}
+                <div className="tools-item-badges">
+                  <Chip>{title(item.category)}</Chip>
+                  {badges.map((b) => (
+                    <Chip key={b}>{b}</Chip>
+                  ))}
+                </div>
                 {/* Edit's fields where the top line shows them: how many at the left, then
                     the name and the category */}
                 {edit && (
