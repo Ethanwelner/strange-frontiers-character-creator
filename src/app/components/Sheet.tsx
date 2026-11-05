@@ -36,15 +36,15 @@ function source(s: string) {
 type Held = NonNullable<BuildResult["summary"]>["traits"][number];
 
 // Where a held Trait came from, as badges: Origin, Profession or Past for a
-// Trait that package gave in the Background step, as a grant (a Knight's
-// Wielder: Longsword) or a choice it offers. A Trait bought with a pick isn't
-// one, even from a package's Background list, and a Trait the Kind gives
-// gets none (Kinds are their own cards).
+// Trait selected from that package's choices in the Background step. A
+// package's grants (a Knight's Wielder: Longsword) come with it rather than
+// being selected, and a Trait bought with a pick isn't one, even from a
+// package's Background list, so neither gets a badge; nor does the Kind's.
 function sourceBadges(held: Held): string[] {
   const slots = new Set<string>();
   for (const s of held.sources) {
     const m = SOURCE.exec(s);
-    if (m && m[1] !== "kind") slots.add(m[1]!);
+    if (m && m[1] !== "kind" && m[3]) slots.add(m[1]!);
   }
   return ["origin", "profession", "past"].filter((slot) => slots.has(slot)).map(title);
 }
