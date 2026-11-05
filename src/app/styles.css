@@ -1459,11 +1459,10 @@
     margin: 0;
   }
 
-  /* Every row as tall as the tallest card in the list */
+  /* Each card as tall as the others in its row (grid rows stretch) */
   .trait-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(256px, 100%), 1fr));
-    grid-auto-rows: 1fr;
     gap: 1rem;
   }
 
@@ -3579,11 +3578,10 @@
     margin-bottom: 0.5rem;
   }
 
-  /* Every row as tall as the tallest card, like the Traits step */
+  /* Each card as tall as the others in its row, like the Traits step */
   .sheet-traits {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(256px, 1fr));
-    grid-auto-rows: 1fr;
     gap: 1rem;
 
     > li {
