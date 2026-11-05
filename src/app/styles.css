@@ -2619,7 +2619,7 @@
 
   /* Each damage type resisted: its icon, then the total, along a line that
      wraps, with its sources in a popover above it on hover or focus */
-  /* Movement's small box and HP, VP and SP's on one line */
+  /* Movement's small box and the resistances' on one line */
   .sheet-move-row {
     display: flex;
     align-items: stretch;
