@@ -78,13 +78,13 @@ export function itemDetails(stock: StockItem): string {
 
 // A stock item's rules that read as badges, under an open card's top line:
 // its cost, how it Attacks, and the slot it takes, like "60 ERC",
-// "Melee Attack", "Max Range: 1 m", "Attack Stat: Grace", "Slot: Headwear".
+// "Melee Attack", "Max Range: 1 m", "Grace" (the Attack Stat), "Slot: Headwear".
 export function itemBadges(stock: StockItem): string[] {
   return [
     stock.value !== undefined && stock.currency ? `${stock.value.toLocaleString("en-US")} ${stock.currency}` : "",
     stock.attackType ? `${stock.attackType} Attack` : "",
     stock.maxRange ? `Max Range: ${stock.maxRange}` : "",
-    stock.attackStat ? `Attack Stat: ${stock.attackStat}` : "",
+    stock.attackStat ? stock.attackStat : "",
     stock.areaOfEffect ? `Area of Effect: ${stock.areaOfEffect}` : "",
     stock.reload ? `Reload: ${stock.reload} Action` : "",
     stock.slot ? `Slot: ${stock.slot}` : "",
