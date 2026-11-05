@@ -12,7 +12,7 @@ const STOCK = content.items.filter((i) => i.category !== "currency").sort((a, b)
 
 // A stock item's damage and resistances as badges, in a closed card's line
 // before its category, and under an open card's fields. Each badge starts
-// with a circle on its left edge: a bow for a ranged or thrown weapon's
+// with a circle on its left edge: crosshairs for a ranged or thrown weapon's
 // damage, a sword for any other's, a shield for resistances. Then each damage
 // type's icon and number, all in one badge, with "or" between a damage
 // choice's options. Where a resistance applies, like a helmet's (head), is
@@ -24,7 +24,7 @@ function ItemStats({ stock }: { stock: StockItem }) {
   const ranged = stock.tags?.some((t) => t === "ranged" || t === "thrown");
   const damageLead = (
     <span className="tools-item-stat-lead">
-      <Icon name={ranged ? "bow-arrow" : "sword"} label={ranged ? "Ranged damage" : "Melee damage"} />
+      <Icon name={ranged ? "crosshairs" : "sword"} label={ranged ? "Ranged damage" : "Melee damage"} />
     </span>
   );
   return (
