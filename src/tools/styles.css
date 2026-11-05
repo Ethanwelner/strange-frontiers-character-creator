@@ -173,7 +173,8 @@
   /* The header box, and the resources' box under it, dark and borderless like
      the sheet's */
   .tools-head,
-  .tools-resources-box {
+  .tools-resources-box,
+  .sheet-movement {
     background-color: var(--panel);
     border-color: transparent;
   }

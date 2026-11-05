@@ -104,6 +104,17 @@ function MaybeStack({ stack, top, children }: { stack: boolean; top?: ReactNode;
   );
 }
 
+// Movement, from the Kind, in a small box of its own to the left of HP, VP
+// and SP's, a running figure in place of a label. Player Tools' tracker uses it too.
+export function MovementBox({ movement }: { movement?: string | number }) {
+  return (
+    <div className="c-sheet-box sheet-movement" title="Movement">
+      <Icon name="person-running" label="Movement" />
+      <span className="num">{movement ?? "–"}</span>
+    </div>
+  );
+}
+
 // Laid out like the sample character sheet on the site's Mechanics tab.
 // Knowledges and Languages are a list of links, as on that sheet, each opening
 // its card; the other Traits are cards.
@@ -194,17 +205,7 @@ export function Sheet({
     observer.observe(el);
     return () => observer.disconnect();
   }, [hasResistances]);
-  // Movement, from the Kind, in a small box of its own to the left of the
-  // resistances, a running figure in place of a label
-  const resistancesBox = resistancesSlot && (
-    <div className="sheet-move-row">
-      <div className="c-sheet-box sheet-movement" title="Movement">
-        <Icon name="person-running" label="Movement" />
-        <span className="num">{summary?.movement ?? "–"}</span>
-      </div>
-      <div className="c-sheet-box sheet-resistances">{resistancesSlot}</div>
-    </div>
-  );
+  const resistancesBox = resistancesSlot && <div className="c-sheet-box sheet-resistances">{resistancesSlot}</div>;
   const opened = held.find((h) => h.trait === open);
   // The Kind's features sit at the top, under HP, VP and SP; the packages' at the bottom.
   const features = [
@@ -258,8 +259,10 @@ export function Sheet({
           </div>
         )}
 
-        {/* HP, VP, SP and MP at full, like Player Tools' tracker without its controls or bars */}
+        {/* Movement, then HP, VP, SP and MP at full, like Player Tools' tracker without its controls or bars */}
         {!embedded && (
+          <div className="sheet-move-row">
+          <MovementBox movement={summary?.movement} />
           <div className="c-sheet-box">
             <div className="tools-resources sheet-resources">
               {resources.map((r) => (
@@ -276,6 +279,7 @@ export function Sheet({
                 </div>
               ))}
             </div>
+          </div>
           </div>
         )}
 

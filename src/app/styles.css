@@ -2608,7 +2608,7 @@
      sections tighten: 1rem between its boxes and inside each one (an
      Item's card keeps its own) */
   @media (max-width: 1399px) {
-    :is(.c-sheet, .sheet-row, .sheet-row > .sheet-side-stack, .sheet-side-row, .sheet-lower) {
+    :is(.c-sheet, .sheet-row, .sheet-row > .sheet-side-stack, .sheet-side-row, .sheet-lower, .sheet-move-row) {
       gap: 1rem;
     }
 
@@ -2619,13 +2619,13 @@
 
   /* Each damage type resisted: its icon, then the total, along a line that
      wraps, with its sources in a popover above it on hover or focus */
-  /* Movement's small box and the resistances' on one line */
+  /* Movement's small box and HP, VP and SP's on one line */
   .sheet-move-row {
     display: flex;
     align-items: stretch;
-    gap: inherit;
+    gap: 24px;
 
-    > .sheet-resistances {
+    > :last-child {
       flex: 1;
       min-width: 0;
     }
