@@ -34,6 +34,7 @@ Every tab's Description is `summary`, Tags is `tags`, and Notes is for anything 
 | Plane, Region, Lore | `plane`, `region`, `lore`. Plane is Earth, Isekai or Any (lowercase in YAML); the Sheet's "Settled Systems" is `earth`. A package's Region is The Settled Systems (no `region`), Any (no `region`) or a nation or kingdom (its slug, like `union-of-texas`). Every Trait tab has a Plane column after Name: a Trait is Earth or Isekai only when it names that setting's places, peoples, institutions, languages, technology or magic, and Any otherwise |
 | Kinds: Features | `features`, one `name: description` per line |
 | Kinds: Trait Access, Free Points, Max Total | `traitAccess`, `freePoints`, `maxTotal` |
+| Kinds: Movement | `movement`, like `10 m` (the default when left out); `-` for a Kind with no body of its own, like the AI Core |
 | Packages: Bonus | `bonusPoints`, like `[{ count: 1, group: physical }]`: free points the player places in that group's focus stats |
 | Packages: Core Bonus | `coreBonus`, like `{ magic: 1 }`: added to Magic without a level, if the character can level it |
 | Kinds: Grants, Resources | `grants` (Traits every character of the Kind holds, like Magical Heritage), `resources` (like `{ mp: 6 }`) |
@@ -44,11 +45,15 @@ Every tab's Description is `summary`, Tags is `tags`, and Notes is for anything 
 | Traits: Category | `category`; Language rows are `knowledge` with `types: [language]`. "X (Spoken)" has id `x` and "X (Written)" `x-written`, both with `language: x`, which pairs them for spoken-and-written choices |
 | Traits: Ranked, Conveyed | `ranked`, `conveyed` |
 | Traits: Effect | `effect` |
-| Traits: Stat Requirements | stats go in `minStats` (focus or core: "Power 3", "Physical 5"), a Trait's name in `prerequisites`, "Any Pilot skill" in `prerequisiteTags: [pilot]`, anything else in `rpRequirement` |
+| Traits: Stat Requirements | `minStats` (focus or core: "Power 3", "Physical 5") |
+| Traits: Prerequisites | a Trait's name in `prerequisites`, "Any Pilot skill" in `prerequisiteTags: [pilot]`, anything else in `rpRequirement` |
+| Traits: Mastery, Type, Temporary | `mastery`, `types`, `temporary` |
+| Traits: Modifiers, Action | `modifiers` (like `Priority -1, Attack Rolls -1`) and `action`, as the Sheet words them |
 | Items: Category, Creator Category | `type` (the site's Items page categories, lowercase: weapon, wearable, equipment, structure, vehicle, animal, misc) and `category` (the creator's: weapon, armor, gear, consumable, currency, other) |
-| Items: Damage Types, Resistances, Uses, Exclusive | `damage`, `resistances`, `uses` and `slot`, as the Sheet words them, in the Items page's damage type order. Damage separated by commas is all dealt at once (`2 Blunt, 2 Electrical`); options separated by ` / ` are a choice (`5 Slashing / 4 Piercing`). Resistances carry amounts too, like `3 Blunt, 4 Slashing, 2 Piercing (head)` |
+| Items: Damage Profile, Resistances, Uses, Exclusive | `damage`, `resistances`, `uses` and `slot`, as the Sheet words them, in the Items page's damage type order. Damage separated by commas is all dealt at once (`2 Blunt, 2 Electrical`); options separated by ` / ` are a choice (`5 Slashing / 4 Piercing`). Resistances carry amounts too, like `3 Blunt, 4 Slashing, 2 Piercing (head)` |
+| Items: Attack Type, Max Range, Attack Stat, Area of Effect, Reload, On Hit, Modifiers | `attackType` (`Melee`, `Ranged` or `Ranged, Thrown`), `maxRange` (like `2 m`; Thrown weapons leave it out, since their range is Power × 3), `attackStat` (`Grace / Power` is a choice), `areaOfEffect` (a radius, like `5 m`), `reload` (`Partial` or `Full`), `onHit` and `modifiers` (like `Defense +4 (when Defending)`), as the Sheet words them |
 | Items: Value, Currency | `value` and `currency`: one value per item, in the currency of its plane of origin (Luras for Isekai, ERC for Earth and Any) |
-| Traits: Notes | "Mastery" is `mastery`, "Background-only" is `background`, "Type: X" is `types`, "Temporary (…)" is `temporary`, "Choice: which seas" is a `place` choice (below) |
+| Traits: Notes | "Background-only" is `background`, "Choice: which seas" is a `place` choice (below) |
 
 ## Fields every entry has
 

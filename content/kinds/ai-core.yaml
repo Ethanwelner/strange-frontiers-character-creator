@@ -28,3 +28,4 @@ stats:
   logic: { bonus: 3, max: 20 }
   intuition: { bonus: 3, max: 20 }
   memory: { bonus: 3, max: 20 }
+movement: "-"

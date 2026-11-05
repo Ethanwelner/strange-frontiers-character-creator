@@ -7,6 +7,9 @@ tags: [explosive, thrown, anti-machine]
 type: weapon
 category: consumable
 damage: "7 EMP"
+attackType: "Ranged, Thrown"
+attackStat: "Grace"
+areaOfEffect: "5 m"
 uses: "uses 1: when thrown"
 value: 400
 currency: "ERC"

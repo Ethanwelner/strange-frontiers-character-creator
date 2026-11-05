@@ -6,7 +6,8 @@ summary: "A tall shield that covers a body from shin to chin. Heavy and slow."
 tags: [shield, heavy]
 type: equipment
 category: armor
-resistances: "5 Blunt, 5 Slashing, 5 Piercing (when raised)"
+resistances: "5 Blunt, 5 Slashing, 5 Piercing (when Defending)"
+modifiers: "Defense +6 (when Defending)"
 slot: "Off Hand"
 value: 300
 currency: "ERC"

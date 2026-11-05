@@ -6,6 +6,9 @@ summary: "A grenade that fills an area with thick smoke."
 tags: [thrown, cover, military]
 type: equipment
 category: consumable
+attackType: "Ranged, Thrown"
+attackStat: "Grace"
+areaOfEffect: "5 m"
 uses: "uses 1: when thrown"
 value: 40
 currency: "ERC"

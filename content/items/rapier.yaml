@@ -7,5 +7,8 @@ tags: [melee, blade, sword]
 type: weapon
 category: weapon
 damage: "3 Slashing / 5 Piercing"
+attackType: "Melee"
+maxRange: "1 m"
+attackStat: "Grace"
 value: 450
 currency: "ERC"

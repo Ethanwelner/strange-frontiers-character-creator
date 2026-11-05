@@ -87,7 +87,7 @@ export function Tracker({
       {/* The character's header, in a box like the sheet's head */}
       <div className="c-sheet-box tools-head">{head}</div>
 
-      {/* HP, VP, SP and MP, in their own box under it */}
+      {/* HP, VP, SP and MP, in their own box under it, then Movement */}
       <div className="c-sheet-box tools-resources-box">
         <div className="tools-resources">
           {shown.map((r) => {
@@ -146,6 +146,15 @@ export function Tracker({
               </div>
             );
           })}
+          {/* Movement, from the Kind: nothing to spend, so just the value */}
+          <div className="tools-resource">
+            <div className="tools-resource-value">
+              <strong className="tools-resource-name resource-move" title="Movement">
+                MOVE
+              </strong>
+              <span className="num">{result.summary?.movement ?? "–"}</span>
+            </div>
+          </div>
         </div>
       </div>
 

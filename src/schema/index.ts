@@ -94,6 +94,9 @@ export const Kind = BaseEntry.extend({
   // What this Kind's stat maximums add up to, when it's deliberately off
   // Human's 135, like the AI Core's 120. The validator checks against it.
   maxTotal: z.number().int().min(0).optional(),
+  // How far the Kind moves in a full Movement Action during an Incident, as
+  // the Sheet words it, like "10 m" (the default) or "-" for a bodiless AI Core.
+  movement: z.string().optional(),
 });
 export type Kind = z.infer<typeof Kind>;
 
@@ -189,6 +192,11 @@ export const Trait = BaseEntry.extend({
   // Traits holding this one conveys, like Magical Heritage's Magic Access,
   // held for as long as this one is, from whatever source.
   grants: z.array(TraitGrant).default([]),
+  // Changes to Defense, Priority, Movement or Attack Rolls while held, as the
+  // Sheet words them, like Flat-Footed's "Priority -1, Attack Rolls -1".
+  modifiers: z.string().optional(),
+  // A unique Action holding this Trait adds in an Incident.
+  action: z.string().optional(),
 });
 export type Trait = z.infer<typeof Trait>;
 
@@ -210,6 +218,22 @@ export const Item = BaseEntry.extend({
   // What it resists and by how much, as the Sheet words it, in the Items
 // page's damage type order, like "3 Blunt, 4 Slashing, 2 Piercing (head)".
   resistances: z.string().optional(),
+  // How a weapon Attacks, from the Incidents rules: Melee or Ranged, plus
+  // Thrown for a weapon whose Max Range is the thrower's Power × 3.
+  attackType: z.enum(["Melee", "Ranged", "Ranged, Thrown"]).optional(),
+  // How far it reaches, like "2 m" or "400 m". Thrown weapons leave it out.
+  maxRange: z.string().optional(),
+  // The Stat added to its Attack Rolls; "Grace / Power" is a choice.
+  attackStat: z.string().optional(),
+  // The radius it hits every target in, as a Glancing Blow, like "5 m".
+  areaOfEffect: z.string().optional(),
+  // Reloading it: "Partial" goes with another Action, "Full" takes the Action.
+  reload: z.enum(["Partial", "Full"]).optional(),
+  // What a hit does beyond damage, by Severity.
+  onHit: z.string().optional(),
+  // Changes to Defense, Priority, Movement or Attack Rolls, like a shield's
+  // "Defense +4 (when Defending)".
+  modifiers: z.string().optional(),
   // Limited uses, like "uses 1: when thrown".
   uses: z.string().optional(),
   // The slot only one item can fill at a time, like Body Armor or Headwear.

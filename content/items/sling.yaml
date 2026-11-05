@@ -7,5 +7,9 @@ tags: [ranged, cheap]
 type: weapon
 category: weapon
 damage: "3 Blunt"
+attackType: "Ranged"
+maxRange: "60 m"
+attackStat: "Grace"
+reload: "Partial"
 value: 15
 currency: "ERC"

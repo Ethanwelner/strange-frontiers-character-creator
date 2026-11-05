@@ -248,7 +248,7 @@ export function Sheet({
           </div>
         )}
 
-        {/* HP, VP, SP and MP at full, like Player Tools' tracker without its controls or bars */}
+        {/* HP, VP, SP and MP at full, like Player Tools' tracker without its controls or bars, then Movement */}
         {!embedded && (
           <div className="c-sheet-box">
             <div className="tools-resources sheet-resources">
@@ -265,6 +265,15 @@ export function Sheet({
                   </div>
                 </div>
               ))}
+              {/* Movement, from the Kind, after them */}
+              <div className="tools-resource">
+                <div className="tools-resource-value">
+                  <strong className="tools-resource-name resource-move" title="Movement">
+                    MOVE
+                  </strong>
+                  <span className="num">{summary?.movement ?? "–"}</span>
+                </div>
+              </div>
             </div>
           </div>
         )}

@@ -7,5 +7,9 @@ tags: [ranged, firearm, military]
 type: weapon
 category: weapon
 damage: "6 Piercing"
+attackType: "Ranged"
+maxRange: "100 m"
+attackStat: "Grace"
+reload: "Partial"
 value: 2500
 currency: "ERC"

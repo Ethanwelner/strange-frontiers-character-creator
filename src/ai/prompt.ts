@@ -2,7 +2,7 @@
 // only from content, with no dates or per-request values, so the prefix is
 // byte-identical across requests and stays cached.
 import type { Content } from "../engine/parse.js";
-import { damageText } from "../engine/damage.js";
+import { attackText, damageText } from "../engine/damage.js";
 import { STAT_GROUPS, type StatBlock } from "../schema/index.js";
 
 export const INSTRUCTIONS = `You build player characters for Strange Frontiers, a tabletop RPG. A player describes the character they want; you choose who they are from the game's real content and explain each choice in one line. The rules engine does the bookkeeping: it spreads the stat points, buys Traits and checks that the result is legal.
@@ -78,7 +78,7 @@ export function contentIndex(content: Content): string {
     ].filter(Boolean);
     lines.push(`- ${t.id}: ${t.name} [${[t.category, ...flags].join("; ")}] ${t.summary} Tags: ${t.tags.join(", ") || "none"}.`);
   }
-  lines.push("", "## Items", "Format: id: name [category; plane; slot; damage or resistances] summary. Any-plane items suit everyone.");
+  lines.push("", "## Items", "Format: id: name [category; plane; slot; damage, attack, resistances or modifiers] summary. Any-plane items suit everyone.");
   for (const i of content.items) {
     if (i.category === "currency") continue;
     const flags = [
@@ -86,7 +86,9 @@ export function contentIndex(content: Content): string {
       i.plane,
       i.slot ? `slot ${i.slot}` : "",
       i.damage ? `damage ${damageText(i.damage)}` : "",
+      attackText(i),
       i.resistances ? `resists ${i.resistances}` : "",
+      i.modifiers ?? "",
       i.uses ?? "",
     ].filter(Boolean);
     lines.push(`- ${i.id}: ${i.name} [${flags.join("; ")}] ${i.summary} Tags: ${i.tags.join(", ") || "none"}.`);

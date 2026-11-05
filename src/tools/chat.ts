@@ -221,6 +221,7 @@ export function sheetText(play: Play, result: BuildResult, content: Content): st
       `Resources (current/max): ${RESOURCES.filter((r) => maxOf(result, r) > 0 || r !== "mp")
         .map((r) => `${r.toUpperCase()} ${currentOf(play, result, r)}/${maxOf(result, r)}`)
         .join(", ")}`,
+      `Movement: ${s.movement}`,
       `Banked picks: ${s.picks.universal.banked} universal, ${s.picks.background.banked} background`,
       "Traits:",
       ...s.traits.map((h) => {

@@ -61,6 +61,9 @@ export interface ChoiceQuestion {
   notes: string[];
 }
 
+// A humanoid's full Movement in an Incident, by the Incidents rules.
+export const DEFAULT_MOVEMENT = "10 m";
+
 export interface BuildSummary {
   stats: Record<StatId, number>;
   coreStats: Record<StatGroup, number>;
@@ -74,6 +77,9 @@ export interface BuildSummary {
   // Mental focus stat totals; MP is 3 per point of Magic. Kinds and Traits
   // can add to any of them.
   resources: Record<"hp" | "vp" | "sp" | "mp", number>;
+  // A full Movement Action in an Incident, from the Kind: "10 m" unless the
+  // Kind says otherwise.
+  movement: string;
   picks: Record<PickKind, PickCount>;
   traits: HeldTrait[];
   // Traits the build may spend background picks on.
@@ -592,6 +598,7 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
       coreBonus,
       coreAccess: [...coreAccess],
       resources,
+      movement: kind?.movement ?? DEFAULT_MOVEMENT,
       picks,
       traits: [...held.values()],
       backgroundList: [...backgroundList].sort(),

@@ -7,5 +7,8 @@ tags: [melee, blunt]
 type: weapon
 category: weapon
 damage: "5 Blunt / 4 Piercing"
+attackType: "Melee"
+maxRange: "1 m"
+attackStat: "Power"
 value: 300
 currency: "ERC"

@@ -7,5 +7,9 @@ tags: [melee, blunt, nonlethal, police]
 type: weapon
 category: weapon
 damage: "2 Blunt, 2 Electrical"
+attackType: "Melee"
+maxRange: "1 m"
+attackStat: "Power"
+onHit: "Solid Hit or better: the target loses its next Action"
 value: 150
 currency: "ERC"

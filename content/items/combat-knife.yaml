@@ -7,5 +7,8 @@ tags: [melee, blade, military, concealable]
 type: weapon
 category: weapon
 damage: "3 Slashing / 4 Piercing"
+attackType: "Melee"
+maxRange: "1 m"
+attackStat: "Grace"
 value: 120
 currency: "ERC"
