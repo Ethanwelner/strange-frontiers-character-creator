@@ -2654,7 +2654,9 @@
     }
 
     .sheet-movement-unit {
+      margin-left: 4px;
       font-family: var(--title);
+      font-size: 1rem;
       font-weight: normal;
     }
   }
