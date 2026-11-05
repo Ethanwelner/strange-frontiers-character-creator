@@ -76,11 +76,26 @@ export function itemDetails(stock: StockItem): string {
   return line.charAt(0).toUpperCase() + line.slice(1);
 }
 
-// What a stock item's damage and resistance badges and its cost badge leave
-// out of the line: how it Attacks, its Defense and other modifiers, its uses
-// and the slot it takes, like "Melee Attack; Max Range: 2 m; Attack Stat: Grace / Power; Slot: Off Hand".
+// A stock item's rules that read as badges, under an open card's top line:
+// its cost, how it Attacks, and the slot it takes, like "60 ERC",
+// "Melee Attack", "Max Range: 1 m", "Attack Stat: Grace", "Slot: Headwear".
+export function itemBadges(stock: StockItem): string[] {
+  return [
+    stock.value !== undefined && stock.currency ? `${stock.value.toLocaleString("en-US")} ${stock.currency}` : "",
+    stock.attackType ? `${stock.attackType} Attack` : "",
+    stock.maxRange ? `Max Range: ${stock.maxRange}` : "",
+    stock.attackStat ? `Attack Stat: ${stock.attackStat}` : "",
+    stock.areaOfEffect ? `Area of Effect: ${stock.areaOfEffect}` : "",
+    stock.reload ? `Reload: ${stock.reload} Action` : "",
+    stock.slot ? `Slot: ${stock.slot}` : "",
+  ].filter(Boolean);
+}
+
+// What the badges leave out, as a rules line under the description: its
+// Defense and other modifiers, its uses, and what a hit does, like
+// "Defense +2 (when Defending)" or "Uses 1: when thrown".
 export function itemUses(stock: StockItem): string {
-  const line = [attackText(stock), stock.modifiers ?? "", stock.uses ?? "", stock.slot ? `Slot: ${stock.slot}` : ""].filter(Boolean).join("; ");
+  const line = [stock.modifiers ?? "", stock.uses ?? "", stock.onHit ? `On Hit: ${stock.onHit}` : ""].filter(Boolean).join("; ");
   return line.charAt(0).toUpperCase() + line.slice(1);
 }
 

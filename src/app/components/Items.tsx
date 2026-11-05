@@ -2,7 +2,7 @@ import { Fragment, useId, useState } from "react";
 import { Chip, Icon, LorePopup, title } from "./ui.js";
 import { damageIcon } from "./Resistances.js";
 import { content, itemById } from "../content.js";
-import { ITEM_CATEGORIES, itemUses, stockItemNamed, withItem, type Item, type ItemCategory } from "../items.js";
+import { ITEM_CATEGORIES, itemBadges, itemUses, stockItemNamed, withItem, type Item, type ItemCategory } from "../items.js";
 import { parseDamage } from "../../engine/damage.js";
 import { parseResistances } from "../resistances.js";
 import type { Item as StockItem } from "../../schema/index.js";
@@ -249,7 +249,7 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                 </li>
               );
             }
-            const cost = stock?.value !== undefined && stock.currency ? `${stock.value.toLocaleString("en-US")} ${stock.currency}` : undefined;
+            const badges = stock ? itemBadges(stock) : [];
             return (
               <li key={item.id} className="c-sheet-box tools-item">
                 {count}
@@ -274,11 +274,13 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                     </svg>
                   </button>
                 )}
-                {/* Under the top line, the badges it leaves out: the cost, and
-                    later keywords and the like */}
-                {cost && (
+                {/* Under the top line, the badges it leaves out: the cost, how
+                    it Attacks, and the slot it takes */}
+                {badges.length > 0 && (
                   <div className="tools-item-badges">
-                    <Chip>{cost}</Chip>
+                    {badges.map((b) => (
+                      <Chip key={b}>{b}</Chip>
+                    ))}
                   </div>
                 )}
                 {/* Edit's fields where the top line shows them: how many at the left, then
