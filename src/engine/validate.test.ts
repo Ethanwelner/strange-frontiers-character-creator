@@ -76,6 +76,17 @@ const fixtures = [
     effect: "Test only.",
   }),
   Trait.parse({
+    id: "fixture-spell-ward",
+    name: "Spell Ward",
+    status: "placeholder",
+    plane: "isekai",
+    summary: "Test fixture: a Background Trait on the Magic list.",
+    category: "ability",
+    list: "magic",
+    background: true,
+    effect: "Test only.",
+  }),
+  Trait.parse({
     id: "fixture-trade-cant",
     name: "Trade Cant",
     status: "placeholder",
@@ -851,9 +862,10 @@ describe("rule 13: Magic", () => {
     ]);
     expect(pick(human, "incantation").summary!.traitLists).toEqual([]);
     // A Background Trait on an open list joins the Background Trait list.
-    expect(check(isek).summary!.backgroundList).toContain("sorcerous");
-    expect(check(human).summary!.backgroundList).not.toContain("sorcerous");
-    expect(pick(isek, "sorcerous", "background").errors.filter((e) => e.code === "pick-type" || e.code === "trait-list")).toEqual([]);
+    expect(check(isek, withFixtures).summary!.backgroundList).toContain("fixture-spell-ward");
+    expect(check(human, withFixtures).summary!.backgroundList).not.toContain("fixture-spell-ward");
+    const ward = check({ ...isek, traits: [{ trait: "fixture-spell-ward", pick: "background" }] }, withFixtures);
+    expect(ward.errors.filter((e) => e.code === "pick-type" || e.code === "trait-list")).toEqual([]);
     // A package can still grant a listed Trait to anyone, like a Human hedge witch's Magic on Isekai.
     expect(check({ ...human, profession: "hedge-witch", choices: [] }).summary!.traits.map((h) => h.trait)).toContain("magic-on-isekai");
   });
