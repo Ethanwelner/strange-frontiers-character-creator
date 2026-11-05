@@ -36,18 +36,17 @@ function source(s: string) {
 type Held = NonNullable<BuildResult["summary"]>["traits"][number];
 
 // Where a held Trait came from, as badges: Origin, Profession or Past for a
-// Background Trait picked from that package's list. A Trait the Kind gives
-// isn't a Kind (Kinds are their own cards), and a package's own grants (a
-// Farmer's Teamster) get none.
-const PACKAGE_SLOTS = ["origin", "profession", "past"] as const;
-function sourceBadges(held: Held, draft: Draft): string[] {
-  const badges: string[] = [];
-  if (held.sources.includes("background pick")) {
-    for (const slot of PACKAGE_SLOTS) {
-      if (packageById.get(draft[slot] ?? "")?.backgroundTraits.includes(held.trait)) badges.push(title(slot));
-    }
+// Trait that package gave in the Background step, as a grant (a Knight's
+// Wielder: Longsword) or a choice it offers. A Trait bought with a pick isn't
+// one, even from a package's Background list, and a Trait the Kind gives
+// gets none (Kinds are their own cards).
+function sourceBadges(held: Held): string[] {
+  const slots = new Set<string>();
+  for (const s of held.sources) {
+    const m = SOURCE.exec(s);
+    if (m && m[1] !== "kind") slots.add(m[1]!);
   }
-  return badges;
+  return ["origin", "profession", "past"].filter((slot) => slots.has(slot)).map(title);
 }
 
 // A held Trait, drawn like the site's Traits page cards (.trait-box), with
@@ -64,7 +63,7 @@ function TraitCard({ held, places, draft }: { held: Held; places: string[]; draf
           {t?.ranked || held.rank > 1 ? ` (${held.rank})` : ""}
         </span>
         <span className="trait-name-chips">
-          {sourceBadges(held, draft).map((b) => (
+          {sourceBadges(held).map((b) => (
             <Chip key={b}>{b}</Chip>
           ))}
           {t ? <Chip>{title(t.category)}</Chip> : <Chip tone="bad">not in content yet</Chip>}
@@ -198,6 +197,21 @@ export function Sheet({
   // Knowledges, then Languages, as on the sample sheet
   const knowledges = [...held.filter((h) => isKnowledge(h) && !isLanguage(h)), ...held.filter(isLanguage)];
   const others = held.filter((h) => !isKnowledge(h));
+  // The other Traits in a box per category: Skills, then Abilities, then any
+  // left over (Circumstances and the like) in a box of their own
+  const categoryOf = (h: Held) => traitById.get(h.trait)?.category;
+  const skills = others.filter((h) => categoryOf(h) === "skill");
+  const abilities = others.filter((h) => categoryOf(h) === "ability");
+  const rest = others.filter((h) => categoryOf(h) !== "skill" && categoryOf(h) !== "ability");
+  const traitCards = (list: Held[]) => (
+    <ul className="sheet-traits">
+      {list.map((h) => (
+        <li key={h.trait}>
+          <TraitCard held={h} places={places(h.trait)} draft={draft} />
+        </li>
+      ))}
+    </ul>
+  );
   const [open, setOpen] = useState<string>();
   const closeModal = useCallback(() => setOpen(undefined), []);
   // Whether the Conditions and Items have wrapped under the stats, leaving a
@@ -363,7 +377,7 @@ export function Sheet({
           )}
         </div>
 
-        {/* The Knowledges in their own box, to the left of the Traits */}
+        {/* The Knowledges in their own box, to the left of the Skills and Abilities */}
         <div className="sheet-lower">
           <div className="c-sheet-box sheet-side">
             <h3 className="subhead">Knowledges</h3>
@@ -386,59 +400,65 @@ export function Sheet({
               <p className="empty">None yet.</p>
             )}
           </div>
-          <div className="c-sheet-box">
-            {traitsAction ? (
-              // The action at the right end of the Traits title's line
-              <div className="sheet-traits-head">
-                <h3 className="subhead">Traits</h3>
-                {traitsAction}
+          {/* Skills, Abilities and any other Traits, each in a box, stacked */}
+          <div className="sheet-traits-col">
+            <div className="c-sheet-box">
+              {traitsAction ? (
+                // The action at the right end of the Skills title's line
+                <div className="sheet-traits-head">
+                  <h3 className="subhead">Skills</h3>
+                  {traitsAction}
+                </div>
+              ) : (
+                <h3 className="subhead">Skills</h3>
+              )}
+              {/* The picks the character still has to spend on Traits */}
+              {summary && (
+                <p className="sheet-banked">
+                  {summary.picks.universal.banked} universal and {summary.picks.background.banked} background{" "}
+                  {summary.picks.universal.banked + summary.picks.background.banked === 1 ? "pick" : "picks"} available
+                </p>
+              )}
+              {skills.length > 0 ? traitCards(skills) : <p className="empty">No Skills yet.</p>}
+            </div>
+            <div className="c-sheet-box">
+              <h3 className="subhead">Abilities</h3>
+              {abilities.length > 0 ? traitCards(abilities) : <p className="empty">No Abilities yet.</p>}
+            </div>
+            {(rest.length > 0 || records.length > 0 || features.length > 0) && (
+              <div className="c-sheet-box">
+                {rest.length > 0 && (
+                  <>
+                    <h3 className="subhead">Other Traits</h3>
+                    {traitCards(rest)}
+                  </>
+                )}
+                {records.length > 0 && (
+                  <>
+                    <h3 className="subhead">Contacts</h3>
+                    <ul className="features">
+                      {records.map((r, i) => (
+                        <li key={i}>
+                          <strong>{r.text}</strong> <span className="muted">({r.noun} from {r.from})</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+
+                {features.length > 0 && (
+                  <>
+                    <h3 className="subhead">Features</h3>
+                    <ul className="features">
+                      {features.map((f, i) => (
+                        <li key={i}>
+                          <strong>{f.name}</strong> <span className="muted">({f.from})</span>. {f.description}
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
               </div>
-            ) : (
-              <h3 className="subhead">Traits</h3>
-            )}
-            {/* The picks the character still has to spend on Traits */}
-            {summary && (
-              <p className="sheet-banked">
-                {summary.picks.universal.banked} universal and {summary.picks.background.banked} background{" "}
-                {summary.picks.universal.banked + summary.picks.background.banked === 1 ? "pick" : "picks"} available
-              </p>
-            )}
-            {others.length > 0 ? (
-              <ul className="sheet-traits">
-                {others.map((h) => (
-                  <li key={h.trait}>
-                    <TraitCard held={h} places={places(h.trait)} draft={draft} />
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="empty">{held.length ? "No Traits besides Knowledges." : "No Traits yet."}</p>
-            )}
-
-            {records.length > 0 && (
-              <>
-                <h3 className="subhead">Contacts</h3>
-                <ul className="features">
-                  {records.map((r, i) => (
-                    <li key={i}>
-                      <strong>{r.text}</strong> <span className="muted">({r.noun} from {r.from})</span>
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-
-            {features.length > 0 && (
-              <>
-                <h3 className="subhead">Features</h3>
-                <ul className="features">
-                  {features.map((f, i) => (
-                    <li key={i}>
-                      <strong>{f.name}</strong> <span className="muted">({f.from})</span>. {f.description}
-                    </li>
-                  ))}
-                </ul>
-              </>
             )}
           </div>
         </div>

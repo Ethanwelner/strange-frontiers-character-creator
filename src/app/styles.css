@@ -2542,6 +2542,14 @@
     }
   }
 
+  /* Skills, Abilities and any other Traits, a box each, down the Knowledges' right */
+  .sheet-traits-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+  }
+
   /* The stats', Conditions' and Items' boxes, as tall as each other on a
      line. The stats take only the width they need, and the Conditions sit
      beside them whenever 13rem is left, taking the rest; otherwise each
@@ -2614,7 +2622,7 @@
      sections tighten: 1rem between its boxes and inside each one (an
      Item's card keeps its own) */
   @media (max-width: 1399px) {
-    :is(.c-sheet, .sheet-row, .sheet-row > .sheet-side-stack, .sheet-side-row, .sheet-lower, .sheet-move-row) {
+    :is(.c-sheet, .sheet-row, .sheet-row > .sheet-side-stack, .sheet-side-row, .sheet-lower, .sheet-move-row, .sheet-traits-col) {
       gap: 1rem;
     }
 
