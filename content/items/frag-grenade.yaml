@@ -7,6 +7,9 @@ tags: [explosive, thrown, military]
 type: weapon
 category: consumable
 damage: "5 Blunt, 5 Piercing"
+attackType: "Ranged, Thrown"
+attackStat: "Grace"
+areaOfEffect: "5 m"
 uses: "uses 1: when thrown"
 value: 50
 currency: "ERC"

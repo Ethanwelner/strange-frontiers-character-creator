@@ -46,3 +46,25 @@ export function damageText(text: string): string {
   };
   return options.map(and).join(" or ");
 }
+
+// How a weapon Attacks, in a line, like "Melee, 2 m, Grace / Power" or
+// "Ranged, Thrown, Grace, 5 m Area of Effect, Full reload".
+export function attackText(item: {
+  attackType?: string;
+  maxRange?: string;
+  attackStat?: string;
+  areaOfEffect?: string;
+  reload?: string;
+  onHit?: string;
+}): string {
+  return [
+    item.attackType ?? "",
+    item.maxRange ?? "",
+    item.attackStat ?? "",
+    item.areaOfEffect ? `${item.areaOfEffect} Area of Effect` : "",
+    item.reload ? `${item.reload} reload` : "",
+    item.onHit ? `on hit: ${item.onHit}` : "",
+  ]
+    .filter(Boolean)
+    .join(", ");
+}

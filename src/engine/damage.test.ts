@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { damageText, parseDamage } from "./damage.js";
+import { attackText, damageText, parseDamage } from "./damage.js";
 
 describe("weapon damage", () => {
   it("reads commas as damage dealt together and a slash as a choice", () => {
@@ -28,5 +28,14 @@ describe("weapon damage", () => {
     expect(damageText("3 Slashing, 3 Piercing")).toBe("3 Slashing and 3 Piercing");
     expect(damageText("2 Blunt, 6 Heat / 7 EMP")).toBe("2 Blunt and 6 Heat or 7 EMP");
     expect(damageText("lots")).toBe("lots");
+  });
+});
+
+describe("attackText", () => {
+  it("lists how a weapon Attacks", () => {
+    expect(attackText({ attackType: "Melee", maxRange: "2 m", attackStat: "Grace / Power" })).toBe("Melee, 2 m, Grace / Power");
+    expect(attackText({ attackType: "Ranged, Thrown", attackStat: "Grace", areaOfEffect: "5 m" })).toBe("Ranged, Thrown, Grace, 5 m Area of Effect");
+    expect(attackText({ attackType: "Ranged", maxRange: "100 m", attackStat: "Grace", reload: "Full" })).toBe("Ranged, 100 m, Grace, Full reload");
+    expect(attackText({})).toBe("");
   });
 });

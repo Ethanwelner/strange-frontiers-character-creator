@@ -7,6 +7,9 @@ tags: [explosive, thrown, fire, military]
 type: weapon
 category: consumable
 damage: "2 Blunt, 6 Heat"
+attackType: "Ranged, Thrown"
+attackStat: "Grace"
+areaOfEffect: "4 m"
 uses: "uses 1: when thrown"
 value: 150
 currency: "ERC"

@@ -4,7 +4,7 @@
 // writes. It travels in the build as `items` (BuildItem in engine/build.ts).
 import { ITEM_CATEGORIES } from "../engine/build.js";
 import type { Item as StockItem } from "../schema/index.js";
-import { damageText } from "../engine/damage.js";
+import { attackText, damageText } from "../engine/damage.js";
 
 export { ITEM_CATEGORIES };
 export type ItemCategory = (typeof ITEM_CATEGORIES)[number];
@@ -64,7 +64,9 @@ export function readItems(input: unknown): Item[] {
 export function itemDetails(stock: StockItem): string {
   const line = [
     stock.damage ? `${damageText(stock.damage)} damage` : "",
+    attackText(stock),
     stock.resistances ? `resists ${stock.resistances}` : "",
+    stock.modifiers ?? "",
     stock.uses ?? "",
     stock.slot ? `${stock.slot} slot` : "",
     stock.value !== undefined && stock.currency ? `${stock.value.toLocaleString("en-US")} ${stock.currency}` : "",
@@ -75,9 +77,10 @@ export function itemDetails(stock: StockItem): string {
 }
 
 // What a stock item's damage and resistance badges and its cost badge leave
-// out of the line: its uses and the slot it takes, like "Single use; Hands slot".
+// out of the line: how it Attacks, its Defense and other modifiers, its uses
+// and the slot it takes, like "Melee, 2 m, Grace / Power; Hands slot".
 export function itemUses(stock: StockItem): string {
-  const line = [stock.uses ?? "", stock.slot ? `${stock.slot} slot` : ""].filter(Boolean).join("; ");
+  const line = [attackText(stock), stock.modifiers ?? "", stock.uses ?? "", stock.slot ? `${stock.slot} slot` : ""].filter(Boolean).join("; ");
   return line.charAt(0).toUpperCase() + line.slice(1);
 }
 

@@ -1,0 +1,11 @@
+id: flat-footed
+name: "Flat-Footed"
+status: draft
+plane: any
+summary: "Off balance after a badly missed Attack."
+tags: [combat]
+category: condition
+conveyed: true
+temporary: "Lasts through the following combat Round"
+effect: "This character has -1 Priority and -1 to Attack Rolls."
+modifiers: "Priority -1, Attack Rolls -1"

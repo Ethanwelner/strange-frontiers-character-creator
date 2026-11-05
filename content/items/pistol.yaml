@@ -7,5 +7,9 @@ tags: [ranged, firearm, sidearm, concealable]
 type: weapon
 category: weapon
 damage: "7 Piercing"
+attackType: "Ranged"
+maxRange: "50 m"
+attackStat: "Grace"
+reload: "Partial"
 value: 600
 currency: "ERC"

@@ -6,7 +6,8 @@ summary: "A small round fist shield, quick to raise."
 tags: [shield]
 type: equipment
 category: armor
-resistances: "2 Blunt, 2 Slashing, 1 Piercing (when raised)"
+resistances: "2 Blunt, 2 Slashing, 1 Piercing (when Defending)"
+modifiers: "Defense +2 (when Defending)"
 slot: "Off Hand"
 value: 60
 currency: "ERC"

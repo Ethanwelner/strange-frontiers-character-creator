@@ -6,7 +6,8 @@ summary: "A handheld shield of layered ballistic panels with a view port."
 tags: [shield, modern]
 type: equipment
 category: armor
-resistances: "4 Blunt, 3 Slashing, 6 Piercing (when raised)"
+resistances: "4 Blunt, 3 Slashing, 6 Piercing (when Defending)"
+modifiers: "Defense +5 (when Defending)"
 slot: "Off Hand"
 value: 1200
 currency: "ERC"

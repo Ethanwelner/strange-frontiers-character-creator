@@ -7,6 +7,11 @@ tags: [ranged, nonlethal, police]
 type: weapon
 category: weapon
 damage: "4 Electrical"
+attackType: "Ranged"
+maxRange: "5 m"
+attackStat: "Grace"
+reload: "Partial"
+onHit: "Any hit: the target loses its next Action"
 uses: "uses 1: per cartridge"
 value: 300
 currency: "ERC"

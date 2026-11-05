@@ -7,6 +7,8 @@ tags: [ranged, thrown, concealable]
 type: weapon
 category: weapon
 damage: "3 Piercing"
+attackType: "Ranged, Thrown"
+attackStat: "Grace"
 uses: "uses 6: when thrown, until recovered"
 value: 80
 currency: "ERC"

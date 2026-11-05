@@ -6,7 +6,8 @@ summary: "A round shield of planks and leather."
 tags: [shield]
 type: equipment
 category: armor
-resistances: "4 Blunt, 4 Slashing, 3 Piercing (when raised)"
+resistances: "4 Blunt, 4 Slashing, 3 Piercing (when Defending)"
+modifiers: "Defense +4 (when Defending)"
 slot: "Off Hand"
 value: 100
 currency: "ERC"
