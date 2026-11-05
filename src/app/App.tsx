@@ -102,9 +102,9 @@ export function App() {
     setJustBuilt(true);
     setSaved((s) => ({
       ...s,
-      // A portrait added before building stays; the AI doesn't look at it.
+      // A new character starts without the last one's portrait.
       // The builder's summary becomes the character's description.
-      draft: { ...built, portrait: s.draft.portrait, description: result.summary?.trim() || undefined },
+      draft: { ...built, portrait: undefined, description: result.summary?.trim() || undefined },
       campaign: { startingLevel: built.level },
       step: "sheet",
       ai: {
