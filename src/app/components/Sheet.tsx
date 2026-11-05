@@ -104,13 +104,15 @@ function MaybeStack({ stack, top, children }: { stack: boolean; top?: ReactNode;
   );
 }
 
-// Movement, from the Kind, in a small box of its own to the left of HP, VP
-// and SP's, a running figure in place of a label. Player Tools' tracker uses it too.
+// Movement, from the Kind, in a small box of its own to the left of the
+// resistances, under its ruled title, a running figure before the number.
 // The number runs into its unit, "10m", with the m in the titles' Bebas.
 export function MovementBox({ movement }: { movement?: string }) {
   const parts = movement?.match(/^\s*([\d.]+)\s*([a-z]+)\s*$/i);
   return (
-    <div className="c-sheet-box sheet-movement" title="Movement">
+    <div className="c-sheet-box sheet-movement">
+      <h3 className="subhead" title="Movement">Move</h3>
+      <div className="sheet-movement-value" title="Movement">
       <Icon name="person-running" label="Movement" />
       <span className="num">
         {parts ? (
@@ -122,6 +124,7 @@ export function MovementBox({ movement }: { movement?: string }) {
           (movement ?? "–")
         )}
       </span>
+      </div>
     </div>
   );
 }
@@ -216,7 +219,13 @@ export function Sheet({
     observer.observe(el);
     return () => observer.disconnect();
   }, [hasResistances]);
-  const resistancesBox = resistancesSlot && <div className="c-sheet-box sheet-resistances">{resistancesSlot}</div>;
+  // Movement's small box, then the resistances', on one line
+  const resistancesBox = resistancesSlot && (
+    <div className="sheet-move-row">
+      <MovementBox movement={summary?.movement} />
+      <div className="c-sheet-box sheet-resistances">{resistancesSlot}</div>
+    </div>
+  );
   const opened = held.find((h) => h.trait === open);
   // The Kind's features sit at the top, under HP, VP and SP; the packages' at the bottom.
   const features = [
@@ -270,10 +279,8 @@ export function Sheet({
           </div>
         )}
 
-        {/* Movement, then HP, VP, SP and MP at full, like Player Tools' tracker without its controls or bars */}
+        {/* HP, VP, SP and MP at full, like Player Tools' tracker without its controls or bars */}
         {!embedded && (
-          <div className="sheet-move-row">
-          <MovementBox movement={summary?.movement} />
           <div className="c-sheet-box">
             <div className="tools-resources sheet-resources">
               {resources.map((r) => (
@@ -290,7 +297,6 @@ export function Sheet({
                 </div>
               ))}
             </div>
-          </div>
           </div>
         )}
 

@@ -161,11 +161,11 @@
     box-shadow: none;
   }
 
-  /* 24px between the boxes */
+  /* 20px between the boxes */
   .tools-tracker {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 20px;
   }
 
   /* The first box, dark like the sheet's boxes, with the name 24px above
@@ -578,7 +578,7 @@
      boxes, without the sheet's outer one, which the left column's box
      stands in for */
   .builder-panel .sheet-embedded .c-sheet {
-    gap: 24px;
+    gap: 20px;
     margin-top: 0;
     background: none;
     border: none;
