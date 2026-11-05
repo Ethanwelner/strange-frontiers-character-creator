@@ -50,32 +50,68 @@ function sourceBadges(held: Held): string[] {
 }
 
 // A held Trait, drawn like the site's Traits page cards (.trait-box), with
-// badges at the right of the name's bar: where it came from (the package of
-// a Background Trait pick), then its category
-function TraitCard({ held, places, draft }: { held: Held; places: string[]; draft: Draft }) {
+// the badges for where it came from (a package's choice) at the right of the
+// name's bar. Its category sits in its body, as a badge over the effect: the
+// sheet's sections already sort the cards by it. `onToggle` makes it an
+// accordion like the item cards, a chevron at the end of the name's bar
+// opening the body or closing the card back to that bar.
+function TraitCard({
+  held,
+  places,
+  open = true,
+  onToggle,
+}: {
+  held: Held;
+  places: string[];
+  draft?: Draft;
+  open?: boolean;
+  onToggle?: () => void;
+}) {
   const t = traitById.get(held.trait);
+  const name = traitName(held.trait);
+  const badges = sourceBadges(held);
   return (
-    <div className={`trait-box ${traitRegionClass(held.trait)}`}>
+    <div className={`trait-box ${traitRegionClass(held.trait)}${onToggle && !open ? " is-collapsed" : ""}`}>
       <div className="trait-name trait-name-with-chip">
         <span>
           <SettingIcon plane={t?.plane} />
-          {traitName(held.trait)}
+          {name}
           {t?.ranked || held.rank > 1 ? ` (${held.rank})` : ""}
         </span>
-        <span className="trait-name-chips">
-          {sourceBadges(held).map((b) => (
-            <Chip key={b}>{b}</Chip>
-          ))}
-          {t ? <Chip>{title(t.category)}</Chip> : <Chip tone="bad">not in content yet</Chip>}
-        </span>
+        {(badges.length > 0 || onToggle) && (
+          <span className="trait-name-chips">
+            {badges.map((b) => (
+              <Chip key={b}>{b}</Chip>
+            ))}
+            {onToggle && (
+              <button
+                type="button"
+                className="tools-item-icon tools-item-expand"
+                aria-label={`${open ? "Collapse" : "Expand"} ${name}`}
+                aria-expanded={open}
+                title={open ? "Collapse" : "Expand"}
+                onClick={onToggle}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 8" aria-hidden="true">
+                  <path d="M1 1.5l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                </svg>
+              </button>
+            )}
+          </span>
+        )}
       </div>
-      {t && <p className="effect">{t.effect}</p>}
-      {places.length > 0 && (
-        <p className="small">
-          <strong>{t?.choices.find((c) => c.from === "place")?.note ?? "Place"}:</strong> {places.join(", ")}
-        </p>
+      {open && (
+        <>
+          <div className="trait-card-badges">{t ? <Chip>{title(t.category)}</Chip> : <Chip tone="bad">not in content yet</Chip>}</div>
+          {t && <p className="effect">{t.effect}</p>}
+          {places.length > 0 && (
+            <p className="small">
+              <strong>{t?.choices.find((c) => c.from === "place")?.note ?? "Place"}:</strong> {places.join(", ")}
+            </p>
+          )}
+          <p className="muted small">From {held.sources.map(source).join(", ")}</p>
+        </>
       )}
-      <p className="muted small">From {held.sources.map(source).join(", ")}</p>
     </div>
   );
 }
@@ -203,11 +239,23 @@ export function Sheet({
   const skills = others.filter((h) => categoryOf(h) === "skill");
   const abilities = others.filter((h) => categoryOf(h) === "ability");
   const rest = others.filter((h) => categoryOf(h) !== "skill" && categoryOf(h) !== "ability");
-  const traitCards = (list: Held[]) => (
+  // Skills open to their full card from their chevrons, like
+  // the item cards; the rest show their name's bar alone
+  const [openSkills, setOpenSkills] = useState<Set<string>>(new Set());
+  const toggleSkill = (id: string) => {
+    const next = new Set(openSkills);
+    if (!next.delete(id)) next.add(id);
+    setOpenSkills(next);
+  };
+  const traitCards = (list: Held[], accordion = false) => (
     <ul className="sheet-traits">
       {list.map((h) => (
         <li key={h.trait}>
-          <TraitCard held={h} places={places(h.trait)} draft={draft} />
+          <TraitCard
+            held={h}
+            places={places(h.trait)}
+            {...(accordion ? { open: openSkills.has(h.trait), onToggle: () => toggleSkill(h.trait) } : {})}
+          />
         </li>
       ))}
     </ul>
@@ -422,7 +470,7 @@ export function Sheet({
                 {summary.picks.universal.banked + summary.picks.background.banked === 1 ? "pick" : "picks"} available
               </p>
             )}
-            {skills.length > 0 ? traitCards(skills) : <p className="empty">No Skills yet.</p>}
+            {skills.length > 0 ? traitCards(skills, true) : <p className="empty">No Skills yet.</p>}
           </div>
           {(rest.length > 0 || records.length > 0 || features.length > 0) && (
             <div className="c-sheet-box sheet-other">

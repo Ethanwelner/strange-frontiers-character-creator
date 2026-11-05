@@ -1489,9 +1489,23 @@
     }
   }
 
+  /* A closed Skill card keeps its own height in a row with an open one */
+  .sheet-traits > li:has(> .is-collapsed) {
+    align-self: start;
+  }
+
+  /* A closed Skill card on the sheet: its name's bar alone, rounded all round */
+  .trait-box.is-collapsed {
+    padding-bottom: 0;
+
+    > .trait-name {
+      border-radius: 10px;
+    }
+  }
+
   /* The sheet's Trait cards: the name at the left of the bar and, at the
-     right, where it came from (Kind, Origin...) and its category (Skill,
-     Language...) as badges */
+     right, the package it was chosen from (Origin, Profession or Past) as a
+     badge, and a Skill's chevron */
   .trait-name-with-chip {
     display: flex;
     align-items: center;
@@ -1501,6 +1515,13 @@
     > span:first-child {
       min-width: 0;
     }
+  }
+
+  /* A sheet Trait card's category, a badge at the top of its body */
+  .trait-card-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
   }
 
   .trait-name-chips {
