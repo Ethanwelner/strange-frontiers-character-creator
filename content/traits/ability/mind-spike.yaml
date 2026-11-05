@@ -1,0 +1,13 @@
+id: mind-spike
+name: "Mind Spike"
+status: placeholder
+plane: any
+summary: "Drives a spike of pain into a target's mind."
+tags: [magic, spell, mind, attack]
+category: ability
+ranked: true
+minStats: { magic: 3 }
+# On the Magic list: only a character with Magic Access can pick it.
+list: magic
+effect: "This character gains the Cast Mind Spike Action."
+action: "Cast Mind Spike: This character may spend 2 MP to Attack a target with a temporary weapon that has the following profile: (Ranged) (max range 30 m) (4 Psychic per Rank) (Attack Stat: Magic). Characters damaged by Cast Mind Spike gain the Flat-Footed Condition."

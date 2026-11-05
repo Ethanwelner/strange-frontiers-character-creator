@@ -1,0 +1,13 @@
+id: dispel-magic
+name: "Dispel Magic"
+status: placeholder
+plane: any
+summary: "Unravels enchantments."
+tags: [magic, spell, utility]
+category: ability
+ranked: true
+minStats: { magic: 3 }
+# On the Magic list: only a character with Magic Access can pick it.
+list: magic
+effect: "This character gains the Cast Dispel Magic Action."
+action: "Cast Dispel Magic: This character may spend 2 MP to reduce the Rank of one (Enchantment) Condition on a character or object within 10 m by 1 per Rank. A Condition reduced to Rank 0 ends, and one that isn't ranked ends outright."
