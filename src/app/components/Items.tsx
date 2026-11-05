@@ -318,10 +318,11 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                   </div>
                 )}
                 {stock && (
-                  <p className="tools-item-stock">
-                    {stock.summary}
-                    {details && <span className="tools-item-details"> {details}</span>}
-                  </p>
+                  <div className="tools-item-stock">
+                    {/* The flavor text, then the rules on their own line under it */}
+                    <p className="tools-item-flavor">{stock.summary}</p>
+                    {details && <p className="tools-item-details">{details}</p>}
+                  </div>
                 )}
                 <div className="tools-item-note-line">
                   {/* Note, a pen and its label, opening the notes field at its right */}

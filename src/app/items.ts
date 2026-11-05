@@ -68,7 +68,7 @@ export function itemDetails(stock: StockItem): string {
     stock.resistances ? `resists ${stock.resistances}` : "",
     stock.modifiers ?? "",
     stock.uses ?? "",
-    stock.slot ? `${stock.slot} slot` : "",
+    stock.slot ? `Slot: ${stock.slot}` : "",
     stock.value !== undefined && stock.currency ? `${stock.value.toLocaleString("en-US")} ${stock.currency}` : "",
   ]
     .filter(Boolean)
@@ -78,9 +78,9 @@ export function itemDetails(stock: StockItem): string {
 
 // What a stock item's damage and resistance badges and its cost badge leave
 // out of the line: how it Attacks, its Defense and other modifiers, its uses
-// and the slot it takes, like "Melee, 2 m, Grace / Power; Hands slot".
+// and the slot it takes, like "Melee Attack; Max Range: 2 m; Attack Stat: Grace / Power; Slot: Off Hand".
 export function itemUses(stock: StockItem): string {
-  const line = [attackText(stock), stock.modifiers ?? "", stock.uses ?? "", stock.slot ? `${stock.slot} slot` : ""].filter(Boolean).join("; ");
+  const line = [attackText(stock), stock.modifiers ?? "", stock.uses ?? "", stock.slot ? `Slot: ${stock.slot}` : ""].filter(Boolean).join("; ");
   return line.charAt(0).toUpperCase() + line.slice(1);
 }
 
