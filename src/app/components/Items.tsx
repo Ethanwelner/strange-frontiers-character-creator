@@ -7,6 +7,9 @@ import { parseDamage } from "../../engine/damage.js";
 import { parseResistances } from "../resistances.js";
 import type { Item as StockItem } from "../../schema/index.js";
 
+// How itemBadges words a weapon's reach, like "Max Range: 30 m"
+const MAX_RANGE = "Max Range: ";
+
 // Stock items to suggest while typing a name, money left out until wealth has rules.
 const STOCK = content.items.filter((i) => i.category !== "currency").sort((a, b) => a.name.localeCompare(b.name));
 
@@ -275,12 +278,22 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                   </button>
                 )}
                 {/* Under the top line, the badges it leaves out: the cost, how
-                    it Attacks, and the slot it takes */}
+                    it Attacks, and the slot it takes. Max Range leads with an
+                    arc in a tan circle, like the damage badges' icons. */}
                 {badges.length > 0 && (
                   <div className="tools-item-badges">
-                    {badges.map((b) => (
-                      <Chip key={b}>{b}</Chip>
-                    ))}
+                    {badges.map((b) =>
+                      b.startsWith(MAX_RANGE) ? (
+                        <span key={b} className="chip tools-item-stat" title="Max Range">
+                          <span className="tools-item-stat-lead">
+                            <Icon name="range" label="Max Range" />
+                          </span>
+                          <span className="tools-item-stat-value">{b.slice(MAX_RANGE.length)}</span>
+                        </span>
+                      ) : (
+                        <Chip key={b}>{b}</Chip>
+                      ),
+                    )}
                   </div>
                 )}
                 {/* Edit's fields where the top line shows them: how many at the left, then
