@@ -247,6 +247,8 @@ export function Sheet({
     if (!next.delete(id)) next.add(id);
     setOpenSkills(next);
   };
+  // The universal and background picks left, together
+  const banked = summary ? summary.picks.universal.banked + summary.picks.background.banked : 0;
   const traitCards = (list: Held[], accordion = false) => (
     <ul className="sheet-traits">
       {list.map((h) => (
@@ -454,22 +456,17 @@ export function Sheet({
             {abilities.length > 0 ? traitCards(abilities) : <p className="empty">No Abilities yet.</p>}
           </div>
           <div className="c-sheet-box sheet-skills">
-            {traitsAction ? (
-              // The action at the right end of the Skills title's line
-              <div className="sheet-traits-head">
-                <h3 className="subhead">Skills</h3>
-                {traitsAction}
-              </div>
-            ) : (
+            {/* The Skills title, then along its line the picks the character
+                still has to spend on Traits, then the action, if any */}
+            <div className="sheet-traits-head">
               <h3 className="subhead">Skills</h3>
-            )}
-            {/* The picks the character still has to spend on Traits */}
-            {summary && (
-              <p className="sheet-banked">
-                {summary.picks.universal.banked} universal and {summary.picks.background.banked} background{" "}
-                {summary.picks.universal.banked + summary.picks.background.banked === 1 ? "pick" : "picks"} available
-              </p>
-            )}
+              {summary && (
+                <span className="sheet-banked">
+                  {banked} {banked === 1 ? "pick" : "picks"} available
+                </span>
+              )}
+              {traitsAction}
+            </div>
             {skills.length > 0 ? traitCards(skills, true) : <p className="empty">No Skills yet.</p>}
           </div>
           {(rest.length > 0 || records.length > 0 || features.length > 0) && (
