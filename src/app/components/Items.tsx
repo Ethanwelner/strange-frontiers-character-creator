@@ -255,16 +255,13 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
             );
             const edit = editing.has(item.id);
             // The top line, the same open or closed: Equip, the name, then its
-            // damage, resistances and category at the right, and the chevron
+            // damage, range and resistances at the right, and the chevron. The
+            // category waits in the open card, so it doesn't crowd the line.
             const topLine = (
               <div className="tools-item-row tools-item-summary">
                 {equip}
                 <span className="tools-item-title">{item.name}</span>
                 {stock && <ItemStats stock={stock} />}
-                {/* The category as a badge, like a Trait card's */}
-                <span className="tools-item-category">
-                  <Chip>{title(item.category)}</Chip>
-                </span>
                 {expand}
               </div>
             );
@@ -301,15 +298,15 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                     </svg>
                   </button>
                 )}
-                {/* Under the top line, the badges it leaves out: the cost, how
-                    it Attacks, and the slot it takes (Max Range and Area of Effect are on the top line) */}
-                {badges.length > 0 && (
-                  <div className="tools-item-badges">
-                    {badges.map((b) => (
-                      <Chip key={b}>{b}</Chip>
-                    ))}
-                  </div>
-                )}
+                {/* Under the top line, the badges it leaves out: the category,
+                    like a Trait card's, then the cost, how it Attacks, and the
+                    slot it takes (Max Range and Area of Effect are on the top line) */}
+                <div className="tools-item-badges">
+                  <Chip>{title(item.category)}</Chip>
+                  {badges.map((b) => (
+                    <Chip key={b}>{b}</Chip>
+                  ))}
+                </div>
                 {/* Edit's fields where the top line shows them: how many at the left, then
                     the name and the category */}
                 {edit && (

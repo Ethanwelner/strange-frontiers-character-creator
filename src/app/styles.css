@@ -3079,13 +3079,18 @@
     }
   }
 
-  /* A closed card's line: the count, then the name, then at the right the
-     category's badge, Equip, and the chevron that opens it */
+  /* A card's top line: Equip, the name, then at the right its stat badges
+     and the chevron that opens it. With no badges, the chevron takes the
+     right on its own. */
   .tools-item-summary {
     flex-wrap: nowrap;
 
-    .tools-item-category {
+    > .tools-item-icon.tools-item-expand {
       margin-left: auto;
+    }
+
+    > .tools-item-stats ~ .tools-item-icon.tools-item-expand {
+      margin-left: 4px;
     }
   }
 
@@ -3118,11 +3123,6 @@
     font-size: 0.8125rem;
     font-weight: 600;
     line-height: 1;
-  }
-
-  .tools-item-category {
-    flex: none;
-    display: flex;
   }
 
   /* The category's badge in the card's olive: the fields' dark olive with
@@ -3221,10 +3221,6 @@
       flex-wrap: nowrap;
     }
 
-    .tools-item-stats + .tools-item-category {
-      margin-left: 0;
-    }
-
     /* In a narrow card they drop to their own line under it instead */
     @container item (width < 420px) {
       flex-wrap: wrap;
@@ -3236,7 +3232,7 @@
         margin: 2px 0 0;
       }
 
-      .tools-item-stats + .tools-item-category {
+      > .tools-item-stats ~ .tools-item-icon.tools-item-expand {
         margin-left: auto;
       }
     }
