@@ -105,12 +105,14 @@ function MaybeStack({ stack, top, children }: { stack: boolean; top?: ReactNode;
 }
 
 // Movement, from the Kind, in a small box of its own to the left of the
-// resistances, a running figure in place of a label.
+// resistances, under its ruled title, a running figure before the number.
 // The number runs into its unit, "10m", with the m in the titles' Bebas.
 export function MovementBox({ movement }: { movement?: string }) {
   const parts = movement?.match(/^\s*([\d.]+)\s*([a-z]+)\s*$/i);
   return (
-    <div className="c-sheet-box sheet-movement" title="Movement">
+    <div className="c-sheet-box sheet-movement">
+      <h3 className="subhead">Movement</h3>
+      <div className="sheet-movement-value" title="Movement">
       <Icon name="person-running" label="Movement" />
       <span className="num">
         {parts ? (
@@ -122,6 +124,7 @@ export function MovementBox({ movement }: { movement?: string }) {
           (movement ?? "–")
         )}
       </span>
+      </div>
     </div>
   );
 }
