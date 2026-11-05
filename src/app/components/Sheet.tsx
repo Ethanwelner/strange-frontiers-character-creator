@@ -102,14 +102,17 @@ function TraitCard({
       </div>
       {open && (
         <>
-          <div className="trait-card-badges">{t ? <Chip>{title(t.category)}</Chip> : <Chip tone="bad">not in content yet</Chip>}</div>
+          {/* The category, then where the Trait came from, on one line */}
+          <div className="trait-card-badges">
+            {t ? <Chip>{title(t.category)}</Chip> : <Chip tone="bad">not in content yet</Chip>}
+            <span className="muted small trait-card-from">From {held.sources.map(source).join(", ")}</span>
+          </div>
           {t && <p className="effect">{t.effect}</p>}
           {places.length > 0 && (
             <p className="small">
               <strong>{t?.choices.find((c) => c.from === "place")?.note ?? "Place"}:</strong> {places.join(", ")}
             </p>
           )}
-          <p className="muted small">From {held.sources.map(source).join(", ")}</p>
         </>
       )}
     </div>

@@ -1521,7 +1521,13 @@
   .trait-card-badges {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 4px;
+
+    /* Where the Trait came from, after the category badge */
+    > .trait-card-from {
+      margin: 0 0 0 4px;
+    }
   }
 
   .trait-name-chips {
@@ -2567,7 +2573,8 @@
      their left, only as wide as its longest name (up to 20rem) and as tall
      as the Traits' */
   /* The Knowledges, the Abilities and the Skills, each a box, stacked; side
-     by side once there's room, the Abilities and Skills first, then all
+     by side once there's room, the Abilities (twice as wide, so their cards
+     take two columns) and Skills first, then all
      three. Any other Traits take a line of their own under them. */
   .sheet-lower {
     display: flex;
@@ -2582,11 +2589,11 @@
 
     @container sheet (width >= 900px) {
       > .sheet-abilities {
-        flex: 1 1 0;
+        flex: 2 1 0;
       }
 
       > .sheet-skills {
-        flex: 2 1 0;
+        flex: 1 1 0;
       }
     }
 
@@ -3465,7 +3472,7 @@
      a link to its card */
   .knowledge-list {
     display: grid;
-    gap: 6px;
+    gap: 12px;
     list-style: none;
     padding: 0;
     margin: 0;
