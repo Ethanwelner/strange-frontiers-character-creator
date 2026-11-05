@@ -377,7 +377,7 @@ export function Sheet({
           )}
         </div>
 
-        {/* The Knowledges in their own box, to the left of the Skills and Abilities */}
+        {/* The Knowledges in their own box, first along the row */}
         <div className="sheet-lower">
           <div className="c-sheet-box sheet-side">
             <h3 className="subhead">Knowledges</h3>
@@ -400,67 +400,65 @@ export function Sheet({
               <p className="empty">None yet.</p>
             )}
           </div>
-          {/* Skills, Abilities and any other Traits, each in a box, stacked */}
-          <div className="sheet-traits-col">
-            <div className="c-sheet-box">
-              {traitsAction ? (
-                // The action at the right end of the Skills title's line
-                <div className="sheet-traits-head">
-                  <h3 className="subhead">Skills</h3>
-                  {traitsAction}
-                </div>
-              ) : (
-                <h3 className="subhead">Skills</h3>
-              )}
-              {/* The picks the character still has to spend on Traits */}
-              {summary && (
-                <p className="sheet-banked">
-                  {summary.picks.universal.banked} universal and {summary.picks.background.banked} background{" "}
-                  {summary.picks.universal.banked + summary.picks.background.banked === 1 ? "pick" : "picks"} available
-                </p>
-              )}
-              {skills.length > 0 ? traitCards(skills) : <p className="empty">No Skills yet.</p>}
-            </div>
-            <div className="c-sheet-box">
-              <h3 className="subhead">Abilities</h3>
-              {abilities.length > 0 ? traitCards(abilities) : <p className="empty">No Abilities yet.</p>}
-            </div>
-            {(rest.length > 0 || records.length > 0 || features.length > 0) && (
-              <div className="c-sheet-box">
-                {rest.length > 0 && (
-                  <>
-                    <h3 className="subhead">Other Traits</h3>
-                    {traitCards(rest)}
-                  </>
-                )}
-                {records.length > 0 && (
-                  <>
-                    <h3 className="subhead">Contacts</h3>
-                    <ul className="features">
-                      {records.map((r, i) => (
-                        <li key={i}>
-                          <strong>{r.text}</strong> <span className="muted">({r.noun} from {r.from})</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </>
-                )}
-
-                {features.length > 0 && (
-                  <>
-                    <h3 className="subhead">Features</h3>
-                    <ul className="features">
-                      {features.map((f, i) => (
-                        <li key={i}>
-                          <strong>{f.name}</strong> <span className="muted">({f.from})</span>. {f.description}
-                        </li>
-                      ))}
-                    </ul>
-                  </>
-                )}
-              </div>
-            )}
+          {/* Then the Abilities, the Skills, and any other Traits, each in a box along the row */}
+          <div className="c-sheet-box sheet-abilities">
+            <h3 className="subhead">Abilities</h3>
+            {abilities.length > 0 ? traitCards(abilities) : <p className="empty">No Abilities yet.</p>}
           </div>
+          <div className="c-sheet-box sheet-skills">
+            {traitsAction ? (
+              // The action at the right end of the Skills title's line
+              <div className="sheet-traits-head">
+                <h3 className="subhead">Skills</h3>
+                {traitsAction}
+              </div>
+            ) : (
+              <h3 className="subhead">Skills</h3>
+            )}
+            {/* The picks the character still has to spend on Traits */}
+            {summary && (
+              <p className="sheet-banked">
+                {summary.picks.universal.banked} universal and {summary.picks.background.banked} background{" "}
+                {summary.picks.universal.banked + summary.picks.background.banked === 1 ? "pick" : "picks"} available
+              </p>
+            )}
+            {skills.length > 0 ? traitCards(skills) : <p className="empty">No Skills yet.</p>}
+          </div>
+          {(rest.length > 0 || records.length > 0 || features.length > 0) && (
+            <div className="c-sheet-box sheet-other">
+              {rest.length > 0 && (
+                <>
+                  <h3 className="subhead">Other Traits</h3>
+                  {traitCards(rest)}
+                </>
+              )}
+              {records.length > 0 && (
+                <>
+                  <h3 className="subhead">Contacts</h3>
+                  <ul className="features">
+                    {records.map((r, i) => (
+                      <li key={i}>
+                        <strong>{r.text}</strong> <span className="muted">({r.noun} from {r.from})</span>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+
+              {features.length > 0 && (
+                <>
+                  <h3 className="subhead">Features</h3>
+                  <ul className="features">
+                    {features.map((f, i) => (
+                      <li key={i}>
+                        <strong>{f.name}</strong> <span className="muted">({f.from})</span>. {f.description}
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </div>
+          )}
         </div>
       </div>
       {opened && <TraitModal held={opened} places={places(opened.trait)} draft={draft} onClose={closeModal} />}

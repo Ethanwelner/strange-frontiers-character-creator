@@ -2531,23 +2531,36 @@
      1400px wide, where the Items join the stats' row (.sheet-row); then to
      their left, only as wide as its longest name (up to 20rem) and as tall
      as the Traits' */
+  /* The Knowledges, the Abilities and the Skills, each a box, stacked; side
+     by side once there's room, the Abilities and Skills first, then all
+     three. Any other Traits take a line of their own under them. */
   .sheet-lower {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
+    display: flex;
+    flex-wrap: wrap;
     align-items: stretch;
     gap: 20px;
 
-    @container sheet (width >= 1400px) {
-      grid-template-columns: fit-content(20rem) minmax(0, 1fr);
+    > * {
+      flex: 1 1 100%;
+      min-width: 0;
     }
-  }
 
-  /* Skills, Abilities and any other Traits, a box each, down the Knowledges' right */
-  .sheet-traits-col {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    min-width: 0;
+    @container sheet (width >= 900px) {
+      > .sheet-abilities {
+        flex: 1 1 0;
+      }
+
+      > .sheet-skills {
+        flex: 2 1 0;
+      }
+    }
+
+    @container sheet (width >= 1400px) {
+      > .sheet-side {
+        flex: 0 1 auto;
+        max-width: 20rem;
+      }
+    }
   }
 
   /* The stats', Conditions' and Items' boxes, as tall as each other on a
@@ -2622,7 +2635,7 @@
      sections tighten: 1rem between its boxes and inside each one (an
      Item's card keeps its own) */
   @media (max-width: 1399px) {
-    :is(.c-sheet, .sheet-row, .sheet-row > .sheet-side-stack, .sheet-side-row, .sheet-lower, .sheet-move-row, .sheet-traits-col) {
+    :is(.c-sheet, .sheet-row, .sheet-row > .sheet-side-stack, .sheet-side-row, .sheet-lower, .sheet-move-row) {
       gap: 1rem;
     }
 
