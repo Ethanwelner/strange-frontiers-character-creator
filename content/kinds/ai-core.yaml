@@ -16,6 +16,8 @@ features:
 # A machine mind: harmed by EMP, usually immune to Death damage.
 grants:
   - trait: mechanical
+# Cybernetic Intelligence (tagged ai-core) is on its Background Trait list.
+traitAccess: [ai-core]
 # Bodiless keeps Physical at 0, so the maximums total 120, not Human's 135.
 maxTotal: 120
 stats:

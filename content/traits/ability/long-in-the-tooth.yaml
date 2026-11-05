@@ -1,0 +1,14 @@
+id: long-in-the-tooth
+name: "Long in the Tooth"
+status: draft
+plane: isekai
+summary: "An Orc who has kept their teeth long into age."
+tags: [orcs, age, prestige, social]
+category: ability
+background: true
+minStats: { power: 10, endurance: 5, demeanor: 5 }
+rpRequirement: "Middle Aged or Older"
+# The Condition comes with it, for as long as it's held.
+grants:
+  - trait: long-toothed
+effect: "This character has kept their teeth through a long life and has the Long Toothed Condition."
