@@ -104,6 +104,28 @@ function MaybeStack({ stack, top, children }: { stack: boolean; top?: ReactNode;
   );
 }
 
+// Movement, from the Kind, in a small box of its own to the left of HP, VP
+// and SP's, a running figure in place of a label. Player Tools' tracker uses it too.
+// The number runs into its unit, "10m", with the m in the titles' Bebas.
+export function MovementBox({ movement }: { movement?: string }) {
+  const parts = movement?.match(/^\s*([\d.]+)\s*([a-z]+)\s*$/i);
+  return (
+    <div className="c-sheet-box sheet-movement" title="Movement">
+      <Icon name="person-running" label="Movement" />
+      <span className="num">
+        {parts ? (
+          <>
+            {parts[1]}
+            <span className="sheet-movement-unit">{parts[2]}</span>
+          </>
+        ) : (
+          (movement ?? "–")
+        )}
+      </span>
+    </div>
+  );
+}
+
 // Laid out like the sample character sheet on the site's Mechanics tab.
 // Knowledges and Languages are a list of links, as on that sheet, each opening
 // its card; the other Traits are cards.
@@ -248,8 +270,10 @@ export function Sheet({
           </div>
         )}
 
-        {/* HP, VP, SP and MP at full, like Player Tools' tracker without its controls or bars, then Movement */}
+        {/* Movement, then HP, VP, SP and MP at full, like Player Tools' tracker without its controls or bars */}
         {!embedded && (
+          <div className="sheet-move-row">
+          <MovementBox movement={summary?.movement} />
           <div className="c-sheet-box">
             <div className="tools-resources sheet-resources">
               {resources.map((r) => (
@@ -265,16 +289,8 @@ export function Sheet({
                   </div>
                 </div>
               ))}
-              {/* Movement, from the Kind, after them */}
-              <div className="tools-resource">
-                <div className="tools-resource-value">
-                  <strong className="tools-resource-name resource-move" title="Movement">
-                    MOVE
-                  </strong>
-                  <span className="num">{summary?.movement ?? "–"}</span>
-                </div>
-              </div>
             </div>
+          </div>
           </div>
         )}
 

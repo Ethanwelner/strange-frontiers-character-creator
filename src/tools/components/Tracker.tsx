@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState, type ReactNode } from "react";
 import type { BuildResult } from "../../engine/validate.js";
 import { content } from "../../app/content.js";
 import type { Draft } from "../../app/draft.js";
-import { RESOURCE_NAMES, Sheet } from "../../app/components/Sheet.js";
+import { MovementBox, RESOURCE_NAMES, Sheet } from "../../app/components/Sheet.js";
 import { StatsStep } from "../../app/components/StatsStep.js";
 import { TraitsStep } from "../../app/components/TraitsStep.js";
 import { Icon, LorePopup, Sign } from "../../app/components/ui.js";
@@ -87,7 +87,9 @@ export function Tracker({
       {/* The character's header, in a box like the sheet's head */}
       <div className="c-sheet-box tools-head">{head}</div>
 
-      {/* HP, VP, SP and MP, in their own box under it, then Movement */}
+      {/* Movement, then HP, VP, SP and MP, in their own boxes under it */}
+      <div className="sheet-move-row">
+      <MovementBox movement={result.summary?.movement} />
       <div className="c-sheet-box tools-resources-box">
         <div className="tools-resources">
           {shown.map((r) => {
@@ -146,16 +148,8 @@ export function Tracker({
               </div>
             );
           })}
-          {/* Movement, from the Kind: nothing to spend, so just the value */}
-          <div className="tools-resource">
-            <div className="tools-resource-value">
-              <strong className="tools-resource-name resource-move" title="Movement">
-                MOVE
-              </strong>
-              <span className="num">{result.summary?.movement ?? "–"}</span>
-            </div>
-          </div>
         </div>
+      </div>
       </div>
 
       {/* The rest of the character sheet: stats, Conditions and Items, then Knowledges beside the Traits */}
