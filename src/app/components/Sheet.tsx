@@ -111,7 +111,7 @@ export function MovementBox({ movement }: { movement?: string }) {
   const parts = movement?.match(/^\s*([\d.]+)\s*([a-z]+)\s*$/i);
   return (
     <div className="c-sheet-box sheet-movement">
-      <h3 className="subhead">Movement</h3>
+      <h3 className="subhead" title="Movement">Move</h3>
       <div className="sheet-movement-value" title="Movement">
       <Icon name="person-running" label="Movement" />
       <span className="num">
