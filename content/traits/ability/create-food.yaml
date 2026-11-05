@@ -1,0 +1,14 @@
+id: create-food
+name: "Create Food"
+status: draft
+plane: any
+summary: "Conjures plain, filling food."
+tags: [magic, spell, survival]
+category: ability
+ranked: true
+minStats: { magic: 2 }
+prerequisites: [create-water]
+# On the Magic list: only a character with Magic Access can pick it.
+list: magic
+effect: "This character gains the Cast Create Food Action."
+action: "Cast Create Food: This character may spend 1 MP to create enough plain, edible food to feed one person for a day per Rank, at a target location within 3 m."

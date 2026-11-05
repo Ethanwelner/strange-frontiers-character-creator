@@ -1,0 +1,12 @@
+id: magical-flight-condition
+name: "Magical Flight"
+status: placeholder
+plane: any
+summary: "Flying by magic."
+tags: [magic, enchantment, movement]
+category: condition
+types: [enchantment]
+ranked: true
+conveyed: true
+temporary: "Lasts ten minutes per Rank."
+effect: "This character can fly, moving its full Movement distance through the air in any direction. If this Condition ends while the character is in the air, they fall."

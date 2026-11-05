@@ -1,0 +1,12 @@
+id: featherfall-condition
+name: "Featherfall"
+status: placeholder
+plane: any
+summary: "Falling as gently as a feather."
+tags: [magic, enchantment, movement]
+category: condition
+types: [enchantment]
+ranked: true
+conveyed: true
+temporary: "Lasts one minute per Rank."
+effect: "This character falls slowly, about 20 m per Round, and takes no damage from falling."

@@ -1,0 +1,13 @@
+id: hasted
+name: "Hasted"
+status: placeholder
+plane: any
+summary: "Moving at a blur."
+tags: [magic, enchantment, combat, movement]
+category: condition
+types: [enchantment]
+ranked: true
+conveyed: true
+temporary: "Lasts one minute."
+effect: "This character has +1 Priority per Rank and +5 m Movement per Rank."
+modifiers: "Priority +1 per Rank"

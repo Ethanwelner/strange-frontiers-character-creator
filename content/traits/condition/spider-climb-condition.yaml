@@ -1,0 +1,12 @@
+id: spider-climb-condition
+name: "Spider Climb"
+status: placeholder
+plane: any
+summary: "Clings to walls and ceilings like a spider."
+tags: [magic, enchantment, movement]
+category: condition
+types: [enchantment]
+ranked: true
+conveyed: true
+temporary: "Lasts two hours per Rank."
+effect: "This character may move its full Movement distance over vertical obstacles and along walls and ceilings."

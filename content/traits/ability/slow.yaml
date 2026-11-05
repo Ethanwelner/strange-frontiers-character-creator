@@ -1,0 +1,13 @@
+id: slow
+name: "Slow"
+status: placeholder
+plane: any
+summary: "Drags a target's movements to a crawl."
+tags: [magic, spell, hindrance]
+category: ability
+ranked: true
+minStats: { magic: 3 }
+# On the Magic list: only a character with Magic Access can pick it.
+list: magic
+effect: "This character gains the Cast Slow Action."
+action: "Cast Slow: This character may spend 2 MP to give the Slowed Condition to a character within 20 m. The Condition's Rank is equal to the caster's Slow Rank."

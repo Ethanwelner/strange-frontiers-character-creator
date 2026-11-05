@@ -1,0 +1,13 @@
+id: rooted
+name: "Rooted"
+status: placeholder
+plane: any
+summary: "Held fast by grasping earth."
+tags: [magic, hazard, combat]
+category: condition
+types: [hazard]
+ranked: true
+conveyed: true
+temporary: "Lasts until its Rank reaches 0, or one minute at most."
+effect: "This character can't Move."
+action: "The character may spend their Action pulling free to reduce the Rank of Rooted by 1. A character loses Rooted at Rank 0."

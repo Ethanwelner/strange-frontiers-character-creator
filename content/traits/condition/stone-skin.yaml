@@ -6,6 +6,7 @@ summary: "Skin hardened to stone by an enchantment."
 tags: [enchantment, resistance, site-example]
 category: condition
 types: [enchantment]
+ranked: true
 conveyed: true
-temporary: "This trait lasts a number of minutes equal to the caster's Rank in this ability"
+temporary: "Lasts one hour per Rank."
 effect: "This character gains Rank *3 resistance to all Physical damage types."

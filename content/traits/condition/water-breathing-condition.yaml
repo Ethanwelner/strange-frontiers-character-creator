@@ -1,0 +1,12 @@
+id: water-breathing-condition
+name: "Water Breathing"
+status: placeholder
+plane: any
+summary: "Able to breathe underwater."
+tags: [magic, enchantment, water]
+category: condition
+types: [enchantment]
+ranked: true
+conveyed: true
+temporary: "Lasts one hour per Rank."
+effect: "This character can breathe water as easily as air."

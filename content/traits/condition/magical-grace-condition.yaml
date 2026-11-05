@@ -1,0 +1,12 @@
+id: magical-grace-condition
+name: "Magical Grace"
+status: placeholder
+plane: any
+summary: "Grace boosted by magic."
+tags: [magic, enchantment]
+category: condition
+types: [enchantment]
+ranked: true
+conveyed: true
+temporary: "Lasts one hour per Rank."
+effect: "This character gains +3 Grace per Rank."

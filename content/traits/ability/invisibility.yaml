@@ -1,0 +1,13 @@
+id: invisibility
+name: "Invisibility"
+status: placeholder
+plane: any
+summary: "Hides a character from sight."
+tags: [magic, spell, stealth, enchantment]
+category: ability
+ranked: true
+minStats: { magic: 4 }
+# On the Magic list: only a character with Magic Access can pick it.
+list: magic
+effect: "This character gains the Cast Invisibility Action."
+action: "Cast Invisibility: This character may spend 2 MP to give the Invisible Condition to a character within 3 m. The Condition's Rank is equal to the caster's Invisibility Rank."

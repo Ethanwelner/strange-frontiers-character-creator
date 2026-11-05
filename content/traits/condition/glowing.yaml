@@ -1,0 +1,12 @@
+id: glowing
+name: "Glowing"
+status: placeholder
+plane: any
+summary: "Shining with magical light."
+tags: [magic, enchantment, light]
+category: condition
+types: [enchantment]
+ranked: true
+conveyed: true
+temporary: "Lasts one hour per Rank."
+effect: "This object sheds bright light in a 5 m radius per Rank."

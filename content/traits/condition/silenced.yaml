@@ -1,0 +1,12 @@
+id: silenced
+name: "Silenced"
+status: placeholder
+plane: any
+summary: "Inside a bubble of perfect silence."
+tags: [magic, enchantment, stealth]
+category: condition
+types: [enchantment]
+ranked: true
+conveyed: true
+temporary: "Lasts one minute per Rank, or until the character leaves the silenced area."
+effect: "This character can't make or hear any sound."

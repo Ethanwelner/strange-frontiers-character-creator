@@ -1,0 +1,12 @@
+id: elemental-ward-condition
+name: "Elemental Ward"
+status: placeholder
+plane: any
+summary: "Shielded against one elemental damage type."
+tags: [magic, enchantment, resistance]
+category: condition
+types: [enchantment]
+ranked: true
+conveyed: true
+temporary: "Lasts one hour per Rank."
+effect: "This character resists one damage type chosen by the caster: Heat, Cold, Electrical or EMP. The amount is Rank *3."
