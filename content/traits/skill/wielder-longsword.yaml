@@ -7,4 +7,5 @@ tags: [combat, melee, swords, site-example]
 category: skill
 ranked: true
 minStats: { grace: 4, power: 4, endurance: 4 }
-effect: "This character is capable of performing the basic tasks of maintaining a Longsword without a skill check. Rank *5 added to skill check rolls involving a Longsword."
+effect: "This character is capable of performing the basic tasks of maintaining a Longsword without a skill check. Rank *5 added to skill check rolls involving a Longsword. +3 to Attack Rolls made with a Longsword, at any Rank."
+modifiers: "Attack Rolls +3 (Longsword)"

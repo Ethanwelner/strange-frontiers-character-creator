@@ -7,4 +7,5 @@ tags: [combat, firearms, military]
 category: skill
 ranked: true
 minStats: { grace: 3, intuition: 3, power: 2 }
-effect: "This character is capable of performing the basic tasks of maintaining a Rifle without a skill check. Rank *5 added to skill check rolls involving a Rifle."
+effect: "This character is capable of performing the basic tasks of maintaining a Rifle without a skill check. Rank *5 added to skill check rolls involving a Rifle. +3 to Attack Rolls made with a Rifle, at any Rank."
+modifiers: "Attack Rolls +3 (Rifle)"

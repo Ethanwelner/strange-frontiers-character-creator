@@ -7,4 +7,5 @@ tags: [combat, melee, swords]
 category: skill
 ranked: true
 minStats: { power: 5, endurance: 4, grace: 3 }
-effect: "This character is capable of performing the basic tasks of maintaining a Greatsword without a skill check. Rank *5 added to skill check rolls involving a Greatsword."
+effect: "This character is capable of performing the basic tasks of maintaining a Greatsword without a skill check. Rank *5 added to skill check rolls involving a Greatsword. +3 to Attack Rolls made with a Greatsword, at any Rank."
+modifiers: "Attack Rolls +3 (Greatsword)"

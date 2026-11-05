@@ -7,4 +7,5 @@ tags: [combat, firearms, heavy weapons, military]
 category: skill
 ranked: true
 minStats: { power: 3, endurance: 3, grace: 2 }
-effect: "This character is capable of performing the basic tasks of maintaining a Machine Gun without a skill check. Rank *5 added to skill check rolls involving a Machine Gun."
+effect: "This character is capable of performing the basic tasks of maintaining a Machine Gun without a skill check. Rank *5 added to skill check rolls involving a Machine Gun. +3 to Attack Rolls made with a Machine Gun, at any Rank."
+modifiers: "Attack Rolls +3 (Machine Gun)"
