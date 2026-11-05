@@ -194,7 +194,17 @@ export function Sheet({
     observer.observe(el);
     return () => observer.disconnect();
   }, [hasResistances]);
-  const resistancesBox = resistancesSlot && <div className="c-sheet-box sheet-resistances">{resistancesSlot}</div>;
+  // Movement, from the Kind, in a small box of its own to the left of the
+  // resistances, a running figure in place of a label
+  const resistancesBox = resistancesSlot && (
+    <div className="sheet-move-row">
+      <div className="c-sheet-box sheet-movement" title="Movement">
+        <Icon name="person-running" label="Movement" />
+        <span className="num">{summary?.movement ?? "–"}</span>
+      </div>
+      <div className="c-sheet-box sheet-resistances">{resistancesSlot}</div>
+    </div>
+  );
   const opened = held.find((h) => h.trait === open);
   // The Kind's features sit at the top, under HP, VP and SP; the packages' at the bottom.
   const features = [
@@ -248,7 +258,7 @@ export function Sheet({
           </div>
         )}
 
-        {/* HP, VP, SP and MP at full, like Player Tools' tracker without its controls or bars, then Movement */}
+        {/* HP, VP, SP and MP at full, like Player Tools' tracker without its controls or bars */}
         {!embedded && (
           <div className="c-sheet-box">
             <div className="tools-resources sheet-resources">
@@ -265,15 +275,6 @@ export function Sheet({
                   </div>
                 </div>
               ))}
-              {/* Movement, from the Kind, after them */}
-              <div className="tools-resource">
-                <div className="tools-resource-value">
-                  <strong className="tools-resource-name resource-move" title="Movement">
-                    MOVE
-                  </strong>
-                  <span className="num">{summary?.movement ?? "–"}</span>
-                </div>
-              </div>
             </div>
           </div>
         )}
