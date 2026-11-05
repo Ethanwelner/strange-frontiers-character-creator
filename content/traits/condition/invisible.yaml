@@ -1,0 +1,12 @@
+id: invisible
+name: "Invisible"
+status: placeholder
+plane: any
+summary: "Unseen by ordinary eyes."
+tags: [magic, enchantment, stealth]
+category: condition
+types: [enchantment]
+ranked: true
+conveyed: true
+temporary: "Lasts ten minutes per Rank, or until the character Attacks."
+effect: "This character can't be seen by normal sight and can request Advantage on rolls to hide, sneak, or slip past others unnoticed. Characters Attacking it have -2 to Attack Rolls per Rank."

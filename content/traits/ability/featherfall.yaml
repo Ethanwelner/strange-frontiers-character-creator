@@ -1,0 +1,13 @@
+id: featherfall
+name: "Featherfall"
+status: placeholder
+plane: any
+summary: "Slows a fall to a gentle drift."
+tags: [magic, spell, air, enchantment, movement]
+category: ability
+ranked: true
+minStats: { magic: 1 }
+# On the Magic list: only a character with Magic Access can pick it.
+list: magic
+effect: "This character gains the Cast Featherfall Action."
+action: "Cast Featherfall: This character may spend 1 MP to give the Featherfall Condition to a character within 10 m. The Condition's Rank is equal to the caster's Featherfall Rank."

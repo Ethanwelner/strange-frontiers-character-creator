@@ -1,0 +1,13 @@
+id: hoarfrost
+name: "Hoarfrost"
+status: draft
+plane: any
+summary: "Blasts an area with killing frost."
+tags: [magic, spell, cold, attack]
+category: ability
+ranked: true
+minStats: { magic: 3 }
+# On the Magic list: only a character with Magic Access can pick it.
+list: magic
+effect: "This character gains the Cast Hoarfrost Action."
+action: "Cast Hoarfrost: This character may spend 2 MP to Attack a target with a temporary weapon that has the following profile: (Ranged) (max range 40 m) (5 Cold per Rank) (Attack Stat: Magic) (area of effect: 3 m per Rank)."

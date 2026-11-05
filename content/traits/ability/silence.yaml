@@ -1,0 +1,13 @@
+id: silence
+name: "Silence"
+status: placeholder
+plane: any
+summary: "Smothers all sound in an area."
+tags: [magic, spell, stealth]
+category: ability
+ranked: true
+minStats: { magic: 2 }
+# On the Magic list: only a character with Magic Access can pick it.
+list: magic
+effect: "This character gains the Cast Silence Action."
+action: "Cast Silence: This character may spend 2 MP to choose a point within 30 m. Every character within 3 m per Rank of that point gains the Silenced Condition, at a Rank equal to the caster's Silence Rank."

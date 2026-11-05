@@ -1,0 +1,12 @@
+id: magical-strength-condition
+name: "Magical Strength"
+status: draft
+plane: any
+summary: "Power boosted by magic."
+tags: [magic, enchantment]
+category: condition
+types: [enchantment]
+ranked: true
+conveyed: true
+temporary: "Lasts one hour per Rank."
+effect: "This character gains +3 Power per Rank."

@@ -1,0 +1,13 @@
+id: entangle
+name: "Entangle"
+status: placeholder
+plane: any
+summary: "Makes the ground grab at the legs of everyone nearby."
+tags: [magic, spell, earth, hindrance]
+category: ability
+ranked: true
+minStats: { magic: 3 }
+# On the Magic list: only a character with Magic Access can pick it.
+list: magic
+effect: "This character gains the Cast Entangle Action."
+action: "Cast Entangle: This character may spend 2 MP to choose a point within 20 m. Every character within 2 m per Rank of that point gains the Rooted Condition, at a Rank equal to the caster's Entangle Rank."

@@ -1,0 +1,13 @@
+id: burning
+name: "Burning"
+status: draft
+plane: any
+summary: "On fire."
+tags: [fire, hazard]
+category: condition
+types: [hazard]
+ranked: true
+conveyed: true
+temporary: "Lasts 3 combat Rounds or 30 seconds."
+effect: "This character suffers 3 Heat damage per Rank each Round, or every 10 seconds outside of combat."
+action: "The character may spend their Action to reduce the Rank of Burning by 1. A character loses Burning at Rank 0."

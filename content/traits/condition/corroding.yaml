@@ -1,0 +1,13 @@
+id: corroding
+name: "Corroding"
+status: placeholder
+plane: any
+summary: "Being eaten away by acid."
+tags: [acid, hazard]
+category: condition
+types: [hazard]
+ranked: true
+conveyed: true
+temporary: "Lasts 3 combat Rounds or 30 seconds."
+effect: "This character or object suffers 2 Acidic/Corrosive damage per Rank each Round, or every 10 seconds outside of combat."
+action: "The character may spend their Action washing or scraping off the acid to reduce the Rank of Corroding by 1. A character loses Corroding at Rank 0."

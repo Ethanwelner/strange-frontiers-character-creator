@@ -26,7 +26,7 @@ const hunter: ConceptInput = {
   profession: "guild-hunter",
   past: "noble-household",
   focus: ["grace", "power"],
-  traits: ["survivalist", "vigilance", "fireball", "monsters-of-isekai", "streetwise", "haggler"],
+  traits: ["survivalist", "vigilance", "moonbeam", "monsters-of-isekai", "streetwise", "haggler"],
 };
 
 describe("allocateLevels", () => {
@@ -86,7 +86,7 @@ describe("solveConcept", () => {
     expect(validateBuild(s.build, content, L1).ok).toBe(true);
     expect(s.taken).toEqual(["survivalist", "vigilance", "streetwise", "haggler"]);
     expect(s.skipped).toEqual([
-      { trait: "fireball", reason: 'Trait "fireball" doesn\'t exist' },
+      { trait: "moonbeam", reason: 'Trait "moonbeam" doesn\'t exist' },
       { trait: "monsters-of-isekai", reason: "already held (from profession guild-hunter)" },
     ]);
     expect(s.build.traits.slice(0, 4).map((t) => t.trait)).toEqual(s.taken);

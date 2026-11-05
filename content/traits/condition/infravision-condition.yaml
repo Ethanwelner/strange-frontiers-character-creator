@@ -1,0 +1,12 @@
+id: infravision-condition
+name: "Infravision"
+status: draft
+plane: any
+summary: "Sees through walls and smoke."
+tags: [magic, enchantment, senses]
+category: condition
+types: [enchantment]
+ranked: true
+conveyed: true
+temporary: "Lasts one hour per Rank."
+effect: "This character can see and perceive characters and objects within 15 m per Rank, even through barriers, obscuring clouds, obstacles, or other impediments. This does not affect line of sight drawn through solid objects for the purposes of Attacks."

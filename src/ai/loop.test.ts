@@ -196,23 +196,23 @@ describe("describeCharacter", () => {
 
   it("rejects unknown packages in code, and skips unknown Traits", async () => {
     const invented = { ...goblinoid, profession: "pirate-king" };
-    const fixed = { ...goblinoid, traits: ["fireball", ...goblinoid.traits!] };
+    const fixed = { ...goblinoid, traits: ["moonbeam", ...goblinoid.traits!] };
     const { create, calls } = script(message([submit(invented)]), message([submit(fixed)]));
     const result = await describeCharacter({ description: "A goblin mage.", content, provider: noReview(anthropicProvider(create)), campaign: L1 });
 
     expect(bodyOf(calls[1]!).unknownIds).toEqual([expect.objectContaining({ path: "profession" })]);
     expect(result.status).toBe("accepted");
-    expect(result.build!.traits!.map((t) => t.trait)).not.toContain("fireball");
+    expect(result.build!.traits!.map((t) => t.trait)).not.toContain("moonbeam");
   });
 
   it("sends a legal build back once when the Trait list runs out", async () => {
-    const thin = { ...goblinoid, traits: ["tinkerer", "fireball"] };
+    const thin = { ...goblinoid, traits: ["tinkerer", "moonbeam"] };
     const { create, calls } = script(message([submit(thin)]), message([submit(thin)]));
     const result = await describeCharacter({ description: "A goblin mage.", content, provider: noReview(anthropicProvider(create)), campaign: L1 });
     const body = bodyOf(calls[1]!);
     expect(body.picks).toMatch(/^The engine built a legal character, but \d+ of \d+ universal picks are unspent: the Trait list ran out\./);
     expect(body.taken).toEqual(["tinkerer"]);
-    expect(body.skipped).toEqual([{ trait: "fireball", reason: `Trait "fireball" doesn't exist` }]);
+    expect(body.skipped).toEqual([{ trait: "moonbeam", reason: `Trait "moonbeam" doesn't exist` }]);
     // Only once: the second submit is accepted as it is.
     expect(result.status).toBe("accepted");
     expect(result.turns).toBe(2);

@@ -1,0 +1,12 @@
+id: magical-endurance-condition
+name: "Magical Endurance"
+status: placeholder
+plane: any
+summary: "Endurance boosted by magic."
+tags: [magic, enchantment]
+category: condition
+types: [enchantment]
+ranked: true
+conveyed: true
+temporary: "Lasts one hour per Rank."
+effect: "This character gains +3 Endurance per Rank."

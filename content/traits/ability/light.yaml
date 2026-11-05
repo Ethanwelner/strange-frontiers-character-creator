@@ -1,0 +1,13 @@
+id: light
+name: "Light"
+status: placeholder
+plane: any
+summary: "Makes an object shine like a lamp."
+tags: [magic, spell, light, utility]
+category: ability
+ranked: true
+minStats: { magic: 1 }
+# On the Magic list: only a character with Magic Access can pick it.
+list: magic
+effect: "This character gains the Cast Light Action."
+action: "Cast Light: This character may spend 1 MP to give the Glowing Condition to an object within 3 m. The Condition's Rank is equal to the caster's Light Rank."
