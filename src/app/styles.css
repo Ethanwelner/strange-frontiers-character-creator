@@ -1994,6 +1994,12 @@
     margin-top: 0;
   }
 
+  /* The ruled titles (Resistances, Knowledges, Traits) at 20px, like the
+     stat groups', Conditions' and Items' */
+  .c-sheet .subhead {
+    font-size: 20px;
+  }
+
   /* The picks left to spend, a line under the Traits title */
   .sheet-banked {
     margin: 0 0 16px;
