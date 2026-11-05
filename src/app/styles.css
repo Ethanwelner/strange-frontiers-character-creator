@@ -2398,11 +2398,6 @@
     margin: 0;
   }
 
-  .tools-line-stack {
-    flex-direction: column;
-    gap: 8px;
-  }
-
   .tools-line {
     display: flex;
     flex-direction: column;
