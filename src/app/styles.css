@@ -3641,6 +3641,12 @@
     font-size: 0.9rem;
   }
 
+  /* The Action a Trait grants, under its effect, set off by a rule at its left */
+  .trait-action {
+    padding-left: 10px;
+    border-left: 2px solid var(--portfolio-medium-gray);
+  }
+
   /* Below 1300px the tabs share a narrower hero column with the character box,
      so they tighten and drop their step numbers to stay on one row. */
   @media (min-width: 992px) and (max-width: 1299.98px) {

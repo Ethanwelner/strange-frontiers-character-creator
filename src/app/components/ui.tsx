@@ -148,6 +148,24 @@ export function LorePopup({ label, onClose, children, className = "" }: { label:
   );
 }
 
+// The Action a Trait grants, like Fireball's "Cast Fireball: This character
+// may spend 2 MP...", its name in bold
+export function TraitAction({ action }: { action?: string }) {
+  if (!action) return null;
+  const colon = action.indexOf(": ");
+  return (
+    <p className="effect trait-action">
+      {colon > 0 ? (
+        <>
+          <strong>{action.slice(0, colon)}:</strong> {action.slice(colon + 2)}
+        </>
+      ) : (
+        action
+      )}
+    </p>
+  );
+}
+
 export function Chip(props: { children: ReactNode; tone?: "accent" | "muted" | "bad" }) {
   return <span className={`chip${props.tone ? ` chip-${props.tone}` : ""}`}>{props.children}</span>;
 }

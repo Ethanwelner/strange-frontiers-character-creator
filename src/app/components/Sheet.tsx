@@ -9,7 +9,7 @@ import type { HeldCondition } from "../conditions.js";
 import { CharacterLine } from "./CharacterLine.js";
 import { Conditions } from "./Conditions.js";
 import { Items } from "./Items.js";
-import { askerName, baseStats, Chip, CoreLine, DescriptionBox, Icon, LorePopup, NameField, Portrait, SettingIcon, StatLine, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
+import { askerName, baseStats, Chip, CoreLine, DescriptionBox, Icon, LorePopup, NameField, Portrait, SettingIcon, StatLine, StepHeader, title, TraitAction, traitName, traitRegionClass } from "./ui.js";
 
 // Each resource's full name, shown on hover, as in Player Tools
 export const RESOURCE_NAMES = { hp: "Hit Points", vp: "Vibe Points", sp: "Savvy Points", mp: "Mana Points" } as const;
@@ -108,6 +108,7 @@ function TraitCard({
             <span className="muted small trait-card-from">From {held.sources.map(source).join(", ")}</span>
           </div>
           {t && <p className="effect">{t.effect}</p>}
+          <TraitAction action={t?.action} />
           {places.length > 0 && (
             <p className="small">
               <strong>{t?.choices.find((c) => c.from === "place")?.note ?? "Place"}:</strong> {places.join(", ")}
@@ -242,13 +243,14 @@ export function Sheet({
   const skills = others.filter((h) => categoryOf(h) === "skill");
   const abilities = others.filter((h) => categoryOf(h) === "ability");
   const rest = others.filter((h) => categoryOf(h) !== "skill" && categoryOf(h) !== "ability");
-  // Skills open to their full card from their chevrons, like
-  // the item cards; the rest show their name's bar alone
-  const [openSkills, setOpenSkills] = useState<Set<string>>(new Set());
-  const toggleSkill = (id: string) => {
-    const next = new Set(openSkills);
+  // Skills and Abilities open to their full card (the badge, where it came
+  // from, the effect and any Action it grants) from their chevrons, like
+  // the item cards; closed, they show their name's bar alone
+  const [openCards, setOpenCards] = useState<Set<string>>(new Set());
+  const toggleCard = (id: string) => {
+    const next = new Set(openCards);
     if (!next.delete(id)) next.add(id);
-    setOpenSkills(next);
+    setOpenCards(next);
   };
   // The universal and background picks left, together
   const banked = summary ? summary.picks.universal.banked + summary.picks.background.banked : 0;
@@ -259,7 +261,7 @@ export function Sheet({
           <TraitCard
             held={h}
             places={places(h.trait)}
-            {...(accordion ? { open: openSkills.has(h.trait), onToggle: () => toggleSkill(h.trait) } : {})}
+            {...(accordion ? { open: openCards.has(h.trait), onToggle: () => toggleCard(h.trait) } : {})}
           />
         </li>
       ))}
@@ -456,7 +458,7 @@ export function Sheet({
           {/* Then the Abilities, the Skills, and any other Traits, each in a box along the row */}
           <div className="c-sheet-box sheet-abilities">
             <h3 className="subhead">Abilities</h3>
-            {abilities.length > 0 ? traitCards(abilities) : <p className="empty">No Abilities yet.</p>}
+            {abilities.length > 0 ? traitCards(abilities, true) : <p className="empty">No Abilities yet.</p>}
           </div>
           <div className="c-sheet-box sheet-skills">
             {/* The Skills title, then along its line the picks the character
