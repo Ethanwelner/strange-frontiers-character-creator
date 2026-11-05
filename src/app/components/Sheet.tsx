@@ -9,7 +9,7 @@ import type { HeldCondition } from "../conditions.js";
 import { CharacterLine } from "./CharacterLine.js";
 import { Conditions } from "./Conditions.js";
 import { Items } from "./Items.js";
-import { askerName, baseStats, Chip, CoreLine, DescriptionBox, Icon, LorePopup, NameField, Portrait, SettingIcon, StatLine, StepHeader, title, traitName, traitRegionClass } from "./ui.js";
+import { askerName, baseStats, Chip, CoreLine, DescriptionBox, Icon, LorePopup, NameField, Portrait, SettingIcon, StatLine, StepHeader, title, TraitAction, traitName, traitRegionClass } from "./ui.js";
 
 // Each resource's full name, shown on hover, as in Player Tools
 export const RESOURCE_NAMES = { hp: "Hit Points", vp: "Vibe Points", sp: "Savvy Points", mp: "Mana Points" } as const;
@@ -60,18 +60,22 @@ function TraitCard({
   places,
   open = true,
   onToggle,
+  keepEffect = false,
 }: {
   held: Held;
   places: string[];
   draft?: Draft;
   open?: boolean;
   onToggle?: () => void;
+  // An Ability's effect stays in view while closed; only its badge, where it
+  // came from and the Action it grants fold away.
+  keepEffect?: boolean;
 }) {
   const t = traitById.get(held.trait);
   const name = traitName(held.trait);
   const badges = sourceBadges(held);
   return (
-    <div className={`trait-box ${traitRegionClass(held.trait)}${onToggle && !open ? " is-collapsed" : ""}`}>
+    <div className={`trait-box ${traitRegionClass(held.trait)}${onToggle && !open && !keepEffect ? " is-collapsed" : ""}`}>
       <div className="trait-name trait-name-with-chip">
         <span>
           <SettingIcon plane={t?.plane} />
@@ -100,16 +104,21 @@ function TraitCard({
           </span>
         )}
       </div>
+      {keepEffect && t && <p className="effect">{t.effect}</p>}
       {open && (
         <>
-          <div className="trait-card-badges">{t ? <Chip>{title(t.category)}</Chip> : <Chip tone="bad">not in content yet</Chip>}</div>
-          {t && <p className="effect">{t.effect}</p>}
+          {/* The category, then where the Trait came from, on one line */}
+          <div className="trait-card-badges">
+            {t ? <Chip>{title(t.category)}</Chip> : <Chip tone="bad">not in content yet</Chip>}
+            <span className="muted small trait-card-from">From {held.sources.map(source).join(", ")}</span>
+          </div>
+          {!keepEffect && t && <p className="effect">{t.effect}</p>}
+          <TraitAction action={t?.action} />
           {places.length > 0 && (
             <p className="small">
               <strong>{t?.choices.find((c) => c.from === "place")?.note ?? "Place"}:</strong> {places.join(", ")}
             </p>
           )}
-          <p className="muted small">From {held.sources.map(source).join(", ")}</p>
         </>
       )}
     </div>
@@ -239,24 +248,26 @@ export function Sheet({
   const skills = others.filter((h) => categoryOf(h) === "skill");
   const abilities = others.filter((h) => categoryOf(h) === "ability");
   const rest = others.filter((h) => categoryOf(h) !== "skill" && categoryOf(h) !== "ability");
-  // Skills open to their full card from their chevrons, like
-  // the item cards; the rest show their name's bar alone
-  const [openSkills, setOpenSkills] = useState<Set<string>>(new Set());
-  const toggleSkill = (id: string) => {
-    const next = new Set(openSkills);
+  // Skills and Abilities open from their chevrons, like the item cards.
+  // Closed, a Skill shows its name's bar alone and an Ability its name and
+  // effect; open, both add the badge, where it came from and any Action.
+  const [openCards, setOpenCards] = useState<Set<string>>(new Set());
+  const toggleCard = (id: string) => {
+    const next = new Set(openCards);
     if (!next.delete(id)) next.add(id);
-    setOpenSkills(next);
+    setOpenCards(next);
   };
   // The universal and background picks left, together
   const banked = summary ? summary.picks.universal.banked + summary.picks.background.banked : 0;
-  const traitCards = (list: Held[], accordion = false) => (
+  const traitCards = (list: Held[], accordion = false, keepEffect = false) => (
     <ul className="sheet-traits">
       {list.map((h) => (
         <li key={h.trait}>
           <TraitCard
             held={h}
             places={places(h.trait)}
-            {...(accordion ? { open: openSkills.has(h.trait), onToggle: () => toggleSkill(h.trait) } : {})}
+            {...(accordion ? { open: openCards.has(h.trait), onToggle: () => toggleCard(h.trait) } : {})}
+            keepEffect={keepEffect}
           />
         </li>
       ))}
@@ -453,7 +464,7 @@ export function Sheet({
           {/* Then the Abilities, the Skills, and any other Traits, each in a box along the row */}
           <div className="c-sheet-box sheet-abilities">
             <h3 className="subhead">Abilities</h3>
-            {abilities.length > 0 ? traitCards(abilities) : <p className="empty">No Abilities yet.</p>}
+            {abilities.length > 0 ? traitCards(abilities, true, true) : <p className="empty">No Abilities yet.</p>}
           </div>
           <div className="c-sheet-box sheet-skills">
             {/* The Skills title, then along its line the picks the character
