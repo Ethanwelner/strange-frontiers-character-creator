@@ -1,0 +1,13 @@
+id: frightened
+name: "Frightened"
+status: placeholder
+plane: any
+summary: "Filled with dread."
+tags: [magic, enchantment, mind]
+category: condition
+types: [enchantment]
+ranked: true
+conveyed: true
+temporary: "Lasts 1 combat Round per Rank."
+effect: "This character has -1 to Attack Rolls per Rank and can't willingly Move closer to the source of its fear."
+modifiers: "Attack Rolls -1 per Rank"

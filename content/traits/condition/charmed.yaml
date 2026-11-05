@@ -1,0 +1,12 @@
+id: charmed
+name: "Charmed"
+status: placeholder
+plane: any
+summary: "Sees the caster as a trusted friend."
+tags: [magic, enchantment, mind, social]
+category: condition
+types: [enchantment]
+ranked: true
+conveyed: true
+temporary: "Lasts ten minutes per Rank, or until the caster or their allies harm this character."
+effect: "This character regards the caster as a trusted friend and won't Attack them. The caster can request Advantage on Social rolls against this character."

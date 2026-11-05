@@ -1,0 +1,13 @@
+id: sleep
+name: "Sleep"
+status: placeholder
+plane: any
+summary: "Puts a target into a deep, sudden sleep."
+tags: [magic, spell, mind, hindrance]
+category: ability
+ranked: true
+minStats: { magic: 3 }
+# On the Magic list: only a character with Magic Access can pick it.
+list: magic
+effect: "This character gains the Cast Sleep Action."
+action: "Cast Sleep: This character may spend 2 MP to give the Asleep Condition to a character within 20 m. The Condition's Rank is equal to the caster's Sleep Rank."

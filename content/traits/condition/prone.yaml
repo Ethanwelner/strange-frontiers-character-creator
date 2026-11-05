@@ -1,0 +1,11 @@
+id: prone
+name: "Prone"
+status: placeholder
+plane: any
+summary: "Lying on the ground."
+tags: [combat]
+category: condition
+conveyed: true
+temporary: "Lost when the character stands up."
+effect: "This character is lying on the ground and has -1 Priority. Standing up takes half its Movement."
+modifiers: "Priority -1"

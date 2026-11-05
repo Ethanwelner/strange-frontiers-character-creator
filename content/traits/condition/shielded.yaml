@@ -1,0 +1,13 @@
+id: shielded
+name: "Shielded"
+status: placeholder
+plane: any
+summary: "Wrapped in a shimmering barrier."
+tags: [magic, enchantment, defense]
+category: condition
+types: [enchantment]
+ranked: true
+conveyed: true
+temporary: "Lasts 1 combat Round per Rank."
+effect: "This character has +2 Defense per Rank."
+modifiers: "Defense +2 per Rank"

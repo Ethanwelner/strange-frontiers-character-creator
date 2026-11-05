@@ -1,0 +1,13 @@
+id: blink
+name: "Blink"
+status: placeholder
+plane: any
+summary: "Steps through space to a nearby spot."
+tags: [magic, spell, movement, teleport]
+category: ability
+ranked: true
+minStats: { magic: 4 }
+# On the Magic list: only a character with Magic Access can pick it.
+list: magic
+effect: "This character gains the Cast Blink Action."
+action: "Cast Blink: This character may spend 2 MP to teleport, with anything they're carrying, to a point they can see within 10 m per Rank."
