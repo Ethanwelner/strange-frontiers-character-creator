@@ -36,47 +36,82 @@ function source(s: string) {
 type Held = NonNullable<BuildResult["summary"]>["traits"][number];
 
 // Where a held Trait came from, as badges: Origin, Profession or Past for a
-// Background Trait picked from that package's list. A Trait the Kind gives
-// isn't a Kind (Kinds are their own cards), and a package's own grants (a
-// Farmer's Teamster) get none.
-const PACKAGE_SLOTS = ["origin", "profession", "past"] as const;
-function sourceBadges(held: Held, draft: Draft): string[] {
-  const badges: string[] = [];
-  if (held.sources.includes("background pick")) {
-    for (const slot of PACKAGE_SLOTS) {
-      if (packageById.get(draft[slot] ?? "")?.backgroundTraits.includes(held.trait)) badges.push(title(slot));
-    }
+// Trait selected from that package's choices in the Background step. A
+// package's grants (a Knight's Wielder: Longsword) come with it rather than
+// being selected, and a Trait bought with a pick isn't one, even from a
+// package's Background list, so neither gets a badge; nor does the Kind's.
+function sourceBadges(held: Held): string[] {
+  const slots = new Set<string>();
+  for (const s of held.sources) {
+    const m = SOURCE.exec(s);
+    if (m && m[1] !== "kind" && m[3]) slots.add(m[1]!);
   }
-  return badges;
+  return ["origin", "profession", "past"].filter((slot) => slots.has(slot)).map(title);
 }
 
 // A held Trait, drawn like the site's Traits page cards (.trait-box), with
-// badges at the right of the name's bar: where it came from (the package of
-// a Background Trait pick), then its category
-function TraitCard({ held, places, draft }: { held: Held; places: string[]; draft: Draft }) {
+// the badges for where it came from (a package's choice) at the right of the
+// name's bar. Its category sits in its body, as a badge over the effect: the
+// sheet's sections already sort the cards by it. `onToggle` makes it an
+// accordion like the item cards, a chevron at the end of the name's bar
+// opening the body or closing the card back to that bar.
+function TraitCard({
+  held,
+  places,
+  open = true,
+  onToggle,
+}: {
+  held: Held;
+  places: string[];
+  draft?: Draft;
+  open?: boolean;
+  onToggle?: () => void;
+}) {
   const t = traitById.get(held.trait);
+  const name = traitName(held.trait);
+  const badges = sourceBadges(held);
   return (
-    <div className={`trait-box ${traitRegionClass(held.trait)}`}>
+    <div className={`trait-box ${traitRegionClass(held.trait)}${onToggle && !open ? " is-collapsed" : ""}`}>
       <div className="trait-name trait-name-with-chip">
         <span>
           <SettingIcon plane={t?.plane} />
-          {traitName(held.trait)}
+          {name}
           {t?.ranked || held.rank > 1 ? ` (${held.rank})` : ""}
         </span>
-        <span className="trait-name-chips">
-          {sourceBadges(held, draft).map((b) => (
-            <Chip key={b}>{b}</Chip>
-          ))}
-          {t ? <Chip>{title(t.category)}</Chip> : <Chip tone="bad">not in content yet</Chip>}
-        </span>
+        {(badges.length > 0 || onToggle) && (
+          <span className="trait-name-chips">
+            {badges.map((b) => (
+              <Chip key={b}>{b}</Chip>
+            ))}
+            {onToggle && (
+              <button
+                type="button"
+                className="tools-item-icon tools-item-expand"
+                aria-label={`${open ? "Collapse" : "Expand"} ${name}`}
+                aria-expanded={open}
+                title={open ? "Collapse" : "Expand"}
+                onClick={onToggle}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 8" aria-hidden="true">
+                  <path d="M1 1.5l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                </svg>
+              </button>
+            )}
+          </span>
+        )}
       </div>
-      {t && <p className="effect">{t.effect}</p>}
-      {places.length > 0 && (
-        <p className="small">
-          <strong>{t?.choices.find((c) => c.from === "place")?.note ?? "Place"}:</strong> {places.join(", ")}
-        </p>
+      {open && (
+        <>
+          <div className="trait-card-badges">{t ? <Chip>{title(t.category)}</Chip> : <Chip tone="bad">not in content yet</Chip>}</div>
+          {t && <p className="effect">{t.effect}</p>}
+          {places.length > 0 && (
+            <p className="small">
+              <strong>{t?.choices.find((c) => c.from === "place")?.note ?? "Place"}:</strong> {places.join(", ")}
+            </p>
+          )}
+          <p className="muted small">From {held.sources.map(source).join(", ")}</p>
+        </>
       )}
-      <p className="muted small">From {held.sources.map(source).join(", ")}</p>
     </div>
   );
 }
@@ -198,6 +233,35 @@ export function Sheet({
   // Knowledges, then Languages, as on the sample sheet
   const knowledges = [...held.filter((h) => isKnowledge(h) && !isLanguage(h)), ...held.filter(isLanguage)];
   const others = held.filter((h) => !isKnowledge(h));
+  // The other Traits in a box per category: Skills, then Abilities, then any
+  // left over (Circumstances and the like) in a box of their own
+  const categoryOf = (h: Held) => traitById.get(h.trait)?.category;
+  const skills = others.filter((h) => categoryOf(h) === "skill");
+  const abilities = others.filter((h) => categoryOf(h) === "ability");
+  const rest = others.filter((h) => categoryOf(h) !== "skill" && categoryOf(h) !== "ability");
+  // Skills open to their full card from their chevrons, like
+  // the item cards; the rest show their name's bar alone
+  const [openSkills, setOpenSkills] = useState<Set<string>>(new Set());
+  const toggleSkill = (id: string) => {
+    const next = new Set(openSkills);
+    if (!next.delete(id)) next.add(id);
+    setOpenSkills(next);
+  };
+  // The universal and background picks left, together
+  const banked = summary ? summary.picks.universal.banked + summary.picks.background.banked : 0;
+  const traitCards = (list: Held[], accordion = false) => (
+    <ul className="sheet-traits">
+      {list.map((h) => (
+        <li key={h.trait}>
+          <TraitCard
+            held={h}
+            places={places(h.trait)}
+            {...(accordion ? { open: openSkills.has(h.trait), onToggle: () => toggleSkill(h.trait) } : {})}
+          />
+        </li>
+      ))}
+    </ul>
+  );
   const [open, setOpen] = useState<string>();
   const closeModal = useCallback(() => setOpen(undefined), []);
   // Whether the Conditions and Items have wrapped under the stats, leaving a
@@ -363,7 +427,7 @@ export function Sheet({
           )}
         </div>
 
-        {/* The Knowledges in their own box, to the left of the Traits */}
+        {/* The Knowledges in their own box, first along the row */}
         <div className="sheet-lower">
           <div className="c-sheet-box sheet-side">
             <h3 className="subhead">Knowledges</h3>
@@ -386,61 +450,60 @@ export function Sheet({
               <p className="empty">None yet.</p>
             )}
           </div>
-          <div className="c-sheet-box">
-            {traitsAction ? (
-              // The action at the right end of the Traits title's line
-              <div className="sheet-traits-head">
-                <h3 className="subhead">Traits</h3>
-                {traitsAction}
-              </div>
-            ) : (
-              <h3 className="subhead">Traits</h3>
-            )}
-            {/* The picks the character still has to spend on Traits */}
-            {summary && (
-              <p className="sheet-banked">
-                {summary.picks.universal.banked} universal and {summary.picks.background.banked} background{" "}
-                {summary.picks.universal.banked + summary.picks.background.banked === 1 ? "pick" : "picks"} available
-              </p>
-            )}
-            {others.length > 0 ? (
-              <ul className="sheet-traits">
-                {others.map((h) => (
-                  <li key={h.trait}>
-                    <TraitCard held={h} places={places(h.trait)} draft={draft} />
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="empty">{held.length ? "No Traits besides Knowledges." : "No Traits yet."}</p>
-            )}
-
-            {records.length > 0 && (
-              <>
-                <h3 className="subhead">Contacts</h3>
-                <ul className="features">
-                  {records.map((r, i) => (
-                    <li key={i}>
-                      <strong>{r.text}</strong> <span className="muted">({r.noun} from {r.from})</span>
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-
-            {features.length > 0 && (
-              <>
-                <h3 className="subhead">Features</h3>
-                <ul className="features">
-                  {features.map((f, i) => (
-                    <li key={i}>
-                      <strong>{f.name}</strong> <span className="muted">({f.from})</span>. {f.description}
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
+          {/* Then the Abilities, the Skills, and any other Traits, each in a box along the row */}
+          <div className="c-sheet-box sheet-abilities">
+            <h3 className="subhead">Abilities</h3>
+            {abilities.length > 0 ? traitCards(abilities) : <p className="empty">No Abilities yet.</p>}
           </div>
+          <div className="c-sheet-box sheet-skills">
+            {/* The Skills title, then along its line the picks the character
+                still has to spend on Traits, then the action, if any */}
+            <div className="sheet-traits-head">
+              <h3 className="subhead">Skills</h3>
+              {summary && (
+                <span className="sheet-banked">
+                  {banked} {banked === 1 ? "pick" : "picks"} available
+                </span>
+              )}
+              {traitsAction}
+            </div>
+            {skills.length > 0 ? traitCards(skills, true) : <p className="empty">No Skills yet.</p>}
+          </div>
+          {(rest.length > 0 || records.length > 0 || features.length > 0) && (
+            <div className="c-sheet-box sheet-other">
+              {rest.length > 0 && (
+                <>
+                  <h3 className="subhead">Other Traits</h3>
+                  {traitCards(rest)}
+                </>
+              )}
+              {records.length > 0 && (
+                <>
+                  <h3 className="subhead">Contacts</h3>
+                  <ul className="features">
+                    {records.map((r, i) => (
+                      <li key={i}>
+                        <strong>{r.text}</strong> <span className="muted">({r.noun} from {r.from})</span>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+
+              {features.length > 0 && (
+                <>
+                  <h3 className="subhead">Features</h3>
+                  <ul className="features">
+                    {features.map((f, i) => (
+                      <li key={i}>
+                        <strong>{f.name}</strong> <span className="muted">({f.from})</span>. {f.description}
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </div>
+          )}
         </div>
       </div>
       {opened && <TraitModal held={opened} places={places(opened.trait)} draft={draft} onClose={closeModal} />}
