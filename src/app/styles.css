@@ -3250,7 +3250,7 @@
   }
 
   /* One badge holds each value, an icon then its number, 10px apart */
-  .tools-item .chip.tools-item-stat {
+  :is(.tools-item, .trait-action-stats) .chip.tools-item-stat {
     display: inline-flex;
     flex-wrap: wrap;
     align-items: center;
@@ -3273,7 +3273,7 @@
      olive with a dark olive bow, sword or shield, standing in for the
      badge's left edge. The badge rounds its left side to match, and the
      circle runs flush with its edge, top and bottom. */
-  .tools-item .chip.tools-item-stat:has(> .tools-item-stat-lead) {
+  :is(.tools-item, .trait-action-stats) .chip.tools-item-stat:has(> .tools-item-stat-lead) {
     flex-wrap: nowrap;
     padding-top: 0;
     padding-bottom: 0;
@@ -3640,6 +3640,15 @@
   .trait-action {
     padding-left: 10px;
     border-left: 2px solid var(--portfolio-medium-gray);
+
+    > p {
+      margin: 0;
+    }
+
+    /* A temporary weapon's badges, between the Action's lines */
+    > .trait-action-stats {
+      margin: 8px 0;
+    }
   }
 
   /* Below 1300px the tabs share a narrower hero column with the character box,

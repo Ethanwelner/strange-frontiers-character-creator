@@ -4,6 +4,8 @@ import { STAT_GROUPS, type StatBlock, type StatId } from "../../schema/index.js"
 import { kindById, packageById, traitById } from "../content.js";
 import { GENDERS, MAX_AGE, MAX_SIZE_LENGTH, type Draft, type Looks } from "../draft.js";
 import { toPortrait } from "../portrait.js";
+import { parseActionProfile } from "../actionProfile.js";
+import type { DamageType } from "../../engine/damage.js";
 
 export const GROUPS = Object.keys(STAT_GROUPS) as (keyof typeof STAT_GROUPS)[];
 // The core stats with focus stats: every one but Magic.
@@ -150,19 +152,68 @@ export function LorePopup({ label, onClose, children, className = "" }: { label:
 
 // The Action a Trait grants, like Fireball's "Cast Fireball: This character
 // may spend 2 MP...", its name in bold
-export function TraitAction({ action }: { action?: string }) {
+// A temporary weapon's profile, as an Action like Cast Fireball gives one,
+// shows as the item cards' badges: the damage, led by crosshairs for a
+// Ranged Attack or a sword for a Melee one, then its Max Range by an arc,
+// then its Attack Stat and Area of Effect. With the Trait's Rank, "per Rank"
+// amounts are worked out; without it (the Traits step), they say per Rank.
+export function TraitAction({ action, rank }: { action?: string; rank?: number }) {
   if (!action) return null;
   const colon = action.indexOf(": ");
+  const name = colon > 0 ? action.slice(0, colon) : undefined;
+  const text = colon > 0 ? action.slice(colon + 2) : action;
+  const profile = parseActionProfile(text);
+  if (!profile) {
+    return (
+      <p className="effect trait-action">
+        {name && <strong>{name}:</strong>} {text}
+      </p>
+    );
+  }
+  const times = (n: number, perRank: boolean) => (perRank && rank ? n * rank : n);
+  const perRankNote = !rank && (profile.damage.some((d) => d.perRank) || profile.areaOfEffect?.perRank);
+  const ranged = /ranged|thrown/i.test(profile.attackType ?? "");
   return (
-    <p className="effect trait-action">
-      {colon > 0 ? (
-        <>
-          <strong>{action.slice(0, colon)}:</strong> {action.slice(colon + 2)}
-        </>
-      ) : (
-        action
-      )}
-    </p>
+    <div className="effect trait-action">
+      <p>
+        {name && <strong>{name}:</strong>} {profile.before}
+      </p>
+      <div className="tools-item-stats trait-action-stats">
+        {profile.damage.length > 0 && (
+          <span className="chip tools-item-stat" title={ranged ? "Ranged damage" : "Melee damage"}>
+            <span className="tools-item-stat-lead">
+              <Icon name={ranged ? "crosshairs" : "sword"} label={ranged ? "Ranged damage" : "Melee damage"} />
+            </span>
+            {profile.damage.map((d) => (
+              <span key={d.type} className="tools-item-stat-value">
+                <Icon name={d.type === "Acidic/Corrosive" ? "acidic" : (d.type.toLowerCase() as Lowercase<Exclude<DamageType, "Acidic/Corrosive">>)} label={d.type} />
+                {times(d.amount, d.perRank)}
+              </span>
+            ))}
+          </span>
+        )}
+        {profile.maxRange && (
+          <span className="chip tools-item-stat" title="Max Range">
+            <span className="tools-item-stat-lead">
+              <Icon name="range" label="Max Range" />
+            </span>
+            <span className="tools-item-stat-value">{profile.maxRange}</span>
+          </span>
+        )}
+        {profile.attackType && <Chip>{profile.attackType} Attack</Chip>}
+        {profile.attackStat && <Chip>{profile.attackStat}</Chip>}
+        {profile.areaOfEffect && (
+          <Chip>
+            Area of Effect: {times(profile.areaOfEffect.amount, profile.areaOfEffect.perRank)} {profile.areaOfEffect.unit}
+          </Chip>
+        )}
+        {profile.other.map((o) => (
+          <Chip key={o}>{o}</Chip>
+        ))}
+        {perRankNote && <span className="muted small">Damage and area per Rank</span>}
+      </div>
+      {profile.after && <p>{profile.after}</p>}
+    </div>
   );
 }
 
