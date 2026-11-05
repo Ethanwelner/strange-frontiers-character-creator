@@ -48,6 +48,12 @@ A goblin girl from a merchant dynasty in Port Herminst who got into the licensed
 
 Expect: tatot-goblinoid
 
+## Goblinoid coastal school mage
+
+A goblin mage who went to prestigious school near the coast.
+
+Expect: tatot-goblinoid
+
 ## Goblinoid hedge witch
 
 Small goblinoid from a farming village by the King's Woods. Never had the money for the mage schools, so she learned magic from her grandmother: herbs, charms and things the licensed mages say are dangerous.

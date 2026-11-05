@@ -11,6 +11,7 @@
 //   npm run eval -- --provider anthropic --model claude-haiku-5-5
 //   npm run eval -- --trace               print each turn's tool calls
 //   npm run eval -- --turns 6             a different turn limit
+//   npm run eval -- --level 12            a campaign starting at another level
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { describeCharacter } from "../src/ai/loop.js";
 import { MISSING_KEY_MESSAGE, providerFor, settingsFromEnv } from "../src/server/describe.js";
@@ -35,6 +36,8 @@ const settings = settingsFromEnv(process.env);
 const providerFlag = flag("--provider");
 if (providerFlag) settings.provider = providerFlag === "anthropic" ? "anthropic" : "ollama";
 const turnsFlag = flag("--turns");
+const levelFlag = flag("--level");
+const campaign = levelFlag ? { startingLevel: Number(levelFlag) } : undefined;
 const maxTurns = turnsFlag ? Number(turnsFlag) : undefined;
 const trace = args.includes("--trace");
 if (trace) args.splice(args.indexOf("--trace"), 1);
@@ -100,7 +103,7 @@ for (const [i, p] of prompts.entries()) {
       ? (turn: number, calls: { name: string; input: unknown }[]) =>
           console.log(`\n  turn ${turn}: ${calls.map((c) => `${c.name} ${JSON.stringify(c.input).slice(0, 160)}`).join("\n          ") || "(no tool call)"}`)
       : undefined;
-    result = await describeCharacter({ description: p.description, content, provider, onTurn, maxTurns });
+    result = await describeCharacter({ description: p.description, content, provider, onTurn, maxTurns, campaign });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.log(`FAIL (error: ${message})`);
