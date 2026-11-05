@@ -7,5 +7,4 @@ tags: [shell, armor, natural, site-example]
 category: condition
 ranked: true
 background: true
-minStats: { endurance: 5 }
 effect: "This character possesses a hard natural shell that protects them from harm. Rank *3 added to this character's Blunt, Slashing, and Piercing resistances for attacks that hit its torso."
