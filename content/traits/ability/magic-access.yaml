@@ -2,10 +2,9 @@ id: magic-access
 name: "Magic Access"
 status: placeholder
 plane: any
-summary: "This character can use magic: they can level the Magic core stat and take Traits on the Magic list."
+summary: "This character can use magic: they can level the Magic core stat."
 tags: [magic, access]
 category: ability
 conveyed: true
 coreAccess: [magic]
-opensLists: [magic]
 effect: "This character can level up the Magic core stat."

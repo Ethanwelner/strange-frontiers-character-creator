@@ -48,15 +48,8 @@ const PICK_HELP: Record<PickKind, string> = {
   background: "Background picks take only Traits on this character's Background Trait list.",
 };
 
-// Who opens a Trait list, for its tab's help: "Magic Access".
-const openersOf = (list: string) =>
-  content.traits
-    .filter((t) => t.opensLists.includes(list))
-    .map((t) => t.name)
-    .join(" or ");
-
 export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom }: Props) {
-  // A pick type, or a Trait list the character has opened, like Magic
+  // A pick type, or a Trait list, like Magic
   const [chosen, setTab] = useState<TraitTab>("universal");
   const [query, setQuery] = useState("");
   // Categories whose boxes are unchecked; all of them show by default.
@@ -65,7 +58,7 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom }:
 
   const summary = result.summary;
   const lists = summary?.traitLists ?? [];
-  // A list's tab goes back to Universal if the character can't take from it any more.
+  // A list's tab goes back to Universal if the game no longer has that list.
   const tab: TraitTab = typeof chosen === "string" || lists.includes(chosen.list) ? chosen : "universal";
   const tabKey = typeof tab === "string" ? tab : `list:${tab.list}`;
   const options = useMemo(() => traitOptions(draft, content, campaign, tab), [draft, campaign, tabKey]);
@@ -129,7 +122,7 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom }:
               </button>
             );
           })}
-          {/* One tab per Trait list the character has opened, with how many of its Traits are taken */}
+          {/* One tab per Trait list, like Magic, with how many of its Traits are taken */}
           {lists.map((l) => {
             const active = typeof tab !== "string" && tab.list === l;
             const takenHere = new Set(draft.traits.filter((p) => traitById.get(p.trait)?.list === l).map((p) => p.trait)).size;
@@ -143,7 +136,7 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom }:
         <p className="hint">
           {typeof tab === "string"
             ? PICK_HELP[tab]
-            : `${title(tab.list)} Traits, open to this character through ${openersOf(tab.list)}. Background Traits here take Background picks; the rest take Universal picks.`}
+            : `Traits built on ${title(tab.list)}, or closely related to it. Any character can take one whose stat requirements they meet. Background Traits here take Background picks; the rest take Universal picks.`}
         </p>
 
         <div className="filters">

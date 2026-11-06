@@ -7,4 +7,6 @@ tags: [magic, artifacts, relics]
 category: knowledge
 ranked: true
 minStats: { memory: 3, intuition: 2 }
+# On the Magic list: its own tab on the Traits step, open to every character.
+list: magic
 effect: "This character has knowledge of magical artifacts and can be assumed to be familiar with famous relics, common enchanted items and the dangers of handling them."

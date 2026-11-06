@@ -67,7 +67,6 @@ export function contentIndex(content: Content): string {
       t.starterOnly ? "starter only" : "",
       t.conveyed ? "conveyed, packages only" : "",
       t.list ? `${t.list} list` : "",
-      t.opensLists.length ? `opens the ${t.opensLists.join(", ")} list` : "",
       t.grants.length ? `grants ${t.grants.map((g) => g.trait).join(", ")}` : "",
       t.prerequisites.length ? `needs ${t.prerequisites.join(", ")}` : "",
       t.prerequisiteTags.length ? `needs a Trait tagged ${t.prerequisiteTags.join(", ")}` : "",

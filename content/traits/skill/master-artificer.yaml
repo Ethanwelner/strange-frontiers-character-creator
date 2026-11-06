@@ -8,6 +8,6 @@ category: skill
 mastery: true
 minStats: { magic: 6, logic: 6, grace: 5, memory: 6 }
 prerequisites: [enchanting, rune-carving]
-# On the Magic list: only a character with Magic Access can pick it.
+# On the Magic list: its own tab on the Traits step, open to every character.
 list: magic
 effect: "This character can request Advantage on rolls relating to crafting magical artifacts and can design new enchantments of their own."

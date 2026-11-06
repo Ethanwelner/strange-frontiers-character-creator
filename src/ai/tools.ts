@@ -279,9 +279,8 @@ const traitInfo = (t: Trait) => ({
   starterOnly: t.starterOnly,
   conveyed: t.conveyed,
   choices: t.choices,
-  // The Trait list it's on (only a character holding an opener can take it), and the lists it opens
+  // The Trait list it's on, like Magic: a grouping, open to every character
   ...(t.list ? { list: t.list } : {}),
-  ...(t.opensLists.length ? { opensLists: t.opensLists } : {}),
 });
 
 export class ToolError extends Error {}

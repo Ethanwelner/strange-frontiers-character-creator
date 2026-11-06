@@ -87,15 +87,15 @@ export interface TraitOption {
   reasons: string[];
 }
 
-// A Traits step tab: a pick type, or a Trait list the build has opened, like
-// Magic, whose Traits each take the pick they need.
+// A Traits step tab: a pick type, or a Trait list, like Magic, whose Traits
+// each take the pick they need.
 export type TraitTab = PickKind | { list: string };
 
 // The Traits a tab offers, each tried against the engine. A pick type's tab
 // leaves out Traits on a list, which have their own tabs, and Traits the
 // engine says need the other kind of pick; it keeps the rest, with reasons
 // when the engine rejects them for anything else. A list's tab offers only
-// that list's Traits, and only once the build has opened it. A Trait's own
+// that list's Traits. A Trait's own
 // choices, like which language an Additional Language is, are answered on the
 // Choices step afterward, so they don't count against it. Undefined until the
 // build is complete enough for the engine to check.
@@ -106,7 +106,6 @@ export function traitOptions(draft: Draft, content: Content, campaign: Campaign,
   const held = new Map(base.summary.traits.map((h) => [h.trait, h.rank]));
   const options: TraitOption[] = [];
   const list = typeof tab === "string" ? undefined : tab.list;
-  if (list && !base.summary.traitLists.includes(list)) return [];
   for (const trait of content.traits) {
     if (trait.list !== list) continue;
     const pick: PickKind = typeof tab === "string" ? tab : trait.background ? "background" : "universal";

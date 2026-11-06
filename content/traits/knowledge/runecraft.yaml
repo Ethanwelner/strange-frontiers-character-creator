@@ -7,4 +7,6 @@ tags: [magic, runes, writing]
 category: knowledge
 ranked: true
 minStats: { memory: 4, intuition: 2 }
+# On the Magic list: its own tab on the Traits step, open to every character.
+list: magic
 effect: "This character has knowledge of runecraft and can be assumed to be familiar with the common runes of power, their meanings and their effects."

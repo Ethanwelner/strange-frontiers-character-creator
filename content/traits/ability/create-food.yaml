@@ -8,7 +8,7 @@ category: ability
 ranked: true
 minStats: { magic: 2 }
 prerequisites: [create-water]
-# On the Magic list: only a character with Magic Access can pick it.
+# On the Magic list: its own tab on the Traits step, open to every character.
 list: magic
 effect: "This character gains the Cast Create Food Action."
 action: "Cast Create Food: This character may spend 1 MP to create enough plain, edible food to feed one person for a day per Rank, at a target location within 3 m."

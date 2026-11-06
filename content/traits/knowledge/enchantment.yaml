@@ -7,4 +7,6 @@ tags: [magic, enchanting, theory]
 category: knowledge
 ranked: true
 minStats: { memory: 4, magic: 1 }
+# On the Magic list: its own tab on the Traits step, open to every character.
+list: magic
 effect: "This character has knowledge of enchantment and can be assumed to be familiar with how magic is bound into objects and what limits it."
