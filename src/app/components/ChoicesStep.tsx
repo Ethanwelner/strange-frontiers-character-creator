@@ -75,7 +75,7 @@ function Answer({ q, answer, onAnswer }: { q: ChoiceQuestion; answer: string[]; 
     onAnswer(next.filter((v) => v !== ""));
   };
 
-  // A Contact or Place is whatever the player says it is: kept as written.
+  // A Contact, Place or Quarry is whatever the player says it is: kept as written.
   if (noun) {
     const contact = q.from === "contact";
     return (
@@ -86,7 +86,7 @@ function Answer({ q, answer, onAnswer }: { q: ChoiceQuestion; answer: string[]; 
             key={i}
             value={v}
             label={`${q.name} ${noun} ${i + 1}`}
-            placeholder={contact ? undefined : "e.g. The Mende river and its delta"}
+            placeholder={contact ? undefined : q.from === "quarry" ? "e.g. Big game of the Corsine mountains" : "e.g. The Mende river and its delta"}
             onCommit={(text) => set(i, text)}
           />
         ))}

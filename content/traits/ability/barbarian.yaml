@@ -7,5 +7,5 @@ tags: [combat, melee, rage]
 category: ability
 ranked: true
 minStats: { power: 5, endurance: 5 }
-effect: "- This character gains the Rage Action.\n- Rank *5 added to Endurance checks to keep fighting while Injured."
-action: "Rage: As a Partial RP Action, this character flies into a rage until the end of the Incident or until they choose to stop. While raging, they add Rank *2 to the damage of their melee Attacks and Rank *1 to their Blunt Resistance, but they can't take the Defend Action or make Social or Mental rolls."
+effect: "- This character gains the Rage Action.\n- Rank *3 added to Endurance checks to keep fighting while Injured."
+action: "Rage: This character may spend 1 VP to gain the Rage Condition."

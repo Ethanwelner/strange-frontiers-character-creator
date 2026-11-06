@@ -8,6 +8,5 @@ category: ability
 ranked: true
 minStats: { grace: 4, intuition: 4, endurance: 3 }
 prerequisites: [hunter]
-effect: "- This character gains the Brace Action.\n- Rank *1 added to this character's Attack Rolls against monsters and extraplanar beings."
-modifiers: "Attack Rolls +1 per Rank (monsters and extraplanar beings)"
-action: "Brace: As their Action, this character readies a weapon against a monster or extraplanar being. If it Moves to within the weapon's reach before their next turn, they may immediately Attack it first."
+effect: "- Rank *1 added to this character's Attack Rolls against monsters and extraplanar beings.\n- +3 Defense against a creature this character has marked with Mark Quarry."
+modifiers: "Attack Rolls +1 per Rank (monsters and extraplanar beings), Defense +3 (against a marked quarry)"

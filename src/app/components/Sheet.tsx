@@ -1,5 +1,5 @@
 import { useCallback, useLayoutEffect, useRef, useState, type ReactNode } from "react";
-import { FREE_TEXT_POOLS, MP_PER_MAGIC, type BuildResult } from "../../engine/validate.js";
+import { FREE_TEXT_POOLS, isFreeTextPool, MP_PER_MAGIC, type BuildResult } from "../../engine/validate.js";
 import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { coreStatsShown } from "../check.js";
 import { content, kindById, packageById, traitById } from "../content.js";
@@ -116,7 +116,7 @@ function TraitCard({
           <TraitAction action={t?.action} rank={held.rank} />
           {places.length > 0 && (
             <p className="small">
-              <strong>{t?.choices.find((c) => c.from === "place")?.note ?? "Place"}:</strong> {places.join(", ")}
+              <strong>{t?.choices.find((c) => c.from !== "contact" && isFreeTextPool(c.from))?.note ?? "Place"}:</strong> {places.join(", ")}
             </p>
           )}
         </>
@@ -234,8 +234,9 @@ export function Sheet({
   const records = draft.choices.flatMap((c) =>
     c.from === "contact" ? c.traits.map((text) => ({ text, noun: FREE_TEXT_POOLS[c.from]!, from: askerName(c) })) : [],
   );
-  // Places go on their Trait's box, like "Which seas: the Mende coast".
-  const places = (trait: string) => draft.choices.filter((c) => c.trait === trait && c.from === "place").flatMap((c) => c.traits);
+  // Places and the like go on their Trait's box, like "Which seas: the Mende
+  // coast" or a Hunter's quarry. Contacts get their own list.
+  const places = (trait: string) => draft.choices.filter((c) => c.trait === trait && c.from !== "contact" && isFreeTextPool(c.from)).flatMap((c) => c.traits);
   const held = summary?.traits ?? [];
   const isKnowledge = (h: Held) => traitById.get(h.trait)?.category === "knowledge";
   const isLanguage = (h: Held) => !!traitById.get(h.trait)?.types.includes("language");
