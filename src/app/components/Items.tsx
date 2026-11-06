@@ -12,10 +12,11 @@ const MAX_RANGE = "Max Range: ";
 const AREA = "Area of Effect: ";
 
 // Stock items to suggest while typing a name, money left out until wealth has rules.
-// Natural weapons, like Fists or a Haymaker, come with the character or a
-// Trait rather than being picked up, so they aren't stock items.
+// Natural weapons a Trait grants, like a Haymaker, come with the Trait rather
+// than being picked up, so they aren't stock items. The universal ones every
+// character has, Fists and Kick, are, for a player who wants them listed.
 const STOCK = content.items
-  .filter((i) => i.category !== "currency" && !i.tags.includes("natural weapon"))
+  .filter((i) => i.category !== "currency" && (!i.tags.includes("natural weapon") || i.tags.includes("universal")))
   .sort((a, b) => a.name.localeCompare(b.name));
 
 // A stock item's damage and resistances as badges, in a closed card's line

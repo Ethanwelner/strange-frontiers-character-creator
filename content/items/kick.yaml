@@ -3,7 +3,7 @@ name: "Kick"
 status: draft
 plane: any
 summary: "A strong but basic kick."
-tags: [natural weapon, kick]
+tags: [natural weapon, kick, universal]
 type: weapon
 category: weapon
 damage: "1 Blunt + Power"

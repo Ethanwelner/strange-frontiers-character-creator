@@ -3,7 +3,7 @@ name: "Fists"
 status: draft
 plane: any
 summary: "Put up your dukes, we're running these hands."
-tags: [natural weapon, punch]
+tags: [natural weapon, punch, universal]
 type: weapon
 category: weapon
 damage: "1 Blunt + Power"
