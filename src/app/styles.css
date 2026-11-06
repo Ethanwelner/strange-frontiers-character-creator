@@ -2588,9 +2588,9 @@
 
   /* The Knowledges, the Abilities and the Skills, each a box: the
      Knowledges across the whole sheet first (their list in columns), then
-     the Abilities and Skills side by side once the sheet is 900px wide and
-     stacked below that. Any other Traits take a line of their own under
-     them. */
+     the Abilities and Skills side by side, sharing the width equally, once
+     the sheet is 900px wide, and stacked below that. Any other Traits take
+     a line of their own under them. */
   .sheet-lower,
   .sheet-pair {
     display: flex;
@@ -2604,23 +2604,9 @@
     }
   }
 
-  .sheet-pair {
-    container: sheet-pair / inline-size;
-  }
-
   @container sheet (width >= 900px) {
     .sheet-pair > * {
       flex: 1 1 0;
-    }
-
-    /* The Abilities and the Skills split their space equally, until the
-       Abilities, at twice the Skills' width, have room for two columns of
-       cards (two 256px cards, their gap and the box's padding: about
-       570px, two thirds of 876px less the gap) */
-    @container sheet-pair (width >= 876px) {
-      .sheet-pair > .sheet-abilities {
-        flex: 2 1 0;
-      }
     }
   }
 

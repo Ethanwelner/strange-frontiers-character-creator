@@ -465,8 +465,7 @@ export function Sheet({
             )}
           </div>
           {/* Then the Abilities, the Skills, and any other Traits, each in a box along the row */}
-          {/* The Abilities and the Skills share a box of their own, so they can split it
-              by its width (equally until the Abilities fit two columns) */}
+          {/* The Abilities and the Skills share a row of their own, split equally */}
           <div className="sheet-pair">
             <div className="c-sheet-box sheet-abilities">
               <h3 className="subhead">Abilities</h3>
