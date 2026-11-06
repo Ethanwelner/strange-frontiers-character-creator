@@ -2076,12 +2076,18 @@
     font-weight: 400;
   }
 
+  /* A core Stat's circle holds its icon; the number is in the title beside it */
   .stat-badge {
     flex-shrink: 0;
     width: 2.75rem;
     height: 2.75rem;
     padding: 0;
     line-height: 1;
+
+    .icon {
+      width: 1.6rem;
+      height: 1.6rem;
+    }
   }
 
   .sheet-head {

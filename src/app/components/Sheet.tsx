@@ -387,9 +387,11 @@ export function Sheet({
                   <div key={g} className={`sheet-group stat-group-${g}`}>
                     <div className="sheet-group-head">
                       <span className="stat-badge" title="Core Stat">
-                        {summary?.coreStats[g] ?? "–"}
+                        <Icon name={g} />
                       </span>
-                      <h4 className="rule">{title(g)}</h4>
+                      <h4 className="rule">
+                        {title(g)} - {summary?.coreStats[g] ?? "–"}
+                      </h4>
                     </div>
                     {/* Magic: a diamond per point, under its number */}
                     {!STAT_GROUPS[g].length && (
