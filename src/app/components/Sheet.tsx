@@ -465,23 +465,27 @@ export function Sheet({
             )}
           </div>
           {/* Then the Abilities, the Skills, and any other Traits, each in a box along the row */}
-          <div className="c-sheet-box sheet-abilities">
-            <h3 className="subhead">Abilities</h3>
-            {abilities.length > 0 ? traitCards(abilities, true, true) : <p className="empty">No Abilities yet.</p>}
-          </div>
-          <div className="c-sheet-box sheet-skills">
-            {/* The Skills title, then along its line the picks the character
-                still has to spend on Traits, then the action, if any */}
-            <div className="sheet-traits-head">
-              <h3 className="subhead">Skills</h3>
-              {summary && (
-                <span className="sheet-banked">
-                  {banked} {banked === 1 ? "pick" : "picks"} available
-                </span>
-              )}
-              {traitsAction}
+          {/* The Abilities and the Skills share a box of their own, so they can split it
+              by its width (equally until the Abilities fit two columns) */}
+          <div className="sheet-pair">
+            <div className="c-sheet-box sheet-abilities">
+              <h3 className="subhead">Abilities</h3>
+              {abilities.length > 0 ? traitCards(abilities, true, true) : <p className="empty">No Abilities yet.</p>}
             </div>
-            {skills.length > 0 ? traitCards(skills, true) : <p className="empty">No Skills yet.</p>}
+            <div className="c-sheet-box sheet-skills">
+              {/* The Skills title, then along its line the picks the character
+                  still has to spend on Traits, then the action, if any */}
+              <div className="sheet-traits-head">
+                <h3 className="subhead">Skills</h3>
+                {summary && (
+                  <span className="sheet-banked">
+                    {banked} {banked === 1 ? "pick" : "picks"} available
+                  </span>
+                )}
+                {traitsAction}
+              </div>
+              {skills.length > 0 ? traitCards(skills, true) : <p className="empty">No Skills yet.</p>}
+            </div>
           </div>
           {(rest.length > 0 || records.length > 0 || features.length > 0) && (
             <div className="c-sheet-box sheet-other">
