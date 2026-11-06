@@ -2872,6 +2872,18 @@
     .tools-add {
       margin: 0;
     }
+
+    /* Add item's stock dropdown and a custom item's name take the row's room */
+    .tools-add-stock,
+    .tools-add-name {
+      flex: 1 1 12rem;
+      min-width: 0;
+    }
+
+    /* Custom item's ruled title, between the two forms */
+    .tools-add-custom-head {
+      margin: 28px 0 16px;
+    }
   }
 
   /* The add row (Items' and Player Tools' Add a Condition), item notes, and

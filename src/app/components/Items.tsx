@@ -106,12 +106,16 @@ function ItemStats({ stock }: { stock: StockItem }) {
 // items know (content/items) adds that item, with its category, description
 // and details; anything else is what the player writes.
 export function Items({ items, onChange }: { items: Item[]; onChange: (items: Item[]) => void }) {
+  // Add item's popup: a stock item from the dropdown, with its count
+  const [stockId, setStockId] = useState("");
+  const [stockQty, setStockQty] = useState("1");
+  // ...or a custom item the player names and sorts
   const [name, setName] = useState("");
   const [qty, setQty] = useState("1");
   const [category, setCategory] = useState<ItemCategory>("gear");
   // Add item's popup, open or not
   const [adding, setAdding] = useState(false);
-  const listId = useId();
+  const stockSelectId = useId();
   // Items whose notes field the player opened or closed with the note
   // button; the rest show it only when they have notes.
   const [notesShown, setNotesShown] = useState<Map<string, boolean>>(new Map());
@@ -142,21 +146,27 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
 
   const update = (item: Item, change: Partial<Item>) => onChange(items.map((i) => (i === item ? { ...i, ...change } : i)));
   const remove = (item: Item) => onChange(items.filter((i) => i !== item));
-  const add = () => {
+  const countOf = (n: string) => Math.max(1, Math.round(Number(n)) || 1);
+  // A stock item from the dropdown, as the game describes it
+  const addStock = () => {
+    const stock = itemById.get(stockId);
+    if (!stock) return;
+    onChange(withItem(items, { item: stock.id, name: stock.name, qty: countOf(stockQty), category: stock.category, equipped: false }));
+    setStockId("");
+    setStockQty("1");
+    setAdding(false);
+  };
+  // A custom item: whatever the player writes, unless the name is a stock
+  // item's, which adds that item
+  const addCustom = () => {
     if (!name.trim()) return;
     const stock = stockItemNamed(content.items, name);
-    const count = Math.max(1, Math.round(Number(qty)) || 1);
+    const count = countOf(qty);
     onChange(
       withItem(
         items,
         stock
-          ? {
-              item: stock.id,
-              name: stock.name,
-              qty: count,
-              category: stock.category,
-              equipped: false,
-            }
+          ? { item: stock.id, name: stock.name, qty: count, category: stock.category, equipped: false }
           : { name: name.trim(), qty: count, category, equipped: false },
       ),
     );
@@ -178,31 +188,47 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
       {adding && (
         <LorePopup label="Add an item" onClose={() => setAdding(false)} className="sheet-add-popup">
           <h3 className="subhead">Add an item</h3>
+          {/* Most items come from the game's list: pick one and how many */}
           <form
             className="tools-add"
             onSubmit={(e) => {
               e.preventDefault();
-              add();
+              addStock();
             }}
           >
-            <input
-              type="text"
-              placeholder="Item name"
-              aria-label="Item name"
-              list={listId}
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-                const stock = stockItemNamed(content.items, e.target.value);
-                if (stock) setCategory(stock.category);
-              }}
-            />
-            <datalist id={listId}>
-              {STOCK.map((i) => (
-                <option key={i.id} value={i.name} />
-              ))}
-            </datalist>
-            <input type="number" min={1} aria-label="Count" className="tools-qty" value={qty} onChange={(e) => setQty(e.target.value)} />
+            <select id={stockSelectId} aria-label="Item" className="tools-add-stock" value={stockId} onChange={(e) => setStockId(e.target.value)}>
+              <option value="">Choose an item</option>
+              {ITEM_CATEGORIES.map((c) => {
+                const inCategory = STOCK.filter((i) => i.category === c);
+                return (
+                  inCategory.length > 0 && (
+                    <optgroup key={c} label={title(c)}>
+                      {inCategory.map((i) => (
+                        <option key={i.id} value={i.id}>
+                          {i.name}
+                        </option>
+                      ))}
+                    </optgroup>
+                  )
+                );
+              })}
+            </select>
+            <input type="number" min={1} aria-label="Count" className="tools-qty" value={stockQty} onChange={(e) => setStockQty(e.target.value)} />
+            <button type="submit" disabled={!stockId}>
+              Add item
+            </button>
+          </form>
+          {/* Anything else, named and sorted by the player */}
+          <h4 className="rule tools-add-custom-head">Custom item</h4>
+          <form
+            className="tools-add"
+            onSubmit={(e) => {
+              e.preventDefault();
+              addCustom();
+            }}
+          >
+            <input type="text" placeholder="Item name" aria-label="Custom item name" className="tools-add-name" value={name} onChange={(e) => setName(e.target.value)} />
+            <input type="number" min={1} aria-label="Custom item count" className="tools-qty" value={qty} onChange={(e) => setQty(e.target.value)} />
             <select aria-label="Category" value={category} onChange={(e) => setCategory(e.target.value as ItemCategory)}>
               {ITEM_CATEGORIES.map((c) => (
                 <option key={c} value={c}>
@@ -211,7 +237,7 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
               ))}
             </select>
             <button type="submit" disabled={!name.trim()}>
-              Add
+              Add custom item
             </button>
           </form>
         </LorePopup>
@@ -308,7 +334,7 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                   ))}
                 </div>
                 {/* Edit's fields where the top line shows them: how many at the left, then
-                    the name and the category */}
+                    the name. The category stays as the item has it. */}
                 {edit && (
                   <div className="tools-item-row tools-item-fields">
                     <input
@@ -330,17 +356,6 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                       value={item.name}
                       onChange={(e) => update(item, { name: e.target.value })}
                     />
-                    <select
-                      aria-label={`${item.name} category`}
-                      value={item.category}
-                      onChange={(e) => update(item, { category: e.target.value as ItemCategory })}
-                    >
-                      {ITEM_CATEGORIES.map((c) => (
-                        <option key={c} value={c}>
-                          {title(c)}
-                        </option>
-                      ))}
-                    </select>
                   </div>
                 )}
                 {stock && (
