@@ -2588,10 +2588,11 @@
 
   /* The Knowledges, the Abilities and the Skills, each a box: side by
      side once the sheet is 900px wide (the Knowledges only as wide as
-     their longest name, up to 20rem, and the Abilities twice the Skills'
-     width), and below that all three stacked at once. Any other Traits
+     their longest name, up to 20rem, and the Abilities and Skills sharing
+     the rest), and below that all three stacked at once. Any other Traits
      take a line of their own under them. */
-  .sheet-lower {
+  .sheet-lower,
+  .sheet-pair {
     display: flex;
     flex-wrap: wrap;
     align-items: stretch;
@@ -2601,19 +2602,30 @@
       flex: 1 1 100%;
       min-width: 0;
     }
+  }
 
-    @container sheet (width >= 900px) {
-      > .sheet-side {
-        flex: 0 1 auto;
-        max-width: 20rem;
-      }
+  .sheet-pair {
+    container: sheet-pair / inline-size;
+  }
 
-      > .sheet-abilities {
+  @container sheet (width >= 900px) {
+    .sheet-lower > .sheet-side {
+      flex: 0 1 auto;
+      max-width: 20rem;
+    }
+
+    .sheet-lower > .sheet-pair,
+    .sheet-pair > * {
+      flex: 1 1 0;
+    }
+
+    /* The Abilities and the Skills split their space equally, until the
+       Abilities, at twice the Skills' width, have room for two columns of
+       cards (two 256px cards, their gap and the box's padding: about
+       570px, two thirds of 876px less the gap) */
+    @container sheet-pair (width >= 876px) {
+      .sheet-pair > .sheet-abilities {
         flex: 2 1 0;
-      }
-
-      > .sheet-skills {
-        flex: 1 1 0;
       }
     }
   }
@@ -2690,7 +2702,7 @@
      sections tighten: 1rem between its boxes and inside each one (an
      Item's card keeps its own) */
   @media (max-width: 1399px) {
-    :is(.c-sheet, .sheet-row, .sheet-row > .sheet-side-stack, .sheet-side-row, .sheet-lower, .sheet-move-row) {
+    :is(.c-sheet, .sheet-row, .sheet-row > .sheet-side-stack, .sheet-side-row, .sheet-lower, .sheet-pair, .sheet-move-row) {
       gap: 1rem;
     }
 
