@@ -1,0 +1,11 @@
+id: hard-puncher
+name: "Hard Puncher"
+status: draft
+plane: any
+summary: "Hits that land heavy."
+tags: [combat, unarmed, boxing, punch]
+category: skill
+ranked: true
+minStats: { power: 4, endurance: 2 }
+prerequisites: [brawler]
+effect: "Rank *1 added to the Blunt damage of this character's punches."

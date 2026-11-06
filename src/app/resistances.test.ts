@@ -34,6 +34,21 @@ describe("resistances", () => {
     expect(shell.every((r) => r.where === "torso" && r.amount === 3)).toBe(true);
   });
 
+  it("reads a flat amount whatever the rank, and skips other sentences", () => {
+    const jaw = traitResistances(
+      "- This character can request Advantage on Endurance checks to resist the Unconscious Condition.\n- +2 to this character's Blunt Resistance for Attacks that hit their head.",
+      1,
+      "Iron Jaw",
+    );
+    expect(jaw).toEqual([{ type: "Blunt", amount: 2, from: "Iron Jaw", where: "head" }]);
+    const shins = traitResistances(
+      "- Rank *1 added to the Blunt damage of this character's kicks.\n- Rank *1 added to this character's Blunt Resistance for Attacks that hit their legs.",
+      3,
+      "Shin Training",
+    );
+    expect(shins).toEqual([{ type: "Blunt", amount: 3, from: "Shin Training", where: "legs" }]);
+  });
+
   it("adds up equipped items and held Conditions, not carried ones", () => {
     const item = (name: string, equipped: boolean) => ({ id: name, name, qty: 1, category: "armor" as const, equipped });
     const rs = resistancesOf(content, [item("Chainmail", true), item("Gambeson", false)], [{ trait: "stone-skin", rank: 1 }]);
