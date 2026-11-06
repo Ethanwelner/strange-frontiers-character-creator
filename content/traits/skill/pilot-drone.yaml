@@ -1,0 +1,10 @@
+id: pilot-drone
+name: "Pilot: Drone"
+status: draft
+plane: earth
+summary: "Flying remote and semi-autonomous drones."
+tags: [pilot, drones, technology]
+category: skill
+ranked: true
+minStats: { intuition: 3, grace: 3, logic: 2 }
+effect: "This character is capable of piloting drones in simple scenarios without a Skill Check and is capable of describing the basic functions and controls of a drone. Rank *10 added to Skill Check rolls involving drone piloting."

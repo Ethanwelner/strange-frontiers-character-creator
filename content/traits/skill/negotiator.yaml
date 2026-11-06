@@ -1,0 +1,10 @@
+id: negotiator
+name: "Negotiator"
+status: draft
+plane: any
+summary: "Reaching an agreement both sides can live with."
+tags: [negotiation, trade, social]
+category: skill
+ranked: true
+minStats: { persuasion: 4, empathy: 3, intuition: 2 }
+effect: "This character is capable of negotiating a simple agreement without a Skill Check. Rank *10 added to Skill Check rolls involving negotiation."

@@ -1,8 +1,9 @@
 id: haggler
-name: Haggler
-status: placeholder
+name: "Haggler"
+status: draft
 plane: any
-summary: Getting a better price.
+summary: "Getting a better price."
 tags: [trade, bargaining, merchant]
 category: skill
-effect: Placeholder. Effect not yet written.
+minStats: { persuasion: 4, intuition: 2 }
+effect: "This character gains +5 to Persuasion or Demeanor checks relating to haggling, bartering, and price negotiations."

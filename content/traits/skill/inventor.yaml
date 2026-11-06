@@ -1,0 +1,11 @@
+id: inventor
+name: "Inventor"
+status: draft
+plane: any
+summary: "Designing new devices and making them work."
+tags: [invention, engineering, science]
+category: skill
+ranked: true
+minStats: { logic: 5, intuition: 4, memory: 3 }
+prerequisites: [tinkerer]
+effect: "This character is capable of drafting a workable design for a simple new device without a Skill Check. Rank *10 added to Skill Check rolls involving designing or improving inventions."

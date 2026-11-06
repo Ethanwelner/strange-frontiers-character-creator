@@ -1,0 +1,11 @@
+id: suturing
+name: "Suturing"
+status: draft
+plane: any
+summary: "Closing wounds with needle and thread."
+tags: [medicine, first-aid, healing]
+category: skill
+ranked: true
+minStats: { grace: 4, memory: 3 }
+prerequisites: [medical-aid]
+effect: "This character is capable of closing a wound and ending the Severe Bleeding Condition without a Skill Check, given the tools. Rank *10 added to Skill Check rolls involving closing wounds."

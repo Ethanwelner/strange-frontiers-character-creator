@@ -7,12 +7,13 @@ import { addPick, fromBuild, genderText, levelsToPool, poolToLevels, toBuild, wi
 
 const campaign = { startingLevel: 1 };
 
-// Knowledges need Memory 3 and up, out of reach for these level 1 fixtures,
-// so the rules are tested without Knowledge minimum stats, or Origins' bonus
-// points. validate.test.ts checks the real ones.
+// Knowledges and Skills (and Shield Wall, once a Skill) need 2 to 5 in their
+// focus stats, out of reach for these level 1 fixtures, so the rules are tested
+// without their minimum stats, or Origins' bonus points. validate.test.ts
+// checks the real ones.
 const bundled: Content = {
   ...appContent,
-  traits: appContent.traits.map((t) => (t.category === "knowledge" ? { ...t, minStats: {} } : t)),
+  traits: appContent.traits.map((t) => (t.category === "knowledge" || t.category === "skill" || t.id === "shield-wall" ? { ...t, minStats: {} } : t)),
   packages: appContent.packages.map((p) => ({ ...p, bonusPoints: [] })),
 };
 

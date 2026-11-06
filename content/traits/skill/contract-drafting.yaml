@@ -1,0 +1,10 @@
+id: contract-drafting
+name: "Contract Drafting"
+status: draft
+plane: any
+summary: "Writing agreements that hold up."
+tags: [law, contracts, writing]
+category: skill
+ranked: true
+minStats: { logic: 4, memory: 4 }
+effect: "This character is capable of drafting a simple binding contract without a Skill Check. Rank *10 added to Skill Check rolls involving writing contracts."

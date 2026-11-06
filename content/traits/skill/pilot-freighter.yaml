@@ -1,0 +1,10 @@
+id: pilot-freighter
+name: "Pilot: Freighter"
+status: draft
+plane: earth
+summary: "Flying large cargo voidships."
+tags: [pilot, freighters, shipping, space]
+category: skill
+ranked: true
+minStats: { memory: 5, logic: 3, intuition: 3 }
+effect: "This character is capable of piloting freighters in simple scenarios without a Skill Check and is capable of describing the basic functions and controls of a freighter. Rank *10 added to Skill Check rolls involving freighter piloting."

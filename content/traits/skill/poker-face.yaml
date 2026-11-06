@@ -1,0 +1,9 @@
+id: poker-face
+name: "Poker Face"
+status: draft
+plane: any
+summary: "Giving nothing away."
+tags: [social, deception, gambling]
+category: skill
+minStats: { demeanor: 4 }
+effect: "This character gains +3 to Demeanor rolls relating to hiding their intentions or reactions."

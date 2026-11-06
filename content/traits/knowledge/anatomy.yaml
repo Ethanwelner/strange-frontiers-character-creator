@@ -1,0 +1,10 @@
+id: anatomy
+name: "Anatomy"
+status: draft
+plane: any
+summary: "How bodies are built, and where they break."
+tags: [anatomy, medicine, biology]
+category: knowledge
+ranked: true
+minStats: { memory: 3, logic: 2 }
+effect: "This character has knowledge of anatomy and can be assumed to be familiar with the structure of the body, its organs and its vulnerable points."

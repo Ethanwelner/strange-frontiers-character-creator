@@ -1,0 +1,10 @@
+id: diplomacy
+name: "Diplomacy"
+status: draft
+plane: any
+summary: "Representing a side and keeping the peace between powers."
+tags: [diplomacy, politics, social]
+category: skill
+ranked: true
+minStats: { persuasion: 4, empathy: 4, demeanor: 3 }
+effect: "This character is capable of conducting routine diplomatic business without a Skill Check. Rank *10 added to Skill Check rolls involving diplomacy."

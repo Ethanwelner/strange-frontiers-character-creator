@@ -1,0 +1,10 @@
+id: electronics-repair
+name: "Electronics Repair"
+status: draft
+plane: any
+summary: "Fixing circuits, wiring and devices."
+tags: [electronics, repair, technology]
+category: skill
+ranked: true
+minStats: { grace: 3, logic: 3, memory: 2 }
+effect: "This character is capable of repairing simple electronic devices without a Skill Check. Rank *10 added to Skill Check rolls involving electronics repair."

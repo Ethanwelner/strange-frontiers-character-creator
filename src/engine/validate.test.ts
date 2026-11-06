@@ -5,13 +5,16 @@ import type { BuildInput } from "./build.js";
 import { validateBuild, type IssueCode } from "./validate.js";
 
 const loaded = loadContent();
-// Knowledges need Memory 3 and up, out of reach for these level 1 fixtures,
-// so the rules are tested without Knowledge minimum stats. Rule 12's tests
-// check the real ones. The fixtures don't place Origins' bonus points either;
+// Knowledges and Skills (and Shield Wall, a Skill until it became an Ability)
+// need 2 to 5 in their focus stats, out of reach for these level 1 fixtures,
+// so the rules are tested without their minimum stats. Rule 12's tests check
+// the real ones. The fixtures don't place Origins' bonus points either;
 // rule 1's tests check those against the real packages.
 const content: Content = {
   ...loaded.content,
-  traits: loaded.content.traits.map((t) => (t.category === "knowledge" ? { ...t, minStats: {} } : t)),
+  traits: loaded.content.traits.map((t) =>
+    t.category === "knowledge" || t.category === "skill" || t.id === "shield-wall" ? { ...t, minStats: {} } : t,
+  ),
   packages: loaded.content.packages.map((p) => ({ ...p, bonusPoints: [] })),
 };
 
@@ -691,7 +694,7 @@ describe("rule 12: minimum stats and tag prerequisites", () => {
 
   it("grants a package's Knowledges whatever their minimum stats", () => {
     // The Dreft Origin grants Dreft and Dreftian Law; this Human has Memory 1.
-    const r = check({ ...human, traits: [{ trait: "survivalist", pick: "universal" }] }, loaded.content);
+    const r = check({ ...human, traits: [{ trait: "eagle-eye", pick: "universal" }] }, loaded.content);
     expect(codes(r)).not.toContain("min-stats");
   });
 

@@ -1,8 +1,9 @@
 id: schemer
-name: Schemer
-status: placeholder
+name: "Schemer"
+status: draft
 plane: any
-summary: Plotting and seeing through plots.
+summary: "Plotting and seeing through plots."
 tags: [intrigue, politics]
 category: skill
-effect: Placeholder. Effect not yet written.
+minStats: { logic: 4, persuasion: 3, intuition: 2 }
+effect: "This character gains +3 to Logic and Persuasion rolls when attempting to trick or deceive."

@@ -5,9 +5,15 @@ import { validateBuild } from "../engine/validate.js";
 import { contentIndex } from "./prompt.js";
 import { checkBuild, openChoices, runTool, ToolError, TOOLS, unknownIds } from "./tools.js";
 
-// The fixture builds don't place Origins' bonus points; validate.test.ts checks those.
+// The fixture builds don't place Origins' bonus points, and as level 1
+// characters can't reach Skills' minimum stats (or Shield Wall's, once a
+// Skill); validate.test.ts checks both.
 const loaded = loadContent().content;
-const content = { ...loaded, packages: loaded.packages.map((p) => ({ ...p, bonusPoints: [] })) };
+const content = {
+  ...loaded,
+  traits: loaded.traits.map((t) => (t.category === "skill" || t.id === "shield-wall" ? { ...t, minStats: {} } : t)),
+  packages: loaded.packages.map((p) => ({ ...p, bonusPoints: [] })),
+};
 // These fixtures are level 1 characters; the default campaign starts at 3.
 const L1 = { startingLevel: 1 };
 

@@ -1,0 +1,9 @@
+id: field-splinting
+name: "Field Splinting"
+status: draft
+plane: any
+summary: "Setting bones and bracing limbs with whatever is at hand."
+tags: [medicine, first-aid, improvisation]
+category: skill
+minStats: { grace: 3, intuition: 3 }
+effect: "This character gains +5 to rolls relating to setting bones or immobilizing injuries with improvised materials."

@@ -1,0 +1,13 @@
+id: master-artificer
+name: "Master Artificer"
+status: draft
+plane: isekai
+summary: "A crafter of true magical artifacts."
+tags: [magic, artifacts, crafting, expert]
+category: skill
+mastery: true
+minStats: { magic: 6, logic: 6, grace: 5, memory: 6 }
+prerequisites: [enchanting, rune-carving]
+# On the Magic list: only a character with Magic Access can pick it.
+list: magic
+effect: "This character can request Advantage on rolls relating to crafting magical artifacts and can design new enchantments of their own."

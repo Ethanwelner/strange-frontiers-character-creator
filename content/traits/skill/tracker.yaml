@@ -1,8 +1,9 @@
 id: tracker
-name: Tracker
-status: placeholder
+name: "Tracker"
+status: draft
 plane: any
-summary: Following trails and reading signs.
+summary: "Following trails and reading signs."
 tags: [tracking, hunting, wilderness]
 category: skill
-effect: Placeholder. Effect not yet written.
+minStats: { intuition: 4, memory: 2 }
+effect: "This character gains +5 to rolls relating to the tracking of sapients or animals in wilderness settings."

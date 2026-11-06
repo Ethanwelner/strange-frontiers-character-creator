@@ -1,8 +1,9 @@
 id: folk-remedies
-name: Folk Remedies
-status: placeholder
+name: "Folk Remedies"
+status: draft
 plane: any
-summary: Treating ailments with folk cures.
+summary: "Treating ailments with folk cures."
 tags: [healing, folk, herbs]
 category: skill
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3, intuition: 3 }
+effect: "This character gains +5 to rolls relating to using folk or herbal remedies to heal or produce medicaments."

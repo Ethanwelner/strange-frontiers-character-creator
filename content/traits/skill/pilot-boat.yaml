@@ -1,0 +1,10 @@
+id: pilot-boat
+name: "Pilot: Boat"
+status: draft
+plane: any
+summary: "Handling small powered or oared boats."
+tags: [pilot, boats, water]
+category: skill
+ranked: true
+minStats: { grace: 3, intuition: 2, memory: 2 }
+effect: "This character is capable of piloting small boats in simple scenarios without a Skill Check and is capable of describing the basic functions and controls of a boat. Rank *10 added to Skill Check rolls involving boat handling."

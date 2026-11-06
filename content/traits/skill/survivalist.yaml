@@ -1,8 +1,9 @@
 id: survivalist
-name: Survivalist
-status: placeholder
+name: "Survivalist"
+status: draft
 plane: any
-summary: Staying alive with little in the wild.
+summary: "Staying alive with little in the wild."
 tags: [survival, wilderness]
 category: skill
-effect: Placeholder. Effect not yet written.
+minStats: { endurance: 3, intuition: 3, memory: 2 }
+effect: "This character gains +3 to rolls relating to navigation, gathering, or the identification of flora and fauna in a wilderness setting."

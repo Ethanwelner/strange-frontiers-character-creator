@@ -1,0 +1,10 @@
+id: pilot-gunship
+name: "Pilot: Gunship"
+status: draft
+plane: earth
+summary: "Flying armed voidships in combat."
+tags: [pilot, military, space]
+category: skill
+ranked: true
+minStats: { grace: 4, intuition: 4, memory: 4 }
+effect: "This character is capable of piloting gunships in simple scenarios without a Skill Check and is capable of describing the basic functions and controls of a gunship. Rank *10 added to Skill Check rolls involving gunship piloting."

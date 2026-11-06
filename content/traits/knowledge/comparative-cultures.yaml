@@ -1,0 +1,10 @@
+id: comparative-cultures
+name: "Comparative Cultures"
+status: draft
+plane: any
+summary: "How peoples differ in custom, belief and manners."
+tags: [culture, diplomacy, society]
+category: knowledge
+ranked: true
+minStats: { memory: 3, empathy: 2 }
+effect: "This character has knowledge of comparative cultures and can be assumed to be familiar with how customs, beliefs and manners differ between peoples."

@@ -1,0 +1,9 @@
+id: triage
+name: "Triage"
+status: draft
+plane: any
+summary: "Deciding who gets treated first."
+tags: [medicine, triage, healing]
+category: skill
+minStats: { intuition: 4, memory: 3 }
+effect: "This character gains +5 to rolls relating to assessing injuries and deciding which patients to treat first."

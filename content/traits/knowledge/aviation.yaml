@@ -1,0 +1,10 @@
+id: aviation
+name: "Aviation"
+status: draft
+plane: any
+summary: "Aircraft, airships and how they fly."
+tags: [aviation, aircraft, pilot]
+category: knowledge
+ranked: true
+minStats: { memory: 3, logic: 2 }
+effect: "This character has knowledge of aviation and can be assumed to be familiar with how aircraft and airships fly, are maintained and are flown safely."

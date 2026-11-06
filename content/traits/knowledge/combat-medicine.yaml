@@ -1,0 +1,10 @@
+id: combat-medicine
+name: "Combat Medicine"
+status: draft
+plane: any
+summary: "Treating wounds on the battlefield."
+tags: [medicine, combat, military]
+category: knowledge
+ranked: true
+minStats: { memory: 3, logic: 2 }
+effect: "This character has knowledge of combat medicine and can be assumed to be familiar with battlefield wounds, their treatment and getting the injured out alive."

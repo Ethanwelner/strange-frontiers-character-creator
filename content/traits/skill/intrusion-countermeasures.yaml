@@ -1,0 +1,11 @@
+id: intrusion-countermeasures
+name: "Intrusion Countermeasures"
+status: draft
+plane: earth
+summary: "Spotting and stopping attacks on a system."
+tags: [computers, security, defense]
+category: skill
+ranked: true
+minStats: { logic: 4, intuition: 4, memory: 3 }
+prerequisites: [programming]
+effect: "This character is capable of noticing a clumsy intrusion into a system they maintain without a Skill Check. Rank *10 added to Skill Check rolls involving detecting or stopping intrusions."

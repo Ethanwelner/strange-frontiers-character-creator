@@ -1,0 +1,9 @@
+id: long-distance-runner
+name: "Long-Distance Runner"
+status: draft
+plane: any
+summary: "Running and marching for hours."
+tags: [athletics, running, endurance]
+category: skill
+minStats: { endurance: 4, grace: 2 }
+effect: "This character gains +5 to Endurance rolls relating to running or marching over long distances."

@@ -1,0 +1,10 @@
+id: network-engineering
+name: "Network Engineering"
+status: draft
+plane: earth
+summary: "Building and maintaining the networks systems talk over."
+tags: [computers, networks, engineering]
+category: skill
+ranked: true
+minStats: { logic: 4, memory: 4 }
+effect: "This character is capable of setting up and maintaining a small network without a Skill Check. Rank *10 added to Skill Check rolls involving computer networks."

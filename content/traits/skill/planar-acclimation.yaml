@@ -1,0 +1,9 @@
+id: planar-acclimation
+name: "Planar Acclimation"
+status: draft
+plane: earth
+summary: "Keeping a clear head and a working body on unfamiliar planes."
+tags: [planes, exploration, endurance]
+category: skill
+minStats: { endurance: 4, demeanor: 2 }
+effect: "This character gains +5 to Endurance rolls to resist the effects of a plane's foreign paraphysics, including Null Physics at a gate's border."

@@ -1,0 +1,10 @@
+id: parasapient-field-medicine
+name: "Parasapient Field Medicine"
+status: draft
+plane: earth
+summary: "Treating sapients whose bodies aren't human."
+tags: [medicine, parasapients, healing]
+category: skill
+minStats: { memory: 5, intuition: 3 }
+prerequisites: [medical-aid]
+effect: "This character gains +5 to rolls relating to treating injuries or illnesses of parasapients."

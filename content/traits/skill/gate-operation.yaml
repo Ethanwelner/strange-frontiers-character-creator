@@ -1,0 +1,10 @@
+id: gate-operation
+name: "Gate Operation"
+status: draft
+plane: earth
+summary: "Running a switch gate: tuning, monitoring and shutting down."
+tags: [planes, switch gates, technology]
+category: skill
+ranked: true
+minStats: { logic: 5, memory: 4, intuition: 3 }
+effect: "This character is capable of operating an attuned switch gate in routine conditions without a Skill Check. Rank *10 added to Skill Check rolls involving tuning, monitoring or shutting down a switch gate."

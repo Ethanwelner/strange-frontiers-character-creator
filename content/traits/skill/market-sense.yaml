@@ -1,0 +1,9 @@
+id: market-sense
+name: "Market Sense"
+status: draft
+plane: any
+summary: "Knowing where prices are headed before they get there."
+tags: [trade, merchant, markets]
+category: skill
+minStats: { intuition: 4, memory: 3 }
+effect: "This character gains +5 to Intuition rolls relating to predicting prices, demand or market shifts."

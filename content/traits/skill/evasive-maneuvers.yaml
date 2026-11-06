@@ -1,0 +1,11 @@
+id: evasive-maneuvers
+name: "Evasive Maneuvers"
+status: draft
+plane: any
+summary: "Keeping a vehicle in one piece under fire."
+tags: [pilot, combat, defense]
+category: skill
+minStats: { grace: 5, intuition: 5 }
+prerequisiteTags: [pilot]
+effect: "A vehicle this character is piloting gains +2 Defense."
+modifiers: "Defense +2 (vehicle being piloted)"

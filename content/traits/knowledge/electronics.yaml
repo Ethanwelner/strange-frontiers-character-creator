@@ -1,0 +1,10 @@
+id: electronics
+name: "Electronics"
+status: draft
+plane: any
+summary: "Circuits, components and how devices work inside."
+tags: [electronics, technology, engineering]
+category: knowledge
+ranked: true
+minStats: { memory: 3, logic: 3 }
+effect: "This character has knowledge of electronics and can be assumed to be familiar with circuits, components and how electronic devices are built."

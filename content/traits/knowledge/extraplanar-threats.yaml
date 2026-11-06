@@ -1,0 +1,10 @@
+id: extraplanar-threats
+name: "Extraplanar Threats"
+status: draft
+plane: earth
+summary: "Dangerous beings and organisms from other planes."
+tags: [planes, monsters, parabiology]
+category: knowledge
+ranked: true
+minStats: { memory: 4, intuition: 2 }
+effect: "This character has knowledge of extraplanar threats and can be assumed to be familiar with the known dangerous beings and organisms of other planes and how they have been fought or contained."

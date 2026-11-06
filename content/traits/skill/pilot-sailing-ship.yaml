@@ -1,0 +1,10 @@
+id: pilot-sailing-ship
+name: "Pilot: Sailing Ship"
+status: draft
+plane: any
+summary: "Sailing, from a skiff to a three-master."
+tags: [pilot, sailing, seafaring]
+category: skill
+ranked: true
+minStats: { memory: 4, intuition: 3, grace: 2 }
+effect: "This character is capable of sailing a ship in simple scenarios without a Skill Check and is capable of describing the basic functions and rigging of a sailing ship. Rank *10 added to Skill Check rolls involving sailing."

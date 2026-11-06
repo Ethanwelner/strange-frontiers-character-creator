@@ -1,0 +1,10 @@
+id: herb-gathering
+name: "Herb Gathering"
+status: draft
+plane: any
+summary: "Finding, picking and keeping useful plants."
+tags: [herbs, gathering, potions]
+category: skill
+ranked: true
+minStats: { intuition: 3, memory: 2 }
+effect: "This character is capable of finding common useful herbs in a suitable environment without a Skill Check. Rank *10 added to Skill Check rolls involving finding or identifying herbs and reagents in the wild."

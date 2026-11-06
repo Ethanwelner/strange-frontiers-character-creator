@@ -1,0 +1,11 @@
+id: disarm
+name: "Disarm"
+status: draft
+plane: any
+summary: "Taking the weapon out of an opponent's hands."
+tags: [combat, unarmed, technique]
+category: skill
+minStats: { grace: 5, intuition: 3 }
+prerequisites: [brawler]
+effect: "This character gains the Disarm Action."
+action: "Disarm: This character may make an Attack Roll with Grace against a character within 1 m who is holding a weapon. On a Solid Hit or better, the target drops the weapon at their feet."

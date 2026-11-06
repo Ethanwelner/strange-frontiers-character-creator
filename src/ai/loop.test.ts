@@ -13,7 +13,13 @@ import type { Provider } from "./model.js";
 // Most tests are about other parts of the loop, so they skip the Claude review turn.
 const noReview = (p: Provider): Provider => ({ ...p, review: false });
 
-const { content } = loadContent();
+// The level 1 fixture builds can't reach Skills' minimum stats (or Shield
+// Wall's, once a Skill); validate.test.ts checks those.
+const loaded = loadContent().content;
+const content = {
+  ...loaded,
+  traits: loaded.traits.map((t) => (t.category === "skill" || t.id === "shield-wall" ? { ...t, minStats: {} } : t)),
+};
 // These fixtures are level 1 characters; the default campaign starts at 3.
 const L1 = { startingLevel: 1 };
 

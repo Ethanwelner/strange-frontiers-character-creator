@@ -1,0 +1,11 @@
+id: field-surgeon
+name: "Field Surgeon"
+status: draft
+plane: any
+summary: "A surgeon who can operate in a tent, in the dark, under fire."
+tags: [medicine, surgery, combat, expert]
+category: skill
+mastery: true
+minStats: { grace: 8, memory: 8, demeanor: 6, logic: 5 }
+prerequisites: [surgery, combat-medic]
+effect: "This character can request Advantage on Surgery and Medical Aid rolls made in the field or under fire."

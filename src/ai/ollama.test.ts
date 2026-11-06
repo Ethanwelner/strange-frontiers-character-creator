@@ -6,7 +6,13 @@ import type { ConceptInput } from "../engine/solve.js";
 import { describeCharacter } from "./loop.js";
 import { ollamaProvider, type Fetch } from "./ollama.js";
 
-const { content } = loadContent();
+// The level 1 fixture builds can't reach Skills' minimum stats (or Shield
+// Wall's, once a Skill); validate.test.ts checks those.
+const loaded = loadContent().content;
+const content = {
+  ...loaded,
+  traits: loaded.traits.map((t) => (t.category === "skill" || t.id === "shield-wall" ? { ...t, minStats: {} } : t)),
+};
 
 const goblinoid: ConceptInput = {
   kind: "tatot-goblinoid",
