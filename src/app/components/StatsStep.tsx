@@ -4,7 +4,7 @@ import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { coreAccessFor, coreStatsShown } from "../check.js";
 import { content, kindById, packageById } from "../content.js";
 import { withCore, type Draft } from "../draft.js";
-import { baseStats, CoreLine, FOCUS_GROUPS, GROUPS, Sign, StatLine, StepHeader, title } from "./ui.js";
+import { baseStats, CoreLine, FOCUS_GROUPS, GROUPS, Icon, Sign, StatLine, StepHeader, title } from "./ui.js";
 
 interface Props {
   draft: Draft;
@@ -182,7 +182,7 @@ export function StatsStep({ draft, onChange, floor }: Props) {
                   <div className="sheet-group-head">
                     <div className="core-control">
                       <span className="stat-badge" title="Core Stat">
-                        {core + extra}
+                        <Icon name={g} />
                       </span>
                       <button aria-label={`Take a core point from ${g}`} onClick={() => takeCore(g)} disabled={core <= coreFloor(g)}>
                         <Sign is="minus" />
@@ -197,7 +197,9 @@ export function StatsStep({ draft, onChange, floor }: Props) {
                         <Sign is="plus" />
                       </button>
                     </div>
-                    <h4 className="rule">{title(g)}</h4>
+                    <h4 className="rule">
+                      {title(g)} - {core + extra}
+                    </h4>
                     <span className={`num${core + extra === 0 ? " muted" : " resource-mp"}`}>{MP_PER_MAGIC * (core + extra)} MP</span>
                   </div>
                   {/* A diamond per point, under the core's − and +, which already set it */}
@@ -226,7 +228,7 @@ export function StatsStep({ draft, onChange, floor }: Props) {
                 <div className="sheet-group-head">
                   <div className="core-control">
                     <span className="stat-badge" title="Core Stat">
-                      {core}
+                      <Icon name={g} />
                     </span>
                     <button
                       aria-label={`Take a core point from ${g}`}
@@ -246,7 +248,9 @@ export function StatsStep({ draft, onChange, floor }: Props) {
                       <Sign is="plus" />
                     </button>
                   </div>
-                  <h4 className="rule">{title(g)}</h4>
+                  <h4 className="rule">
+                    {title(g)} - {core}
+                  </h4>
                   <span className={`num${core === 0 ? " muted" : spent === room ? " good" : spent > room ? " bad" : ""}`}>
                     {spent}/{room}
                   </span>

@@ -778,8 +778,15 @@
   .builder-panel :is(.core-control, .stat-buttons) button {
     background: #6b6b6b;
 
-    &:hover:not(:disabled) {
-      background: #858585;
+    /* A usable + or − glitches (below), and turns the creator's green like
+       the other things waiting on the player, so it's hard to miss */
+    &:not(:disabled) {
+      background: var(--frontiers-green);
+      color: var(--portfolio-black);
+
+      &:hover {
+        background: color-mix(in srgb, var(--frontiers-green) 75%, var(--portfolio-white));
+      }
     }
   }
 
@@ -2076,12 +2083,18 @@
     font-weight: 400;
   }
 
+  /* A core Stat's circle holds its icon; the number is in the title beside it */
   .stat-badge {
     flex-shrink: 0;
     width: 2.75rem;
     height: 2.75rem;
     padding: 0;
     line-height: 1;
+
+    .icon {
+      width: 1.6rem;
+      height: 1.6rem;
+    }
   }
 
   .sheet-head {
@@ -3953,8 +3966,8 @@
 
 /* A much smaller take on the site's glitching Strange Frontiers title
    (.frontiers-glitch in css/rpg.css), on the things waiting for the player:
-   Player Tools' rules problems chip, the stats' +
-   while it has a point to place, and the creator's next step button once
+   Player Tools' rules problems chip, the stats' + and − while they're
+   usable, and the creator's next step button once
    its step is finished (green), Build it once there's something to
    build, Player Tools' Send once there's a message, and its level up's
    Submit once every point is placed, and Add items once an item is
@@ -3962,7 +3975,7 @@
    cyan and red split that widens on the flares, and a slight skew instead of the title's slices and
    lurches. Every frame has the same three shadows (green, cyan to the left,
    red to the right), so they blend from one to the next. */
-.sf-creator :is(.tools-issues li, .is-plus:not(:disabled), .pager .step-next.is-done, .describe .build-button:not(:disabled), .tools-chat-send:not(:disabled), .tools-level-actions button:not(:disabled), .item-picker-submit button:not(:disabled)) {
+.sf-creator :is(.tools-issues li, :is(.core-control, .stat-buttons) button:not(:disabled), .pager .step-next.is-done, .describe .build-button:not(:disabled), .tools-chat-send:not(:disabled), .tools-level-actions button:not(:disabled), .item-picker-submit button:not(:disabled)) {
   animation:
     sf-glitch-small-shift 4s ease-in-out infinite alternate,
     sf-glitch-small-glow 8s ease-in-out infinite alternate;
@@ -3994,7 +4007,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sf-creator :is(.tools-issues li, .is-plus:not(:disabled), .pager .step-next.is-done, .describe .build-button:not(:disabled), .tools-chat-send:not(:disabled), .tools-level-actions button:not(:disabled), .item-picker-submit button:not(:disabled)) {
+  .sf-creator :is(.tools-issues li, :is(.core-control, .stat-buttons) button:not(:disabled), .pager .step-next.is-done, .describe .build-button:not(:disabled), .tools-chat-send:not(:disabled), .tools-level-actions button:not(:disabled), .item-picker-submit button:not(:disabled)) {
     animation: none;
   }
 }
