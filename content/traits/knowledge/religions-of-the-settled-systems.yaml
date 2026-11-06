@@ -1,0 +1,10 @@
+id: religions-of-the-settled-systems
+name: "Religions of the Settled Systems"
+status: draft
+plane: earth
+summary: "The faiths of Earth and its colonies."
+tags: [religion, faith, earth]
+category: knowledge
+ranked: true
+minStats: { memory: 3 }
+effect: "This character has knowledge of the religions of the Settled Systems and can be assumed to be familiar with the major faiths of Earth and its colonies, their beliefs and their rites."

@@ -1,0 +1,10 @@
+id: industrial-machinery
+name: "Industrial Machinery"
+status: draft
+plane: any
+summary: "How heavy machines are built and kept running."
+tags: [industry, machinery, engineering]
+category: knowledge
+ranked: true
+minStats: { memory: 3, logic: 3 }
+effect: "This character has knowledge of industrial machinery and can be assumed to be familiar with how cranes, drills, loaders and factory machines work and are maintained."

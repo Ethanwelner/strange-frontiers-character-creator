@@ -1,0 +1,10 @@
+id: logistics
+name: "Logistics"
+status: draft
+plane: any
+summary: "Moving people, supplies and equipment where they're needed."
+tags: [logistics, supplies, leadership]
+category: knowledge
+ranked: true
+minStats: { memory: 3, logic: 3 }
+effect: "This character has knowledge of logistics and can be assumed to be familiar with how supplies, people and equipment are moved, stored and accounted for."

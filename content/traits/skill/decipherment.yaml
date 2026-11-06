@@ -1,0 +1,10 @@
+id: decipherment
+name: "Decipherment"
+status: draft
+plane: any
+summary: "Reading dead languages and old scripts."
+tags: [scholarship, languages, history]
+category: skill
+ranked: true
+minStats: { memory: 5, logic: 4, intuition: 3 }
+effect: "This character is capable of reading simple texts in a dead language they hold a Knowledge of without a Skill Check. Rank *10 added to Skill Check rolls involving deciphering old or unknown scripts."

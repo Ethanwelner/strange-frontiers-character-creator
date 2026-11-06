@@ -1,0 +1,11 @@
+id: exorcism
+name: "Exorcism"
+status: draft
+plane: any
+summary: "Driving a spirit out of the living."
+tags: [faith, spirits, exorcism, supernatural]
+category: skill
+ranked: true
+minStats: { demeanor: 5, empathy: 3, memory: 3 }
+prerequisites: [rites-and-ceremonies]
+effect: "Rank *10 added to Skill Check rolls to end the Possessed by a Spirit Trait or drive a spirit out of a person, place or object."

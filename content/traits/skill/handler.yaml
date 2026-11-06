@@ -1,0 +1,9 @@
+id: handler
+name: "Handler"
+status: draft
+plane: any
+summary: "Recruiting informants and keeping them talking."
+tags: [espionage, informants, social]
+category: skill
+minStats: { empathy: 4, persuasion: 4, intuition: 3 }
+effect: "This character gains +5 to rolls relating to recruiting, running and protecting informants."

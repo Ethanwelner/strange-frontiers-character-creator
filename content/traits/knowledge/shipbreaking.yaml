@@ -1,0 +1,10 @@
+id: shipbreaking
+name: "Shipbreaking"
+status: draft
+plane: earth
+summary: "Breaking up voidships for parts and scrap."
+tags: [salvage, starships, industry]
+category: knowledge
+ranked: true
+minStats: { memory: 3, logic: 2 }
+effect: "This character has knowledge of shipbreaking and can be assumed to be familiar with how voidships are taken apart, which parts are worth saving and which are dangerous."

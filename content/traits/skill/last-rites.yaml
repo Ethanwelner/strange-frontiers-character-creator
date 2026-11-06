@@ -1,0 +1,10 @@
+id: last-rites
+name: "Last Rites"
+status: draft
+plane: any
+summary: "Easing the dying, and seeing that the dead rest."
+tags: [faith, death, ritual]
+category: skill
+minStats: { empathy: 4, memory: 3 }
+prerequisites: [rites-and-ceremonies]
+effect: "This character gains +5 to rolls relating to comforting the dying and laying the dead to rest so they don't linger as spirits."

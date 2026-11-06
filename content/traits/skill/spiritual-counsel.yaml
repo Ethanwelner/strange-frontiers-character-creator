@@ -1,0 +1,9 @@
+id: spiritual-counsel
+name: "Spiritual Counsel"
+status: draft
+plane: any
+summary: "Guiding someone through doubt, guilt or loss of faith."
+tags: [faith, counsel, social]
+category: skill
+minStats: { empathy: 4, memory: 3 }
+effect: "This character gains +5 to Empathy rolls relating to guiding someone through doubt, guilt or questions of faith."

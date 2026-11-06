@@ -1,0 +1,10 @@
+id: rites-and-ceremonies
+name: "Rites and Ceremonies"
+status: draft
+plane: any
+summary: "Performing the rites of a faith correctly."
+tags: [faith, ritual, religion]
+category: skill
+ranked: true
+minStats: { memory: 3, demeanor: 3, empathy: 2 }
+effect: "This character is capable of performing the common rites of a faith they hold a Knowledge of without a Skill Check. Rank *10 added to Skill Check rolls involving religious rites and ceremonies."

@@ -1,0 +1,9 @@
+id: shaking-a-tail
+name: "Shaking a Tail"
+status: draft
+plane: any
+summary: "Spotting who's following you, and losing them."
+tags: [espionage, evasion, urban]
+category: skill
+minStats: { intuition: 4, memory: 2 }
+effect: "This character gains +5 to rolls relating to noticing and losing anyone following them."

@@ -1,0 +1,9 @@
+id: linguist
+name: "Linguist"
+status: draft
+plane: any
+summary: "Puzzling out languages you don't know yet."
+tags: [languages, scholarship]
+category: skill
+minStats: { memory: 4, intuition: 3 }
+effect: "This character gains +5 to rolls relating to learning or puzzling out an unfamiliar Language."

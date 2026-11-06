@@ -1,0 +1,10 @@
+id: interrogation
+name: "Interrogation"
+status: draft
+plane: any
+summary: "Getting answers out of people who don't want to give them."
+tags: [espionage, interrogation, social]
+category: skill
+ranked: true
+minStats: { demeanor: 4, empathy: 3, intuition: 3 }
+effect: "This character is capable of drawing simple information from a reluctant subject without a Skill Check. Rank *10 added to Skill Check rolls involving interrogation."

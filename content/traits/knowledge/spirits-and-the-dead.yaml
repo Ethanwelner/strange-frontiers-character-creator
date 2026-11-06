@@ -1,0 +1,10 @@
+id: spirits-and-the-dead
+name: "Spirits and the Dead"
+status: draft
+plane: any
+summary: "What spirits are, what they want and how they're dealt with."
+tags: [spirits, death, supernatural]
+category: knowledge
+ranked: true
+minStats: { memory: 3, intuition: 2 }
+effect: "This character has knowledge of spirits and the dead and can be assumed to be familiar with the kinds of spirits, the signs of hauntings and possession, and the traditional ways of dealing with them."

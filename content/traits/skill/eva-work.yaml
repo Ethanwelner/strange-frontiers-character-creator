@@ -1,0 +1,9 @@
+id: eva-work
+name: "EVA Work"
+status: draft
+plane: earth
+summary: "Working outside a ship in a suit."
+tags: [space, eva, labor]
+category: skill
+minStats: { grace: 3, endurance: 3, logic: 2 }
+effect: "This character gains +5 to rolls relating to working outside a vessel or station in a pressure suit."

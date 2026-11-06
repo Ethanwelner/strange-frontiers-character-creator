@@ -1,0 +1,9 @@
+id: shoring
+name: "Shoring"
+status: draft
+plane: any
+summary: "Holding up what's about to come down."
+tags: [engineering, safety, construction]
+category: skill
+minStats: { logic: 4, power: 3 }
+effect: "This character gains +5 to rolls relating to stabilizing collapsing structures, tunnels or wrecks."
