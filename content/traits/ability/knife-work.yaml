@@ -1,0 +1,11 @@
+id: knife-work
+name: "Knife Work"
+status: draft
+plane: any
+summary: "Fighting dirty with a short blade."
+tags: [combat, melee, blades]
+category: ability
+ranked: true
+minStats: { grace: 3 }
+prerequisites: [wielder-dagger]
+effect: "Rank *2 added to the Piercing damage of this character's Attacks with a knife or other small bladed weapon against a target that hasn't acted yet this Round."

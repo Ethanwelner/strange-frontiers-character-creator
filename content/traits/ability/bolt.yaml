@@ -1,0 +1,10 @@
+id: bolt
+name: "Bolt"
+status: draft
+plane: any
+summary: "Getting out while the getting's good."
+tags: [movement, evasion]
+category: ability
+minStats: { grace: 3, endurance: 2 }
+effect: "This character gains the Bolt Action."
+action: "Bolt: This character takes Full Movement at +5 Priority for the Round. This character gains the Flat-Footed Condition the following Round."

@@ -1,0 +1,10 @@
+id: sht-talk
+name: "Sh!t Talk"
+status: draft
+plane: any
+summary: "Running their mouth to throw people off."
+tags: [social, combat, distraction]
+category: ability
+minStats: { persuasion: 4, demeanor: 3 }
+effect: "This character gains the Sh!t Talk Action."
+action: "Sh!t Talk: As an RP Action and Defend, this character keeps up a stream of fast talk. One character within 5 m who can hear and understand them takes -2 to Attack Rolls against this character this Round."

@@ -1,0 +1,9 @@
+id: running-dark
+name: "Running Dark"
+status: draft
+plane: any
+summary: "Flying where nobody's watching."
+tags: [piloting, smuggling, stealth]
+category: skill
+minStats: { memory: 4, grace: 3, demeanor: 4 }
+effect: "This character can request Advantage on piloting Skill Checks to avoid detection, such as slipping past patrols or sensor sweeps."
