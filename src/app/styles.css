@@ -2563,14 +2563,11 @@
     gap: 24px;
   }
 
-  /* Under it, the Knowledges' box above the Traits', until the sheet is
-     1400px wide, where the Items join the stats' row (.sheet-row); then to
-     their left, only as wide as its longest name (up to 20rem) and as tall
-     as the Traits' */
-  /* The Knowledges, the Abilities and the Skills, each a box, stacked; side
-     by side once there's room, the Abilities (twice as wide, so their cards
-     take two columns) and Skills first, then all
-     three. Any other Traits take a line of their own under them. */
+  /* The Knowledges, the Abilities and the Skills, each a box: side by
+     side once the sheet is 900px wide (the Knowledges only as wide as
+     their longest name, up to 20rem, and the Abilities twice the Skills'
+     width), and below that all three stacked at once. Any other Traits
+     take a line of their own under them. */
   .sheet-lower {
     display: flex;
     flex-wrap: wrap;
@@ -2583,19 +2580,17 @@
     }
 
     @container sheet (width >= 900px) {
+      > .sheet-side {
+        flex: 0 1 auto;
+        max-width: 20rem;
+      }
+
       > .sheet-abilities {
         flex: 2 1 0;
       }
 
       > .sheet-skills {
         flex: 1 1 0;
-      }
-    }
-
-    @container sheet (width >= 1400px) {
-      > .sheet-side {
-        flex: 0 1 auto;
-        max-width: 20rem;
       }
     }
   }
