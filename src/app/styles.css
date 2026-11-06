@@ -3180,16 +3180,22 @@
     flex-wrap: nowrap;
   }
 
-  /* The name and the stat badges between Equip and the chevron: the badges
-     at the right while they fit beside the name, wrapping under it (still
-     at the right) only when they don't */
+  /* The name and the stat badges between Equip and the chevron. Each badge
+     is its own item here: the name takes what its line leaves, the badges
+     sit at the right, and they wrap under it one at a time as the room runs
+     out, still at the right. */
   .tools-item-main {
     flex: 1 1 auto;
     min-width: 0;
     display: flex;
     flex-wrap: wrap;
+    justify-content: flex-end;
     align-items: center;
-    gap: 4px 8px;
+    gap: 6px 8px;
+
+    > .tools-item-title {
+      flex: 1 1 auto;
+    }
   }
 
   .tools-item-title {
@@ -3306,18 +3312,10 @@
     margin-top: 10px;
   }
 
-  /* On a card's top line they sit at the right of the name, wrapping among
-     themselves only if a line can't hold them all */
-  .tools-item-summary {
-    .tools-item-stats {
-      flex: 0 1 auto;
-      justify-content: flex-end;
-      margin: 0 0 0 auto;
-    }
-
-    .tools-item-stat-group {
-      flex-wrap: nowrap;
-    }
+  /* On a card's top line the badges' wrappers step aside, so each badge
+     lays out on its own in .tools-item-main */
+  .tools-item-summary :is(.tools-item-stats, .tools-item-stat-group) {
+    display: contents;
   }
 
   .tools-item-stat-group {
