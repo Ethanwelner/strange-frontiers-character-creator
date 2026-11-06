@@ -1,5 +1,5 @@
-import { Fragment, useId, useState } from "react";
-import { Chip, Icon, LorePopup, title } from "./ui.js";
+import { Fragment, useState, type ReactNode } from "react";
+import { Chip, Icon, LorePopup, SettingIcon, Sign, title } from "./ui.js";
 import { damageIcon } from "./Resistances.js";
 import { content, itemById } from "../content.js";
 import { ITEM_CATEGORIES, itemBadges, itemUses, stockItemNamed, withItem, type Item, type ItemCategory } from "../items.js";
@@ -101,21 +101,161 @@ function ItemStats({ stock }: { stock: StockItem }) {
   );
 }
 
+// Add item's picker, like the Traits step: a tab per category, each with a
+// search, over the game's items as the inventory's item cards. A large
+// checkbox at each card's right picks it, with a count to set; Add items
+// adds every picked one, from any tab. The last tab, Custom, holds the form
+// for an item the game doesn't have.
+function ItemPicker({ onAdd, custom }: { onAdd: (picked: { stock: StockItem; qty: number }[]) => void; custom: ReactNode }) {
+  const categories = ITEM_CATEGORIES.filter((c) => STOCK.some((i) => i.category === c));
+  const [tab, setTab] = useState<ItemCategory | "custom">(categories[0]!);
+  const [query, setQuery] = useState("");
+  const [picked, setPicked] = useState<Map<string, number>>(new Map());
+  // Cards opened to their badges and description
+  const [opened, setOpened] = useState<Set<string>>(new Set());
+  const toggleOpen = (id: string) => {
+    const next = new Set(opened);
+    if (!next.delete(id)) next.add(id);
+    setOpened(next);
+  };
+  const toggle = (id: string) => {
+    const next = new Map(picked);
+    if (!next.delete(id)) next.set(id, 1);
+    setPicked(next);
+  };
+  const setCount = (id: string, n: number) => setPicked(new Map(picked).set(id, Math.max(1, n)));
+  const words = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  const matches = (i: StockItem) => {
+    const hay = [i.name, i.summary, i.type ?? "", ...(i.tags ?? [])].join(" ").toLowerCase();
+    return words.every((w) => hay.includes(w));
+  };
+  const shown = STOCK.filter((i) => i.category === tab && matches(i));
+  const count = [...picked.values()].reduce((n, q) => n + q, 0);
+  return (
+    <div className="item-picker">
+      <div className="tech-fields tech-fields-light">
+        <div className="tech-field-tab-list" role="tablist" aria-label="Item category">
+          {categories.map((c) => (
+            <button key={c} type="button" role="tab" aria-selected={tab === c} className={`tech-field-tab${tab === c ? " is-active" : ""}`} onClick={() => setTab(c)}>
+              {title(c)}
+            </button>
+          ))}
+          <button type="button" role="tab" aria-selected={tab === "custom"} className={`tech-field-tab${tab === "custom" ? " is-active" : ""}`} onClick={() => setTab("custom")}>
+            Custom
+          </button>
+        </div>
+        {tab === "custom" ? (
+          <div className="item-picker-custom">
+            <p className="hint">An item the game doesn't have yet: name it, say how many, and choose its category.</p>
+            {custom}
+          </div>
+        ) : (
+          <>
+        <div className="filters">
+          <input type="search" placeholder="Search name or tag" value={query} onChange={(e) => setQuery(e.target.value)} aria-label="Search items" />
+        </div>
+        {shown.length === 0 && <p className="empty">No {title(tab).toLowerCase()} items match.</p>}
+        <ul className="item-pick-list">
+          {shown.map((i) => {
+            const qty = picked.get(i.id);
+            const selected = qty !== undefined;
+            const open = opened.has(i.id);
+            const details = itemUses(i);
+            const badges = itemBadges(i).filter((b) => !b.startsWith(MAX_RANGE) && !b.startsWith(AREA));
+            return (
+              <li key={i.id} className={`item-pick-row${selected ? " selected" : ""}`}>
+                {/* The inventory's item card: its top line without Equip, which waits until the character has it */}
+                <div className="c-sheet-box tools-item item-pick">
+                  {selected && (
+                    <span className="tools-item-count" aria-label={`${qty} of ${i.name}`}>
+                      {qty}
+                    </span>
+                  )}
+                  <div className="tools-item-row tools-item-summary">
+                    {/* The name and its stat badges, which drop under it only when they don't fit beside it */}
+                    <span className="tools-item-main">
+                      <span className="tools-item-title">{i.name}</span>
+                      <ItemStats stock={i} />
+                    </span>
+                    <button
+                      type="button"
+                      className="tools-item-icon tools-item-expand"
+                      aria-label={`${open ? "Collapse" : "Expand"} ${i.name}`}
+                      aria-expanded={open}
+                      title={open ? "Collapse" : "Expand"}
+                      onClick={() => toggleOpen(i.id)}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 8" aria-hidden="true">
+                        <path d="M1 1.5l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                      </svg>
+                    </button>
+                  </div>
+                  {open && (
+                    <>
+                      <div className="tools-item-badges">
+                        <Chip>{title(i.category)}</Chip>
+                        {badges.map((b) => (
+                          <Chip key={b}>{b}</Chip>
+                        ))}
+                      </div>
+                      <div className="tools-item-stock">
+                        <p className="tools-item-flavor">{i.summary}</p>
+                        {details && <p className="tools-item-details">{details}</p>}
+                      </div>
+                    </>
+                  )}
+                  {/* Picked, how many to add */}
+                  {selected && (
+                    <div className="rank-step item-pick-count">
+                      <span className="rank-label">Count</span>
+                      <button type="button" aria-label={`One fewer ${i.name}`} disabled={qty <= 1} onClick={() => setCount(i.id, qty - 1)}>
+                        <Sign is="minus" />
+                      </button>
+                      <span className="num">{qty}</span>
+                      <button type="button" aria-label={`One more ${i.name}`} onClick={() => setCount(i.id, qty + 1)}>
+                        <Sign is="plus" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+                {/* The large checkbox that picks it */}
+                <input type="checkbox" className="item-pick-check" aria-label={`Add ${i.name}`} checked={selected} onChange={() => toggle(i.id)} />
+              </li>
+            );
+          })}
+        </ul>
+          </>
+        )}
+      </div>
+      {/* On the Custom tab, Add items only while something is picked, so it doesn't sit beside Add custom item */}
+      {(tab !== "custom" || count > 0) && (
+        <div className="item-picker-submit">
+          <button
+            type="button"
+            className="build-button"
+            disabled={count === 0}
+            onClick={() => onAdd([...picked].map(([id, qty]) => ({ stock: itemById.get(id)!, qty })).filter((p) => p.stock))}
+          >
+            {count === 0 ? "Add items" : `Add ${count} ${count === 1 ? "item" : "items"}`}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // The character's inventory, a column of the sheet after the Knowledges, in
 // the Character Creator and on Player Tools' Tracker. A name the game's stock
 // items know (content/items) adds that item, with its category, description
 // and details; anything else is what the player writes.
 export function Items({ items, onChange }: { items: Item[]; onChange: (items: Item[]) => void }) {
-  // Add item's popup: a stock item from the dropdown, with its count
-  const [stockId, setStockId] = useState("");
-  const [stockQty, setStockQty] = useState("1");
-  // ...or a custom item the player names and sorts
+  // Add item's popup: the game's items to pick from, or a custom item the
+  // player names and sorts
   const [name, setName] = useState("");
   const [qty, setQty] = useState("1");
   const [category, setCategory] = useState<ItemCategory>("gear");
   // Add item's popup, open or not
   const [adding, setAdding] = useState(false);
-  const stockSelectId = useId();
   // Items whose notes field the player opened or closed with the note
   // button; the rest show it only when they have notes.
   const [notesShown, setNotesShown] = useState<Map<string, boolean>>(new Map());
@@ -147,13 +287,14 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
   const update = (item: Item, change: Partial<Item>) => onChange(items.map((i) => (i === item ? { ...i, ...change } : i)));
   const remove = (item: Item) => onChange(items.filter((i) => i !== item));
   const countOf = (n: string) => Math.max(1, Math.round(Number(n)) || 1);
-  // A stock item from the dropdown, as the game describes it
-  const addStock = () => {
-    const stock = itemById.get(stockId);
-    if (!stock) return;
-    onChange(withItem(items, { item: stock.id, name: stock.name, qty: countOf(stockQty), category: stock.category, equipped: false }));
-    setStockId("");
-    setStockQty("1");
+  // The items checked in the picker, as the game describes them
+  const addStock = (picked: { stock: StockItem; qty: number }[]) => {
+    onChange(
+      picked.reduce(
+        (list, { stock, qty: n }) => withItem(list, { item: stock.id, name: stock.name, qty: n, category: stock.category, equipped: false }),
+        items,
+      ),
+    );
     setAdding(false);
   };
   // A custom item: whatever the player writes, unless the name is a stock
@@ -186,60 +327,34 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
       </div>
 
       {adding && (
-        <LorePopup label="Add an item" onClose={() => setAdding(false)} className="sheet-add-popup">
-          <h3 className="subhead">Add an item</h3>
-          {/* Most items come from the game's list: pick one and how many */}
-          <form
-            className="tools-add"
-            onSubmit={(e) => {
-              e.preventDefault();
-              addStock();
-            }}
-          >
-            <select id={stockSelectId} aria-label="Item" className="tools-add-stock" value={stockId} onChange={(e) => setStockId(e.target.value)}>
-              <option value="">Choose an item</option>
-              {ITEM_CATEGORIES.map((c) => {
-                const inCategory = STOCK.filter((i) => i.category === c);
-                return (
-                  inCategory.length > 0 && (
-                    <optgroup key={c} label={title(c)}>
-                      {inCategory.map((i) => (
-                        <option key={i.id} value={i.id}>
-                          {i.name}
-                        </option>
-                      ))}
-                    </optgroup>
-                  )
-                );
-              })}
-            </select>
-            <input type="number" min={1} aria-label="Count" className="tools-qty" value={stockQty} onChange={(e) => setStockQty(e.target.value)} />
-            <button type="submit" disabled={!stockId}>
-              Add item
-            </button>
-          </form>
-          {/* Anything else, named and sorted by the player */}
-          <h4 className="rule tools-add-custom-head">Custom item</h4>
-          <form
-            className="tools-add"
-            onSubmit={(e) => {
-              e.preventDefault();
-              addCustom();
-            }}
-          >
-            <input type="text" placeholder="Item name" aria-label="Custom item name" className="tools-add-name" value={name} onChange={(e) => setName(e.target.value)} />
-            <input type="number" min={1} aria-label="Custom item count" className="tools-qty" value={qty} onChange={(e) => setQty(e.target.value)} />
-            <select aria-label="Category" value={category} onChange={(e) => setCategory(e.target.value as ItemCategory)}>
-              {ITEM_CATEGORIES.map((c) => (
-                <option key={c} value={c}>
-                  {title(c)}
-                </option>
-              ))}
-            </select>
-            <button type="submit" disabled={!name.trim()}>
-              Add custom item
-            </button>
-          </form>
+        <LorePopup label="Add items" onClose={() => setAdding(false)} className="sheet-add-popup item-picker-popup">
+          <h3 className="subhead">Add items</h3>
+          {/* Most items come from the game's list: search, check, set counts */}
+          <ItemPicker
+            onAdd={addStock}
+            custom={
+              <form
+                className="tools-add"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  addCustom();
+                }}
+              >
+                <input type="text" placeholder="Item name" aria-label="Custom item name" className="tools-add-name" value={name} onChange={(e) => setName(e.target.value)} />
+                <input type="number" min={1} aria-label="Custom item count" className="tools-qty" value={qty} onChange={(e) => setQty(e.target.value)} />
+                <select aria-label="Category" value={category} onChange={(e) => setCategory(e.target.value as ItemCategory)}>
+                  {ITEM_CATEGORIES.map((c) => (
+                    <option key={c} value={c}>
+                      {title(c)}
+                    </option>
+                  ))}
+                </select>
+                <button type="submit" disabled={!name.trim()}>
+                  Add custom item
+                </button>
+              </form>
+            }
+          />
         </LorePopup>
       )}
 
@@ -286,8 +401,11 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
             const topLine = (
               <div className="tools-item-row tools-item-summary">
                 {equip}
-                <span className="tools-item-title">{item.name}</span>
-                {stock && <ItemStats stock={stock} />}
+                {/* The name and its stat badges, which drop under it only when they don't fit beside it */}
+                <span className="tools-item-main">
+                  <span className="tools-item-title">{item.name}</span>
+                  {stock && <ItemStats stock={stock} />}
+                </span>
                 {expand}
               </div>
             );

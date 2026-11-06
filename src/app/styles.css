@@ -2879,10 +2879,108 @@
       flex: 1 1 12rem;
       min-width: 0;
     }
+  }
 
-    /* Custom item's ruled title, between the two forms */
-    .tools-add-custom-head {
-      margin: 28px 0 16px;
+  /* Add items as wide as Player Tools' Traits popup, for the cards */
+  .item-picker-popup .lore-modal-panel {
+    max-width: 1100px;
+  }
+
+  /* The picker's rows: the inventory's item card, with room on the left
+     for the count's circle, and a large checkbox at its right. In two
+     columns once there's room. */
+  .item-pick-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(400px, 100%), 1fr));
+    gap: 12px 24px;
+    margin: 0;
+    padding: 0 0 0 14px;
+    align-items: start;
+  }
+
+  .item-pick-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+
+    > .tools-item {
+      flex: 1;
+      min-width: 0;
+    }
+  }
+
+  /* Picked, the card takes the Traits' green edge */
+  .builder-panel .item-pick-row.selected > .c-sheet-box.tools-item {
+    border-color: var(--portfolio-green) !important;
+    box-shadow: 0 0 0 1px var(--portfolio-green), 0 4px 10px #00000030;
+  }
+
+  .item-pick .item-pick-count {
+    margin-top: 8px;
+  }
+
+  /* A large checkbox, centered on the card's top line, green and checked
+     once picked */
+  .item-pick-check {
+    appearance: none;
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    margin: 10px 0 0;
+    background-color: #25241e;
+    border: 2px solid #6d6a5a;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 150ms, border-color 150ms;
+
+    &:hover {
+      border-color: var(--portfolio-green);
+    }
+
+    &:checked {
+      background-color: var(--portfolio-green);
+      border-color: var(--portfolio-green);
+    }
+
+    &:checked::after {
+      content: "✓";
+      color: var(--portfolio-white);
+      font-size: 1.1rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--portfolio-white);
+      outline-offset: 2px;
+    }
+  }
+
+  /* Add items stays in view at the popup's foot while the cards scroll,
+     like Player Tools' Traits Submit */
+  .item-picker-submit {
+    position: sticky;
+    bottom: -32px;
+    z-index: 1;
+    display: flex;
+    justify-content: flex-end;
+    margin: 24px -32px 0;
+    padding: 16px 32px;
+    background: var(--panel);
+    border-top: 1px solid #444;
+  }
+
+  /* Add items turns the creator's green, like Build it, once something is
+     picked (and glitches, with the other things waiting on the player) */
+  .item-picker-submit button:not(:disabled) {
+    background: var(--frontiers-green);
+    color: var(--portfolio-black);
+
+    &:hover {
+      background-color: color-mix(in srgb, var(--frontiers-green) 75%, var(--portfolio-white));
     }
   }
 
@@ -3091,13 +3189,23 @@
      right on its own. */
   .tools-item-summary {
     flex-wrap: nowrap;
+  }
 
-    > .tools-item-icon.tools-item-expand {
-      margin-left: auto;
-    }
+  /* The name and the stat badges between Equip and the chevron. Each badge
+     is its own item here: the name takes what its line leaves, the badges
+     sit at the right, and they wrap under it one at a time as the room runs
+     out, still at the right. */
+  .tools-item-main {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 6px 8px;
 
-    > .tools-item-stats ~ .tools-item-icon.tools-item-expand {
-      margin-left: 4px;
+    > .tools-item-title {
+      flex: 1 1 auto;
     }
   }
 
@@ -3215,34 +3323,10 @@
     margin-top: 10px;
   }
 
-  /* In a closed card's line, they sit at the right before the category,
-     on one line, and the category follows them */
-  .tools-item-summary {
-    .tools-item-stats {
-      flex: none;
-      flex-wrap: nowrap;
-      margin: 0 0 0 auto;
-    }
-
-    .tools-item-stat-group {
-      flex-wrap: nowrap;
-    }
-
-    /* In a narrow card they drop to their own line under it instead */
-    @container item (width < 420px) {
-      flex-wrap: wrap;
-
-      .tools-item-stats {
-        order: 1;
-        flex-basis: 100%;
-        flex-wrap: wrap;
-        margin: 2px 0 0;
-      }
-
-      > .tools-item-stats ~ .tools-item-icon.tools-item-expand {
-        margin-left: auto;
-      }
-    }
+  /* On a card's top line the badges' wrappers step aside, so each badge
+     lays out on its own in .tools-item-main */
+  .tools-item-summary :is(.tools-item-stats, .tools-item-stat-group) {
+    display: contents;
   }
 
   .tools-item-stat-group {
@@ -3509,27 +3593,24 @@
     outline-color: var(--portfolio-white);
   }
 
-  .lore-modal-panel > .trait-box {
-    margin-top: 36px;
-  }
-
   /* A card on its own in the popup (.lore-modal-card: a Trait, Knowledge,
      Kind or background package): the card is the popup's edge, with no
-     panel around it, and the close button floats outside its top right
-     corner. The panel lets it overflow, so a long card scrolls itself. On
-     phones, with no room at the side, the button sits above the card's
-     right edge. */
+     panel around it, and the close button sits on its top right corner
+     like any popup's. A long card scrolls itself. */
   .lore-modal-card {
     .lore-modal-panel {
       max-width: 560px;
-      padding: 0;
       border-radius: 12px;
       background: none;
+    }
+
+    .lore-modal-scroll {
+      padding: 0;
       overflow: visible;
     }
 
     /* View only: no pointer, and no hover border like the cards to pick */
-    .lore-modal-panel > :is(.trait-box, .card) {
+    .lore-modal-scroll > :is(.trait-box, .card) {
       margin: 0;
       max-height: calc(100dvh - 128px);
       overflow-y: auto;
@@ -3540,19 +3621,14 @@
       }
     }
 
+    /* A little smaller on a card */
     .lore-modal-close {
-      top: -36px;
-      right: -36px;
       width: 28px;
       height: 28px;
 
       svg {
         width: 12px;
         height: 12px;
-      }
-
-      @media (max-width: 767px) {
-        right: 0;
       }
     }
   }
@@ -3861,11 +3937,12 @@
    while it has a point to place, and the creator's next step button once
    its step is finished (green), Build it once there's something to
    build, Player Tools' Send once there's a message, and its level up's
-   Submit once every point is placed. The same rhythm, but a faint green glow, a
+   Submit once every point is placed, and Add items once an item is
+   picked. The same rhythm, but a faint green glow, a
    cyan and red split that widens on the flares, and a slight skew instead of the title's slices and
    lurches. Every frame has the same three shadows (green, cyan to the left,
    red to the right), so they blend from one to the next. */
-.sf-creator :is(.tools-issues li, .is-plus:not(:disabled), .pager .step-next.is-done, .describe .build-button:not(:disabled), .tools-chat-send:not(:disabled), .tools-level-actions button:not(:disabled)) {
+.sf-creator :is(.tools-issues li, .is-plus:not(:disabled), .pager .step-next.is-done, .describe .build-button:not(:disabled), .tools-chat-send:not(:disabled), .tools-level-actions button:not(:disabled), .item-picker-submit button:not(:disabled)) {
   animation:
     sf-glitch-small-shift 4s ease-in-out infinite alternate,
     sf-glitch-small-glow 8s ease-in-out infinite alternate;
@@ -3897,7 +3974,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sf-creator :is(.tools-issues li, .is-plus:not(:disabled), .pager .step-next.is-done, .describe .build-button:not(:disabled), .tools-chat-send:not(:disabled), .tools-level-actions button:not(:disabled)) {
+  .sf-creator :is(.tools-issues li, .is-plus:not(:disabled), .pager .step-next.is-done, .describe .build-button:not(:disabled), .tools-chat-send:not(:disabled), .tools-level-actions button:not(:disabled), .item-picker-submit button:not(:disabled)) {
     animation: none;
   }
 }
