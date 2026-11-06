@@ -3624,9 +3624,13 @@
       }
     }
 
+    /* Outside the card, so placed absolutely rather than stuck in the corner */
     .lore-modal-close {
+      position: absolute;
       top: -36px;
       right: -36px;
+      float: none;
+      margin: 0;
       width: 28px;
       height: 28px;
 
