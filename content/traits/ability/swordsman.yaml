@@ -1,0 +1,12 @@
+id: swordsman
+name: "Swordsman"
+status: draft
+plane: any
+summary: "Trained swordplay, beyond knowing which end to hold."
+tags: [combat, melee, swordplay]
+category: ability
+ranked: true
+minStats: { grace: 4, power: 3, intuition: 3 }
+prerequisiteTags: [swords]
+effect: "- This character gains the Riposte Action.\n- Rank *5 added to Skill Check rolls involving swordplay."
+action: "Riposte: While holding a sword, this character may take the Defend Action as a riposte. If a Melee Attack against them misses by 4 or more before their next turn, they may immediately Attack the attacker with that sword."

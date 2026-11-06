@@ -1,0 +1,11 @@
+id: knight
+name: "Knight"
+status: draft
+plane: any
+summary: "Trained to fight armored and on horseback."
+tags: [combat, mounted, cavalry, nobility]
+category: ability
+minStats: { power: 5, endurance: 5, grace: 3, demeanor: 3 }
+prerequisites: [rider-basic-animals]
+effect: "- This character gains the Charge Action.\n- This character can request Advantage on rolls to stay in the saddle or keep control of their mount in a fight."
+action: "Charge: While mounted, this character may Move up to their mount's Movement in a straight line toward a target and Attack it with a melee weapon at the end, adding +3 to the damage. A shield on this character's arm gives the target no extra Defense against it."
