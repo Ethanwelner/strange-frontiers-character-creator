@@ -8,7 +8,7 @@ category: ability
 ranked: true
 minStats: { magic: 5 }
 prerequisites: [heal]
-# On the Magic list: only a character with Magic Access can pick it.
+# On the Magic list: its own tab on the Traits step, open to every character.
 list: magic
 effect: "This character gains the Cast Greater Heal Action."
 action: "Cast Greater Heal: This character may spend 3 MP to heal a living character within 3 m, restoring 8 HP per Rank plus the caster's Magic and ending the Severe Bleeding Condition."

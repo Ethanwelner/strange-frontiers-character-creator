@@ -7,7 +7,7 @@ tags: [magic, spell, spirits, supernatural]
 category: ability
 ranked: true
 minStats: { magic: 4 }
-# On the Magic list: only a character with Magic Access can pick it.
+# On the Magic list: its own tab on the Traits step, open to every character.
 list: magic
 effect: "This character gains the Cast Banish Spirit Action."
 action: "Cast Banish Spirit: This character may spend 2 MP to make an Attack Roll with Magic against a spirit possessing a character within 3 m. On a Solid Hit or better, the character loses the Possessed by a Spirit Trait and the spirit is driven off."

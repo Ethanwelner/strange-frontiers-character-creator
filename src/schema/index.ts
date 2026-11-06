@@ -183,12 +183,11 @@ export const Trait = BaseEntry.extend({
   // Core stats beyond Physical, Social and Mental that holding this Trait
   // lets a character level, like Magic Access's Magic.
   coreAccess: z.array(z.enum(["magic"])).default([]),
-  // Trait lists: a Trait on a list (like Incantation on `magic`) can only be
-  // picked by a character holding a Trait that opens that list (like
-  // Magic Access). Lists are named freely; each is its own tab on the
-  // Traits step.
+  // Trait lists: the special stat a Trait is built on or closely related to
+  // (the Sheet's Special Stat, like Incantation's `magic`). Each list is its
+  // own tab on the Traits step, open to every character; a Trait's stat
+  // requirements, like Magic 1, decide who can actually take it.
   list: z.string().optional(),
-  opensLists: z.array(z.string()).default([]),
   // Traits holding this one conveys, like Magical Heritage's Magic Access,
   // held for as long as this one is, from whatever source.
   grants: z.array(TraitGrant).default([]),

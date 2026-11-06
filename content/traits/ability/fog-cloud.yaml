@@ -7,7 +7,7 @@ tags: [magic, spell, water, air, stealth]
 category: ability
 ranked: true
 minStats: { magic: 1 }
-# On the Magic list: only a character with Magic Access can pick it.
+# On the Magic list: its own tab on the Traits step, open to every character.
 list: magic
 effect: "This character gains the Cast Fog Cloud Action."
 action: "Cast Fog Cloud: This character may spend 1 MP to fill a sphere 3 m across per Rank, at a point within 30 m, with fog for 1 minute per Rank. Characters inside the fog are in Light Cover, and those more than 3 m apart inside it can't see each other."

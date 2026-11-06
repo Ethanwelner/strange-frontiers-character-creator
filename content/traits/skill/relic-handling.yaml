@@ -6,6 +6,6 @@ summary: "Handling magical relics without incident."
 tags: [magic, relics]
 category: skill
 minStats: { grace: 3, intuition: 3, memory: 2 }
-# On the Magic list: only a character with Magical Heritage can pick it.
+# On the Magic list: its own tab on the Traits step, open to every character.
 list: magic
 effect: "This character gains +5 to rolls relating to the safe handling and use of relics or artifacts."

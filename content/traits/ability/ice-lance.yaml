@@ -7,7 +7,7 @@ tags: [magic, spell, cold, attack]
 category: ability
 ranked: true
 minStats: { magic: 2 }
-# On the Magic list: only a character with Magic Access can pick it.
+# On the Magic list: its own tab on the Traits step, open to every character.
 list: magic
 effect: "This character gains the Cast Ice Lance Action."
 action: "Cast Ice Lance: This character may spend 2 MP to Attack a target with a temporary weapon that has the following profile: (Ranged) (max range 40 m) (3 Piercing per Rank, 2 Cold per Rank) (Attack Stat: Magic)."

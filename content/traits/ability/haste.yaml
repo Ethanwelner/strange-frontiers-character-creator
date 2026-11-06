@@ -8,7 +8,7 @@ category: ability
 ranked: true
 minStats: { magic: 4 }
 prerequisites: [magical-grace]
-# On the Magic list: only a character with Magic Access can pick it.
+# On the Magic list: its own tab on the Traits step, open to every character.
 list: magic
 effect: "This character gains the Cast Haste Action."
 action: "Cast Haste: This character may spend 2 MP to give the Hasted Condition to a character within 3 m. The Condition's Rank is equal to the caster's Haste Rank."

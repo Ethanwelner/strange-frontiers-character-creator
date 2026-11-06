@@ -24,8 +24,7 @@ export type IssueCode =
   | "rank-stats"
   | "min-stats"
   | "prerequisite"
-  | "core-access"
-  | "trait-list";
+  | "core-access";
 
 export interface Issue {
   code: IssueCode;
@@ -187,12 +186,10 @@ export function withConveyed(traitIds: Iterable<string>, content: Content): Set<
   return all;
 }
 
-// The Trait lists a character holding these Traits can take from, like the
-// Magic list that Magic Access opens.
-export function listsOpenedBy(traitIds: Iterable<string>, content: Content): Set<string> {
-  const open = new Set<string>();
-  for (const id of withConveyed(traitIds, content)) for (const l of content.traits.find((t) => t.id === id)?.opensLists ?? []) open.add(l);
-  return open;
+// The game's Trait lists, like Magic: one Traits step tab each, open to every
+// character (rule 14).
+export function traitListsOf(content: Content): string[] {
+  return [...new Set(content.traits.flatMap((t) => (t.list ? [t.list] : [])))].sort();
 }
 
 // The core stats a character holding these Traits can level: Physical, Social
@@ -401,14 +398,12 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
 
   // Rule 7: the Background Trait list is the packages' backgroundTraits plus
   // Traits tagged with one of the Kind's traitAccess pools, plus the
-  // Background Traits on any Trait list the build has opened (rule 14).
+  // Background Traits on a Trait list, like Magic (rule 14).
   const access = new Set(kind?.traitAccess ?? []);
-  const openedBefore = listsOpenedBy(held.keys(), content);
   const backgroundList = new Set(packages.flatMap((p) => p.backgroundTraits));
-  // Conveyed Traits never go on it: no pick can buy them. Nor do Traits on a
-  // list the build hasn't opened.
+  // Conveyed Traits never go on it: no pick can buy them.
   for (const t of content.traits) {
-    if (t.conveyed || (t.list && !openedBefore.has(t.list))) continue;
+    if (t.conveyed) continue;
     if (t.tags.some((tag) => access.has(tag)) || (t.list && t.background)) backgroundList.add(t.id);
   }
 
@@ -541,20 +536,10 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
   }
   for (const g of Object.keys(coreStats) as StatGroup[]) coreStats[g] += coreBonus[g];
 
-  // Rule 14: a Trait on a list, like a Magic Trait, needs a held Trait that
-  // opens that list, like Magic Access. Granted Traits skip the check.
-  const opened = listsOpenedBy(held.keys(), content);
-  for (const id of byTrait.keys()) {
-    const t = traits.get(id)!;
-    if (!t.list || opened.has(t.list)) continue;
-    const openers = content.traits.filter((o) => o.opensLists.includes(t.list!)).map((o) => o.name);
-    const list = t.list.charAt(0).toUpperCase() + t.list.slice(1);
-    error(
-      "trait-list",
-      `${label(t)} is on the ${list} list, which this character can't take from${openers.length ? ` without ${openers.join(" or ")}` : ""}`,
-      `traits[${byTrait.get(id)![0]!.index}]`,
-    );
-  }
+  // Rule 14: a Trait list, like Magic, is open to every character. Its Traits
+  // are held to their stat requirements like any other (rule 12), so a Magic 1
+  // Trait is out of reach until the character can level Magic.
+  const traitLists = traitListsOf(content);
 
   // Rule 12: a picked Trait's minimum stats, focus and core, once per Trait.
   for (const id of byTrait.keys()) {
@@ -602,7 +587,7 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
       picks,
       traits: [...held.values()],
       backgroundList: [...backgroundList].sort(),
-      traitLists: [...opened],
+      traitLists,
       questions,
     },
   };

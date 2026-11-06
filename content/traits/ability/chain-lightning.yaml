@@ -8,7 +8,7 @@ category: ability
 ranked: true
 minStats: { magic: 5 }
 prerequisites: [lightning]
-# On the Magic list: only a character with Magic Access can pick it.
+# On the Magic list: its own tab on the Traits step, open to every character.
 list: magic
 effect: "This character gains the Cast Chain Lightning Action."
 action: "Cast Chain Lightning: This character may spend 3 MP to Attack a target with a temporary weapon that has the following profile: (Ranged) (max range 60 m) (4 Electrical per Rank, 1 EMP per Rank) (Attack Stat: Magic). On a hit, the lightning leaps to one more character per Rank within 5 m of the last one struck, each hit as if with a Glancing Blow."

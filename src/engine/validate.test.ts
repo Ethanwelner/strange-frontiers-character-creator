@@ -853,23 +853,20 @@ describe("rule 13: Magic", () => {
     expect(h.summary!.resources.mp).toBe(0);
   });
 
-  it("lets only a character with Magic Access take Traits on the Magic list (rule 14)", () => {
-    const pick = (b: BuildInput, trait: string, kind: "universal" | "background" = "universal") => check({ ...b, traits: [{ trait, pick: kind }] });
-    expect(pick(isek, "incantation").errors.filter((e) => e.code === "trait-list")).toEqual([]);
-    expect(pick(isek, "incantation").summary!.traitLists).toEqual(["magic"]);
-    expect(pick(human, "incantation").errors).toEqual([
-      expect.objectContaining({
-        code: "trait-list",
-        message: "Incantation (incantation) is on the Magic list, which this character can't take from without Magic Access",
-      }),
-    ]);
-    expect(pick(human, "incantation").summary!.traitLists).toEqual([]);
-    // A Background Trait on an open list joins the Background Trait list.
-    expect(check(isek, withFixtures).summary!.backgroundList).toContain("fixture-spell-ward");
-    expect(check(human, withFixtures).summary!.backgroundList).not.toContain("fixture-spell-ward");
-    const ward = check({ ...isek, traits: [{ trait: "fixture-spell-ward", pick: "background" }] }, withFixtures);
-    expect(ward.errors.filter((e) => e.code === "pick-type" || e.code === "trait-list")).toEqual([]);
-    // A package can still grant a listed Trait to anyone, like a Human hedge witch's Magic on Isekai.
+  it("opens the Magic list to every character, and leaves it to stat requirements (rule 14)", () => {
+    const pick = (b: BuildInput, trait: string) => check({ ...b, traits: [{ trait, pick: "universal" }] }, loaded.content);
+    // Every character gets the Magic list's tab.
+    expect(check(human).summary!.traitLists).toEqual(["magic"]);
+    expect(check(isek).summary!.traitLists).toEqual(["magic"]);
+    // A Human can't level Magic, so Incantation's Magic 1 keeps it out of reach.
+    expect(pick(human, "incantation").errors.map((e) => e.message)).toContainEqual(expect.stringMatching(/Incantation .* needs .*magic 1/));
+    // A Magic-related Trait with no Magic requirement is open to anyone who meets its stats.
+    expect(pick(human, "relic-handling").errors.map((e) => e.message).filter((m) => m.includes("magic"))).toEqual([]);
+    // A Background Trait on a list joins every character's Background Trait list.
+    expect(check(human, withFixtures).summary!.backgroundList).toContain("fixture-spell-ward");
+    const ward = check({ ...human, traits: [{ trait: "fixture-spell-ward", pick: "background" }] }, withFixtures);
+    expect(ward.errors.filter((e) => e.code === "pick-type")).toEqual([]);
+    // A package can still grant a listed Trait, like a Human hedge witch's Magic on Isekai.
     expect(check({ ...human, profession: "hedge-witch", choices: [] }).summary!.traits.map((h) => h.trait)).toContain("magic-on-isekai");
   });
 

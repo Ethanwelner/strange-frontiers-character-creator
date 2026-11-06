@@ -7,6 +7,6 @@ tags: [magic, artifacts, repair, crafting]
 category: skill
 minStats: { grace: 4, magic: 2, memory: 3 }
 prerequisites: [enchanting]
-# On the Magic list: only a character with Magic Access can pick it.
+# On the Magic list: its own tab on the Traits step, open to every character.
 list: magic
 effect: "This character gains +5 to rolls relating to repairing a Damaged magical artifact."
