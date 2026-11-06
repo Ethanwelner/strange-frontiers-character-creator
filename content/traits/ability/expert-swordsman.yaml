@@ -1,0 +1,12 @@
+id: expert-swordsman
+name: "Expert Swordsman"
+status: draft
+plane: any
+summary: "A sword master, the kind people tell stories about."
+tags: [combat, melee, swordplay, expert]
+category: ability
+mastery: true
+minStats: { grace: 8, power: 6, intuition: 6, endurance: 4 }
+prerequisites: [swordsman]
+effect: "- This character gains the Flurry Action.\n- This character can request Advantage on Attack Rolls made with swords."
+action: "Flurry: As a Full RP Action, this character makes two Attacks with a sword, against the same target or two targets within its reach, each at -3 to the Attack Roll."

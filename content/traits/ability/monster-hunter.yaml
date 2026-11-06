@@ -1,0 +1,12 @@
+id: monster-hunter
+name: "Monster Hunter"
+status: draft
+plane: any
+summary: "Hunting and killing monsters and extraplanar beings."
+tags: [combat, monsters, hunting]
+category: ability
+ranked: true
+minStats: { grace: 4, intuition: 4, endurance: 3 }
+prerequisites: [hunter]
+effect: "- Rank *1 added to this character's Attack Rolls against monsters and extraplanar beings.\n- +3 Defense against a creature this character has marked with Mark Quarry."
+modifiers: "Attack Rolls +1 per Rank (monsters and extraplanar beings), Defense +3 (against a marked quarry)"

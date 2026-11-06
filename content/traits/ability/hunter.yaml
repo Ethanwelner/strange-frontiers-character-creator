@@ -1,0 +1,17 @@
+id: hunter
+name: "Hunter"
+status: draft
+plane: any
+summary: "Stalking game and bringing it down."
+tags: [combat, hunting, wilderness]
+category: ability
+ranked: true
+minStats: { intuition: 4, grace: 3, endurance: 3 }
+prerequisites: [tracker]
+choices:
+  - choose: 1
+    from: quarry
+    note: "What counts as quarry"
+    perRank: false
+effect: "- This character gains the Mark Quarry Action.\n- Rank *5 added to Skill Check rolls involving hunting, stalking or field dressing game."
+action: "Mark Quarry: As a Partial RP Action, this character may spend 1 SP and make a Skill Check with a relevant Knowledge about a creature they can see that counts as their quarry. On a success, they gain +3 to Attack Rolls against it for the rest of the Incident."

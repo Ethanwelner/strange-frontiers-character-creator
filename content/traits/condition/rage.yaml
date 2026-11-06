@@ -1,0 +1,10 @@
+id: rage
+name: "Rage"
+status: draft
+plane: any
+summary: "Seeing red."
+tags: [combat, rage]
+category: condition
+conveyed: true
+temporary: "Ends after any turn in which this character didn't make an Attack."
+effect: "- This character's Attacks deal x2 damage.\n- -10 to this character's Social and Mental rolls."

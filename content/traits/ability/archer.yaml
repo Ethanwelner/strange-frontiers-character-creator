@@ -1,0 +1,12 @@
+id: archer
+name: "Archer"
+status: draft
+plane: any
+summary: "Trained to shoot well, not just often."
+tags: [combat, ranged, archer]
+category: ability
+ranked: true
+minStats: { grace: 4, intuition: 4, power: 2 }
+prerequisiteTags: [archery]
+effect: "- This character gains the Aimed Shot Action.\n- Rank *5 added to Skill Check rolls involving archery."
+action: "Aimed Shot: This character Attacks with a bow or crossbow at +4 to the Attack Roll, but loses 6 Priority for the Round."

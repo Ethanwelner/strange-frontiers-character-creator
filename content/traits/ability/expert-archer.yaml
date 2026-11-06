@@ -1,0 +1,12 @@
+id: expert-archer
+name: "Expert Archer"
+status: draft
+plane: any
+summary: "An archer who rarely needs a second arrow."
+tags: [combat, ranged, archer, expert]
+category: ability
+mastery: true
+minStats: { grace: 8, intuition: 6, power: 4, endurance: 4 }
+prerequisites: [archer]
+effect: "- This character gains the Volley Action.\n- This character can request Advantage on Attack Rolls made with bows and crossbows."
+action: "Volley: As a Full RP Action, this character makes two Attacks with a bow, against the same target or two targets within 5 m of each other, each at -3 to the Attack Roll."
