@@ -7,5 +7,5 @@ tags: [combat, firearms]
 category: skill
 ranked: true
 minStats: { grace: 2, power: 3, intuition: 2 }
-effect: "Rank *5 added to skill check rolls involving a Shotgun. +3 to Attack Rolls made with a Shotgun, at any Rank. This character is capable of performing the basic tasks of maintaining a Shotgun without a skill check."
+effect: "- Rank *5 added to skill check rolls involving a Shotgun.\n- +3 to Attack Rolls made with a Shotgun, at any Rank.\n- This character is capable of performing the basic tasks of maintaining a Shotgun without a skill check."
 modifiers: "Attack Rolls +3 (Shotgun)"

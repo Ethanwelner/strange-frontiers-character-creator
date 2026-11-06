@@ -158,6 +158,34 @@ export function LorePopup({ label, onClose, children, className = "" }: { label:
 // Ranged Attack or a sword for a Melee one, then its Max Range by an arc
 // and its Area of Effect by a burst, then its Attack type and Stat. With the Trait's Rank, "per Rank"
 // amounts are worked out; without it (the Traits step), they say per Rank.
+// A Trait's effect. Lines starting with "- " are bullets, one for each part
+// of the effect that does something different; other lines are paragraphs.
+export function Effect({ text }: { text: string }) {
+  const lines = text.split("\n").map((l) => l.trim()).filter(Boolean);
+  if (!lines.some((l) => l.startsWith("- "))) return <p className="effect">{text}</p>;
+  const blocks: (string | string[])[] = [];
+  for (const l of lines) {
+    if (!l.startsWith("- ")) blocks.push(l);
+    else if (Array.isArray(blocks.at(-1))) (blocks.at(-1) as string[]).push(l.slice(2));
+    else blocks.push([l.slice(2)]);
+  }
+  return (
+    <div className="effect">
+      {blocks.map((b, i) =>
+        Array.isArray(b) ? (
+          <ul key={i}>
+            {b.map((li, j) => (
+              <li key={j}>{li}</li>
+            ))}
+          </ul>
+        ) : (
+          <p key={i}>{b}</p>
+        ),
+      )}
+    </div>
+  );
+}
+
 export function TraitAction({ action, rank }: { action?: string; rank?: number }) {
   if (!action) return null;
   const colon = action.indexOf(": ");

@@ -7,5 +7,5 @@ tags: [combat, heavy weapons, fire]
 category: skill
 ranked: true
 minStats: { endurance: 3, power: 3 }
-effect: "Rank *5 added to skill check rolls involving a Flamethrower. +3 to Attack Rolls made with a Flamethrower, at any Rank. This character is capable of performing the basic tasks of maintaining a Flamethrower without a skill check."
+effect: "- Rank *5 added to skill check rolls involving a Flamethrower.\n- +3 to Attack Rolls made with a Flamethrower, at any Rank.\n- This character is capable of performing the basic tasks of maintaining a Flamethrower without a skill check."
 modifiers: "Attack Rolls +3 (Flamethrower)"
