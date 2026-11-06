@@ -183,9 +183,10 @@ export function Tracker({
             newFrom={play.draft.traits.length}
           />
           <div className="tools-traits-submit">
+            {/* Green and glitching, like Add items, once the picks change the character's Traits */}
             <button
               type="button"
-              className="build-button"
+              className={`build-button${JSON.stringify(traitDraft.traits) !== JSON.stringify(play.draft.traits) ? " is-ready" : ""}`}
               onClick={() => {
                 onChange({ ...play, draft: traitDraft });
                 setTraitDraft(undefined);
