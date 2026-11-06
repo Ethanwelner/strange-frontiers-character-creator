@@ -1,0 +1,13 @@
+id: detect-magic
+name: "Detect Magic"
+status: draft
+plane: any
+summary: "Senses the magic nearby."
+tags: [magic, spell, senses, utility]
+category: ability
+ranked: true
+minStats: { magic: 1 }
+# On the Magic list: only a character with Magic Access can pick it.
+list: magic
+effect: "This character gains the Cast Detect Magic Action."
+action: "Cast Detect Magic: This character may spend 1 MP to sense every magical object, spell and (Enchantment) Condition within 10 m per Rank, and where each one is."

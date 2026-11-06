@@ -1,0 +1,13 @@
+id: darkness
+name: "Darkness"
+status: draft
+plane: any
+summary: "Fills a space with darkness no lamp can pierce."
+tags: [magic, spell, darkness, stealth]
+category: ability
+ranked: true
+minStats: { magic: 2 }
+# On the Magic list: only a character with Magic Access can pick it.
+list: magic
+effect: "This character gains the Cast Darkness Action."
+action: "Cast Darkness: This character may spend 1 MP to fill a sphere 3 m across per Rank, at a point within 20 m, with magical darkness for 1 minute per Rank. Light that isn't magical doesn't shine into it, and characters inside it can't be seen from outside."
