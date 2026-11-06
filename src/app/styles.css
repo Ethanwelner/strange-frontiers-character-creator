@@ -781,6 +781,17 @@
     &:hover:not(:disabled) {
       background: #858585;
     }
+
+    /* A + with a point to place glitches (below), and turns the creator's
+       green like the other things waiting on the player, so it's hard to miss */
+    &.is-plus:not(:disabled) {
+      background: var(--frontiers-green);
+      color: var(--portfolio-black);
+
+      &:hover {
+        background: color-mix(in srgb, var(--frontiers-green) 75%, var(--portfolio-white));
+      }
+    }
   }
 
   .panel :is(.muted, .hint, .empty) {
