@@ -44,7 +44,7 @@ Every tab's Description is `summary`, Tags is `tags`, and Notes is for anything 
 | Packages: Background Traits | `backgroundTraits` |
 | Traits: Category | `category`; Language rows are `knowledge` with `types: [language]`. "X (Spoken)" has id `x` and "X (Written)" `x-written`, both with `language: x`, which pairs them for spoken-and-written choices |
 | Traits: Ranked, Conveyed | `ranked`, `conveyed` |
-| Traits: Effect | `effect` |
+| Traits: Effect | `effect`. Each part of an effect that does something different can be its own bullet: in the Sheet, a line per bullet starting with `- ` in the cell; in YAML, the same lines joined with `\n` (like the Wielder skills). Lines without `- ` show as paragraphs |
 | Traits: Stat Requirements | `minStats` (focus or core: "Power 3", "Physical 5") |
 | Traits: Prerequisites | a Trait's name in `prerequisites`, "Any Pilot skill" in `prerequisiteTags: [pilot]`, anything else in `rpRequirement` |
 | Traits: Mastery, Type, Temporary | `mastery`, `types`, `temporary` |

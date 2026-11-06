@@ -7,5 +7,5 @@ tags: [combat, firearms, sidearm]
 category: skill
 ranked: true
 minStats: { grace: 3, intuition: 2 }
-effect: "This character is capable of performing the basic tasks of maintaining a Pistol without a skill check. Rank *5 added to skill check rolls involving a Pistol. +3 to Attack Rolls made with a Pistol, at any Rank."
+effect: "- Rank *5 added to skill check rolls involving a Pistol.\n- +3 to Attack Rolls made with a Pistol, at any Rank.\n- This character is capable of performing the basic tasks of maintaining a Pistol without a skill check."
 modifiers: "Attack Rolls +3 (Pistol)"

@@ -5,7 +5,7 @@ import { TraitCategory, type Trait } from "../../schema/index.js";
 import { traitOptions, type TraitTab } from "../check.js";
 import { content, traitById } from "../content.js";
 import { addPick, type Draft } from "../draft.js";
-import { Chip, SettingIcon, Sign, StepHeader, TraitAction, title, traitName, traitRegionClass } from "./ui.js";
+import { Chip, Effect, SettingIcon, Sign, StepHeader, title, TraitAction, traitName, traitRegionClass } from "./ui.js";
 
 interface Props {
   draft: Draft;
@@ -202,7 +202,7 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom }:
                         {t.mastery && <Chip tone="muted">Mastery</Chip>}
                       </div>
                       <p>{t.summary}</p>
-                      <p className="effect">{t.effect}</p>
+                      <Effect text={t.effect} />
                       <TraitAction action={t.action} />
                       {requirements(t) && <p className="muted small">Needs {requirements(t)}</p>}
                       {t.tags.length > 0 && <p className="tags">{t.tags.map((tag) => `#${tag}`).join(" ")}</p>}

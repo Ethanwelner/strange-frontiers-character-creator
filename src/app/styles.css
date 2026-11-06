@@ -3713,6 +3713,24 @@
 
   .effect {
     font-size: 0.9rem;
+
+    /* A bulleted effect: a line for each part that does something different */
+    > p,
+    > ul {
+      margin: 0;
+    }
+
+    > * + * {
+      margin-top: 4px;
+    }
+
+    > ul {
+      padding-left: 1.25em;
+    }
+
+    li + li {
+      margin-top: 2px;
+    }
   }
 
   /* The Action a Trait grants, under its effect, set off by a rule at its left */

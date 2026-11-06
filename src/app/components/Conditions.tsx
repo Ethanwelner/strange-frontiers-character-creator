@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { content, traitById } from "../content.js";
 import { hpConditions, playConditions, withCondition, withoutCondition, type HeldCondition } from "../conditions.js";
-import { LorePopup, Sign, TraitAction } from "./ui.js";
+import { Effect, LorePopup, Sign, TraitAction } from "./ui.js";
 
 // The Conditions, the same on the Character Creator's sheet and in Player
 // Tools: the ones HP decides (from `hp` of `maxHp`), and the temporary ones
@@ -64,7 +64,7 @@ export function Conditions({
             <li key={id} className="trait-box">
               <div className="trait-name">{t?.name ?? id}</div>
               <p className="muted small">From HP. {t?.temporary}</p>
-              {t && <p className="effect">{t.effect}</p>}
+              {t && <Effect text={t.effect} />}
               <TraitAction action={t?.action} />
             </li>
           );
@@ -97,7 +97,7 @@ export function Conditions({
                 </div>
               )}
               {t?.temporary && <p className="muted small">{t.temporary}.</p>}
-              {t && <p className="effect">{t.effect}</p>}
+              {t && <Effect text={t.effect} />}
               <TraitAction action={t?.action} />
             </li>
           );

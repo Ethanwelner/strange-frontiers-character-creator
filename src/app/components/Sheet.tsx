@@ -9,7 +9,7 @@ import type { HeldCondition } from "../conditions.js";
 import { CharacterLine } from "./CharacterLine.js";
 import { Conditions } from "./Conditions.js";
 import { Items } from "./Items.js";
-import { askerName, baseStats, Chip, CoreLine, DescriptionBox, Icon, LorePopup, NameField, Portrait, SettingIcon, StatLine, StepHeader, title, TraitAction, traitName, traitRegionClass } from "./ui.js";
+import { askerName, baseStats, Chip, CoreLine, DescriptionBox, Effect, Icon, LorePopup, NameField, Portrait, SettingIcon, StatLine, StepHeader, title, TraitAction, traitName, traitRegionClass } from "./ui.js";
 
 // Each resource's full name, shown on hover, as in Player Tools
 export const RESOURCE_NAMES = { hp: "Hit Points", vp: "Vibe Points", sp: "Savvy Points", mp: "Mana Points" } as const;
@@ -104,7 +104,7 @@ function TraitCard({
           </span>
         )}
       </div>
-      {keepEffect && t && <p className="effect">{t.effect}</p>}
+      {keepEffect && t && <Effect text={t.effect} />}
       {open && (
         <>
           {/* The category, then where the Trait came from, on one line */}
@@ -112,7 +112,7 @@ function TraitCard({
             {t ? <Chip>{title(t.category)}</Chip> : <Chip tone="bad">not in content yet</Chip>}
             <span className="muted small trait-card-from">From {held.sources.map(source).join(", ")}</span>
           </div>
-          {!keepEffect && t && <p className="effect">{t.effect}</p>}
+          {!keepEffect && t && <Effect text={t.effect} />}
           <TraitAction action={t?.action} rank={held.rank} />
           {places.length > 0 && (
             <p className="small">
