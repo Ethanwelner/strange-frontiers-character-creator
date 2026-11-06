@@ -101,13 +101,14 @@ function ItemStats({ stock }: { stock: StockItem }) {
   );
 }
 
-// Add item's picker, like the Traits step: a search and a checkbox per
-// category over the game's items, grouped by category, as the inventory's
-// item cards. Picking a card (its checkbox, or a click on it) shows a count
-// to set; Add items adds every picked one.
+// Add item's picker, like the Traits step: a tab per category, each with a
+// search, over the game's items as the inventory's item cards. A large
+// checkbox at each card's right picks it, with a count to set; Add items
+// adds every picked one, from any tab.
 function ItemPicker({ onAdd }: { onAdd: (picked: { stock: StockItem; qty: number }[]) => void }) {
+  const categories = ITEM_CATEGORIES.filter((c) => STOCK.some((i) => i.category === c));
+  const [tab, setTab] = useState<ItemCategory>(categories[0]!);
   const [query, setQuery] = useState("");
-  const [hidden, setHidden] = useState<Set<ItemCategory>>(new Set());
   const [picked, setPicked] = useState<Map<string, number>>(new Map());
   // Cards opened to their badges and description
   const [opened, setOpened] = useState<Set<string>>(new Set());
@@ -115,11 +116,6 @@ function ItemPicker({ onAdd }: { onAdd: (picked: { stock: StockItem; qty: number
     const next = new Set(opened);
     if (!next.delete(id)) next.add(id);
     setOpened(next);
-  };
-  const toggleCategory = (c: ItemCategory) => {
-    const next = new Set(hidden);
-    if (!next.delete(c)) next.add(c);
-    setHidden(next);
   };
   const toggle = (id: string) => {
     const next = new Map(picked);
@@ -129,55 +125,43 @@ function ItemPicker({ onAdd }: { onAdd: (picked: { stock: StockItem; qty: number
   const setCount = (id: string, n: number) => setPicked(new Map(picked).set(id, Math.max(1, n)));
   const words = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
   const matches = (i: StockItem) => {
-    const hay = [i.name, i.summary, i.category, i.type ?? "", ...(i.tags ?? [])].join(" ").toLowerCase();
+    const hay = [i.name, i.summary, i.type ?? "", ...(i.tags ?? [])].join(" ").toLowerCase();
     return words.every((w) => hay.includes(w));
   };
-  const categories = ITEM_CATEGORIES.filter((c) => STOCK.some((i) => i.category === c));
-  const groups = categories
-    .filter((c) => !hidden.has(c))
-    .map((c) => ({ category: c, items: STOCK.filter((i) => i.category === c && matches(i)) }))
-    .filter((g) => g.items.length > 0);
+  const shown = STOCK.filter((i) => i.category === tab && matches(i));
+  const pickedIn = (c: ItemCategory) => STOCK.filter((i) => i.category === c && picked.has(i.id)).length;
   const count = [...picked.values()].reduce((n, q) => n + q, 0);
   return (
     <div className="item-picker">
-      <div className="filters">
-        <input type="search" placeholder="Search name or tag" value={query} onChange={(e) => setQuery(e.target.value)} aria-label="Search items" />
-        {categories.map((c) => (
-          <label key={c} className="check">
-            <input type="checkbox" checked={!hidden.has(c)} onChange={() => toggleCategory(c)} /> {title(c)}
-          </label>
-        ))}
-      </div>
-      {groups.length === 0 && <p className="empty">No items match.</p>}
-      {groups.map((g) => (
-        <div key={g.category} className="trait-group">
-          <h3 className="subhead">{title(g.category)}</h3>
-          <ul className="tools-item-list item-pick-list">
-            {g.items.map((i) => {
-              const qty = picked.get(i.id);
-              const selected = qty !== undefined;
-              const open = opened.has(i.id);
-              const details = itemUses(i);
-              const badges = itemBadges(i).filter((b) => !b.startsWith(MAX_RANGE) && !b.startsWith(AREA));
-              return (
-                <li
-                  key={i.id}
-                  className={`c-sheet-box tools-item item-pick${selected ? " selected" : ""}`}
-                  // A click anywhere on the card picks it, except on its own controls
-                  onClick={(e) => !(e.target as HTMLElement).closest("button, input, label") && toggle(i.id)}
-                >
-                  {/* How many, in the item card's circle on the left edge, once picked */}
+      <div className="tech-fields tech-fields-light">
+        <div className="tech-field-tab-list" role="tablist" aria-label="Item category">
+          {categories.map((c) => (
+            <button key={c} type="button" role="tab" aria-selected={tab === c} className={`tech-field-tab${tab === c ? " is-active" : ""}`} onClick={() => setTab(c)}>
+              {title(c)} <span className="num">{pickedIn(c) > 0 ? `${pickedIn(c)} picked` : STOCK.filter((i) => i.category === c).length}</span>
+            </button>
+          ))}
+        </div>
+        <div className="filters">
+          <input type="search" placeholder="Search name or tag" value={query} onChange={(e) => setQuery(e.target.value)} aria-label="Search items" />
+        </div>
+        {shown.length === 0 && <p className="empty">No {title(tab).toLowerCase()} items match.</p>}
+        <ul className="item-pick-list">
+          {shown.map((i) => {
+            const qty = picked.get(i.id);
+            const selected = qty !== undefined;
+            const open = opened.has(i.id);
+            const details = itemUses(i);
+            const badges = itemBadges(i).filter((b) => !b.startsWith(MAX_RANGE) && !b.startsWith(AREA));
+            return (
+              <li key={i.id} className={`item-pick-row${selected ? " selected" : ""}`}>
+                {/* The inventory's item card: its top line without Equip, which waits until the character has it */}
+                <div className="c-sheet-box tools-item item-pick">
                   {selected && (
                     <span className="tools-item-count" aria-label={`${qty} of ${i.name}`}>
                       {qty}
                     </span>
                   )}
-                  {/* The item card's top line, a pick checkbox in Equip's place */}
                   <div className="tools-item-row tools-item-summary">
-                    <label className="tools-equipped" title="Pick">
-                      <input type="checkbox" aria-label={`Pick ${i.name}`} checked={selected} onChange={() => toggle(i.id)} />
-                      <span className="tools-equipped-label">Pick</span>
-                    </label>
                     <span className="tools-item-title">{i.name}</span>
                     <ItemStats stock={i} />
                     <button
@@ -193,7 +177,6 @@ function ItemPicker({ onAdd }: { onAdd: (picked: { stock: StockItem; qty: number
                       </svg>
                     </button>
                   </div>
-                  {/* Open, the card's badges and description, as in the inventory */}
                   {open && (
                     <>
                       <div className="tools-item-badges">
@@ -221,12 +204,14 @@ function ItemPicker({ onAdd }: { onAdd: (picked: { stock: StockItem; qty: number
                       </button>
                     </div>
                   )}
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      ))}
+                </div>
+                {/* The large checkbox that picks it */}
+                <input type="checkbox" className="item-pick-check" aria-label={`Add ${i.name}`} checked={selected} onChange={() => toggle(i.id)} />
+              </li>
+            );
+          })}
+        </ul>
+      </div>
       <div className="item-picker-submit">
         <button
           type="button"

@@ -2891,22 +2891,76 @@
     max-width: 1100px;
   }
 
-  /* The picker's item cards: the inventory's, in columns with room on the
-     left for the count's circle, picked with the Traits' green edge */
+  /* The picker's rows: the inventory's item card, with room on the left
+     for the count's circle, and a large checkbox at its right. In two
+     columns once there's room. */
   .item-pick-list {
-    padding-left: 14px;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(400px, 100%), 1fr));
+    gap: 12px 24px;
+    margin: 0;
+    padding: 0 0 0 14px;
+    align-items: start;
   }
 
-  .builder-panel .c-sheet-box.tools-item.item-pick {
-    cursor: pointer;
+  .item-pick-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
 
-    &.selected {
-      border-color: var(--portfolio-green) !important;
-      box-shadow: 0 0 0 1px var(--portfolio-green), 0 4px 10px #00000030;
+    > .tools-item {
+      flex: 1;
+      min-width: 0;
+    }
+  }
+
+  /* Picked, the card takes the Traits' green edge */
+  .builder-panel .item-pick-row.selected > .c-sheet-box.tools-item {
+    border-color: var(--portfolio-green) !important;
+    box-shadow: 0 0 0 1px var(--portfolio-green), 0 4px 10px #00000030;
+  }
+
+  .item-pick .item-pick-count {
+    margin-top: 8px;
+  }
+
+  /* A large checkbox, centered on the card's top line, green and checked
+     once picked */
+  .item-pick-check {
+    appearance: none;
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    margin: 10px 0 0;
+    background-color: #25241e;
+    border: 2px solid #6d6a5a;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 150ms, border-color 150ms;
+
+    &:hover {
+      border-color: var(--portfolio-green);
     }
 
-    .item-pick-count {
-      margin-top: 8px;
+    &:checked {
+      background-color: var(--portfolio-green);
+      border-color: var(--portfolio-green);
+    }
+
+    &:checked::after {
+      content: "✓";
+      color: var(--portfolio-white);
+      font-size: 1.1rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--portfolio-white);
+      outline-offset: 2px;
     }
   }
 
