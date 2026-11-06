@@ -12,7 +12,11 @@ const MAX_RANGE = "Max Range: ";
 const AREA = "Area of Effect: ";
 
 // Stock items to suggest while typing a name, money left out until wealth has rules.
-const STOCK = content.items.filter((i) => i.category !== "currency").sort((a, b) => a.name.localeCompare(b.name));
+// Natural weapons, like Fists or a Haymaker, come with the character or a
+// Trait rather than being picked up, so they aren't stock items.
+const STOCK = content.items
+  .filter((i) => i.category !== "currency" && !i.tags.includes("natural weapon"))
+  .sort((a, b) => a.name.localeCompare(b.name));
 
 // A stock item's damage and resistances as badges, in a closed card's line
 // before its category, and under an open card's fields. Each badge starts
@@ -46,6 +50,7 @@ function ItemStats({ stock }: { stock: StockItem }) {
                     <span key={d.type} className="tools-item-stat-value">
                       <Icon name={damageIcon(d.type)} label={d.type} />
                       {d.amount}
+                      {d.plus && ` + ${d.plus}`}
                     </span>
                   ))}
                 </Fragment>

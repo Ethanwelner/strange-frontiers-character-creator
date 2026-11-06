@@ -1,0 +1,15 @@
+id: five-fingered-palm-of-death
+name: "Five Fingered Palm of Death"
+status: draft
+plane: any
+summary: "Five fingertips to five points on the chest. A few steps later, the heart stops."
+tags: [natural weapon, martial arts]
+type: weapon
+category: weapon
+damage: "1 Blunt + Power"
+attackType: "Melee"
+maxRange: "1 m"
+attackStat: "Grace"
+onHit: "Critical Hit: the target makes an Endurance check against the damage dealt *5, and its HP drops to 0 if it fails"
+modifiers: "Attack Rolls -5"
+notes: "Natural weapon, granted by Martial Arts Master."

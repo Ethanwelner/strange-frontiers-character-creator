@@ -2,10 +2,9 @@ id: martial-artist
 name: "Martial Artist"
 status: draft
 plane: any
-summary: "A master of fighting without weapons."
-tags: [combat, unarmed, martial arts, expert]
+summary: "Trained in a fighting art without weapons."
+tags: [combat, unarmed, martial arts]
 category: skill
-mastery: true
-minStats: { grace: 8, power: 6, endurance: 6, intuition: 5 }
+minStats: { grace: 5, power: 4, endurance: 4, intuition: 3 }
 prerequisites: [brawler, footwork]
-effect: "- This character can request Advantage on Attack Rolls made with Unarmed Strike and on rolls to keep their balance or footing in a fight.\n- Unarmed Strike deals +1 Blunt damage."
+effect: "- This character can Attack with the Roundhouse Kick natural weapon.\n- This character can request Advantage on rolls to keep their balance or footing in a fight.\n- Natural weapon attacks deal +1 Blunt damage."

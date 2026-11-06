@@ -1,0 +1,10 @@
+id: brawler
+name: "Brawler"
+status: draft
+plane: any
+summary: "Fighting with fists, feet, elbows and whatever else is attached."
+tags: [combat, unarmed, brawling]
+category: skill
+ranked: true
+minStats: { power: 3, endurance: 3 }
+effect: "Rank *1 added to the Blunt damage of this character's natural weapons."

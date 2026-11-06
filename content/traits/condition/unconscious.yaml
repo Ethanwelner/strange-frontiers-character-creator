@@ -1,0 +1,10 @@
+id: unconscious
+name: "Unconscious"
+status: draft
+plane: any
+summary: "Knocked out cold."
+tags: [health, injury, knockout]
+category: condition
+conveyed: true
+temporary: "Lasts until the character takes damage or another character spends their Action waking them."
+effect: "This character has been knocked out and can't perform voluntary Actions or perceive the world around them."
