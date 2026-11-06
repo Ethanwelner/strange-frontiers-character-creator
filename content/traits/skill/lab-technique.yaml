@@ -1,0 +1,10 @@
+id: lab-technique
+name: "Lab Technique"
+status: draft
+plane: any
+summary: "Running experiments cleanly, safely and repeatably."
+tags: [science, laboratory, research]
+category: skill
+ranked: true
+minStats: { grace: 3, logic: 3, memory: 3 }
+effect: "This character is capable of running a standard laboratory procedure without a Skill Check. Rank *10 added to Skill Check rolls involving laboratory work."

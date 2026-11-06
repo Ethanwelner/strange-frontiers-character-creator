@@ -1,0 +1,10 @@
+id: physical-training
+name: "Physical Training"
+status: draft
+plane: any
+summary: "Building strength, speed and stamina."
+tags: [athletics, training, fitness]
+category: knowledge
+ranked: true
+minStats: { memory: 2, endurance: 2 }
+effect: "This character has knowledge of physical training and can be assumed to be familiar with exercise, conditioning, nutrition and recovery."

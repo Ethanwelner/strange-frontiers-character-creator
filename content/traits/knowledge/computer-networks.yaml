@@ -1,0 +1,10 @@
+id: computer-networks
+name: "Computer Networks"
+status: draft
+plane: earth
+summary: "How systems connect, talk and fail."
+tags: [computers, networks, security]
+category: knowledge
+ranked: true
+minStats: { memory: 3, logic: 3 }
+effect: "This character has knowledge of computer networks and can be assumed to be familiar with how networks are built, secured and attacked."

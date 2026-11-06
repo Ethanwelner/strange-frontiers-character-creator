@@ -1,0 +1,10 @@
+id: cultural-fluency
+name: "Cultural Fluency"
+status: draft
+plane: any
+summary: "Fitting in among people with customs not your own."
+tags: [culture, diplomacy, social]
+category: skill
+ranked: true
+minStats: { empathy: 3, memory: 3, demeanor: 2 }
+effect: "This character is capable of avoiding basic social missteps among a culture they hold a Knowledge of without a Skill Check. Rank *10 added to Skill Check rolls involving navigating an unfamiliar culture."

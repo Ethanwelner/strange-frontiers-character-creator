@@ -1,0 +1,10 @@
+id: counterpuncher
+name: "Counterpuncher"
+status: draft
+plane: any
+summary: "Making an opponent pay for every swing that misses."
+tags: [combat, unarmed, boxing]
+category: skill
+minStats: { grace: 5, intuition: 4, power: 3 }
+prerequisites: [boxing]
+effect: "When a Melee Attack against this character misses by 6 or more while it is Defending, this character may immediately make an Unarmed Strike against the attacker."

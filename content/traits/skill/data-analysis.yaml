@@ -1,0 +1,9 @@
+id: data-analysis
+name: "Data Analysis"
+status: draft
+plane: earth
+summary: "Finding the signal in a mountain of numbers."
+tags: [science, data, computers]
+category: skill
+minStats: { logic: 5, memory: 3 }
+effect: "This character gains +5 to rolls relating to analyzing large sets of data or sensor readings."

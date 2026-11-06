@@ -1,0 +1,10 @@
+id: zero-g-maneuvering
+name: "Zero-G Maneuvering"
+status: draft
+plane: earth
+summary: "Moving with purpose in free fall."
+tags: [athletics, space, zero-g, movement]
+category: skill
+ranked: true
+minStats: { grace: 4, intuition: 3, endurance: 2 }
+effect: "This character is capable of moving through zero-gravity environments without a Skill Check. Rank *10 added to Skill Check rolls involving movement or fighting in free fall."

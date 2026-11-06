@@ -1,0 +1,10 @@
+id: contract-law
+name: "Contract Law"
+status: draft
+plane: any
+summary: "How agreements are made binding, and broken."
+tags: [law, contracts, trade]
+category: knowledge
+ranked: true
+minStats: { memory: 4, logic: 3 }
+effect: "This character has knowledge of contract law and can be assumed to be familiar with how contracts are formed, enforced and challenged."

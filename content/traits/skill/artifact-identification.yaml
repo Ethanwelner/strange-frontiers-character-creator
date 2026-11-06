@@ -1,0 +1,10 @@
+id: artifact-identification
+name: "Artifact Identification"
+status: draft
+plane: isekai
+summary: "Working out what a magical artifact does before it does it."
+tags: [magic, relics, artifacts, identification]
+category: skill
+minStats: { memory: 4, intuition: 4 }
+prerequisites: [relic-handling]
+effect: "This character gains +5 to rolls relating to identifying the function and power of magical artifacts."

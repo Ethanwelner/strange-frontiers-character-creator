@@ -1,0 +1,12 @@
+id: grappler
+name: "Grappler"
+status: draft
+plane: any
+summary: "Grabbing, holding and pinning an opponent."
+tags: [combat, unarmed, wrestling]
+category: skill
+ranked: true
+minStats: { power: 4, endurance: 3, grace: 2 }
+prerequisites: [brawler]
+effect: "- This character gains the Grapple Action.\n- Rank *5 added to Skill Check rolls involving grappling or escaping a hold."
+action: "Grapple: This character may make an Attack Roll with Power against a character within 1 m. On a hit, the target gains the Rooted Condition at a Rank equal to this character's Grappler Rank for as long as this character keeps hold, and this character can't move while holding them."

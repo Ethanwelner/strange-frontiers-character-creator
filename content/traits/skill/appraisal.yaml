@@ -1,8 +1,9 @@
 id: appraisal
-name: Appraisal
-status: placeholder
+name: "Appraisal"
+status: draft
 plane: any
-summary: Judging what something is worth.
+summary: "Judging what something is worth."
 tags: [trade, valuation, merchant]
 category: skill
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 3, logic: 3, intuition: 2 }
+effect: "This character gains +8 to rolls for accurately appraising the value of artifacts, merchandise, or commodities in fields that it has familiarity with."

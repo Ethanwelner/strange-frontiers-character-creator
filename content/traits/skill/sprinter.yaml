@@ -1,0 +1,10 @@
+id: sprinter
+name: "Sprinter"
+status: draft
+plane: any
+summary: "Fast over short distances."
+tags: [athletics, running, speed]
+category: skill
+minStats: { grace: 4, endurance: 3 }
+effect: "This character's Movement is increased by 2 m."
+modifiers: "Movement +2 m"

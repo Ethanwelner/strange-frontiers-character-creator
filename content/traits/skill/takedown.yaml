@@ -1,0 +1,11 @@
+id: takedown
+name: "Takedown"
+status: draft
+plane: any
+summary: "Throwing or sweeping an opponent to the ground."
+tags: [combat, unarmed, wrestling]
+category: skill
+minStats: { power: 4, grace: 4 }
+prerequisites: [grappler]
+effect: "This character gains the Takedown Action."
+action: "Takedown: This character may make an Attack Roll with Power or Grace against a character within 1 m. On a Solid Hit or better, the target gains the Prone Condition."

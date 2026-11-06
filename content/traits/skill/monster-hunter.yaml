@@ -1,0 +1,11 @@
+id: monster-hunter
+name: "Monster Hunter"
+status: draft
+plane: any
+summary: "Hunting and killing monsters and extraplanar beings."
+tags: [combat, monsters, hunting]
+category: skill
+ranked: true
+minStats: { grace: 4, intuition: 4, endurance: 3 }
+effect: "Rank *1 added to this character's Attack Rolls against monsters and extraplanar beings."
+modifiers: "Attack Rolls +1 per Rank (monsters and extraplanar beings)"

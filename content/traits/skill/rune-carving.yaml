@@ -1,0 +1,12 @@
+id: rune-carving
+name: "Rune Carving"
+status: draft
+plane: isekai
+summary: "Carving and inscribing runes that hold magic."
+tags: [magic, runes, crafting]
+category: skill
+ranked: true
+minStats: { grace: 3, memory: 3, magic: 1 }
+# On the Magic list: only a character with Magic Access can pick it.
+list: magic
+effect: "This character is capable of carving simple runes of power without a Skill Check. Rank *10 added to Skill Check rolls involving carving or reading runes of power."

@@ -1,0 +1,11 @@
+id: curse-sense
+name: "Curse Sense"
+status: draft
+plane: isekai
+summary: "A feel for objects that are cursed or wrong."
+tags: [magic, curses, artifacts]
+category: skill
+minStats: { intuition: 4, magic: 1 }
+# On the Magic list: only a character with Magic Access can pick it.
+list: magic
+effect: "This character gains +5 to Intuition rolls relating to noticing cursed or dangerous magical objects."

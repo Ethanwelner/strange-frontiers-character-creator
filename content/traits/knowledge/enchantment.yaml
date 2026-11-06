@@ -1,0 +1,10 @@
+id: enchantment
+name: "Enchantment"
+status: draft
+plane: isekai
+summary: "The theory of binding magic into objects."
+tags: [magic, enchanting, theory]
+category: knowledge
+ranked: true
+minStats: { memory: 4, magic: 1 }
+effect: "This character has knowledge of enchantment and can be assumed to be familiar with how magic is bound into objects and what limits it."

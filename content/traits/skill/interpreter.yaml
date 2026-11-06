@@ -1,0 +1,10 @@
+id: interpreter
+name: "Interpreter"
+status: draft
+plane: any
+summary: "Carrying meaning, not just words, between languages."
+tags: [languages, diplomacy, translation]
+category: skill
+ranked: true
+minStats: { memory: 4, empathy: 3, intuition: 2 }
+effect: "This character is capable of interpreting between two Languages they know without a Skill Check. Rank *10 added to Skill Check rolls involving interpreting tone, idiom or nuance."

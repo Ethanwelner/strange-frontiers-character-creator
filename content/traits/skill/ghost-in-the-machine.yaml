@@ -1,0 +1,11 @@
+id: ghost-in-the-machine
+name: "Ghost in the Machine"
+status: draft
+plane: earth
+summary: "A hacker who leaves no trace."
+tags: [computers, hacking, expert]
+category: skill
+mastery: true
+minStats: { logic: 10, intuition: 8, memory: 6 }
+prerequisites: [hacking, intrusion-countermeasures]
+effect: "This character can request Advantage on rolls relating to breaking into systems, and can act inside a network without leaving evidence of having been there."

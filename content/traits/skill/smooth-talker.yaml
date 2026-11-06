@@ -1,8 +1,9 @@
 id: smooth-talker
-name: Smooth Talker
-status: placeholder
+name: "Smooth Talker"
+status: draft
 plane: any
 summary: "Talking people into things, or out of them."
 tags: [social, persuasion]
 category: skill
-effect: Placeholder. Effect not yet written.
+minStats: { persuasion: 3, empathy: 2 }
+effect: "This character gains +2 to Persuasion or Demeanor rolls."

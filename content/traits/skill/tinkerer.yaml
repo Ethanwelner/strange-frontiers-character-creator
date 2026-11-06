@@ -1,8 +1,9 @@
 id: tinkerer
-name: Tinkerer
-status: placeholder
+name: "Tinkerer"
+status: draft
 plane: any
-summary: Fixing and improvising with machines.
+summary: "Fixing and improvising with machines."
 tags: [technology, repair, crafting]
 category: skill
-effect: Placeholder. Effect not yet written.
+minStats: { logic: 3, grace: 3, intuition: 2 }
+effect: "This character gains +5 to the understanding and modification of mechanisms."

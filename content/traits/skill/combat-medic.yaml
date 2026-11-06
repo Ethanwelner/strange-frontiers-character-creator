@@ -1,0 +1,10 @@
+id: combat-medic
+name: "Combat Medic"
+status: draft
+plane: any
+summary: "Treating the wounded under fire."
+tags: [medicine, combat, military, healing]
+category: skill
+minStats: { grace: 3, memory: 3, demeanor: 3 }
+prerequisites: [medical-aid]
+effect: "Treating a wounded character within 1 m counts as a Partial RP Action for this character during an Incident."

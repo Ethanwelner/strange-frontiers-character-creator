@@ -1,0 +1,11 @@
+id: antidote-brewing
+name: "Antidote Brewing"
+status: draft
+plane: isekai
+summary: "Brewing cures for poisons and toxins."
+tags: [potions, alchemy, poison, healing]
+category: skill
+ranked: true
+minStats: { memory: 4, intuition: 3, logic: 2 }
+prerequisites: [simple-potion-mixing]
+effect: "This character can brew a simple antidote to a known poison without a Skill Check. Rank *10 added to Skill Check rolls involving brewing antidotes."

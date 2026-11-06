@@ -1,0 +1,10 @@
+id: runecraft
+name: "Runecraft"
+status: draft
+plane: isekai
+summary: "Runes of power and how they work."
+tags: [magic, runes, writing]
+category: knowledge
+ranked: true
+minStats: { memory: 4, intuition: 2 }
+effect: "This character has knowledge of runecraft and can be assumed to be familiar with the common runes of power, their meanings and their effects."

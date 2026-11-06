@@ -1,0 +1,9 @@
+id: field-pharmacology
+name: "Field Pharmacology"
+status: draft
+plane: any
+summary: "Dosing medicines and stimulants correctly in the field."
+tags: [medicine, drugs, healing]
+category: skill
+minStats: { memory: 4, logic: 3 }
+effect: "This character gains +5 to rolls relating to choosing, dosing and administering drugs and medicines."

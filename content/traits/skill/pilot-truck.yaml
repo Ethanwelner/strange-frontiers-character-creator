@@ -1,10 +1,11 @@
 id: pilot-truck
 name: "Pilot: Truck"
-status: placeholder
+status: draft
 plane: earth
 summary: "Flying cargo trucks between stations, ships and planetary surfaces."
 tags: [pilot, trucks, shipping]
-lore: trucks
 category: skill
 ranked: true
-effect: Placeholder. Effect not yet written.
+minStats: { memory: 4, grace: 3, intuition: 3 }
+lore: trucks
+effect: "This character is capable of piloting Truck Class Voidships in simple scenarios without a Skill Check and is capable of describing the basic functions and controls of a Truck Class Voidship. Rank *10 added to Skill Check rolls involving Truck Class Voidship piloting."

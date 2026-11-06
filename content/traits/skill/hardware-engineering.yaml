@@ -1,0 +1,10 @@
+id: hardware-engineering
+name: "Hardware Engineering"
+status: draft
+plane: earth
+summary: "Designing, building and repairing computers."
+tags: [computers, hardware, engineering]
+category: skill
+ranked: true
+minStats: { logic: 4, grace: 3, memory: 3 }
+effect: "This character is capable of assembling and repairing common computer hardware without a Skill Check. Rank *10 added to Skill Check rolls involving computer hardware."

@@ -1,0 +1,10 @@
+id: pilot-airplane
+name: "Pilot: Airplane"
+status: draft
+plane: earth
+summary: "Flying fixed-wing aircraft in an atmosphere."
+tags: [pilot, aircraft, aviation]
+category: skill
+ranked: true
+minStats: { memory: 4, grace: 3, intuition: 3 }
+effect: "This character is capable of piloting airplanes in simple scenarios without a Skill Check and is capable of describing the basic functions and controls of an airplane. Rank *10 added to Skill Check rolls involving airplane piloting."

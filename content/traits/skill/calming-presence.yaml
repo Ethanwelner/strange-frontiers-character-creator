@@ -1,0 +1,9 @@
+id: calming-presence
+name: "Calming Presence"
+status: draft
+plane: any
+summary: "Settling the frightened, the panicked and the angry."
+tags: [empathy, social, calm]
+category: skill
+minStats: { empathy: 4, demeanor: 3 }
+effect: "This character gains +5 to rolls relating to calming a frightened, panicked or hostile person."

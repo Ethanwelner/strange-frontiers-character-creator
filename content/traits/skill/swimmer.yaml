@@ -1,0 +1,10 @@
+id: swimmer
+name: "Swimmer"
+status: draft
+plane: any
+summary: "Swimming far, fast and in rough water."
+tags: [athletics, swimming, water]
+category: skill
+ranked: true
+minStats: { endurance: 3, power: 2, grace: 2 }
+effect: "This character is capable of swimming in calm water without a Skill Check. Rank *10 added to Skill Check rolls involving swimming or holding their breath."

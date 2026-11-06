@@ -1,0 +1,10 @@
+id: prototyping
+name: "Prototyping"
+status: draft
+plane: any
+summary: "Turning a design into a first working model."
+tags: [invention, crafting, engineering]
+category: skill
+minStats: { grace: 4, logic: 4, intuition: 3 }
+prerequisites: [inventor]
+effect: "This character gains +5 to rolls relating to building a working prototype from a design."

@@ -1,0 +1,10 @@
+id: monster-handling
+name: "Monster Handling"
+status: draft
+plane: any
+summary: "Working with dangerous creatures without being eaten."
+tags: [monsters, animals, handling]
+category: skill
+ranked: true
+minStats: { empathy: 4, demeanor: 3, endurance: 2 }
+effect: "This character is capable of approaching and handling a tamed dangerous creature without a Skill Check. Rank *10 added to Skill Check rolls involving handling dangerous creatures."

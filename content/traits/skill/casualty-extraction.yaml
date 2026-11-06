@@ -1,0 +1,9 @@
+id: casualty-extraction
+name: "Casualty Extraction"
+status: draft
+plane: any
+summary: "Getting the wounded out of the line of fire."
+tags: [medicine, combat, rescue, movement]
+category: skill
+minStats: { power: 4, endurance: 4 }
+effect: "This character may move their full Movement while dragging or carrying an Incapacitated character."

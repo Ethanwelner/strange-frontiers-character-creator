@@ -1,0 +1,10 @@
+id: pilot-shuttle
+name: "Pilot: Shuttle"
+status: draft
+plane: earth
+summary: "Flying shuttles between ships, stations and surfaces."
+tags: [pilot, shuttles, space]
+category: skill
+ranked: true
+minStats: { memory: 4, grace: 3, intuition: 3 }
+effect: "This character is capable of piloting shuttles in simple scenarios without a Skill Check and is capable of describing the basic functions and controls of a shuttle. Rank *10 added to Skill Check rolls involving shuttle piloting."

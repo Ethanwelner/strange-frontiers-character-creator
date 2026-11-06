@@ -1,8 +1,10 @@
 id: vigilance
-name: Vigilance
-status: placeholder
+name: "Vigilance"
+status: draft
 plane: any
-summary: Staying alert on watch.
+summary: "Staying alert on watch."
 tags: [guard, awareness]
 category: skill
-effect: Placeholder. Effect not yet written.
+minStats: { intuition: 3, endurance: 2 }
+effect: "- This character gains +2 Priority and +2 Defense in the first Round of a combat Incident in which it was caught unaware or surprised.\n- This character gains +2 to Intuition checks relating to detecting ambushes or surprises."
+modifiers: "Priority +2 (first Round, when surprised), Defense +2 (first Round, when surprised)"
