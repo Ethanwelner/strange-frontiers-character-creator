@@ -441,9 +441,9 @@
     position: relative;
     z-index: 1;
     flex: none;
-    /* The die sits 12px down from the top, which the chat box's top padding
+    /* The die sits 24px down from the top, which the chat box's top padding
        gives back */
-    padding-top: 12px;
+    padding-top: 24px;
     background-color: #212121;
     border-radius: 16px 16px 0 0;
   }
