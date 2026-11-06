@@ -1,4 +1,4 @@
-import { Fragment, useState, type KeyboardEvent } from "react";
+import { Fragment, useState } from "react";
 import { Chip, Icon, LorePopup, SettingIcon, Sign, title } from "./ui.js";
 import { damageIcon } from "./Resistances.js";
 import { content, itemById } from "../content.js";
@@ -102,12 +102,20 @@ function ItemStats({ stock }: { stock: StockItem }) {
 }
 
 // Add item's picker, like the Traits step: a search and a checkbox per
-// category over the game's items as cards, grouped by category. Clicking a
-// card checks it, with a count to set; Add items adds every checked one.
+// category over the game's items, grouped by category, as the inventory's
+// item cards. Picking a card (its checkbox, or a click on it) shows a count
+// to set; Add items adds every picked one.
 function ItemPicker({ onAdd }: { onAdd: (picked: { stock: StockItem; qty: number }[]) => void }) {
   const [query, setQuery] = useState("");
   const [hidden, setHidden] = useState<Set<ItemCategory>>(new Set());
   const [picked, setPicked] = useState<Map<string, number>>(new Map());
+  // Cards opened to their badges and description
+  const [opened, setOpened] = useState<Set<string>>(new Set());
+  const toggleOpen = (id: string) => {
+    const next = new Set(opened);
+    if (!next.delete(id)) next.add(id);
+    setOpened(next);
+  };
   const toggleCategory = (c: ItemCategory) => {
     const next = new Set(hidden);
     if (!next.delete(c)) next.add(c);
@@ -144,54 +152,75 @@ function ItemPicker({ onAdd }: { onAdd: (picked: { stock: StockItem; qty: number
       {groups.map((g) => (
         <div key={g.category} className="trait-group">
           <h3 className="subhead">{title(g.category)}</h3>
-          <ul className="trait-list">
+          <ul className="tools-item-list item-pick-list">
             {g.items.map((i) => {
               const qty = picked.get(i.id);
               const selected = qty !== undefined;
+              const open = opened.has(i.id);
               const details = itemUses(i);
-              const value = i.value !== undefined && i.currency ? `${i.value.toLocaleString("en-US")} ${i.currency}` : "";
+              const badges = itemBadges(i).filter((b) => !b.startsWith(MAX_RANGE) && !b.startsWith(AREA));
               return (
                 <li
                   key={i.id}
-                  role="checkbox"
-                  aria-checked={selected}
-                  aria-label={selected ? `${i.name}, picked` : `Pick ${i.name}`}
-                  tabIndex={0}
-                  className={`trait trait-box item-pick${selected ? " selected" : ""}`}
-                  onClick={() => toggle(i.id)}
-                  onKeyDown={(e: KeyboardEvent) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      toggle(i.id);
-                    }
-                  }}
+                  className={`c-sheet-box tools-item item-pick${selected ? " selected" : ""}`}
+                  // A click anywhere on the card picks it, except on its own controls
+                  onClick={(e) => !(e.target as HTMLElement).closest("button, input, label") && toggle(i.id)}
                 >
-                  <h3 className="trait-name">
-                    <SettingIcon plane={i.plane} />
-                    {i.name}
-                  </h3>
-                  <div className="trait-main">
-                    <div className="chips">
-                      <Chip>{title(i.category)}</Chip>
-                      {value && <Chip tone="muted">{value}</Chip>}
-                    </div>
+                  {/* How many, in the item card's circle on the left edge, once picked */}
+                  {selected && (
+                    <span className="tools-item-count" aria-label={`${qty} of ${i.name}`}>
+                      {qty}
+                    </span>
+                  )}
+                  {/* The item card's top line, a pick checkbox in Equip's place */}
+                  <div className="tools-item-row tools-item-summary">
+                    <label className="tools-equipped" title="Pick">
+                      <input type="checkbox" aria-label={`Pick ${i.name}`} checked={selected} onChange={() => toggle(i.id)} />
+                      <span className="tools-equipped-label">Pick</span>
+                    </label>
+                    <span className="tools-item-title">{i.name}</span>
                     <ItemStats stock={i} />
-                    <p>{i.summary}</p>
-                    {details && <p className="muted small">{details}</p>}
-                    {selected && (
-                      // The card's own click and keys toggle it, so the count keeps its events to itself.
-                      <div className="rank-step" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
-                        <span className="rank-label">Count</span>
-                        <button type="button" aria-label={`One fewer ${i.name}`} disabled={qty <= 1} onClick={() => setCount(i.id, qty - 1)}>
-                          <Sign is="minus" />
-                        </button>
-                        <span className="num">{qty}</span>
-                        <button type="button" aria-label={`One more ${i.name}`} onClick={() => setCount(i.id, qty + 1)}>
-                          <Sign is="plus" />
-                        </button>
-                      </div>
-                    )}
+                    <button
+                      type="button"
+                      className="tools-item-icon tools-item-expand"
+                      aria-label={`${open ? "Collapse" : "Expand"} ${i.name}`}
+                      aria-expanded={open}
+                      title={open ? "Collapse" : "Expand"}
+                      onClick={() => toggleOpen(i.id)}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 8" aria-hidden="true">
+                        <path d="M1 1.5l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                      </svg>
+                    </button>
                   </div>
+                  {/* Open, the card's badges and description, as in the inventory */}
+                  {open && (
+                    <>
+                      <div className="tools-item-badges">
+                        <Chip>{title(i.category)}</Chip>
+                        {badges.map((b) => (
+                          <Chip key={b}>{b}</Chip>
+                        ))}
+                      </div>
+                      <div className="tools-item-stock">
+                        <p className="tools-item-flavor">{i.summary}</p>
+                        {details && <p className="tools-item-details">{details}</p>}
+                      </div>
+                    </>
+                  )}
+                  {/* Picked, how many to add */}
+                  {selected && (
+                    <div className="rank-step item-pick-count">
+                      <span className="rank-label">Count</span>
+                      <button type="button" aria-label={`One fewer ${i.name}`} disabled={qty <= 1} onClick={() => setCount(i.id, qty - 1)}>
+                        <Sign is="minus" />
+                      </button>
+                      <span className="num">{qty}</span>
+                      <button type="button" aria-label={`One more ${i.name}`} onClick={() => setCount(i.id, qty + 1)}>
+                        <Sign is="plus" />
+                      </button>
+                    </div>
+                  )}
                 </li>
               );
             })}

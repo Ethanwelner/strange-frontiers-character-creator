@@ -2891,10 +2891,23 @@
     max-width: 1100px;
   }
 
-  /* An item card in the picker: its stat badges under the chips, and
-     Add items under the cards, at the right */
-  .item-pick .tools-item-stats {
-    margin: 0;
+  /* The picker's item cards: the inventory's, in columns with room on the
+     left for the count's circle, picked with the Traits' green edge */
+  .item-pick-list {
+    padding-left: 14px;
+  }
+
+  .builder-panel .c-sheet-box.tools-item.item-pick {
+    cursor: pointer;
+
+    &.selected {
+      border-color: var(--portfolio-green) !important;
+      box-shadow: 0 0 0 1px var(--portfolio-green), 0 4px 10px #00000030;
+    }
+
+    .item-pick-count {
+      margin-top: 8px;
+    }
   }
 
   /* Add items stays in view at the popup's foot while the cards scroll,
@@ -3278,7 +3291,7 @@
   }
 
   /* One badge holds each value, an icon then its number, 10px apart */
-  :is(.tools-item, .trait-action-stats, .item-pick) .chip.tools-item-stat {
+  :is(.tools-item, .trait-action-stats) .chip.tools-item-stat {
     display: inline-flex;
     flex-wrap: wrap;
     align-items: center;
@@ -3301,7 +3314,7 @@
      olive with a dark olive bow, sword or shield, standing in for the
      badge's left edge. The badge rounds its left side to match, and the
      circle runs flush with its edge, top and bottom. */
-  :is(.tools-item, .trait-action-stats, .item-pick) .chip.tools-item-stat:has(> .tools-item-stat-lead) {
+  :is(.tools-item, .trait-action-stats) .chip.tools-item-stat:has(> .tools-item-stat-lead) {
     flex-wrap: nowrap;
     padding-top: 0;
     padding-bottom: 0;
