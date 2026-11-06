@@ -680,8 +680,9 @@
         outline-color: var(--portfolio-white);
       }
 
-      /* Black chips would vanish into the black card */
-      .chip:not(.chip-muted, .chip-accent, .chip-bad) {
+      /* Black chips would vanish into the black card. A Cast Action's
+         badges keep the item badges' olive. */
+      .chip:not(.chip-muted, .chip-accent, .chip-bad, .trait-action-stats .chip) {
         background: var(--portfolio-gray);
       }
 
@@ -3241,8 +3242,9 @@
   }
 
   /* The category's badge in the card's olive: the fields' dark olive with
-     the card's lighter edge and a pale olive text */
-  .tools-item .chip {
+     the card's lighter edge and a pale olive text. A spell's Cast Action
+     badges in an ability card take the same colors. */
+  :is(.tools-item, .trait-action-stats) .chip {
     background-color: #25241e;
     border: 1px solid #6d6a5a;
     color: #d6d1b4;
