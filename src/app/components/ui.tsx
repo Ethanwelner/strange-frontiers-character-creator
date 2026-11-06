@@ -144,7 +144,8 @@ export function LorePopup({ label, onClose, children, className = "" }: { label:
             <path d="M2 2l16 16M18 2L2 18" fill="none" stroke="currentColor" strokeWidth="2" />
           </svg>
         </button>
-        {children}
+        {/* The content scrolls inside the panel, so the close button stays on its corner */}
+        <div className="lore-modal-scroll">{children}</div>
       </div>
     </div>
   );

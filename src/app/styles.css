@@ -3593,27 +3593,24 @@
     outline-color: var(--portfolio-white);
   }
 
-  .lore-modal-panel > .trait-box {
-    margin-top: 36px;
-  }
-
   /* A card on its own in the popup (.lore-modal-card: a Trait, Knowledge,
      Kind or background package): the card is the popup's edge, with no
-     panel around it, and the close button floats outside its top right
-     corner. The panel lets it overflow, so a long card scrolls itself. On
-     phones, with no room at the side, the button sits above the card's
-     right edge. */
+     panel around it, and the close button sits on its top right corner
+     like any popup's. A long card scrolls itself. */
   .lore-modal-card {
     .lore-modal-panel {
       max-width: 560px;
-      padding: 0;
       border-radius: 12px;
       background: none;
+    }
+
+    .lore-modal-scroll {
+      padding: 0;
       overflow: visible;
     }
 
     /* View only: no pointer, and no hover border like the cards to pick */
-    .lore-modal-panel > :is(.trait-box, .card) {
+    .lore-modal-scroll > :is(.trait-box, .card) {
       margin: 0;
       max-height: calc(100dvh - 128px);
       overflow-y: auto;
@@ -3624,23 +3621,14 @@
       }
     }
 
-    /* Outside the card, so placed absolutely rather than stuck in the corner */
+    /* A little smaller on a card */
     .lore-modal-close {
-      position: absolute;
-      top: -36px;
-      right: -36px;
-      float: none;
-      margin: 0;
       width: 28px;
       height: 28px;
 
       svg {
         width: 12px;
         height: 12px;
-      }
-
-      @media (max-width: 767px) {
-        right: 0;
       }
     }
   }
