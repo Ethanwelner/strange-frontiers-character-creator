@@ -1,0 +1,10 @@
+id: salvage
+name: "Salvage"
+status: draft
+plane: any
+summary: "Stripping wrecks for whatever still works."
+tags: [salvage, wrecks, scavenging]
+category: skill
+ranked: true
+minStats: { logic: 3, power: 3, intuition: 2 }
+effect: "This character is capable of finding and removing usable parts from a wreck without a Skill Check. Rank *10 added to Skill Check rolls involving salvage."

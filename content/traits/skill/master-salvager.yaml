@@ -1,0 +1,11 @@
+id: master-salvager
+name: "Master Salvager"
+status: draft
+plane: any
+summary: "A salvager who can strip anything, safely."
+tags: [salvage, industry, expert]
+category: skill
+mastery: true
+minStats: { logic: 6, power: 6, endurance: 6, intuition: 6 }
+prerequisites: [salvage, demolitions]
+effect: "This character can request Advantage on rolls relating to salvage, demolition and heavy machinery."

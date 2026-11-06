@@ -1,0 +1,9 @@
+id: bugging
+name: "Bugging"
+status: draft
+plane: earth
+summary: "Planting and finding listening devices."
+tags: [espionage, electronics, surveillance]
+category: skill
+minStats: { grace: 3, logic: 3, intuition: 3 }
+effect: "This character gains +5 to rolls relating to planting, hiding or finding listening devices and hidden cameras."

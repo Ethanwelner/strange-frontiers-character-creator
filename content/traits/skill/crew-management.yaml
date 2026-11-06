@@ -1,0 +1,10 @@
+id: crew-management
+name: "Crew Management"
+status: draft
+plane: any
+summary: "Running a crew's duties, shifts and squabbles."
+tags: [leadership, crew, management]
+category: skill
+ranked: true
+minStats: { persuasion: 3, empathy: 3, logic: 2 }
+effect: "This character is capable of organizing the duties and shifts of a small crew without a Skill Check. Rank *10 added to Skill Check rolls involving managing a crew."

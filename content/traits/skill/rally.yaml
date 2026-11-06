@@ -1,0 +1,10 @@
+id: rally
+name: "Rally"
+status: draft
+plane: any
+summary: "Pulling frightened people back together."
+tags: [leadership, morale, combat]
+category: skill
+minStats: { demeanor: 5, persuasion: 4 }
+effect: "This character gains the Rally Action."
+action: "Rally: As a Full RP Action, this character ends the Frightened Condition on every ally within 10 m who can hear them."

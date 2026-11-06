@@ -1,0 +1,9 @@
+id: morale-officer
+name: "Morale Officer"
+status: draft
+plane: any
+summary: "Keeping spirits up through long hardship."
+tags: [leadership, morale, social]
+category: skill
+minStats: { empathy: 4, persuasion: 3 }
+effect: "This character gains +5 to Persuasion and Empathy rolls relating to keeping a group's spirits up through hardship."

@@ -1,0 +1,9 @@
+id: quartermaster
+name: "Quartermaster"
+status: draft
+plane: any
+summary: "Keeping a group fed, supplied and equipped."
+tags: [leadership, logistics, supplies]
+category: skill
+minStats: { logic: 4, memory: 3 }
+effect: "This character gains +5 to Logic and Memory rolls relating to managing a group's supplies, rations and equipment."

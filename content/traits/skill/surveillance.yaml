@@ -1,0 +1,10 @@
+id: surveillance
+name: "Surveillance"
+status: draft
+plane: any
+summary: "Watching and following without being seen."
+tags: [espionage, stealth, observation]
+category: skill
+ranked: true
+minStats: { intuition: 4, grace: 3, demeanor: 2 }
+effect: "This character is capable of watching or following a target through a crowd without being noticed and without a Skill Check. Rank *10 added to Skill Check rolls involving surveillance."

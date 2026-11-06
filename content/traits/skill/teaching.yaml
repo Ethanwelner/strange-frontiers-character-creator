@@ -1,0 +1,10 @@
+id: teaching
+name: "Teaching"
+status: draft
+plane: any
+summary: "Passing what you know on to others."
+tags: [teaching, scholarship, social]
+category: skill
+ranked: true
+minStats: { empathy: 3, persuasion: 3, memory: 3 }
+effect: "This character is capable of teaching the basics of a Knowledge or Skill they hold without a Skill Check. Rank *10 added to Skill Check rolls involving teaching."

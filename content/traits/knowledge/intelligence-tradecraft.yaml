@@ -1,0 +1,10 @@
+id: intelligence-tradecraft
+name: "Intelligence Tradecraft"
+status: draft
+plane: any
+summary: "How spies watch, communicate and stay hidden."
+tags: [espionage, intelligence, tradecraft]
+category: knowledge
+ranked: true
+minStats: { memory: 3, intuition: 3 }
+effect: "This character has knowledge of intelligence tradecraft and can be assumed to be familiar with how spies recruit, communicate, watch and avoid being watched."

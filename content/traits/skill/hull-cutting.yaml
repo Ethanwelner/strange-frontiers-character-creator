@@ -1,0 +1,9 @@
+id: hull-cutting
+name: "Hull Cutting"
+status: draft
+plane: earth
+summary: "Cutting into hulls and bulkheads safely."
+tags: [salvage, space, cutting]
+category: skill
+minStats: { power: 3, grace: 3, logic: 2 }
+effect: "This character gains +5 to rolls relating to cutting through hulls, bulkheads and other heavy plating."

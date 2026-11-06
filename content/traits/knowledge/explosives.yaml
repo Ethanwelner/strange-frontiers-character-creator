@@ -1,0 +1,10 @@
+id: explosives
+name: "Explosives"
+status: draft
+plane: any
+summary: "What explodes, how, and how to handle it."
+tags: [explosives, demolition, chemistry]
+category: knowledge
+ranked: true
+minStats: { memory: 3, logic: 3 }
+effect: "This character has knowledge of explosives and can be assumed to be familiar with common explosives, how they're set off and how to store and handle them safely."

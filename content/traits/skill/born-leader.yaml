@@ -1,0 +1,11 @@
+id: born-leader
+name: "Born Leader"
+status: draft
+plane: any
+summary: "Someone people follow without being told to."
+tags: [leadership, command, expert]
+category: skill
+mastery: true
+minStats: { demeanor: 8, persuasion: 8, empathy: 6 }
+prerequisites: [crew-management, rally]
+effect: "This character can request Advantage on rolls relating to leading, commanding or rallying a group."

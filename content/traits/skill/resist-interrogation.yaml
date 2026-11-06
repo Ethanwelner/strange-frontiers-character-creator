@@ -1,0 +1,9 @@
+id: resist-interrogation
+name: "Resist Interrogation"
+status: draft
+plane: any
+summary: "Saying nothing, whatever they do."
+tags: [espionage, resistance, discipline]
+category: skill
+minStats: { demeanor: 4, endurance: 4 }
+effect: "This character gains +5 to Demeanor and Endurance rolls relating to resisting interrogation, coercion or torture."

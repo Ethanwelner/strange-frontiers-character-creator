@@ -1,0 +1,10 @@
+id: scrap-appraisal
+name: "Scrap Appraisal"
+status: draft
+plane: any
+summary: "Knowing what a pile of scrap is worth."
+tags: [salvage, trade, valuation]
+category: skill
+minStats: { memory: 3, intuition: 3 }
+prerequisites: [salvage]
+effect: "This character gains +5 to rolls relating to judging the value of salvage and scrap."

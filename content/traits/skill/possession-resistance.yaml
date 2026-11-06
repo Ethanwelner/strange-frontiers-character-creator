@@ -1,0 +1,9 @@
+id: possession-resistance
+name: "Possession Resistance"
+status: draft
+plane: any
+summary: "A will that spirits can't easily take."
+tags: [spirits, resistance, supernatural]
+category: skill
+minStats: { demeanor: 5, endurance: 3 }
+effect: "This character gains +5 to Demeanor rolls to resist possession and supernatural control of their mind."

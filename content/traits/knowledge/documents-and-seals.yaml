@@ -1,0 +1,10 @@
+id: documents-and-seals
+name: "Documents and Seals"
+status: draft
+plane: any
+summary: "Official papers, seals and how they're verified."
+tags: [documents, forgery, bureaucracy]
+category: knowledge
+ranked: true
+minStats: { memory: 3, logic: 2 }
+effect: "This character has knowledge of documents and seals and can be assumed to be familiar with official papers, seals, signatures and how authorities verify them."
