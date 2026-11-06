@@ -2879,11 +2879,6 @@
       flex: 1 1 12rem;
       min-width: 0;
     }
-
-    /* Custom item's ruled title, between the two forms */
-    .tools-add-custom-head {
-      margin: 28px 0 16px;
-    }
   }
 
   /* Add items as wide as Player Tools' Traits popup, for the cards */
@@ -3183,14 +3178,18 @@
      right on its own. */
   .tools-item-summary {
     flex-wrap: nowrap;
+  }
 
-    > .tools-item-icon.tools-item-expand {
-      margin-left: auto;
-    }
-
-    > .tools-item-stats ~ .tools-item-icon.tools-item-expand {
-      margin-left: 4px;
-    }
+  /* The name and the stat badges between Equip and the chevron: the badges
+     at the right while they fit beside the name, wrapping under it (still
+     at the right) only when they don't */
+  .tools-item-main {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 8px;
   }
 
   .tools-item-title {
@@ -3307,33 +3306,17 @@
     margin-top: 10px;
   }
 
-  /* In a closed card's line, they sit at the right before the category,
-     on one line, and the category follows them */
+  /* On a card's top line they sit at the right of the name, wrapping among
+     themselves only if a line can't hold them all */
   .tools-item-summary {
     .tools-item-stats {
-      flex: none;
-      flex-wrap: nowrap;
+      flex: 0 1 auto;
+      justify-content: flex-end;
       margin: 0 0 0 auto;
     }
 
     .tools-item-stat-group {
       flex-wrap: nowrap;
-    }
-
-    /* In a narrow card they drop to their own line under it instead */
-    @container item (width < 420px) {
-      flex-wrap: wrap;
-
-      .tools-item-stats {
-        order: 1;
-        flex-basis: 100%;
-        flex-wrap: wrap;
-        margin: 2px 0 0;
-      }
-
-      > .tools-item-stats ~ .tools-item-icon.tools-item-expand {
-        margin-left: auto;
-      }
     }
   }
 

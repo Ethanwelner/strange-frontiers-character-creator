@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, type ReactNode } from "react";
 import { Chip, Icon, LorePopup, SettingIcon, Sign, title } from "./ui.js";
 import { damageIcon } from "./Resistances.js";
 import { content, itemById } from "../content.js";
@@ -104,10 +104,11 @@ function ItemStats({ stock }: { stock: StockItem }) {
 // Add item's picker, like the Traits step: a tab per category, each with a
 // search, over the game's items as the inventory's item cards. A large
 // checkbox at each card's right picks it, with a count to set; Add items
-// adds every picked one, from any tab.
-function ItemPicker({ onAdd }: { onAdd: (picked: { stock: StockItem; qty: number }[]) => void }) {
+// adds every picked one, from any tab. The last tab, Custom, holds the form
+// for an item the game doesn't have.
+function ItemPicker({ onAdd, custom }: { onAdd: (picked: { stock: StockItem; qty: number }[]) => void; custom: ReactNode }) {
   const categories = ITEM_CATEGORIES.filter((c) => STOCK.some((i) => i.category === c));
-  const [tab, setTab] = useState<ItemCategory>(categories[0]!);
+  const [tab, setTab] = useState<ItemCategory | "custom">(categories[0]!);
   const [query, setQuery] = useState("");
   const [picked, setPicked] = useState<Map<string, number>>(new Map());
   // Cards opened to their badges and description
@@ -140,7 +141,17 @@ function ItemPicker({ onAdd }: { onAdd: (picked: { stock: StockItem; qty: number
               {title(c)} <span className="num">{pickedIn(c) > 0 ? `${pickedIn(c)} picked` : STOCK.filter((i) => i.category === c).length}</span>
             </button>
           ))}
+          <button type="button" role="tab" aria-selected={tab === "custom"} className={`tech-field-tab${tab === "custom" ? " is-active" : ""}`} onClick={() => setTab("custom")}>
+            Custom
+          </button>
         </div>
+        {tab === "custom" ? (
+          <div className="item-picker-custom">
+            <p className="hint">An item the game doesn't have yet: name it, say how many, and choose its category.</p>
+            {custom}
+          </div>
+        ) : (
+          <>
         <div className="filters">
           <input type="search" placeholder="Search name or tag" value={query} onChange={(e) => setQuery(e.target.value)} aria-label="Search items" />
         </div>
@@ -162,8 +173,11 @@ function ItemPicker({ onAdd }: { onAdd: (picked: { stock: StockItem; qty: number
                     </span>
                   )}
                   <div className="tools-item-row tools-item-summary">
-                    <span className="tools-item-title">{i.name}</span>
-                    <ItemStats stock={i} />
+                    {/* The name and its stat badges, which drop under it only when they don't fit beside it */}
+                    <span className="tools-item-main">
+                      <span className="tools-item-title">{i.name}</span>
+                      <ItemStats stock={i} />
+                    </span>
                     <button
                       type="button"
                       className="tools-item-icon tools-item-expand"
@@ -211,17 +225,22 @@ function ItemPicker({ onAdd }: { onAdd: (picked: { stock: StockItem; qty: number
             );
           })}
         </ul>
+          </>
+        )}
       </div>
-      <div className="item-picker-submit">
-        <button
-          type="button"
-          className="build-button"
-          disabled={count === 0}
-          onClick={() => onAdd([...picked].map(([id, qty]) => ({ stock: itemById.get(id)!, qty })).filter((p) => p.stock))}
-        >
-          {count === 0 ? "Add items" : `Add ${count} ${count === 1 ? "item" : "items"}`}
-        </button>
-      </div>
+      {/* On the Custom tab, Add items only while something is picked, so it doesn't sit beside Add custom item */}
+      {(tab !== "custom" || count > 0) && (
+        <div className="item-picker-submit">
+          <button
+            type="button"
+            className="build-button"
+            disabled={count === 0}
+            onClick={() => onAdd([...picked].map(([id, qty]) => ({ stock: itemById.get(id)!, qty })).filter((p) => p.stock))}
+          >
+            {count === 0 ? "Add items" : `Add ${count} ${count === 1 ? "item" : "items"}`}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -312,29 +331,31 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
         <LorePopup label="Add items" onClose={() => setAdding(false)} className="sheet-add-popup item-picker-popup">
           <h3 className="subhead">Add items</h3>
           {/* Most items come from the game's list: search, check, set counts */}
-          <ItemPicker onAdd={addStock} />
-          {/* Anything else, named and sorted by the player */}
-          <h4 className="rule tools-add-custom-head">Custom item</h4>
-          <form
-            className="tools-add"
-            onSubmit={(e) => {
-              e.preventDefault();
-              addCustom();
-            }}
-          >
-            <input type="text" placeholder="Item name" aria-label="Custom item name" className="tools-add-name" value={name} onChange={(e) => setName(e.target.value)} />
-            <input type="number" min={1} aria-label="Custom item count" className="tools-qty" value={qty} onChange={(e) => setQty(e.target.value)} />
-            <select aria-label="Category" value={category} onChange={(e) => setCategory(e.target.value as ItemCategory)}>
-              {ITEM_CATEGORIES.map((c) => (
-                <option key={c} value={c}>
-                  {title(c)}
-                </option>
-              ))}
-            </select>
-            <button type="submit" disabled={!name.trim()}>
-              Add custom item
-            </button>
-          </form>
+          <ItemPicker
+            onAdd={addStock}
+            custom={
+              <form
+                className="tools-add"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  addCustom();
+                }}
+              >
+                <input type="text" placeholder="Item name" aria-label="Custom item name" className="tools-add-name" value={name} onChange={(e) => setName(e.target.value)} />
+                <input type="number" min={1} aria-label="Custom item count" className="tools-qty" value={qty} onChange={(e) => setQty(e.target.value)} />
+                <select aria-label="Category" value={category} onChange={(e) => setCategory(e.target.value as ItemCategory)}>
+                  {ITEM_CATEGORIES.map((c) => (
+                    <option key={c} value={c}>
+                      {title(c)}
+                    </option>
+                  ))}
+                </select>
+                <button type="submit" disabled={!name.trim()}>
+                  Add custom item
+                </button>
+              </form>
+            }
+          />
         </LorePopup>
       )}
 
@@ -381,8 +402,11 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
             const topLine = (
               <div className="tools-item-row tools-item-summary">
                 {equip}
-                <span className="tools-item-title">{item.name}</span>
-                {stock && <ItemStats stock={stock} />}
+                {/* The name and its stat badges, which drop under it only when they don't fit beside it */}
+                <span className="tools-item-main">
+                  <span className="tools-item-title">{item.name}</span>
+                  {stock && <ItemStats stock={stock} />}
+                </span>
                 {expand}
               </div>
             );
