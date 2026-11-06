@@ -2886,6 +2886,31 @@
     }
   }
 
+  /* Add items as wide as Player Tools' Traits popup, for the cards */
+  .item-picker-popup .lore-modal-panel {
+    max-width: 1100px;
+  }
+
+  /* An item card in the picker: its stat badges under the chips, and
+     Add items under the cards, at the right */
+  .item-pick .tools-item-stats {
+    margin: 0;
+  }
+
+  /* Add items stays in view at the popup's foot while the cards scroll,
+     like Player Tools' Traits Submit */
+  .item-picker-submit {
+    position: sticky;
+    bottom: -32px;
+    z-index: 1;
+    display: flex;
+    justify-content: flex-end;
+    margin: 24px -32px 0;
+    padding: 16px 32px;
+    background: var(--panel);
+    border-top: 1px solid #444;
+  }
+
   /* The add row (Items' and Player Tools' Add a Condition), item notes, and
      the count */
   .tools-add {
@@ -3253,7 +3278,7 @@
   }
 
   /* One badge holds each value, an icon then its number, 10px apart */
-  :is(.tools-item, .trait-action-stats) .chip.tools-item-stat {
+  :is(.tools-item, .trait-action-stats, .item-pick) .chip.tools-item-stat {
     display: inline-flex;
     flex-wrap: wrap;
     align-items: center;
@@ -3276,7 +3301,7 @@
      olive with a dark olive bow, sword or shield, standing in for the
      badge's left edge. The badge rounds its left side to match, and the
      circle runs flush with its edge, top and bottom. */
-  :is(.tools-item, .trait-action-stats) .chip.tools-item-stat:has(> .tools-item-stat-lead) {
+  :is(.tools-item, .trait-action-stats, .item-pick) .chip.tools-item-stat:has(> .tools-item-stat-lead) {
     flex-wrap: nowrap;
     padding-top: 0;
     padding-bottom: 0;
