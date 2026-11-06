@@ -4,6 +4,6 @@ status: draft
 plane: any
 summary: "Sees unusually well at a distance."
 tags: [sight, perception, site-example]
-category: ability
+category: skill
 conveyed: true
 effect: "This character can request advantage in situations that involve seeing at distance."
