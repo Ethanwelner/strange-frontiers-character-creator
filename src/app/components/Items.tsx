@@ -130,7 +130,6 @@ function ItemPicker({ onAdd, custom }: { onAdd: (picked: { stock: StockItem; qty
     return words.every((w) => hay.includes(w));
   };
   const shown = STOCK.filter((i) => i.category === tab && matches(i));
-  const pickedIn = (c: ItemCategory) => STOCK.filter((i) => i.category === c && picked.has(i.id)).length;
   const count = [...picked.values()].reduce((n, q) => n + q, 0);
   return (
     <div className="item-picker">
@@ -138,7 +137,7 @@ function ItemPicker({ onAdd, custom }: { onAdd: (picked: { stock: StockItem; qty
         <div className="tech-field-tab-list" role="tablist" aria-label="Item category">
           {categories.map((c) => (
             <button key={c} type="button" role="tab" aria-selected={tab === c} className={`tech-field-tab${tab === c ? " is-active" : ""}`} onClick={() => setTab(c)}>
-              {title(c)} <span className="num">{pickedIn(c) > 0 ? `${pickedIn(c)} picked` : STOCK.filter((i) => i.category === c).length}</span>
+              {title(c)}
             </button>
           ))}
           <button type="button" role="tab" aria-selected={tab === "custom"} className={`tech-field-tab${tab === "custom" ? " is-active" : ""}`} onClick={() => setTab("custom")}>
