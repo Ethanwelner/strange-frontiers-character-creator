@@ -2989,8 +2989,9 @@
   }
 
   /* Add items turns the creator's green, like Build it, once something is
-     picked (and glitches, with the other things waiting on the player) */
-  .item-picker-submit button:not(:disabled) {
+     picked, and Player Tools' Traits Submit once Traits are picked (both
+     glitch, with the other things waiting on the player) */
+  :is(.item-picker-submit button:not(:disabled), .tools-traits-submit .build-button.is-ready) {
     background: var(--frontiers-green);
     color: var(--portfolio-black);
 
@@ -3977,7 +3978,7 @@
    cyan and red split that widens on the flares, and a slight skew instead of the title's slices and
    lurches. Every frame has the same three shadows (green, cyan to the left,
    red to the right), so they blend from one to the next. */
-.sf-creator :is(.tools-issues li, :is(.core-control, .stat-buttons) button:not(:disabled), .pager .step-next.is-done, .describe .build-button:not(:disabled), .tools-chat-send:not(:disabled), .tools-level-actions button:not(:disabled), .item-picker-submit button:not(:disabled)) {
+.sf-creator :is(.tools-issues li, :is(.core-control, .stat-buttons) button:not(:disabled), .pager .step-next.is-done, .describe .build-button:not(:disabled), .tools-chat-send:not(:disabled), .tools-level-actions button:not(:disabled), .item-picker-submit button:not(:disabled), .tools-traits-submit .build-button.is-ready) {
   animation:
     sf-glitch-small-shift 4s ease-in-out infinite alternate,
     sf-glitch-small-glow 8s ease-in-out infinite alternate;
@@ -4009,7 +4010,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sf-creator :is(.tools-issues li, :is(.core-control, .stat-buttons) button:not(:disabled), .pager .step-next.is-done, .describe .build-button:not(:disabled), .tools-chat-send:not(:disabled), .tools-level-actions button:not(:disabled), .item-picker-submit button:not(:disabled)) {
+  .sf-creator :is(.tools-issues li, :is(.core-control, .stat-buttons) button:not(:disabled), .pager .step-next.is-done, .describe .build-button:not(:disabled), .tools-chat-send:not(:disabled), .tools-level-actions button:not(:disabled), .item-picker-submit button:not(:disabled), .tools-traits-submit .build-button.is-ready) {
     animation: none;
   }
 }
