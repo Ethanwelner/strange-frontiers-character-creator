@@ -99,14 +99,6 @@ export function Conditions({
               {t?.temporary && <p className="muted small">{t.temporary}.</p>}
               {t && <p className="effect">{t.effect}</p>}
               <TraitAction action={t?.action} />
-              <input
-                className="tools-note"
-                type="text"
-                placeholder="Note, like where or from what"
-                aria-label={`Note for ${t?.name ?? c.trait}`}
-                value={c.note ?? ""}
-                onChange={(e) => update(c, { note: e.target.value || undefined })}
-              />
             </li>
           );
         })}
