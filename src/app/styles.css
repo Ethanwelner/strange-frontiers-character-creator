@@ -2068,6 +2068,15 @@
     line-height: 1;
   }
 
+  /* From 1200px to 1399px the site's column runs nearly to the page edges, so
+     the blob comes in off the corner: its left edge 12px inside the sheet's
+     outer edge (11px from its padding box, inside the 1px border). */
+  @media (min-width: 1200px) and (max-width: 1399.98px) {
+    .level-badge {
+      left: 11px;
+    }
+  }
+
   /* 4px down, so Level and the number sit centered together in the blob */
   .level-badge-label {
     margin-top: 4px;
