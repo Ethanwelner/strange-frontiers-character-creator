@@ -4,7 +4,7 @@ status: draft
 plane: any
 summary: "Taking the weapon out of an opponent's hands."
 tags: [combat, unarmed, technique]
-category: skill
+category: ability
 minStats: { grace: 5, intuition: 3 }
 prerequisites: [brawler]
 effect: "This character gains the Disarm Action."

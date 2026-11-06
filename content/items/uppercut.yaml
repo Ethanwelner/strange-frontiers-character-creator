@@ -1,0 +1,15 @@
+id: uppercut
+name: "Uppercut"
+status: draft
+plane: any
+summary: "One to the chin."
+tags: [natural weapon, punch, boxing]
+type: weapon
+category: weapon
+damage: "2 Blunt + Power"
+attackType: "Melee"
+maxRange: "1 m"
+attackStat: "Grace"
+onHit: "Devastating Hit or better: the Attack ignores 2 of the target's Blunt Resistance"
+modifiers: "Attack Rolls -2"
+notes: "Natural weapon, granted by Boxing."

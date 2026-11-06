@@ -2,6 +2,7 @@
 // dealt at once ("2 Blunt, 2 Electrical"); options separated by a slash are a
 // choice the player makes ("5 Slashing / 4 Piercing"). A slash inside a type's
 // own name, like Acidic/Corrosive, isn't a choice: a choice starts with a number.
+// Natural weapons add a Stat to their damage ("1 Blunt + Power").
 
 // In the Mechanics page's order: Physical, Elemental, Supernatural, then the
 // other common elemental effects.
@@ -18,7 +19,11 @@ export interface Damage {
   type: DamageType;
   // Left out where the Sheet gives only the type, like a torch's Heat
   amount?: number;
+  // A Stat added to the amount, like a natural weapon's Power
+  plus?: string;
 }
+
+const DAMAGE_STATS = ["Power", "Grace", "Endurance", "Physical"];
 
 const typeNamed = (name: string) => DAMAGE_TYPES.find((t) => t.toLowerCase() === name.trim().toLowerCase());
 
@@ -27,9 +32,11 @@ const typeNamed = (name: string) => DAMAGE_TYPES.find((t) => t.toLowerCase() ===
 export function parseDamage(text: string): Damage[][] | undefined {
   const options = text.split(/\s*\/\s*(?=\d)/).map((option) =>
     option.split(",").map((part) => {
-      const m = part.trim().match(/^(?:(\d+)\s+)?(.+)$/);
+      const m = part.trim().match(/^(?:(\d+)\s+)?(.+?)(?:\s*\+\s*(\w+))?$/);
       const type = m && typeNamed(m[2]!);
-      return type ? { type, ...(m[1] ? { amount: Number(m[1]) } : {}) } : undefined;
+      const plus = m?.[3] && DAMAGE_STATS.find((s) => s.toLowerCase() === m[3]!.toLowerCase());
+      if (m?.[3] && !plus) return undefined;
+      return type ? { type, ...(m[1] ? { amount: Number(m[1]) } : {}), ...(plus ? { plus } : {}) } : undefined;
     }),
   );
   return options.every((o) => o.every(Boolean)) ? (options as Damage[][]) : undefined;
@@ -41,7 +48,7 @@ export function damageText(text: string): string {
   const options = parseDamage(text);
   if (!options) return text;
   const and = (o: Damage[]) => {
-    const parts = o.map((d) => (d.amount === undefined ? d.type : `${d.amount} ${d.type}`));
+    const parts = o.map((d) => (d.amount === undefined ? d.type : `${d.amount} ${d.type}`) + (d.plus ? ` + ${d.plus}` : ""));
     return parts.length > 1 ? `${parts.slice(0, -1).join(", ")} and ${parts.at(-1)}` : parts[0]!;
   };
   return options.map(and).join(" or ");

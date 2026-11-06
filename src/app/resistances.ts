@@ -39,18 +39,22 @@ export function parseResistances(text: string, from: string): Resistance[] {
 
 // A Trait's effect, like "Rank *3 resistance to all Physical damage types" or
 // "Rank *3 added to this character's Blunt, Slashing, and Piercing
-// resistances for attacks that hit its torso", at the rank held.
+// resistances for attacks that hit its torso", at the rank held, or a flat
+// amount whatever the rank, like Iron Jaw's "+2 to this character's Blunt
+// Resistance for Attacks that hit their head".
 export function traitResistances(effect: string, rank: number, from: string): Resistance[] {
   return effect.split(/(?<=\.)\s+/).flatMap((sentence) => {
-    const per = sentence.match(/Rank \*(\d+)/i);
-    if (!per || !/resist/i.test(sentence)) return [];
+    const perRank = sentence.match(/Rank \*(\d+)/i);
+    const flat = perRank ? null : sentence.match(/\+(\d+) to [^.]*resist/i);
+    if ((!perRank && !flat) || !/resist/i.test(sentence)) return [];
+    const amount = perRank ? Number(perRank[1]) * rank : Number(flat![1]);
     const types = new Set<DamageType>();
     for (const [group, members] of Object.entries(DAMAGE_TYPE_GROUPS)) {
       if (new RegExp(`all ${group} damage types`, "i").test(sentence)) members.forEach((t) => types.add(t));
     }
     for (const t of DAMAGE_TYPES) if (new RegExp(`\\b${t.replace("/", "\\/")}\\b`).test(sentence)) types.add(t);
     const where = sentence.match(/attacks that hit (?:its|their|the) (\w+)/i)?.[1];
-    return [...types].map((type) => ({ type, amount: Number(per[1]) * rank, from, ...(where ? { where } : {}) }));
+    return [...types].map((type) => ({ type, amount, from, ...(where ? { where } : {}) }));
   });
 }
 

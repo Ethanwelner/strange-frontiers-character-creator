@@ -665,9 +665,16 @@ describe("rule 9: creation-only allowances", () => {
 });
 
 describe("rule 12: minimum stats and tag prerequisites", () => {
+  // The shared test content drops Skills' minimum stats; these tests put back
+  // the real ones for the Traits they check.
+  const withStats = (...ids: string[]): Content => ({
+    ...content,
+    traits: content.traits.map((t) => (ids.includes(t.id) ? loaded.content.traits.find((x) => x.id === t.id)! : t)),
+  });
+
   it("rejects a picked Trait the focus stats don't reach", () => {
     // Trail Runner needs Power 3, Endurance 2 and Grace 2; this Human has Power 2, Endurance 1.
-    const r = check({ ...human, traits: [{ trait: "trail-runner", pick: "universal" }] });
+    const r = check({ ...human, traits: [{ trait: "trail-runner", pick: "universal" }] }, withStats("trail-runner"));
     expect(codes(r)).toEqual(["min-stats"]);
     expect(r.errors[0]!.message).toContain("has endurance 1, power 2");
   });
@@ -683,7 +690,7 @@ describe("rule 12: minimum stats and tag prerequisites", () => {
       ],
       traits: [{ trait: "capable-student", pick: "universal" as const }],
     };
-    expectLegal(check(scholar, content, { startingLevel: 2 }));
+    expectLegal(check(scholar, withStats("capable-student"), { startingLevel: 2 }));
   });
 
   it("holds Knowledges bought with picks to their minimum stats", () => {
@@ -700,7 +707,7 @@ describe("rule 12: minimum stats and tag prerequisites", () => {
 
   it("checks core stats too", () => {
     // Gladiator needs Physical 5; one level gives Physical 1.
-    const r = check({ ...human, traits: [{ trait: "gladiator", pick: "universal" }] });
+    const r = check({ ...human, traits: [{ trait: "gladiator", pick: "universal" }] }, withStats("gladiator"));
     expect(r.errors.find((e) => e.code === "min-stats")!.message).toContain("physical 1");
   });
 

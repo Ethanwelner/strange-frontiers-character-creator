@@ -1,0 +1,15 @@
+id: bicycle-kick
+name: "Bicycle Kick"
+status: draft
+plane: any
+summary: "Two kicks from the air before landing."
+tags: [natural weapon, kick, martial arts]
+type: weapon
+category: weapon
+damage: "3 Blunt + Power"
+attackType: "Melee"
+maxRange: "1 m"
+attackStat: "Grace"
+onHit: "Solid Hit or better: the target loses its next Action"
+modifiers: "Attack Rolls -3"
+notes: "Natural weapon, granted by Martial Arts Master."

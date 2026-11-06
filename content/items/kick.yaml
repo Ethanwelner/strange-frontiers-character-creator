@@ -1,0 +1,13 @@
+id: kick
+name: "Kick"
+status: draft
+plane: any
+summary: "A strong but basic kick."
+tags: [natural weapon, kick, universal]
+type: weapon
+category: weapon
+damage: "1 Blunt + Power"
+attackType: "Melee"
+maxRange: "1 m"
+attackStat: "Grace"
+notes: "Natural weapon: every character has it."

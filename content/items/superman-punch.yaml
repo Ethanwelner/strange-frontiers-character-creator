@@ -1,0 +1,15 @@
+id: superman-punch
+name: "Superman Punch"
+status: draft
+plane: any
+summary: "Looks cool when it works."
+tags: [natural weapon, punch, boxing]
+type: weapon
+category: weapon
+damage: "3 Blunt + Power"
+attackType: "Melee"
+maxRange: "1 m"
+attackStat: "Grace"
+onHit: "Critical Hit: the target makes an Endurance check against the damage dealt *3 and gains the Unconscious Condition if it fails"
+modifiers: "Attack Rolls -5"
+notes: "Natural weapon, granted by Expert Boxer."

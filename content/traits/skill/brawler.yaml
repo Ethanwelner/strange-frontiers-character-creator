@@ -7,5 +7,4 @@ tags: [combat, unarmed, brawling]
 category: skill
 ranked: true
 minStats: { power: 3, endurance: 3 }
-effect: "This character gains the Unarmed Strike Action."
-action: "Unarmed Strike: This character may Attack a target with a temporary weapon that has the following profile: (Melee) (max range 1 m) (1 Blunt per Rank) (Attack Stat: Power)."
+effect: "Rank *1 added to the Blunt damage of this character's natural weapons."
