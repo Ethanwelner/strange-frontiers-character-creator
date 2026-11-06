@@ -2973,6 +2973,17 @@
     border-top: 1px solid #444;
   }
 
+  /* Add items turns the creator's green, like Build it, once something is
+     picked (and glitches, with the other things waiting on the player) */
+  .item-picker-submit button:not(:disabled) {
+    background: var(--frontiers-green);
+    color: var(--portfolio-black);
+
+    &:hover {
+      background-color: color-mix(in srgb, var(--frontiers-green) 75%, var(--portfolio-white));
+    }
+  }
+
   /* The add row (Items' and Player Tools' Add a Condition), item notes, and
      the count */
   .tools-add {
@@ -3934,11 +3945,12 @@
    while it has a point to place, and the creator's next step button once
    its step is finished (green), Build it once there's something to
    build, Player Tools' Send once there's a message, and its level up's
-   Submit once every point is placed. The same rhythm, but a faint green glow, a
+   Submit once every point is placed, and Add items once an item is
+   picked. The same rhythm, but a faint green glow, a
    cyan and red split that widens on the flares, and a slight skew instead of the title's slices and
    lurches. Every frame has the same three shadows (green, cyan to the left,
    red to the right), so they blend from one to the next. */
-.sf-creator :is(.tools-issues li, .is-plus:not(:disabled), .pager .step-next.is-done, .describe .build-button:not(:disabled), .tools-chat-send:not(:disabled), .tools-level-actions button:not(:disabled)) {
+.sf-creator :is(.tools-issues li, .is-plus:not(:disabled), .pager .step-next.is-done, .describe .build-button:not(:disabled), .tools-chat-send:not(:disabled), .tools-level-actions button:not(:disabled), .item-picker-submit button:not(:disabled)) {
   animation:
     sf-glitch-small-shift 4s ease-in-out infinite alternate,
     sf-glitch-small-glow 8s ease-in-out infinite alternate;
@@ -3970,7 +3982,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sf-creator :is(.tools-issues li, .is-plus:not(:disabled), .pager .step-next.is-done, .describe .build-button:not(:disabled), .tools-chat-send:not(:disabled), .tools-level-actions button:not(:disabled)) {
+  .sf-creator :is(.tools-issues li, .is-plus:not(:disabled), .pager .step-next.is-done, .describe .build-button:not(:disabled), .tools-chat-send:not(:disabled), .tools-level-actions button:not(:disabled), .item-picker-submit button:not(:disabled)) {
     animation: none;
   }
 }
