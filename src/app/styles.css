@@ -3728,6 +3728,13 @@
     }
   }
 
+  /* A long Knowledges, Abilities or Skills list stops at 75vh and scrolls
+     inside its box */
+  :is(.sheet-side > .knowledge-list, :is(.sheet-abilities, .sheet-skills) > .sheet-traits) {
+    max-height: 75vh;
+    overflow-y: auto;
+  }
+
   .effect {
     font-size: 0.9rem;
 
@@ -3956,6 +3963,12 @@
 
     .c-sheet {
       margin-top: 40px;
+    }
+
+    /* Printed lists run their full length */
+    :is(.sheet-side > .knowledge-list, :is(.sheet-abilities, .sheet-skills) > .sheet-traits) {
+      max-height: none;
+      overflow: visible;
     }
   }
 }
