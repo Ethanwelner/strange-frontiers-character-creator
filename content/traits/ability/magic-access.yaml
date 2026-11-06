@@ -8,4 +8,4 @@ category: ability
 conveyed: true
 coreAccess: [magic]
 opensLists: [magic]
-effect: "This character can put levels into Magic, a core stat with no focus stats; each point of Magic adds 3 MP (Mana Points). They can also take Traits on the Magic list, like Incantation."
+effect: "This character can level up the Magic core stat."
