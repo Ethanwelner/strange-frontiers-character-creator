@@ -7,4 +7,4 @@ tags: [diplomacy, politics, social]
 category: skill
 ranked: true
 minStats: { persuasion: 4, empathy: 4, demeanor: 3 }
-effect: "This character is capable of conducting routine diplomatic business without a Skill Check. Rank *10 added to Skill Check rolls involving diplomacy."
+effect: "This character is capable of handling formal negotiations, protocol and official meetings between groups without a Skill Check. Rank *5 added to Skill Check rolls involving negotiating on behalf of a group or settling disputes between groups."

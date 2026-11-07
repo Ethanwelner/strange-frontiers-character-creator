@@ -7,4 +7,4 @@ tags: [animals, farming, care]
 category: skill
 ranked: true
 minStats: { empathy: 3, endurance: 2, intuition: 2 }
-effect: "This character is capable of raising, feeding and caring for livestock and working animals without a skill check. Rank *10 added to skill check rolls involving handling and caring for animals."
+effect: "This character is capable of raising, feeding and caring for livestock and working animals without a skill check. Rank *5 added to skill check rolls involving handling and caring for animals."

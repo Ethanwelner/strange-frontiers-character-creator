@@ -7,4 +7,4 @@ tags: [intimidation, social, threat]
 category: skill
 ranked: true
 minStats: { demeanor: 3, power: 3 }
-effect: "This character is capable of making a credible threat without a skill check. Rank *10 added to skill check rolls involving intimidation."
+effect: "This character is capable of making a credible threat without a skill check. Rank *5 added to skill check rolls involving intimidation."

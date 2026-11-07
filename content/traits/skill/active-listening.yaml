@@ -1,9 +1,0 @@
-id: active-listening
-name: "Active Listening"
-status: draft
-plane: any
-summary: "Hearing what someone means as well as what they say."
-tags: [empathy, social, understanding]
-category: skill
-minStats: { empathy: 3, intuition: 2 }
-effect: "This character gains +3 to Empathy rolls relating to understanding what someone wants, means or is leaving out."

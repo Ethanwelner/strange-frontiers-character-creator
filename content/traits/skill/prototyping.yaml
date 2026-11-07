@@ -7,4 +7,4 @@ tags: [invention, crafting, engineering]
 category: skill
 minStats: { grace: 4, logic: 4, intuition: 3 }
 prerequisites: [inventor]
-effect: "This character gains +5 to rolls relating to building a working prototype from a design."
+effect: "This character gains +5 to rolls relating to building a first working version of a device, whether from plans, a sketch or salvaged parts."

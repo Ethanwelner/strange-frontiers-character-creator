@@ -7,4 +7,4 @@ tags: [art, sculpture, craft]
 category: skill
 ranked: true
 minStats: { grace: 3, intuition: 3, power: 2 }
-effect: "This character is capable of sculpting a competent figure in stone, clay or wood without a skill check. Rank *10 added to skill check rolls involving sculpture."
+effect: "This character is capable of sculpting a competent figure in stone, clay or wood without a skill check. Rank *5 added to skill check rolls involving sculpture."

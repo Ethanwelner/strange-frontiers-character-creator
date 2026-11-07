@@ -7,4 +7,4 @@ tags: [athletics, jumping]
 category: skill
 ranked: true
 minStats: { power: 3, grace: 3 }
-effect: "This character is capable of jumping across a gap of up to 2 m without a Skill Check. Rank *10 added to Skill Check rolls involving jumping."
+effect: "This character is capable of jumping across a gap of up to 2 m without a Skill Check. Rank *5 added to Skill Check rolls involving jumping."

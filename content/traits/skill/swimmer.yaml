@@ -7,4 +7,4 @@ tags: [athletics, swimming, water]
 category: skill
 ranked: true
 minStats: { endurance: 3, power: 2, grace: 2 }
-effect: "This character is capable of swimming in calm water without a Skill Check. Rank *10 added to Skill Check rolls involving swimming or holding their breath."
+effect: "This character is capable of swimming in rough water or against a current without a Skill Check. Rank *5 added to Skill Check rolls involving swimming or holding their breath."

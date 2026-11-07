@@ -6,4 +6,4 @@ summary: "Planning, packing and supplying an expedition."
 tags: [exploration, planning, logistics]
 category: skill
 minStats: { logic: 4, memory: 3 }
-effect: "This character gains +5 to rolls relating to planning routes, supplies and equipment for an expedition."
+effect: "This character gains +5 to rolls relating to planning and supplying a trip, operation or project, such as routes, schedules, supplies, equipment and people."
