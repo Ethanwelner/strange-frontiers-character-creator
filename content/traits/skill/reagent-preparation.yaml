@@ -2,8 +2,8 @@ id: reagent-preparation
 name: "Reagent Preparation"
 status: draft
 plane: isekai
-summary: "Drying, grinding and distilling ingredients for potions."
+summary: "Gathering and preparing the components magic needs."
 tags: [potions, alchemy, reagents]
 category: skill
 minStats: { grace: 3, memory: 3 }
-effect: "This character gains +5 to rolls relating to preparing and preserving potion reagents."
+effect: "This character gains +5 to rolls relating to gathering, preparing and preserving magical components."

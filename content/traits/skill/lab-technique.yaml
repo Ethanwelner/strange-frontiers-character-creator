@@ -7,4 +7,4 @@ tags: [science, laboratory, research]
 category: skill
 ranked: true
 minStats: { grace: 3, logic: 3, memory: 3 }
-effect: "This character is capable of running a standard laboratory procedure without a Skill Check. Rank *10 added to Skill Check rolls involving laboratory work."
+effect: "This character is capable of carrying out standard scientific procedures, like taking samples, running tests and handling instruments, without a Skill Check. Rank *5 added to Skill Check rolls involving lab or field science work."

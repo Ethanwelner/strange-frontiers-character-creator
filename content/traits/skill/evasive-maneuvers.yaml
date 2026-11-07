@@ -7,5 +7,4 @@ tags: [pilot, combat, defense]
 category: skill
 minStats: { grace: 5, intuition: 5 }
 prerequisiteTags: [pilot]
-effect: "A vehicle this character is piloting gains +2 Defense."
-modifiers: "Defense +2 (vehicle being piloted)"
+effect: "This character can request Advantage on piloting rolls to dodge incoming fire, debris or a collision."
