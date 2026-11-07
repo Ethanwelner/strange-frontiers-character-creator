@@ -7,4 +7,4 @@ tags: [craft, leather, armor]
 category: skill
 ranked: true
 minStats: { grace: 3, endurance: 2, intuition: 2 }
-effect: "This character is capable of tanning hides and making leather goods and simple leather armor without a skill check. Rank *10 added to skill check rolls involving leatherworking."
+effect: "This character is capable of tanning hides and making leather goods and simple leather armor without a skill check. Rank *5 added to skill check rolls involving leatherworking."

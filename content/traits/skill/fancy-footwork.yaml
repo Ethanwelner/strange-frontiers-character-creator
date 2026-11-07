@@ -8,5 +8,5 @@ category: skill
 mastery: true
 minStats: { grace: 6, endurance: 4, intuition: 3 }
 prerequisites: [footwork]
-effect: "- +2 m added to this character's Movement.\n- This character can request Advantage on rolls to dodge, feint or slip out of reach in a fight."
-modifiers: "Movement +2 m"
+effect: "This character gains +2 Defense against Attacks with natural weapons."
+modifiers: "Defense +2 (against natural weapons)"

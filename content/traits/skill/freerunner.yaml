@@ -7,4 +7,4 @@ tags: [athletics, parkour, agility, movement]
 category: skill
 ranked: true
 minStats: { grace: 5, power: 3, endurance: 3 }
-effect: "This character is capable of vaulting low obstacles during Movement without a Skill Check. Rank *10 added to Grace Skill Check rolls to overcome obstacles during Movement."
+effect: "This character is capable of vaulting low obstacles during Movement without a Skill Check. Rank *5 added to Grace Skill Check rolls to overcome obstacles during Movement."

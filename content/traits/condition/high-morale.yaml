@@ -1,0 +1,11 @@
+id: high-morale
+name: "High Morale"
+status: draft
+plane: any
+summary: "Good vibes."
+tags: [morale, confidence]
+category: condition
+conveyed: true
+temporary: "Lasts for one hour, or until the character takes damage equal to or greater than its Physical stat."
+effect: "This character gains +2 to checks against fear, sadness or other negative emotions, +1 to Endurance checks and +1 to Attack Rolls."
+modifiers: "Attack Rolls +1"

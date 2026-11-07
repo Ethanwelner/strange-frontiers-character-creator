@@ -1,9 +1,0 @@
-id: brokering
-name: "Brokering"
-status: draft
-plane: any
-summary: "Arranging deals between other people, for a cut."
-tags: [trade, negotiation, merchant]
-category: skill
-minStats: { persuasion: 4, empathy: 3 }
-effect: "This character gains +5 to Persuasion rolls relating to arranging a deal between two other parties."

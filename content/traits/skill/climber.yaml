@@ -7,4 +7,4 @@ tags: [athletics, climbing]
 category: skill
 ranked: true
 minStats: { grace: 3, power: 3, endurance: 2 }
-effect: "This character is capable of climbing surfaces with handholds without a Skill Check. Rank *10 added to Skill Check rolls involving climbing."
+effect: "This character is capable of climbing surfaces with handholds without a Skill Check. Rank *5 added to Skill Check rolls involving climbing."

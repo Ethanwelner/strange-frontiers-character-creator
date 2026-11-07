@@ -7,4 +7,4 @@ tags: [health, injury, knockout]
 category: condition
 conveyed: true
 temporary: "Lasts until the character takes damage or another character spends their Action waking them."
-effect: "This character has been knocked out and can't perform voluntary Actions or perceive the world around them."
+effect: "This character has been knocked out and can't perform voluntary Actions or perceive the world around them. At the end of every 3 Incident Rounds, or every 5 minutes outside of an Incident, this character may make an Endurance check of 15. If it succeeds, the character wakes up and loses this Condition."
