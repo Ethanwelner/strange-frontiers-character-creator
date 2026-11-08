@@ -18,14 +18,15 @@ describe("a character in play", () => {
     expect(result.summary).toBeDefined();
   });
 
-  it("starts full and keeps resources at or below the max", () => {
+  it("starts full and lets resources go above the max", () => {
     const play = fresh();
     const result = checkPlay(play.draft, content);
     const max = maxOf(result, "hp");
     expect(currentOf(play, result, "hp")).toBe(max);
     const hurt = withResource(play, result, "hp", max - 3);
     expect(currentOf(hurt, result, "hp")).toBe(max - 3);
-    expect(withResource(hurt, result, "hp", max + 10).current.hp).toBeUndefined();
+    expect(withResource(hurt, result, "hp", max).current.hp).toBeUndefined();
+    expect(currentOf(withResource(hurt, result, "hp", max + 10), result, "hp")).toBe(max + 10);
     // HP can go below 0 (Dead is "0 or less"); the others stop at 0.
     expect(currentOf(withResource(play, result, "hp", -4), result, "hp")).toBe(-4);
     expect(currentOf(withResource(play, result, "vp", -4), result, "vp")).toBe(0);

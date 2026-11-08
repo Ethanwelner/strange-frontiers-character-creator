@@ -84,7 +84,7 @@ export const CHAT_TOOLS: Tool[] = [
   {
     name: "change_resources",
     description:
-      "Change the character's current HP, VP, SP or MP, all of one message's changes in one call. Each change passes `by` to add or subtract (damage is negative) or `to` to set the value. Values stop at the max. Returns each value before and after, and the tracker's resources afterward.",
+      "Change the character's current HP, VP, SP or MP, all of one message's changes in one call. Each change passes `by` to add or subtract (damage is negative) or `to` to set the value. Values can go above the max, for bonus points; HP can go below 0 and the others stop at 0. Returns each value before and after, and the tracker's resources afterward.",
     input_schema: {
       type: "object",
       properties: {

@@ -63,12 +63,12 @@ export function currentOf(play: Play, result: BuildResult, r: ResourceKey): numb
   return play.current[r] ?? maxOf(result, r);
 }
 
-// Current values are kept between 0 (or below, for HP: Dead is "0 or less")
-// and the max. A value at the max is stored as missing, so a level up that
-// raises the max keeps the character full.
+// Current values stop at 0 (HP can go below: Dead is "0 or less") but can go
+// above the max, for bonus points given to a character. A value at the max is
+// stored as missing, so a level up that raises the max keeps the character full.
 export function withResource(play: Play, result: BuildResult, r: ResourceKey, value: number): Play {
   const max = maxOf(result, r);
-  const v = Math.min(max, r === "hp" ? Math.round(value) : Math.max(0, Math.round(value)));
+  const v = r === "hp" ? Math.round(value) : Math.max(0, Math.round(value));
   const current = { ...play.current };
   if (v === max) delete current[r];
   else current[r] = v;
