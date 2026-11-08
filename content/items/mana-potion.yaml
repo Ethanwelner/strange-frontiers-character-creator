@@ -2,11 +2,11 @@ id: mana-potion
 name: "Mana Potion"
 status: draft
 plane: isekai
-summary: "Whoever drinks it regains 2 MP per Rank."
+summary: "Whoever drinks it regains 6 MP."
 tags: [potion, magic, mana]
 type: misc
 category: consumable
 uses: "uses 1: when drunk"
-value: 40
+value: 60
 currency: "Luras"
-notes: "Brewed at a Rank, like the other potions, though no spell brews it yet. Value is per Rank."
+notes: "Not brewed at a Rank."
