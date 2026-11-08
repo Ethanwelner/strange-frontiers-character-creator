@@ -109,7 +109,7 @@ export function Tracker({
                     {cur}
                     <span className="muted"> / {max}</span>
                   </span>
-                  <button type="button" onClick={() => set(r, cur + 1)} disabled={cur >= max} aria-label={`1 more ${r.toUpperCase()}`}>
+                  <button type="button" onClick={() => set(r, cur + 1)} aria-label={`1 more ${r.toUpperCase()}`}>
                     <Sign is="plus" />
                   </button>
                   <button
