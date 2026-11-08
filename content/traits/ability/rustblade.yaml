@@ -1,0 +1,13 @@
+id: rustblade
+name: "Rustblade"
+status: draft
+plane: any
+summary: "Coats a weapon in magical acid."
+tags: [magic, spell, enchantment, weapon, acid, corrosion]
+category: ability
+ranked: true
+minStats: { magic: 3 }
+# On the Magic list: its own tab on the Traits step, open to every character.
+list: magic
+effect: "This character gains the Cast Rustblade Action."
+action: "Cast Rustblade: This character may spend 2 MP per Rank of Rustblade to give a weapon within 5 m the Corrosive Weapon Condition. The Condition's Rank is equal to the caster's Rustblade Rank."

@@ -1,0 +1,14 @@
+id: rustproof
+name: "Rustproof"
+status: draft
+plane: any
+summary: "Protects a character or item from acid and rust."
+tags: [magic, spell, enchantment, defense, acid, corrosion]
+category: ability
+types: [potion]
+ranked: true
+minStats: { magic: 3 }
+# On the Magic list: its own tab on the Traits step, open to every character.
+list: magic
+effect: "This character gains the Cast Rustproof Action."
+action: "Cast Rustproof: This character may spend 2 MP per Rank of Rustproof to give a character or item within 5 m the Magically Rustproof Condition. The Condition's Rank is equal to the caster's Rustproof Rank."

@@ -1,0 +1,12 @@
+id: electrified-weapon
+name: "Electrified Weapon"
+status: draft
+plane: any
+summary: "A weapon crackling with magical lightning."
+tags: [magic, enchantment, weapon, lightning, storm]
+category: condition
+types: [enchantment]
+ranked: true
+conveyed: true
+temporary: "Lasts 10 minutes per Rank."
+effect: "This weapon deals 3 more Electrical damage per Rank. Targets hit by this weapon gain the Deafened Condition."

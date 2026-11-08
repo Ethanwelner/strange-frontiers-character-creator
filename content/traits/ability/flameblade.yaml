@@ -1,0 +1,13 @@
+id: flameblade
+name: "Flameblade"
+status: draft
+plane: any
+summary: "Wreathes a weapon in magical fire."
+tags: [magic, spell, enchantment, weapon, fire]
+category: ability
+ranked: true
+minStats: { magic: 3 }
+# On the Magic list: its own tab on the Traits step, open to every character.
+list: magic
+effect: "This character gains the Cast Flameblade Action."
+action: "Cast Flameblade: This character may spend 2 MP per Rank of Flameblade to give a weapon within 5 m the Flaming Weapon Condition. The Condition's Rank is equal to the caster's Flameblade Rank."

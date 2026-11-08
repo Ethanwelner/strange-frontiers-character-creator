@@ -1,0 +1,12 @@
+id: magically-iceproof
+name: "Magically Iceproof"
+status: draft
+plane: any
+summary: "Magically protected from frost and cold."
+tags: [magic, enchantment, defense, ice, cold]
+category: condition
+types: [enchantment]
+ranked: true
+conveyed: true
+temporary: "Lasts 30 minutes per Rank."
+effect: "This character or item gains Rank *3 resistance to Cold damage."

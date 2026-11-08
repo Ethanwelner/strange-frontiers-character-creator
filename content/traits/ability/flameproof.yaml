@@ -1,0 +1,14 @@
+id: flameproof
+name: "Flameproof"
+status: draft
+plane: any
+summary: "Protects a character or item from flames and heat."
+tags: [magic, spell, enchantment, defense, fire]
+category: ability
+types: [potion]
+ranked: true
+minStats: { magic: 3 }
+# On the Magic list: its own tab on the Traits step, open to every character.
+list: magic
+effect: "This character gains the Cast Flameproof Action."
+action: "Cast Flameproof: This character may spend 2 MP per Rank of Flameproof to give a character or item within 5 m the Magically Flameproof Condition. The Condition's Rank is equal to the caster's Flameproof Rank."

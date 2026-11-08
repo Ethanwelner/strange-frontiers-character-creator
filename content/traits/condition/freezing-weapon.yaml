@@ -1,0 +1,12 @@
+id: freezing-weapon
+name: "Freezing Weapon"
+status: draft
+plane: any
+summary: "A weapon sheathed in magical frost."
+tags: [magic, enchantment, weapon, ice, cold]
+category: condition
+types: [enchantment]
+ranked: true
+conveyed: true
+temporary: "Lasts 10 minutes per Rank."
+effect: "This weapon deals 2 more Cold damage per Rank. Targets hit by this weapon gain 1 Rank of the Frozen Condition."

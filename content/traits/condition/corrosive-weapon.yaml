@@ -1,0 +1,12 @@
+id: corrosive-weapon
+name: "Corrosive Weapon"
+status: draft
+plane: any
+summary: "A weapon dripping with magical acid."
+tags: [magic, enchantment, weapon, acid, corrosion]
+category: condition
+types: [enchantment]
+ranked: true
+conveyed: true
+temporary: "Lasts 10 minutes per Rank."
+effect: "This weapon deals 2 more Corrosive damage per Rank. Targets hit by this weapon gain 1 Rank of the Corroding Condition."

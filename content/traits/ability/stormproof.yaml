@@ -1,0 +1,14 @@
+id: stormproof
+name: "Stormproof"
+status: draft
+plane: any
+summary: "Protects a character or item from lightning and electricity."
+tags: [magic, spell, enchantment, defense, lightning, storm]
+category: ability
+types: [potion]
+ranked: true
+minStats: { magic: 3 }
+# On the Magic list: its own tab on the Traits step, open to every character.
+list: magic
+effect: "This character gains the Cast Stormproof Action."
+action: "Cast Stormproof: This character may spend 2 MP per Rank of Stormproof to give a character or item within 5 m the Magically Stormproof Condition. The Condition's Rank is equal to the caster's Stormproof Rank."
