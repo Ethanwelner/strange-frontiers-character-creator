@@ -1,0 +1,12 @@
+id: earthen-weapon
+name: "Earthen Weapon"
+status: draft
+plane: any
+summary: "A weapon weighted with magical stone."
+tags: [magic, enchantment, weapon, earth, stone]
+category: condition
+types: [enchantment]
+ranked: true
+conveyed: true
+temporary: "Lasts one minute."
+effect: "This weapon deals 2 more Blunt damage per Rank. Targets hit by this weapon gain the Prone Condition."

@@ -1,0 +1,13 @@
+id: stormblade
+name: "Stormblade"
+status: draft
+plane: any
+summary: "Charges a weapon with magical lightning."
+tags: [magic, spell, enchantment, weapon, lightning, storm]
+category: ability
+ranked: true
+minStats: { magic: 3 }
+# On the Magic list: its own tab on the Traits step, open to every character.
+list: magic
+effect: "This character gains the Cast Stormblade Action."
+action: "Cast Stormblade: This character may spend 2 MP per Rank of Stormblade to give a weapon within 5 m the Electrified Weapon Condition. The Condition's Rank is equal to the caster's Stormblade Rank."

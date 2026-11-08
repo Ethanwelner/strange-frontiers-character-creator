@@ -1,0 +1,13 @@
+id: iceblade
+name: "Iceblade"
+status: draft
+plane: any
+summary: "Sheathes a weapon in magical frost."
+tags: [magic, spell, enchantment, weapon, ice, cold]
+category: ability
+ranked: true
+minStats: { magic: 3 }
+# On the Magic list: its own tab on the Traits step, open to every character.
+list: magic
+effect: "This character gains the Cast Iceblade Action."
+action: "Cast Iceblade: This character may spend 2 MP per Rank of Iceblade to give a weapon within 5 m the Freezing Weapon Condition. The Condition's Rank is equal to the caster's Iceblade Rank."
