@@ -5,9 +5,8 @@ plane: isekai
 summary: "Binding magic into objects."
 tags: [magic, enchanting, crafting, artifacts]
 category: skill
-ranked: true
 minStats: { magic: 2, memory: 3, grace: 3 }
 prerequisites: [relic-handling]
 # On the Magic list: its own tab on the Traits step, open to every character.
 list: magic
-effect: "This character is capable of enchanting a simple item with a minor magical property, given the time and materials, without a Skill Check. Rank *10 added to Skill Check rolls involving enchanting."
+effect: "This character gains +5 to rolls relating to enchanting."

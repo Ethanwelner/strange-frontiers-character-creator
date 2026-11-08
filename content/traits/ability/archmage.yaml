@@ -1,0 +1,13 @@
+id: archmage
+name: "Archmage"
+status: draft
+plane: any
+summary: "Among the greatest mages of their age."
+tags: [magic, metamagic, expert]
+category: ability
+mastery: true
+minStats: { magic: 12, intuition: 8 }
+prerequisites: [master-mage]
+# On the Magic list: its own tab on the Traits step, open to every character.
+list: magic
+effect: "When using a Cast: Action, this character may spend 1 less MP on it."

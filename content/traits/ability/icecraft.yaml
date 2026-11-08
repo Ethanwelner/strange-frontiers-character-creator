@@ -1,0 +1,11 @@
+id: icecraft
+name: "Icecraft"
+status: draft
+plane: any
+summary: "Turning any elemental spell to ice."
+tags: [magic, metamagic, ice, cold]
+category: ability
+minStats: { magic: 3, demeanor: 3 }
+# On the Magic list: its own tab on the Traits step, open to every character.
+list: magic
+effect: "When using a Cast: Action, this character may spend 1 more MP on it to change all Elemental damage (Heat, Cold and Electrical) the Attack deals to Cold, and any Burning, Frozen or Corroding Condition it gives to Frozen."

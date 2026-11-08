@@ -1,0 +1,11 @@
+id: simple-metamagic
+name: "Simple Metamagic"
+status: draft
+plane: any
+summary: "Pouring extra power into a spell to push it past the caster's limits."
+tags: [magic, metamagic]
+category: ability
+minStats: { magic: 3, intuition: 3 }
+# On the Magic list: its own tab on the Traits step, open to every character.
+list: magic
+effect: "When using a Cast: Action, this character may double the MP spent on it to cast it at one Rank higher than it would otherwise be capable of."

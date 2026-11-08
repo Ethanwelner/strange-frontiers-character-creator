@@ -1,0 +1,11 @@
+id: rustcraft
+name: "Rustcraft"
+status: draft
+plane: any
+summary: "Turning any elemental spell to acid and rust."
+tags: [magic, metamagic, acid, corrosion]
+category: ability
+minStats: { magic: 3, empathy: 3 }
+# On the Magic list: its own tab on the Traits step, open to every character.
+list: magic
+effect: "When using a Cast: Action, this character may spend 1 more MP on it to change all Elemental damage (Heat, Cold and Electrical) the Attack deals to Corrosive, and any Burning, Frozen or Corroding Condition it gives to Corroding."

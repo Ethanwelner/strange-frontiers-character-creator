@@ -1,0 +1,13 @@
+id: master-flamecraft
+name: "Master Flamecraft"
+status: draft
+plane: any
+summary: "Fire magic cast cheaper and hotter."
+tags: [magic, metamagic, fire, expert]
+category: ability
+mastery: true
+minStats: { magic: 5, endurance: 5 }
+prerequisites: [flamecraft]
+# On the Magic list: its own tab on the Traits step, open to every character.
+list: magic
+effect: "When using a Cast: Action for an Attack that would deal Heat damage, this character spends 1 less MP on it and the Attack deals 1 more Heat damage."
