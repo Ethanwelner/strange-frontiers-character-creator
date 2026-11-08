@@ -6,4 +6,4 @@ summary: "Healing a wounded comrade under fire."
 tags: [medicine, healing, combat]
 category: ability
 effect: "This character gains the Field Medicine Action."
-action: "Field Medicine: As a Full RP Action, this character may make a Grace or Memory check to remove a Condition from a character within 1 m. For every 5 points the roll exceeds 10, one Rank of a Condition is removed."
+action: "Field Medicine: As a Full RP Action, this character may make a Grace or Memory check to reduce Severe Bleeding, Unconscious, temporary blindness or a concussion on a character within 1 m. For every 5 points the roll exceeds 10, one Rank of the Condition is removed."

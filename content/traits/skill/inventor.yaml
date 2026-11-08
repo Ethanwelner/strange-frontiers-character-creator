@@ -8,4 +8,4 @@ category: skill
 ranked: true
 minStats: { logic: 5, intuition: 4, memory: 3 }
 prerequisites: [tinkerer]
-effect: "This character is capable of drafting a workable design for a simple new device without a Skill Check. Rank *10 added to Skill Check rolls involving designing or improving inventions."
+effect: "This character is capable of drafting a workable design for a simple device, or working out what an unfamiliar one is for, without a Skill Check. Rank *10 added to Skill Check rolls involving designing, improving or reverse-engineering devices, machines and tools."
