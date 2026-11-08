@@ -10,7 +10,7 @@ damage: "3 Blunt per Rank"
 attackType: "Ranged, Thrown"
 attackStat: "Grace"
 areaOfEffect: "3 m per Rank"
-onHit: "Characters damaged by it gain the Deafened Condition"
+onHit: "Characters damaged by it gain the Temporarily Deafened Condition"
 uses: "uses 1: when thrown"
 value: 40
 currency: "Luras"

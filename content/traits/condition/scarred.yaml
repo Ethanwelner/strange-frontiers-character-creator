@@ -1,0 +1,11 @@
+id: scarred
+name: "Scarred"
+status: draft
+plane: any
+summary: "Marked by deep, disfiguring wounds."
+tags: [injury, slashing]
+category: condition
+types: [injury]
+ranked: true
+conveyed: true
+effect: "This character suffers -2 Persuasion and -2 Demeanor per Rank."

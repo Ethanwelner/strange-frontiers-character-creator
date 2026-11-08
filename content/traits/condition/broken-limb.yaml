@@ -1,0 +1,12 @@
+id: broken-limb
+name: "Broken Limb"
+status: draft
+plane: any
+summary: "A bone broken by a heavy blow."
+tags: [injury, blunt]
+category: condition
+types: [injury]
+ranked: true
+conveyed: true
+effect: "This character suffers -2 to Attack Rolls per Rank and -1 Priority."
+modifiers: "Attack Rolls -2 per Rank, Priority -1"

@@ -1,0 +1,12 @@
+id: organ-damage
+name: "Organ Damage"
+status: draft
+plane: any
+summary: "Wounded deep inside."
+tags: [injury, piercing]
+category: condition
+types: [injury]
+ranked: true
+conveyed: true
+effect: "This character suffers -1 Priority and +2 to all damage it receives per Rank."
+modifiers: "Priority -1"
