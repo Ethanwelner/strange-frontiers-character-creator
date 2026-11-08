@@ -9,4 +9,4 @@ types: [enchantment]
 ranked: true
 conveyed: true
 temporary: "Lasts 10 minutes per Rank."
-effect: "This weapon deals 4 more Heat damage per Rank. Targets hit by this weapon gain 1 Rank of the Burning Condition."
+effect: "This weapon deals 3 more Heat damage per Rank. Targets hit by this weapon gain 1 Rank of the Burning Condition."
