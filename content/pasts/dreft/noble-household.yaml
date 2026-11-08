@@ -13,5 +13,5 @@ grants:
   - { trait: succession-law }
 backgroundTraits:
   - high-society
-  - history
+  - local-history
   - politics

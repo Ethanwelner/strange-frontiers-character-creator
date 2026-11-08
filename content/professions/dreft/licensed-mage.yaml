@@ -14,7 +14,7 @@ grants:
   - { trait: magic-on-isekai }
   - { trait: dreftian-law }
 backgroundTraits:
-  - history
+  - local-history
   - literature
   - bureaucracy
   - chemistry

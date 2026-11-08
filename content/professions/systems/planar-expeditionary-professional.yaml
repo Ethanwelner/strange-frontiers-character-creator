@@ -14,7 +14,6 @@ grants:
   - { trait: explorers-lodge-membership }
 backgroundTraits:
   - wilderness-lore
-  - geography
   - navigation
   - biology
   - wielder-shotgun

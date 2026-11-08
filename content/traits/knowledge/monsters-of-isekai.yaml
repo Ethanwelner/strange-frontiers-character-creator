@@ -7,4 +7,4 @@ tags: [monsters, hunting]
 lore: isekai-monsters
 category: knowledge
 minStats: { memory: 3 }
-effect: "This character has knowledge of the monsters of Isekai and can be assumed to be familiar with their names, territories, the goods that they can provide, and their strengths and weaknesses."
+effect: "This character has knowledge of the known monsters of Isekai and can be assumed to be familiar with their names, territories, the goods that they can provide, and their strengths and weaknesses."

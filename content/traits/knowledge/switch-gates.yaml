@@ -6,5 +6,5 @@ summary: "How switch gates are built, tuned and run."
 tags: [planes, switch gates, technology]
 category: knowledge
 ranked: true
-minStats: { memory: 4, logic: 3 }
+minStats: { memory: 3, logic: 3 }
 effect: "This character has knowledge of switch gates and can be assumed to be familiar with how gates are attuned, operated and kept stable."

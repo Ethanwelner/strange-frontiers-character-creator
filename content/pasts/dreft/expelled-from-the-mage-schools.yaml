@@ -13,4 +13,4 @@ grants:
   - { trait: concealment }
 backgroundTraits:
   - literature
-  - history
+  - local-history

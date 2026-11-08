@@ -13,5 +13,4 @@ grants:
   - { trait: earth-baseline-customs }
 backgroundTraits:
   - commerce
-  - geography
   - animal-lore

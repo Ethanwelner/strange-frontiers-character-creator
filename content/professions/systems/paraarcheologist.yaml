@@ -11,6 +11,5 @@ grants:
   - { trait: paraarcheology }
   - { trait: appraisal }
 backgroundTraits:
-  - history
-  - geography
+  - local-history
   - chemistry

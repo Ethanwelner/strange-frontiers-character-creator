@@ -14,6 +14,5 @@ choices:
     from: contact
     note: "+1 Contact"
 backgroundTraits:
-  - legal-systems
   - bureaucracy
   - politics

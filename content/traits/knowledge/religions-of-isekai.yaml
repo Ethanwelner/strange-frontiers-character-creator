@@ -6,5 +6,5 @@ summary: "The faiths, temples and rites of Isekai's peoples."
 tags: [religion, faith, isekai]
 category: knowledge
 ranked: true
-minStats: { memory: 3 }
+minStats: { memory: 3, empathy: 2 }
 effect: "This character has knowledge of the religions of Isekai and can be assumed to be familiar with the faiths, temples, holy days and rites of Isekai's peoples."
