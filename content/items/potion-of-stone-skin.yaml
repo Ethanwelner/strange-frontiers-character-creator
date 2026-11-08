@@ -1,0 +1,12 @@
+id: potion-of-stone-skin
+name: "Potion of Stone Skin"
+status: draft
+plane: isekai
+summary: "Whoever drinks it gains the Stone Skin Condition at the potion's Rank."
+tags: [potion, magic, enhancement, defense]
+type: misc
+category: consumable
+uses: "uses 1: when drunk"
+value: 40
+currency: "Luras"
+notes: "Brewed at a Rank: the brewer's Rank in Skin of Stone. Value is per Rank."

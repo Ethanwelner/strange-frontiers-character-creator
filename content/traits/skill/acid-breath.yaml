@@ -1,0 +1,9 @@
+id: acid-breath
+name: "Acid Breath"
+status: draft
+plane: any
+summary: "Breath that comes out as acid."
+tags: [breath, natural weapon, acid]
+category: skill
+prerequisites: [natural-breath-weapon]
+effect: "- This character's Breath Weapon deals Corrosive damage in place of Blunt, with +2 damage.\n- Devastating Hit or better: the target gains 1 Rank of the Corroding Condition.\n- Can't be taken alongside Fire Breath or Frost Breath."

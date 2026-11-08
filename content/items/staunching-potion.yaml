@@ -1,0 +1,12 @@
+id: staunching-potion
+name: "Staunching Potion"
+status: draft
+plane: isekai
+summary: "Whoever drinks it loses the Severe Bleeding Condition."
+tags: [potion, magic, healing]
+type: misc
+category: consumable
+uses: "uses 1: when drunk"
+value: 20
+currency: "Luras"
+notes: "Brewed at a Rank: the brewer's Rank in Staunch. Value is per Rank."

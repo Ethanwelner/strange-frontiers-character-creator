@@ -1,0 +1,15 @@
+id: banishing-water
+name: "Banishing Water"
+status: draft
+plane: isekai
+summary: "Thrown at a character possessed by a spirit."
+tags: [potion, magic, thrown, spirits]
+type: equipment
+category: consumable
+attackType: "Ranged, Thrown"
+attackStat: "Grace"
+onHit: "Solid Hit or better: the character loses the Possessed by a Spirit Trait and the spirit is driven off"
+uses: "uses 1: when thrown"
+value: 40
+currency: "Luras"
+notes: "Brewed at a Rank: the brewer's Rank in Banish Spirit. Value is per Rank."

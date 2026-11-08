@@ -1,0 +1,12 @@
+id: cleansing-potion
+name: "Cleansing Potion"
+status: draft
+plane: isekai
+summary: "Drunk, or poured over a character or object, it ends the Burning and Corroding Conditions."
+tags: [potion, magic, fire, acid]
+type: misc
+category: consumable
+uses: "uses 1: when drunk or poured"
+value: 20
+currency: "Luras"
+notes: "Brewed at a Rank: the brewer's Rank in Cleanse. Value is per Rank."

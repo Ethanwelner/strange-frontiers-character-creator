@@ -1,0 +1,17 @@
+id: acid-flask
+name: "Acid Flask"
+status: draft
+plane: isekai
+summary: "The flask breaks where it lands and sprays acid like Acid Spray."
+tags: [potion, magic, thrown, acid]
+type: weapon
+category: consumable
+damage: "3 Corrosive per Rank"
+attackType: "Ranged, Thrown"
+attackStat: "Grace"
+areaOfEffect: "1 m per Rank"
+onHit: "Characters and Items damaged by it gain the Corroding Condition"
+uses: "uses 1: when thrown"
+value: 40
+currency: "Luras"
+notes: "Brewed at a Rank: the brewer's Rank in Acid Spray. Value is per Rank."

@@ -1,0 +1,15 @@
+id: entangling-flask
+name: "Entangling Flask"
+status: draft
+plane: isekai
+summary: "The flask breaks where it lands and roots grow out of it. Every character within 2 m per Rank of it gains the Rooted Condition at the flask's Rank."
+tags: [potion, magic, thrown, plants, enchantment]
+type: equipment
+category: consumable
+attackType: "Ranged, Thrown"
+attackStat: "Grace"
+areaOfEffect: "2 m per Rank"
+uses: "uses 1: when thrown"
+value: 40
+currency: "Luras"
+notes: "Brewed at a Rank: the brewer's Rank in Entangle. Value is per Rank."

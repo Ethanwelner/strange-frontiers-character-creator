@@ -1,0 +1,14 @@
+id: darkness-flask
+name: "Darkness Flask"
+status: draft
+plane: isekai
+summary: "The flask breaks where it lands and fills a sphere 3 m across per Rank with magical darkness for 1 minute per Rank. Light that isn't magical doesn't shine into it, and characters inside it can't be seen from outside."
+tags: [potion, magic, thrown, darkness, cover]
+type: equipment
+category: consumable
+attackType: "Ranged, Thrown"
+attackStat: "Grace"
+uses: "uses 1: when thrown"
+value: 20
+currency: "Luras"
+notes: "Brewed at a Rank: the brewer's Rank in Darkness. Value is per Rank."

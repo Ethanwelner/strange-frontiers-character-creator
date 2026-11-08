@@ -1,0 +1,12 @@
+id: potion-of-invisibility
+name: "Potion of Invisibility"
+status: draft
+plane: isekai
+summary: "Whoever drinks it gains the Invisible Condition at the potion's Rank."
+tags: [potion, magic, enhancement, stealth]
+type: misc
+category: consumable
+uses: "uses 1: when drunk"
+value: 40
+currency: "Luras"
+notes: "Brewed at a Rank: the brewer's Rank in Invisibility. Value is per Rank."

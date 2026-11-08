@@ -1,0 +1,12 @@
+id: potion-of-shielding
+name: "Potion of Shielding"
+status: draft
+plane: isekai
+summary: "Whoever drinks it gains the Shielded Condition at the potion's Rank."
+tags: [potion, magic, enhancement, defense]
+type: misc
+category: consumable
+uses: "uses 1: when drunk"
+value: 20
+currency: "Luras"
+notes: "Brewed at a Rank: the brewer's Rank in Shield. Value is per Rank."

@@ -1,0 +1,12 @@
+id: potion-of-haste
+name: "Potion of Haste"
+status: draft
+plane: isekai
+summary: "Whoever drinks it gains the Hasted Condition at the potion's Rank."
+tags: [potion, magic, enhancement, movement]
+type: misc
+category: consumable
+uses: "uses 1: when drunk"
+value: 40
+currency: "Luras"
+notes: "Brewed at a Rank: the brewer's Rank in Haste. Value is per Rank."

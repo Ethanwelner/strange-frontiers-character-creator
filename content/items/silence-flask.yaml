@@ -1,0 +1,15 @@
+id: silence-flask
+name: "Silence Flask"
+status: draft
+plane: isekai
+summary: "The flask breaks where it lands. Every character within 3 m per Rank of it gains the Silenced Condition at the flask's Rank."
+tags: [potion, magic, thrown, silence, enchantment]
+type: equipment
+category: consumable
+attackType: "Ranged, Thrown"
+attackStat: "Grace"
+areaOfEffect: "3 m per Rank"
+uses: "uses 1: when thrown"
+value: 40
+currency: "Luras"
+notes: "Brewed at a Rank: the brewer's Rank in Silence. Value is per Rank."

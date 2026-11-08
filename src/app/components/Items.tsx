@@ -51,6 +51,7 @@ function ItemStats({ stock }: { stock: StockItem }) {
                     <span key={d.type} className="tools-item-stat-value">
                       <Icon name={damageIcon(d.type)} label={d.type} />
                       {d.amount}
+                      {d.perRank && "/Rank"}
                       {d.plus && ` + ${d.plus}`}
                     </span>
                   ))}

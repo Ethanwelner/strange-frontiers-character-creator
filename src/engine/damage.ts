@@ -1,7 +1,8 @@
 // A weapon's damage, as the Sheet words it. Types separated by commas are all
 // dealt at once ("2 Blunt, 2 Electrical"); options separated by a slash are a
 // choice the player makes ("5 Slashing / 4 Piercing"); a choice starts with a number.
-// Natural weapons add a Stat to their damage ("1 Blunt + Power").
+// Natural weapons add a Stat to their damage ("1 Blunt + Power"), and items
+// brewed at a Rank, like potions, deal damage per Rank ("3 Corrosive per Rank").
 
 // In the Mechanics page's order: Physical, Elemental, Supernatural, then the
 // other common elemental effects.
@@ -20,6 +21,8 @@ export interface Damage {
   amount?: number;
   // A Stat added to the amount, like a natural weapon's Power
   plus?: string;
+  // The amount is per Rank, like an Explosive Flask's, brewed at a Rank
+  perRank?: boolean;
 }
 
 const DAMAGE_STATS = ["Power", "Grace", "Endurance", "Physical"];
@@ -31,11 +34,14 @@ const typeNamed = (name: string) => DAMAGE_TYPES.find((t) => t.toLowerCase() ===
 export function parseDamage(text: string): Damage[][] | undefined {
   const options = text.split(/\s*\/\s*(?=\d)/).map((option) =>
     option.split(",").map((part) => {
-      const m = part.trim().match(/^(?:(\d+)\s+)?(.+?)(?:\s*\+\s*(\w+))?$/);
+      const m = part.trim().match(/^(?:(\d+)\s+)?(.+?)(\s+per\s+rank)?(?:\s*\+\s*(\w+))?$/i);
       const type = m && typeNamed(m[2]!);
-      const plus = m?.[3] && DAMAGE_STATS.find((s) => s.toLowerCase() === m[3]!.toLowerCase());
-      if (m?.[3] && !plus) return undefined;
-      return type ? { type, ...(m[1] ? { amount: Number(m[1]) } : {}), ...(plus ? { plus } : {}) } : undefined;
+      const plus = m?.[4] && DAMAGE_STATS.find((s) => s.toLowerCase() === m[4]!.toLowerCase());
+      if (m?.[4] && !plus) return undefined;
+      if (m?.[3] && !m[1]) return undefined;
+      return type
+        ? { type, ...(m[1] ? { amount: Number(m[1]) } : {}), ...(plus ? { plus } : {}), ...(m[3] ? { perRank: true } : {}) }
+        : undefined;
     }),
   );
   return options.every((o) => o.every(Boolean)) ? (options as Damage[][]) : undefined;
@@ -47,7 +53,9 @@ export function damageText(text: string): string {
   const options = parseDamage(text);
   if (!options) return text;
   const and = (o: Damage[]) => {
-    const parts = o.map((d) => (d.amount === undefined ? d.type : `${d.amount} ${d.type}`) + (d.plus ? ` + ${d.plus}` : ""));
+    const parts = o.map(
+      (d) => (d.amount === undefined ? d.type : `${d.amount} ${d.type}`) + (d.perRank ? " per Rank" : "") + (d.plus ? ` + ${d.plus}` : ""),
+    );
     return parts.length > 1 ? `${parts.slice(0, -1).join(", ")} and ${parts.at(-1)}` : parts[0]!;
   };
   return options.map(and).join(" or ");

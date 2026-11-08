@@ -1,0 +1,15 @@
+id: breath-weapon
+name: "Breath Weapon"
+status: draft
+plane: any
+summary: "A blast of breath from deep in the lungs."
+tags: [natural weapon, breath]
+type: weapon
+category: weapon
+damage: "1 Blunt + Physical"
+attackType: "Ranged"
+maxRange: "10 m"
+attackStat: "Physical"
+areaOfEffect: "3 m"
+uses: "uses 1: every 3 Rounds, or once a minute outside of combat"
+notes: "Natural weapon, granted by Natural Breath Weapon."
