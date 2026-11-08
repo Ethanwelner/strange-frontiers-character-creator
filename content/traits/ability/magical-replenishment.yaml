@@ -1,0 +1,14 @@
+id: magical-replenishment
+name: "Magical Replenishment"
+status: draft
+plane: any
+summary: "Pours the caster's own mana into another magic user."
+tags: [magic, spell, mana, support]
+category: ability
+types: [potion]
+ranked: true
+minStats: { magic: 2 }
+# On the Magic list: its own tab on the Traits step, open to every character.
+list: magic
+effect: "This character gains the Cast Magical Replenishment Action."
+action: "Cast Magical Replenishment: This character may spend up to 3 MP per Rank to give a character within 3 m who has the Magic Stat that many bonus MP. Bonus MP not spent within 1 hour per Rank is lost."
