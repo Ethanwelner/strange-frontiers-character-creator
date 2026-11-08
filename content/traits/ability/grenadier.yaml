@@ -1,0 +1,11 @@
+id: grenadier
+name: "Grenadier"
+status: draft
+plane: any
+summary: "Getting grenades over walls and around corners."
+tags: [combat, ranged, thrown, explosive]
+category: ability
+minStats: { grace: 3, intuition: 4, power: 3 }
+prerequisites: [wielder-throwing-weapon]
+effect: "This character gains the Lob Action."
+action: "Lob: This character Attacks with a thrown weapon that has an area of effect, aimed at a location outside its line of sight. A thrown object must be able to reach that location."
