@@ -1,11 +1,10 @@
 id: deafened
 name: "Deafened"
-status: placeholder
+status: draft
 plane: any
-summary: "Can't hear a thing."
-tags: [hazard, senses]
+summary: "Can't hear a thing, for good."
+tags: [injury, senses]
 category: condition
-types: [hazard]
+types: [injury]
 conveyed: true
-temporary: "Lasts one minute."
-effect: "This character can't hear."
+effect: "This character suffers -20 to all Skill Checks that require hearing and can no longer understand verbal communication."

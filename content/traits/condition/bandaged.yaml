@@ -1,0 +1,10 @@
+id: bandaged
+name: "Bandaged"
+status: draft
+plane: any
+summary: "Wounds dressed and healing."
+tags: [healing, medicine]
+category: condition
+conveyed: true
+temporary: "Lasts 24 hours."
+effect: "This character's automatic Hit Point recovery is doubled."

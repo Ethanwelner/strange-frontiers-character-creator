@@ -1,0 +1,11 @@
+id: irradiated
+name: "Irradiated"
+status: draft
+plane: any
+summary: "Poisoned by radiation."
+tags: [injury, radiation, hazard]
+category: condition
+types: [injury]
+ranked: true
+conveyed: true
+effect: "- This character suffers -2 Endurance per Rank. If its Endurance would fall below 0 due to Irradiated, it dies.\n- This character regains 1 less HP per six-hour period."

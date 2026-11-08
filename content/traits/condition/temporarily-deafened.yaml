@@ -1,0 +1,11 @@
+id: temporarily-deafened
+name: "Temporarily Deafened"
+status: placeholder
+plane: any
+summary: "Can't hear a thing."
+tags: [hazard, senses]
+category: condition
+types: [hazard]
+conveyed: true
+temporary: "Lasts one minute."
+effect: "This character suffers -20 to all Skill Checks that require hearing and can no longer understand verbal communication."

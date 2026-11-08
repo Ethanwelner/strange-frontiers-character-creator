@@ -1,0 +1,11 @@
+id: severe-burn
+name: "Severe Burn"
+status: draft
+plane: any
+summary: "Badly burned, by fire, frost, electricity or acid."
+tags: [injury, heat, cold, electrical, corrosive]
+category: condition
+types: [injury]
+ranked: true
+conveyed: true
+effect: "This character suffers +2 to all damage it receives per Rank and -2 Demeanor."

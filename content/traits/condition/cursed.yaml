@@ -1,0 +1,11 @@
+id: cursed
+name: "Cursed"
+status: draft
+plane: any
+summary: "Marked by a power from beyond."
+tags: [injury, metaphysical, supernatural]
+category: condition
+types: [injury, supernatural]
+ranked: true
+conveyed: true
+effect: "This character suffers -2 to all Skill Checks per Rank and +2 to all damage it receives."

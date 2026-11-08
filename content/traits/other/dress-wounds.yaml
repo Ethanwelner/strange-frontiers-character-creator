@@ -1,0 +1,11 @@
+id: dress-wounds
+name: "Dress Wounds"
+status: draft
+plane: any
+summary: "Bandaging wounds, your own or someone else's."
+tags: [healing, medicine]
+category: other
+types: [basic action]
+conveyed: true
+effect: "This character gains the Dress Wounds Action."
+action: "Dress Wounds: As a Full RP Action, this character may dress the wounds of itself or another character within reach, giving them the Bandaged Condition."

@@ -1,0 +1,12 @@
+id: scrambled
+name: "Scrambled"
+status: draft
+plane: any
+summary: "A mind, or a machine, that no longer works right."
+tags: [injury, psychic, emp]
+category: condition
+types: [injury]
+ranked: true
+conveyed: true
+effect: "This character suffers -2 to all Skill Checks per Rank and -1 Priority."
+modifiers: "Priority -1"

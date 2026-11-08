@@ -8,4 +8,4 @@ category: ability
 minStats: { magic: 3, logic: 3 }
 # On the Magic list: its own tab on the Traits step, open to every character.
 list: magic
-effect: "When using a Cast: Action, this character may spend 1 more MP on it to change all Elemental damage the Attack deals to Electrical, and any Burning, Frozen or Corroding Condition it gives to Deafened."
+effect: "When using a Cast: Action, this character may spend 1 more MP on it to change all Elemental damage the Attack deals to Electrical, and any Burning, Frozen or Corroding Condition it gives to Temporarily Deafened."

@@ -1,0 +1,10 @@
+id: paralyzed
+name: "Paralyzed"
+status: draft
+plane: any
+summary: "Can't move."
+tags: [injury, movement]
+category: condition
+types: [injury]
+conveyed: true
+effect: "This character's Grace and Movement are reduced to 0. It can't perform any actions that require voluntary movement."
