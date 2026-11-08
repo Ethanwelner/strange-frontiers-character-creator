@@ -5,6 +5,7 @@ plane: any
 summary: "Fighting with, and maintaining, a war axe."
 tags: [combat, melee, axes]
 category: skill
+list: wielder
 ranked: true
 minStats: { power: 5, endurance: 4, grace: 3 }
 effect: "- Rank *5 added to skill check rolls involving a War Axe.\n- +3 to Attack Rolls made with a War Axe, at any Rank.\n- This character is capable of performing the basic tasks of maintaining a War Axe without a skill check."

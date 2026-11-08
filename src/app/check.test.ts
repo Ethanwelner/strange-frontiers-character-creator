@@ -74,6 +74,16 @@ describe("traitOptions", () => {
     expect(ids).not.toContain("tracker");
   });
 
+  it("keeps Wielder Skills on their own tab, spending a Background pick on the character's own", () => {
+    const skills = traitOptions(human, bundled, campaign, "universal")!.map((o) => o.trait.id);
+    expect(skills).not.toContain("wielder-shortsword");
+    const wielder = new Map(traitOptions(human, bundled, campaign, { list: "wielder" })!.map((o) => [o.trait.id, o]));
+    // Royal Guard puts Wielder: Shortsword on the Background Trait list; Wielder: Bow isn't.
+    expect(wielder.get("wielder-shortsword")!.pick).toBe("background");
+    expect(wielder.get("wielder-bow")!.pick).toBe("universal");
+    expect(wielder.get("wielder-bow")!.reasons).toEqual([]);
+  });
+
   it("gives the engine's reasons for picks it would reject", () => {
     const options = traitOptions(human, bundled, campaign, "universal")!;
     const byId = new Map(options.map((o) => [o.trait.id, o]));

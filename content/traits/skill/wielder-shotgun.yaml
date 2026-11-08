@@ -5,6 +5,7 @@ plane: earth
 summary: "Fighting with, and maintaining, shotguns."
 tags: [combat, firearms]
 category: skill
+list: wielder
 ranked: true
 minStats: { grace: 2, power: 3, intuition: 2 }
 effect: "- Rank *5 added to skill check rolls involving a Shotgun.\n- +3 to Attack Rolls made with a Shotgun, at any Rank.\n- This character is capable of performing the basic tasks of maintaining a Shotgun without a skill check."
