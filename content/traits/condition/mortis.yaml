@@ -5,7 +5,7 @@ plane: any
 summary: "Touched by death, and slow to recover from it."
 tags: [injury, death]
 category: condition
-types: [injury]
+types: [injury, supernatural]
 ranked: true
 conveyed: true
 effect: "Every time an effect would cause this character to regain HP or gain bonus HP, it gains 2 fewer per Rank."
