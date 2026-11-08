@@ -5,12 +5,12 @@
 // brewed at a Rank, like potions, deal damage per Rank ("3 Corrosive per Rank").
 
 // In the Mechanics page's order: Physical, Elemental, Supernatural, then the
-// other common elemental effects.
+// uncommon elemental effects.
 export const DAMAGE_TYPE_GROUPS = {
   Physical: ["Blunt", "Slashing", "Piercing"],
-  Elemental: ["Heat", "Cold", "Electrical", "EMP"],
+  Elemental: ["Heat", "Cold", "Electrical"],
   Supernatural: ["Metaphysical", "Death", "Psychic"],
-  Other: ["Radiation", "Corrosive"],
+  Uncommon: ["Radiation", "Corrosive", "EMP"],
 } as const;
 export const DAMAGE_TYPES = Object.values(DAMAGE_TYPE_GROUPS).flat();
 export type DamageType = (typeof DAMAGE_TYPES)[number];

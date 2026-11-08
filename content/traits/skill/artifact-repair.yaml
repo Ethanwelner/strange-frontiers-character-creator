@@ -5,7 +5,7 @@ plane: isekai
 summary: "Restoring damaged magical artifacts."
 tags: [magic, artifacts, repair, crafting]
 category: skill
-minStats: { grace: 4, magic: 2, memory: 3 }
+minStats: { grace: 4, magic: 2, intuition: 3 }
 prerequisites: [enchanting]
 # On the Magic list: its own tab on the Traits step, open to every character.
 list: magic
