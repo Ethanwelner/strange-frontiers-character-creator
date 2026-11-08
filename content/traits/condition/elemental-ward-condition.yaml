@@ -8,5 +8,5 @@ category: condition
 types: [enchantment]
 ranked: true
 conveyed: true
-temporary: "Lasts one hour per Rank."
+temporary: "Every hour after a character is affected by Elemental Ward, it loses one Rank of Elemental Ward."
 effect: "This character resists one damage type chosen by the caster: Heat, Cold, Electrical or EMP. The amount is Rank *3."

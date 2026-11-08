@@ -8,5 +8,5 @@ category: condition
 types: [enchantment]
 ranked: true
 conveyed: true
-temporary: "Lasts one hour per Rank."
+temporary: "Every hour after a character is affected by Magical Strength, it loses one Rank of Magical Strength."
 effect: "This character gains +3 Power per Rank."

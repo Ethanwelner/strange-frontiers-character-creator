@@ -10,7 +10,7 @@ damage: "2 Blunt per Rank, 4 Heat per Rank"
 attackType: "Ranged, Thrown"
 attackStat: "Grace"
 areaOfEffect: "3 m per Rank"
-onHit: "Characters and Items damaged by it gain the Burning Condition"
+onHit: "Characters and Items damaged by it gain one rank of the Burning Condition"
 uses: "uses 1: when thrown"
 value: 40
 currency: "Luras"

@@ -8,6 +8,6 @@ category: condition
 types: [enchantment]
 ranked: true
 conveyed: true
-temporary: "Lasts 1 combat Round per Rank."
+temporary: "Every combat Round or 10 seconds after a character is affected by Shielded, it loses one Rank of Shielded."
 effect: "This character has +2 Defense per Rank."
 modifiers: "Defense +2 per Rank"

@@ -8,5 +8,5 @@ category: condition
 types: [enchantment]
 ranked: true
 conveyed: true
-temporary: "Lasts one hour per Rank."
+temporary: "Every hour after a character is affected by Magical Endurance, it loses one Rank of Magical Endurance."
 effect: "This character gains +3 Endurance per Rank."

@@ -8,5 +8,5 @@ category: condition
 types: [enchantment]
 ranked: true
 conveyed: true
-temporary: "Lasts one hour per Rank."
+temporary: "Every hour after a character is affected by Glowing, it loses one Rank of Glowing."
 effect: "This object sheds bright light in a 5 m radius per Rank."

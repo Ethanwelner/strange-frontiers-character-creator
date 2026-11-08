@@ -8,5 +8,5 @@ category: condition
 types: [enchantment]
 ranked: true
 conveyed: true
-temporary: "Lasts one hour per Rank."
+temporary: "Every hour after a character is affected by Stone Skin, it loses one Rank of Stone Skin."
 effect: "This character gains Rank *3 resistance to all Physical damage types."

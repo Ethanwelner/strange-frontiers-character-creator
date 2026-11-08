@@ -8,5 +8,5 @@ category: condition
 types: [enchantment]
 ranked: true
 conveyed: true
-temporary: "Lasts two hours per Rank."
+temporary: "Every two hours after a character is affected by Spider Climb, it loses one Rank of Spider Climb."
 effect: "This character may move its full Movement distance over vertical obstacles and along walls and ceilings."

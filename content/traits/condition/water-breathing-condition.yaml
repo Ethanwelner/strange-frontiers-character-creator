@@ -8,5 +8,5 @@ category: condition
 types: [enchantment]
 ranked: true
 conveyed: true
-temporary: "Lasts one hour per Rank."
+temporary: "Every hour after a character is affected by Water Breathing, it loses one Rank of Water Breathing."
 effect: "This character can breathe water as easily as air."
