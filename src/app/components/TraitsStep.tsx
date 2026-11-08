@@ -48,6 +48,11 @@ const PICK_HELP: Record<PickKind, string> = {
   background: "Background picks take only Traits on this character's Background Trait list.",
 };
 
+// A Trait list's own help line, when it isn't built on a special stat like Magic.
+const LIST_HELP: Record<string, string> = {
+  wielder: "Wielder Skills, one per weapon. They're ordinary Skills, kept on their own tab so they don't crowd the rest.",
+};
+
 export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom }: Props) {
   // A pick type, or a Trait list, like Magic
   const [chosen, setTab] = useState<TraitTab>("universal");
@@ -136,7 +141,9 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom }:
         <p className="hint">
           {typeof tab === "string"
             ? PICK_HELP[tab]
-            : `Traits built on ${title(tab.list)}, or closely related to it. Any character can take one whose stat requirements they meet. Background Traits here take Background picks; the rest take Universal picks.`}
+            : (LIST_HELP[tab.list] ??
+                `Traits built on ${title(tab.list)}, or closely related to it. Any character can take one whose stat requirements they meet.`) +
+              " Traits on this character's Background Trait list take a Background pick while one is left; the rest take Universal picks."}
         </p>
 
         <div className="filters">

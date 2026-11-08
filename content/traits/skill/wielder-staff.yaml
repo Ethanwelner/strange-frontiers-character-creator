@@ -5,6 +5,7 @@ plane: any
 summary: "Fighting with, and maintaining, a staff or quarterstaff."
 tags: [combat, melee, staves]
 category: skill
+list: wielder
 ranked: true
 minStats: { grace: 3, endurance: 2 }
 effect: "- Rank *5 added to skill check rolls involving a Staff.\n- +3 to Attack Rolls made with a Staff, at any Rank.\n- This character is capable of performing the basic tasks of maintaining a Staff without a skill check."

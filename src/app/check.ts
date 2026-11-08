@@ -108,12 +108,21 @@ export function traitOptions(draft: Draft, content: Content, campaign: Campaign,
   const list = typeof tab === "string" ? undefined : tab.list;
   for (const trait of content.traits) {
     if (trait.list !== list) continue;
-    const pick: PickKind = typeof tab === "string" ? tab : trait.background ? "background" : "universal";
     // Non-ranked Traits are only ever bought at rank 1; the engine explains a duplicate.
     const rank = trait.ranked ? (held.get(trait.id) ?? 0) + 1 : 1;
-    const trial = check(addPick(draft, trait.id, rank, pick), content, campaign);
     const ownChoice = `${trait.name} gives a choice of `;
-    const added = trial.errors.filter((e) => !before.has(e.message) && !(e.code === "choice" && e.message.startsWith(ownChoice)));
+    const attempt = (pick: PickKind) => ({
+      pick,
+      added: check(addPick(draft, trait.id, rank, pick), content, campaign).errors.filter(
+        (e) => !before.has(e.message) && !(e.code === "choice" && e.message.startsWith(ownChoice)),
+      ),
+    });
+    // A list's tab spends a Background pick when the Trait is on this
+    // character's Background Trait list and one is left, like a Soldier's
+    // Wielder: Rifle, and a Universal pick otherwise. A Background-only Trait
+    // only ever takes a Background pick.
+    let { pick, added } = attempt(typeof tab === "string" ? tab : "background");
+    if (typeof tab !== "string" && added.length && !trait.background) ({ pick, added } = attempt("universal"));
     // A Conveyed Trait can't be picked at all, and the wrong kind of pick is the other tab's.
     if (added.some((e) => e.code === "pick-type" || e.code === "conveyed")) continue;
     options.push({ trait, rank, pick, reasons: added.map((e) => e.message) });

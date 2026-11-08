@@ -5,6 +5,7 @@ plane: earth
 summary: "Throwing, launching and safely handling grenades."
 tags: [combat, explosives, military]
 category: skill
+list: wielder
 ranked: true
 minStats: { grace: 2, intuition: 3, power: 2 }
 effect: "- Rank *5 added to skill check rolls involving a Grenade.\n- +3 to Attack Rolls made with a Grenade, at any Rank.\n- This character is capable of performing the basic tasks of maintaining a Grenade without a skill check."
