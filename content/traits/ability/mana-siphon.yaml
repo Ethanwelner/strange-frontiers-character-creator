@@ -10,4 +10,4 @@ minStats: { magic: 4, empathy: 3 }
 # On the Magic list: its own tab on the Traits step, open to every character.
 list: magic
 effect: "This character gains the Cast Mana Siphon Action."
-action: "Cast Mana Siphon: This character may spend 2 MP to Attack a target with a temporary weapon that has the following profile: (Ranged) (max range 60 m) (1 EMP per Rank) (Attack Stat: Magic). On a hit, the target loses up to 3 MP; on a Devastating Hit, up to 4 MP; on a Critical Hit, up to 5 MP. This character gains as much MP as the target lost."
+action: "Cast Mana Siphon: This character may spend 2 MP to Attack a target with a temporary weapon that has the following profile: (Ranged) (max range 60 m) (1 EMP per Rank) (Attack Stat: Magic). On a hit, the target loses up to 3 MP; on a Devastating Hit, up to 4 MP; on a Critical Hit, up to 5 MP. This character gains as much MP as the target lost. MP gained above this character's maximum is bonus MP, which is lost if not spent within 1 hour per Rank."

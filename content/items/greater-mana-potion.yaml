@@ -2,11 +2,11 @@ id: greater-mana-potion
 name: "Greater Mana Potion"
 status: draft
 plane: isekai
-summary: "Whoever drinks it regains 12 MP."
+summary: "Whoever drinks it gains 12 bonus MP, if they have the Magic Stat. Bonus MP not spent within 2 hours is lost."
 tags: [potion, magic, mana]
 type: misc
 category: consumable
 uses: "uses 1: when drunk"
 value: 120
 currency: "Luras"
-notes: "Not brewed at a Rank."
+notes: "Magical Replenishment at Rank 2. Not brewed at a Rank."

@@ -2,11 +2,11 @@ id: mana-potion
 name: "Mana Potion"
 status: draft
 plane: isekai
-summary: "Whoever drinks it regains 6 MP."
+summary: "Whoever drinks it gains 6 bonus MP, if they have the Magic Stat. Bonus MP not spent within 1 hour is lost."
 tags: [potion, magic, mana]
 type: misc
 category: consumable
 uses: "uses 1: when drunk"
 value: 60
 currency: "Luras"
-notes: "Not brewed at a Rank."
+notes: "Magical Replenishment at Rank 1. Not brewed at a Rank."
