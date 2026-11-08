@@ -1,0 +1,9 @@
+id: commercial-pilots-license
+name: "Commercial Pilot’s License"
+status: draft
+plane: earth
+summary: "Licensed to fly cargo and passengers for hire."
+tags: [pilot, license, travel]
+category: circumstance
+conveyed: true
+effect: "This character holds a commercial pilot’s license and can legally fly cargo and passengers for hire in the Settled Systems."

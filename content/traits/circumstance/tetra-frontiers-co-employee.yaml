@@ -1,0 +1,13 @@
+id: tetra-frontiers-co-employee
+name: "Tetra Frontiers Co. Employee"
+status: draft
+plane: earth
+summary: "On Tetra Frontiers Co.’s payroll."
+tags: [tetra, corporate, employment]
+category: circumstance
+conveyed: true
+choices:
+  - choose: 1
+    from: detail
+    note: "What job they do for the company"
+effect: "This character works for Tetra Frontiers Co. They draw a regular salary, have company housing on Tetra, and can travel on company business through the Switch Port."

@@ -1,0 +1,15 @@
+id: wanted-in-dreft
+name: "Wanted in Dreft"
+status: draft
+plane: isekai
+region: dreft
+summary: "Wanted by the Crown of Dreft."
+tags: [dreft, wanted, crime, law]
+category: circumstance
+conveyed: true
+choices:
+  - choose: 1
+    from: detail
+    note: "What they're wanted for"
+temporary: "Lost when the character is pardoned or caught"
+effect: "This character is wanted by the Crown of Dreft for past crimes. The kingdom’s guards and bounty hunters are looking for them."

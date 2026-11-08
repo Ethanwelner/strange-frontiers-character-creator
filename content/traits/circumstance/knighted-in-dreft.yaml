@@ -1,0 +1,10 @@
+id: knighted-in-dreft
+name: "Knighted in Dreft"
+status: draft
+plane: isekai
+region: dreft
+summary: "A knight of Dreft, sworn to the Crown."
+tags: [dreft, nobility, knight, title]
+category: circumstance
+conveyed: true
+effect: "This character has been knighted by the Crown of Dreft. They are owed the courtesy of a knight, may bear arms at court, and can be called on to serve the Crown in war."

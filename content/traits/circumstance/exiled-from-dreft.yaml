@@ -1,0 +1,15 @@
+id: exiled-from-dreft
+name: "Exiled from Dreft"
+status: draft
+plane: isekai
+region: dreft
+summary: "Banished from the kingdom of Dreft."
+tags: [dreft, exile, law]
+category: circumstance
+conveyed: true
+choices:
+  - choose: 1
+    from: detail
+    note: "Why they were exiled"
+temporary: "Lost if the Crown lifts the exile"
+effect: "This character has been exiled from Dreft and can’t lawfully enter the kingdom. Anyone who recognizes them there may turn them in."

@@ -1,0 +1,9 @@
+id: switch-port-transit-pass
+name: "Switch Port Transit Pass"
+status: draft
+plane: earth
+summary: "Cleared to cross through the Tetra Switch Port."
+tags: [tetra, switch-port, travel, permit]
+category: circumstance
+conveyed: true
+effect: "This character holds a transit pass for the Tetra Switch Port and can cross between Tetra and Isekai without an escort or a fresh inspection."

@@ -1,0 +1,10 @@
+id: senior-member-of-a-thieves-guild
+name: "Senior Member of a Thieves Guild"
+status: draft
+plane: any
+summary: "Someone the local thieves’ guild listens to."
+tags: [thieves-guild, membership, crime, senior]
+category: circumstance
+conveyed: true
+prerequisites: [thieves-guild-membership]
+effect: "This character is a senior member of a local thieves’ guild. They can call on the guild’s fences, safehouses and lookouts, take a cut of the jobs they arrange, and settle disputes between members."

@@ -1,0 +1,11 @@
+id: senior-member-of-the-mages-college-of-dreft
+name: "Senior Member of the Mages College of Dreft"
+status: draft
+plane: isekai
+region: dreft
+summary: "A senior mage of the College, with a voice in who gets licensed."
+tags: [magic, college, license, membership, senior]
+category: circumstance
+conveyed: true
+prerequisites: [member-of-the-mages-college-of-dreft]
+effect: "This character is a senior member of the Mages College of Dreft. They can teach and examine students, sponsor licenses for new mages, and use the College’s restricted collections."

@@ -1,0 +1,14 @@
+id: heavy-debts
+name: "Heavy Debts"
+status: draft
+plane: any
+summary: "Owes more than they can pay, to people who want it back."
+tags: [debt, money, trouble]
+category: circumstance
+conveyed: true
+choices:
+  - choose: 1
+    from: detail
+    note: "Who the debt is owed to"
+temporary: "Lost when the debt is paid"
+effect: "This character owes a large debt to a lender who expects to be paid. Collectors may turn up, and the lender may ask for favors in place of money."
