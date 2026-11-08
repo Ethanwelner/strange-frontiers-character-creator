@@ -5,6 +5,7 @@ plane: any
 summary: "Fires a spear of ice."
 tags: [magic, spell, cold, attack]
 category: ability
+types: [elemental]
 ranked: true
 minStats: { magic: 2 }
 # On the Magic list: its own tab on the Traits step, open to every character.

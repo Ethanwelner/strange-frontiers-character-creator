@@ -5,7 +5,7 @@ plane: any
 summary: "Repairs damaged objects."
 tags: [magic, spell, repair]
 category: ability
-types: [potion]
+types: [restoration, potion]
 ranked: true
 minStats: { magic: 1 }
 # On the Magic list: its own tab on the Traits step, open to every character.

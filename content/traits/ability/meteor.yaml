@@ -5,6 +5,7 @@ plane: any
 summary: "Calls down a burning stone from the sky."
 tags: [magic, spell, fire, earth, attack]
 category: ability
+types: [elemental]
 ranked: true
 minStats: { magic: 6 }
 prerequisites: [fireball]

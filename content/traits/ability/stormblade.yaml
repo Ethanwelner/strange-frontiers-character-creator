@@ -5,6 +5,7 @@ plane: any
 summary: "Charges a weapon with magical lightning."
 tags: [magic, spell, enchantment, weapon, lightning, storm]
 category: ability
+types: [enchantment, artifact]
 ranked: true
 minStats: { magic: 3 }
 # On the Magic list: its own tab on the Traits step, open to every character.

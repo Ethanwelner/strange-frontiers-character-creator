@@ -5,7 +5,7 @@ plane: any
 summary: "Hurls a ball of fire that bursts on impact."
 tags: [magic, spell, fire, attack]
 category: ability
-types: [potion]
+types: [elemental, potion]
 ranked: true
 minStats: { magic: 3 }
 prerequisites: [create-fire]
