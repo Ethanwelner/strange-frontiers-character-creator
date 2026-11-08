@@ -106,7 +106,8 @@ export function Tracker({
                     <Sign is="minus" />
                   </button>
                   <span className="num" aria-live="polite">
-                    {cur}
+                    {/* Above the max (bonus points), the value takes the resource's color */}
+                    {cur > max ? <span className={`resource-${r}`} title={`Above the max of ${max}`}>{cur}</span> : cur}
                     <span className="muted"> / {max}</span>
                   </span>
                   <button type="button" onClick={() => set(r, cur + 1)} aria-label={`1 more ${r.toUpperCase()}`}>
