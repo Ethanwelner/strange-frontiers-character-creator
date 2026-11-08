@@ -1,0 +1,12 @@
+id: greater-healing-potion
+name: "Greater Healing Potion"
+status: draft
+plane: isekai
+summary: "Whoever drinks it is healed 8 HP per Rank, and loses the Severe Bleeding Condition."
+tags: [potion, magic, healing]
+type: misc
+category: consumable
+uses: "uses 1: when drunk"
+value: 60
+currency: "Luras"
+notes: "Brewed at a Rank: the brewer's Rank in Greater Heal. Value is per Rank."

@@ -1,0 +1,12 @@
+id: potion-of-speak-with-animals
+name: "Potion of Speak with Animals"
+status: draft
+plane: isekai
+summary: "Whoever drinks it can understand and speak with animals within 10 m for 10 minutes per Rank. Animals aren't made friendly by it, only able to answer."
+tags: [potion, magic, animals]
+type: misc
+category: consumable
+uses: "uses 1: when drunk"
+value: 20
+currency: "Luras"
+notes: "Brewed at a Rank: the brewer's Rank in Speak with Animals. Value is per Rank."

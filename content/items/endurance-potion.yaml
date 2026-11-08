@@ -1,0 +1,12 @@
+id: endurance-potion
+name: "Endurance Potion"
+status: draft
+plane: isekai
+summary: "Whoever drinks it gains the Magical Endurance Condition at the potion's Rank."
+tags: [potion, magic, enhancement, endurance]
+type: misc
+category: consumable
+uses: "uses 1: when drunk"
+value: 20
+currency: "Luras"
+notes: "Brewed at a Rank: the brewer's Rank in Magical Endurance. Value is per Rank."

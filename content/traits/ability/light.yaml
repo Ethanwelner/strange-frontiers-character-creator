@@ -5,6 +5,7 @@ plane: any
 summary: "Makes an object shine like a lamp."
 tags: [magic, spell, light, utility]
 category: ability
+types: [potion]
 ranked: true
 minStats: { magic: 1 }
 # On the Magic list: its own tab on the Traits step, open to every character.

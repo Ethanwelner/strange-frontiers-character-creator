@@ -1,0 +1,12 @@
+id: strength-potion
+name: "Strength Potion"
+status: draft
+plane: isekai
+summary: "Whoever drinks it gains the Magical Strength Condition at the potion's Rank."
+tags: [potion, magic, enhancement, strength]
+type: misc
+category: consumable
+uses: "uses 1: when drunk"
+value: 20
+currency: "Luras"
+notes: "Brewed at a Rank: the brewer's Rank in Magical Strength. Value is per Rank."

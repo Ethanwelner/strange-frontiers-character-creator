@@ -1,0 +1,12 @@
+id: greater-mana-potion
+name: "Greater Mana Potion"
+status: draft
+plane: isekai
+summary: "Whoever drinks it regains 12 MP."
+tags: [potion, magic, mana]
+type: misc
+category: consumable
+uses: "uses 1: when drunk"
+value: 120
+currency: "Luras"
+notes: "Not brewed at a Rank."

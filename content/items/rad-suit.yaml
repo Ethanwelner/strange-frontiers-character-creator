@@ -6,7 +6,7 @@ summary: "A lead-lined suit for work in irradiated areas."
 tags: [radiation, survival]
 type: wearable
 category: armor
-resistances: "1 Blunt, 6 Radiation, 1 Acidic/Corrosive"
+resistances: "1 Blunt, 6 Radiation, 1 Corrosive"
 slot: "Body Armor"
 value: 1500
 currency: "ERC"

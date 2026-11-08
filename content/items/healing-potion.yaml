@@ -1,0 +1,12 @@
+id: healing-potion
+name: "Healing Potion"
+status: draft
+plane: isekai
+summary: "Whoever drinks it is healed 4 HP per Rank."
+tags: [potion, magic, healing]
+type: misc
+category: consumable
+uses: "uses 1: when drunk"
+value: 20
+currency: "Luras"
+notes: "Brewed at a Rank: the brewer's Rank in Heal. Value is per Rank."

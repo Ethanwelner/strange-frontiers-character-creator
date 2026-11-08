@@ -1,0 +1,12 @@
+id: potion-of-detect-magic
+name: "Potion of Detect Magic"
+status: draft
+plane: isekai
+summary: "Whoever drinks it senses every magical object, spell and (Enchantment) Condition within 10 m per Rank, and where each one is."
+tags: [potion, magic, senses, detection]
+type: misc
+category: consumable
+uses: "uses 1: when drunk"
+value: 20
+currency: "Luras"
+notes: "Brewed at a Rank: the brewer's Rank in Detect Magic. Value is per Rank."

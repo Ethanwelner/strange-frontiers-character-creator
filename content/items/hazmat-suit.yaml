@@ -6,7 +6,7 @@ summary: "A sealed suit for chemical, biological and radiation hazards."
 tags: [hazard, survival]
 type: wearable
 category: armor
-resistances: "2 Heat, 4 Electrical, 4 Radiation, 3 Acidic/Corrosive"
+resistances: "2 Heat, 4 Electrical, 4 Radiation, 3 Corrosive"
 slot: "Body Armor"
 value: 400
 currency: "ERC"

@@ -1,0 +1,12 @@
+id: mending-oil
+name: "Mending Oil"
+status: draft
+plane: isekai
+summary: "Poured over an object, it restores 4 HP per Rank. It can't repair a Destroyed object."
+tags: [potion, magic, repair]
+type: misc
+category: consumable
+uses: "uses 1: when poured"
+value: 20
+currency: "Luras"
+notes: "Brewed at a Rank: the brewer's Rank in Mending. Value is per Rank."

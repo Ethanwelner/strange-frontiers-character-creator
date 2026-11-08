@@ -8,4 +8,4 @@ category: ability
 ranked: true
 background: true
 minStats: { endurance: 3 }
-effect: "This character's biology allows them to use their breath as a tool or weapon. For each rank of this ability add another d4 to the damage the breath weapon deals."
+effect: "- This character can Attack with the Breath Weapon natural weapon.\n- Rank *2 added to the Breath Weapon's damage."

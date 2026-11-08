@@ -1,0 +1,14 @@
+id: fog-flask
+name: "Fog Flask"
+status: draft
+plane: isekai
+summary: "The flask breaks where it lands and fills a sphere 3 m across per Rank with fog for 1 minute per Rank. Characters inside the fog are in Light Cover, and those more than 3 m apart inside it can't see each other."
+tags: [potion, magic, thrown, fog, cover]
+type: equipment
+category: consumable
+attackType: "Ranged, Thrown"
+attackStat: "Grace"
+uses: "uses 1: when thrown"
+value: 20
+currency: "Luras"
+notes: "Brewed at a Rank: the brewer's Rank in Fog Cloud. Value is per Rank."

@@ -1,0 +1,15 @@
+id: gust-flask
+name: "Gust Flask"
+status: draft
+plane: isekai
+summary: "The flask breaks where it lands in a burst of wind. Every character within 2 m per Rank of it is pushed 3 m per Rank away and gains the Prone Condition."
+tags: [potion, magic, thrown, wind]
+type: equipment
+category: consumable
+attackType: "Ranged, Thrown"
+attackStat: "Grace"
+areaOfEffect: "2 m per Rank"
+uses: "uses 1: when thrown"
+value: 20
+currency: "Luras"
+notes: "Brewed at a Rank: the brewer's Rank in Gust. Value is per Rank."

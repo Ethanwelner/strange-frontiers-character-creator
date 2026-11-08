@@ -1,0 +1,12 @@
+id: potion-of-elemental-ward
+name: "Potion of Elemental Ward"
+status: draft
+plane: isekai
+summary: "Whoever drinks it gains the Elemental Ward Condition at the potion's Rank, against Heat, Cold, Electrical or EMP, chosen when it's brewed."
+tags: [potion, magic, enhancement, defense]
+type: misc
+category: consumable
+uses: "uses 1: when drunk"
+value: 20
+currency: "Luras"
+notes: "Brewed at a Rank: the brewer's Rank in Elemental Ward. Value is per Rank."

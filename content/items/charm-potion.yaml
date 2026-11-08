@@ -1,0 +1,12 @@
+id: charm-potion
+name: "Charm Potion"
+status: draft
+plane: isekai
+summary: "Whoever drinks it gains the Charmed Condition at the potion's Rank, toward the character who gave it to them."
+tags: [potion, magic, enchantment, social]
+type: misc
+category: consumable
+uses: "uses 1: when drunk"
+value: 40
+currency: "Luras"
+notes: "Brewed at a Rank: the brewer's Rank in Charm. Value is per Rank."

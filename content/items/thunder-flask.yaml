@@ -1,0 +1,17 @@
+id: thunder-flask
+name: "Thunder Flask"
+status: draft
+plane: isekai
+summary: "The flask breaks where it lands with a Thunderclap."
+tags: [potion, magic, thrown, sound]
+type: weapon
+category: consumable
+damage: "3 Blunt per Rank"
+attackType: "Ranged, Thrown"
+attackStat: "Grace"
+areaOfEffect: "3 m per Rank"
+onHit: "Characters damaged by it gain the Deafened Condition"
+uses: "uses 1: when thrown"
+value: 40
+currency: "Luras"
+notes: "Brewed at a Rank: the brewer's Rank in Thunderclap. Value is per Rank."

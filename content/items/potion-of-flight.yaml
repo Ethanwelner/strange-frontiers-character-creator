@@ -1,0 +1,12 @@
+id: potion-of-flight
+name: "Potion of Flight"
+status: draft
+plane: isekai
+summary: "Whoever drinks it gains the Magical Flight Condition at the potion's Rank."
+tags: [potion, magic, enhancement, flight]
+type: misc
+category: consumable
+uses: "uses 1: when drunk"
+value: 40
+currency: "Luras"
+notes: "Brewed at a Rank: the brewer's Rank in Magical Flight. Value is per Rank."

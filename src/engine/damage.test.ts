@@ -13,11 +13,22 @@ describe("weapon damage", () => {
     expect(parseDamage("5 Blunt/4 Piercing")).toHaveLength(2);
   });
 
-  it("keeps Acidic/Corrosive as one type, and a type without an amount", () => {
-    expect(parseDamage("3 Acidic/Corrosive")).toEqual([[{ type: "Acidic/Corrosive", amount: 3 }]]);
+  it("reads Corrosive, and a type without an amount", () => {
+    expect(parseDamage("3 Corrosive")).toEqual([[{ type: "Corrosive", amount: 3 }]]);
     expect(parseDamage("Heat")).toEqual([[{ type: "Heat" }]]);
     // A natural weapon adds a Stat
     expect(parseDamage("1 Blunt + Power")).toEqual([[{ type: "Blunt", amount: 1, plus: "Power" }]]);
+  });
+
+  it("reads damage per Rank, like a potion brewed at a Rank", () => {
+    expect(parseDamage("2 Blunt per Rank, 4 Heat per Rank")).toEqual([
+      [
+        { type: "Blunt", amount: 2, perRank: true },
+        { type: "Heat", amount: 4, perRank: true },
+      ],
+    ]);
+    expect(damageText("3 Corrosive per Rank")).toBe("3 Corrosive per Rank");
+    expect(parseDamage("Heat per Rank")).toBeUndefined();
   });
 
   it("rejects what isn't amounts and damage types", () => {

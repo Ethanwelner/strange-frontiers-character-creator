@@ -1,0 +1,15 @@
+id: slowing-flask
+name: "Slowing Flask"
+status: draft
+plane: isekai
+summary: "Breaks on the character it hits, who gains the Slowed Condition at the flask's Rank."
+tags: [potion, magic, thrown, enchantment, movement]
+type: equipment
+category: consumable
+attackType: "Ranged, Thrown"
+attackStat: "Grace"
+onHit: "The target gains the Slowed Condition at the flask's Rank"
+uses: "uses 1: when thrown"
+value: 40
+currency: "Luras"
+notes: "Brewed at a Rank: the brewer's Rank in Slow. Value is per Rank."

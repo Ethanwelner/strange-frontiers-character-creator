@@ -1,0 +1,12 @@
+id: sleeping-draught
+name: "Sleeping Draught"
+status: draft
+plane: isekai
+summary: "Whoever drinks it gains the Asleep Condition at the potion's Rank."
+tags: [potion, magic, enchantment, sleep]
+type: misc
+category: consumable
+uses: "uses 1: when drunk"
+value: 40
+currency: "Luras"
+notes: "Brewed at a Rank: the brewer's Rank in Sleep. Value is per Rank."

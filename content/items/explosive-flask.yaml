@@ -1,0 +1,17 @@
+id: explosive-flask
+name: "Explosive Flask"
+status: draft
+plane: isekai
+summary: "The flask breaks where it lands and explodes like a Fireball."
+tags: [potion, magic, thrown, fire, explosive]
+type: weapon
+category: consumable
+damage: "2 Blunt per Rank, 4 Heat per Rank"
+attackType: "Ranged, Thrown"
+attackStat: "Grace"
+areaOfEffect: "3 m per Rank"
+onHit: "Characters and Items damaged by it gain the Burning Condition"
+uses: "uses 1: when thrown"
+value: 40
+currency: "Luras"
+notes: "Brewed at a Rank: the brewer's Rank in Fireball. Value is per Rank."

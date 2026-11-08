@@ -1,0 +1,12 @@
+id: glowing-oil
+name: "Glowing Oil"
+status: draft
+plane: isekai
+summary: "Poured over an object, it gives the object the Glowing Condition at the oil's Rank."
+tags: [potion, magic, light]
+type: misc
+category: consumable
+uses: "uses 1: when poured"
+value: 20
+currency: "Luras"
+notes: "Brewed at a Rank: the brewer's Rank in Light. Value is per Rank."

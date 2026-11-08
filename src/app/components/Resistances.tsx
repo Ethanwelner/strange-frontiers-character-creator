@@ -5,7 +5,7 @@ import { DAMAGE_TYPES, resistancesOf, type DamageType } from "../resistances.js"
 import type { Item } from "../items.js";
 
 // A damage type's icon, also used by the item cards' damage and resistance badges
-export const damageIcon = (t: DamageType) => (t === "Acidic/Corrosive" ? "acidic" : (t.toLowerCase() as Lowercase<Exclude<DamageType, "Acidic/Corrosive">>));
+export const damageIcon = (t: DamageType) => t.toLowerCase() as Lowercase<DamageType>;
 
 // The damage types from the Mechanics page that the character resists (or is
 // weak to), in a line, each its icon then the total from everything in
