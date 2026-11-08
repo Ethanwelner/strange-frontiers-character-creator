@@ -8,5 +8,5 @@ category: condition
 types: [enchantment]
 ranked: true
 conveyed: true
-temporary: "Lasts one minute."
-effect: "This weapon deals 2 more Cold damage per Rank. Targets hit by this weapon gain 1 Rank of the Frozen Condition."
+temporary: "Lasts 10 minutes per Rank."
+effect: "This weapon deals 3 more Cold damage per Rank. Targets hit by this weapon gain 1 Rank of the Frozen Condition."

@@ -8,5 +8,5 @@ category: condition
 types: [enchantment]
 ranked: true
 conveyed: true
-temporary: "Lasts one minute."
-effect: "This weapon deals 2 more Electrical damage per Rank. Targets hit by this weapon gain the Deafened Condition."
+temporary: "Lasts 10 minutes per Rank."
+effect: "This weapon deals 4 more Electrical damage per Rank. Targets hit by this weapon gain the Deafened Condition."

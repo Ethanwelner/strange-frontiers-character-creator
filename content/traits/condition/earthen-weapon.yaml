@@ -8,5 +8,5 @@ category: condition
 types: [enchantment]
 ranked: true
 conveyed: true
-temporary: "Lasts one minute."
-effect: "This weapon deals 2 more Blunt damage per Rank. Targets hit by this weapon gain the Prone Condition."
+temporary: "Lasts 10 minutes per Rank."
+effect: "This weapon deals 3 more Blunt damage per Rank. On a Solid Hit or better, the target gains the Prone Condition."
