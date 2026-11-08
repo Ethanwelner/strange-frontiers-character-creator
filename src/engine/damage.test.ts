@@ -13,8 +13,8 @@ describe("weapon damage", () => {
     expect(parseDamage("5 Blunt/4 Piercing")).toHaveLength(2);
   });
 
-  it("keeps Acidic/Corrosive as one type, and a type without an amount", () => {
-    expect(parseDamage("3 Acidic/Corrosive")).toEqual([[{ type: "Acidic/Corrosive", amount: 3 }]]);
+  it("reads Corrosive, and a type without an amount", () => {
+    expect(parseDamage("3 Corrosive")).toEqual([[{ type: "Corrosive", amount: 3 }]]);
     expect(parseDamage("Heat")).toEqual([[{ type: "Heat" }]]);
     // A natural weapon adds a Stat
     expect(parseDamage("1 Blunt + Power")).toEqual([[{ type: "Blunt", amount: 1, plus: "Power" }]]);

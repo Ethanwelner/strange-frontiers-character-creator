@@ -1,7 +1,6 @@
 // A weapon's damage, as the Sheet words it. Types separated by commas are all
 // dealt at once ("2 Blunt, 2 Electrical"); options separated by a slash are a
-// choice the player makes ("5 Slashing / 4 Piercing"). A slash inside a type's
-// own name, like Acidic/Corrosive, isn't a choice: a choice starts with a number.
+// choice the player makes ("5 Slashing / 4 Piercing"); a choice starts with a number.
 // Natural weapons add a Stat to their damage ("1 Blunt + Power").
 
 // In the Mechanics page's order: Physical, Elemental, Supernatural, then the
@@ -10,7 +9,7 @@ export const DAMAGE_TYPE_GROUPS = {
   Physical: ["Blunt", "Slashing", "Piercing"],
   Elemental: ["Heat", "Cold", "Electrical", "EMP"],
   Supernatural: ["Metaphysical", "Death", "Psychic"],
-  Other: ["Radiation", "Acidic/Corrosive"],
+  Other: ["Radiation", "Corrosive"],
 } as const;
 export const DAMAGE_TYPES = Object.values(DAMAGE_TYPE_GROUPS).flat();
 export type DamageType = (typeof DAMAGE_TYPES)[number];

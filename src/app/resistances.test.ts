@@ -16,7 +16,7 @@ describe("resistances", () => {
     expect(parseResistances("4 Blunt, 3 Slashing (when raised)", "Shield").every((r) => r.where === "when raised")).toBe(true);
     const suit = parseResistances("2 Blunt (decompression), 4 Cold", "Voidsuit");
     expect(suit.map((r) => r.where)).toEqual(["decompression", undefined]);
-    expect(parseResistances("3 Acidic/Corrosive", "Suit")[0]?.type).toBe("Acidic/Corrosive");
+    expect(parseResistances("3 Corrosive", "Suit")[0]?.type).toBe("Corrosive");
   });
 
   it("reads a Trait's Rank *3 at the rank held", () => {
