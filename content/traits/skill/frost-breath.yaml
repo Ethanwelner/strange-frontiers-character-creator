@@ -6,4 +6,4 @@ summary: "Breath that comes out freezing cold."
 tags: [breath, natural weapon, cold]
 category: skill
 prerequisites: [natural-breath-weapon]
-effect: "- This character's Breath Weapon deals Cold damage in place of Blunt, with +3 damage.\n- Devastating Hit or better: the target gains 1 Rank of the Slowed Condition.\n- Can't be taken alongside Fire Breath or Acid Breath."
+effect: "- This character's Breath Weapon deals Cold damage in place of Blunt, with +3 damage.\n- Devastating Hit or better: the target gains 1 Rank of the Frozen Condition.\n- Can't be taken alongside Fire Breath or Acid Breath."

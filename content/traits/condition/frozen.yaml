@@ -1,0 +1,13 @@
+id: frozen
+name: "Frozen"
+status: draft
+plane: any
+summary: "Stiff and slow with cold."
+tags: [cold, hazard]
+category: condition
+types: [hazard]
+ranked: true
+conveyed: true
+temporary: "Every three combat Rounds or one minute after a character is affected by Frozen, it loses one Rank of Frozen."
+effect: "This character suffers -1 Priority, -1 Defense and -1 to Attack Rolls per Rank of Frozen."
+modifiers: "Priority -1 per Rank, Defense -1 per Rank, Attack Rolls -1 per Rank"

@@ -8,5 +8,5 @@ category: condition
 types: [enchantment]
 ranked: true
 conveyed: true
-temporary: "Lasts one hour per Rank."
+temporary: "Every hour after a character is affected by Magical Grace, it loses one Rank of Magical Grace."
 effect: "This character gains +3 Grace per Rank."

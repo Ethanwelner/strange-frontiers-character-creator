@@ -96,7 +96,12 @@ export function Conditions({
                   </button>
                 </div>
               )}
-              {t?.temporary && <p className="muted small">{t.temporary}.</p>}
+              {t?.temporary && (
+                <p className="muted small">
+                  {t.temporary}
+                  {/[.!?]$/.test(t.temporary) ? "" : "."}
+                </p>
+              )}
               {t && <Effect text={t.effect} />}
               <TraitAction action={t?.action} />
             </li>

@@ -8,5 +8,5 @@ category: condition
 types: [enchantment]
 ranked: true
 conveyed: true
-temporary: "Lasts one minute per Rank, or until the character takes damage or another character spends their Action waking them."
+temporary: "Every minute after a character is affected by Asleep, it loses one Rank of Asleep. It ends early if the character takes damage or another character spends their Action waking them."
 effect: "This character is asleep and can't perform voluntary Actions or perceive the world around them."

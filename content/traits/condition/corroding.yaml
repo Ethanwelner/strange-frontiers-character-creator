@@ -8,6 +8,6 @@ category: condition
 types: [hazard]
 ranked: true
 conveyed: true
-temporary: "Lasts 3 combat Rounds or 30 seconds."
+temporary: "Every three combat Rounds or 30 seconds after a character is affected by Corroding, it loses one Rank of Corroding."
 effect: "This character or object suffers 2 Corrosive damage per Rank each Round, or every 10 seconds outside of combat."
 action: "The character may spend their Action washing or scraping off the acid to reduce the Rank of Corroding by 1. A character loses Corroding at Rank 0."

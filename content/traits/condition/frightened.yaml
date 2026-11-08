@@ -8,6 +8,6 @@ category: condition
 types: [enchantment]
 ranked: true
 conveyed: true
-temporary: "Lasts 1 combat Round per Rank."
+temporary: "Every combat Round or 10 seconds after a character is affected by Frightened, it loses one Rank of Frightened."
 effect: "This character has -1 to Attack Rolls per Rank and can't willingly Move closer to the source of its fear."
 modifiers: "Attack Rolls -1 per Rank"

@@ -8,5 +8,5 @@ category: condition
 types: [enchantment]
 ranked: true
 conveyed: true
-temporary: "Lasts ten minutes per Rank."
+temporary: "Every ten minutes after a character is affected by Magical Flight, it loses one Rank of Magical Flight."
 effect: "This character can fly, moving its full Movement distance through the air in any direction. If this Condition ends while the character is in the air, they fall."

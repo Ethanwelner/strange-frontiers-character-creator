@@ -8,5 +8,5 @@ category: condition
 types: [enchantment]
 ranked: true
 conveyed: true
-temporary: "Lasts one minute per Rank."
+temporary: "Every minute after a character is affected by Featherfall, it loses one Rank of Featherfall."
 effect: "This character falls slowly, about 20 m per Round, and takes no damage from falling."
