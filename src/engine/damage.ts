@@ -8,9 +8,9 @@
 // other common elemental effects.
 export const DAMAGE_TYPE_GROUPS = {
   Physical: ["Blunt", "Slashing", "Piercing"],
-  Elemental: ["Heat", "Cold", "Electrical", "EMP"],
+  Elemental: ["Heat", "Cold", "Electrical"],
   Supernatural: ["Metaphysical", "Death", "Psychic"],
-  Other: ["Radiation", "Corrosive"],
+  Other: ["Radiation", "Corrosive", "EMP"],
 } as const;
 export const DAMAGE_TYPES = Object.values(DAMAGE_TYPE_GROUPS).flat();
 export type DamageType = (typeof DAMAGE_TYPES)[number];
