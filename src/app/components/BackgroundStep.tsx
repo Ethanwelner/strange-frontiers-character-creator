@@ -15,7 +15,7 @@ const BLURB = {
 // A language's spoken and written forms as one chip, "English (Spoken & Written)",
 // in place of two. Everything else keeps its own chip, with its rank.
 function chipLabels(entries: { trait: string; rank?: number }[]): string[] {
-  const names = entries.map((e) => traitName(e.trait) + (e.rank ? ` ${e.rank}` : ""));
+  const names = entries.map((e) => traitName(e.trait) + (e.rank ? ` (${e.rank})` : ""));
   const labels: string[] = [];
   for (const name of names) {
     const base = name.match(/^(.*) \((Spoken|Written)\)$/)?.[1];
