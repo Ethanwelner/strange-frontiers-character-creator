@@ -1,0 +1,9 @@
+id: ark-residency
+name: "Ark Residency"
+status: draft
+plane: earth
+summary: "The right to live aboard one of the Arks."
+tags: [ark, residency, home]
+category: circumstance
+conveyed: true
+effect: "This character holds residency aboard one of the Arks and has a home, rations and a vote there."

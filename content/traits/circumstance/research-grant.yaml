@@ -1,0 +1,10 @@
+id: research-grant
+name: "Research Grant"
+status: draft
+plane: earth
+summary: "Funded to study something, for now."
+tags: [research, science, money]
+category: circumstance
+conveyed: true
+temporary: "Lasts until the grant runs out, usually a year"
+effect: "This character holds a research grant that pays for their work and their travel, as long as they keep reporting results."

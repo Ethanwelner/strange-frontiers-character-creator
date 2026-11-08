@@ -1,0 +1,10 @@
+id: merchant-clan-elder
+name: "Merchant Clan Elder"
+status: draft
+plane: isekai
+summary: "An elder of a merchant clan, who decides where its money goes."
+tags: [trade, merchant, clan, senior]
+category: circumstance
+conveyed: true
+prerequisites: [merchant-clan-member]
+effect: "This character is an elder of a merchant clan. They can commit the clan’s money and caravans to a venture, and settle disputes between clan members."

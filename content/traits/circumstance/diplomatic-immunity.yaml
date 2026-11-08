@@ -1,0 +1,10 @@
+id: diplomatic-immunity
+name: "Diplomatic Immunity"
+status: draft
+plane: earth
+summary: "Accredited by the Diplomatic Wing, and hard to arrest."
+tags: [diplomacy, un, legal, status]
+category: circumstance
+conveyed: true
+temporary: "Lost if the Diplomatic Wing withdraws their accreditation"
+effect: "This character is an accredited diplomat of the United Nations’ Diplomatic Wing. Signatories to the Protocols can’t arrest or try them, though they can be expelled, and the Wing expects them to behave."

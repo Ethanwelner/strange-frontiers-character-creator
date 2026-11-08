@@ -1,0 +1,10 @@
+id: owed-a-favor
+name: "Owed a Favor"
+status: draft
+plane: any
+summary: "Someone important owes this character."
+tags: [favor, contact, influence]
+category: circumstance
+conveyed: true
+temporary: "Lost when the favor is called in"
+effect: "Someone of power or influence owes this character a favor. Who it is is up to the player and the GM."

@@ -1,0 +1,10 @@
+id: royal-warrant
+name: "Royal Warrant"
+status: draft
+plane: isekai
+region: dreft
+summary: "Licensed to trade with the Crown of Dreft."
+tags: [dreft, trade, crown, license]
+category: circumstance
+conveyed: true
+effect: "This character holds a royal warrant to supply the Crown of Dreft. Their goods pass the kingdom’s tolls freely, and merchants and officials treat their business with respect."

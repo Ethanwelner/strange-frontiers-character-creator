@@ -1,0 +1,10 @@
+id: member-of-the-mages-college-of-dreft
+name: "Member of the Mages College of Dreft"
+status: draft
+plane: isekai
+region: dreft
+summary: "Licensed by the Mages College of Dreft to practice magic."
+tags: [magic, college, license, membership]
+category: circumstance
+conveyed: true
+effect: "This character is a licensed member of the Mages College of Dreft and may practice magic openly within the kingdom. They can use the College’s libraries and workshops, and can request advantage on social checks with Dreft’s officials on matters of magic."

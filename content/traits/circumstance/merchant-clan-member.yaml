@@ -1,0 +1,9 @@
+id: merchant-clan-member
+name: "Merchant Clan Member"
+status: draft
+plane: isekai
+summary: "Part of a merchant clan, with family in every port."
+tags: [trade, merchant, clan, family, membership]
+category: circumstance
+conveyed: true
+effect: "This character belongs to a merchant clan. They can find lodging, credit and news with clan family in the ports and towns where the clan trades."

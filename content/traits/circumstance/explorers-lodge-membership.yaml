@@ -1,10 +1,10 @@
 id: explorers-lodge-membership
-name: "Explorers’ Lodge Membership"
-status: placeholder
+name: "Member of the Explorers’ Lodge"
+status: draft
 plane: earth
-summary: "This character is a member in good standing of the Explorers’ Lodge."
+summary: "A member in good standing of the Explorers’ Lodge."
 tags: [lodge, exploration, membership]
 lore: explorers-lodge
 category: circumstance
 conveyed: true
-effect: Placeholder. Effect not yet written.
+effect: "This character is a member in good standing of the Explorers’ Lodge. They can join certified survey and exploration teams, use Lodge halls and survey archives, and can request advantage on social checks with other Lodge members."

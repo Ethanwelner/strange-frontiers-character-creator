@@ -1,0 +1,10 @@
+id: senior-member-of-the-explorers-lodge
+name: "Senior Member of the Explorers’ Lodge"
+status: draft
+plane: earth
+summary: "A senior Lodge member, trusted to inspect and certify."
+tags: [lodge, exploration, membership, senior]
+category: circumstance
+conveyed: true
+prerequisites: [explorers-lodge-membership]
+effect: "This character is a senior member of the Explorers’ Lodge, licensed to provide inspection and certification services for gate locks and new planes. They can lead certified survey and exploration teams and sponsor new members."

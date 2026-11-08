@@ -1,0 +1,11 @@
+id: senior-member-of-the-monster-hunter-guild
+name: "Senior Member of the Monster Hunter Guild"
+status: draft
+plane: isekai
+region: dreft
+summary: "A senior hunter whose word carries weight in the guild."
+tags: [hunting, monsters, guild, membership, senior]
+category: circumstance
+conveyed: true
+prerequisites: [member-of-the-monster-hunter-guild]
+effect: "This character is a senior member of a monster hunting guild. They can lead guild hunts, post contracts of their own, vouch for new members, and can request advantage on social checks with hunters and the villages the guild protects."
