@@ -5,6 +5,7 @@ plane: any
 summary: "Raises a wall of stone out of the ground."
 tags: [magic, spell, earth, defense]
 category: ability
+types: [elemental]
 ranked: true
 minStats: { magic: 4 }
 prerequisites: [skin-of-stone]

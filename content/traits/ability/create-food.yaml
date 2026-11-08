@@ -5,6 +5,7 @@ plane: any
 summary: "Conjures plain, filling food."
 tags: [magic, spell, survival]
 category: ability
+types: [conjuration]
 ranked: true
 minStats: { magic: 2 }
 prerequisites: [create-water]

@@ -5,7 +5,7 @@ plane: any
 summary: "Lets a character breathe underwater."
 tags: [magic, spell, water, enchantment]
 category: ability
-types: [potion]
+types: [enchantment, potion, artifact]
 ranked: true
 minStats: { magic: 2 }
 prerequisites: [create-water]

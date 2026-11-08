@@ -5,7 +5,7 @@ plane: any
 summary: "Fills a space with darkness no lamp can pierce."
 tags: [magic, spell, darkness, stealth]
 category: ability
-types: [potion]
+types: [illusion, potion]
 ranked: true
 minStats: { magic: 2 }
 # On the Magic list: its own tab on the Traits step, open to every character.

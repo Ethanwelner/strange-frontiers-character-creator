@@ -151,7 +151,8 @@ export type MinStats = z.infer<typeof MinStats>;
 
 export const Trait = BaseEntry.extend({
   category: TraitCategory,
-  // Types like supernatural, injury or cybernetic, which other effects target.
+  // The Sheet's Keywords: what other effects target (supernatural, injury,
+  // cybernetic), potion and artifact, and a spell's school (elemental...).
   types: z.array(z.string()).default([]),
   ranked: z.boolean().default(false),
   // Each listed stat must be at least 3 × the new rank to rank up past 1.
@@ -184,7 +185,7 @@ export const Trait = BaseEntry.extend({
   // lets a character level, like Magic Access's Magic.
   coreAccess: z.array(z.enum(["magic"])).default([]),
   // Trait lists: the special stat a Trait is built on or closely related to
-  // (the Sheet's Special Stat, like Incantation's `magic`). Each list is its
+  // (a special stat among the Sheet's Keywords, like Incantation's `magic`). Each list is its
   // own tab on the Traits step, open to every character; a Trait's stat
   // requirements, like Magic 1, decide who can actually take it.
   list: z.string().optional(),
