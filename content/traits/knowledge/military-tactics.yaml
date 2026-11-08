@@ -6,5 +6,5 @@ summary: "How battles are fought: formations, maneuvers and command."
 tags: [military, tactics, combat]
 category: knowledge
 ranked: true
-minStats: { memory: 3, logic: 3 }
+minStats: { memory: 3, logic: 2 }
 effect: "This character has knowledge of military tactics and can be assumed to be familiar with formations, maneuvers, chains of command and how battles are fought."

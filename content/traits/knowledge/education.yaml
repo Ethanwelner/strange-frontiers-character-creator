@@ -1,5 +1,5 @@
-id: pedagogy
-name: "Pedagogy"
+id: education
+name: "Education"
 status: draft
 plane: any
 summary: "How people learn, and how to teach them."
@@ -7,4 +7,4 @@ tags: [teaching, education, scholarship]
 category: knowledge
 ranked: true
 minStats: { memory: 3, empathy: 2 }
-effect: "This character has knowledge of pedagogy and can be assumed to be familiar with how people learn and the methods for teaching them."
+effect: "This character has knowledge of education and can be assumed to be familiar with how people learn and the methods for teaching them."

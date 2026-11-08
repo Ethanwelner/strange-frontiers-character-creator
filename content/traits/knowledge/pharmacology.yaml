@@ -6,5 +6,5 @@ summary: "Drugs and remedies: what they do, how much is safe, and what they do t
 tags: [medicine, drugs, pharmacology]
 category: knowledge
 ranked: true
-minStats: { memory: 4, logic: 3 }
+minStats: { memory: 3, logic: 3 }
 effect: "This character has knowledge of pharmacology and can be assumed to be familiar with common drugs and remedies, their doses, side effects and interactions."

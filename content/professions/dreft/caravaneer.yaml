@@ -17,7 +17,6 @@ choices:
     note: "+1 Contact"
 backgroundTraits:
   - commerce
-  - geography
   - navigation
   - animal-lore
   - wielder-crossbow

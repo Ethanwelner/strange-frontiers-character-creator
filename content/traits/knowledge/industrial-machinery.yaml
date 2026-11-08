@@ -6,5 +6,5 @@ summary: "How heavy machines are built and kept running."
 tags: [industry, machinery, engineering]
 category: knowledge
 ranked: true
-minStats: { memory: 3, logic: 3 }
+minStats: { memory: 3, logic: 2 }
 effect: "This character has knowledge of industrial machinery and can be assumed to be familiar with how cranes, drills, loaders and factory machines work and are maintained."

@@ -6,5 +6,10 @@ summary: "The gangs, fences and smugglers who work outside the law, and the rule
 tags: [crime, underworld, streets]
 category: knowledge
 ranked: true
+choices:
+  - choose: 1
+    from: place
+    note: "Where they know the underworld"
+    perRank: false
 minStats: { memory: 3, intuition: 2 }
 effect: "This character has knowledge of organized crime and can be assumed to be familiar with its gangs, fences, black markets and the unwritten rules between them."
