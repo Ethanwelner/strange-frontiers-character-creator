@@ -1,0 +1,12 @@
+id: iceproof-potion
+name: "Iceproof Potion"
+status: draft
+plane: isekai
+summary: "Drunk, or poured over a character or object, it gives the Magically Iceproof Condition at the potion's Rank."
+tags: [potion, magic, enhancement, defense, ice, cold]
+type: misc
+category: consumable
+uses: "uses 1: when drunk or poured"
+value: 40
+currency: "Luras"
+notes: "Brewed at a Rank: the brewer's Rank in Iceproof. Value is per Rank."

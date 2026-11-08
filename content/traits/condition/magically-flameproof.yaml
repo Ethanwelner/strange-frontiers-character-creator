@@ -1,0 +1,12 @@
+id: magically-flameproof
+name: "Magically Flameproof"
+status: draft
+plane: any
+summary: "Magically protected from flames and heat."
+tags: [magic, enchantment, defense, fire]
+category: condition
+types: [enchantment]
+ranked: true
+conveyed: true
+temporary: "Lasts 30 minutes per Rank."
+effect: "This character or item gains Rank *3 resistance to Heat damage."

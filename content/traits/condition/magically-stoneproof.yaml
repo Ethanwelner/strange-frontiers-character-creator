@@ -1,0 +1,12 @@
+id: magically-stoneproof
+name: "Magically Stoneproof"
+status: draft
+plane: any
+summary: "Magically protected from crushing blows of stone and earth."
+tags: [magic, enchantment, defense, earth, stone]
+category: condition
+types: [enchantment]
+ranked: true
+conveyed: true
+temporary: "Lasts 30 minutes per Rank."
+effect: "This character or item gains Rank *3 resistance to Blunt damage."

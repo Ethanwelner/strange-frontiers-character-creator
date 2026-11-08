@@ -1,0 +1,14 @@
+id: iceproof
+name: "Iceproof"
+status: draft
+plane: any
+summary: "Protects a character or item from frost and cold."
+tags: [magic, spell, enchantment, defense, ice, cold]
+category: ability
+types: [potion]
+ranked: true
+minStats: { magic: 3 }
+# On the Magic list: its own tab on the Traits step, open to every character.
+list: magic
+effect: "This character gains the Cast Iceproof Action."
+action: "Cast Iceproof: This character may spend 2 MP per Rank of Iceproof to give a character or item within 5 m the Magically Iceproof Condition. The Condition's Rank is equal to the caster's Iceproof Rank."
