@@ -7,4 +7,8 @@ summary: "A retainer of one of Dreft’s noble houses."
 tags: [dreft, nobility, retainer]
 category: circumstance
 conveyed: true
+choices:
+  - choose: 1
+    from: detail
+    note: "Which noble house"
 effect: "This character is sworn to one of Dreft’s noble houses. The house feeds, houses and protects them, and expects their service and loyalty in return."

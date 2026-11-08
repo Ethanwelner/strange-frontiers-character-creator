@@ -72,7 +72,7 @@ Every tab's Description is `summary`, Tags is `tags`, and Notes is for anything 
 
 Packages and Traits can both list `choices` (`choose`, `from`, optional `note`): a pool the player picks from, like `contact` or `language`. Notes use the cards' shorthand: `"+1 Contact"`, `"+1 Language"`, `"+1 Language (Spoken & Written)"`, `"+1 Contact per rank"` (quoted, since YAML can't start a plain value with `+`). A Trait's choices are asked once the character holds it, once per rank if it's ranked, as with Additional Contact and Additional Language. `perRank: false` asks only once, whatever the rank.
 
-Two pools are written in by the player rather than picked from Traits: `contact` (who the Contact is) and `place` (which seas, region or road a Knowledge covers, like Seafaring's `note: "Which seas"` with `perRank: false`). The AI builder leaves both for the player, and an unanswered one is a reminder, not an error.
+Four pools are written in by the player rather than picked from Traits: `contact` (who the Contact is), `place` (which seas, region or road a Knowledge covers, like Seafaring's `note: "Which seas"` with `perRank: false`), `quarry` (what a Hunter hunts) and `detail` (anything else a Trait needs named, like Heavy Debts' `note: "Who the debt is owed to"`). On the Sheet each is a "Choice: …" note. The AI builder leaves them for the player, and an unanswered one is a reminder, not an error.
 
 A Trait marked `conveyed: true` (Explorers’ Lodge Membership, Imperial Service Record) can only come from a package's grants or from play, never from a pick, so it can't go on a package's `backgroundTraits` (the validator errors). Circumstance Traits use `category: circumstance`.
 

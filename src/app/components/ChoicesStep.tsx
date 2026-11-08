@@ -86,7 +86,13 @@ function Answer({ q, answer, onAnswer }: { q: ChoiceQuestion; answer: string[]; 
             key={i}
             value={v}
             label={`${q.name} ${noun} ${i + 1}`}
-            placeholder={contact ? undefined : q.from === "quarry" ? "e.g. Big game of the Corsine mountains" : "e.g. The Mende river and its delta"}
+            placeholder={
+              contact || q.from === "detail"
+                ? undefined
+                : q.from === "quarry"
+                  ? "e.g. Big game of the Corsine mountains"
+                  : "e.g. The Mende river and its delta"
+            }
             onCommit={(text) => set(i, text)}
           />
         ))}

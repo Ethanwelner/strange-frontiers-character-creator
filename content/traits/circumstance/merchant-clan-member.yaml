@@ -6,4 +6,8 @@ summary: "Part of a merchant clan, with family in every port."
 tags: [trade, merchant, clan, family, membership]
 category: circumstance
 conveyed: true
+choices:
+  - choose: 1
+    from: detail
+    note: "Which clan"
 effect: "This character belongs to a merchant clan. They can find lodging, credit and news with clan family in the ports and towns where the clan trades."

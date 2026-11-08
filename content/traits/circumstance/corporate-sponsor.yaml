@@ -6,5 +6,9 @@ summary: "A corporation pays their way, and wants something for it."
 tags: [corporate, money, sponsorship]
 category: circumstance
 conveyed: true
+choices:
+  - choose: 1
+    from: detail
+    note: "Which corporation, and what it wants in return"
 temporary: "Lost if the sponsor drops them"
 effect: "A corporation sponsors this character, covering travel and equipment in exchange for their work, their discoveries or their name."

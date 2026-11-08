@@ -6,5 +6,9 @@ summary: "Funded to study something, for now."
 tags: [research, science, money]
 category: circumstance
 conveyed: true
+choices:
+  - choose: 1
+    from: detail
+    note: "What the research is, and who funds it"
 temporary: "Lasts until the grant runs out, usually a year"
 effect: "This character holds a research grant that pays for their work and their travel, as long as they keep reporting results."

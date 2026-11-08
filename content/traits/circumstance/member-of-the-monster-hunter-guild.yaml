@@ -7,4 +7,8 @@ summary: "A sworn member of one of Isekai’s monster hunting guilds."
 tags: [hunting, monsters, guild, membership]
 category: circumstance
 conveyed: true
+choices:
+  - choose: 1
+    from: detail
+    note: "Which guild"
 effect: "This character is a member of a monster hunting guild. They can take guild contracts and bounties, sell monster parts at guild rates, and use guild halls and the trails the guild keeps open."

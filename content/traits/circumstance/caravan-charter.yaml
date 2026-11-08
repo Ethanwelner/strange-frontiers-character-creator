@@ -7,4 +7,8 @@ summary: "Licensed to lead a caravan on Dreft’s trade roads."
 tags: [caravan, trade, license, travel]
 category: circumstance
 conveyed: true
+choices:
+  - choose: 1
+    from: place
+    note: "Which trade roads"
 effect: "This character holds a charter to lead a caravan on Dreft’s trade roads. They can hire guards and drivers under it, and their caravan is allowed through the kingdom’s waystations and tolls."

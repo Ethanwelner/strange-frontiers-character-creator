@@ -123,8 +123,9 @@ export function writtenForm(spoken: Trait, content: Content): Trait | undefined 
 // Pools the player answers in their own words instead of with Trait ids. A
 // Contact is whoever the player says it is, so any name counts; a Place is
 // whichever seas, region or road a Knowledge covers, like Seafaring's; a
-// Quarry is whatever a Hunter says they hunt.
-export const FREE_TEXT_POOLS: Record<string, string> = { contact: "Contact", place: "Place", quarry: "Quarry" };
+// Quarry is whatever a Hunter says they hunt; a Detail is anything else a
+// Trait needs named, like who a Heavy Debt is owed to.
+export const FREE_TEXT_POOLS: Record<string, string> = { contact: "Contact", place: "Place", quarry: "Quarry", detail: "Detail" };
 
 export const isFreeTextPool = (from: string) => Object.hasOwn(FREE_TEXT_POOLS, from);
 
