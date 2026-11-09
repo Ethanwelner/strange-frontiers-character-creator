@@ -11,6 +11,7 @@ import { Conditions } from "./Conditions.js";
 import { Items } from "./Items.js";
 import { askerName, baseStats, CoreLine, DescriptionBox, Effect, Icon, LorePopup, NameField, Portrait, StatLine, StepHeader, title, TraitAction, traitName } from "./ui.js";
 import { CardChip, TraitCard, traitCardKind } from "./cards.js";
+import { Button } from "./Button.js";
 
 // Each resource's full name, shown on hover, as in Player Tools
 export const RESOURCE_NAMES = { hp: "Hit Points", vp: "Vibe Points", sp: "Savvy Points", mp: "Mana Points" } as const;
@@ -292,18 +293,18 @@ export function Sheet({
           {/* Whether the build is legal, then Download, Import and Print, above the sheet */}
           <div className="sheet-actions">
             <span className={`status ${result.ok ? "good" : "bad"}`}>{result.ok ? "Legal" : `${result.errors.length} ${result.errors.length === 1 ? "error" : "errors"}`}</span>
-            <button onClick={onExport}>
+            <Button onClick={onExport}>
               <Icon name="download" />
               Download
-            </button>
-            <button onClick={onImport}>
+            </Button>
+            <Button onClick={onImport}>
               <Icon name="upload" />
               Import
-            </button>
-            <button onClick={() => window.print()}>
+            </Button>
+            <Button onClick={() => window.print()}>
               <Icon name="print" />
               Print
-            </button>
+            </Button>
           </div>
         </>
       )}
@@ -428,10 +429,10 @@ export function Sheet({
                   return (
                     <li key={h.trait}>
                       {isLanguage(h) ? <Icon name="language" label="Language" /> : <Icon name="knowledge" label="Knowledge" />}
-                      <button type="button" className="link" onClick={() => setOpen(h.trait)}>
+                      <Button kind="link" onClick={() => setOpen(h.trait)}>
                         {traitName(h.trait)}
                         {t?.ranked || h.rank > 1 ? ` (${h.rank})` : ""}
-                      </button>
+                      </Button>
                     </li>
                   );
                 })}

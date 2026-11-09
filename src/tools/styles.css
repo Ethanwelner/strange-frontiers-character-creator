@@ -26,8 +26,8 @@
     border-color: var(--card-border);
     color: var(--panel-text);
 
-    button.link {
-      color: var(--panel-text);
+    .sf-btn--link {
+      --sf-link: var(--panel-text);
     }
 
     &.is-success {
@@ -35,8 +35,8 @@
       border-color: color-mix(in srgb, var(--frontiers-green) 45%, #1c1c1c);
       color: color-mix(in srgb, var(--frontiers-green) 55%, var(--portfolio-white));
 
-      button.link {
-        color: inherit;
+      .sf-btn--link {
+        --sf-link: currentColor;
       }
     }
   }
@@ -90,30 +90,10 @@
     z-index: 2;
     top: calc(0.5rem - 48px);
     left: calc(0.5rem + 48px - 20px);
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4em;
+    /* A green pill (buttons.css), as tall as it is wide around its + */
     padding: 0.5rem;
-    border: 0;
-    border-radius: 999px;
-    background: var(--frontiers-green);
-    color: var(--portfolio-black);
-    font-family: inherit;
-    font-size: 0.75rem;
-    font-weight: 600;
-    line-height: 1.2;
-    letter-spacing: normal;
-    text-transform: none;
-    white-space: nowrap;
-    cursor: pointer;
-
-    &:hover:not(:disabled),
-    &:focus-visible {
-      background-color: color-mix(in srgb, var(--frontiers-green) 75%, var(--portfolio-white));
-    }
 
     &:disabled {
-      opacity: 0.45;
       cursor: default;
     }
 
@@ -185,22 +165,6 @@
 
     h2 {
       margin: 0;
-    }
-  }
-
-  /* The creator's green, like Build it: the stats' Submit once every point
-     is placed (gray until then) */
-  .tools-level-actions button:not(:disabled) {
-    background: var(--frontiers-green);
-    color: var(--portfolio-black);
-
-    &:hover:not(:disabled) {
-      background-color: color-mix(in srgb, var(--frontiers-green) 75%, var(--portfolio-white));
-      color: var(--portfolio-black);
-    }
-
-    &:disabled {
-      opacity: 0.45;
     }
   }
 
@@ -503,6 +467,7 @@
     border: 0;
     border-radius: 16px;
     background: none;
+    color: var(--portfolio-white);
     cursor: pointer;
 
     /* The die and its numbers' canvas, glowing and floating together */
@@ -589,19 +554,6 @@
   /* The character's Traits, at least 360px wide each */
   .sheet-embedded .sheet-traits {
     grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr));
-  }
-
-  /* Gray badges, shaped like the rules problems chip: Download character,
-     Switch character with its Yes and Cancel */
-  .tools-actions > button {
-    padding: 0.5rem 1rem;
-    border-radius: 999px;
-    font-family: inherit;
-    font-size: 0.75rem;
-    font-weight: 600;
-    line-height: 1.2;
-    letter-spacing: normal;
-    white-space: nowrap;
   }
 
   /* Level up, Download character, Switch character and the rules problems
@@ -791,8 +743,8 @@
     border-color: var(--portfolio-red);
     color: var(--portfolio-white);
 
-    button.link {
-      color: inherit;
+    .sf-btn--link {
+      --sf-link: currentColor;
     }
   }
 
@@ -833,36 +785,11 @@
     }
   }
 
-  /* A green round button with the paper plane centered in it, like the
-     creator's green buttons. It stays green while there's nothing to send,
-     and glitches once there is (the small glitch in src/app/styles.css). */
-  button.tools-chat-send {
-    flex: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    padding: 0;
-    border: 0;
-    border-radius: 50%;
-    background: var(--frontiers-green);
-    color: var(--portfolio-black);
-    cursor: pointer;
-
+  /* Send, a green circle (buttons.css) with the paper plane in it */
+  .tools-chat-send {
     .icon {
       width: 14px;
       height: 14px;
-      fill: currentColor;
-    }
-
-    &:hover:not(:disabled) {
-      background-color: color-mix(in srgb, var(--frontiers-green) 75%, var(--portfolio-white));
-    }
-
-    &:focus-visible {
-      outline: 2px solid var(--frontiers-green);
-      outline-offset: 2px;
     }
 
     &:disabled {
@@ -873,18 +800,11 @@
   /* Clear, a round gray button with the restore arrow like the resources',
      in the chat box's top right corner beside the d20. It's on the d20's
      layer (Roller.tsx), so it stays over the conversation as it slides under. */
-  button.tools-chat-clear {
+  .tools-chat-clear {
     position: absolute;
     top: 12px;
     right: 12px;
     z-index: 1;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    padding: 0;
-    border-radius: 50%;
 
     .icon {
       width: 0.75em;

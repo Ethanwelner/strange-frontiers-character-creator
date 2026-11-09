@@ -3,6 +3,7 @@ import { content, traitById } from "../content.js";
 import { hpConditions, playConditions, withCondition, withoutCondition, type HeldCondition } from "../conditions.js";
 import { Effect, LorePopup, Sign, TraitAction } from "./ui.js";
 import { CardNote, TraitCard } from "./cards.js";
+import { Button } from "./Button.js";
 
 // The Conditions, the same on the Character Creator's sheet and in Player
 // Tools: the ones HP decides (from `hp` of `maxHp`), and the temporary ones
@@ -30,9 +31,9 @@ export function Conditions({
       {/* Add Condition at the right end of the title's line, opening the dropdown in a popup */}
       <div className="sheet-section-head">
         <h4 className="rule">Conditions</h4>
-        <button type="button" className="sheet-section-add" aria-label="Add Condition" onClick={() => setAdding(true)}>
+        <Button size="small" tone="condition" className="sheet-section-add" aria-label="Add Condition" onClick={() => setAdding(true)}>
           Add<span className="sheet-section-add-noun"> Condition</span>
-        </button>
+        </Button>
       </div>
       {adding && (
         <LorePopup label="Add a Condition" onClose={() => setAdding(false)} className="sheet-add-popup">
@@ -81,22 +82,22 @@ export function Conditions({
                 name={t?.name ?? c.trait}
                 rank={t?.ranked ? c.rank : undefined}
                 actions={
-                  <button type="button" className="tools-condition-remove" aria-label={`Remove ${t?.name ?? c.trait}`} onClick={() => onChange(withoutCondition(conditions, c.trait))}>
+                  <Button kind="bare" className="tools-condition-remove" aria-label={`Remove ${t?.name ?? c.trait}`} onClick={() => onChange(withoutCondition(conditions, c.trait))}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 20 20" aria-hidden="true">
                       <path d="M2 2l16 16M18 2L2 18" fill="none" stroke="currentColor" strokeWidth="2.5" />
                     </svg>
-                  </button>
+                  </Button>
                 }
               >
                 {t?.ranked && (
                   <div className="stepper tools-rank">
-                    <button type="button" onClick={() => update(c, { rank: c.rank - 1 })} disabled={c.rank <= 1} aria-label="Lower rank">
+                    <Button round="lg" onClick={() => update(c, { rank: c.rank - 1 })} disabled={c.rank <= 1} aria-label="Lower rank">
                       <Sign is="minus" />
-                    </button>
+                    </Button>
                     <span className="num">{c.rank}</span>
-                    <button type="button" onClick={() => update(c, { rank: c.rank + 1 })} aria-label="Raise rank">
+                    <Button round="lg" onClick={() => update(c, { rank: c.rank + 1 })} aria-label="Raise rank">
                       <Sign is="plus" />
-                    </button>
+                    </Button>
                   </div>
                 )}
                 {t?.temporary && (

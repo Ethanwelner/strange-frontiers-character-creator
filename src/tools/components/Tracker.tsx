@@ -8,6 +8,7 @@ import { TraitsStep } from "../../app/components/TraitsStep.js";
 import { Icon, LorePopup, Sign } from "../../app/components/ui.js";
 import { Resistances } from "../../app/components/Resistances.js";
 import { checkPlay, currentOf, maxOf, pointsToPlace, RESOURCES, withResource, type Play, type ResourceKey } from "../play.js";
+import { Button } from "../../app/components/Button.js";
 
 // The character's name (`head`, from the app) over HP, VP, SP and MP, each
 // with its current value against the max the engine works out, in the first
@@ -67,14 +68,15 @@ export function Tracker({
         <div className="tools-level-actions">
           {/* Cancelling a level up is the + on the level blob's corner, which turns into Cancel.
               Submit is green and glitches once every point is placed. */}
-          <button
-            type="button"
+          <Button
+            tone={pointsToPlace(editing, content) ? "gray" : "primary"}
+            ready={!pointsToPlace(editing, content)}
             className="build-button"
             disabled={pointsToPlace(editing, content)}
             onClick={() => (onChange({ ...play, draft: editing }), onLevelDraft(undefined))}
           >
             Submit
-          </button>
+          </Button>
         </div>
       )}
     </div>
@@ -102,26 +104,26 @@ export function Tracker({
                   <strong className={`tools-resource-name resource-${r}`} title={RESOURCE_NAMES[r]}>
                     {r.toUpperCase()}
                   </strong>
-                  <button type="button" onClick={() => set(r, cur - 1)} aria-label={`1 less ${r.toUpperCase()}`}>
+                  <Button round="md" onClick={() => set(r, cur - 1)} aria-label={`1 less ${r.toUpperCase()}`}>
                     <Sign is="minus" />
-                  </button>
+                  </Button>
                   <span className="num" aria-live="polite">
                     {/* Above the max (bonus points), the value takes the resource's color */}
                     {cur > max ? <span className={`resource-${r}`} title={`Above the max of ${max}`}>{cur}</span> : cur}
                     <span className="muted"> / {max}</span>
                   </span>
-                  <button type="button" onClick={() => set(r, cur + 1)} aria-label={`1 more ${r.toUpperCase()}`}>
+                  <Button round="md" onClick={() => set(r, cur + 1)} aria-label={`1 more ${r.toUpperCase()}`}>
                     <Sign is="plus" />
-                  </button>
-                  <button
-                    type="button"
+                  </Button>
+                  <Button
+                    round="md"
                     onClick={() => set(r, max)}
                     disabled={cur >= max}
                     aria-label={`Restore ${r.toUpperCase()} to full`}
                     title="Restore to full"
                   >
                     <Icon name="restore" />
-                  </button>
+                  </Button>
                 </div>
                 <div className={`tools-meter tools-meter-${r}`} aria-hidden="true">
                   <span style={{ width: `${pct}%` }} />
@@ -137,12 +139,12 @@ export function Tracker({
                     onChange={(e) => setAmounts({ ...amounts, [r]: e.target.value })}
                     onKeyDown={(e) => e.key === "Enter" && apply(r, -1)}
                   />
-                  <button type="button" onClick={() => apply(r, -1)}>
+                  <Button onClick={() => apply(r, -1)}>
                     {r === "hp" ? "Damage" : "Spend"}
-                  </button>
-                  <button type="button" onClick={() => apply(r, 1)}>
+                  </Button>
+                  <Button onClick={() => apply(r, 1)}>
                     {r === "hp" ? "Heal" : "Gain"}
-                  </button>
+                  </Button>
                 </div>
               </div>
             );
@@ -165,9 +167,9 @@ export function Tracker({
         traitsAction={
           // Add traits, like Items' and Conditions' add buttons; the picks left show under the title
           banked > 0 && (
-            <button type="button" className="sheet-section-add" aria-label="Add traits" onClick={() => setTraitDraft(play.draft)}>
+            <Button size="small" tone="primary" className="sheet-section-add" aria-label="Add traits" onClick={() => setTraitDraft(play.draft)}>
               Add<span className="sheet-section-add-noun"> traits</span>
-            </button>
+            </Button>
           )
         }
       />
@@ -185,16 +187,17 @@ export function Tracker({
           />
           <div className="tools-traits-submit">
             {/* Green and glitching, like Add items, once the picks change the character's Traits */}
-            <button
-              type="button"
-              className={`build-button${JSON.stringify(traitDraft.traits) !== JSON.stringify(play.draft.traits) ? " is-ready" : ""}`}
+            <Button
+              tone={JSON.stringify(traitDraft.traits) !== JSON.stringify(play.draft.traits) ? "primary" : "gray"}
+              ready={JSON.stringify(traitDraft.traits) !== JSON.stringify(play.draft.traits)}
+              className="build-button"
               onClick={() => {
                 onChange({ ...play, draft: traitDraft });
                 setTraitDraft(undefined);
               }}
             >
               Submit
-            </button>
+            </Button>
           </div>
         </LorePopup>
       )}

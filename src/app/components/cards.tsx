@@ -72,7 +72,7 @@ export function CardNote({ children }: { children: ReactNode }) {
 // The chevron that opens and closes a folding card: the only place that does
 function Chevron({ open, label, onToggle, className }: { open: boolean; label: string; onToggle: () => void; className: string }) {
   return (
-    <button type="button" className={className} aria-label={`${open ? "Collapse" : "Expand"} ${label}`} aria-expanded={open} title={open ? "Collapse" : "Expand"} onClick={onToggle}>
+    <button type="button" className={`sf-btn sf-btn--bare ${className}`} aria-label={`${open ? "Collapse" : "Expand"} ${label}`} aria-expanded={open} title={open ? "Collapse" : "Expand"} onClick={onToggle}>
       <svg className={className === "sf-card-fold" ? "sf-card-chevron" : undefined} viewBox="0 0 12 8" aria-hidden="true" focusable="false">
         <path d="M1 1.5l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="1.5" />
       </svg>
@@ -339,7 +339,7 @@ export function ItemCard({
           {note && (
             <div className="sf-item-note-line">
               {/* Note, a pen and its label, opening the notes field at its right */}
-              <button type="button" className="sf-item-note-toggle" aria-expanded={note.shown} onClick={note.onToggle}>
+              <button type="button" className="sf-btn sf-btn--bare sf-item-note-toggle" aria-expanded={note.shown} onClick={note.onToggle}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" aria-hidden="true">
                   <path d="M492.7 58.75C517.7 83.74 517.7 124.3 492.7 149.3L444.3 197.7L314.3 67.72L362.7 19.32C387.7-5.678 428.3-5.678 453.3 19.32L492.7 58.75zM58.57 323.5L291.7 90.34L421.7 220.3L188.5 453.4C178.1 463.8 165.2 471.5 151.1 475.6L30.77 511C22.35 513.5 13.24 511.2 7.03 504.1C.8198 498.8-1.502 489.7 .976 481.2L36.37 360.9C40.53 346.8 48.16 333.9 58.57 323.5L58.57 323.5zM552 464C565.3 464 576 474.7 576 488C576 501.3 565.3 512 552 512H248C234.7 512 224 501.3 224 488C224 474.7 234.7 464 248 464H552z" />
                 </svg>

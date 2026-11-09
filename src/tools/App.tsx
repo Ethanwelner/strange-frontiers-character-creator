@@ -8,6 +8,7 @@ import { checkPlay, creatorDraft, load, playBuild, pointsToPlace, save, startPla
 import { Chat } from "./components/Chat.js";
 import { Tracker } from "./components/Tracker.js";
 import { CharacterLine } from "../app/components/CharacterLine.js";
+import { Button } from "../app/components/Button.js";
 
 export function ToolsApp() {
   const [play, setPlay] = useState<Play | undefined>(load);
@@ -87,19 +88,20 @@ export function ToolsApp() {
                 already has to place come first, so it waits while there are any. */}
             {play &&
               (levelDraft && levelDraft.level > play.draft.level ? (
-                <button type="button" className="tools-level-up" onClick={() => setLevelDraft(undefined)}>
+                <Button size="pill" tone="primary" className="tools-level-up" onClick={() => setLevelDraft(undefined)}>
                   Cancel
-                </button>
+                </Button>
               ) : (
-                <button
-                  type="button"
+                <Button
+                  size="pill"
+                  tone="primary"
                   className="tools-level-up"
                   aria-label="Level up"
                   disabled={Boolean(levelDraft) || pointsToPlace(play.draft, content)}
                   onClick={() => setLevelDraft({ ...play.draft, level: play.draft.level + 1 })}
                 >
                   <Icon name="plus" />
-                </button>
+                </Button>
               ))}
             <main>
               {contentErrors.length > 0 && <div className="notice bad">Content failed to load: {contentErrors.join("; ")}</div>}
@@ -118,14 +120,14 @@ export function ToolsApp() {
                   </p>
                   <div className="tools-start-options">
                     {fromCreator && (
-                      <button type="button" className="build-button" onClick={() => setPlay(startPlay(toBuild(fromCreator)))}>
+                      <Button className="build-button" onClick={() => setPlay(startPlay(toBuild(fromCreator)))}>
                         Use {fromCreator.name ?? "the character"} from the Character Creator
-                      </button>
+                      </Button>
                     )}
-                    <button type="button" className="build-button" onClick={() => fileInput.current?.click()}>
+                    <Button className="build-button" onClick={() => fileInput.current?.click()}>
                       <Icon name="upload" />
                       Import a character file
-                    </button>
+                    </Button>
                   </div>
                   <p className="hint">
                     A character file is the JSON the <a href="creator.php">Character Creator</a> exports from its Sheet. Everything here stays in this browser.
@@ -148,20 +150,20 @@ export function ToolsApp() {
                               problems as the creator's red chip, which opens them as a list,
                               in the box's top right corner */}
                       <div className="hero-bar tools-actions">
-                        <button type="button" onClick={exportBuild}>
+                        <Button size="pill" onClick={exportBuild}>
                           <Icon name="download" />
                           Download character
-                        </button>
-                        <button type="button" onClick={() => setConfirmingSwitch(true)}>
+                        </Button>
+                        <Button size="pill" onClick={() => setConfirmingSwitch(true)}>
                           <Icon name="switch" />
                           Switch character
-                        </button>
+                        </Button>
                         {!result.ok && (
                           <ul className="issues step-issues tools-issues">
                             <li>
-                              <button type="button" onClick={() => setShowingIssues(true)}>
+                              <Button kind="bare" onClick={() => setShowingIssues(true)}>
                                 {result.errors.length} rules {result.errors.length === 1 ? "problem" : "problems"}
-                              </button>
+                              </Button>
                             </li>
                           </ul>
                         )}
@@ -188,9 +190,8 @@ export function ToolsApp() {
                                 <h3 className="lore-modal-title">Switch character</h3>
                                 <p>Put {play.draft.name || "this character"} away? Their tracker, items and chat are cleared.</p>
                                 <div className="tools-switch-actions">
-                                  <button
-                                    type="button"
-                                    className="primary"
+                                  <Button
+                                    tone="dark"
                                     onClick={() => {
                                       setPlay(undefined);
                                       setLevelDraft(undefined);
@@ -199,10 +200,10 @@ export function ToolsApp() {
                                     }}
                                   >
                                     Switch character
-                                  </button>
-                                  <button type="button" onClick={closeSwitch}>
+                                  </Button>
+                                  <Button onClick={closeSwitch}>
                                     Cancel
-                                  </button>
+                                  </Button>
                                 </div>
                               </LorePopup>
                             )}

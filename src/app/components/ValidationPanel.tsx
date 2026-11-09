@@ -5,6 +5,7 @@ import { coreStatsShown } from "../check.js";
 import { content, packageById } from "../content.js";
 import type { Draft } from "../draft.js";
 import { baseStats, NameField, Portrait, title } from "./ui.js";
+import { Button } from "./Button.js";
 
 interface Props {
   draft: Draft;
@@ -23,7 +24,7 @@ export function ValidationPanel({ draft, result, onName }: Props) {
 
   return (
     <aside className={`panel${open ? " open" : ""}`} aria-label="Validation">
-      <button className="panel-toggle" onClick={() => setOpen(!open)} aria-expanded={open}>
+      <Button kind="bare" className="panel-toggle" onClick={() => setOpen(!open)} aria-expanded={open}>
         <span className={`panel-toggle-name${draft.name ? "" : " muted"}`}>{draft.name ?? "Unnamed character"}</span>
         {summary && (
           <span className="num">
@@ -32,7 +33,7 @@ export function ValidationPanel({ draft, result, onName }: Props) {
           </span>
         )}
         <span className="muted">{open ? "Hide" : "Details"}</span>
-      </button>
+      </Button>
 
       <div className="panel-body">
         <Portrait className="panel-portrait" portrait={draft.portrait} name={draft.name} />

@@ -7,6 +7,7 @@ import { Icon, Notice } from "../../app/components/ui.js";
 import { ask } from "../chat.js";
 import type { Play } from "../play.js";
 import { Roller } from "./Roller.js";
+import { Button } from "../../app/components/Button.js";
 
 const EXAMPLES = ["I took 6 slashing damage", "What is my condition?", "I picked up 3 ration packs"];
 
@@ -95,8 +96,8 @@ export function Chat({
             right corner beside the die. It's on the die's layer so it stays over the
             conversation as it slides under the die (styles.css). */}
         {play.chat.length > 0 && (
-          <button
-            type="button"
+          <Button
+            round="md"
             className="tools-chat-clear"
             onClick={() => onChange({ ...play, chat: [] })}
             disabled={busy}
@@ -104,7 +105,7 @@ export function Chat({
             title="Clear the conversation"
           >
             <Icon name="restore" />
-          </button>
+          </Button>
         )}
       </Roller>
       <section className="tools-chat" aria-label="Assistant">
@@ -116,9 +117,9 @@ export function Chat({
                 <p className="muted">Ask about the rules or your Traits, or say what happened and I'll update the tracker.</p>
                 <div className="tools-chat-examples">
                   {EXAMPLES.map((e) => (
-                    <button key={e} type="button" className="tools-chat-example" onClick={() => send(e)} disabled={busy || !result.summary}>
+                    <Button key={e} kind="bare" className="tools-chat-example" onClick={() => send(e)} disabled={busy || !result.summary}>
                       {e}
-                    </button>
+                    </Button>
                   ))}
                 </div>
               </li>
@@ -182,9 +183,9 @@ export function Chat({
               }}
             />
             {/* Send, as a paper plane beside the text, at the bottom right */}
-            <button type="submit" className="tools-chat-send" disabled={busy || !message.trim()} aria-busy={busy}>
+            <Button type="submit" round="md" tone="primary" ready={!busy && Boolean(message.trim())} className="tools-chat-send" disabled={busy || !message.trim()} aria-busy={busy}>
               <Icon name="send" label="Send" />
-            </button>
+            </Button>
           </form>
         </div>
       </section>

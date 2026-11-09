@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { axisAngle, facing, icosahedron, mul, roll, rotate, slerp, type Quat, type Vec } from "../dice.js";
+import { Button } from "../../app/components/Button.js";
 
 // Screen pixels per canvas pixel: the die is drawn small and scaled up blocky.
 const PIXEL = 3;
@@ -246,8 +247,8 @@ export function Roller({
 
   return (
     <section className="tools-roller" aria-label="Dice">
-      <button
-        type="button"
+      <Button
+        kind="bare"
         className="tools-roller-screen"
         disabled={disabled || rolling}
         aria-label="Roll the d20"
@@ -264,7 +265,7 @@ export function Roller({
         <span className="tools-roller-caption" aria-live="polite">
           {rolling ? "Rolling…" : landed ? `Rolled ${landed}` : ""}
         </span>
-      </button>
+      </Button>
       {children}
     </section>
   );

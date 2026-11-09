@@ -6,6 +6,7 @@ import { GENDERS, MAX_AGE, MAX_SIZE_LENGTH, type Draft, type Looks } from "../dr
 import { toPortrait } from "../portrait.js";
 import { parseActionProfile } from "../actionProfile.js";
 import type { DamageType } from "../../engine/damage.js";
+import { Button } from "./Button.js";
 
 export const GROUPS = Object.keys(STAT_GROUPS) as (keyof typeof STAT_GROUPS)[];
 // The core stats with focus stats: every one but Magic.
@@ -83,9 +84,9 @@ export function Notice({ children, fades, bad, onDismiss }: { children: string; 
   return (
     <div className={`notice${bad ? " bad" : fades ? " is-success" : ""}${leaving ? " is-leaving" : ""}`} role="status">
       {children}
-      <button className="link" onClick={onDismiss} aria-label="Dismiss">
+      <Button kind="link" onClick={onDismiss} aria-label="Dismiss">
         ✕
-      </button>
+      </Button>
     </div>
   );
 }
@@ -114,11 +115,11 @@ export function LorePopup({ label, onClose, children, className = "" }: { label:
   return (
     <div className={`lore-modal is-open ${className}`} role="dialog" aria-modal="true" aria-label={label} onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className="lore-modal-panel">
-        <button ref={close} type="button" className="lore-modal-close" aria-label="Close" onClick={onClose}>
+        <Button ref={close} round="lg" tone="light" className="lore-modal-close" aria-label="Close" onClick={onClose}>
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true">
             <path d="M2 2l16 16M18 2L2 18" fill="none" stroke="currentColor" strokeWidth="2" />
           </svg>
-        </button>
+        </Button>
         {/* The content scrolls inside the panel, so the close button stays on its corner */}
         <div className="lore-modal-scroll">{children}</div>
       </div>
@@ -350,8 +351,8 @@ export function Portrait({
   const choose = () => input.current?.click();
   return (
     <div className={`portrait-field ${className}`}>
-      <button
-        type="button"
+      <Button
+        kind="bare"
         className={`portrait${portrait ? " portrait-filled" : " portrait-empty"}`}
         onClick={() => (portrait ? setOpen(true) : choose())}
         disabled={busy}
@@ -370,7 +371,7 @@ export function Portrait({
             {busy ? "Shrinking…" : "Add a portrait"}
           </span>
         )}
-      </button>
+      </Button>
       <input
         ref={input}
         type="file"
@@ -388,12 +389,11 @@ export function Portrait({
           <img className="portrait-large" src={portrait} alt={alt} />
           {error && <p className="portrait-error">{error}</p>}
           <div className="portrait-actions">
-            <button type="button" className="primary" onClick={choose} disabled={busy}>
+            <Button tone="dark" onClick={choose} disabled={busy}>
               <Icon name="upload" />
               {busy ? "Shrinking…" : "Replace image"}
-            </button>
-            <button
-              type="button"
+            </Button>
+            <Button
               onClick={() => {
                 onChange(undefined);
                 close();
@@ -401,7 +401,7 @@ export function Portrait({
               disabled={busy}
             >
               Remove
-            </button>
+            </Button>
           </div>
         </LorePopup>
       )}
@@ -569,13 +569,13 @@ export function NameField({
             }}
           />
         ) : (
-          <button type="button" className={`name-text${name ? "" : " muted"}`} onClick={start}>
+          <Button kind="bare" className={`name-text${name ? "" : " muted"}`} onClick={start}>
             {name || "Unnamed character"}
-          </button>
+          </Button>
         )}
       </Heading>
-      <button
-        type="button"
+      <Button
+        kind="bare"
         className="name-edit"
         aria-label="Edit the name"
         // Keeps the field from losing focus first, so the pen doesn't reopen it
@@ -583,7 +583,7 @@ export function NameField({
         onClick={() => (editing ? finish(true) : start())}
       >
         <span className="pen-icon" aria-hidden="true" />
-      </button>
+      </Button>
     </div>
   );
 }
@@ -703,15 +703,15 @@ export function LevelStepper({
     <div className={`level-stepper ${className}`}>
       <span className="field-label">{label}</span>
       <div className="stepper">
-        <button type="button" onClick={() => onChange(Math.max(1, level - 1))} disabled={disabled || level <= 1} aria-label="Lower Level">
+        <Button round="lg" onClick={() => onChange(Math.max(1, level - 1))} disabled={disabled || level <= 1} aria-label="Lower Level">
           <Sign is="minus" />
-        </button>
+        </Button>
         <span className="num" aria-live="polite">
           {level}
         </span>
-        <button type="button" onClick={() => onChange(Math.min(MAX_LEVEL, level + 1))} disabled={disabled || level >= MAX_LEVEL} aria-label="Raise Level">
+        <Button round="lg" onClick={() => onChange(Math.min(MAX_LEVEL, level + 1))} disabled={disabled || level >= MAX_LEVEL} aria-label="Raise Level">
           <Sign is="plus" />
-        </button>
+        </Button>
       </div>
     </div>
   );
