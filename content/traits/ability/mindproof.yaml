@@ -1,0 +1,14 @@
+id: mindproof
+name: "Mindproof"
+status: draft
+plane: any
+summary: "Protects a character's mind from psychic attacks."
+tags: [magic, spell, enchantment, defense, mind, psychic]
+category: ability
+types: [enchantment, potion, artifact]
+ranked: true
+minStats: { magic: 3 }
+# On the Magic list: its own tab on the Traits step, open to every character.
+list: magic
+effect: "This character gains the Cast Mindproof Action."
+action: "Cast Mindproof: This character may spend 2 MP per Rank of Mindproof to give a character or item within 5 m the Magically Mindproof Condition. The Condition's Rank is equal to the caster's Mindproof Rank."

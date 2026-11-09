@@ -1,0 +1,14 @@
+id: mindblade
+name: "Mindblade"
+status: draft
+plane: any
+summary: "Charges a weapon with psychic force."
+tags: [magic, spell, enchantment, weapon, mind, psychic]
+category: ability
+types: [enchantment, artifact]
+ranked: true
+minStats: { magic: 3 }
+# On the Magic list: its own tab on the Traits step, open to every character.
+list: magic
+effect: "This character gains the Cast Mindblade Action."
+action: "Cast Mindblade: This character may spend 2 MP per Rank of Mindblade to give a weapon within 5 m the Maddening Weapon Condition. The Condition's Rank is equal to the caster's Mindblade Rank."

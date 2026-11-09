@@ -1,0 +1,12 @@
+id: maddening-weapon
+name: "Maddening Weapon"
+status: draft
+plane: any
+summary: "A weapon that strikes the mind as well as the body."
+tags: [magic, enchantment, weapon, mind, psychic]
+category: condition
+types: [enchantment]
+ranked: true
+conveyed: true
+temporary: "Lasts 10 minutes per Rank."
+effect: "This weapon deals 2 more Psychic damage per Rank. Targets hit by this weapon gain the Flat-Footed Condition for the following Round."

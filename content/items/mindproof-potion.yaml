@@ -1,0 +1,12 @@
+id: mindproof-potion
+name: "Mindproof Potion"
+status: draft
+plane: isekai
+summary: "Drunk, or poured over a character or object, it gives the Magically Mindproof Condition at the potion's Rank."
+tags: [potion, magic, enhancement, defense, mind, psychic]
+type: misc
+category: consumable
+uses: "uses 1: when drunk or poured"
+value: 40
+currency: "Luras"
+notes: "Brewed at a Rank: the brewer's Rank in Mindproof. Value is per Rank."
