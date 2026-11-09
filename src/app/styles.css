@@ -2740,7 +2740,7 @@
        past the cards' edges, which the list would clip once it scrolls; the
        margins give the room back, so the cards stay where they were */
     padding: 0 14px;
-    margin: 0 -14px 16px;
+    margin: 0 -14px;
     /* An open card doesn't stretch the closed one beside it */
     align-items: start;
   }
@@ -2958,6 +2958,11 @@
   :is(.sheet-side > .knowledge-list, :is(.sheet-abilities, .sheet-skills) > .sheet-traits, .tools-conditions-side > .tools-conditions, .tools-items > .tools-item-list) {
     max-height: 60vh;
     overflow-y: auto;
+  }
+
+  /* The Items stop sooner on a tall screen: 60vh, but no more than 640px */
+  .tools-items > .tools-item-list {
+    max-height: min(60vh, 640px);
   }
 
   /* Player Tools' chat (the conversation and the message box) and the
