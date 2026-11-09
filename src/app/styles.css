@@ -2733,11 +2733,14 @@
      wide enough (under the stats and Conditions); one column otherwise */
   .tools-item-list {
     list-style: none;
-    padding: 0;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr));
     gap: 12px;
-    margin: 0 0 16px;
+    /* Room for the count's circle and the Edit and Remove circles that hang
+       past the cards' edges, which the list would clip once it scrolls; the
+       margins give the room back, so the cards stay where they were */
+    padding: 0 14px;
+    margin: 0 -14px 16px;
     /* An open card doesn't stretch the closed one beside it */
     align-items: start;
   }
@@ -2949,9 +2952,10 @@
     }
   }
 
-  /* A long Knowledges, Abilities or Skills list stops at 75vh and scrolls
-     inside its box */
-  :is(.sheet-side > .knowledge-list, :is(.sheet-abilities, .sheet-skills) > .sheet-traits) {
+  /* A long Knowledges, Abilities, Skills, Conditions or Items list stops at
+     75vh and scrolls inside its box, so one long column doesn't leave the
+     one beside it far shorter */
+  :is(.sheet-side > .knowledge-list, :is(.sheet-abilities, .sheet-skills) > .sheet-traits, .tools-conditions-side > .tools-conditions, .tools-items > .tools-item-list) {
     max-height: 75vh;
     overflow-y: auto;
   }
@@ -2962,7 +2966,7 @@
      parts; Firefox, which has no such parts, a thin bar in the same colors.
      The site sets scrollbar-color on the page, which makes Chrome skip
      -webkit- parts, so it's reset here. */
-  :is(.tools-chat-log, .tools-chat-form textarea, .sheet-side > .knowledge-list, :is(.sheet-abilities, .sheet-skills) > .sheet-traits) {
+  :is(.tools-chat-log, .tools-chat-form textarea, .sheet-side > .knowledge-list, :is(.sheet-abilities, .sheet-skills) > .sheet-traits, .tools-conditions-side > .tools-conditions, .tools-items > .tools-item-list) {
     scrollbar-color: auto;
     scrollbar-width: auto;
 
@@ -3194,7 +3198,7 @@
     }
 
     /* Printed lists run their full length */
-    :is(.sheet-side > .knowledge-list, :is(.sheet-abilities, .sheet-skills) > .sheet-traits) {
+    :is(.sheet-side > .knowledge-list, :is(.sheet-abilities, .sheet-skills) > .sheet-traits, .tools-conditions-side > .tools-conditions, .tools-items > .tools-item-list) {
       max-height: none;
       overflow: visible;
     }
