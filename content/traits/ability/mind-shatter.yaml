@@ -1,0 +1,14 @@
+id: mind-shatter
+name: "Mind Shatter"
+status: draft
+plane: any
+summary: "Breaks a target's thoughts apart."
+tags: [magic, spell, mind, attack]
+category: ability
+types: [mentalism]
+ranked: true
+minStats: { magic: 6 }
+prerequisites: [mind-spike]
+list: magic
+effect: "This character gains the Cast Mind Shatter Action."
+action: "Cast Mind Shatter: This character may spend 4 MP to Attack a target with a temporary weapon that has the following profile: (Ranged) (max range 30 m) (6 Psychic per Rank) (Attack Stat: Magic). Characters damaged by Cast Mind Shatter gain the Flat-Footed Condition for the following Round and the Frightened Condition at a Rank equal to the caster's Mind Shatter Rank."

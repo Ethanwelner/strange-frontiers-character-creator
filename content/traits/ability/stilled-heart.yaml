@@ -1,0 +1,14 @@
+id: stilled-heart
+name: "Stilled Heart"
+status: draft
+plane: any
+summary: "Stops a target's heart, if only for a moment."
+tags: [magic, spell, death, attack]
+category: ability
+types: [necromancy]
+ranked: true
+minStats: { magic: 6 }
+prerequisites: [wither]
+list: magic
+effect: "This character gains the Cast Stilled Heart Action."
+action: "Cast Stilled Heart: This character may spend 4 MP to Attack a target with a temporary weapon that has the following profile: (Ranged) (max range 30 m) (8 Death per Rank) (Attack Stat: Magic)."
