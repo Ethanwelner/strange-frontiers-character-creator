@@ -1,0 +1,12 @@
+id: dark-haze-condition
+name: "Dark Haze"
+status: draft
+plane: any
+summary: "Seen only as a dark, shimmering haze."
+tags: [magic, illusion, stealth]
+category: condition
+types: [illusion]
+ranked: true
+conveyed: true
+temporary: "Every ten minutes after a character is affected by Dark Haze, it loses one Rank of Dark Haze."
+effect: "Characters trying to perceive any visual information about this character must succeed on an Intuition check of 10 per Rank. If they fail, they can't make sense of what they're looking at and see only a dark, shimmering haze."
