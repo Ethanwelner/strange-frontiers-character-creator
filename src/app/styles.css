@@ -2953,10 +2953,10 @@
   }
 
   /* A long Knowledges, Abilities, Skills, Conditions or Items list stops at
-     75vh and scrolls inside its box, so one long column doesn't leave the
+     60vh and scrolls inside its box, so one long column doesn't leave the
      one beside it far shorter */
   :is(.sheet-side > .knowledge-list, :is(.sheet-abilities, .sheet-skills) > .sheet-traits, .tools-conditions-side > .tools-conditions, .tools-items > .tools-item-list) {
-    max-height: 75vh;
+    max-height: 60vh;
     overflow-y: auto;
   }
 
