@@ -7,7 +7,12 @@ import { addCondition, addItem, checkPlay, currentOf, hpConditions, maxOf, playB
 import type { CreateMessage } from "../ai/anthropic.js";
 
 const { content } = loadContent();
-const grosh = JSON.parse(readFileSync(new URL("../../characters/grosh.json", import.meta.url), "utf8"));
+// The example character's build alone, without what a player adds around
+// it (looks, a description, a portrait, items, Conditions, a placed bonus
+// point), so each test starts from a plain character
+const EXTRAS = ["age", "gender", "customGender", "height", "weight", "description", "portrait", "items", "conditions", "startPoints"];
+const example = JSON.parse(readFileSync(new URL("../../characters/grosh.json", import.meta.url), "utf8")) as Record<string, unknown>;
+const grosh = Object.fromEntries(Object.entries(example).filter(([key]) => !EXTRAS.includes(key)));
 const fresh = () => startPlay(grosh);
 
 describe("a character in play", () => {
@@ -54,8 +59,9 @@ describe("a character in play", () => {
     const placed = { ...fresh().draft, startPoints: { endurance: 1 } };
     expect(pointsToPlace(placed, content)).toBe(false);
     // A level up leaves a core point and its focus points to place.
-    expect(pointsToPlace({ ...placed, level: 2 }, content)).toBe(true);
-    expect(pointsToPlace({ ...placed, level: 2, core: { ...placed.core, physical: 2 } }, content)).toBe(true);
+    const next = placed.level + 1;
+    expect(pointsToPlace({ ...placed, level: next }, content)).toBe(true);
+    expect(pointsToPlace({ ...placed, level: next, core: { ...placed.core, physical: placed.core.physical + 1 } }, content)).toBe(true);
   });
 
   it("stacks items by name and removes part of a stack", () => {
@@ -141,7 +147,7 @@ describe("the assistant's tools", () => {
     const play = fresh();
     const text = sheetText(play, checkPlay(play.draft, content), content);
     expect(text).toContain("Name: Grosh");
-    expect(text).toContain("[streetwise]");
+    expect(text).toContain("[vigilance]");
     expect(text).toMatch(/HP \d+\/\d+/);
   });
 

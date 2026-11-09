@@ -1,20 +1,111 @@
 {
   "name": "Grosh",
+  "age": 44,
+  "gender": "male",
+  "height": "6′4″",
+  "weight": "290 lbs",
+  "description": "Grosh is a broad, gray-tusked Tatot who has driven caravans between Port Herminst and Glintl for twenty years. His family's trade house made its money off the switch port, and he's spent most of his life proving he can earn his own. He knows every waystation on the King's Woods road, haggles like it's a contact sport, and keeps a war axe on the wagon bench for the stretches where haggling doesn't work.",
   "kind": "tatot-orcoid",
   "origin": "dreft",
   "profession": "caravaneer",
   "past": "merchant-dynasty",
-  "level": 1,
+  "startPoints": {
+    "power": 1
+  },
+  "level": 10,
   "levels": [
     {
       "group": "physical",
       "points": {
-        "power": 2,
+        "power": 1,
+        "grace": 1,
         "endurance": 1
+      }
+    },
+    {
+      "group": "social",
+      "points": {
+        "demeanor": 1,
+        "persuasion": 1,
+        "empathy": 1
+      }
+    },
+    {
+      "group": "mental",
+      "points": {
+        "memory": 1,
+        "intuition": 1,
+        "logic": 1
+      }
+    },
+    {
+      "group": "physical",
+      "points": {
+        "power": 1,
+        "grace": 1,
+        "endurance": 1
+      }
+    },
+    {
+      "group": "social",
+      "points": {
+        "demeanor": 1,
+        "persuasion": 1,
+        "empathy": 1
+      }
+    },
+    {
+      "group": "mental",
+      "points": {
+        "memory": 1,
+        "intuition": 1,
+        "logic": 1
+      }
+    },
+    {
+      "group": "mental",
+      "points": {
+        "memory": 1,
+        "intuition": 1,
+        "logic": 1
+      }
+    },
+    {
+      "group": "physical",
+      "points": {
+        "power": 1,
+        "grace": 1,
+        "endurance": 1
+      }
+    },
+    {
+      "group": "social",
+      "points": {
+        "demeanor": 1,
+        "persuasion": 1,
+        "empathy": 1
+      }
+    },
+    {
+      "group": "mental",
+      "points": {
+        "memory": 1,
+        "intuition": 1,
+        "logic": 1
       }
     }
   ],
   "traits": [
+    {
+      "trait": "wielder-war-axe",
+      "rank": 1,
+      "pick": "universal"
+    },
+    {
+      "trait": "wielder-war-axe",
+      "rank": 2,
+      "pick": "universal"
+    },
     {
       "trait": "shield-wall",
       "rank": 1,
@@ -26,22 +117,27 @@
       "pick": "universal"
     },
     {
+      "trait": "quartermaster",
+      "rank": 1,
+      "pick": "universal"
+    },
+    {
+      "trait": "negotiator",
+      "rank": 1,
+      "pick": "universal"
+    },
+    {
+      "trait": "intimidation",
+      "rank": 1,
+      "pick": "universal"
+    },
+    {
+      "trait": "crew-management",
+      "rank": 1,
+      "pick": "universal"
+    },
+    {
       "trait": "survivalist",
-      "rank": 1,
-      "pick": "universal"
-    },
-    {
-      "trait": "smooth-talker",
-      "rank": 1,
-      "pick": "universal"
-    },
-    {
-      "trait": "caravan-routes",
-      "rank": 1,
-      "pick": "universal"
-    },
-    {
-      "trait": "streetwise",
       "rank": 1,
       "pick": "universal"
     },
@@ -51,8 +147,78 @@
       "pick": "universal"
     },
     {
+      "trait": "caravan-routes",
+      "rank": 1,
+      "pick": "universal"
+    },
+    {
       "trait": "the-kings-woods",
       "rank": 1,
+      "pick": "background"
+    },
+    {
+      "trait": "the-corsine-pass",
+      "rank": 1,
+      "pick": "background"
+    },
+    {
+      "trait": "commerce",
+      "rank": 1,
+      "pick": "background"
+    },
+    {
+      "trait": "logistics",
+      "rank": 1,
+      "pick": "universal"
+    },
+    {
+      "trait": "expedition-logistics",
+      "rank": 1,
+      "pick": "universal"
+    },
+    {
+      "trait": "expedition-leader",
+      "rank": 1,
+      "pick": "universal"
+    },
+    {
+      "trait": "market-sense",
+      "rank": 1,
+      "pick": "universal"
+    },
+    {
+      "trait": "wielder-crossbow",
+      "rank": 1,
+      "pick": "background"
+    },
+    {
+      "trait": "body-conditioning",
+      "rank": 1,
+      "pick": "universal"
+    },
+    {
+      "trait": "orc-society",
+      "rank": 1,
+      "pick": "universal"
+    },
+    {
+      "trait": "animal-lore",
+      "rank": 1,
+      "pick": "background"
+    },
+    {
+      "trait": "iron-jaw",
+      "rank": 1,
+      "pick": "universal"
+    },
+    {
+      "trait": "brawler",
+      "rank": 1,
+      "pick": "universal"
+    },
+    {
+      "trait": "wielder-war-axe",
+      "rank": 3,
       "pick": "universal"
     }
   ],
@@ -61,8 +227,144 @@
       "package": "merchant-dynasty",
       "from": "language",
       "traits": [
-        "dreftan"
+        "dreftan-written"
       ]
+    }
+  ],
+  "items": [
+    {
+      "item": "war-axe",
+      "name": "War Axe",
+      "qty": 1,
+      "category": "weapon",
+      "equipped": true
+    },
+    {
+      "item": "wooden-shield",
+      "name": "Wooden Shield",
+      "qty": 1,
+      "category": "armor",
+      "equipped": true
+    },
+    {
+      "item": "crossbow",
+      "name": "Crossbow",
+      "qty": 1,
+      "category": "weapon",
+      "equipped": true
+    },
+    {
+      "item": "crossbow-bolts",
+      "name": "Crossbow Bolts",
+      "qty": 20,
+      "category": "consumable",
+      "equipped": false
+    },
+    {
+      "item": "brigandine",
+      "name": "Brigandine",
+      "qty": 1,
+      "category": "armor",
+      "equipped": true
+    },
+    {
+      "item": "steel-helm",
+      "name": "Steel Helm",
+      "qty": 1,
+      "category": "armor",
+      "equipped": true
+    },
+    {
+      "item": "travelers-cloak",
+      "name": "Traveler’s Cloak",
+      "qty": 1,
+      "category": "gear",
+      "equipped": true
+    },
+    {
+      "item": "backpack",
+      "name": "Backpack",
+      "qty": 1,
+      "category": "gear",
+      "equipped": true
+    },
+    {
+      "item": "bedroll",
+      "name": "Bedroll",
+      "qty": 1,
+      "category": "gear",
+      "equipped": false
+    },
+    {
+      "item": "rope",
+      "name": "Rope",
+      "qty": 1,
+      "category": "gear",
+      "equipped": false
+    },
+    {
+      "item": "lantern",
+      "name": "Lantern",
+      "qty": 1,
+      "category": "gear",
+      "equipped": false
+    },
+    {
+      "item": "waterskin",
+      "name": "Waterskin",
+      "qty": 1,
+      "category": "gear",
+      "equipped": false
+    },
+    {
+      "item": "trail-rations",
+      "name": "Trail Rations",
+      "qty": 6,
+      "category": "consumable",
+      "equipped": false
+    },
+    {
+      "item": "flint-and-steel",
+      "name": "Flint and Steel",
+      "qty": 1,
+      "category": "gear",
+      "equipped": false
+    },
+    {
+      "item": "writing-kit",
+      "name": "Writing Kit",
+      "qty": 1,
+      "category": "gear",
+      "equipped": false
+    },
+    {
+      "item": "spyglass",
+      "name": "Spyglass",
+      "qty": 1,
+      "category": "gear",
+      "equipped": false
+    },
+    {
+      "item": "healing-potion",
+      "name": "Healing Potion",
+      "qty": 1,
+      "category": "consumable",
+      "equipped": false
+    },
+    {
+      "item": "wagon",
+      "name": "Wagon",
+      "qty": 1,
+      "category": "other",
+      "equipped": false,
+      "notes": "Covered, with the family mark burned into the tailgate"
+    },
+    {
+      "item": "pack-animal",
+      "name": "Pack Animal",
+      "qty": 1,
+      "category": "other",
+      "equipped": false
     }
   ]
 }
