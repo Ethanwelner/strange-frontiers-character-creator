@@ -2733,11 +2733,14 @@
      wide enough (under the stats and Conditions); one column otherwise */
   .tools-item-list {
     list-style: none;
-    padding: 0;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr));
     gap: 12px;
-    margin: 0 0 16px;
+    /* Room for the count's circle and the Edit and Remove circles that hang
+       past the cards' edges, which the list would clip once it scrolls; the
+       margins give the room back, so the cards stay where they were */
+    padding: 0 14px;
+    margin: 0 -14px;
     /* An open card doesn't stretch the closed one beside it */
     align-items: start;
   }
@@ -2949,11 +2952,30 @@
     }
   }
 
-  /* A long Knowledges, Abilities or Skills list stops at 75vh and scrolls
-     inside its box */
-  :is(.sheet-side > .knowledge-list, :is(.sheet-abilities, .sheet-skills) > .sheet-traits) {
-    max-height: 75vh;
+  /* A long Knowledges, Abilities, Skills, Conditions or Items list stops at
+     60vh and scrolls inside its box, so one long column doesn't leave the
+     one beside it far shorter */
+  :is(.sheet-side > .knowledge-list, :is(.sheet-abilities, .sheet-skills) > .sheet-traits, .tools-conditions-side > .tools-conditions, .tools-items > .tools-item-list) {
+    max-height: 60vh;
     overflow-y: auto;
+  }
+
+  /* The Items stop sooner on a tall screen: 60vh, but no more than 640px */
+  .tools-items > .tools-item-list {
+    max-height: min(60vh, 640px);
+  }
+
+  /* A scrolling list fades out over its last 48px into the box's gray
+     instead of cutting off hard, and the fade goes as it reaches the bottom.
+     It follows the list's own scroll (a scroll-driven animation), so a list
+     that doesn't scroll has no fade. Browsers without scroll timelines
+     (Firefox, for now) keep the hard edge. */
+  @supports (animation-timeline: scroll()) {
+    :is(.sheet-side > .knowledge-list, :is(.sheet-abilities, .sheet-skills) > .sheet-traits, .tools-conditions-side > .tools-conditions, .tools-items > .tools-item-list) {
+      mask-image: linear-gradient(to bottom, #000 calc(100% - var(--sf-list-fade)), transparent);
+      animation: sf-list-fade linear both;
+      animation-timeline: scroll(self);
+    }
   }
 
   /* Player Tools' chat (the conversation and the message box) and the
@@ -2962,7 +2984,7 @@
      parts; Firefox, which has no such parts, a thin bar in the same colors.
      The site sets scrollbar-color on the page, which makes Chrome skip
      -webkit- parts, so it's reset here. */
-  :is(.tools-chat-log, .tools-chat-form textarea, .sheet-side > .knowledge-list, :is(.sheet-abilities, .sheet-skills) > .sheet-traits) {
+  :is(.tools-chat-log, .tools-chat-form textarea, .sheet-side > .knowledge-list, :is(.sheet-abilities, .sheet-skills) > .sheet-traits, .tools-conditions-side > .tools-conditions, .tools-items > .tools-item-list) {
     scrollbar-color: auto;
     scrollbar-width: auto;
 
@@ -3194,9 +3216,10 @@
     }
 
     /* Printed lists run their full length */
-    :is(.sheet-side > .knowledge-list, :is(.sheet-abilities, .sheet-skills) > .sheet-traits) {
+    :is(.sheet-side > .knowledge-list, :is(.sheet-abilities, .sheet-skills) > .sheet-traits, .tools-conditions-side > .tools-conditions, .tools-items > .tools-item-list) {
       max-height: none;
       overflow: visible;
+      mask-image: none;
     }
   }
 }
@@ -3204,6 +3227,25 @@
 @media print {
   html:has(.sf-creator) {
     background: var(--portfolio-white);
+  }
+}
+
+/* How much of a scrolling sheet list's bottom fades out: 48px until the
+   last 5% of the scroll, then down to none at the bottom */
+@property --sf-list-fade {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@keyframes sf-list-fade {
+  0%,
+  95% {
+    --sf-list-fade: 48px;
+  }
+
+  100% {
+    --sf-list-fade: 0px;
   }
 }
 
