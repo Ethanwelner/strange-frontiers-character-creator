@@ -1,0 +1,14 @@
+id: dark-haze
+name: "Dark Haze"
+status: draft
+plane: any
+summary: "Hides a character in a haze the eye can't make sense of."
+tags: [magic, spell, stealth, illusion]
+category: ability
+types: [illusion, potion, artifact]
+ranked: true
+minStats: { magic: 4 }
+# On the Magic list: its own tab on the Traits step, open to every character.
+list: magic
+effect: "This character gains the Cast Dark Haze Action."
+action: "Cast Dark Haze: This character may spend 2 MP to give the Dark Haze Condition to a character within 3 m. The Condition's Rank is equal to the caster's Dark Haze Rank."
