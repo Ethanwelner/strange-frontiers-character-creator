@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { MAX_LEVEL } from "../../ai/level.js";
 import { STAT_GROUPS, type StatBlock, type StatId } from "../../schema/index.js";
 import { kindById, packageById, traitById } from "../content.js";
@@ -18,7 +18,6 @@ export const traitName = (id: string) => traitById.get(id)?.name ?? id;
 // A card's header bar color, the same for every card: anything from Isekai
 // gets Dreft's green, and the rest (Earth and any plane) the Settled Systems gray.
 export const regionClass = (plane: string | undefined) => `region-${plane === "isekai" ? "dreft" : "systems"}`;
-export const traitRegionClass = (id: string) => regionClass(traitById.get(id)?.plane);
 
 // A choice with no note of its own, in the notes' shorthand: "+1 Spoken Language".
 export const choiceLabel = (count: number, pool: string) =>
@@ -55,30 +54,6 @@ export function StepHeader({ title, children }: { title: string; children?: Reac
       <h2>{title}</h2>
       {children && <p className="lede">{children}</p>}
     </header>
-  );
-}
-
-// A selectable card in a radio group, clickable and keyboard-operable. The
-// step decides what a second click does; the Kind and package cards clear.
-export function Card(props: { selected: boolean; onSelect: () => void; children: ReactNode; label: string; className?: string }) {
-  const onKey = (e: KeyboardEvent) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      props.onSelect();
-    }
-  };
-  return (
-    <div
-      role="radio"
-      aria-checked={props.selected}
-      aria-label={props.label}
-      tabIndex={0}
-      className={`card${props.className ? ` ${props.className}` : ""}${props.selected ? " selected" : ""}`}
-      onClick={props.onSelect}
-      onKeyDown={onKey}
-    >
-      {props.children}
-    </div>
   );
 }
 
@@ -162,7 +137,7 @@ export function LorePopup({ label, onClose, children, className = "" }: { label:
 // of the effect that does something different; other lines are paragraphs.
 export function Effect({ text }: { text: string }) {
   const lines = text.split("\n").map((l) => l.trim()).filter(Boolean);
-  if (!lines.some((l) => l.startsWith("- "))) return <p className="effect">{text}</p>;
+  if (!lines.some((l) => l.startsWith("- "))) return <p className="sf-card-effect">{text}</p>;
   const blocks: (string | string[])[] = [];
   for (const l of lines) {
     if (!l.startsWith("- ")) blocks.push(l);
@@ -170,7 +145,7 @@ export function Effect({ text }: { text: string }) {
     else blocks.push([l.slice(2)]);
   }
   return (
-    <div className="effect">
+    <div className="sf-card-effect">
       {blocks.map((b, i) =>
         Array.isArray(b) ? (
           <ul key={i}>
@@ -194,7 +169,7 @@ export function TraitAction({ action, rank }: { action?: string; rank?: number }
   const profile = parseActionProfile(text);
   if (!profile) {
     return (
-      <p className="effect trait-action">
+      <p className="sf-card-action">
         {name && <strong>{name}:</strong>} {text}
       </p>
     );
@@ -203,18 +178,18 @@ export function TraitAction({ action, rank }: { action?: string; rank?: number }
   const perRankNote = !rank && (profile.damage.some((d) => d.perRank) || profile.areaOfEffect?.perRank);
   const ranged = /ranged|thrown/i.test(profile.attackType ?? "");
   return (
-    <div className="effect trait-action">
+    <div className="sf-card-action">
       <p>
         {name && <strong>{name}:</strong>} {profile.before}
       </p>
-      <div className="tools-item-stats trait-action-stats">
+      <div className="equipment-stats sf-item-badges sf-card-action-badges">
         {profile.damage.length > 0 && (
-          <span className="chip tools-item-stat" title={ranged ? "Ranged damage" : "Melee damage"}>
-            <span className="tools-item-stat-lead">
+          <span className="chip equipment-stat" title={ranged ? "Ranged damage" : "Melee damage"}>
+            <span className="item-stat-lead">
               <Icon name={ranged ? "crosshairs" : "sword"} label={ranged ? "Ranged damage" : "Melee damage"} />
             </span>
             {profile.damage.map((d) => (
-              <span key={d.type} className="tools-item-stat-value">
+              <span key={d.type} className="equipment-stat-value">
                 <Icon name={d.type.toLowerCase() as Lowercase<DamageType>} label={d.type} />
                 {times(d.amount, d.perRank)}
               </span>
@@ -222,19 +197,19 @@ export function TraitAction({ action, rank }: { action?: string; rank?: number }
           </span>
         )}
         {profile.maxRange && (
-          <span className="chip tools-item-stat" title="Max Range">
-            <span className="tools-item-stat-lead">
+          <span className="chip equipment-stat" title="Max Range">
+            <span className="item-stat-lead">
               <Icon name="range" label="Max Range" />
             </span>
-            <span className="tools-item-stat-value">{profile.maxRange}</span>
+            <span className="equipment-stat-value">{profile.maxRange}</span>
           </span>
         )}
         {profile.areaOfEffect && (
-          <span className="chip tools-item-stat" title="Area of Effect">
-            <span className="tools-item-stat-lead">
+          <span className="chip equipment-stat" title="Area of Effect">
+            <span className="item-stat-lead">
               <Icon name="burst" label="Area of Effect" />
             </span>
-            <span className="tools-item-stat-value">
+            <span className="equipment-stat-value">
               {times(profile.areaOfEffect.amount, profile.areaOfEffect.perRank)} {profile.areaOfEffect.unit}
             </span>
           </span>

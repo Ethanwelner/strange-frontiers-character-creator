@@ -9,7 +9,8 @@ import type { HeldCondition } from "../conditions.js";
 import { CharacterLine } from "./CharacterLine.js";
 import { Conditions } from "./Conditions.js";
 import { Items } from "./Items.js";
-import { askerName, baseStats, Chip, CoreLine, DescriptionBox, Effect, Icon, LorePopup, NameField, Portrait, SettingIcon, StatLine, StepHeader, title, TraitAction, traitName, traitRegionClass } from "./ui.js";
+import { askerName, baseStats, CoreLine, DescriptionBox, Effect, Icon, LorePopup, NameField, Portrait, StatLine, StepHeader, title, TraitAction, traitName } from "./ui.js";
+import { CardChip, TraitCard, traitCardKind } from "./cards.js";
 
 // Each resource's full name, shown on hover, as in Player Tools
 export const RESOURCE_NAMES = { hp: "Hit Points", vp: "Vibe Points", sp: "Savvy Points", mp: "Mana Points" } as const;
@@ -49,13 +50,12 @@ function sourceBadges(held: Held): string[] {
   return ["origin", "profession", "past"].filter((slot) => slots.has(slot)).map(title);
 }
 
-// A held Trait, drawn like the site's Traits page cards (.trait-box), with
-// the badges for where it came from (a package's choice) at the right of the
-// name's bar. Its category sits in its body, as a badge over the effect: the
-// sheet's sections already sort the cards by it. `onToggle` makes it an
-// accordion like the item cards, a chevron at the end of the name's bar
-// opening the body or closing the card back to that bar.
-function TraitCard({
+// A held Trait's card, with the badges for where it came from (a package's
+// choice) at the right of the name's bar. Its category sits in its body, as
+// a badge over the effect: the sheet's sections already sort the cards by it.
+// `onToggle` makes it fold, a chevron at the end of the name's bar opening
+// the body or closing the card back to that bar.
+function HeldTraitCard({
   held,
   places,
   open = true,
@@ -74,54 +74,29 @@ function TraitCard({
   const t = traitById.get(held.trait);
   const name = traitName(held.trait);
   const badges = sourceBadges(held);
+  const effect = t && <Effect text={t.effect} />;
   return (
-    <div className={`trait-box ${traitRegionClass(held.trait)}${onToggle && !open && !keepEffect ? " is-collapsed" : ""}`}>
-      <div className="trait-name trait-name-with-chip">
-        <span>
-          <SettingIcon plane={t?.plane} />
-          {name}
-          {t?.ranked || held.rank > 1 ? ` (${held.rank})` : ""}
-        </span>
-        {(badges.length > 0 || onToggle) && (
-          <span className="trait-name-chips">
-            {badges.map((b) => (
-              <Chip key={b}>{b}</Chip>
-            ))}
-            {onToggle && (
-              <button
-                type="button"
-                className="tools-item-icon tools-item-expand"
-                aria-label={`${open ? "Collapse" : "Expand"} ${name}`}
-                aria-expanded={open}
-                title={open ? "Collapse" : "Expand"}
-                onClick={onToggle}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 8" aria-hidden="true">
-                  <path d="M1 1.5l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="1.5" />
-                </svg>
-              </button>
-            )}
-          </span>
-        )}
+    <TraitCard
+      kind={traitCardKind(t)}
+      name={name}
+      rank={t?.ranked || held.rank > 1 ? held.rank : undefined}
+      plane={t?.plane}
+      chips={badges.length > 0 ? badges.map((b) => <CardChip key={b}>{b}</CardChip>) : undefined}
+      fold={onToggle ? { open, onToggle, label: name, ...(keepEffect ? { always: effect } : {}) } : undefined}
+    >
+      {/* The category, then where the Trait came from, on one line */}
+      <div className="sf-card-tags">
+        {t ? <CardChip>{title(t.category)}</CardChip> : <CardChip tone="bad">not in content yet</CardChip>}
+        <span className="sf-card-note">From {held.sources.map(source).join(", ")}</span>
       </div>
-      {keepEffect && t && <Effect text={t.effect} />}
-      {open && (
-        <>
-          {/* The category, then where the Trait came from, on one line */}
-          <div className="trait-card-badges">
-            {t ? <Chip>{title(t.category)}</Chip> : <Chip tone="bad">not in content yet</Chip>}
-            <span className="muted small trait-card-from">From {held.sources.map(source).join(", ")}</span>
-          </div>
-          {!keepEffect && t && <Effect text={t.effect} />}
-          <TraitAction action={t?.action} rank={held.rank} />
-          {places.length > 0 && (
-            <p className="small">
-              <strong>{t?.choices.find((c) => c.from !== "contact" && isFreeTextPool(c.from))?.note ?? "Place"}:</strong> {places.join(", ")}
-            </p>
-          )}
-        </>
+      {!keepEffect && effect}
+      <TraitAction action={t?.action} rank={held.rank} />
+      {places.length > 0 && (
+        <p className="small">
+          <strong>{t?.choices.find((c) => c.from !== "contact" && isFreeTextPool(c.from))?.note ?? "Place"}:</strong> {places.join(", ")}
+        </p>
       )}
-    </div>
+    </TraitCard>
   );
 }
 
@@ -129,7 +104,7 @@ function TraitCard({
 function TraitModal({ held, places, draft, onClose }: { held: Held; places: string[]; draft: Draft; onClose: () => void }) {
   return (
     <LorePopup label={traitName(held.trait)} onClose={onClose} className="lore-modal-card">
-      <TraitCard held={held} places={places} draft={draft} />
+      <HeldTraitCard held={held} places={places} draft={draft} />
     </LorePopup>
   );
 }
@@ -264,7 +239,7 @@ export function Sheet({
     <ul className="sheet-traits">
       {list.map((h) => (
         <li key={h.trait}>
-          <TraitCard
+          <HeldTraitCard
             held={h}
             places={places(h.trait)}
             {...(accordion ? { open: openCards.has(h.trait), onToggle: () => toggleCard(h.trait) } : {})}

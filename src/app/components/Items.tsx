@@ -1,5 +1,6 @@
 import { Fragment, useState, type ReactNode } from "react";
 import { Chip, Icon, LorePopup, SettingIcon, Sign, title } from "./ui.js";
+import { ItemCard, ItemName } from "./cards.js";
 import { damageIcon } from "./Resistances.js";
 import { content, itemById } from "../content.js";
 import { ITEM_CATEGORIES, itemBadges, itemUses, stockItemNamed, withItem, type Item, type ItemCategory } from "../items.js";
@@ -33,22 +34,22 @@ function ItemStats({ stock }: { stock: StockItem }) {
   if (!stock.damage && !resists.length && !stock.maxRange && !stock.areaOfEffect) return null;
   const ranged = stock.tags?.some((t) => t === "ranged" || t === "thrown");
   const damageLead = (
-    <span className="tools-item-stat-lead">
+    <span className="item-stat-lead">
       <Icon name={ranged ? "crosshairs" : "sword"} label={ranged ? "Ranged damage" : "Melee damage"} />
     </span>
   );
   return (
-    <div className="tools-item-stats">
+    <div className="equipment-stats sf-item-badges">
       {stock.damage && (
-        <span className="tools-item-stat-group">
+        <span className="sf-item-badge-group">
           {damage ? (
-            <span className="chip tools-item-stat">
+            <span className="chip equipment-stat">
               {damageLead}
               {damage.map((option, i) => (
                 <Fragment key={i}>
-                  {i > 0 && <span className="tools-item-stat-or">or</span>}
+                  {i > 0 && <span className="equipment-stat-or">or</span>}
                   {option.map((d) => (
-                    <span key={d.type} className="tools-item-stat-value">
+                    <span key={d.type} className="equipment-stat-value">
                       <Icon name={damageIcon(d.type)} label={d.type} />
                       {d.amount}
                       {d.perRank && "/Rank"}
@@ -60,7 +61,7 @@ function ItemStats({ stock }: { stock: StockItem }) {
             </span>
           ) : (
             // Damage the badges can't read stays as written
-            <span className="chip tools-item-stat">
+            <span className="chip equipment-stat">
               {damageLead}
               {stock.damage}
             </span>
@@ -69,34 +70,34 @@ function ItemStats({ stock }: { stock: StockItem }) {
       )}
       {stock.maxRange && (
         // How far it reaches, after the damage: an arc in a tan circle, then the distance
-        <span className="tools-item-stat-group">
-          <span className="chip tools-item-stat" title="Max Range">
-            <span className="tools-item-stat-lead">
+        <span className="sf-item-badge-group">
+          <span className="chip equipment-stat" title="Max Range">
+            <span className="item-stat-lead">
               <Icon name="range" label="Max Range" />
             </span>
-            <span className="tools-item-stat-value">{stock.maxRange}</span>
+            <span className="equipment-stat-value">{stock.maxRange}</span>
           </span>
         </span>
       )}
       {stock.areaOfEffect && (
         // Its blast's reach, after the range: a burst in a tan circle, then the radius
-        <span className="tools-item-stat-group">
-          <span className="chip tools-item-stat" title="Area of Effect">
-            <span className="tools-item-stat-lead">
+        <span className="sf-item-badge-group">
+          <span className="chip equipment-stat" title="Area of Effect">
+            <span className="item-stat-lead">
               <Icon name="burst" label="Area of Effect" />
             </span>
-            <span className="tools-item-stat-value">{stock.areaOfEffect}</span>
+            <span className="equipment-stat-value">{stock.areaOfEffect}</span>
           </span>
         </span>
       )}
       {resists.length > 0 && (
-        <span className="tools-item-stat-group">
-          <span className="chip tools-item-stat">
-            <span className="tools-item-stat-lead">
+        <span className="sf-item-badge-group">
+          <span className="chip equipment-stat">
+            <span className="item-stat-lead">
               <Icon name="shield" label="Resists" />
             </span>
             {resists.map((r, i) => (
-              <span key={i} className="tools-item-stat-value">
+              <span key={i} className="equipment-stat-value">
                 <Icon name={damageIcon(r.type)} label={r.type} />
                 {r.amount}
               </span>
@@ -172,42 +173,48 @@ function ItemPicker({ onAdd, custom }: { onAdd: (picked: { stock: StockItem; qty
             return (
               <li key={i.id} className={`item-pick-row${selected ? " selected" : ""}`}>
                 {/* The inventory's item card: its top line without Equip, which waits until the character has it */}
-                <div className="c-sheet-box tools-item item-pick">
-                  {selected && (
-                    <span className="tools-item-count" aria-label={`${qty} of ${i.name}`}>
-                      {qty}
-                    </span>
-                  )}
-                  <div className="tools-item-row tools-item-summary">
-                    {/* The name and its stat badges, which drop under it only when they don't fit beside it */}
-                    <span className="tools-item-main">
-                      <span className="tools-item-title">{i.name}</span>
-                      <ItemStats stock={i} />
-                    </span>
-                    <button
-                      type="button"
-                      className="tools-item-icon tools-item-expand"
-                      aria-label={`${open ? "Collapse" : "Expand"} ${i.name}`}
-                      aria-expanded={open}
-                      title={open ? "Collapse" : "Expand"}
-                      onClick={() => toggleOpen(i.id)}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 8" aria-hidden="true">
-                        <path d="M1 1.5l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="1.5" />
-                      </svg>
-                    </button>
-                  </div>
+                <ItemCard
+                  className="item-pick"
+                  edge={
+                    selected && (
+                      <span className="sf-item-count" aria-label={`${qty} of ${i.name}`}>
+                        {qty}
+                      </span>
+                    )
+                  }
+                  row={
+                    <>
+                      {/* The name and its stat badges, which drop under it only when they don't fit beside it */}
+                      <span className="sf-item-main">
+                        <ItemName>{i.name}</ItemName>
+                        <ItemStats stock={i} />
+                      </span>
+                      <button
+                        type="button"
+                        className="sf-item-icon sf-item-expand"
+                        aria-label={`${open ? "Collapse" : "Expand"} ${i.name}`}
+                        aria-expanded={open}
+                        title={open ? "Collapse" : "Expand"}
+                        onClick={() => toggleOpen(i.id)}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 8" aria-hidden="true">
+                          <path d="M1 1.5l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                        </svg>
+                      </button>
+                    </>
+                  }
+                >
                   {open && (
                     <>
-                      <div className="tools-item-badges">
+                      <div className="equipment-chips">
                         <Chip>{title(i.category)}</Chip>
                         {badges.map((b) => (
                           <Chip key={b}>{b}</Chip>
                         ))}
                       </div>
-                      <div className="tools-item-stock">
-                        <p className="tools-item-flavor">{i.summary}</p>
-                        {details && <p className="tools-item-details">{details}</p>}
+                      <div className="sf-item-stock">
+                        <p className="equipment-description">{i.summary}</p>
+                        {details && <p className="equipment-effect">{details}</p>}
                       </div>
                     </>
                   )}
@@ -224,7 +231,7 @@ function ItemPicker({ onAdd, custom }: { onAdd: (picked: { stock: StockItem; qty
                       </button>
                     </div>
                   )}
-                </div>
+                </ItemCard>
                 {/* The large checkbox that picks it */}
                 <input type="checkbox" className="item-pick-check" aria-label={`Add ${i.name}`} checked={selected} onChange={() => toggle(i.id)} />
               </li>
@@ -377,7 +384,7 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
             const expand = (
               <button
                 type="button"
-                className="tools-item-icon tools-item-expand"
+                className="sf-item-icon sf-item-expand"
                 aria-label={`${open ? "Collapse" : "Expand"} ${item.name}`}
                 aria-expanded={open}
                 title={open ? "Collapse" : "Expand"}
@@ -390,15 +397,15 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
             );
             // How many, in a circle on the card's left edge, open or closed
             const count = (
-              <span className="tools-item-count" aria-label={`${item.qty} of ${item.name}`}>
+              <span className="sf-item-count" aria-label={`${item.qty} of ${item.name}`}>
                 {item.qty}
               </span>
             );
             // Equip, a checkbox at the start of the card's first line, open or closed
             const equip = (
-              <label className="tools-equipped" title="Equip">
+              <label className="sf-item-equip" title="Equip">
                 <input type="checkbox" aria-label="Equip" checked={item.equipped} onChange={(e) => update(item, { equipped: e.target.checked })} />
-                <span className="tools-equipped-label">Equip</span>
+                <span className="sf-item-equip-label">Equip</span>
               </label>
             );
             const edit = editing.has(item.id);
@@ -406,34 +413,25 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
             // damage, range and resistances at the right, and the chevron. The
             // category waits in the open card, so it doesn't crowd the line.
             const topLine = (
-              <div className="tools-item-row tools-item-summary">
+              <>
                 {equip}
                 {/* The name and its stat badges, which drop under it only when they don't fit beside it */}
-                <span className="tools-item-main">
-                  <span className="tools-item-title">{item.name}</span>
+                <span className="sf-item-main">
+                  <ItemName>{item.name}</ItemName>
                   {stock && <ItemStats stock={stock} />}
                 </span>
                 {expand}
-              </div>
+              </>
             );
-            if (!open) {
-              return (
-                <li key={item.id} className="c-sheet-box tools-item">
-                  {count}
-                  {topLine}
-                </li>
-              );
-            }
+            if (!open) return <ItemCard key={item.id} as="li" edge={count} row={topLine} />;
             const badges = stock ? itemBadges(stock).filter((b) => !b.startsWith(MAX_RANGE) && !b.startsWith(AREA)) : [];
             return (
-              <li key={item.id} className="c-sheet-box tools-item">
-                {count}
-                {topLine}
+              <ItemCard key={item.id} as="li" edge={count} row={topLine}>
                 {/* Edit, a pen in a circle on the card's right edge, centered
                     top to bottom, like the count on the left */}
                 <button
                   type="button"
-                  className="tools-item-edge tools-item-edit-toggle"
+                  className="sf-item-edge sf-item-edit"
                   aria-label={`Edit ${item.name}`}
                   title="Edit"
                   aria-expanded={edit}
@@ -443,7 +441,7 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                 </button>
                 {/* In edit mode, Remove, a trash can in a circle under Edit's */}
                 {edit && (
-                  <button type="button" className="tools-item-edge tools-item-remove" aria-label={`Remove ${item.name}`} title="Remove" onClick={() => remove(item)}>
+                  <button type="button" className="sf-item-edge sf-item-remove" aria-label={`Remove ${item.name}`} title="Remove" onClick={() => remove(item)}>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" aria-hidden="true">
                       <path d="M135.2 17.69C140.6 6.848 151.7 0 163.8 0H284.2C296.3 0 307.4 6.848 312.8 17.69L320 32H416C433.7 32 448 46.33 448 64C448 81.67 433.7 96 416 96H32C14.33 96 0 81.67 0 64C0 46.33 14.33 32 32 32H128L135.2 17.69zM394.8 466.1C393.2 492.3 372.3 512 346.9 512H101.1C75.75 512 54.77 492.3 53.19 466.1L31.1 128H416L394.8 466.1z" />
                     </svg>
@@ -452,7 +450,7 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                 {/* Under the top line, the badges it leaves out: the category,
                     like a Trait card's, then the cost, how it Attacks, and the
                     slot it takes (Max Range and Area of Effect are on the top line) */}
-                <div className="tools-item-badges">
+                <div className="equipment-chips">
                   <Chip>{title(item.category)}</Chip>
                   {badges.map((b) => (
                     <Chip key={b}>{b}</Chip>
@@ -461,7 +459,7 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                 {/* Edit's fields where the top line shows them: how many at the left, then
                     the name. The category stays as the item has it. */}
                 {edit && (
-                  <div className="tools-item-row tools-item-fields">
+                  <div className="equipment-row sf-item-fields">
                     <input
                       type="number"
                       min={0}
@@ -476,7 +474,7 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                     />
                     <input
                       type="text"
-                      className="tools-item-name"
+                      className="sf-item-name-field"
                       aria-label="Item name"
                       value={item.name}
                       onChange={(e) => update(item, { name: e.target.value })}
@@ -484,17 +482,17 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                   </div>
                 )}
                 {stock && (
-                  <div className="tools-item-stock">
+                  <div className="sf-item-stock">
                     {/* The flavor text, then the rules on their own line under it */}
-                    <p className="tools-item-flavor">{stock.summary}</p>
-                    {details && <p className="tools-item-details">{details}</p>}
+                    <p className="equipment-description">{stock.summary}</p>
+                    {details && <p className="equipment-effect">{details}</p>}
                   </div>
                 )}
-                <div className="tools-item-note-line">
+                <div className="sf-item-note-line">
                   {/* Note, a pen and its label, opening the notes field at its right */}
                   <button
                     type="button"
-                    className="tools-item-note-toggle"
+                    className="sf-item-note-toggle"
                     aria-expanded={showsNotes(item)}
                     onClick={() => {
                       if (!showsNotes(item)) setFocusNote(item.id);
@@ -519,7 +517,7 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                     />
                   )}
                 </div>
-              </li>
+              </ItemCard>
             );
           })}
         </ul>

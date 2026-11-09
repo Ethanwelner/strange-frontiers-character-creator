@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import type { BackgroundPackage } from "../../schema/index.js";
 import { content, packageById } from "../content.js";
 import type { Draft } from "../draft.js";
-import { Card, Chip, choiceLabel, regionClass, SettingIcon, Sign, StepHeader, title, traitName } from "./ui.js";
+import { choiceLabel, Sign, StepHeader, title, traitName } from "./ui.js";
+import { BackgroundCard, BackgroundRows } from "./cards.js";
 
 const SLOTS = ["origin", "profession", "past"] as const;
 
@@ -28,54 +29,27 @@ function chipLabels(entries: { trait: string; rank?: number }[]): string[] {
 
 export function PackageGrants({ pkg }: { pkg: BackgroundPackage }) {
   return (
-    <div className="grants">
-      {(pkg.bonusPoints.length > 0 || Object.keys(pkg.coreBonus).length > 0) && (
-        <div>
-          <span className="label">Bonus</span>
-          {pkg.bonusPoints.map((b) => (
-            <Chip key={b.group} tone="accent">
-              +{b.count} {title(b.group)} focus {b.count === 1 ? "point" : "points"}
-            </Chip>
-          ))}
-          {Object.entries(pkg.coreBonus).map(([g, n]) => (
-            <Chip key={g} tone="accent">
-              +{n} {title(g)}
-            </Chip>
-          ))}
-        </div>
-      )}
-      {pkg.grants.length > 0 && (
-        <div>
-          <span className="label">Grants</span>
-          {chipLabels(pkg.grants).map((label) => (
-            <Chip key={label} tone="accent">
-              {label}
-            </Chip>
-          ))}
-        </div>
-      )}
-      {pkg.choices.length > 0 && (
-        <div>
-          <span className="label">Choose</span>
-          {pkg.choices.map((c, i) => (
-            <Chip key={i}>{c.note ?? choiceLabel(c.choose, c.from)}</Chip>
-          ))}
-        </div>
-      )}
-      {pkg.backgroundTraits.length > 0 && (
-        <div>
-          <span className="label">Background list</span>
-          {chipLabels(pkg.backgroundTraits.map((trait) => ({ trait }))).map((label) => (
-            <Chip key={label}>{label}</Chip>
-          ))}
-        </div>
-      )}
+    <BackgroundRows
+      rows={[
+        {
+          label: "Bonus",
+          accent: true,
+          chips: [
+            ...pkg.bonusPoints.map((b) => `+${b.count} ${title(b.group)} focus ${b.count === 1 ? "point" : "points"}`),
+            ...Object.entries(pkg.coreBonus).map(([g, n]) => `+${n} ${title(g)}`),
+          ],
+        },
+        { label: "Grants", accent: true, chips: chipLabels(pkg.grants) },
+        { label: "Choose", chips: pkg.choices.map((c) => c.note ?? choiceLabel(c.choose, c.from)) },
+        { label: "Background list", chips: chipLabels(pkg.backgroundTraits.map((trait) => ({ trait }))) },
+      ]}
+    >
       {pkg.features.map((f) => (
         <p key={f.name}>
           <strong>{f.name}.</strong> {f.description}
         </p>
       ))}
-    </div>
+    </BackgroundRows>
   );
 }
 
@@ -133,21 +107,10 @@ function SlotCards({ slot, picked, onChoose }: { slot: Slot; picked?: string; on
       ) : (
         <div className="cards" role="radiogroup" aria-label={title(slot)}>
           {shown.map((p) => (
-            <Card key={p.id} className={`headed ${regionClass(p.plane)}`} label={p.name} selected={picked === p.id} onSelect={() => onChoose(p.id)}>
-              <div className="card-head">
-                <h3>
-                  <SettingIcon plane={p.plane} />
-                  {p.name}
-                </h3>
-                {/* Origin, Profession or Past, then its setting, like the card opened from under the name */}
-                <span className="trait-name-chips">
-                  <Chip>{title(p.type)}</Chip>
-                  <Chip tone="muted">{p.plane}</Chip>
-                </span>
-              </div>
+            <BackgroundCard key={p.id} name={p.name} slot={title(p.type)} plane={p.plane} select={{ selected: picked === p.id, onSelect: () => onChoose(p.id) }}>
               <p>{p.summary}</p>
               <PackageGrants pkg={p} />
-            </Card>
+            </BackgroundCard>
           ))}
         </div>
       )}

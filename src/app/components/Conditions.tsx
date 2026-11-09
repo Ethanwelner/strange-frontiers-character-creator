@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { content, traitById } from "../content.js";
 import { hpConditions, playConditions, withCondition, withoutCondition, type HeldCondition } from "../conditions.js";
 import { Effect, LorePopup, Sign, TraitAction } from "./ui.js";
+import { CardNote, TraitCard } from "./cards.js";
 
 // The Conditions, the same on the Character Creator's sheet and in Player
 // Tools: the ones HP decides (from `hp` of `maxHp`), and the temporary ones
@@ -61,49 +62,52 @@ export function Conditions({
         {fromHp.map((id) => {
           const t = traitById.get(id);
           return (
-            <li key={id} className="trait-box">
-              <div className="trait-name">{t?.name ?? id}</div>
-              <p className="muted small">From HP. {t?.temporary}</p>
-              {t && <Effect text={t.effect} />}
-              <TraitAction action={t?.action} />
+            <li key={id}>
+              <TraitCard kind="condition" name={t?.name ?? id}>
+                <CardNote>From HP. {t?.temporary}</CardNote>
+                {t && <Effect text={t.effect} />}
+                <TraitAction action={t?.action} />
+              </TraitCard>
             </li>
           );
         })}
         {conditions.map((c) => {
           const t = traitById.get(c.trait);
           return (
-            <li key={c.trait} className="trait-box">
+            <li key={c.trait}>
               {/* The name, then at the right of its bar an ✕ that takes the Condition off */}
-              <div className="trait-name tools-condition-head">
-                <span>
-                  {t?.name ?? c.trait}
-                  {t?.ranked ? ` (${c.rank})` : ""}
-                </span>
-                <button type="button" className="tools-condition-remove" aria-label={`Remove ${t?.name ?? c.trait}`} onClick={() => onChange(withoutCondition(conditions, c.trait))}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 20 20" aria-hidden="true">
-                    <path d="M2 2l16 16M18 2L2 18" fill="none" stroke="currentColor" strokeWidth="2.5" />
-                  </svg>
-                </button>
-              </div>
-              {t?.ranked && (
-                <div className="stepper tools-rank">
-                  <button type="button" onClick={() => update(c, { rank: c.rank - 1 })} disabled={c.rank <= 1} aria-label="Lower rank">
-                    <Sign is="minus" />
+              <TraitCard
+                kind="condition"
+                name={t?.name ?? c.trait}
+                rank={t?.ranked ? c.rank : undefined}
+                barActions={
+                  <button type="button" className="tools-condition-remove" aria-label={`Remove ${t?.name ?? c.trait}`} onClick={() => onChange(withoutCondition(conditions, c.trait))}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 20 20" aria-hidden="true">
+                      <path d="M2 2l16 16M18 2L2 18" fill="none" stroke="currentColor" strokeWidth="2.5" />
+                    </svg>
                   </button>
-                  <span className="num">{c.rank}</span>
-                  <button type="button" onClick={() => update(c, { rank: c.rank + 1 })} aria-label="Raise rank">
-                    <Sign is="plus" />
-                  </button>
-                </div>
-              )}
-              {t?.temporary && (
-                <p className="muted small">
-                  {t.temporary}
-                  {/[.!?]$/.test(t.temporary) ? "" : "."}
-                </p>
-              )}
-              {t && <Effect text={t.effect} />}
-              <TraitAction action={t?.action} />
+                }
+              >
+                {t?.ranked && (
+                  <div className="stepper tools-rank">
+                    <button type="button" onClick={() => update(c, { rank: c.rank - 1 })} disabled={c.rank <= 1} aria-label="Lower rank">
+                      <Sign is="minus" />
+                    </button>
+                    <span className="num">{c.rank}</span>
+                    <button type="button" onClick={() => update(c, { rank: c.rank + 1 })} aria-label="Raise rank">
+                      <Sign is="plus" />
+                    </button>
+                  </div>
+                )}
+                {t?.temporary && (
+                  <CardNote>
+                    {t.temporary}
+                    {/[.!?]$/.test(t.temporary) ? "" : "."}
+                  </CardNote>
+                )}
+                {t && <Effect text={t.effect} />}
+                <TraitAction action={t?.action} />
+              </TraitCard>
             </li>
           );
         })}

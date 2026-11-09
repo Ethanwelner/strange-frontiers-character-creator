@@ -5,7 +5,8 @@ import { TraitCategory, type Trait } from "../../schema/index.js";
 import { traitOptions, type TraitTab } from "../check.js";
 import { content, traitById } from "../content.js";
 import { addPick, type Draft } from "../draft.js";
-import { Chip, Effect, SettingIcon, Sign, StepHeader, title, TraitAction, traitName, traitRegionClass } from "./ui.js";
+import { Chip, Effect, Sign, StepHeader, title, TraitAction, traitName } from "./ui.js";
+import { CardChip, CardNote, TraitCard, traitCardKind } from "./cards.js";
 
 interface Props {
   draft: Draft;
@@ -179,61 +180,61 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom }:
                   }
                 };
                 return (
-                  <li
+                  <TraitCard
                     key={t.id}
-                    role="checkbox"
-                    aria-checked={selected}
-                    aria-disabled={rejected}
-                    aria-label={selected ? `${t.name}, taken` : `Take ${t.name}${t.ranked || rank > 1 ? ` rank ${rank}` : ""} with a ${pick} pick`}
-                    tabIndex={0}
-                    className={`trait trait-box ${traitRegionClass(t.id)}${selected ? " selected" : ""}${rejected ? " rejected" : ""}`}
-                    onClick={() => !rejected && toggle(t.id, rank, pick)}
-                    onKeyDown={onKey}
+                    as="li"
+                    kind={traitCardKind(t)}
+                    name={t.name}
+                    plane={t.plane}
+                    className={`trait${selected ? " selected" : ""}${rejected ? " rejected" : ""}`}
+                    rootProps={{
+                      role: "checkbox",
+                      "aria-checked": selected,
+                      "aria-disabled": rejected,
+                      "aria-label": selected ? `${t.name}, taken` : `Take ${t.name}${t.ranked || rank > 1 ? ` rank ${rank}` : ""} with a ${pick} pick`,
+                      tabIndex: 0,
+                      onClick: () => !rejected && toggle(t.id, rank, pick),
+                      onKeyDown: onKey,
+                    }}
                   >
-                    <h3 className="trait-name">
-                      <SettingIcon plane={t.plane} />
-                      {t.name}
-                    </h3>
-                    <div className="trait-main">
-                      <div className="chips">
-                        <Chip>{title(t.category)}</Chip>
-                        {t.ranked && <Chip tone="muted">Ranked</Chip>}
-                        {t.background && <Chip tone="muted">Background</Chip>}
-                        {t.mastery && <Chip tone="muted">Mastery</Chip>}
-                      </div>
-                      <p>{t.summary}</p>
-                      <Effect text={t.effect} />
-                      <TraitAction action={t.action} />
-                      {requirements(t) && <p className="muted small">Needs {requirements(t)}</p>}
-                      {t.tags.length > 0 && <p className="tags">{t.tags.map((tag) => `#${tag}`).join(" ")}</p>}
-                      {selected && t.ranked && (
-                        // The card's own click and keys toggle it, so the stepper keeps its events to itself.
-                        <div className="rank-step" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
-                          <span className="rank-label">Rank</span>
-                          <button type="button" aria-label={`Drop a rank of ${t.name}`} onClick={() => remove(lastPick(t.id))}>
-                            <Sign is="minus" />
-                          </button>
-                          <span className="num">{heldRank.get(t.id) ?? 0}</span>
-                          <button
-                            type="button"
-                            disabled={reasons.length > 0}
-                            title={reasons.join(" ") || undefined}
-                            aria-label={`Take ${t.name} rank ${rank} with a ${pick} pick`}
-                            onClick={() => onChange(addPick(draft, t.id, rank, pick))}
-                          >
-                            <Sign is="plus" />
-                          </button>
-                        </div>
-                      )}
-                      {rejected && (
-                        <ul className="reasons">
-                          {reasons.map((r) => (
-                            <li key={r}>{r}</li>
-                          ))}
-                        </ul>
-                      )}
+                    <div className="sf-card-tags">
+                      <CardChip>{title(t.category)}</CardChip>
+                      {t.ranked && <CardChip tone="muted">Ranked</CardChip>}
+                      {t.background && <CardChip tone="muted">Background</CardChip>}
+                      {t.mastery && <CardChip tone="muted">Mastery</CardChip>}
                     </div>
-                  </li>
+                    <p>{t.summary}</p>
+                    <Effect text={t.effect} />
+                    <TraitAction action={t.action} />
+                    {requirements(t) && <CardNote>Needs {requirements(t)}</CardNote>}
+                    {t.tags.length > 0 && <p className="tags">{t.tags.map((tag) => `#${tag}`).join(" ")}</p>}
+                    {selected && t.ranked && (
+                      // The card's own click and keys toggle it, so the stepper keeps its events to itself.
+                      <div className="rank-step" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
+                        <span className="rank-label">Rank</span>
+                        <button type="button" aria-label={`Drop a rank of ${t.name}`} onClick={() => remove(lastPick(t.id))}>
+                          <Sign is="minus" />
+                        </button>
+                        <span className="num">{heldRank.get(t.id) ?? 0}</span>
+                        <button
+                          type="button"
+                          disabled={reasons.length > 0}
+                          title={reasons.join(" ") || undefined}
+                          aria-label={`Take ${t.name} rank ${rank} with a ${pick} pick`}
+                          onClick={() => onChange(addPick(draft, t.id, rank, pick))}
+                        >
+                          <Sign is="plus" />
+                        </button>
+                      </div>
+                    )}
+                    {rejected && (
+                      <ul className="reasons">
+                        {reasons.map((r) => (
+                          <li key={r}>{r}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </TraitCard>
                 );
               })}
             </ul>
