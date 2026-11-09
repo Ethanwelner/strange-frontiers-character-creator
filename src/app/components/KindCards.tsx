@@ -41,10 +41,10 @@ export function KindBody({ kind: k, lore = false }: { kind: Kind; lore?: boolean
   return (
     <>
       <p>{k.summary}</p>
-      {lore && k.lore && <p className="muted">{k.lore}</p>}
+      {lore && k.lore && <p className="sf-card-lore">{k.lore}</p>}
       <StatRanges stats={k.stats} />
       <BackgroundRows rows={[{ label: "Grants", accent: true, chips: k.grants.map((g) => traitName(g.trait)) }]} />
-      <ul className="features">
+      <ul className="sf-card-features">
         {k.features.map((f) => (
           <li key={f.name}>
             <strong>{f.name}.</strong> {f.description}

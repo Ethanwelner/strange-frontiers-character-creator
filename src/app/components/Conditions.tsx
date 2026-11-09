@@ -80,7 +80,7 @@ export function Conditions({
                 kind="condition"
                 name={t?.name ?? c.trait}
                 rank={t?.ranked ? c.rank : undefined}
-                barActions={
+                actions={
                   <button type="button" className="tools-condition-remove" aria-label={`Remove ${t?.name ?? c.trait}`} onClick={() => onChange(withoutCondition(conditions, c.trait))}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 20 20" aria-hidden="true">
                       <path d="M2 2l16 16M18 2L2 18" fill="none" stroke="currentColor" strokeWidth="2.5" />

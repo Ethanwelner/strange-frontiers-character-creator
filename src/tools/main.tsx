@@ -6,6 +6,8 @@ import { ToolsApp } from "./App.js";
 // comes from game-tools.php on the site, and from vite.config.ts in development.
 import "../app/styles.css";
 import "./styles.css";
+// The cards' styles, shared with the site (src/app/cards.css)
+import "../app/cards.css";
 
 // Rendered before this script finishes, so game-tools.php (which holds its
 // first paint for this script) slides in showing the tools, not an empty page.

@@ -82,7 +82,8 @@ function HeldTraitCard({
       rank={t?.ranked || held.rank > 1 ? held.rank : undefined}
       plane={t?.plane}
       chips={badges.length > 0 ? badges.map((b) => <CardChip key={b}>{b}</CardChip>) : undefined}
-      fold={onToggle ? { open, onToggle, label: name, ...(keepEffect ? { always: effect } : {}) } : undefined}
+      fold={onToggle ? { open, onToggle, label: name } : undefined}
+      keep={keepEffect ? effect : undefined}
     >
       {/* The category, then where the Trait came from, on one line */}
       <div className="sf-card-tags">

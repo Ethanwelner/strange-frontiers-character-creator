@@ -171,7 +171,7 @@
     outline-color: var(--portfolio-white);
   }
 
-  .builder-panel :is(.sf-card, .level-card, .choice, .c-sheet, .notice) :focus-visible {
+  .builder-panel :is(.level-card, .choice, .c-sheet, .notice) :focus-visible {
     outline-color: var(--portfolio-black);
   }
 
@@ -643,16 +643,25 @@
   }
 
   /* Printed, cards, notices and the sheet stay light, with their own dark text */
-  .builder-panel :is(.sf-card, .level-card, .choice, .c-sheet, .notice) {
+  .builder-panel :is(.level-card, .choice, .c-sheet, .notice) {
     --rule: rgb(0 0 0 / 15%);
     color: var(--portfolio-black);
 
-    :is(.muted, .hint, .empty, .tags, .sf-card-note) {
+    :is(.muted, .hint, .empty, .tags) {
       color: var(--portfolio-gray);
     }
 
     .good:not(.status) {
       color: var(--good-on-light);
+    }
+  }
+
+  /* Printed, the cards (cards.css) go light like the rest, with dark text */
+  @media print {
+    :is(.sf-card, .sf-item-card) {
+      --card-bg: #efefef;
+      --card-text: var(--portfolio-black);
+      --card-soft: var(--portfolio-gray);
     }
   }
 
@@ -663,12 +672,11 @@
       --card-bg: var(--portfolio-black);
     }
 
-    .builder-panel :is(.sf-card, .level-card, .choice, .notice),
-    .lore-modal .sf-card {
+    .builder-panel :is(.level-card, .choice, .notice) {
       --rule: rgb(255 255 255 / 18%);
       color: var(--panel-text);
 
-      :is(.muted, .hint, .empty, .tags, .sf-card-note) {
+      :is(.muted, .hint, .empty, .tags) {
         color: var(--panel-soft);
       }
 
@@ -682,25 +690,24 @@
 
       /* Black chips would vanish into the black card. A Cast Action's
          badges keep the item badges' olive. */
-      .chip:not(.chip-muted, .chip-accent, .chip-bad, .sf-card-action-badges .chip),
-      .sf-chip:not(.sf-chip--muted, .sf-chip--accent, .sf-chip--bad) {
+      .chip:not(.chip-muted, .chip-accent, .chip-bad) {
         background: var(--portfolio-gray);
       }
 
-      :is(.chip-accent, .sf-chip--accent) {
+      .chip-accent {
         background: #6b6b6b;
       }
     }
 
-    /* Trait cards and the headed cards (Kind, package, choice): a 2px border
-       the color of their header bar (--card-edge), and a soft shadow under
-       them. A picked card keeps its green ring. */
-    :is(.builder-panel, .lore-modal) :is(.sf-card, .headed) {
+    /* The Choices step's headed cards: a 2px border the color of their
+       header bar (--card-edge), and a soft shadow under them, like the
+       cards (cards.css) */
+    :is(.builder-panel, .lore-modal) .headed {
       --card-edge: #181818;
       border: 2px solid var(--card-edge);
       box-shadow: 0 4px 10px #00000030;
 
-      &:is(.region-dreft, .sf-card--dreft) {
+      &.region-dreft {
         --card-edge: var(--frontiers-dreft);
       }
 
@@ -708,27 +715,15 @@
         box-shadow: 0 0 0 1px var(--portfolio-green), 0 4px 10px #00000030;
       }
 
-      > :is(.sf-card-bar, .card-head) {
+      > .card-head {
         border-radius: 10px 10px 0 0;
       }
     }
 
     /* The black header bars go a shade darker than the card under them */
     :is(.builder-panel, .lore-modal) {
-      .headed:not(.region-dreft) > .card-head,
-      .sf-card:not(.sf-card--dreft) > .sf-card-bar {
+      .headed:not(.region-dreft) > .card-head {
         background-color: #181818;
-      }
-    }
-
-    /* Condition cards in grays, so they read apart from Traits: a mid gray
-       border and a light gray header bar with dark text */
-    :is(.builder-panel, .lore-modal) .sf-trait-card.sf-trait-card--condition {
-      --card-edge: #646464;
-
-      > .sf-card-bar {
-        background-color: #b7b4b4;
-        color: var(--portfolio-black);
       }
     }
 
@@ -1106,7 +1101,6 @@
   }
 
   /* Bootstrap's .card, redrawn like the site's sheet boxes */
-  .sf-background-card,
   .level-card,
   .choice {
     position: relative;
@@ -1116,65 +1110,12 @@
     padding: 16px;
   }
 
-  .sf-background-card {
-    display: grid;
-    align-content: start;
-    gap: 16px;
-    transition: border-color 200ms;
-
-    /* A card to pick */
-    &.is-selectable {
-      cursor: pointer;
-
-      &:hover {
-        border-color: var(--portfolio-medium-gray);
-      }
-    }
-
-    /* The grid gap does the spacing between a card's rows */
-    > *,
-    > .sf-card-body > * {
-      margin-top: 0;
-      margin-bottom: 0;
-    }
-
-    > .sf-card-body {
-      display: grid;
-      align-content: start;
-      gap: 16px;
-    }
-  }
-
-  .sf-card.selected {
-    border-color: var(--portfolio-green);
-    /* Outside the border, so a card's header bar can't cover it */
-    box-shadow: 0 0 0 1px var(--portfolio-green);
-  }
-
-  /* A check in a green badge, the stinger's green */
-  .sf-card.selected::after {
-    content: "✓";
-    position: absolute;
-    top: -12px;
-    right: -12px;
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background: var(--portfolio-green);
-    color: var(--portfolio-white);
-    font-weight: 600;
-    font-size: 0.9rem;
-  }
-
   /* Kind cards run wider than the other steps' cards */
   .kind-group .cards {
     grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr));
   }
 
-  :is(.card-head, .sf-background-card > .sf-card-bar) {
+  .card-head {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
@@ -1183,10 +1124,9 @@
     margin-bottom: 0.5rem;
   }
 
-  /* Every character card (Kind, package, choice; Trait cards have their own
-     bar) opens with a header bar in its region color: Dreft's green
-     for Isekai, black for the rest */
-  :is(.headed > .card-head, .sf-background-card > .sf-card-bar) {
+  /* A Choices card opens with a header bar in its region color, like the
+     cards' (cards.css): Dreft's green for Isekai, black for the rest */
+  .headed > .card-head {
     margin: -16px -16px 0;
     padding: 10px 16px;
     align-items: center;
@@ -1199,7 +1139,6 @@
     }
 
     .chip-muted,
-    .sf-chip--muted,
     .muted {
       background: rgb(255 255 255 / 15%);
       color: var(--portfolio-white);
@@ -1211,7 +1150,7 @@
     }
   }
 
-  :is(.headed.region-dreft > .card-head, .sf-background-card.sf-card--dreft > .sf-card-bar) {
+  .headed.region-dreft > .card-head {
     background: var(--frontiers-dreft);
   }
 
@@ -1225,14 +1164,9 @@
     }
   }
 
-  /* In a card, the grid's gap spaces the features list like everything else */
-  .sf-card-body > .features {
-    margin: 0;
-  }
-
-  /* Chips: the side nav's black badges. A card's chips (.sf-chip) are the
-     same. */
-  :is(.chip, .sf-chip) {
+  /* Chips: the side nav's black badges. A card's chips are .sf-chip
+     (cards.css). */
+  .chip {
     display: inline-block;
     background: var(--portfolio-black);
     color: var(--portfolio-white);
@@ -1244,67 +1178,22 @@
     white-space: nowrap;
   }
 
-  :is(.chip-muted, .sf-chip--muted) {
+  .chip-muted {
     background: var(--portfolio-light-gray);
     color: var(--portfolio-black);
   }
 
-  :is(.chip-accent, .sf-chip--accent) {
+  .chip-accent {
     background: var(--portfolio-gray);
   }
 
-  :is(.chip-bad, .sf-chip--bad) {
+  .chip-bad {
     background: var(--portfolio-red);
   }
 
   .chips {
     display: flex;
     flex-wrap: wrap;
-  }
-
-  /* A background card's lists sit in the card's 16px rhythm; within a list,
-     the label (Grants, Choose, Background list) sits above chips spaced by
-     gaps alone */
-  .sf-background-rows {
-    display: grid;
-    gap: 16px;
-
-    > div {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px;
-    }
-
-    .sf-background-label {
-      flex-basis: 100%;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-
-    .sf-chip,
-    > p {
-      margin: 0;
-    }
-  }
-
-  /* Physical, Social and Mental side by side, 2.5rem apart, or closer (down
-     to 0.75rem) when the card is too narrow for that and three 6rem columns */
-  .stat-ranges {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
-    gap: 0.75rem clamp(0.75rem, (100% - 18rem) / 2, 2.5rem);
-    font-size: 0.8rem;
-  }
-
-  .stat-ranges-group {
-    font-weight: 600;
-    margin-bottom: 0.15rem;
-  }
-
-  .stat-range {
-    display: flex;
-    justify-content: space-between;
-    gap: 0.25rem;
   }
 
   /* Levels */
@@ -1487,190 +1376,28 @@
     gap: 1rem;
   }
 
-  /* Trait cards (components/cards.tsx, TraitCard): light like the Kind
-     cards, so the dark name bar reads as their header. They don't clip, so a
-     selected card's check can sit over its corner. */
-  .sf-trait-card {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    width: 100%;
-    padding: 0 1rem 1rem;
-    overflow: visible;
-    background-color: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 12px;
-    font-size: 14px;
-    transition: border-color 200ms;
-  }
-
-  /* A Trait to pick, in the Traits step */
+  /* The Traits step's cards (cards.css), picked or not: the whole card
+     picks the Trait, and its lines run together, spaced by their own
+     margins */
   .sf-trait-card.trait {
     cursor: pointer;
 
-    &:hover {
+    &:hover:not(.selected) {
       border-color: var(--portfolio-medium-gray);
     }
-  }
 
-  /* The name at the left of the bar and, at the right, its chips: the
-     package it was chosen from (Origin, Profession or Past) on the sheet,
-     and a folding card's chevron. The bar rounds its own top corners. */
-  .sf-trait-card > .sf-card-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    margin: 0 -1rem;
-    padding: 10px 16px;
-    border-radius: 11px 11px 0 0;
-    background-color: var(--portfolio-black);
-    color: var(--portfolio-white);
-    font-size: 1rem;
-    font-weight: 600;
+    > .sf-card-body {
+      display: block;
+    }
 
-    > .sf-card-name {
-      min-width: 0;
+    .sf-card-tags {
+      gap: 0;
     }
   }
 
-  /* Isekai Traits get the Dreft Kind cards' green bar */
-  .sf-trait-card.sf-card--dreft > .sf-card-bar {
-    background-color: var(--frontiers-dreft);
-  }
-
-  .sf-card-chips {
-    flex: none;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 4px;
-  }
-
-  .sf-trait-card > .sf-card-body {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    min-width: 0;
-  }
-
-  /* A picker's card runs its lines together, spaced by their own margins */
-  .sf-trait-card.trait > .sf-card-body {
-    display: block;
-  }
-
-  .sf-trait-card.trait .sf-card-tags {
-    gap: 0;
-  }
-
-  /* A Trait card's category and flags, a row of badges at the top of its
-     body, and on the sheet where the Trait came from after them */
-  .sf-card-tags {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 4px;
-
-    > .sf-card-note {
-      margin: 0 0 0 4px;
-    }
-  }
-
-  /* Requirements, durations and where a Trait came from, small and muted */
-  .sf-card-note {
-    color: var(--portfolio-gray);
-    font-size: 0.75rem;
-  }
-
-  /* A card that folds: a <details>, its bar the summary, or (an Ability,
-     which keeps its effect in view) a chevron button in the bar */
-  details.sf-card > summary {
-    cursor: pointer;
-    list-style: none;
-
-    &::-webkit-details-marker {
-      display: none;
-    }
-  }
-
-  /* A closed card keeps its own height in a row with an open one */
-  .sheet-traits > li:has(> details.sf-card:not([open])) {
+  /* A closed Skill card keeps its own height in a row with an open one */
+  .sheet-traits > li:has(> .sf-card.is-closed:not(.has-keep)) {
     align-self: start;
-  }
-
-  /* Closed, a Skill card is its name's bar alone, rounded all round */
-  details.sf-card:not([open]) {
-    gap: 0;
-    padding-bottom: 0;
-
-    > .sf-card-bar {
-      border-radius: 10px;
-    }
-  }
-
-  /* The chevron, faded like the sheet's pens and full strength under the
-     pointer or while the card is open, pointing up while open */
-  .sf-card-chevron {
-    flex: none;
-    width: 12px;
-    height: 8px;
-    margin: 8px 6px 8px 10px;
-    opacity: 0.4;
-    transition: opacity 200ms, transform 200ms;
-  }
-
-  details.sf-card > summary:is(:hover, :focus-visible) .sf-card-chevron,
-  details.sf-card[open] .sf-card-chevron,
-  .sf-card-fold:is(:hover, :focus-visible, [aria-expanded="true"]) .sf-card-chevron {
-    opacity: 1;
-  }
-
-  details.sf-card[open] .sf-card-chevron,
-  .sf-card-fold[aria-expanded="true"] .sf-card-chevron {
-    transform: rotate(180deg);
-  }
-
-  button.sf-card-fold {
-    flex: none;
-    display: grid;
-    place-items: center;
-    margin-left: 4px;
-    padding: 0;
-    background: none;
-    border: 0;
-    color: inherit;
-    cursor: pointer;
-
-    &:is(:hover, :focus-visible) {
-      background: none;
-      color: inherit;
-    }
-
-    .sf-card-chevron {
-      margin: 8px 6px;
-    }
-  }
-
-  /* The setting mark before a card's name, in the header's text color */
-  .setting-icon {
-    display: inline-block;
-    flex-shrink: 0;
-    width: 1.15em;
-    height: 1.15em;
-    margin-right: 0.45em;
-    vertical-align: -0.2em;
-    background-color: currentColor;
-    mask: center / contain no-repeat;
-  }
-
-  .setting-isekai {
-    mask-image: url("./img/isekai.svg");
-  }
-
-  .setting-systems {
-    mask-image: url("./img/the_systems.svg");
   }
 
   /* Rank stepper on a checked ranked Trait */
@@ -3196,424 +2923,15 @@
     align-items: start;
   }
 
-  /* Each item a card with the Traits' shadow and background, with a warm
-     olive edge, the same in the creator and Player Tools (the sheet's boxes
-     otherwise have no border) */
-  .builder-panel .sf-item-card {
-    position: relative;
-    border-radius: 12px;
-    container: item / inline-size;
-    background-color: var(--card-bg);
-    border: 2px solid #6d6a5a !important;
-    padding: 12px 12px 12px 22px;
-    box-shadow: 0 4px 10px #00000030;
-
-    /* Its fields in a darker olive to match */
-    :is(input:not([type="checkbox"]), select) {
-      background-color: #25241e;
-    }
-  }
-
-  /* Bites scooped out of the cards' corners, like the site's item cards
-     (corner-shape; browsers without it keep the plain corners) */
-  @supports (corner-shape: scoop) {
-    .builder-panel .sf-item-card {
-      border-radius: 6px;
-      corner-shape: scoop;
-    }
+  /* An item card's edit fields keep its dark olive over the panel's
+     field styles */
+  .builder-panel .sf-item-card :is(input:not([type="checkbox"]), select) {
+    background-color: #25241e;
   }
 
   /* The add form's fields match the cards' */
   .builder-panel .tools-items .tools-add :is(input, select) {
     background-color: #25241e;
-  }
-
-  /* One line once the card has the room for the name at its smallest and
-     the category shrunk to 5.5rem (357px); wrapping in narrower cards */
-  .equipment-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    align-items: center;
-
-    @container item (width >= 357px) {
-      flex-wrap: nowrap;
-    }
-
-    select {
-      flex: 0 1 auto;
-      min-width: 5.5rem;
-
-      /* In a tight card the category gives the name its room first */
-      @container item (width < 440px) {
-        flex-basis: 6rem;
-      }
-    }
-  }
-
-  /* The name on the same line as the count, category, Equip and Remove,
-     taking what room they leave */
-  .sf-item-name-field {
-    flex: 1 1 0;
-    min-width: 3rem;
-  }
-
-  .sf-item-equip {
-    display: inline-flex;
-    gap: 4px;
-    align-items: center;
-  }
-
-  /* The chevron, faded like the sheet's pens and full strength under the
-     pointer or while the card is open */
-  .sf-item-icon {
-    flex: none;
-    display: grid;
-    place-items: center;
-    width: 24px;
-    height: 24px;
-    padding: 0;
-    background: none;
-    border: 0;
-    color: inherit;
-    cursor: pointer;
-    opacity: 0.4;
-    transition: opacity 200ms;
-
-    &:is(:hover, :focus-visible, [aria-expanded="true"]) {
-      opacity: 1;
-    }
-
-    svg {
-      width: 14px;
-      height: 16px;
-      fill: currentColor;
-    }
-  }
-
-  /* A card's top line: Equip, the name, then at the right its stat badges
-     and the chevron that opens it. With no badges, the chevron takes the
-     right on its own. */
-  .sf-item-summary {
-    flex-wrap: nowrap;
-  }
-
-  /* The name and the stat badges between Equip and the chevron. Each badge
-     is its own item here: the name takes what its line leaves, the badges
-     sit at the right, and they wrap under it one at a time as the room runs
-     out, still at the right. */
-  .sf-item-main {
-    flex: 1 1 auto;
-    min-width: 0;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 6px 8px;
-
-    > .equipment-name {
-      flex: 1 1 auto;
-    }
-  }
-
-  .equipment-name {
-    flex: 0 1 auto;
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-weight: 600;
-  }
-
-  /* How many, in a circle on the card's left border, in the card's
-     own color and edge */
-  .sf-item-count {
-    position: absolute;
-    /* A set distance down, centered on the top line, so it stays put
-       when the card opens */
-    top: 14.15px;
-    left: -14px;
-    display: grid;
-    place-items: center;
-    box-sizing: border-box;
-    min-width: 26px;
-    height: 26px;
-    padding: 0 5px;
-    background-color: var(--card-bg);
-    border: 2px solid #6d6a5a;
-    border-radius: 13px;
-    font-size: 0.8125rem;
-    font-weight: 600;
-    line-height: 1;
-  }
-
-  /* The category's badge in the card's olive: the fields' dark olive with
-     the card's lighter edge and a pale olive text. A spell's Cast Action
-     badges in an ability card take the same colors. */
-  :is(.sf-item-card, .sf-card-action-badges) .chip {
-    background-color: #25241e;
-    border: 1px solid #6d6a5a;
-    color: #d6d1b4;
-  }
-
-  /* Equip's box, 18px, in the fields' dark olive with the card's lighter
-     edge, filling with a pale olive and a dark check when it's on */
-  .sf-item-card .sf-item-equip input[type="checkbox"] {
-    appearance: none;
-    flex: none;
-    width: 18px;
-    height: 18px;
-    margin: 0;
-    background-color: #25241e;
-    border: 1px solid #6d6a5a;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 150ms, border-color 150ms;
-
-    &:hover {
-      border-color: #a29d82;
-    }
-
-    &:focus-visible {
-      outline: 2px solid #a29d82;
-      outline-offset: 2px;
-    }
-
-    &:checked {
-      background-color: #b5ae86;
-      border-color: #b5ae86;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='%2325241e' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-      background-size: 14px;
-      background-position: center;
-      background-repeat: no-repeat;
-    }
-  }
-
-  /* Equip's box starts a closed card's line, after the count's circle; its
-     title and label still say Equip */
-  .sf-item-card .sf-item-equip {
-    flex: none;
-    cursor: pointer;
-
-    .sf-item-equip-label {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip-path: inset(50%);
-      white-space: nowrap;
-    }
-  }
-
-  /* The chevron, a little apart from the rest, pointing up while open */
-  .sf-item-icon.sf-item-expand {
-    margin-left: 4px;
-
-    svg {
-      width: 12px;
-      height: 8px;
-      fill: none;
-      transition: transform 200ms;
-    }
-
-    &[aria-expanded="true"] svg {
-      transform: rotate(180deg);
-    }
-  }
-
-  /* A stock item's badges under the card's top line: its damage or
-     resistances at the left, then, in an open card, its cost and the like */
-  .sf-item-badges {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 8px;
-    margin-top: 10px;
-  }
-
-  /* On a card's top line the badges' wrappers step aside, so each badge
-     lays out on its own in .sf-item-main */
-  .sf-item-summary :is(.sf-item-badges, .sf-item-badge-group) {
-    display: contents;
-  }
-
-  .sf-item-badge-group {
-    display: inline-flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 6px;
-  }
-
-  /* One badge holds each value, an icon then its number, 10px apart */
-  :is(.sf-item-card, .sf-card-action-badges) .chip.equipment-stat {
-    display: inline-flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 2px 10px;
-  }
-
-  .equipment-stat-value {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-
-    .icon {
-      width: 1.1em;
-      height: 1.1em;
-      fill: currentColor;
-    }
-  }
-
-  /* A damage or resistances badge's lead: a circle of the checkbox's pale
-     olive with a dark olive bow, sword or shield, standing in for the
-     badge's left edge. The badge rounds its left side to match, and the
-     circle runs flush with its edge, top and bottom. */
-  :is(.sf-item-card, .sf-card-action-badges) .chip.equipment-stat:has(> .item-stat-lead) {
-    flex-wrap: nowrap;
-    padding-top: 0;
-    padding-bottom: 0;
-    padding-left: 0;
-    border-radius: calc((1lh + 0.4rem + 2px) / 2) 4px 4px calc((1lh + 0.4rem + 2px) / 2);
-  }
-
-  /* As tall as a plain badge (its line, padding and border), sitting over
-     the border on the top, bottom and left */
-  .item-stat-lead {
-    display: grid;
-    place-items: center;
-    flex: none;
-    width: calc(1lh + 0.4rem + 2px);
-    height: calc(1lh + 0.4rem + 2px);
-    margin: -1px -4px -1px -1px;
-    background-color: #b5ae86;
-    border-radius: 50%;
-
-    .icon {
-      width: 1rem;
-      height: 1rem;
-      fill: #25241e;
-    }
-  }
-
-  /* "or" between a damage choice's options, inside the badge */
-  .equipment-stat-or {
-    color: #a29d82;
-    font-weight: 400;
-  }
-
-  /* An open card's badges the top line leaves out, under it */
-  .equipment-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 10px;
-  }
-
-  /* Edit, and Remove in edit mode: circles half outside the card's right
-     border, in the checkbox's pale olive with a dark olive icon, lighter
-     under the pointer. Each is a set distance down, so they stay put as the
-     card changes: Edit centered on the badges' line under the top line, and
-     lighter while the fields are showing; Remove 8px under it. */
-  button.sf-item-edge {
-    position: absolute;
-    right: -14px;
-    display: grid;
-    place-items: center;
-    width: 26px;
-    height: 26px;
-    padding: 0;
-    background-color: #b5ae86;
-    border: 2px solid #6d6a5a;
-    border-radius: 50%;
-    color: #25241e;
-    cursor: pointer;
-    transition: background-color 200ms;
-
-    &:is(:hover, :focus-visible) {
-      background-color: #d6d1b4;
-      color: #25241e;
-    }
-
-    svg {
-      width: 11px;
-      height: 13px;
-      fill: currentColor;
-    }
-  }
-
-  button.sf-item-edit {
-    top: 54.45px;
-
-    &[aria-expanded="true"] {
-      background-color: #d6d1b4;
-    }
-
-    .pen-icon {
-      width: 13px;
-      height: 13px;
-      opacity: 1;
-    }
-  }
-
-  button.sf-item-remove {
-    top: calc(54.45px + 26px + 8px);
-  }
-
-  /* Edit's fields under it, clear of the circles at the card's edge */
-  .sf-item-fields {
-    margin-top: 10px;
-    padding-right: 12px;
-  }
-
-  /* Note: a pen and its label at the card's bottom, faded like the other
-     icons until pointed at or open */
-  button.sf-item-note-toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 4px;
-    padding: 0;
-    background: none;
-    border: 0;
-    color: inherit;
-    font-size: 0.875rem;
-    cursor: pointer;
-    opacity: 0.6;
-    transition: opacity 200ms;
-
-    &:is(:hover, :focus-visible, [aria-expanded="true"]) {
-      background: none;
-      color: inherit;
-      opacity: 1;
-    }
-
-    svg {
-      width: 16px;
-      height: 14px;
-      fill: currentColor;
-    }
-  }
-
-  /* A stock item's description, in italics, and its rules, under its row */
-  .sf-item-stock {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    margin: 8px 0;
-    font-size: 0.875rem;
-
-    p {
-      margin: 0;
-    }
-  }
-
-  .equipment-description {
-    color: inherit;
-    font-style: italic;
-  }
-
-  .equipment-effect {
-    color: var(--panel-soft);
   }
 
   .sheet-stats {
@@ -3869,44 +3187,6 @@
     @supports not selector(::-webkit-scrollbar) {
       scrollbar-width: thin;
       scrollbar-color: rgb(255 255 255 / 25%) transparent;
-    }
-  }
-
-  .sf-card-effect {
-    font-size: 0.9rem;
-
-    /* A bulleted effect: a line for each part that does something different */
-    > p,
-    > ul {
-      margin: 0;
-    }
-
-    > * + * {
-      margin-top: 4px;
-    }
-
-    > ul {
-      padding-left: 1.25em;
-    }
-
-    li + li {
-      margin-top: 2px;
-    }
-  }
-
-  /* The Action a Trait grants, under its effect, set off by a rule at its left */
-  .sf-card-action {
-    padding-left: 10px;
-    font-size: 0.9rem;
-    border-left: 2px solid var(--portfolio-medium-gray);
-
-    > p {
-      margin: 0;
-    }
-
-    /* A temporary weapon's badges, between the Action's lines */
-    > .sf-card-action-badges {
-      margin: 8px 0;
     }
   }
 

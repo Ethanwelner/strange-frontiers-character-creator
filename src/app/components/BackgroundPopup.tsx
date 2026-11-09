@@ -22,7 +22,7 @@ export function BackgroundPopup({ id, onClose }: { id: string; onClose: () => vo
         ) : (
           <>
             <p>{entry.summary}</p>
-            {entry.lore && <p className="muted">{entry.lore}</p>}
+            {entry.lore && <p className="sf-card-lore">{entry.lore}</p>}
             <PackageGrants pkg={pkg!} />
           </>
         )}
