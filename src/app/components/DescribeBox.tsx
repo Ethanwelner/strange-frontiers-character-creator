@@ -5,6 +5,7 @@ import { describeRemote } from "../../ai/remote.js";
 import { content, itemById, kindById, packageById } from "../content.js";
 import { genderText, type AiNotes, type Draft } from "../draft.js";
 import { askerName, choiceLabel, LevelStepper, LooksFields, title, traitName, type Looks } from "./ui.js";
+import { Button } from "./Button.js";
 
 interface Props {
   draft: Draft;
@@ -245,7 +246,7 @@ export function DescribeBox({ notes, showNotes, startingLevel, hasBuild, onBuilt
             </label>
           </div>
           <div className="describe-actions">
-            <button type="submit" className="primary build-button" disabled={busy || !text.trim()} aria-busy={busy}>
+            <Button type="submit" tone="primary" ready={!busy && Boolean(text.trim())} className="build-button" disabled={busy || !text.trim()} aria-busy={busy}>
               {busy ? (
                 <>
                   Building
@@ -259,14 +260,14 @@ export function DescribeBox({ notes, showNotes, startingLevel, hasBuild, onBuilt
               ) : (
                 "Build it"
               )}
-            </button>
+            </Button>
             {actions}
             {confirming && (
               <>
                 <span className="hint">This replaces the current build.</span>
-                <button type="button" className="link" onClick={() => setConfirming(false)}>
+                <Button kind="link" onClick={() => setConfirming(false)}>
                   Cancel
-                </button>
+                </Button>
               </>
             )}
             {busy && (
@@ -281,9 +282,9 @@ export function DescribeBox({ notes, showNotes, startingLevel, hasBuild, onBuilt
       {error && (
         <div className="notice bad" role="alert">
           {error}
-          <button className="link" onClick={() => setError(undefined)} aria-label="Dismiss error">
+          <Button kind="link" onClick={() => setError(undefined)} aria-label="Dismiss error">
             ✕
-          </button>
+          </Button>
         </div>
       )}
 

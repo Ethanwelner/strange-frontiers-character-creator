@@ -64,31 +64,6 @@
     color: inherit;
   }
 
-  /* Buttons take the tabs' Bebas and gray; primary is black. The site's own
-     tab buttons keep their rules. */
-  button:where(:not(.rpg-tab, .tech-field-tab, .lore-modal-close)) {
-    font-family: var(--title);
-    font-size: 1.25rem;
-    letter-spacing: 1px;
-    line-height: 1;
-    background: var(--portfolio-gray);
-    color: var(--portfolio-white);
-    border: 0;
-    border-radius: 4px;
-    padding: 0.6rem 1rem 0.5rem;
-    cursor: pointer;
-    transition: background-color 200ms;
-
-    &:hover:not(:disabled) {
-      background-color: color-mix(in srgb, var(--portfolio-gray) 80%, var(--portfolio-white));
-    }
-  }
-
-  button:disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
-  }
-
   input,
   select {
     background: var(--portfolio-white);
@@ -137,35 +112,6 @@
   min-height: 100vh;
   font-size: 14px;
   line-height: 1.25;
-
-  button.primary {
-    background: var(--portfolio-black);
-
-    &:hover:not(:disabled) {
-      background-color: color-mix(in srgb, var(--portfolio-black) 66%, var(--portfolio-white));
-    }
-  }
-
-  /* Text buttons look like the site's lore links. */
-  button.link {
-    font-family: var(--body);
-    font-size: inherit;
-    letter-spacing: 0;
-    line-height: inherit;
-    background: none;
-    border: none;
-    padding: 0;
-    text-align: left;
-    color: var(--frontiers-lore);
-    font-weight: 600;
-    text-decoration: underline dotted;
-    text-underline-offset: 3px;
-
-    &:hover:not(:disabled) {
-      background: none;
-      text-decoration-style: solid;
-    }
-  }
 
   .builder-panel :focus-visible {
     outline-color: var(--portfolio-white);
@@ -294,17 +240,6 @@
     gap: 0.75rem;
   }
 
-  /* New, Yes and Cancel: Build it's type and padding, with no background and white text */
-  button.hero-link {
-    background: none;
-    color: var(--portfolio-white);
-
-    &:hover:not(:disabled) {
-      background: none;
-      color: var(--frontiers-green);
-    }
-  }
-
   /* New, once clicked: "Clear this build?" with Yes and Cancel */
   .hero-confirm {
     display: inline-flex;
@@ -410,17 +345,8 @@
       color: #c9c9c9;
     }
 
-    button.primary {
-      background: var(--frontiers-green);
-      color: var(--portfolio-black);
-
-      &:hover:not(:disabled) {
-        background-color: color-mix(in srgb, var(--frontiers-green) 75%, var(--portfolio-white));
-      }
-    }
-
-    button.link {
-      color: var(--frontiers-lore-on-black);
+    .sf-btn--link {
+      --sf-link: var(--frontiers-lore-on-black);
     }
 
     .notice {
@@ -537,10 +463,6 @@
     display: inline-flex;
     align-items: center;
     gap: 0.4em;
-  }
-
-  .build-button:disabled[aria-busy="true"] {
-    opacity: 1;
   }
 
   .stopwatch-icon {
@@ -771,21 +693,6 @@
     }
   }
 
-  .builder-panel :is(.core-control, .stat-buttons) button {
-    background: #6b6b6b;
-
-    /* A usable + or − glitches (below), and turns the creator's green like
-       the other things waiting on the player, so it's hard to miss */
-    &:not(:disabled) {
-      background: var(--frontiers-green);
-      color: var(--portfolio-black);
-
-      &:hover {
-        background: color-mix(in srgb, var(--frontiers-green) 75%, var(--portfolio-white));
-      }
-    }
-  }
-
   .panel :is(.muted, .hint, .empty) {
     color: var(--panel-soft);
   }
@@ -843,8 +750,8 @@
         background-color: #8a8a8a;
       }
 
-      button.link {
-        color: var(--frontiers-lore-on-black);
+      .sf-btn--link {
+        --sf-link: var(--frontiers-lore-on-black);
       }
     }
   }
@@ -974,25 +881,6 @@
     width: 0.9em;
     height: 0.9em;
     fill: currentColor;
-  }
-
-  /* The next step: Build it's disabled green until this step is finished,
-     then its full green. It still works either way, so steps can be skipped. */
-  .pager .step-next {
-    background: var(--frontiers-green);
-    color: var(--portfolio-black);
-    opacity: 0.45;
-    transition:
-      opacity 200ms,
-      background-color 200ms;
-
-    &.is-done {
-      opacity: 1;
-    }
-
-    &:hover {
-      background-color: color-mix(in srgb, var(--frontiers-green) 75%, var(--portfolio-white));
-    }
   }
 
   /* Boxed step content: the site's .tech-fields box, which holds the Setting
@@ -1257,15 +1145,6 @@
     align-items: center;
     gap: 6px;
 
-    button {
-      width: 1.75rem;
-      height: 1.75rem;
-      padding: 0;
-      border-radius: 50%;
-      font-family: var(--body);
-      font-size: 1rem;
-      font-weight: 600;
-    }
   }
 
   .pool-stat-row {
@@ -1290,16 +1169,6 @@
     display: flex;
     align-items: center;
     gap: 0.6rem;
-
-    button {
-      width: 2.25rem;
-      height: 2.25rem;
-      padding: 0;
-      border-radius: 50%;
-      font-family: var(--body);
-      font-size: 1.15rem;
-      font-weight: 600;
-    }
 
     .num {
       min-width: 1ch;
@@ -1407,15 +1276,6 @@
     gap: 8px;
     margin-top: 0.5rem;
     cursor: default;
-
-    button {
-      width: 24px;
-      height: 24px;
-      padding: 0;
-      font-family: var(--body);
-      font-size: 1rem;
-      font-weight: 600;
-    }
 
     .num {
       min-width: 1.25em;
@@ -1616,6 +1476,7 @@
   }
 
   button.portrait {
+    color: var(--portfolio-white);
     cursor: pointer;
 
     &:hover,
@@ -1823,8 +1684,8 @@
     border-left-color: var(--portfolio-yellow);
   }
 
-  .issues button.link {
-    color: var(--portfolio-black);
+  .issues .sf-btn--link {
+    --sf-link: var(--portfolio-black);
     font-weight: 300;
   }
 
@@ -2138,17 +1999,6 @@
       height: 0.75em;
     }
 
-    button {
-      flex: none;
-      width: 32px;
-      height: 32px;
-      padding: 0;
-      border-radius: 50%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-
     .tools-resource-name {
       font-family: var(--title);
       font-size: 1.5rem;
@@ -2261,8 +2111,8 @@
 
   /* The Kind and background links in the sheet's lighter purple, like the
      Knowledges', which reads better on the dark box */
-  .tools-line button.link {
-    color: var(--frontiers-lore-on-black);
+  .tools-line .sf-btn--link {
+    --sf-link: var(--frontiers-lore-on-black);
   }
 
   /* Age, gender, height and weight's value with a small pen that opens its field in place
@@ -2655,21 +2505,10 @@
     }
   }
 
-  /* In green, or the section's own --add-color: the Conditions' header
-     gray, the Items' Equip olive */
-  button.sheet-section-add {
+  /* A section's Add (a small button in its color, buttons.css) at the
+     right end of its title's line */
+  .sheet-section-add {
     flex: none;
-    padding: 0.35rem 0.75rem;
-    font-size: 0.875rem;
-    background: var(--add-color, var(--frontiers-green));
-    color: var(--portfolio-black);
-    border: 0;
-
-    &:hover,
-    &:focus-visible {
-      background-color: color-mix(in srgb, var(--add-color, var(--frontiers-green)) 75%, var(--portfolio-white));
-      color: var(--portfolio-black);
-    }
   }
 
   /* When the title's line gets too narrow for the whole button, it keeps
@@ -2683,14 +2522,6 @@
     .sheet-section-add-noun {
       display: none;
     }
-  }
-
-  .tools-conditions-side {
-    --add-color: #b7b4b4;
-  }
-
-  .tools-items {
-    --add-color: #b5ae86;
   }
 
   /* The add form on its own in a small popup, its title over it */
@@ -2803,18 +2634,6 @@
     padding: 16px 32px;
     background: var(--panel);
     border-top: 1px solid #444;
-  }
-
-  /* Add items turns the creator's green, like Build it, once something is
-     picked, and Player Tools' Traits Submit once Traits are picked (both
-     glitch, with the other things waiting on the player) */
-  :is(.item-picker-submit button:not(:disabled), .tools-traits-submit .build-button.is-ready) {
-    background: var(--frontiers-green);
-    color: var(--portfolio-black);
-
-    &:hover {
-      background-color: color-mix(in srgb, var(--frontiers-green) 75%, var(--portfolio-white));
-    }
   }
 
   /* The add row (Items' and Player Tools' Add a Condition), item notes, and
@@ -3006,15 +2825,6 @@
   .lore-modal-panel {
     background-color: var(--panel);
     color: var(--panel-text);
-  }
-
-  .lore-modal-close {
-    background: var(--portfolio-near-white);
-    color: var(--portfolio-black);
-
-    &:hover {
-      background-color: color-mix(in srgb, var(--portfolio-near-white) 75%, var(--portfolio-black));
-    }
   }
 
   .lore-modal :focus-visible {
@@ -3397,50 +3207,16 @@
   }
 }
 
-/* A much smaller take on the site's glitching Strange Frontiers title
-   (.frontiers-glitch in css/rpg.css), on the things waiting for the player:
-   Player Tools' rules problems chip, the stats' + and − while they're
-   usable, and the creator's next step button once
-   its step is finished (green), Build it once there's something to
-   build, Player Tools' Send once there's a message, and its level up's
-   Submit once every point is placed, and Add items once an item is
-   picked. The same rhythm, but a faint green glow, a
-   cyan and red split that widens on the flares, and a slight skew instead of the title's slices and
-   lurches. Every frame has the same three shadows (green, cyan to the left,
-   red to the right), so they blend from one to the next. */
-.sf-creator :is(.tools-issues li, :is(.core-control, .stat-buttons) button:not(:disabled), .pager .step-next.is-done, .describe .build-button:not(:disabled), .tools-chat-send:not(:disabled), .tools-level-actions button:not(:disabled), .item-picker-submit button:not(:disabled), .tools-traits-submit .build-button.is-ready) {
+/* Player Tools' rules problems chip glitches like a ready button (.is-ready
+   in buttons.css, which has the keyframes): it's waiting on the player */
+.sf-creator .tools-issues li {
   animation:
     sf-glitch-small-shift 4s ease-in-out infinite alternate,
     sf-glitch-small-glow 8s ease-in-out infinite alternate;
 }
 
-@keyframes sf-glitch-small-glow {
-  0%, 40%, 50%, 60%, 90%, 95%, 100% {
-    filter: drop-shadow(0 0 2px rgb(45 252 100 / 35%)) drop-shadow(-1.5px 0 0 rgb(0 255 255 / 60%)) drop-shadow(1.5px 0 0 rgb(255 0 0 / 60%));
-  }
-  45%, 75% {
-    filter: drop-shadow(0 0 4px rgb(45 252 100 / 70%)) drop-shadow(-3px 0 0 rgb(0 255 255 / 85%)) drop-shadow(3px 0 0 rgb(255 0 0 / 75%));
-  }
-  97.5% {
-    filter: drop-shadow(0 0 2px rgb(45 252 100 / 0%)) drop-shadow(-1.5px 0 0 rgb(0 255 255 / 60%)) drop-shadow(4px 0 0 rgb(255 0 0 / 90%));
-  }
-}
-
-@keyframes sf-glitch-small-shift {
-  0%, 40%, 44%, 58%, 61%, 65%, 69%, 73%, 100% {
-    transform: none;
-  }
-  41% { transform: skewX(2deg); }
-  42% { transform: skewX(-2deg); }
-  59% { transform: skewX(5deg); }
-  60% { transform: skewX(-5deg); }
-  63% { transform: skewX(2deg); }
-  70% { transform: skewX(-6deg); }
-  71% { transform: skewX(2deg); }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .sf-creator :is(.tools-issues li, :is(.core-control, .stat-buttons) button:not(:disabled), .pager .step-next.is-done, .describe .build-button:not(:disabled), .tools-chat-send:not(:disabled), .tools-level-actions button:not(:disabled), .item-picker-submit button:not(:disabled), .tools-traits-submit .build-button.is-ready) {
+  .sf-creator .tools-issues li {
     animation: none;
   }
 }

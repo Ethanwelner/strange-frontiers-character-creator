@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import { check, describe, stepOf } from "./check.js";
+import { Button } from "./components/Button.js";
 import { BackgroundStep } from "./components/BackgroundStep.js";
 import { CharacterStep } from "./components/CharacterStep.js";
 import { ChoicesStep } from "./components/ChoicesStep.js";
@@ -156,17 +157,17 @@ export function App() {
                   {confirmingNew ? (
                     <span className="hero-confirm">
                       Clear this build?
-                      <button type="button" className="hero-link" onClick={reset}>
+                      <Button tone="ghost" onClick={reset}>
                         Yes
-                      </button>
-                      <button type="button" className="hero-link" onClick={() => setConfirmingNew(false)}>
+                      </Button>
+                      <Button tone="ghost" onClick={() => setConfirmingNew(false)}>
                         Cancel
-                      </button>
+                      </Button>
                     </span>
                   ) : (
-                    <button type="button" className="hero-link" onClick={() => setConfirmingNew(true)}>
+                    <Button tone="ghost" onClick={() => setConfirmingNew(true)}>
                       New
-                    </button>
+                    </Button>
                   )}
                   <input ref={fileInput} type="file" accept="application/json,.json" hidden onChange={importBuild} />
                 </div>
@@ -204,7 +205,7 @@ export function App() {
               {/* The previous and next steps, above the step's title, with what's
                   left to fix on this step to the left of the next one */}
               <div className="pager">
-                {i > 0 ? <button onClick={() => setStep(STEPS[i - 1]!)}><Arrow to="left" /> {LABELS[STEPS[i - 1]!]}</button> : <span />}
+                {i > 0 ? <Button onClick={() => setStep(STEPS[i - 1]!)}><Arrow to="left" /> {LABELS[STEPS[i - 1]!]}</Button> : <span />}
                 <div className="pager-next">
                   {stepErrors.length > 0 && (
                     <ul className="issues bad step-issues">
@@ -214,9 +215,11 @@ export function App() {
                     </ul>
                   )}
                   {i < STEPS.length - 1 && (
-                    <button className={`step-next${done[step] ? " is-done" : ""}`} onClick={() => setStep(STEPS[i + 1]!)}>
+                    // The creator's green, faded until this step is finished, then
+                    // glitching; it works either way, so steps can be skipped
+                    <Button tone="primary" waiting={!done[step]} ready={done[step]} className="step-next" onClick={() => setStep(STEPS[i + 1]!)}>
                       {LABELS[STEPS[i + 1]!]} <Arrow to="right" />
-                    </button>
+                    </Button>
                   )}
                 </div>
               </div>

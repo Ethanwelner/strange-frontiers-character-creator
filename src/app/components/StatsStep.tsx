@@ -5,6 +5,13 @@ import { coreAccessFor, coreStatsShown } from "../check.js";
 import { content, kindById, packageById } from "../content.js";
 import { withCore, type Draft } from "../draft.js";
 import { baseStats, CoreLine, FOCUS_GROUPS, GROUPS, Icon, Sign, StatLine, StepHeader, title } from "./ui.js";
+import { Button } from "./Button.js";
+import type { ButtonHTMLAttributes } from "react";
+
+// A stat's − or +: the creator's green, glitching, while it can be used
+function StatButton(props: ButtonHTMLAttributes<HTMLButtonElement>) {
+  return <Button round="sm" tone={props.disabled ? "gray" : "primary"} ready={!props.disabled} {...props} />;
+}
 
 interface Props {
   draft: Draft;
@@ -184,10 +191,10 @@ export function StatsStep({ draft, onChange, floor }: Props) {
                       <span className="stat-badge" title="Core Stat">
                         <Icon name={g} />
                       </span>
-                      <button aria-label={`Take a core point from ${g}`} onClick={() => takeCore(g)} disabled={core <= coreFloor(g)}>
+                      <StatButton aria-label={`Take a core point from ${g}`} onClick={() => takeCore(g)} disabled={core <= coreFloor(g)}>
                         <Sign is="minus" />
-                      </button>
-                      <button
+                      </StatButton>
+                      <StatButton
                         className="is-plus"
                         aria-label={`Put a core point in ${g}`}
                         title={coreLeft > 0 && !open.includes(g) ? `This character can't Level ${title(g)}` : undefined}
@@ -195,7 +202,7 @@ export function StatsStep({ draft, onChange, floor }: Props) {
                         disabled={!canLevel}
                       >
                         <Sign is="plus" />
-                      </button>
+                      </StatButton>
                     </div>
                     <h4 className="rule">
                       {title(g)} - {core + extra}
@@ -230,15 +237,15 @@ export function StatsStep({ draft, onChange, floor }: Props) {
                     <span className="stat-badge" title="Core Stat">
                       <Icon name={g} />
                     </span>
-                    <button
+                    <StatButton
                       aria-label={`Take a core point from ${g}`}
                       title={core > 0 && stranded ? `Also takes back ${stranded} focus ${stranded === 1 ? "point" : "points"}` : undefined}
                       onClick={() => takeCore(g)}
                       disabled={core <= coreFloor(g)}
                     >
                       <Sign is="minus" />
-                    </button>
-                    <button
+                    </StatButton>
+                    <StatButton
                       className="is-plus"
                       aria-label={`Put a core point in ${g}`}
                       title={coreLeft > 0 && !canLevel ? `${title(g)}'s Stats have no room for ${POINTS_PER_LEVEL} more points` : undefined}
@@ -246,7 +253,7 @@ export function StatsStep({ draft, onChange, floor }: Props) {
                       disabled={!canLevel}
                     >
                       <Sign is="plus" />
-                    </button>
+                    </StatButton>
                   </div>
                   <h4 className="rule">
                     {title(g)} - {core}
@@ -275,12 +282,12 @@ export function StatsStep({ draft, onChange, floor }: Props) {
                       </div>
                       <div className="pool-stat-row">
                         <div className="stat-buttons">
-                          <button aria-label={`Take a point from ${s}`} onClick={() => bump(s, -1)} disabled={value <= floorOf(s)}>
+                          <StatButton aria-label={`Take a point from ${s}`} onClick={() => bump(s, -1)} disabled={value <= floorOf(s)}>
                             <Sign is="minus" />
-                          </button>
-                          <button className="is-plus" aria-label={`Add a point to ${s}`} onClick={() => bump(s, 1)} disabled={spare === 0 || value >= max}>
+                          </StatButton>
+                          <StatButton className="is-plus" aria-label={`Add a point to ${s}`} onClick={() => bump(s, 1)} disabled={spare === 0 || value >= max}>
                             <Sign is="plus" />
-                          </button>
+                          </StatButton>
                         </div>
                         <StatLine bonus={bonusOf(s)} value={value} max={max} />
                       </div>

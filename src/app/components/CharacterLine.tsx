@@ -3,6 +3,7 @@ import { kindById, packageById } from "../content.js";
 import type { Draft, Looks } from "../draft.js";
 import { BackgroundPopup } from "./BackgroundPopup.js";
 import { LooksLine } from "./LooksLine.js";
+import { Button } from "./Button.js";
 
 const LABELS = ["Kind", "Origin", "Profession", "Past"];
 
@@ -20,9 +21,9 @@ export function CharacterLine({ draft, onLooks }: { draft: Draft; onLooks: (look
     id && (
       <span className="tools-line-item">
         <span className="field-label">{LABELS[n]}</span>
-        <button type="button" className="link" onClick={() => setShowing(id)}>
+        <Button kind="link" onClick={() => setShowing(id)}>
           {(n === 0 ? kindById.get(id)?.name : packageById.get(id)?.name) ?? id}
-        </button>
+        </Button>
       </span>
     );
   return (

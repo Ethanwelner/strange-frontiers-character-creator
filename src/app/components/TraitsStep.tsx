@@ -7,6 +7,7 @@ import { content, traitById } from "../content.js";
 import { addPick, type Draft } from "../draft.js";
 import { Chip, Effect, Sign, StepHeader, title, TraitAction, traitName } from "./ui.js";
 import { CardChip, CardNote, TraitCard, traitCardKind } from "./cards.js";
+import { Button } from "./Button.js";
 
 interface Props {
   draft: Draft;
@@ -212,19 +213,19 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom }:
                       // The card's own click and keys toggle it, so the stepper keeps its events to itself.
                       <div className="rank-step" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
                         <span className="rank-label">Rank</span>
-                        <button type="button" aria-label={`Drop a rank of ${t.name}`} onClick={() => remove(lastPick(t.id))}>
+                        <Button round="xs" aria-label={`Drop a rank of ${t.name}`} onClick={() => remove(lastPick(t.id))}>
                           <Sign is="minus" />
-                        </button>
+                        </Button>
                         <span className="num">{heldRank.get(t.id) ?? 0}</span>
-                        <button
-                          type="button"
+                        <Button
+                          round="xs"
                           disabled={reasons.length > 0}
                           title={reasons.join(" ") || undefined}
                           aria-label={`Take ${t.name} rank ${rank} with a ${pick} pick`}
                           onClick={() => onChange(addPick(draft, t.id, rank, pick))}
                         >
                           <Sign is="plus" />
-                        </button>
+                        </Button>
                       </div>
                     )}
                     {rejected && (
@@ -252,9 +253,9 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom }:
                   <strong>{traitName(p.trait)}</strong> rank {p.rank ?? 1} <span className="muted">· {p.pick} pick</span>
                   {!traitById.has(p.trait) && <Chip tone="bad">unknown</Chip>}
                 </span>
-                <button className="link" onClick={() => remove(i)} aria-label={`Remove ${traitName(p.trait)} rank ${p.rank ?? 1}`}>
+                <Button kind="link" onClick={() => remove(i)} aria-label={`Remove ${traitName(p.trait)} rank ${p.rank ?? 1}`}>
                   Remove
-                </button>
+                </Button>
               </li>
             ))}
           </ul>

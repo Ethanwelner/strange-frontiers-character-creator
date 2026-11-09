@@ -1,5 +1,6 @@
 import { useState, type FocusEvent, type KeyboardEvent } from "react";
 import { GENDERS, MAX_AGE, MAX_SIZE_LENGTH, genderText, type Looks } from "../draft.js";
+import { Button } from "./Button.js";
 
 const label = (g: string) => g[0]!.toUpperCase() + g.slice(1);
 
@@ -79,19 +80,19 @@ export function LooksLine({ looks, onChange }: { looks: Looks; onChange: (looks:
             onKeyDown={keys(finishSize(key))}
           />
         ) : (
-          <button type="button" className="tools-look-value" onClick={() => startSize(key)}>
+          <Button kind="bare" className="tools-look-value" onClick={() => startSize(key)}>
             <strong>{looks[key] ?? "—"}</strong>
-          </button>
+          </Button>
         )}
-        <button
-          type="button"
+        <Button
+          kind="bare"
           className="name-edit tools-look-edit"
           aria-label={`Edit the ${key}`}
           onMouseDown={(e) => editing === key && e.preventDefault()}
           onClick={() => (editing === key ? finishSize(key)(true) : startSize(key))}
         >
           <span className="pen-icon" aria-hidden="true" />
-        </button>
+        </Button>
       </span>
     </span>
   );
@@ -118,19 +119,19 @@ export function LooksLine({ looks, onChange }: { looks: Looks; onChange: (looks:
               onKeyDown={keys(finishAge)}
             />
           ) : (
-            <button type="button" className="tools-look-value" onClick={startAge}>
+            <Button kind="bare" className="tools-look-value" onClick={startAge}>
               <strong>{looks.age ?? "—"}</strong>
-            </button>
+            </Button>
           )}
-          <button
-            type="button"
+          <Button
+            kind="bare"
             className="name-edit tools-look-edit"
             aria-label="Edit the age"
             onMouseDown={(e) => editing === "age" && e.preventDefault()}
             onClick={() => (editing === "age" ? finishAge(true) : startAge())}
           >
             <span className="pen-icon" aria-hidden="true" />
-          </button>
+          </Button>
         </span>
       </span>
       <span className="tools-line-item tools-look">
@@ -173,19 +174,19 @@ export function LooksLine({ looks, onChange }: { looks: Looks; onChange: (looks:
               )}
             </span>
           ) : (
-            <button type="button" className="tools-look-value" onClick={startGender}>
+            <Button kind="bare" className="tools-look-value" onClick={startGender}>
               <strong>{genderText(looks) ?? "Unlisted"}</strong>
-            </button>
+            </Button>
           )}
-          <button
-            type="button"
+          <Button
+            kind="bare"
             className="name-edit tools-look-edit"
             aria-label="Edit the gender"
             onMouseDown={(e) => editing === "gender" && e.preventDefault()}
             onClick={() => (editing === "gender" ? finishGender(true) : startGender())}
           >
             <span className="pen-icon" aria-hidden="true" />
-          </button>
+          </Button>
         </span>
       </span>
       {sizeItem("height", "Height")}

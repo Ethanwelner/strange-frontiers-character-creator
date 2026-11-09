@@ -4,6 +4,7 @@ import { ItemCard } from "./cards.js";
 import { content, itemById } from "../content.js";
 import { ITEM_CATEGORIES, stockItemNamed, withItem, type Item, type ItemCategory } from "../items.js";
 import type { Item as StockItem } from "../../schema/index.js";
+import { Button } from "./Button.js";
 
 // Stock items to suggest while typing a name, money left out until wealth has rules.
 // Natural weapons a Trait grants, like a Haymaker, come with the Trait rather
@@ -87,13 +88,13 @@ function ItemPicker({ onAdd, custom }: { onAdd: (picked: { stock: StockItem; qty
                   {selected && (
                     <div className="rank-step item-pick-count">
                       <span className="rank-label">Count</span>
-                      <button type="button" aria-label={`One fewer ${i.name}`} disabled={qty <= 1} onClick={() => setCount(i.id, qty - 1)}>
+                      <Button round="xs" aria-label={`One fewer ${i.name}`} disabled={qty <= 1} onClick={() => setCount(i.id, qty - 1)}>
                         <Sign is="minus" />
-                      </button>
+                      </Button>
                       <span className="num">{qty}</span>
-                      <button type="button" aria-label={`One more ${i.name}`} onClick={() => setCount(i.id, qty + 1)}>
+                      <Button round="xs" aria-label={`One more ${i.name}`} onClick={() => setCount(i.id, qty + 1)}>
                         <Sign is="plus" />
-                      </button>
+                      </Button>
                     </div>
                   )}
                 </ItemCard>
@@ -109,14 +110,15 @@ function ItemPicker({ onAdd, custom }: { onAdd: (picked: { stock: StockItem; qty
       {/* On the Custom tab, Add items only while something is picked, so it doesn't sit beside Add custom item */}
       {(tab !== "custom" || count > 0) && (
         <div className="item-picker-submit">
-          <button
-            type="button"
+          <Button
+            tone={count === 0 ? "gray" : "primary"}
+            ready={count > 0}
             className="build-button"
             disabled={count === 0}
             onClick={() => onAdd([...picked].map(([id, qty]) => ({ stock: itemById.get(id)!, qty })).filter((p) => p.stock))}
           >
             {count === 0 ? "Add items" : `Add ${count} ${count === 1 ? "item" : "items"}`}
-          </button>
+          </Button>
         </div>
       )}
     </div>
@@ -200,9 +202,9 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
       {/* Add item at the right end of the title's line, opening the add form in a popup */}
       <div className="sheet-section-head">
         <h4 className="rule">Items</h4>
-        <button type="button" className="sheet-section-add" aria-label="Add item" onClick={() => setAdding(true)}>
+        <Button size="small" tone="item" className="sheet-section-add" aria-label="Add item" onClick={() => setAdding(true)}>
           Add<span className="sheet-section-add-noun"> item</span>
-        </button>
+        </Button>
       </div>
 
       {adding && (
@@ -228,9 +230,9 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                     </option>
                   ))}
                 </select>
-                <button type="submit" disabled={!name.trim()}>
+                <Button type="submit" disabled={!name.trim()}>
                   Add custom item
-                </button>
+                </Button>
               </form>
             }
           />
