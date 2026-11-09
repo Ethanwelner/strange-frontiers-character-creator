@@ -1,5 +1,7 @@
 import { PackageGrants } from "./BackgroundStep.js";
-import { Chip, LorePopup, regionClass, SettingIcon, StatRanges, title, traitName } from "./ui.js";
+import { LorePopup, title } from "./ui.js";
+import { BackgroundCard } from "./cards.js";
+import { KindBody } from "./KindCards.js";
 import { kindById, packageById } from "../content.js";
 
 // A Kind's or a background package's card, drawn like its card in the
@@ -14,45 +16,17 @@ export function BackgroundPopup({ id, onClose }: { id: string; onClose: () => vo
   if (!entry) return null;
   return (
     <LorePopup label={entry.name} onClose={onClose} className="lore-modal-card">
-      <div className={`card headed tools-background-card ${regionClass(entry.plane)}`}>
-        <div className="card-head">
-          <h3>
-            <SettingIcon plane={entry.plane} />
-            {entry.name}
-          </h3>
-          <span className="trait-name-chips">
-            <Chip>{kind ? "Kind" : title(pkg!.type)}</Chip>
-            <Chip tone="muted">{entry.plane}</Chip>
-          </span>
-        </div>
-        <p>{entry.summary}</p>
-        {entry.lore && <p className="muted">{entry.lore}</p>}
-        {kind && (
+      <BackgroundCard name={entry.name} slot={kind ? "Kind" : title(pkg!.type)} plane={entry.plane} className="tools-background-card">
+        {kind ? (
+          <KindBody kind={kind} lore />
+        ) : (
           <>
-            <StatRanges stats={kind.stats} />
-            {kind.grants.length > 0 && (
-              <div className="grants">
-                <div>
-                  <span className="label">Grants</span>
-                  {kind.grants.map((g) => (
-                    <Chip key={g.trait} tone="accent">
-                      {traitName(g.trait)}
-                    </Chip>
-                  ))}
-                </div>
-              </div>
-            )}
-            <ul className="features">
-              {kind.features.map((f) => (
-                <li key={f.name}>
-                  <strong>{f.name}.</strong> {f.description}
-                </li>
-              ))}
-            </ul>
+            <p>{entry.summary}</p>
+            {entry.lore && <p className="sf-card-lore">{entry.lore}</p>}
+            <PackageGrants pkg={pkg!} />
           </>
         )}
-        {pkg && <PackageGrants pkg={pkg} />}
-      </div>
+      </BackgroundCard>
     </LorePopup>
   );
 }

@@ -1,0 +1,870 @@
+/* ========================================
+   STRANGE FRONTIERS CARDS
+   ========================================
+   One stylesheet for every Trait, Item and Background card, wherever it's
+   drawn. The Character Creator and Player Tools are the reference:
+
+     strange-frontiers-character-creator  src/app/cards.css (this file)
+                                          src/app/components/cards.tsx
+     portfolio_site                       css/sf-cards.css (a copy)
+                                          php/rpg/components/cards.php
+
+   Both copies must stay identical: change it in the creator, then copy it
+   to the site. The components in both repos draw the same markup and take
+   the same options for how a card behaves where it's used (see cards.tsx).
+
+   Cards carry their own colors (the creator's on-screen dark), so a card
+   looks the same in a light section, a dark one or a popup. Each interface
+   only adds its own layout (grids, popups) and its picker states. */
+
+.sf-card,
+.sf-item-card {
+    --card-bg: var(--portfolio-black, #212121);
+    --card-text: #e8e8e8;
+    --card-soft: #b3b3b3;
+    color: var(--card-text);
+}
+
+/* ---- Chips: the side nav's badges, gray on the black card ---- */
+
+.sf-chip {
+    display: inline-block;
+    margin: .15rem .25rem .15rem 0;
+    padding: .2rem .5rem;
+    border-radius: 4px;
+    background: var(--portfolio-gray, #525252);
+    color: var(--portfolio-white, #fff);
+    font-size: .875rem;
+    font-weight: 600;
+    white-space: nowrap;
+
+    &.sf-chip--muted {
+        background: var(--portfolio-light-gray, #eaeaea);
+        color: var(--portfolio-black, #212121);
+    }
+
+    &.sf-chip--accent {
+        background: #6b6b6b;
+    }
+
+    &.sf-chip--bad {
+        background: var(--portfolio-red, #eb0844);
+    }
+}
+
+/* ---- Trait and Background cards: a 2px edge the color of the bar ---- */
+
+.sf-card {
+    --card-edge: #181818;
+    position: relative;
+    width: 100%;
+    background-color: var(--card-bg);
+    border: 2px solid var(--card-edge);
+    border-radius: 12px;
+    box-shadow: 0 4px 10px #00000030;
+    transition: border-color 200ms;
+
+    /* Isekai's cards: Dreft's green bar and edge */
+    &.sf-card--dreft {
+        --card-edge: var(--frontiers-dreft, #1c372b);
+    }
+
+    > .sf-card-bar {
+        border-radius: 10px 10px 0 0;
+        background-color: var(--card-edge);
+        color: var(--portfolio-white, #fff);
+    }
+
+    /* A picked card (a picker's): a green ring and a check on its corner */
+    &.selected {
+        border-color: var(--portfolio-green, #47b767);
+        box-shadow: 0 0 0 1px var(--portfolio-green, #47b767), 0 4px 10px #00000030;
+    }
+
+    &.selected::after {
+        content: "✓";
+        position: absolute;
+        top: -12px;
+        right: -12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--portfolio-green, #47b767);
+        color: var(--portfolio-white, #fff);
+        font-size: .9rem;
+        font-weight: 600;
+    }
+}
+
+/* The setting's mark before a card's name, in the bar's text color */
+.setting-icon {
+    display: inline-block;
+    flex-shrink: 0;
+    width: 1.15em;
+    height: 1.15em;
+    margin-right: .45em;
+    vertical-align: -.2em;
+    background-color: currentColor;
+    mask: center / contain no-repeat;
+
+    &.setting-isekai {
+        mask-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 512 512%22%3E%3Cg%3E%3Cpath d=%22m194.547 20.182-12.815 195.064L73.522 94.22l45.562 160.89-92.547-8.542 54.106 103.94-61.225 8.54 79.943 65.73a159.426 159.426 0 0 1-4.204-36.206l-20.963-1.7 1.508-18.626 20.536 1.664a156.566 156.566 0 0 1 15.233-51.414l-40.48-29.09 10.908-15.176 38.9 27.96a158.684 158.684 0 0 1 35.288-38.31l-27.73-50.21 16.36-9.033 26.845 48.607a156.696 156.696 0 0 1 48.88-19.217l-12.952-90.87 18.502-2.637 12.94 90.785c4.583-.4 9.22-.62 13.906-.62h.004c4.13 0 8.223.163 12.275.475l6.574-62.775 18.587 1.945-6.634 63.37a157.415 157.415 0 0 1 37.95 12.68l18.37-36.737L356.678 218l-18.746 37.492a159.36 159.36 0 0 1 24.59 19.342l46.53-52.115 13.942 12.446-47.707 53.438a157.87 157.87 0 0 1 20.957 33.115l32.97-22.372 10.493 15.464-36.393 24.696a155.963 155.963 0 0 1 7.327 36.707l19.594-3.19 3.002 18.448-22.29 3.627a156.823 156.823 0 0 1-4.706 32.09l80.9-63.87-56.24-5.695 54.034-85.428-59.73 9.252 39.868-103.57-88.28 35.94 32.75-116.752-96.82 111.057-17.085-168.008-42.715 108.207-58.375-128.142zm58.29 229.193c-76.976.002-138.993 62.02-138.993 138.996 0 33.147 11.532 63.544 30.783 87.485l-130.545-46.02h-.713v62.487h146.823l.004.004h29.6c-.002 0-.004-.002-.006-.004h1.548l-3.07-1.082c-28.443-20.302-46.98-53.577-46.98-91.19 0-61.712 49.773-112.13 111.55-112.13 61.776 0 112.13 50.354 112.13 112.13 0 37.508-18.62 70.66-47.05 90.97l-3.69 1.302h1.848l-.006.004h29.424c.002 0 .003-.003.004-.004h146.7v-62.488h-.716l-130.195 45.898c19.395-23.942 31.13-54.303 31.13-87.36 0-76.932-62.6-138.995-139.577-138.997h-.004z%22 fill=%22%23000000%22 fill-opacity=%221%22%3E%3C/path%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    &.setting-systems {
+        mask-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 512 512%22%3E%3Cg%3E%3Cpath d=%22M133.813 38.28c-62.975 0-113.407 51.22-113.407 114.19 0 62.972 50.432 113.405 113.406 113.405 12.027 0 23.638-1.835 34.532-5.25a95.864 95.864 0 0 1-1.25-2.906l-69.78-120.876-8.19-13.625 16-.345h138.97c-13.07-48.662-57.543-84.596-110.28-84.594zm247.843 0c-52.74 0-96.672 35.93-109.562 84.595H426.47l-8.19 14.28-71.124 123.314c-.004.007.004.02 0 .03-.013.03-.017.064-.03.094 10.874 3.434 22.47 5.28 34.53 5.28 62.975 0 114.156-50.432 114.156-113.405 0-62.972-51.18-114.19-114.156-114.19zm-260.53 103.314 39.093 67.562c3.127-27.534 17.792-51.71 39-67.562h-78.095zm125.405 0c-38.53 5.45-68.186 38.596-68.186 78.625 0 11.152 2.282 21.772 6.437 31.405l1.064 1.844c36.87-18.726 62.156-56.763 62.156-101 0-3.67-.19-7.295-.53-10.876h-.94zm22.25 0c-.334 3.58-.53 7.206-.53 10.875 0 44.112 24.748 82.062 61.22 100.843l1.75-3.032a79.097 79.097 0 0 0 5.905-30.06c0-40.03-29.657-73.175-68.188-78.626h-.156zm47.47 0c21.134 15.798 35.742 39.864 38.938 67.28l38.937-67.28H316.25zm-58.5 109.28c-23.044 0-44.42 6.85-62.25 18.626.005.006-.005.025 0 .03 14.546 18.33 37.014 30.095 62.22 30.095 25.257 0 47.766-11.823 62.31-30.22-17.92-11.708-39.308-18.53-62.28-18.53zm-77.094 30.345c-22.37 20.864-36.312 50.707-36.312 83.81 0 62.974 50.43 113.408 113.406 113.408 62.975 0 114.156-50.434 114.156-113.407 0-33.095-14.16-62.915-36.72-83.78l-69.06 119.72-8.5 13.967-7.813-13.968-69.157-119.75zm38 28.936 38.97 67.344 38.905-67.22a97.13 97.13 0 0 1-38.81 8.064c-13.87 0-27.07-2.93-39.064-8.188z%22 fill=%22%23000000%22 fill-opacity=%221%22%3E%3C/path%3E%3C/g%3E%3C/svg%3E");
+    }
+}
+
+.sf-card-chips {
+    flex: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 4px;
+}
+
+/* A card's paragraphs, .4rem above and below, as the creator sets them */
+.sf-card-body p {
+    margin: .4rem 0;
+}
+
+/* A card's note: where a Trait came from, how long a Condition lasts, what
+   a Trait needs, small and muted */
+.sf-card-note {
+    margin: 0;
+    color: var(--card-soft);
+    font-size: .75rem;
+}
+
+/* ---- Trait cards ---- */
+
+.sf-trait-card {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    padding: 0 1rem 1rem;
+    font-size: 14px;
+
+    > .sf-card-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin: 0 -1rem;
+        padding: 10px 16px;
+        font-size: 1rem;
+        font-weight: 600;
+
+        > .sf-card-name {
+            min-width: 0;
+        }
+    }
+
+    > .sf-card-body {
+        display: flex;
+        flex-direction: column;
+        gap: .5rem;
+        min-width: 0;
+    }
+
+    /* Conditions in grays: a mid gray edge, a light gray bar, dark text */
+    &.sf-trait-card--condition {
+        --card-edge: #646464;
+
+        > .sf-card-bar {
+            background-color: #b7b4b4;
+            color: var(--portfolio-black, #212121);
+        }
+    }
+}
+
+/* A Trait card's category and flags, a row of chips at the top of its
+   body, and where it came from after them */
+.sf-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+
+    > .sf-card-note {
+        margin: 0 0 0 4px;
+    }
+}
+
+/* Its effect: a line for each part that does something different */
+.sf-card-effect {
+    margin: 0;
+    font-size: .9rem;
+
+    > p,
+    > ul {
+        margin: 0;
+    }
+
+    > * + * {
+        margin-top: 4px;
+    }
+
+    > ul {
+        padding-left: 1.25em;
+    }
+
+    li + li {
+        margin-top: 2px;
+    }
+}
+
+/* The Action a Trait grants, set off by a rule at its left */
+.sf-card-action {
+    margin: 0;
+    padding-left: 10px;
+    border-left: 2px solid var(--portfolio-medium-gray, #969696);
+    font-size: .9rem;
+
+    > p {
+        margin: 0;
+    }
+
+    /* A temporary weapon's badges, between the Action's lines */
+    > .sf-card-action-badges {
+        margin: 8px 0;
+    }
+}
+
+/* A card that folds (fold): the chevron at the end of its bar opens and
+   closes it, and is the only place that does. Closed, the card keeps what
+   stays in view (.has-keep, like an Ability's effect), or is its bar
+   alone, rounded all round. */
+.sf-card-fold {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    margin-left: 4px;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: inherit;
+    cursor: pointer;
+
+    &:is(:hover, :focus-visible) {
+        background: none;
+        color: inherit;
+    }
+}
+
+.sf-card-chevron {
+    width: 12px;
+    height: 8px;
+    opacity: .4;
+    transition: opacity 200ms, transform 200ms;
+
+    .sf-card-fold:is(:hover, :focus-visible, [aria-expanded="true"]) > & {
+        opacity: 1;
+    }
+
+    .sf-card-fold[aria-expanded="true"] > & {
+        transform: rotate(180deg);
+    }
+}
+
+.sf-card-more {
+    display: contents;
+}
+
+.sf-card.is-closed .sf-card-more {
+    display: none;
+}
+
+.sf-trait-card.is-closed:not(.has-keep) {
+    gap: 0;
+    padding-bottom: 0;
+
+    > .sf-card-bar {
+        border-radius: 10px;
+    }
+
+    > .sf-card-body {
+        display: none;
+    }
+}
+
+/* ---- Background cards: Kinds, Origins, Professions and Pasts ---- */
+
+.sf-background-card {
+    display: grid;
+    align-content: start;
+    gap: 16px;
+    padding: 16px;
+
+    /* The grid's gap does the spacing between a card's rows */
+    > *,
+    > .sf-card-body > * {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    > .sf-card-bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: .5rem;
+        margin: -16px -16px 0;
+        padding: 10px 16px;
+
+        > .sf-card-name {
+            margin: 0;
+            font-size: 1.05rem;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        .sf-chip--muted {
+            background: rgb(255 255 255 / 15%);
+            color: var(--portfolio-white, #fff);
+        }
+    }
+
+    > .sf-card-body {
+        display: grid;
+        align-content: start;
+        gap: 16px;
+    }
+
+    /* A card to pick */
+    &.is-selectable {
+        cursor: pointer;
+
+        &:hover:not(.selected) {
+            border-color: var(--portfolio-medium-gray, #969696);
+        }
+    }
+}
+
+/* A Kind's or package's lore line, under its summary */
+.sf-card-lore {
+    color: var(--card-soft);
+}
+
+/* What it gives, as labeled rows of chips */
+.sf-background-rows {
+    display: grid;
+    gap: 16px;
+
+    > div {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+
+    > p,
+    .sf-chip {
+        margin: 0;
+    }
+}
+
+.sf-background-label {
+    flex-basis: 100%;
+    font-size: .75rem;
+    font-weight: 600;
+}
+
+/* A Kind's bonus and maximum for every stat: Physical, Social and Mental
+   side by side, 2.5rem apart, or closer (down to .75rem) when the card is
+   too narrow for that and three 6rem columns */
+.stat-ranges {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
+    gap: .75rem clamp(.75rem, (100% - 18rem) / 2, 2.5rem);
+    font-size: .8rem;
+
+    .muted {
+        color: var(--card-soft);
+    }
+}
+
+.stat-ranges-group {
+    margin-bottom: .15rem;
+    font-weight: 600;
+}
+
+.stat-range {
+    display: flex;
+    justify-content: space-between;
+    gap: .25rem;
+}
+
+/* A Kind's features */
+.sf-card-features {
+    margin: 0;
+    padding-left: 1.1rem;
+    font-size: .9rem;
+
+    li {
+        margin: .25rem 0;
+    }
+}
+
+/* ---- Item cards: the Traits' black with a warm olive edge ---- */
+
+.sf-item-card {
+    position: relative;
+    container: item / inline-size;
+    width: 100%;
+    padding: 12px 12px 12px 22px;
+    background-color: var(--card-bg);
+    border: 2px solid #6d6a5a;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px #00000030;
+    font-size: 14px;
+
+    /* Bites scooped out of its corners, so it reads apart from a Trait card
+       (corner-shape; browsers without it keep the plain corners) */
+    @supports (corner-shape: scoop) {
+        border-radius: 6px;
+        corner-shape: scoop;
+    }
+
+    /* Its fields in a darker olive to match */
+    :is(input:not([type="checkbox"]), select) {
+        background-color: #25241e;
+    }
+
+    p {
+        margin: 0;
+    }
+}
+
+/* Its chips, and a Cast Action's badges in a Trait card: the fields' dark
+   olive with the card's edge and a pale olive text */
+:is(.sf-item-card, .sf-card-action-badges) .chip {
+    display: inline-block;
+    margin: .15rem .25rem .15rem 0;
+    padding: .2rem .5rem;
+    background-color: #25241e;
+    border: 1px solid #6d6a5a;
+    border-radius: 4px;
+    color: #d6d1b4;
+    font-size: .875rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Its top line: Equip, the name and its badges, the chevron. One line once
+   the card has the room for the name at its smallest and the category
+   shrunk to 5.5rem (357px); wrapping in narrower cards. */
+.equipment-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+
+    @container item (width >= 357px) {
+        flex-wrap: nowrap;
+    }
+
+    select {
+        flex: 0 1 auto;
+        min-width: 5.5rem;
+
+        @container item (width < 440px) {
+            flex-basis: 6rem;
+        }
+    }
+}
+
+.sf-item-card .sf-item-summary {
+    flex-wrap: nowrap;
+}
+
+/* The name and its badges between Equip and the chevron: the name takes what
+   its line leaves, the badges sit at the right, and they wrap under it one
+   at a time as the room runs out, still at the right */
+.sf-item-main {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 6px 8px;
+
+    > .equipment-name {
+        flex: 1 1 auto;
+    }
+}
+
+.equipment-name {
+    flex: 0 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 600;
+}
+
+/* How many (count), in a circle on the card's left edge, a set distance
+   down so it stays put when the card opens */
+.sf-item-count {
+    position: absolute;
+    top: 14.15px;
+    left: -14px;
+    display: grid;
+    place-items: center;
+    box-sizing: border-box;
+    min-width: 26px;
+    height: 26px;
+    padding: 0 5px;
+    background-color: var(--card-bg);
+    border: 2px solid #6d6a5a;
+    border-radius: 13px;
+    font-size: .8125rem;
+    font-weight: 600;
+    line-height: 1;
+}
+
+/* Equip (equip): an 18px box in the fields' dark olive, filling pale olive
+   with a dark check when it's on. Read-only, it's the same box, disabled. */
+.sf-item-equip {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+
+    input[type="checkbox"] {
+        appearance: none;
+        flex: none;
+        width: 18px;
+        height: 18px;
+        margin: 0;
+        background-color: #25241e;
+        border: 1px solid #6d6a5a;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 150ms, border-color 150ms;
+
+        &:hover:not(:disabled) {
+            border-color: #a29d82;
+        }
+
+        &:focus-visible {
+            outline: 2px solid #a29d82;
+            outline-offset: 2px;
+        }
+
+        &:checked {
+            background-color: #b5ae86;
+            border-color: #b5ae86;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='%2325241e' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-size: 14px;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        &:disabled {
+            opacity: 1;
+            cursor: default;
+        }
+    }
+
+    &:has(input:disabled) {
+        cursor: default;
+    }
+
+    /* Its label, for screen readers */
+    .sf-item-equip-label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+}
+
+/* The card's icon buttons: faded like the sheet's pens and full strength
+   under the pointer or while the card is open */
+.sf-item-icon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: inherit;
+    cursor: pointer;
+    opacity: .4;
+    transition: opacity 200ms;
+
+    &:is(:hover, :focus-visible, [aria-expanded="true"]) {
+        background: none;
+        color: inherit;
+        opacity: 1;
+    }
+
+    svg {
+        width: 14px;
+        height: 16px;
+        fill: currentColor;
+    }
+}
+
+/* The chevron (fold), a little apart from the rest, pointing up while open.
+   It's the only place that opens and closes the card. */
+.sf-item-icon.sf-item-expand {
+    margin-left: 4px;
+
+    svg {
+        width: 12px;
+        height: 8px;
+        fill: none;
+        transition: transform 200ms;
+    }
+
+    &[aria-expanded="true"] svg {
+        transform: rotate(180deg);
+    }
+}
+
+.sf-item-more {
+    display: contents;
+}
+
+.sf-item-card.is-closed .sf-item-more {
+    display: none;
+}
+
+/* Its damage, range, area and resistances as badges. On the top line their
+   wrappers step aside, so each badge lays out on its own in .sf-item-main. */
+.sf-item-badges {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.sf-item-summary :is(.sf-item-badges, .sf-item-badge-group) {
+    display: contents;
+}
+
+.sf-item-badge-group {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+}
+
+/* One badge holds each value, an icon then its number, 10px apart */
+:is(.sf-item-card, .sf-card-action-badges) .chip.equipment-stat {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2px 10px;
+}
+
+.equipment-stat-value {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+
+    :is(.icon, .damage-icon) {
+        width: 1.1em;
+        height: 1.1em;
+        margin: 0;
+        fill: currentColor;
+    }
+}
+
+/* A badge's lead: a circle of the checkbox's pale olive with a dark olive
+   crosshairs, sword, arc, burst or shield, standing in for the badge's left
+   edge. The badge rounds its left side to match. */
+:is(.sf-item-card, .sf-card-action-badges) .chip.equipment-stat:has(> .item-stat-lead) {
+    flex-wrap: nowrap;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    border-radius: calc((1lh + .4rem + 2px) / 2) 4px 4px calc((1lh + .4rem + 2px) / 2);
+}
+
+.item-stat-lead {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: calc(1lh + .4rem + 2px);
+    height: calc(1lh + .4rem + 2px);
+    margin: -1px -4px -1px -1px;
+    background-color: #b5ae86;
+    border-radius: 50%;
+
+    :is(.icon, svg) {
+        width: 1rem;
+        height: 1rem;
+        fill: #25241e;
+    }
+}
+
+/* "or" between a damage choice's options, inside the badge */
+.equipment-stat-or {
+    color: #a29d82;
+    font-weight: 400;
+}
+
+/* An open card's chips the top line leaves out: its category, then its
+   value, how it Attacks and the slot it takes */
+.equipment-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+}
+
+/* Edit (edit), and Remove in edit mode: circles half outside the card's
+   right edge, in the checkbox's pale olive with a dark olive icon. Edit sits
+   on the chips' line under the top line; Remove 8px under it. */
+.sf-item-edge {
+    position: absolute;
+    right: -14px;
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    background-color: #b5ae86;
+    border: 2px solid #6d6a5a;
+    border-radius: 50%;
+    color: #25241e;
+    cursor: pointer;
+    transition: background-color 200ms;
+
+    &:is(:hover, :focus-visible) {
+        background-color: #d6d1b4;
+        color: #25241e;
+    }
+
+    svg {
+        width: 11px;
+        height: 13px;
+        fill: currentColor;
+    }
+}
+
+.sf-item-edit {
+    top: 54.45px;
+
+    &[aria-expanded="true"] {
+        background-color: #d6d1b4;
+    }
+
+    .pen-icon {
+        width: 13px;
+        height: 13px;
+        opacity: 1;
+    }
+}
+
+.sf-item-remove {
+    top: calc(54.45px + 26px + 8px);
+}
+
+/* Edit's fields, clear of the circles at the card's edge */
+.sf-item-fields {
+    margin-top: 10px;
+    padding-right: 12px;
+}
+
+.sf-item-name-field {
+    flex: 1 1 0;
+    min-width: 3rem;
+}
+
+/* Note (note): a pen and its label at the card's bottom, faded until
+   pointed at or open, opening the notes field at its right */
+.sf-item-note-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: inherit;
+    font-size: .875rem;
+    cursor: pointer;
+    opacity: .6;
+    transition: opacity 200ms;
+
+    &:is(:hover, :focus-visible, [aria-expanded="true"]) {
+        background: none;
+        color: inherit;
+        opacity: 1;
+    }
+
+    svg {
+        width: 16px;
+        height: 14px;
+        fill: currentColor;
+    }
+}
+
+/* Its description, in italics, then its rules, under its chips */
+.sf-item-stock {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 8px 0;
+    font-size: .875rem;
+}
+
+.sf-item-card .equipment-description {
+    margin: 0;
+    color: var(--card-text);
+    font-size: inherit;
+    font-style: italic;
+}
+
+.sf-item-card .equipment-effect {
+    margin: 0;
+    color: var(--card-soft);
+    font-size: inherit;
+}
+
+/* An enchanted Item's stored MP, on its top line: current over maximum in
+   Bebas, the maximum muted */
+.equipment-mp {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    font-family: 'bebas_neueregular', sans-serif;
+    font-weight: 400;
+    line-height: 1;
+
+    .resource-name {
+        font-size: 20px;
+        font-weight: 400;
+    }
+
+    .num {
+        font-size: 24px;
+    }
+
+    .muted {
+        color: var(--card-soft);
+    }
+}
+
+/* A damage formula's total, muted after it */
+.sf-damage-total {
+    color: #a29d82;
+    font-weight: 400;
+}

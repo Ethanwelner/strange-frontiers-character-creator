@@ -1,15 +1,9 @@
-import { Fragment, useState, type ReactNode } from "react";
-import { Chip, Icon, LorePopup, SettingIcon, Sign, title } from "./ui.js";
-import { damageIcon } from "./Resistances.js";
+import { useState, type ReactNode } from "react";
+import { LorePopup, Sign, title } from "./ui.js";
+import { ItemCard } from "./cards.js";
 import { content, itemById } from "../content.js";
-import { ITEM_CATEGORIES, itemBadges, itemUses, stockItemNamed, withItem, type Item, type ItemCategory } from "../items.js";
-import { parseDamage } from "../../engine/damage.js";
-import { parseResistances } from "../resistances.js";
+import { ITEM_CATEGORIES, stockItemNamed, withItem, type Item, type ItemCategory } from "../items.js";
 import type { Item as StockItem } from "../../schema/index.js";
-
-// How itemBadges words a weapon's reach, like "Max Range: 30 m"
-const MAX_RANGE = "Max Range: ";
-const AREA = "Area of Effect: ";
 
 // Stock items to suggest while typing a name, money left out until wealth has rules.
 // Natural weapons a Trait grants, like a Haymaker, come with the Trait rather
@@ -18,95 +12,6 @@ const AREA = "Area of Effect: ";
 const STOCK = content.items
   .filter((i) => i.category !== "currency" && (!i.tags.includes("natural weapon") || i.tags.includes("universal")))
   .sort((a, b) => a.name.localeCompare(b.name));
-
-// A stock item's damage and resistances as badges, in a closed card's line
-// before its category, and under an open card's fields. Each badge starts
-// with a circle on its left edge: crosshairs for a ranged or thrown weapon's
-// damage, a sword for any other's, an arc for its Max Range and a burst
-// for its Area of Effect (after the damage), a shield for resistances. Then each damage
-// type's icon and number, all in one badge, with "or" between a damage
-// choice's options. Where a resistance applies, like a helmet's (head), is
-// left to the item's description.
-function ItemStats({ stock }: { stock: StockItem }) {
-  const damage = stock.damage ? parseDamage(stock.damage) : undefined;
-  const resists = stock.resistances ? parseResistances(stock.resistances, stock.name) : [];
-  if (!stock.damage && !resists.length && !stock.maxRange && !stock.areaOfEffect) return null;
-  const ranged = stock.tags?.some((t) => t === "ranged" || t === "thrown");
-  const damageLead = (
-    <span className="tools-item-stat-lead">
-      <Icon name={ranged ? "crosshairs" : "sword"} label={ranged ? "Ranged damage" : "Melee damage"} />
-    </span>
-  );
-  return (
-    <div className="tools-item-stats">
-      {stock.damage && (
-        <span className="tools-item-stat-group">
-          {damage ? (
-            <span className="chip tools-item-stat">
-              {damageLead}
-              {damage.map((option, i) => (
-                <Fragment key={i}>
-                  {i > 0 && <span className="tools-item-stat-or">or</span>}
-                  {option.map((d) => (
-                    <span key={d.type} className="tools-item-stat-value">
-                      <Icon name={damageIcon(d.type)} label={d.type} />
-                      {d.amount}
-                      {d.perRank && "/Rank"}
-                      {d.plus && ` + ${d.plus}`}
-                    </span>
-                  ))}
-                </Fragment>
-              ))}
-            </span>
-          ) : (
-            // Damage the badges can't read stays as written
-            <span className="chip tools-item-stat">
-              {damageLead}
-              {stock.damage}
-            </span>
-          )}
-        </span>
-      )}
-      {stock.maxRange && (
-        // How far it reaches, after the damage: an arc in a tan circle, then the distance
-        <span className="tools-item-stat-group">
-          <span className="chip tools-item-stat" title="Max Range">
-            <span className="tools-item-stat-lead">
-              <Icon name="range" label="Max Range" />
-            </span>
-            <span className="tools-item-stat-value">{stock.maxRange}</span>
-          </span>
-        </span>
-      )}
-      {stock.areaOfEffect && (
-        // Its blast's reach, after the range: a burst in a tan circle, then the radius
-        <span className="tools-item-stat-group">
-          <span className="chip tools-item-stat" title="Area of Effect">
-            <span className="tools-item-stat-lead">
-              <Icon name="burst" label="Area of Effect" />
-            </span>
-            <span className="tools-item-stat-value">{stock.areaOfEffect}</span>
-          </span>
-        </span>
-      )}
-      {resists.length > 0 && (
-        <span className="tools-item-stat-group">
-          <span className="chip tools-item-stat">
-            <span className="tools-item-stat-lead">
-              <Icon name="shield" label="Resists" />
-            </span>
-            {resists.map((r, i) => (
-              <span key={i} className="tools-item-stat-value">
-                <Icon name={damageIcon(r.type)} label={r.type} />
-                {r.amount}
-              </span>
-            ))}
-          </span>
-        </span>
-      )}
-    </div>
-  );
-}
 
 // Add item's picker, like the Traits step: a tab per category, each with a
 // search, over the game's items as the inventory's item cards. A large
@@ -167,50 +72,17 @@ function ItemPicker({ onAdd, custom }: { onAdd: (picked: { stock: StockItem; qty
             const qty = picked.get(i.id);
             const selected = qty !== undefined;
             const open = opened.has(i.id);
-            const details = itemUses(i);
-            const badges = itemBadges(i).filter((b) => !b.startsWith(MAX_RANGE) && !b.startsWith(AREA));
             return (
               <li key={i.id} className={`item-pick-row${selected ? " selected" : ""}`}>
-                {/* The inventory's item card: its top line without Equip, which waits until the character has it */}
-                <div className="c-sheet-box tools-item item-pick">
-                  {selected && (
-                    <span className="tools-item-count" aria-label={`${qty} of ${i.name}`}>
-                      {qty}
-                    </span>
-                  )}
-                  <div className="tools-item-row tools-item-summary">
-                    {/* The name and its stat badges, which drop under it only when they don't fit beside it */}
-                    <span className="tools-item-main">
-                      <span className="tools-item-title">{i.name}</span>
-                      <ItemStats stock={i} />
-                    </span>
-                    <button
-                      type="button"
-                      className="tools-item-icon tools-item-expand"
-                      aria-label={`${open ? "Collapse" : "Expand"} ${i.name}`}
-                      aria-expanded={open}
-                      title={open ? "Collapse" : "Expand"}
-                      onClick={() => toggleOpen(i.id)}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 8" aria-hidden="true">
-                        <path d="M1 1.5l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="1.5" />
-                      </svg>
-                    </button>
-                  </div>
-                  {open && (
-                    <>
-                      <div className="tools-item-badges">
-                        <Chip>{title(i.category)}</Chip>
-                        {badges.map((b) => (
-                          <Chip key={b}>{b}</Chip>
-                        ))}
-                      </div>
-                      <div className="tools-item-stock">
-                        <p className="tools-item-flavor">{i.summary}</p>
-                        {details && <p className="tools-item-details">{details}</p>}
-                      </div>
-                    </>
-                  )}
+                {/* The inventory's item card, without Equip, which waits until the character has it */}
+                <ItemCard
+                  className="item-pick"
+                  name={i.name}
+                  stock={i}
+                  category={i.category}
+                  count={selected ? qty : undefined}
+                  fold={{ open, onToggle: () => toggleOpen(i.id) }}
+                >
                   {/* Picked, how many to add */}
                   {selected && (
                     <div className="rank-step item-pick-count">
@@ -224,7 +96,7 @@ function ItemPicker({ onAdd, custom }: { onAdd: (picked: { stock: StockItem; qty
                       </button>
                     </div>
                   )}
-                </div>
+                </ItemCard>
                 {/* The large checkbox that picks it */}
                 <input type="checkbox" className="item-pick-check" aria-label={`Add ${i.name}`} checked={selected} onChange={() => toggle(i.id)} />
               </li>
@@ -371,142 +243,42 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
         <ul className="tools-item-list">
           {items.map((item) => {
             const stock = item.item ? itemById.get(item.item) : undefined;
-            const details = stock ? itemUses(stock) : "";
-            const open = expanded.has(item.id);
-            // The chevron that opens the card to its fields, or closes it back to a line
-            const expand = (
-              <button
-                type="button"
-                className="tools-item-icon tools-item-expand"
-                aria-label={`${open ? "Collapse" : "Expand"} ${item.name}`}
-                aria-expanded={open}
-                title={open ? "Collapse" : "Expand"}
-                onClick={() => toggleExpanded(item)}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 8" aria-hidden="true">
-                  <path d="M1 1.5l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="1.5" />
-                </svg>
-              </button>
-            );
-            // How many, in a circle on the card's left edge, open or closed
-            const count = (
-              <span className="tools-item-count" aria-label={`${item.qty} of ${item.name}`}>
-                {item.qty}
-              </span>
-            );
-            // Equip, a checkbox at the start of the card's first line, open or closed
-            const equip = (
-              <label className="tools-equipped" title="Equip">
-                <input type="checkbox" aria-label="Equip" checked={item.equipped} onChange={(e) => update(item, { equipped: e.target.checked })} />
-                <span className="tools-equipped-label">Equip</span>
-              </label>
-            );
-            const edit = editing.has(item.id);
-            // The top line, the same open or closed: Equip, the name, then its
-            // damage, range and resistances at the right, and the chevron. The
-            // category waits in the open card, so it doesn't crowd the line.
-            const topLine = (
-              <div className="tools-item-row tools-item-summary">
-                {equip}
-                {/* The name and its stat badges, which drop under it only when they don't fit beside it */}
-                <span className="tools-item-main">
-                  <span className="tools-item-title">{item.name}</span>
-                  {stock && <ItemStats stock={stock} />}
-                </span>
-                {expand}
-              </div>
-            );
-            if (!open) {
-              return (
-                <li key={item.id} className="c-sheet-box tools-item">
-                  {count}
-                  {topLine}
-                </li>
-              );
-            }
-            const badges = stock ? itemBadges(stock).filter((b) => !b.startsWith(MAX_RANGE) && !b.startsWith(AREA)) : [];
             return (
-              <li key={item.id} className="c-sheet-box tools-item">
-                {count}
-                {topLine}
-                {/* Edit, a pen in a circle on the card's right edge, centered
-                    top to bottom, like the count on the left */}
-                <button
-                  type="button"
-                  className="tools-item-edge tools-item-edit-toggle"
-                  aria-label={`Edit ${item.name}`}
-                  title="Edit"
-                  aria-expanded={edit}
-                  onClick={() => toggleEditing(item)}
-                >
-                  <span className="pen-icon" aria-hidden="true" />
-                </button>
-                {/* In edit mode, Remove, a trash can in a circle under Edit's */}
-                {edit && (
-                  <button type="button" className="tools-item-edge tools-item-remove" aria-label={`Remove ${item.name}`} title="Remove" onClick={() => remove(item)}>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" aria-hidden="true">
-                      <path d="M135.2 17.69C140.6 6.848 151.7 0 163.8 0H284.2C296.3 0 307.4 6.848 312.8 17.69L320 32H416C433.7 32 448 46.33 448 64C448 81.67 433.7 96 416 96H32C14.33 96 0 81.67 0 64C0 46.33 14.33 32 32 32H128L135.2 17.69zM394.8 466.1C393.2 492.3 372.3 512 346.9 512H101.1C75.75 512 54.77 492.3 53.19 466.1L31.1 128H416L394.8 466.1z" />
-                    </svg>
-                  </button>
-                )}
-                {/* Under the top line, the badges it leaves out: the category,
-                    like a Trait card's, then the cost, how it Attacks, and the
-                    slot it takes (Max Range and Area of Effect are on the top line) */}
-                <div className="tools-item-badges">
-                  <Chip>{title(item.category)}</Chip>
-                  {badges.map((b) => (
-                    <Chip key={b}>{b}</Chip>
-                  ))}
-                </div>
-                {/* Edit's fields where the top line shows them: how many at the left, then
-                    the name. The category stays as the item has it. */}
-                {edit && (
-                  <div className="tools-item-row tools-item-fields">
-                    <input
-                      type="number"
-                      min={0}
-                      className="tools-qty"
-                      aria-label={`How many ${item.name}`}
-                      value={item.qty}
-                      onChange={(e) =>
-                        update(item, {
-                          qty: Math.max(0, Math.round(Number(e.target.value)) || 0),
-                        })
-                      }
-                    />
-                    <input
-                      type="text"
-                      className="tools-item-name"
-                      aria-label="Item name"
-                      value={item.name}
-                      onChange={(e) => update(item, { name: e.target.value })}
-                    />
-                  </div>
-                )}
-                {stock && (
-                  <div className="tools-item-stock">
-                    {/* The flavor text, then the rules on their own line under it */}
-                    <p className="tools-item-flavor">{stock.summary}</p>
-                    {details && <p className="tools-item-details">{details}</p>}
-                  </div>
-                )}
-                <div className="tools-item-note-line">
-                  {/* Note, a pen and its label, opening the notes field at its right */}
-                  <button
-                    type="button"
-                    className="tools-item-note-toggle"
-                    aria-expanded={showsNotes(item)}
-                    onClick={() => {
-                      if (!showsNotes(item)) setFocusNote(item.id);
-                      toggleNotes(item);
-                    }}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" aria-hidden="true">
-                        <path d="M492.7 58.75C517.7 83.74 517.7 124.3 492.7 149.3L444.3 197.7L314.3 67.72L362.7 19.32C387.7-5.678 428.3-5.678 453.3 19.32L492.7 58.75zM58.57 323.5L291.7 90.34L421.7 220.3L188.5 453.4C178.1 463.8 165.2 471.5 151.1 475.6L30.77 511C22.35 513.5 13.24 511.2 7.03 504.1C.8198 498.8-1.502 489.7 .976 481.2L36.37 360.9C40.53 346.8 48.16 333.9 58.57 323.5L58.57 323.5zM552 464C565.3 464 576 474.7 576 488C576 501.3 565.3 512 552 512H248C234.7 512 224 501.3 224 488C224 474.7 234.7 464 248 464H552z" />
-                    </svg>
-                    Note
-                  </button>
-                  {showsNotes(item) && (
+              <ItemCard
+                key={item.id}
+                as="li"
+                name={item.name}
+                stock={stock}
+                category={item.category}
+                count={item.qty}
+                equip={{ checked: item.equipped, onChange: (equipped) => update(item, { equipped }) }}
+                fold={{ open: expanded.has(item.id), onToggle: () => toggleExpanded(item) }}
+                edit={{
+                  editing: editing.has(item.id),
+                  onToggle: () => toggleEditing(item),
+                  onRemove: () => remove(item),
+                  // How many at the left, then the name. The category stays as the item has it.
+                  fields: (
+                    <>
+                      <input
+                        type="number"
+                        min={0}
+                        className="tools-qty"
+                        aria-label={`How many ${item.name}`}
+                        value={item.qty}
+                        onChange={(e) => update(item, { qty: Math.max(0, Math.round(Number(e.target.value)) || 0) })}
+                      />
+                      <input type="text" className="sf-item-name-field" aria-label="Item name" value={item.name} onChange={(e) => update(item, { name: e.target.value })} />
+                    </>
+                  ),
+                }}
+                note={{
+                  shown: showsNotes(item),
+                  onToggle: () => {
+                    if (!showsNotes(item)) setFocusNote(item.id);
+                    toggleNotes(item);
+                  },
+                  field: (
                     <input
                       type="text"
                       className="tools-note"
@@ -517,9 +289,9 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                       value={item.notes ?? ""}
                       onChange={(e) => update(item, { notes: e.target.value || undefined })}
                     />
-                  )}
-                </div>
-              </li>
+                  ),
+                }}
+              />
             );
           })}
         </ul>
