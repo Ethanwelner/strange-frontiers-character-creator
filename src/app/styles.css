@@ -2121,10 +2121,29 @@
       flex: none;
     }
 
+    /* The search sits close under the tabs, with more room between it and
+       the cards */
+    > .tech-field-tab-list {
+      margin-bottom: 20px;
+    }
+
+    > .filters {
+      margin: 0 0 32px;
+
+      input[type="search"] {
+        padding: 0.6rem 0.9rem;
+        font-size: 1rem;
+      }
+    }
+
+    /* Pulled left by its 14px of room for the count circles, so the cards'
+       edges line up with the tabs and the search, the circles hanging into
+       the box's margin */
     > .item-pick-list {
       flex: 0 1 auto;
       min-height: 0;
       overflow-y: auto;
+      margin-left: -14px;
     }
   }
 
