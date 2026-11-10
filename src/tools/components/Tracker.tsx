@@ -183,7 +183,7 @@ export function Tracker({
 
       {/* The creator's Traits step, without the Traits the character already has */}
       {traitDraft && traitResult && (
-        <Popup label="Choose Traits" onClose={closeTraits} size="wide" className="tools-traits-popup">
+        <Popup label="Choose Traits" onClose={closeTraits} size="wide" scroll="inner" className="tools-traits-popup">
           <TraitsStep
             draft={traitDraft}
             campaign={{ startingLevel: traitDraft.level }}
@@ -191,6 +191,8 @@ export function Tracker({
             onChange={setTraitDraft}
             hide={heldIds}
             newFrom={play.draft.traits.length}
+            picksBelow
+            hints={false}
           />
           <div className="sf-popup-foot">
             {/* Green and glitching, like Add items, once the picks change the character's Traits */}

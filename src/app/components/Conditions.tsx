@@ -4,7 +4,7 @@ import { content, traitById } from "../content.js";
 import { CONDITION_TYPES, conditionTypes, hpConditions, playConditions, withCondition, withoutCondition, type ConditionType, type HeldCondition } from "../conditions.js";
 import { Effect, Sign, TraitAction } from "./ui.js";
 import { CardNote, TraitCard } from "./cards.js";
-import { Button } from "./Button.js";
+import { Button, RemoveX } from "./Button.js";
 import { SheetTitle } from "./sheet-layout.js";
 
 // The Conditions, the same on the Character Creator's sheet and in Player
@@ -46,7 +46,7 @@ export function Conditions({
         Conditions
       </SheetTitle>
       {adding && (
-        <Popup label="Add a Condition" onClose={() => setAdding(false)} size="narrow" className="sheet-add-popup">
+        <Popup label="Add a Condition" onClose={() => setAdding(false)} size="narrow" scroll="inner" className="sheet-add-popup">
           <h3 className="subhead">Add a Condition</h3>
           <ConditionSearch options={options} onPick={add} />
         </Popup>
@@ -90,11 +90,7 @@ export function Conditions({
                   </>
                 }
                 actions={
-                  <Button kind="bare" className="tools-condition-remove" aria-label={`Remove ${t?.name ?? c.trait}`} onClick={() => onChange(withoutCondition(conditions, c.trait))}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 20 20" aria-hidden="true">
-                      <path d="M2 2l16 16M18 2L2 18" fill="none" stroke="currentColor" strokeWidth="2.5" />
-                    </svg>
-                  </Button>
+                  <RemoveX label={`Remove ${t?.name ?? c.trait}`} onClick={() => onChange(withoutCondition(conditions, c.trait))} />
                 }
               >
                 {t?.temporary && (
@@ -135,7 +131,7 @@ function ConditionSearch({ options, onPick }: { options: ReturnType<typeof playC
     return words.every((w) => hay.includes(w));
   });
   return (
-    <div className="condition-search">
+    <div className="condition-search sf-popup-grow picker-box">
       <div className="filters">
         <input
           type="search"
@@ -157,7 +153,7 @@ function ConditionSearch({ options, onPick }: { options: ReturnType<typeof playC
       {shown.length === 0 ? (
         <p className="empty">No Conditions match.</p>
       ) : (
-        <ul className="condition-search-list">
+        <ul className="condition-search-list picker-scroll">
           {shown.map((t) => (
             <li key={t.id}>
               <button type="button" className="condition-search-option" onClick={() => onPick(t.id)}>
