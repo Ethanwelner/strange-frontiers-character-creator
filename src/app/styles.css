@@ -597,7 +597,7 @@
   /* On screen they go dark: the site's black, with the panel's light text */
   @media screen {
     .builder-panel,
-    .lore-modal {
+    .sf-popup {
       --card-bg: var(--portfolio-black);
     }
 
@@ -631,7 +631,7 @@
     /* The Choices step's headed cards: a 1px border the color of their
        header bar (--card-edge), and a soft shadow under them, like the
        cards (cards.css) */
-    :is(.builder-panel, .lore-modal) .headed {
+    :is(.builder-panel, .sf-popup) .headed {
       --card-edge: #161819;
       border: 1px solid var(--card-edge);
       box-shadow: 0 4px 10px #00000030;
@@ -650,7 +650,7 @@
     }
 
     /* The black header bars go a shade darker than the card under them */
-    :is(.builder-panel, .lore-modal) {
+    :is(.builder-panel, .sf-popup) {
       .headed:not(.region-dreft) > .card-head {
         background-color: #161819;
       }
@@ -1479,11 +1479,6 @@
     opacity: 1;
   }
 
-  /* The portrait popup: the picture, then Replace image and Remove */
-  .portrait-popup .lore-modal-panel {
-    max-width: 480px;
-  }
-
   .portrait-large {
     display: block;
     width: 100%;
@@ -2030,9 +2025,7 @@
   }
 
   /* The add form on its own in a small popup, its title over it */
-  .sheet-add-popup .lore-modal-panel {
-    max-width: 520px;
-
+  .sheet-add-popup {
     .subhead {
       margin: 0 0 24px;
     }
@@ -2111,11 +2104,6 @@
     grid-column: 1 / -1;
     color: var(--panel-soft);
     font-size: .875rem;
-  }
-
-  /* Add items as wide as Player Tools' Traits popup, for the cards */
-  .item-picker-popup .lore-modal-panel {
-    max-width: 1100px;
   }
 
   /* The picker's rows: the inventory's item card, with room on the left
@@ -2336,58 +2324,6 @@
        widening the stats' box (sized to its content, .sf-sheet-row) */
     .pool-summary {
       contain: inline-size;
-    }
-  }
-
-  /* The card opened in the site's lore popup (.lore-modal), on the dark
-     panel's gray with a light close button, below that button. The card
-     is dark, like the Sheet's. */
-  .lore-modal-panel {
-    background-color: var(--panel);
-    color: var(--panel-text);
-  }
-
-  .lore-modal :focus-visible {
-    outline-color: var(--portfolio-white);
-  }
-
-  /* A card on its own in the popup (.lore-modal-card: a Trait, Knowledge,
-     Kind or background package): the card is the popup's edge, with no
-     panel around it, and the close button sits on its top right corner
-     like any popup's. A long card scrolls itself. */
-  .lore-modal-card {
-    .lore-modal-panel {
-      max-width: 560px;
-      border-radius: 12px;
-      background: none;
-    }
-
-    .lore-modal-scroll {
-      padding: 0;
-      overflow: visible;
-    }
-
-    /* View only: no pointer, and no hover border like the cards to pick */
-    .lore-modal-scroll > .sf-card {
-      margin: 0;
-      max-height: calc(100dvh - 128px);
-      overflow-y: auto;
-      cursor: default;
-
-      &:hover {
-        border-color: var(--card-edge, var(--card-border));
-      }
-    }
-
-    /* A little smaller on a card */
-    .lore-modal-close {
-      width: 28px;
-      height: 28px;
-
-      svg {
-        width: 12px;
-        height: 12px;
-      }
     }
   }
 
@@ -2623,7 +2559,6 @@
   }
 
   @media print {
-    .lore-modal,
     .builder-hero,
     .builder-side,
     .pager,

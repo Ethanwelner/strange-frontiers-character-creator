@@ -223,14 +223,7 @@
     margin-top: 24px;
   }
 
-  /* The creator's Traits step in a wide popup on the panel's dark gray, with
-     Submit under it */
-  .tools-traits-popup .lore-modal-panel {
-    max-width: 1100px;
-    background: var(--panel);
-    color: var(--panel-text);
-  }
-
+  /* The Traits popup's Submit, under the creator's Traits step */
   .tools-traits-submit {
     position: sticky;
     bottom: -32px;
@@ -442,12 +435,8 @@
     }
   }
 
-  /* Switch character asks in a small popup: the question, then Switch
-     character and Cancel, 24px under it */
-  .tools-switch-popup .lore-modal-panel {
-    max-width: 480px;
-  }
-
+  /* Switch character's popup: Switch character and Cancel, 24px under the
+     question */
   .tools-switch-actions {
     display: flex;
     flex-wrap: wrap;

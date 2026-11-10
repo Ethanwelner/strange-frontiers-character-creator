@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState, type ReactNode } from "react";
+import { Popup } from "./popup.js";
 import { FREE_TEXT_POOLS, isFreeTextPool, type BuildResult } from "../../engine/validate.js";
 import { coreStatsShown } from "../check.js";
 import { sheetStatGroups, StatBlock } from "./stats.js";
@@ -9,7 +10,7 @@ import type { HeldCondition } from "../conditions.js";
 import { CharacterLine } from "./CharacterLine.js";
 import { Conditions } from "./Conditions.js";
 import { Items } from "./Items.js";
-import { askerName, DescriptionBox, Effect, Icon, LorePopup, NameField, Portrait, StepHeader, title, TraitAction, traitName } from "./ui.js";
+import { askerName, DescriptionBox, Effect, Icon, NameField, Portrait, StepHeader, title, TraitAction, traitName } from "./ui.js";
 import { FullResources, SHEET_RULES, SheetLayout, SheetTitle, type SheetContext } from "./sheet-layout.js";
 import { Resistances } from "./Resistances.js";
 import { CardChip, TraitCard, traitCardKind } from "./cards.js";
@@ -104,9 +105,9 @@ function HeldTraitCard({
 // A Knowledge's card, opened from the sheet's list in the site's lore popup.
 function TraitModal({ held, places, draft, onClose }: { held: Held; places: string[]; draft: Draft; onClose: () => void }) {
   return (
-    <LorePopup label={traitName(held.trait)} onClose={onClose} className="lore-modal-card">
+    <Popup label={traitName(held.trait)} onClose={onClose} card>
       <HeldTraitCard held={held} places={places} draft={draft} />
-    </LorePopup>
+    </Popup>
   );
 }
 
