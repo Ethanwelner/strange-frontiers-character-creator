@@ -2547,6 +2547,68 @@
     }
   }
 
+  /* Add a Condition's search: the field takes its own line over the type
+     checkboxes, and the matches scroll in a list under them, each a row
+     with its name and types on top and its summary under */
+  .condition-search {
+    .filters {
+      margin: 0 0 12px;
+
+      input[type="search"] {
+        flex: 1 1 100%;
+      }
+    }
+
+    .empty {
+      margin: 0;
+    }
+  }
+
+  .condition-search-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: min(50vh, 420px);
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+  }
+
+  .condition-search-option {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2px 12px;
+    width: 100%;
+    padding: 8px 12px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--panel-box);
+    color: var(--panel-text);
+    text-align: left;
+    cursor: pointer;
+
+    &:hover,
+    &:focus-visible {
+      background: color-mix(in srgb, var(--panel-box) 70%, white);
+    }
+  }
+
+  .condition-search-name {
+    font-weight: 600;
+  }
+
+  .condition-search-types {
+    color: var(--panel-soft);
+    font-size: .8125rem;
+  }
+
+  .condition-search-summary {
+    grid-column: 1 / -1;
+    color: var(--panel-soft);
+    font-size: .875rem;
+  }
+
   /* Add items as wide as Player Tools' Traits popup, for the cards */
   .item-picker-popup .lore-modal-panel {
     max-width: 1100px;

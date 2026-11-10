@@ -32,6 +32,24 @@ export function playConditions(content: Content) {
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 
+// The kinds of Condition Add a Condition filters by, read from each one's
+// tags: Injury, Hazard (fire, acid, cold, radiation and the like), Magic
+// (spells and enchantments), Combat, and Misc for anything none of those
+// cover. A Condition can be more than one (Irradiated is an Injury and a
+// Hazard).
+export const CONDITION_TYPES = ["injury", "hazard", "magic", "combat", "misc"] as const;
+export type ConditionType = (typeof CONDITION_TYPES)[number];
+
+export function conditionTypes(t: { tags?: string[] }): ConditionType[] {
+  const tags = t.tags ?? [];
+  const types: ConditionType[] = [];
+  if (tags.includes("injury")) types.push("injury");
+  if (tags.includes("hazard")) types.push("hazard");
+  if (tags.includes("magic") || tags.includes("enchantment")) types.push("magic");
+  if (tags.includes("combat")) types.push("combat");
+  return types.length ? types : ["misc"];
+}
+
 // Taking a Condition again raises its rank if it's ranked, or does nothing.
 export function withCondition(conditions: HeldCondition[], content: Content, trait: string, rank = 1, note?: string): HeldCondition[] {
   const t = content.traits.find((x) => x.id === trait);

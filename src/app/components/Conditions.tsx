@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { content, traitById } from "../content.js";
-import { hpConditions, playConditions, withCondition, withoutCondition, type HeldCondition } from "../conditions.js";
+import { CONDITION_TYPES, conditionTypes, hpConditions, playConditions, withCondition, withoutCondition, type ConditionType, type HeldCondition } from "../conditions.js";
 import { Effect, LorePopup, Sign, TraitAction } from "./ui.js";
 import { CardNote, TraitCard } from "./cards.js";
 import { Button } from "./Button.js";
@@ -24,6 +24,10 @@ export function Conditions({
   const fromHp = hpConditions(hp, maxHp);
   // Add Condition's popup, open or not
   const [adding, setAdding] = useState(false);
+  const add = (id: string) => {
+    onChange(withCondition(conditions, content, id));
+    setAdding(false);
+  };
   const update = (c: HeldCondition, change: Partial<HeldCondition>) => onChange(conditions.map((x) => (x === c ? { ...x, ...change } : x)));
 
   return (
@@ -38,25 +42,7 @@ export function Conditions({
       {adding && (
         <LorePopup label="Add a Condition" onClose={() => setAdding(false)} className="sheet-add-popup">
           <h3 className="subhead">Add a Condition</h3>
-          {/* Picking one adds it and closes the popup */}
-          <div className="tools-add">
-            <select
-              aria-label="Condition to add"
-              value=""
-              onChange={(e) => {
-                if (!e.target.value) return;
-                onChange(withCondition(conditions, content, e.target.value));
-                setAdding(false);
-              }}
-            >
-              <option value="">Pick a Condition…</option>
-              {options.map((t) => (
-                <option key={t.id} value={t.id}>
-                  {t.name}
-                </option>
-              ))}
-            </select>
-          </div>
+          <ConditionSearch options={options} onPick={add} />
         </LorePopup>
       )}
       <ul className="tools-conditions">
@@ -114,5 +100,64 @@ export function Conditions({
         })}
       </ul>
     </section>
+  );
+}
+
+const TYPE_TITLE: Record<ConditionType, string> = { injury: "Injury", hazard: "Hazard", magic: "Magic", combat: "Combat", misc: "Misc" };
+
+// Add a Condition's picker: a search field that narrows the list as the
+// player types (by name, summary or tag), checkboxes for the kinds of
+// Condition to show, and the matches below. Picking one, or Enter for the
+// first match, adds it and closes the popup.
+function ConditionSearch({ options, onPick }: { options: ReturnType<typeof playConditions>; onPick: (id: string) => void }) {
+  const [query, setQuery] = useState("");
+  const [hidden, setHidden] = useState<Set<ConditionType>>(new Set());
+  const toggle = (c: ConditionType) => {
+    const next = new Set(hidden);
+    if (!next.delete(c)) next.add(c);
+    setHidden(next);
+  };
+  const words = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  const shown = options.filter((t) => {
+    if (!conditionTypes(t).some((c) => !hidden.has(c))) return false;
+    const hay = [t.name, t.summary ?? "", ...(t.tags ?? [])].join(" ").toLowerCase();
+    return words.every((w) => hay.includes(w));
+  });
+  return (
+    <div className="condition-search">
+      <div className="filters">
+        <input
+          type="search"
+          placeholder="Search name or tag"
+          value={query}
+          autoFocus
+          onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && shown[0]) onPick(shown[0].id);
+          }}
+          aria-label="Search Conditions"
+        />
+        {CONDITION_TYPES.map((c) => (
+          <label key={c} className="check">
+            <input type="checkbox" checked={!hidden.has(c)} onChange={() => toggle(c)} /> {TYPE_TITLE[c]}
+          </label>
+        ))}
+      </div>
+      {shown.length === 0 ? (
+        <p className="empty">No Conditions match.</p>
+      ) : (
+        <ul className="condition-search-list">
+          {shown.map((t) => (
+            <li key={t.id}>
+              <button type="button" className="condition-search-option" onClick={() => onPick(t.id)}>
+                <span className="condition-search-name">{t.name}</span>
+                <span className="condition-search-types">{conditionTypes(t).map((c) => TYPE_TITLE[c]).join(", ")}</span>
+                {t.summary && <span className="condition-search-summary">{t.summary}</span>}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }
