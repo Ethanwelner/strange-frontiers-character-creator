@@ -131,8 +131,11 @@
     position: relative;
     padding: 1rem;
     background-color: var(--panel-box);
-    border: 1px solid var(--card-border);
-    border-radius: 12px;
+    /* A sketchy, hand-drawn edge (tmrDevelops' "Hand Drawn Border Effects"
+       CodePen, its solid version): uneven elliptical corners make each side
+       bow a little, like a line drawn by hand */
+    border: 3px solid var(--card-border);
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
     box-shadow: 0 4px 10px #00000030;
   }
 
