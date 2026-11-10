@@ -2611,8 +2611,8 @@
     gap: 8px;
     max-height: min(50vh, 420px);
     margin: 0;
-    /* Room between the rows and the scrollbar */
-    padding: 0 8px 0 0;
+    /* The slim scrollbar's lane keeps the handle 10px off the rows */
+    padding: 0;
     overflow-y: auto;
   }
 
@@ -3141,12 +3141,12 @@
   }
 
   /* Player Tools' chat (the conversation and the message box) and the
-     sheet's scrolling lists have just a slim rounded handle for a
+     sheet's scrolling lists, and Add a Condition's, have just a slim rounded handle for a
      scrollbar: no track and no arrows. Chrome and Safari take the -webkit-
      parts; Firefox, which has no such parts, a thin bar in the same colors.
      The site sets scrollbar-color on the page, which makes Chrome skip
      -webkit- parts, so it's reset here. */
-  :is(.tools-chat-log, .tools-chat-form textarea, .sheet-side > .knowledge-list, :is(.sheet-abilities, .sheet-skills) > .sheet-traits, .tools-conditions-side > .tools-conditions, .tools-items > .tools-item-list) {
+  :is(.tools-chat-log, .tools-chat-form textarea, .sheet-side > .knowledge-list, :is(.sheet-abilities, .sheet-skills) > .sheet-traits, .tools-conditions-side > .tools-conditions, .tools-items > .tools-item-list, .condition-search-list) {
     scrollbar-color: auto;
     scrollbar-width: auto;
 
