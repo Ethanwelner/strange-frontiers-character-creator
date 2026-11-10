@@ -4,7 +4,7 @@ import { content, traitById } from "../content.js";
 import { CONDITION_TYPES, conditionTypes, hpConditions, playConditions, withCondition, withoutCondition, type ConditionType, type HeldCondition } from "../conditions.js";
 import { Effect, Sign, TraitAction } from "./ui.js";
 import { CardNote, TraitCard } from "./cards.js";
-import { Button } from "./Button.js";
+import { Button, RemoveX } from "./Button.js";
 import { SheetTitle } from "./sheet-layout.js";
 
 // The Conditions, the same on the Character Creator's sheet and in Player
@@ -90,11 +90,7 @@ export function Conditions({
                   </>
                 }
                 actions={
-                  <Button kind="bare" className="tools-condition-remove" aria-label={`Remove ${t?.name ?? c.trait}`} onClick={() => onChange(withoutCondition(conditions, c.trait))}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 20 20" aria-hidden="true">
-                      <path d="M2 2l16 16M18 2L2 18" fill="none" stroke="currentColor" strokeWidth="2.5" />
-                    </svg>
-                  </Button>
+                  <RemoveX label={`Remove ${t?.name ?? c.trait}`} onClick={() => onChange(withoutCondition(conditions, c.trait))} />
                 }
               >
                 {t?.temporary && (

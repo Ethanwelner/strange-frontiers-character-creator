@@ -1991,8 +1991,9 @@
     }
   }
 
-  /* A Condition the player added: an ✕ at the right of its name bar */
-  button.tools-condition-remove {
+  /* The X that takes something off (RemoveX): at the right of an added
+     Condition's name bar, and after each Trait picked in Choose Traits */
+  button.remove-x {
     flex: none;
     display: grid;
     place-items: center;
@@ -2172,6 +2173,25 @@
     > .picks {
       max-height: min(25vh, 220px);
       overflow-y: auto;
+    }
+  }
+
+  /* Each Trait picked, its name then its X, along a line that wraps */
+  .picks-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 28px;
+
+    li {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0;
+      border: 0;
+    }
+
+    button.remove-x {
+      margin: 0;
     }
   }
 

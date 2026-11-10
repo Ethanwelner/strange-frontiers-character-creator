@@ -40,6 +40,18 @@ export function sfButton({ tone = "gray", size = "default", round, kind, ready, 
     .join(" ");
 }
 
+// The X that takes something off: a Condition the player added, a Trait
+// picked in Choose Traits. Bare, in the text color, 24px to click.
+export function RemoveX({ label, onClick }: { label: string; onClick: () => void }) {
+  return (
+    <Button kind="bare" className="remove-x" aria-label={label} title={label} onClick={onClick}>
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 20 20" aria-hidden="true">
+        <path d="M2 2l16 16M18 2L2 18" fill="none" stroke="currentColor" strokeWidth="2.5" />
+      </svg>
+    </Button>
+  );
+}
+
 export function Button({ tone, size, round, kind, ready, waiting, className, type = "button", ...props }: ButtonOptions & ComponentProps<"button">) {
   return <button type={type} className={sfButton({ tone, size, round, kind, ready, waiting }, className)} {...props} />;
 }

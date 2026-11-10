@@ -7,7 +7,7 @@ import { content, traitById } from "../content.js";
 import { addPick, type Draft } from "../draft.js";
 import { Chip, Effect, Sign, StepHeader, title, TraitAction, traitName } from "./ui.js";
 import { CardChip, CardNote, TraitCard, traitCardKind } from "./cards.js";
-import { Button } from "./Button.js";
+import { Button, RemoveX } from "./Button.js";
 
 interface Props {
   draft: Draft;
@@ -117,6 +117,22 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom, p
       <h3 className="subhead">{newFrom === undefined ? "Picks spent" : "Traits selected"}</h3>
       {draft.traits.length <= (newFrom ?? 0) ? (
         <p className="empty">{newFrom === undefined ? "No picks spent yet." : "No Traits selected yet."}</p>
+      ) : picksBelow ? (
+        // In the popup: each Trait's name (and Rank above 1), then its X, in a row
+        <ul className="picks picks-row">
+          {draft.traits.map((p, i) =>
+            i < (newFrom ?? 0) ? null : (
+              <li key={i}>
+                <strong>
+                  {traitName(p.trait)}
+                  {(p.rank ?? 1) > 1 ? ` (${p.rank})` : ""}
+                </strong>
+                {!traitById.has(p.trait) && <Chip tone="bad">unknown</Chip>}
+                <RemoveX label={`Remove ${traitName(p.trait)}`} onClick={() => remove(i)} />
+              </li>
+            ),
+          )}
+        </ul>
       ) : (
         <ul className="picks">
           {draft.traits.map((p, i) => i < (newFrom ?? 0) ? null : (
