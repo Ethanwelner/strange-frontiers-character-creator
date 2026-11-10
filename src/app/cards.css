@@ -181,6 +181,60 @@
             color: var(--portfolio-black, #212121);
         }
     }
+
+    /* Abilities: a vintage frame (chris_tudor's "Vintage Frame with
+       Multiple Borders" CodePen, without its corner flourishes). Three
+       nested lines in one color, a 2px outer line, a 3px band and a 1px
+       inner line, 2px apart, with nearly square corners. They're inset
+       box-shadows on an overlay over the card's own edge, so nothing pokes
+       out of a scrolling box, and the bar and text sit inside them.
+       --sf-frame follows the card's states: the Conditions' mid gray,
+       Dreft's green on Isekai cards, gray on hover, green when picked. */
+    &.sf-trait-card--ability {
+        --sf-frame: #646464;
+        --sf-frame-gap: var(--card-bg);
+        padding: 8px calc(1rem + 8px) calc(1rem + 8px);
+        border-radius: 4px;
+
+        &.sf-card--dreft {
+            --sf-frame: var(--frontiers-dreft, #1c372b);
+        }
+
+        &:is(.is-selectable, .trait):hover:not(.selected) {
+            --sf-frame: var(--portfolio-medium-gray, #969696);
+        }
+
+        &.selected {
+            --sf-frame: var(--portfolio-green, #47b767);
+        }
+
+        &::before {
+            content: "";
+            position: absolute;
+            inset: -2px;
+            z-index: 1;
+            border-radius: 4px;
+            box-shadow:
+                inset 0 0 0 2px var(--sf-frame),
+                inset 0 0 0 4px var(--sf-frame-gap),
+                inset 0 0 0 7px var(--sf-frame),
+                inset 0 0 0 9px var(--sf-frame-gap),
+                inset 0 0 0 10px var(--sf-frame);
+            pointer-events: none;
+        }
+
+        > .sf-card-bar {
+            border-radius: 0;
+        }
+
+        &.is-closed:not(.has-keep) {
+            padding-bottom: 8px;
+
+            > .sf-card-bar {
+                border-radius: 0;
+            }
+        }
+    }
 }
 
 /* A Trait card's category and flags, a row of chips at the top of its
