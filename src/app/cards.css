@@ -182,70 +182,7 @@
         }
     }
 
-    /* Abilities: a curved notch cut out of the top-left corner (a quarter
-       circle around the corner), with a dot at its center, and a second
-       line inside the card that follows the edge and curves around the
-       notch. The clip cuts the notch out of the card and its shadow but
-       keeps a circle for the dot, which the bar fills in its own color. The
-       card's ::before draws the inner line. */
-    &.sf-trait-card--ability {
-        border-top-left-radius: 0;
-        clip-path: polygon(
-            10.63px -20px,
-            calc(100% + 20px) -20px,
-            calc(100% + 20px) calc(100% + 20px),
-            -20px calc(100% + 20px),
-            -20px 10.63px,
-            0 4.5px,
-            0.6px 2.25px,
-            2.25px 0.6px,
-            4.5px 0,
-            6.75px 0.6px,
-            8.4px 2.25px,
-            9px 4.5px,
-            8.4px 6.75px,
-            6.75px 8.4px,
-            4.5px 9px,
-            2.25px 8.4px,
-            0.6px 6.75px,
-            0 4.5px,
-            -20px 10.63px,
-            -0.64px 10.63px,
-            0.5px 11.43px,
-            1.76px 12.02px,
-            3.11px 12.38px,
-            4.5px 12.5px,
-            5.89px 12.38px,
-            7.24px 12.02px,
-            8.5px 11.43px,
-            9.64px 10.63px,
-            10.63px 9.64px,
-            11.43px 8.5px,
-            12.02px 7.24px,
-            12.38px 5.89px,
-            12.5px 4.5px,
-            12.38px 3.11px,
-            12.02px 1.76px,
-            11.43px 0.5px,
-            10.63px -0.64px);
-
-        &::before {
-            content: "";
-            position: absolute;
-            z-index: 1;
-            top: -1px;
-            left: -1px;
-            width: 72px;
-            height: 72px;
-            background-color: rgb(255 255 255 / 50%);
-            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 72 72'%3E%3Cpath d='M72 5.5H17.46A13 13 0 0 1 5.5 17.46V72' fill='none' stroke='%23000' stroke-width='1'/%3E%3C/svg%3E") no-repeat;
-            pointer-events: none;
-        }
-
-        > .sf-card-bar {
-            border-top-left-radius: 0;
-        }
-    }
+}
 }
 
 /* A Trait card's category and flags, a row of chips at the top of its
