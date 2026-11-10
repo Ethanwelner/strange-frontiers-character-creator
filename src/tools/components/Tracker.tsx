@@ -4,6 +4,7 @@ import { content } from "../../app/content.js";
 import type { Draft } from "../../app/draft.js";
 import { RESOURCE_NAMES, Sheet } from "../../app/components/Sheet.js";
 import { StatsStep } from "../../app/components/StatsStep.js";
+import { sheetStatGroups, StatBlock } from "../../app/components/stats.js";
 import { TraitsStep } from "../../app/components/TraitsStep.js";
 import { Icon, LorePopup, Sign } from "../../app/components/ui.js";
 import { Resistances } from "../../app/components/Resistances.js";
@@ -14,8 +15,8 @@ import { Button } from "../../app/components/Button.js";
 // with its current value against the max the engine works out, in the first
 // of the sheet's boxes, then the rest of the character sheet in its own boxes.
 //
-// The sheet's stats are the creator's Stats step, which gains its + and −
-// whenever there are points to add. Level up (beside the name) hands this a
+// The sheet's stats are the plain stat block, which becomes the creator's
+// Stats step, with its + and −, whenever there are points to add. Level up (beside the name) hands this a
 // `levelDraft`, the character one level up; adding points to a character
 // that has some unplaced starts one at its own level. Submit keeps it, and
 // the Level up badge (Cancel while leveling) throws a level up away. Traits available, under the
@@ -56,13 +57,15 @@ export function Tracker({
   // The Traits and Conditions the character has now, for their resistances
   const held = useMemo(() => [...(result.summary?.traits ?? []), ...play.conditions], [result, play.conditions]);
 
-  // The stats are always the creator's Stats step. Its + and − and Submit
-  // show only while there are points to add: after Level up, or when the
-  // character has points it never placed. Otherwise it reads like the sheet.
+  // The stats are the stat block. While there are points to add (after Level
+  // up, or when the character has points it never placed) they're the
+  // creator's Stats step instead, with its + and − and Submit.
   const editing = levelDraft ?? play.draft;
   const adding = Boolean(levelDraft) || pointsToPlace(play.draft, content);
-  const stats = (
-    <div className={`tools-stats${adding ? "" : " is-static"}`}>
+  const stats = !adding ? (
+    <StatBlock groups={sheetStatGroups(play.draft, result)} />
+  ) : (
+    <div className="tools-stats">
       <StatsStep draft={editing} onChange={onLevelDraft} floor={play.draft} />
       {adding && (
         <div className="tools-level-actions">

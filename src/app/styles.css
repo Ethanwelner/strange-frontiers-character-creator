@@ -5,7 +5,7 @@
    (--portfolio-*, --frontiers-*), fonts, .container and flex columns, .title,
    .hero-title, .section-title, .copy-title, the black .copy.stinger, the
    .rpg-tab and .tech-field-tab tabs, .rpg-search-input,
-   .c-sheet, .stat-line and .stat. This file adds the builder on top and
+   and .c-sheet. This file adds the builder on top and
    only reaches inside .sf-creator.
 
    Element rules sit under :where(.sf-creator), as plain as the site's own,
@@ -578,12 +578,19 @@
     }
   }
 
-  /* Printed, the cards (cards.css) go light like the rest, with dark text */
+  /* Printed, the cards (cards.css) and the stat block (stats.css) go light
+     like the rest, with dark text */
   @media print {
     :is(.sf-card, .sf-item-card) {
       --card-bg: #eeeff0;
       --card-text: var(--portfolio-black);
       --card-soft: var(--portfolio-gray);
+    }
+
+    .sf-stats {
+      --stat-text: var(--portfolio-black);
+      --stat-soft: var(--portfolio-gray);
+      --stat-rule: rgb(0 0 0 / 15%);
     }
   }
 
@@ -660,39 +667,6 @@
     }
   }
 
-  /* The Stats step's bars sit on the dark box: core badges dark, the bonus
-     points in a dark shade of the group's color at the left, the player's
-     points after them in the full color (.stat-group-*), and open slots a
-     lighter outline. Core badges take the group's dark shade, with white
-     numbers. */
-  .builder-panel .pool-stats {
-    .stat-badge {
-      background-color: var(--stat-bonus, var(--portfolio-black));
-      color: var(--portfolio-white);
-    }
-
-    .stat.filled {
-      background-color: var(--stat-color, var(--frontiers-green));
-    }
-
-    .stat.default {
-      background-color: var(--stat-bonus, var(--frontiers-lore-on-black));
-    }
-
-    .stat:is(.empty, .unavailable) {
-      border-color: #888a8c;
-    }
-
-    .stat.unavailable {
-      background-color: #888a8c;
-    }
-
-    /* A locked group's row is already faded */
-    .sheet-group.locked .stat.unavailable {
-      opacity: 1;
-    }
-  }
-
   .panel :is(.muted, .hint, .empty) {
     color: var(--panel-soft);
   }
@@ -727,27 +701,6 @@
 
       :focus-visible {
         outline-color: var(--portfolio-white);
-      }
-
-      .stat-badge {
-        background-color: var(--stat-bonus, var(--portfolio-black));
-        color: var(--portfolio-white);
-      }
-
-      .stat.filled {
-        background-color: var(--stat-color, var(--frontiers-green));
-      }
-
-      .stat.default {
-        background-color: var(--stat-bonus, var(--frontiers-lore-on-black));
-      }
-
-      .stat:is(.empty, .unavailable) {
-        border-color: #888a8c;
-      }
-
-      .stat.unavailable {
-        background-color: #888a8c;
       }
 
       .sf-btn--link {
@@ -1106,16 +1059,6 @@
     gap: 1rem;
   }
 
-  /* Physical, Social and Mental stacked in each level card */
-  .stat-group h4 {
-    font-size: 1.1rem;
-    margin: 1.25rem 0 0.25rem;
-  }
-
-  .stat-group.locked {
-    opacity: 0.45;
-  }
-
   /* Stats pool: core points placed, then one card per group */
   .pool-summary {
     margin: 0 0 1rem;
@@ -1126,35 +1069,6 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 32px;
-  }
-
-  .pool-stats .sheet-group.locked .sheet-stat {
-    opacity: 0.45;
-  }
-
-  /* How many of the group's points a stat can still take, beside its name */
-  .stat-spend {
-    margin-left: 12px;
-  }
-
-  /* Core stat: the sheet's round badge with − and + to its right. Each stat has
-     its bar with its own − and + beside it. */
-  .core-control,
-  .stat-buttons {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-
-  }
-
-  .pool-stat-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    .stat-line {
-      flex: 1;
-    }
   }
 
   .stepper-row {
@@ -1778,7 +1692,7 @@
     }
   }
 
-  /* The site's .level-badge and .stat-badge, at a fixed size. The level is
+  /* The site's .level-badge, at a fixed size. The level is
      a 96px blob (.level-blob) centered between the corner of the creator's
      sheet (or Player Tools' box) and the corner of the box inside it: half
      their 1rem padding in. */
@@ -1814,20 +1728,6 @@
   .level-badge-number {
     font-size: 3rem;
     font-weight: 400;
-  }
-
-  /* A core Stat's circle holds its icon; the number is in the title beside it */
-  .stat-badge {
-    flex-shrink: 0;
-    width: 2.75rem;
-    height: 2.75rem;
-    padding: 0;
-    line-height: 1;
-
-    .icon {
-      width: 1.6rem;
-      height: 1.6rem;
-    }
   }
 
   .sheet-head {
@@ -2899,29 +2799,6 @@
     }
   }
 
-  .sheet-group {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .sheet-group-head {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    .rule {
-      flex: 1;
-      margin: 0;
-    }
-  }
-
-  /* On the sheet (and Player Tools' sheet), the focus stats and their
-     bubbles sit 15px in from the core stat and its title line */
-  .sheet-stats .sheet-stat {
-    padding-left: 15px;
-  }
-
   .sheet-side .rule {
     margin-top: 0;
   }
@@ -3013,85 +2890,10 @@
     }
   }
 
-  .sheet-stat {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  /* The sheet's circles and squares (the site's .stat-line) hold a set size,
-     shrinking only when the column is too narrow for all 20. */
-  .sheet-stat .stat-line {
-    grid-template-columns: repeat(20, minmax(0, 20px));
-    gap: 4px;
-  }
-
-  /* Magic's points: the same slots, turned into diamonds that fit the cell */
-  .stat.diamond {
-    border-radius: 2px;
-    transform: rotate(45deg) scale(0.72);
-  }
-
-  /* Slots past a stat's maximum: filled and outlined in the open slots'
-     gray, faded, on the Stats step and the Sheet */
-  .sheet-stat .stat.unavailable {
-    border-color: var(--portfolio-gray);
-    background-color: var(--portfolio-gray);
-    opacity: 0.25;
-  }
-
-  /* On screen each group's points take its resource's color, as in the HP,
-     VP, SP and MP trackers: Physical red, Social purple, Mental yellow and
-     Magic blue, with the Kind's and packages' bonus points a darker shade.
-     Open and over-max slots keep their gray. */
-  .stat-group-physical {
-    --stat-color: var(--frontiers-hp);
-  }
-
-  .stat-group-social {
-    --stat-color: var(--frontiers-vp);
-  }
-
-  .stat-group-mental {
-    --stat-color: var(--frontiers-sp);
-  }
-
-  .stat-group-magic {
-    --stat-color: var(--frontiers-mp);
-  }
-
-  [class*="stat-group-"] {
-    --stat-bonus: color-mix(in srgb, var(--stat-color) 50%, black);
-  }
-
-  /* A point past the stat's maximum */
-  .stat.over {
-    background-color: var(--portfolio-red);
-  }
-
-  /* On screen, each colored piece of the sheet glows 3px in its own color:
-     the core stat badges, the points in each group's color and its darker
-     bonus shade, HP, VP, SP and MP's names, and Player Tools' meters.
-     Names are text, so theirs is a text-shadow. Print stays flat. */
+  /* On screen, HP, VP, SP and MP's names and Player Tools' meters glow 3px
+     in their own color, like the stat block's points (stats.css). Names are
+     text, so theirs is a text-shadow. Print stays flat. */
   @media screen {
-    .c-sheet [class*="stat-group-"] {
-      .stat-badge {
-        box-shadow: 0 0 3px var(--stat-bonus);
-      }
-
-      .stat.filled {
-        box-shadow: 0 0 3px var(--stat-color);
-      }
-
-      .stat.default {
-        box-shadow: 0 0 3px var(--stat-bonus);
-      }
-
-      .stat.over {
-        box-shadow: 0 0 3px var(--portfolio-red);
-      }
-    }
-
     .tools-resource-name {
       text-shadow: 0 0 3px currentColor;
     }
@@ -3448,25 +3250,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   .sf-creator .tools-issues li {
-    animation: none;
-  }
-}
-
-/* A point just placed in a stat bar (.is-new, from StatLine and CoreLine in
-   components/ui.tsx) pops in: it starts small, overshoots a little and
-   settles. On scale, so Magic's diamonds keep their own transform. */
-.sf-creator .stat.filled.is-new {
-  animation: sf-stat-pop 320ms cubic-bezier(0.3, 1.6, 0.5, 1);
-}
-
-@keyframes sf-stat-pop {
-  0% { scale: 0.4; }
-  60% { scale: 1.3; }
-  100% { scale: 1; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .sf-creator .stat.filled.is-new {
     animation: none;
   }
 }
