@@ -182,13 +182,13 @@
         }
     }
 
-    /* Abilities: a sketchy, hand-drawn edge (tmrDevelops' "Hand Drawn
-       Border Effects" CodePen, its solid version). Uneven elliptical corners
-       make each side bow a little, like a line drawn by hand. The card clips
-       its bar to that shape, so a picked card's check sits just inside the
-       corner instead of over it. */
+    /* Abilities: a globular edge, lopsided like the level badge's blob
+       (.level-blob), every corner swelling by a different amount. In pixels
+       rather than the blob's percentages, so a wide card stays a card. The
+       card clips its bar to that shape, so a picked card's check sits just
+       inside the corner instead of over it. */
     &.sf-trait-card--ability {
-        border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+        border-radius: 46px 26px 40px 22px / 26px 42px 22px 36px;
         overflow: clip;
 
         > .sf-card-bar {
