@@ -2202,12 +2202,31 @@
     margin-left: -14px;
   }
 
-  /* Choose Traits' search takes its own line over the category checkboxes */
+  /* Choose Traits' search takes the line with Hide unavailable after it,
+     over the category checkboxes (a break, ::after, holds them under) */
   .sf-popup--inner .traits-filters {
-    row-gap: 16px;
+    /* No row gap, which the break's empty line would double: each
+       category checkbox keeps 16px over it instead */
+    row-gap: 0;
 
     input[type="search"] {
-      flex: 1 1 100%;
+      flex: 1 1 14rem;
+      order: 0;
+    }
+
+    .hide-unavailable {
+      order: 1;
+    }
+
+    &::after {
+      content: "";
+      flex-basis: 100%;
+      order: 2;
+    }
+
+    > .check:not(.hide-unavailable) {
+      order: 3;
+      margin-top: 16px;
     }
   }
 

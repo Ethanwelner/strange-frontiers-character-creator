@@ -202,7 +202,7 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom, p
               <input type="checkbox" checked={!hidden.has(c)} onChange={() => toggleCategory(c)} /> {GROUP_TITLE[c]}
             </label>
           ))}
-          <label className="check">
+          <label className="check hide-unavailable">
             <input type="checkbox" checked={hideRejected} onChange={(e) => setHideRejected(e.target.checked)} /> Hide unavailable
           </label>
         </div>
