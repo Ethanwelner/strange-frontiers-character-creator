@@ -196,6 +196,13 @@
         border-image: linear-gradient(transparent, transparent) 1;
         box-shadow: none;
 
+        /* The Conditions' mid gray edge, so the rough edge shows against the
+           dark boxes, while the bar stays dark. Isekai's keep Dreft's green,
+           and picked or hovered cards their own. */
+        &:not(.selected, .sf-card--dreft) {
+            border-color: #646464;
+        }
+
         &::before {
             content: "";
             position: absolute;
