@@ -31,8 +31,8 @@
     }
 
     &.is-success {
-      background: color-mix(in srgb, var(--frontiers-green) 16%, #1a1c1e);
-      border-color: color-mix(in srgb, var(--frontiers-green) 45%, #1a1c1e);
+      background: color-mix(in srgb, var(--frontiers-green) 16%, #1a1c1d);
+      border-color: color-mix(in srgb, var(--frontiers-green) 45%, #1a1c1d);
       color: color-mix(in srgb, var(--frontiers-green) 55%, var(--portfolio-white));
 
       .sf-btn--link {
@@ -408,7 +408,7 @@
     /* The die sits 24px down from the top, which the chat box's top padding
        gives back */
     padding-top: 24px;
-    background-color: #1f2123;
+    background-color: #1f2122;
     border-radius: 16px 16px 0 0;
   }
 
@@ -611,7 +611,7 @@
     padding: var(--chat-pad-top) 16px 16px;
     /* The rest of the chat box: its sides and rounded bottom, which move
        with it, so its bottom edge shows wherever it is */
-    background-color: #1f2123;
+    background-color: #1f2122;
     border: 1px solid var(--card-border);
     border-top: 0;
     border-radius: 0 0 16px 16px;
@@ -739,7 +739,7 @@
   /* A chat error, like the assistant being out of credits: light text on a
      dark red, fading after 3 seconds */
   .tools-chat .notice.bad {
-    background: color-mix(in srgb, var(--portfolio-red) 25%, #1a1c1e);
+    background: color-mix(in srgb, var(--portfolio-red) 25%, #1a1c1d);
     border-color: var(--portfolio-red);
     color: var(--portfolio-white);
 
@@ -760,7 +760,7 @@
     gap: 7px;
     padding: 7px;
     border-radius: 16px;
-    background: #16181a;
+    background: #161819;
 
     /* No border to turn green, so a green ring while typing */
     &:focus-within {

@@ -35,7 +35,7 @@
    creator wears too. */
 
 .sf-btn {
-    --sf-btn-bg: var(--portfolio-gray, #505354);
+    --sf-btn-bg: var(--portfolio-gray, #505254);
     --sf-btn-fg: var(--portfolio-white, #fff);
     /* Hover mixes the fill this much of itself with --sf-btn-mix */
     --sf-btn-mix: var(--portfolio-white, #fff);
@@ -116,37 +116,37 @@
 
 .sf-btn--primary {
     --sf-btn-bg: var(--frontiers-green, #2dfc64);
-    --sf-btn-fg: var(--portfolio-black, #1f2123);
+    --sf-btn-fg: var(--portfolio-black, #1f2122);
     --sf-btn-keep: 75%;
 }
 
 .sf-btn--dark {
-    --sf-btn-bg: var(--portfolio-black, #1f2123);
+    --sf-btn-bg: var(--portfolio-black, #1f2122);
     --sf-btn-keep: 66%;
 }
 
 .sf-btn--light {
-    --sf-btn-bg: var(--portfolio-near-white, #f8fafb);
-    --sf-btn-fg: var(--portfolio-black, #1f2123);
-    --sf-btn-mix: var(--portfolio-black, #1f2123);
+    --sf-btn-bg: var(--portfolio-near-white, #f9fafb);
+    --sf-btn-fg: var(--portfolio-black, #1f2122);
+    --sf-btn-mix: var(--portfolio-black, #1f2122);
     --sf-btn-keep: 75%;
 }
 
 .sf-btn--danger {
     --sf-btn-bg: var(--portfolio-red, #eb0844);
-    --sf-btn-mix: var(--portfolio-black, #1f2123);
+    --sf-btn-mix: var(--portfolio-black, #1f2122);
 }
 
 /* A section's own color: the Conditions' header gray, the Items' olive */
 .sf-btn--condition {
     --sf-btn-bg: #b7b4b4;
-    --sf-btn-fg: var(--portfolio-black, #1f2123);
+    --sf-btn-fg: var(--portfolio-black, #1f2122);
     --sf-btn-keep: 75%;
 }
 
 .sf-btn--item {
     --sf-btn-bg: #b5ae86;
-    --sf-btn-fg: var(--portfolio-black, #1f2123);
+    --sf-btn-fg: var(--portfolio-black, #1f2122);
     --sf-btn-keep: 75%;
 }
 

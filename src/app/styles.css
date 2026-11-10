@@ -95,15 +95,15 @@
 
 .sf-creator {
   /* Builder colors on top of css/tokens.css */
-  --card-bg: #edeff0;
-  --card-border: #d2d4d5;
+  --card-bg: #eeeff0;
+  --card-border: #d3d4d5;
   --good-on-light: #2e8a4a;
   --rule: rgb(0 0 0 / 15%);
   --rule-on-black: rgb(255 255 255 / 25%);
   /* The dark builder panel and the box each step sits in */
-  --panel: #292b2d;
+  --panel: #292b2c;
   --panel-box: #343638;
-  --panel-text: #e6e8e9;
+  --panel-text: #e7e8e9;
   --panel-soft: #b2b3b4;
   --panel-good: #6fd18a;
   --title: "bebas_neueregular", Impact, "Arial Narrow", sans-serif;
@@ -525,7 +525,7 @@
   .builder-panel {
     --rule: rgb(255 255 255 / 18%);
     /* Card edges fade into the dark box instead of outlining it in light gray */
-    --card-border: #5c5f60;
+    --card-border: #5c5e60;
     position: relative;
     /* Clear of the site's .white-bg; the gray is the layer below */
     background: none;
@@ -581,7 +581,7 @@
   /* Printed, the cards (cards.css) go light like the rest, with dark text */
   @media print {
     :is(.sf-card, .sf-item-card) {
-      --card-bg: #edeff0;
+      --card-bg: #eeeff0;
       --card-text: var(--portfolio-black);
       --card-soft: var(--portfolio-gray);
     }
@@ -617,7 +617,7 @@
       }
 
       .chip-accent {
-        background: #696c6d;
+        background: #696b6d;
       }
     }
 
@@ -625,7 +625,7 @@
        header bar (--card-edge), and a soft shadow under them, like the
        cards (cards.css) */
     :is(.builder-panel, .lore-modal) .headed {
-      --card-edge: #16181a;
+      --card-edge: #161819;
       border: 2px solid var(--card-edge);
       box-shadow: 0 4px 10px #00000030;
 
@@ -645,7 +645,7 @@
     /* The black header bars go a shade darker than the card under them */
     :is(.builder-panel, .lore-modal) {
       .headed:not(.region-dreft) > .card-head {
-        background-color: #16181a;
+        background-color: #161819;
       }
     }
 
@@ -680,11 +680,11 @@
     }
 
     .stat:is(.empty, .unavailable) {
-      border-color: #888b8c;
+      border-color: #888a8c;
     }
 
     .stat.unavailable {
-      background-color: #888b8c;
+      background-color: #888a8c;
     }
 
     /* A locked group's row is already faded */
@@ -743,11 +743,11 @@
       }
 
       .stat:is(.empty, .unavailable) {
-        border-color: #888b8c;
+        border-color: #888a8c;
       }
 
       .stat.unavailable {
-        background-color: #888b8c;
+        background-color: #888a8c;
       }
 
       .sf-btn--link {
@@ -2636,7 +2636,7 @@
     margin: 24px -32px 0;
     padding: 16px 32px;
     background: var(--panel);
-    border-top: 1px solid #424546;
+    border-top: 1px solid #424446;
   }
 
   /* The add row (Items' and Player Tools' Add a Condition), item notes, and
