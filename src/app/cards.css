@@ -182,20 +182,47 @@
         }
     }
 
-    /* Abilities: the top-left corner is cut off on a 45° line, with a dot
-       sitting in the cut where the corner would be, and a second line
-       inside the card that follows the edge and its cut (a cut-corner
-       frame). The clip cuts the corner out of the card and its shadow but
-       keeps a small octagon for the dot, which the bar fills in its own
-       color. The card's ::before draws the inner line. */
+    /* Abilities: a curved notch cut out of the top-left corner (a quarter
+       circle around the corner), with a dot at its center, and a second
+       line inside the card that follows the edge and curves around the
+       notch. The clip cuts the notch out of the card and its shadow but
+       keeps a circle for the dot, which the bar fills in its own color. The
+       card's ::before draws the inner line. */
     &.sf-trait-card--ability {
         border-top-left-radius: 0;
         clip-path: polygon(
-            38px -20px, calc(100% + 20px) -20px,
-            calc(100% + 20px) calc(100% + 20px), -20px calc(100% + 20px),
-            -20px 38px, .04px 4.22px, .04px 1.78px, 1.78px .04px,
-            4.22px .04px, 5.96px 1.78px, 5.96px 4.22px, 4.22px 5.96px,
-            1.78px 5.96px, .04px 4.22px, -20px 38px);
+            22.85px -20px,
+            calc(100% + 20px) -20px,
+            calc(100% + 20px) calc(100% + 20px),
+            -20px calc(100% + 20px),
+            -20px 22.85px,
+            0 4.5px,
+            0.6px 2.25px,
+            2.25px 0.6px,
+            4.5px 0,
+            6.75px 0.6px,
+            8.4px 2.25px,
+            9px 4.5px,
+            8.4px 6.75px,
+            6.75px 8.4px,
+            4.5px 9px,
+            2.25px 8.4px,
+            0.6px 6.75px,
+            0 4.5px,
+            -20px 22.85px,
+            -0.42px 22.85px,
+            2.84px 23.43px,
+            6.16px 23.43px,
+            9.42px 22.85px,
+            12.53px 21.72px,
+            15.4px 20.06px,
+            17.94px 17.94px,
+            20.06px 15.4px,
+            21.72px 12.53px,
+            22.85px 9.42px,
+            23.43px 6.16px,
+            23.43px 2.84px,
+            22.85px -0.42px);
 
         &::before {
             content: "";
@@ -206,12 +233,14 @@
             width: 72px;
             height: 72px;
             background-color: rgb(255 255 255 / 50%);
-            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 72 72'%3E%3Cpath d='M72 6.5H20L6.5 20V72' fill='none' stroke='%23000' stroke-width='1'/%3E%3C/svg%3E") no-repeat;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 72 72'%3E%3Cpath d='M72 6.5H29.4A25 25 0 0 1 6.5 29.4V72' fill='none' stroke='%23000' stroke-width='1'/%3E%3C/svg%3E") no-repeat;
             pointer-events: none;
         }
 
+        /* The name moves over to clear the inner line's curve */
         > .sf-card-bar {
             border-top-left-radius: 0;
+            padding-left: 34px;
         }
     }
 }
