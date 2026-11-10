@@ -13,7 +13,6 @@ grants:
   - { trait: the-corsine-pass }
   - { trait: karsef }
 backgroundTraits:
-  - weapons
   - wilderness-lore
   - wielder-crossbow
   - wielder-spear
