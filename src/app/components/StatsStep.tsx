@@ -4,14 +4,8 @@ import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { coreAccessFor, coreStatsShown } from "../check.js";
 import { content, kindById, packageById } from "../content.js";
 import { withCore, type Draft } from "../draft.js";
-import { baseStats, CoreLine, FOCUS_GROUPS, GROUPS, Icon, Sign, StatLine, StepHeader, title } from "./ui.js";
-import { Button } from "./Button.js";
-import type { ButtonHTMLAttributes } from "react";
-
-// A stat's − or +: the creator's green, glitching, while it can be used
-function StatButton(props: ButtonHTMLAttributes<HTMLButtonElement>) {
-  return <Button round="sm" tone={props.disabled ? "gray" : "primary"} ready={!props.disabled} {...props} />;
-}
+import { baseStats, FOCUS_GROUPS, GROUPS, StepHeader, title } from "./ui.js";
+import { StatBlock } from "./stats.js";
 
 interface Props {
   draft: Draft;
@@ -59,6 +53,9 @@ export function StatsStep({ draft, onChange, floor }: Props) {
   const shown = coreStatsShown(draft, content);
   const open = coreAccessFor(draft, content);
   const spentIn = (g: StatGroup) => STAT_GROUPS[g].reduce((n, s) => n + (draft.points[s] ?? 0), 0);
+  // Points any of a group's stats could still take: free bonus points, then
+  // the group's unlocked points
+  const spareIn = (g: StatGroup) => freeFor(g) + Math.max(0, draft.core[g] * POINTS_PER_LEVEL - spentIn(g));
   const kindBonus = (s: StatId) => base?.[s]?.bonus ?? 0;
   // The Kind's bonus plus any free bonus points placed on the stat
   const bonusOf = (s: StatId) => kindBonus(s) + (start[s] ?? 0);
@@ -92,6 +89,65 @@ export function StatsStep({ draft, onChange, floor }: Props) {
     if (!startPoints[s]) delete startPoints[s];
     if (!points[s]) delete points[s];
     onChange({ ...draft, startPoints, points });
+  };
+
+  // A package's Magic bonus, like the Licensed Mage's 1 Magic, on top of the levels
+  const extraOf = (g: StatGroup) =>
+    !STAT_GROUPS[g].length && open.includes(g) ? packages.reduce((n, p) => n + (p.coreBonus[g as "magic"] ?? 0), 0) : 0;
+
+  // A core stat's − and +, its count, and whether it's faded
+  const coreControl = (g: StatGroup) => {
+    const core = draft.core[g];
+    const take = { onClick: () => takeCore(g), disabled: core <= coreFloor(g) };
+    if (!STAT_GROUPS[g].length) {
+      // Magic: each point adds MP, so its count is its MP
+      const canLevel = coreLeft > 0 && open.includes(g);
+      const total = core + extraOf(g);
+      return {
+        take,
+        put: {
+          onClick: () => onChange(withCore(draft, g, core + 1)),
+          disabled: !canLevel,
+          title: coreLeft > 0 && !open.includes(g) ? `This character can't Level ${title(g)}` : undefined,
+        },
+        count: { text: `${MP_PER_MAGIC * total} MP`, tone: total === 0 ? ("muted" as const) : ("mp" as const) },
+        locked: core === 0 && !canLevel,
+        hint: !open.includes(g) ? `This character can't Level ${title(g)}; take these points back.` : undefined,
+      };
+    }
+    const room = core * POINTS_PER_LEVEL;
+    const spent = spentIn(g);
+    const spare = spareIn(g);
+    // Room left under the group's maxes, after the points already unlocked.
+    const headroom = STAT_GROUPS[g].reduce((n, s) => n + Math.max(0, (base![s]?.max ?? 0) - valueOf(s)), 0) - Math.max(0, room - spent);
+    const canLevel = coreLeft > 0 && headroom >= POINTS_PER_LEVEL;
+    // Focus points that taking a core point back also takes back
+    const stranded = Math.max(0, spent - (core - 1) * POINTS_PER_LEVEL);
+    return {
+      take: { ...take, title: core > 0 && stranded ? `Also takes back ${stranded} focus ${stranded === 1 ? "point" : "points"}` : undefined },
+      put: {
+        onClick: () => onChange(withCore(draft, g, core + 1)),
+        disabled: !canLevel,
+        title: coreLeft > 0 && !canLevel ? `${title(g)}'s Stats have no room for ${POINTS_PER_LEVEL} more points` : undefined,
+      },
+      count: { text: `${spent}/${room}`, tone: core === 0 ? ("muted" as const) : spent === room ? ("good" as const) : spent > room ? ("bad" as const) : undefined },
+      locked: spare === 0 && spent === 0,
+      hint: core === 0 && !canLevel && headroom < POINTS_PER_LEVEL ? "These Stats have no room for points." : undefined,
+    };
+  };
+
+  // A focus stat's − and +, and how many points it can still take
+  const statControl = (s: StatId) => {
+    const g = groupOf(s);
+    const spare = spareIn(g);
+    const value = valueOf(s);
+    const max = base![s]?.max ?? 0;
+    return {
+      take: { onClick: () => bump(s, -1), disabled: value <= floorOf(s) },
+      put: { onClick: () => bump(s, 1), disabled: spare === 0 || value >= max },
+      // The group's unspent points this stat can still take under its max
+      spend: Math.max(0, Math.min(spare, max - value)),
+    };
   };
 
   if (!base) {
@@ -175,128 +231,17 @@ export function StatsStep({ draft, onChange, floor }: Props) {
           </p>
         )}
 
+        {/* The groups, one under the next, as the stat block with its − and + */}
         <div className="pool-stats">
-          {shown.map((g) => {
-            const core = draft.core[g];
-            const room = core * POINTS_PER_LEVEL;
-            const spent = spentIn(g);
-            if (!STAT_GROUPS[g].length) {
-              const canLevel = coreLeft > 0 && open.includes(g);
-              // A package's bonus, like the Licensed Mage's 1 Magic, on top of the levels
-              const extra = open.includes(g) ? packages.reduce((n, p) => n + (p.coreBonus[g as "magic"] ?? 0), 0) : 0;
-              return (
-                <div key={g} className={`sheet-group stat-group-${g}${core === 0 && !canLevel ? " locked" : ""}`}>
-                  <div className="sheet-group-head">
-                    <div className="core-control">
-                      <span className="stat-badge" title="Core Stat">
-                        <Icon name={g} />
-                      </span>
-                      <StatButton aria-label={`Take a core point from ${g}`} onClick={() => takeCore(g)} disabled={core <= coreFloor(g)}>
-                        <Sign is="minus" />
-                      </StatButton>
-                      <StatButton
-                        className="is-plus"
-                        aria-label={`Put a core point in ${g}`}
-                        title={coreLeft > 0 && !open.includes(g) ? `This character can't Level ${title(g)}` : undefined}
-                        onClick={() => onChange(withCore(draft, g, core + 1))}
-                        disabled={!canLevel}
-                      >
-                        <Sign is="plus" />
-                      </StatButton>
-                    </div>
-                    <h4 className="rule">
-                      {title(g)} - {core + extra}
-                    </h4>
-                    <span className={`num${core + extra === 0 ? " muted" : " resource-mp"}`}>{MP_PER_MAGIC * (core + extra)} MP</span>
-                  </div>
-                  {/* A diamond per point, under the core's − and +, which already set it */}
-                  <div className="sheet-stat">
-                    <div className="tiny-text">
-                      <strong>
-                        Each point in {title(g)} adds {MP_PER_MAGIC} MP (Mana Points)
-                      </strong>
-                    </div>
-                    <CoreLine bonus={extra} value={core + extra} />
-                  </div>
-                  {!open.includes(g) && <p className="hint">This character can't Level {title(g)}; take these points back.</p>}
-                </div>
-              );
-            }
-            // Points any of this group's stats could still take.
-            const spare = freeFor(g) + Math.max(0, room - spent);
-            const locked = spare === 0 && spent === 0;
-            // Room left under the group's maxes, after the points already unlocked.
-            const headroom = STAT_GROUPS[g].reduce((n, s) => n + Math.max(0, (base[s]?.max ?? 0) - valueOf(s)), 0) - Math.max(0, room - spent);
-            const canLevel = coreLeft > 0 && headroom >= POINTS_PER_LEVEL;
-            // Focus points that taking a core point back also takes back
-            const stranded = Math.max(0, spent - (core - 1) * POINTS_PER_LEVEL);
-            return (
-              <div key={g} className={`sheet-group stat-group-${g}${locked ? " locked" : ""}`}>
-                <div className="sheet-group-head">
-                  <div className="core-control">
-                    <span className="stat-badge" title="Core Stat">
-                      <Icon name={g} />
-                    </span>
-                    <StatButton
-                      aria-label={`Take a core point from ${g}`}
-                      title={core > 0 && stranded ? `Also takes back ${stranded} focus ${stranded === 1 ? "point" : "points"}` : undefined}
-                      onClick={() => takeCore(g)}
-                      disabled={core <= coreFloor(g)}
-                    >
-                      <Sign is="minus" />
-                    </StatButton>
-                    <StatButton
-                      className="is-plus"
-                      aria-label={`Put a core point in ${g}`}
-                      title={coreLeft > 0 && !canLevel ? `${title(g)}'s Stats have no room for ${POINTS_PER_LEVEL} more points` : undefined}
-                      onClick={() => onChange(withCore(draft, g, core + 1))}
-                      disabled={!canLevel}
-                    >
-                      <Sign is="plus" />
-                    </StatButton>
-                  </div>
-                  <h4 className="rule">
-                    {title(g)} - {core}
-                  </h4>
-                  <span className={`num${core === 0 ? " muted" : spent === room ? " good" : spent > room ? " bad" : ""}`}>
-                    {spent}/{room}
-                  </span>
-                </div>
-                {core === 0 && !canLevel && headroom < POINTS_PER_LEVEL && <p className="hint">These Stats have no room for points.</p>}
-                {STAT_GROUPS[g].map((s: StatId) => {
-                  const value = valueOf(s);
-                  const max = base[s]?.max ?? 0;
-                  // The group's unspent points this stat can still take under its max
-                  const toSpend = Math.max(0, Math.min(spare, max - value));
-                  return (
-                    <div key={s} className="sheet-stat">
-                      <div className="tiny-text">
-                        <strong>
-                          {title(s)} - {value}
-                        </strong>
-                        {toSpend > 0 && (
-                          <span className="stat-spend muted">
-                            Spend {toSpend} {toSpend === 1 ? "point" : "points"}
-                          </span>
-                        )}
-                      </div>
-                      <div className="pool-stat-row">
-                        <div className="stat-buttons">
-                          <StatButton aria-label={`Take a point from ${s}`} onClick={() => bump(s, -1)} disabled={value <= floorOf(s)}>
-                            <Sign is="minus" />
-                          </StatButton>
-                          <StatButton className="is-plus" aria-label={`Add a point to ${s}`} onClick={() => bump(s, 1)} disabled={spare === 0 || value >= max}>
-                            <Sign is="plus" />
-                          </StatButton>
-                        </div>
-                        <StatLine bonus={bonusOf(s)} value={value} max={max} />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            );
-          })}
+          <StatBlock
+            groups={shown.map((g) => ({
+              group: g,
+              core: draft.core[g] + extraOf(g),
+              bonus: extraOf(g),
+              stats: STAT_GROUPS[g].map((s: StatId) => ({ id: s, value: valueOf(s), bonus: bonusOf(s), max: base[s]?.max ?? 0 })),
+            }))}
+            edit={{ core: coreControl, stat: statControl }}
+          />
         </div>
       </div>
     </section>

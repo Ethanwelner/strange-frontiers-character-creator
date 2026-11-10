@@ -1,0 +1,279 @@
+/* ========================================
+   STRANGE FRONTIERS STAT BLOCK
+   ========================================
+   One stylesheet for the stat block, wherever it's drawn. Player Tools'
+   sheet is the reference:
+
+     strange-frontiers-character-creator  src/app/stats.css (this file)
+                                          src/app/components/stats.tsx
+     portfolio_site                       css/sf-stats.css (a copy)
+                                          php/rpg/components/stats.php
+
+   Both copies must stay identical: change it in the creator, then copy it
+   to the site. The components in both repos draw the same markup and take
+   the same options for what the block does where it's used (see stats.tsx).
+
+   The block carries its own colors (the creator's on-screen dark text), so
+   it looks the same on any of the dark boxes that hold it. Each interface
+   only adds its own layout around it. */
+
+.sf-stats {
+    --stat-text: #e7e8e9;
+    --stat-soft: #b2b3b4;
+    --stat-rule: rgb(255 255 255 / 18%);
+    --stat-open: #888a8c;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    color: var(--stat-text);
+}
+
+/* ---- Each core stat's group, in its resource's color: Physical red,
+   Social purple, Mental yellow and Magic blue, as in the HP, VP, SP and MP
+   trackers, with bonus points and the badge a darker shade ---- */
+
+.sf-stat-group {
+    --stat-color: var(--frontiers-green, #4ed37b);
+    --stat-bonus: color-mix(in srgb, var(--stat-color) 50%, black);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.sf-stat-group--physical {
+    --stat-color: var(--frontiers-hp);
+}
+
+.sf-stat-group--social {
+    --stat-color: var(--frontiers-vp);
+}
+
+.sf-stat-group--mental {
+    --stat-color: var(--frontiers-sp);
+}
+
+.sf-stat-group--magic {
+    --stat-color: var(--frontiers-mp);
+}
+
+/* The badge (and with edit, its − and +), then the title with a rule
+   running out to the right, then with edit the group's count */
+.sf-stat-group-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sf-stat-core {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* A core stat's circle holds its icon; the number is in the title */
+.sf-stat-badge {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0;
+    border-radius: 50%;
+    background-color: var(--stat-bonus);
+    color: #ffffff;
+    line-height: 1;
+}
+
+.sf-stat-badge .sf-stat-badge-icon {
+    flex: none;
+    width: 1.6rem;
+    height: 1.6rem;
+    fill: currentColor;
+}
+
+.sf-stat-group-title {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 20px;
+    min-width: 0;
+    margin: 0;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 24px;
+    color: inherit;
+
+    &::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background-color: var(--stat-rule);
+    }
+}
+
+/* ---- Each focus stat: its name and number, then its bar, 15px in from
+   the badge and the title's rule ---- */
+
+.sf-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-left: 15px;
+}
+
+.sf-stat-label {
+    font-size: .75rem;
+    line-height: 15px;
+
+    strong {
+        font-weight: 600;
+    }
+}
+
+.sf-stat-max,
+.sf-stat-spend {
+    color: var(--stat-soft);
+}
+
+/* How many of the group's points a stat can still take, beside its name */
+.sf-stat-spend {
+    margin-left: 12px;
+}
+
+/* The slots hold a set size, shrinking only when the column is too narrow
+   for all 20 */
+.sf-stat-line {
+    display: grid;
+    grid-template-columns: repeat(20, minmax(0, 20px));
+    gap: 4px;
+    width: 100%;
+}
+
+.sf-stat-slot {
+    box-sizing: border-box;
+    aspect-ratio: 1 / 1;
+    width: 100%;
+}
+
+.sf-stat-slot--dot {
+    border-radius: 50%;
+}
+
+.sf-stat-slot--square {
+    border-radius: 4px;
+}
+
+/* Magic's points: the same slots, turned into diamonds that fit the cell */
+.sf-stat-slot--diamond {
+    border-radius: 2px;
+    transform: rotate(45deg) scale(.72);
+}
+
+.sf-stat-slot.is-bonus {
+    background-color: var(--stat-bonus);
+}
+
+.sf-stat-slot.is-filled {
+    background-color: var(--stat-color);
+}
+
+.sf-stat-slot.is-empty {
+    border: .1rem solid var(--stat-open);
+}
+
+/* Slots past a stat's maximum: filled and outlined in the open slots'
+   gray, faded */
+.sf-stat-slot.is-unavailable {
+    border: .1rem solid var(--stat-open);
+    background-color: var(--stat-open);
+    opacity: .25;
+}
+
+/* A point past the stat's maximum */
+.sf-stat-slot.is-over {
+    background-color: var(--portfolio-red, #e2574c);
+}
+
+/* On screen, each colored piece glows 3px in its own color. Print stays
+   flat. */
+@media screen {
+    .sf-stat-badge,
+    .sf-stat-slot.is-bonus {
+        box-shadow: 0 0 3px var(--stat-bonus);
+    }
+
+    .sf-stat-slot.is-filled {
+        box-shadow: 0 0 3px var(--stat-color);
+    }
+
+    .sf-stat-slot.is-over {
+        box-shadow: 0 0 3px var(--portfolio-red, #e2574c);
+    }
+}
+
+/* ---- edit: the − and + beside the badge and each bar, the group's count,
+   its hints, and groups that can't take points faded ---- */
+
+.sf-stat-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .sf-stat-line {
+        flex: 1;
+    }
+}
+
+.sf-stat-steps {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.sf-stat-group-count {
+    &.is-muted {
+        color: var(--stat-soft);
+    }
+
+    &.is-good {
+        color: var(--panel-good, #7fdc9b);
+    }
+
+    &.is-bad {
+        color: var(--portfolio-red, #e2574c);
+    }
+
+    &.is-mp {
+        color: var(--frontiers-mp);
+    }
+}
+
+.sf-stat-hint {
+    margin: 0;
+    font-size: .9rem;
+    color: var(--stat-soft);
+}
+
+.sf-stat-group.is-locked .sf-stat {
+    opacity: .45;
+}
+
+/* A point just placed pops in: it starts small, overshoots a little and
+   settles. On scale, so Magic's diamonds keep their own transform. */
+.sf-stat-slot.is-filled.is-new {
+    animation: sf-stat-pop 320ms cubic-bezier(.3, 1.6, .5, 1);
+}
+
+@keyframes sf-stat-pop {
+    0% { scale: .4; }
+    60% { scale: 1.3; }
+    100% { scale: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sf-stat-slot.is-filled.is-new {
+        animation: none;
+    }
+}

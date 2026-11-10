@@ -2,6 +2,7 @@ import { useCallback, useLayoutEffect, useRef, useState, type ReactNode } from "
 import { FREE_TEXT_POOLS, isFreeTextPool, MP_PER_MAGIC, type BuildResult } from "../../engine/validate.js";
 import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { coreStatsShown } from "../check.js";
+import { sheetStatGroups, StatBlock } from "./stats.js";
 import { content, kindById, packageById, traitById } from "../content.js";
 import type { Draft, Looks } from "../draft.js";
 import type { Item } from "../items.js";
@@ -9,7 +10,7 @@ import type { HeldCondition } from "../conditions.js";
 import { CharacterLine } from "./CharacterLine.js";
 import { Conditions } from "./Conditions.js";
 import { Items } from "./Items.js";
-import { askerName, baseStats, CoreLine, DescriptionBox, Effect, Icon, LorePopup, NameField, Portrait, StatLine, StepHeader, title, TraitAction, traitName } from "./ui.js";
+import { askerName, baseStats, DescriptionBox, Effect, Icon, LorePopup, NameField, Portrait, StepHeader, title, TraitAction, traitName } from "./ui.js";
 import { CardChip, TraitCard, traitCardKind } from "./cards.js";
 import { Button } from "./Button.js";
 
@@ -361,46 +362,8 @@ export function Sheet({
               <div className="sheet-stats">{statsSlot}</div>
             ) : (
               <div className="sheet-stats">
-                {groups.map((g) => (
-                  <div key={g} className={`sheet-group stat-group-${g}`}>
-                    <div className="sheet-group-head">
-                      <span className="stat-badge" title="Core Stat">
-                        <Icon name={g} />
-                      </span>
-                      <h4 className="rule">
-                        {title(g)} - {summary?.coreStats[g] ?? "–"}
-                      </h4>
-                    </div>
-                    {/* Magic: a diamond per point, under its number */}
-                    {!STAT_GROUPS[g].length && (
-                      <div className="sheet-stat">
-                        <div className="tiny-text">
-                          <strong>
-                            Each point in {title(g)} adds {MP_PER_MAGIC} MP (Mana Points)
-                          </strong>
-                        </div>
-                        <CoreLine bonus={summary?.coreBonus[g] ?? 0} value={summary?.coreStats[g] ?? draft.core[g]} />
-                      </div>
-                    )}
-                    {STAT_GROUPS[g].map((s: StatId) => {
-                      const value = summary?.stats[s];
-                      // The Kind's bonus, with any free bonus points placed, shows gray.
-                      const bonus = (base?.[s]?.bonus ?? 0) + (draft.startPoints?.[s] ?? 0);
-                      const max = base?.[s]?.max ?? 0;
-                      return (
-                        <div key={s} className="sheet-stat">
-                          <div className="tiny-text">
-                            <strong>
-                              {title(s)} - {value ?? "–"}
-                            </strong>
-                            <span className="muted"> max {base?.[s]?.max ?? "–"}</span>
-                          </div>
-                          <StatLine bonus={bonus} value={value ?? bonus} max={max} />
-                        </div>
-                      );
-                    })}
-                  </div>
-                ))}
+                {/* The stat block with each stat's maximum */}
+                <StatBlock max groups={sheetStatGroups(draft, result)} />
               </div>
             )}
           </div>

@@ -304,18 +304,6 @@
       display: grid;
       gap: 4px;
     }
-
-    &.is-static {
-      :is(.pool-summary, .stat-buttons, .stat-spend, .hint),
-      .core-control button,
-      .sheet-group-head > .num {
-        display: none;
-      }
-
-      .sheet-group.locked .sheet-stat {
-        opacity: 1;
-      }
-    }
   }
 
   .tools-level-actions {
