@@ -2229,13 +2229,29 @@
   }
 
   /* A ranked Condition's − rank + in its bar after the name, in place of
-     "(rank)": the Stats' 28px buttons, 6px from the rank, pulled in top and
-     bottom so the bar keeps its height */
+     "(rank)": − and + as plain text buttons in the bar's text color, each a
+     20px target */
   .tools-rank {
     display: inline-flex;
-    gap: 6px;
-    margin: -6px 0 -6px 10px;
+    align-items: center;
+    gap: 2px;
+    /* Pulled in top and bottom so the bar keeps its height */
+    margin: -4px 0 -4px 8px;
     vertical-align: middle;
+
+    .tools-rank-btn {
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      font-size: 1.15rem;
+      font-weight: 600;
+      line-height: 1;
+
+      &:hover:not(:disabled) {
+        opacity: .65;
+      }
+    }
   }
 
   .tools-conditions-side {

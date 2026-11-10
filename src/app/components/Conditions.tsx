@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { content, traitById } from "../content.js";
 import { CONDITION_TYPES, conditionTypes, hpConditions, playConditions, withCondition, withoutCondition, type ConditionType, type HeldCondition } from "../conditions.js";
-import { Effect, LorePopup, Sign, TraitAction } from "./ui.js";
+import { Effect, LorePopup, TraitAction } from "./ui.js";
 import { CardNote, TraitCard } from "./cards.js";
 import { Button } from "./Button.js";
 
@@ -72,12 +72,12 @@ export function Conditions({
                     {t?.name ?? c.trait}
                     {t?.ranked && (
                       <span className="stepper tools-rank">
-                        <Button round="sm" onClick={() => update(c, { rank: c.rank - 1 })} disabled={c.rank <= 1} aria-label="Lower rank">
-                          <Sign is="minus" />
+                        <Button kind="bare" className="tools-rank-btn" onClick={() => update(c, { rank: c.rank - 1 })} disabled={c.rank <= 1} aria-label="Lower rank">
+                          −
                         </Button>
                         <span className="num">{c.rank}</span>
-                        <Button round="sm" onClick={() => update(c, { rank: c.rank + 1 })} aria-label="Raise rank">
-                          <Sign is="plus" />
+                        <Button kind="bare" className="tools-rank-btn" onClick={() => update(c, { rank: c.rank + 1 })} aria-label="Raise rank">
+                          +
                         </Button>
                       </span>
                     )}
