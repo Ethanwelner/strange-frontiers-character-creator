@@ -2591,7 +2591,8 @@
      with its name and types on top and its summary under */
   .condition-search {
     .filters {
-      margin: 0 0 12px;
+      row-gap: 16px;
+      margin: 0 0 20px;
 
       input[type="search"] {
         flex: 1 1 100%;
@@ -2610,7 +2611,8 @@
     gap: 4px;
     max-height: min(50vh, 420px);
     margin: 0;
-    padding: 0;
+    /* Room between the rows and the scrollbar */
+    padding: 0 8px 0 0;
     overflow-y: auto;
   }
 
