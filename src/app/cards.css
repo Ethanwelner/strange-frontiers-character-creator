@@ -242,6 +242,42 @@
             border-radius: 10px;
         }
     }
+
+    /* Abilities: a sketched edge, drawn twice (Piccalilli's "Sketchy
+       border test" CodePen). The card's edge has slightly uneven corners,
+       and a second line (::before) has those corners swapped and sits a
+       little askew, just inside the edge so it never pokes out of a
+       scrolling box. Both lines are the Conditions' mid gray, so they show
+       against the dark boxes; the second takes the card's edge color, so
+       hover and picked states color both. Isekai cards keep Dreft's green. */
+    &.sf-trait-card--ability {
+        border-radius: 12px 16px 13px 15px / 14px 12px 16px 13px;
+
+        &:not(.selected, .sf-card--dreft) {
+            border-color: #646464;
+        }
+
+        &::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            border: 2px solid;
+            border-color: inherit;
+            border-radius: 14px 12px 16px 13px / 12px 16px 13px 15px;
+            transform: rotate(0.3deg);
+            pointer-events: none;
+        }
+
+        /* The bar's top corners follow the card's, inside its 2px edge */
+        > .sf-card-bar {
+            border-radius: 10px 14px 0 0 / 12px 10px 0 0;
+        }
+
+        &.is-closed:not(.has-keep) > .sf-card-bar {
+            border-radius: 10px 14px 11px 13px / 12px 10px 14px 11px;
+        }
+    }
 }
 
 /* A Trait card's category and flags, a row of chips at the top of its
