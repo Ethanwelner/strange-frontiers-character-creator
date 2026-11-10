@@ -19,8 +19,8 @@
 
 .sf-card,
 .sf-item-card {
-    --card-bg: var(--portfolio-black, #202122);
-    --card-text: #e7e8e9;
+    --card-bg: var(--portfolio-black, #1f2123);
+    --card-text: #e6e8e9;
     --card-soft: #b2b3b4;
     color: var(--card-text);
 }
@@ -32,19 +32,19 @@
     margin: .15rem .25rem .15rem 0;
     padding: .2rem .5rem;
     border-radius: 4px;
-    background: var(--portfolio-gray, #505253);
+    background: var(--portfolio-gray, #505354);
     color: var(--portfolio-white, #fff);
     font-size: .875rem;
     font-weight: 600;
     white-space: nowrap;
 
     &.sf-chip--muted {
-        background: var(--portfolio-light-gray, #e9eaeb);
-        color: var(--portfolio-black, #202122);
+        background: var(--portfolio-light-gray, #e8eaeb);
+        color: var(--portfolio-black, #1f2123);
     }
 
     &.sf-chip--accent {
-        background: #696b6c;
+        background: #696c6d;
     }
 
     &.sf-chip--bad {
@@ -55,7 +55,7 @@
 /* ---- Trait and Background cards: a 2px edge the color of the bar ---- */
 
 .sf-card {
-    --card-edge: #171819;
+    --card-edge: #16181a;
     position: relative;
     width: 100%;
     background-color: var(--card-bg);
@@ -174,11 +174,11 @@
 
     /* Conditions in grays: a mid gray edge, a light gray bar, dark text */
     &.sf-trait-card--condition {
-        --card-edge: #626465;
+        --card-edge: #626566;
 
         > .sf-card-bar {
             background-color: #b7b4b4;
-            color: var(--portfolio-black, #202122);
+            color: var(--portfolio-black, #1f2123);
         }
     }
 }
@@ -223,7 +223,7 @@
 .sf-card-action {
     margin: 0;
     padding-left: 10px;
-    border-left: 2px solid var(--portfolio-medium-gray, #949698);
+    border-left: 2px solid var(--portfolio-medium-gray, #949798);
     font-size: .9rem;
 
     > p {
@@ -343,7 +343,7 @@
         cursor: pointer;
 
         &:hover:not(.selected) {
-            border-color: var(--portfolio-medium-gray, #949698);
+            border-color: var(--portfolio-medium-gray, #949798);
         }
     }
 }
