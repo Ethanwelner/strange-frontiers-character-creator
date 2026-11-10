@@ -206,12 +206,12 @@
         &::before {
             content: "";
             position: absolute;
-            /* A 4px edge: the card's own 2px and 2px more inside it, so
+            /* A 3px edge: the card's own 2px and 1px more inside it, so
                the card keeps its size. The bar's layer stops short of it. */
             inset: -2px;
             z-index: -1;
             background-color: var(--card-bg);
-            border: 4px solid;
+            border: 3px solid;
             border-color: inherit;
             border-radius: 12px;
             box-shadow: 0 4px 10px #00000030;
@@ -227,23 +227,23 @@
             isolation: isolate;
             background-color: transparent;
 
-            /* 2px in from the card's edge on the top and sides (and the
+            /* 1px in from the card's edge on the top and sides (and the
                bottom, when the card is closed to its bar), so it doesn't
-               cover the edge's inner half */
+               cover the edge's inner part */
             &::before {
                 content: "";
                 position: absolute;
-                inset: 2px 2px 0;
+                inset: 1px 1px 0;
                 z-index: -1;
                 background-color: var(--card-edge);
-                border-radius: 8px 8px 0 0;
+                border-radius: 9px 9px 0 0;
                 filter: url(#sf-rough-edge);
             }
         }
 
         &.is-closed:not(.has-keep) > .sf-card-bar::before {
-            inset: 2px;
-            border-radius: 8px;
+            inset: 1px;
+            border-radius: 9px;
         }
     }
 }
