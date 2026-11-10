@@ -62,11 +62,27 @@ export function Conditions({
           const t = traitById.get(c.trait);
           return (
             <li key={c.trait}>
-              {/* The name, then at the right of its bar an ✕ that takes the Condition off */}
+              {/* The name, with a ranked Condition's − rank + after it in place
+                  of "(rank)", then at the right of its bar an ✕ that takes the
+                  Condition off */}
               <TraitCard
                 kind="condition"
-                name={t?.name ?? c.trait}
-                rank={t?.ranked ? c.rank : undefined}
+                name={
+                  <>
+                    {t?.name ?? c.trait}
+                    {t?.ranked && (
+                      <span className="stepper tools-rank">
+                        <Button round="sm" onClick={() => update(c, { rank: c.rank - 1 })} disabled={c.rank <= 1} aria-label="Lower rank">
+                          <Sign is="minus" />
+                        </Button>
+                        <span className="num">{c.rank}</span>
+                        <Button round="sm" onClick={() => update(c, { rank: c.rank + 1 })} aria-label="Raise rank">
+                          <Sign is="plus" />
+                        </Button>
+                      </span>
+                    )}
+                  </>
+                }
                 actions={
                   <Button kind="bare" className="tools-condition-remove" aria-label={`Remove ${t?.name ?? c.trait}`} onClick={() => onChange(withoutCondition(conditions, c.trait))}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 20 20" aria-hidden="true">
@@ -75,17 +91,6 @@ export function Conditions({
                   </Button>
                 }
               >
-                {t?.ranked && (
-                  <div className="stepper tools-rank">
-                    <Button round="sm" onClick={() => update(c, { rank: c.rank - 1 })} disabled={c.rank <= 1} aria-label="Lower rank">
-                      <Sign is="minus" />
-                    </Button>
-                    <span className="num">{c.rank}</span>
-                    <Button round="sm" onClick={() => update(c, { rank: c.rank + 1 })} aria-label="Raise rank">
-                      <Sign is="plus" />
-                    </Button>
-                  </div>
-                )}
                 {t?.temporary && (
                   <CardNote>
                     {t.temporary}

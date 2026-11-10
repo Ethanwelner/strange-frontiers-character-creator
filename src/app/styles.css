@@ -2228,10 +2228,14 @@
     margin: 0;
   }
 
-  /* A ranked Condition's − and +, the Stats' size (28px), 6px from the rank */
+  /* A ranked Condition's − rank + in its bar after the name, in place of
+     "(rank)": the Stats' 28px buttons, 6px from the rank, pulled in top and
+     bottom so the bar keeps its height */
   .tools-rank {
+    display: inline-flex;
     gap: 6px;
-    margin: 4px 0;
+    margin: -6px 0 -6px 10px;
+    vertical-align: middle;
   }
 
   .tools-conditions-side {
