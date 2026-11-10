@@ -2230,7 +2230,7 @@
 
   /* A ranked Condition's − rank + in its bar after the name, in place of
      "(rank)": − and + as the game's sign icons, bare (no circle) in the bar's
-     text color, each a 20px target */
+     text color at 14px, each a 20px target */
   .tools-rank {
     display: inline-flex;
     align-items: center;
@@ -2246,8 +2246,8 @@
       height: 20px;
 
       .sign-icon {
-        width: 12px;
-        height: 12px;
+        width: 14px;
+        height: 14px;
         fill: currentColor;
       }
 
