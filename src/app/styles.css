@@ -2971,7 +2971,7 @@
     overflow-y: auto;
   }
 
-  /* Ability cards' corner border sits 7px outside the card (cards.css), so
+  /* Ability cards' corner dot sits just outside the card (cards.css), so
      their scrolling list makes room for it above and to the left without
      moving the cards */
   .sheet-abilities > .sheet-traits {

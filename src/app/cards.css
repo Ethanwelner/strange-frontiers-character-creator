@@ -182,30 +182,48 @@
         }
     }
 
-    /* Abilities: an extra border just outside the top-left corner. Lines
-       run 6px outside the top and left edges and step in to the card's
-       corner, with a small hollow square sitting in the step (a fretwork
-       corner). Drawn by ::before in the card's edge color. */
+    /* Abilities: the top-left corner is cut off on a 45° line, with a dot
+       just outside where the corner would be, and a second, lighter set of
+       lines inside the card that follows the cut (a cut-corner frame).
+       The clip cuts the corner out of the card and its shadow, and keeps a
+       small box outside the corner for the dot. The bar's ::before draws
+       the cut's edge and the dot in the card's edge color; the card's
+       ::before draws the inner lines. */
     &.sf-trait-card--ability {
         border-top-left-radius: 0;
+        clip-path: polygon(
+            32px -20px, calc(100% + 20px) -20px,
+            calc(100% + 20px) calc(100% + 20px), -20px calc(100% + 20px),
+            -20px 32px, -8px 0, -8px -8px, 0 -8px, 0 0, -8px 0, -20px 32px);
 
         &::before {
             content: "";
             position: absolute;
-            top: -7px;
-            left: -7px;
-            width: 60px;
-            height: 60px;
-            background-color: var(--card-edge);
-            mask:
-                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 13 13'%3E%3Cpath d='M.5 .5h6v6h-6z M6.5 6.5h6v-6.5 M6.5 6.5v6h-6.5' fill='none' stroke='%23000' stroke-width='1'/%3E%3C/svg%3E") 0 0 / 13px 13px no-repeat,
-                linear-gradient(#000 0 0) 12px 0 / 100% 1px no-repeat,
-                linear-gradient(#000 0 0) 0 12px / 1px 100% no-repeat;
+            z-index: 1;
+            top: -1px;
+            left: -1px;
+            width: 61px;
+            height: 61px;
+            background-color: rgb(255 255 255 / 35%);
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 61 61'%3E%3Cpath d='M61 6.5H14.7L6.5 14.7V61' fill='none' stroke='%23000' stroke-width='1'/%3E%3C/svg%3E") no-repeat;
             pointer-events: none;
         }
 
         > .sf-card-bar {
+            position: relative;
             border-top-left-radius: 0;
+
+            &::before {
+                content: "";
+                position: absolute;
+                top: -9px;
+                left: -9px;
+                width: 24px;
+                height: 24px;
+                background-color: var(--card-edge);
+                mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='4' cy='4' r='2.5'/%3E%3Cpath d='M7.5 21.2L21.2 7.5' fill='none' stroke='%23000' stroke-width='1'/%3E%3C/svg%3E") no-repeat;
+                pointer-events: none;
+            }
         }
     }
 }
