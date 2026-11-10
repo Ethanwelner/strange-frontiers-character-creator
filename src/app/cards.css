@@ -181,6 +181,29 @@
             color: var(--portfolio-black, #212121);
         }
     }
+
+    /* Abilities: a square top-left corner with a fretwork ornament, a
+       small square at the corner whose lines step out along the top and
+       left edges. The name moves over to clear it. */
+    &.sf-trait-card--ability {
+        border-top-left-radius: 0;
+
+        &::before {
+            content: "";
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            width: 48px;
+            height: 48px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='M.75 .75h7v7h-7z M7.75 7.75h7v-7h33.25 M7.75 7.75v7h-7v33.25' fill='none' stroke='%23a29d82' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat;
+            pointer-events: none;
+        }
+
+        > .sf-card-bar {
+            border-top-left-radius: 0;
+            padding-left: 28px;
+        }
+    }
 }
 
 /* A Trait card's category and flags, a row of chips at the top of its
