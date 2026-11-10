@@ -2179,20 +2179,6 @@
     }
   }
 
-  /* Add items stays in view at the popup's foot while the cards scroll,
-     like Player Tools' Traits Submit */
-  .item-picker-submit {
-    position: sticky;
-    bottom: -32px;
-    z-index: 1;
-    display: flex;
-    justify-content: flex-end;
-    margin: 24px -32px 0;
-    padding: 16px 32px;
-    background: var(--panel);
-    border-top: 1px solid #424446;
-  }
-
   /* The add row (Items' and Player Tools' Add a Condition), item notes, and
      the count */
   .tools-add {

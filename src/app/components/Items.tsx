@@ -111,7 +111,7 @@ function ItemPicker({ onAdd, custom }: { onAdd: (picked: { stock: StockItem; qty
       </div>
       {/* On the Custom tab, Add items only while something is picked, so it doesn't sit beside Add custom item */}
       {(tab !== "custom" || count > 0) && (
-        <div className="item-picker-submit">
+        <div className="sf-popup-foot">
           <Button
             tone={count === 0 ? "gray" : "primary"}
             ready={count > 0}
