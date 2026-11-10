@@ -181,6 +181,54 @@
             color: var(--portfolio-black, #212121);
         }
     }
+
+    /* Abilities: a rough, hand-made edge, from an SVG filter (dannydjones'
+       "SVG Filters" CodePen, its combined version: fractal noise displacing
+       the shape's edges). The filter (#sf-rough-edge) is drawn once on each
+       page. A filter roughens everything it's on, text too, so the card's
+       background and edge, and its bar's, are drawn on layers behind the
+       text and only those are filtered. The card's own edge is hidden by a
+       transparent border-image but keeps its color, so hover and picked
+       states still change it, and the layer behind takes that color. */
+    &.sf-trait-card--ability {
+        isolation: isolate;
+        background-color: transparent;
+        border-image: linear-gradient(transparent, transparent) 1;
+        box-shadow: none;
+
+        &::before {
+            content: "";
+            position: absolute;
+            inset: -2px;
+            z-index: -1;
+            background-color: var(--card-bg);
+            border: 2px solid;
+            border-color: inherit;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px #00000030;
+            filter: url(#sf-rough-edge);
+        }
+
+        &.selected::before {
+            box-shadow: 0 0 0 1px var(--portfolio-green, #47b767), 0 4px 10px #00000030;
+        }
+
+        > .sf-card-bar {
+            position: relative;
+            isolation: isolate;
+            background-color: transparent;
+
+            &::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                z-index: -1;
+                background-color: var(--card-edge);
+                border-radius: inherit;
+                filter: url(#sf-rough-edge);
+            }
+        }
+    }
 }
 
 /* A Trait card's category and flags, a row of chips at the top of its
