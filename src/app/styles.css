@@ -621,12 +621,12 @@
       }
     }
 
-    /* The Choices step's headed cards: a 2px border the color of their
+    /* The Choices step's headed cards: a 1px border the color of their
        header bar (--card-edge), and a soft shadow under them, like the
        cards (cards.css) */
     :is(.builder-panel, .lore-modal) .headed {
       --card-edge: #181818;
-      border: 2px solid var(--card-edge);
+      border: 1px solid var(--card-edge);
       box-shadow: 0 4px 10px #00000030;
 
       &.region-dreft {
