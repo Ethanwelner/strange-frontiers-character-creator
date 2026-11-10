@@ -274,6 +274,7 @@
         <filter id="sf-rough-edge">
           <feTurbulence type="fractalNoise" baseFrequency=".02" numOctaves="1" />
           <feDisplacementMap in="SourceGraphic" scale="4" />
+          <feGaussianBlur stdDeviation=".5" />
         </filter>
       </defs>
     </svg>
