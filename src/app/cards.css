@@ -184,7 +184,7 @@
 
     /* Abilities: a hand-drawn wobble on the edge. card-edges.js draws it
        as a vector path in an <svg class="sf-card-edge"> behind the content,
-       the card's size, filled with its background and stroked 3px with
+       the card's size, filled with its background and stroked 2px with
        --sf-edge. A vector stays smooth, where a filter (the first try)
        stair-stepped. The card's own edge is hidden by a transparent
        border-image, and --sf-edge follows its states: the Conditions' mid
@@ -221,7 +221,7 @@
             path {
                 fill: var(--card-bg);
                 stroke: var(--sf-edge);
-                stroke-width: 3px;
+                stroke-width: 2px;
                 stroke-linejoin: round;
                 transition: stroke 200ms;
             }
@@ -234,9 +234,8 @@
             border-color: var(--sf-edge);
         }
 
-        /* The bar's background, 1px in from the card's edge on the top and
-           sides (and the bottom, when the card is closed to its bar), so it
-           sits inside the 3px line */
+        /* The bar's background, just inside the 2px line: the card's own
+           2px edge, which the line covers */
         > .sf-card-bar {
             position: relative;
             isolation: isolate;
@@ -245,16 +244,15 @@
             &::before {
                 content: "";
                 position: absolute;
-                inset: 1px 1px 0;
+                inset: 0;
                 z-index: -1;
                 background-color: var(--card-edge);
-                border-radius: 9px 9px 0 0;
+                border-radius: 10px 10px 0 0;
             }
         }
 
         &.is-closed:not(.has-keep) > .sf-card-bar::before {
-            inset: 1px;
-            border-radius: 9px;
+            border-radius: 10px;
         }
     }
 }

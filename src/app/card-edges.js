@@ -28,7 +28,7 @@
     var SVG_NS = "http://www.w3.org/2000/svg";
     var CARDS = ".sf-trait-card--ability";
     var RADIUS = 12; // the card's corner radius
-    var STROKE = 3; // the edge's width, centered on the outline
+    var STROKE = 2; // the edge's width, centered on the outline
     var AMPLITUDE = 1.2; // how far the outline wanders, in px
     var WAVE = 160; // about how long one wave is, in px
     var STEP = 3; // px between the outline's points
