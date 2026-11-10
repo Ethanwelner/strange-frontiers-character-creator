@@ -2815,10 +2815,18 @@
 
   /* Each entry's type, as an icon in place of a "Knowledge:" or "Language:"
      label: a graduation cap or speech bubbles, in the text color */
+  /* A full 1.5 line for each entry, like the site's sample sheet: the link
+     buttons' tighter line let their text stick out a pixel, which made the
+     list scroll even when everything fit */
   .knowledge-list li {
     display: flex;
     align-items: center;
     gap: 6px;
+    line-height: 1.5;
+
+    .sf-btn {
+      line-height: inherit;
+    }
   }
 
   .knowledge-list .icon {
