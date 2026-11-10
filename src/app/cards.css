@@ -182,54 +182,66 @@
         }
     }
 
-    /* Abilities: a rough, hand-made edge, from an SVG filter (dannydjones'
-       "SVG Filters" CodePen, its combined version: fractal noise displacing
-       the shape's edges). The filter (#sf-rough-edge) is drawn once on each
-       page. A filter roughens everything it's on, text too, so the card's
-       background and edge, and its bar's, are drawn on layers behind the
-       text and only those are filtered. The card's own edge is hidden by a
-       transparent border-image but keeps its color, so hover and picked
-       states still change it, and the layer behind takes that color. */
+    /* Abilities: a hand-drawn wobble on the edge. card-edges.js draws it
+       as a vector path in an <svg class="sf-card-edge"> behind the content,
+       the card's size, filled with its background and stroked 3px with
+       --sf-edge. A vector stays smooth, where a filter (the first try)
+       stair-stepped. The card's own edge is hidden by a transparent
+       border-image, and --sf-edge follows its states: the Conditions' mid
+       gray, Dreft's green on Isekai cards, gray on hover, green when
+       picked. */
     &.sf-trait-card--ability {
+        --sf-edge: #646464;
         isolation: isolate;
         background-color: transparent;
         border-image: linear-gradient(transparent, transparent) 1;
         box-shadow: none;
 
-        /* The Conditions' mid gray edge, so the rough edge shows against the
-           dark boxes, while the bar stays dark. Isekai's keep Dreft's green,
-           and picked or hovered cards their own. */
-        &:not(.selected, .sf-card--dreft) {
-            border-color: #646464;
+        &.sf-card--dreft {
+            --sf-edge: var(--frontiers-dreft, #1c372b);
         }
 
-        &::before {
-            content: "";
+        &:is(.is-selectable, .trait):hover:not(.selected) {
+            --sf-edge: var(--portfolio-medium-gray, #969696);
+        }
+
+        &.selected {
+            --sf-edge: var(--portfolio-green, #47b767);
+        }
+
+        > .sf-card-edge {
             position: absolute;
-            /* A 3px edge: the card's own 2px and 1px more inside it, so
-               the card keeps its size. The bar's layer stops short of it. */
-            inset: -2px;
+            top: -2px;
+            left: -2px;
             z-index: -1;
+            overflow: visible;
+            pointer-events: none;
+            filter: drop-shadow(0 4px 10px #00000030);
+
+            path {
+                fill: var(--card-bg);
+                stroke: var(--sf-edge);
+                stroke-width: 3px;
+                stroke-linejoin: round;
+                transition: stroke 200ms;
+            }
+        }
+
+        /* Until the script draws it (or without it), a plain edge */
+        &:not(:has(> .sf-card-edge)) {
             background-color: var(--card-bg);
-            border: 3px solid;
-            border-color: inherit;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px #00000030;
-            filter: url(#sf-rough-edge);
+            border-image: none;
+            border-color: var(--sf-edge);
         }
 
-        &.selected::before {
-            box-shadow: 0 0 0 1px var(--portfolio-green, #47b767), 0 4px 10px #00000030;
-        }
-
+        /* The bar's background, 1px in from the card's edge on the top and
+           sides (and the bottom, when the card is closed to its bar), so it
+           sits inside the 3px line */
         > .sf-card-bar {
             position: relative;
             isolation: isolate;
             background-color: transparent;
 
-            /* 1px in from the card's edge on the top and sides (and the
-               bottom, when the card is closed to its bar), so it doesn't
-               cover the edge's inner part */
             &::before {
                 content: "";
                 position: absolute;
@@ -237,7 +249,6 @@
                 z-index: -1;
                 background-color: var(--card-edge);
                 border-radius: 9px 9px 0 0;
-                filter: url(#sf-rough-edge);
             }
         }
 

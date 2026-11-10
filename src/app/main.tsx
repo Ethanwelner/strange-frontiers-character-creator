@@ -10,6 +10,8 @@ import "./styles.css";
 // after the creator's so they win where both style a card
 import "./buttons.css";
 import "./cards.css";
+// The hand-drawn edge on Ability cards (js/sf-card-edges.js on the site is a copy)
+import "./card-edges.js";
 
 // Rendered before this script finishes, so creator.php (which holds its first
 // paint for this script) slides in showing the builder, not an empty page.

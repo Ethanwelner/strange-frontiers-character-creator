@@ -267,17 +267,6 @@
             <span></span>
         </div>
     </div>
-    <!-- The rough edge on Ability cards (src/app/cards.css): fractal noise
-         displacing a shape's edges (dannydjones' "SVG Filters" CodePen) -->
-    <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-      <defs>
-        <filter id="sf-rough-edge">
-          <feTurbulence type="fractalNoise" baseFrequency=".02" numOctaves="1" />
-          <feDisplacementMap in="SourceGraphic" scale="4" />
-          <feGaussianBlur stdDeviation=".5" />
-        </filter>
-      </defs>
-    </svg>
     <div id="root"></div>
     <script type="module" src="/src/app/main.tsx"></script>
   </body>

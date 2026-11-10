@@ -10,6 +10,8 @@ import "./styles.css";
 // src/app/cards.css)
 import "../app/buttons.css";
 import "../app/cards.css";
+// The hand-drawn edge on Ability cards
+import "../app/card-edges.js";
 
 // Rendered before this script finishes, so game-tools.php (which holds its
 // first paint for this script) slides in showing the tools, not an empty page.
