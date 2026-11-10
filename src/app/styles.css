@@ -3123,10 +3123,12 @@
     margin-bottom: 0.5rem;
   }
 
-  /* Each card as tall as the others in its row, like the Traits step */
+  /* Each card as tall as the others in its row, like the Traits step, at
+     least 256px wide (the box's whole width when it's narrower), in the
+     creator and Player Tools alike */
   .sheet-traits {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(256px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(256px, 100%), 1fr));
     gap: 1rem;
 
     > li {
