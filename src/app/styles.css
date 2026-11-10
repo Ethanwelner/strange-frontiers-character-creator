@@ -1228,6 +1228,45 @@
     font-size: 0.9rem;
   }
 
+  /* The Traits picker's and Add a Condition's filter checkboxes: 20px
+     squares outlined in the picker's color (the Traits' green, the
+     Conditions' header gray), filled in it with a dark check when on */
+  .traits-filters {
+    --check-color: var(--frontiers-green, #2dfc64);
+  }
+
+  .condition-search {
+    --check-color: #b7b4b4;
+  }
+
+  :is(.traits-filters, .condition-search) .check input[type="checkbox"] {
+    appearance: none;
+    flex: none;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    border: 2px solid var(--check-color);
+    border-radius: 4px;
+    background: transparent center / 14px 14px no-repeat;
+    cursor: pointer;
+    transition: background-color 150ms;
+
+    &:checked {
+      background-color: var(--check-color);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M2.5 7.5l3 3 6-7' fill='none' stroke='%231f2122' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--portfolio-white, #fff);
+      outline-offset: 2px;
+    }
+  }
+
+  :is(.traits-filters, .condition-search) .check {
+    gap: 8px;
+    cursor: pointer;
+  }
+
   .trait-list,
   .picks,
   .sheet-traits,

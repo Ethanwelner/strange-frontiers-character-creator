@@ -148,7 +148,7 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom }:
               " Traits on this character's Background Trait list take a Background pick while one is left; the rest take Universal picks."}
         </p>
 
-        <div className="filters">
+        <div className="filters traits-filters">
           <input type="search" placeholder="Search name or tag" value={query} onChange={(e) => setQuery(e.target.value)} aria-label="Search Traits" />
           {TraitCategory.options.map((c) => (
             <label key={c} className="check">
