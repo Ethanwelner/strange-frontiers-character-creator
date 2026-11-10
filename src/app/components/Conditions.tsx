@@ -46,7 +46,7 @@ export function Conditions({
         Conditions
       </SheetTitle>
       {adding && (
-        <Popup label="Add a Condition" onClose={() => setAdding(false)} size="narrow" className="sheet-add-popup">
+        <Popup label="Add a Condition" onClose={() => setAdding(false)} size="narrow" scroll="inner" className="sheet-add-popup">
           <h3 className="subhead">Add a Condition</h3>
           <ConditionSearch options={options} onPick={add} />
         </Popup>
@@ -135,7 +135,7 @@ function ConditionSearch({ options, onPick }: { options: ReturnType<typeof playC
     return words.every((w) => hay.includes(w));
   });
   return (
-    <div className="condition-search">
+    <div className="condition-search sf-popup-grow picker-box">
       <div className="filters">
         <input
           type="search"
@@ -157,7 +157,7 @@ function ConditionSearch({ options, onPick }: { options: ReturnType<typeof playC
       {shown.length === 0 ? (
         <p className="empty">No Conditions match.</p>
       ) : (
-        <ul className="condition-search-list">
+        <ul className="condition-search-list picker-scroll">
           {shown.map((t) => (
             <li key={t.id}>
               <button type="button" className="condition-search-option" onClick={() => onPick(t.id)}>

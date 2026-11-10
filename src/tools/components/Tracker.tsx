@@ -183,7 +183,7 @@ export function Tracker({
 
       {/* The creator's Traits step, without the Traits the character already has */}
       {traitDraft && traitResult && (
-        <Popup label="Choose Traits" onClose={closeTraits} size="wide" className="tools-traits-popup">
+        <Popup label="Choose Traits" onClose={closeTraits} size="wide" scroll="inner" className="tools-traits-popup">
           <TraitsStep
             draft={traitDraft}
             campaign={{ startingLevel: traitDraft.level }}

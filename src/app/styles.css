@@ -2109,9 +2109,12 @@
   /* The picker's rows: the inventory's item card, with room on the left
      for the count's circle, and a large checkbox at its right. In two
      columns once there's room. */
-  /* In the popup, the title, the tabs and the search stay put and only the
-     list scrolls, inside the tab box (the popup's scroll inner) */
-  .item-picker-popup .item-picker > .tech-fields {
+  /* The pickers in popups (Add items, Choose Traits, Add a Condition), in
+     the popup's scroll inner: the title, the tabs, any hint and the search
+     stay put, and only what's picked from scrolls (.picker-scroll), inside
+     the tab box. The search is a size up, close under the tabs, with more
+     room between it and what it searches. */
+  .sf-popup--inner .picker-box {
     flex: 0 1 auto;
     min-height: 0;
     display: flex;
@@ -2121,10 +2124,12 @@
       flex: none;
     }
 
-    /* The search sits close under the tabs, with more room between it and
-       the cards */
     > .tech-field-tab-list {
       margin-bottom: 20px;
+    }
+
+    > .hint {
+      margin: 0 0 20px;
     }
 
     > .filters {
@@ -2136,14 +2141,32 @@
       }
     }
 
-    /* Pulled left by its 14px of room for the count circles, so the cards'
-       edges line up with the tabs and the search, the circles hanging into
-       the box's margin */
-    > .item-pick-list {
+    > .picker-scroll {
       flex: 0 1 auto;
       min-height: 0;
       overflow-y: auto;
-      margin-left: -14px;
+
+      /* Its first title sits at the top of the scroll, not 40px down */
+      > :first-child,
+      > :first-child > .subhead:first-child {
+        margin-top: 0;
+      }
+    }
+  }
+
+  /* Add items' list is pulled left by its 14px of room for the count
+     circles, so the cards' edges line up with the tabs and the search, the
+     circles hanging into the box's margin */
+  .sf-popup--inner .picker-box > .item-pick-list {
+    margin-left: -14px;
+  }
+
+  /* Choose Traits' search takes its own line over the category checkboxes */
+  .sf-popup--inner .traits-filters {
+    row-gap: 16px;
+
+    input[type="search"] {
+      flex: 1 1 100%;
     }
   }
 
@@ -2392,7 +2415,7 @@
      that doesn't scroll has no fade. Browsers without scroll timelines
      (Firefox, for now) keep the hard edge. */
   @supports (animation-timeline: scroll()) {
-    :is(.condition-search-list, .item-picker-popup .item-pick-list) {
+    :is(.condition-search-list, .sf-popup--inner .picker-scroll) {
       mask-image: linear-gradient(to bottom, #000 calc(100% - var(--sf-list-fade)), transparent);
       animation: sf-list-fade linear both;
       animation-timeline: scroll(self);
@@ -2405,7 +2428,7 @@
      parts; Firefox, which has no such parts, a thin bar in the same colors.
      The site sets scrollbar-color on the page, which makes Chrome skip
      -webkit- parts, so it's reset here. */
-  :is(.tools-chat-log, .tools-chat-form textarea, .condition-search-list, .item-picker-popup .item-pick-list) {
+  :is(.tools-chat-log, .tools-chat-form textarea, .condition-search-list, .sf-popup--inner .picker-scroll) {
     scrollbar-color: auto;
     scrollbar-width: auto;
 

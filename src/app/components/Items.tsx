@@ -48,7 +48,7 @@ function ItemPicker({ onAdd, custom }: { onAdd: (picked: { stock: StockItem; qty
   const count = [...picked.values()].reduce((n, q) => n + q, 0);
   return (
     <div className="item-picker sf-popup-grow">
-      <div className="tech-fields tech-fields-light">
+      <div className="tech-fields tech-fields-light picker-box">
         <div className="tech-field-tab-list" role="tablist" aria-label="Item category">
           {categories.map((c) => (
             <button key={c} type="button" role="tab" aria-selected={tab === c} className={`tech-field-tab${tab === c ? " is-active" : ""}`} onClick={() => setTab(c)}>
@@ -70,7 +70,7 @@ function ItemPicker({ onAdd, custom }: { onAdd: (picked: { stock: StockItem; qty
           <input type="search" placeholder="Search name or tag" value={query} onChange={(e) => setQuery(e.target.value)} aria-label="Search items" />
         </div>
         {shown.length === 0 && <p className="empty">No {title(tab).toLowerCase()} items match.</p>}
-        <ul className="item-pick-list">
+        <ul className="item-pick-list picker-scroll">
           {shown.map((i) => {
             const qty = picked.get(i.id);
             const selected = qty !== undefined;
