@@ -95,16 +95,16 @@
 
 .sf-creator {
   /* Builder colors on top of css/tokens.css */
-  --card-bg: #edeff1;
-  --card-border: #d2d4d6;
+  --card-bg: #eeeff0;
+  --card-border: #d3d4d5;
   --good-on-light: #2e8a4a;
   --rule: rgb(0 0 0 / 15%);
   --rule-on-black: rgb(255 255 255 / 25%);
   /* The dark builder panel and the box each step sits in */
-  --panel: #292c2d;
-  --panel-box: #343738;
-  --panel-text: #e6e8ea;
-  --panel-soft: #b1b3b5;
+  --panel: #2a2b2c;
+  --panel-box: #353637;
+  --panel-text: #e7e8e9;
+  --panel-soft: #b2b3b4;
   --panel-good: #6fd18a;
   --title: "bebas_neueregular", Impact, "Arial Narrow", sans-serif;
   --body: "Open Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -342,7 +342,7 @@
     }
 
     .hint {
-      color: #c7c9cb;
+      color: #c8c9ca;
     }
 
     .sf-btn--link {
@@ -385,7 +385,7 @@
     gap: 6px;
 
     input::placeholder {
-      color: #979b9d;
+      color: #989a9c;
     }
   }
 
@@ -479,7 +479,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 0.9rem;
-    color: #c7c9cb;
+    color: #c8c9ca;
   }
 
   /* The last build's status and summary, 48px below Build it, then its
@@ -525,7 +525,7 @@
   .builder-panel {
     --rule: rgb(255 255 255 / 18%);
     /* Card edges fade into the dark box instead of outlining it in light gray */
-    --card-border: #5b5f60;
+    --card-border: #5c5e5f;
     position: relative;
     /* Clear of the site's .white-bg; the gray is the layer below */
     background: none;
@@ -581,7 +581,7 @@
   /* Printed, the cards (cards.css) go light like the rest, with dark text */
   @media print {
     :is(.sf-card, .sf-item-card) {
-      --card-bg: #edeff1;
+      --card-bg: #eeeff0;
       --card-text: var(--portfolio-black);
       --card-soft: var(--portfolio-gray);
     }
@@ -617,7 +617,7 @@
       }
 
       .chip-accent {
-        background: #686c6d;
+        background: #696b6c;
       }
     }
 
@@ -625,7 +625,7 @@
        header bar (--card-edge), and a soft shadow under them, like the
        cards (cards.css) */
     :is(.builder-panel, .lore-modal) .headed {
-      --card-edge: #16191a;
+      --card-edge: #171819;
       border: 2px solid var(--card-edge);
       box-shadow: 0 4px 10px #00000030;
 
@@ -645,7 +645,7 @@
     /* The black header bars go a shade darker than the card under them */
     :is(.builder-panel, .lore-modal) {
       .headed:not(.region-dreft) > .card-head {
-        background-color: #16191a;
+        background-color: #171819;
       }
     }
 
@@ -680,11 +680,11 @@
     }
 
     .stat:is(.empty, .unavailable) {
-      border-color: #878b8d;
+      border-color: #888a8c;
     }
 
     .stat.unavailable {
-      background-color: #878b8d;
+      background-color: #888a8c;
     }
 
     /* A locked group's row is already faded */
@@ -743,11 +743,11 @@
       }
 
       .stat:is(.empty, .unavailable) {
-        border-color: #878b8d;
+        border-color: #888a8c;
       }
 
       .stat.unavailable {
-        background-color: #878b8d;
+        background-color: #888a8c;
       }
 
       .sf-btn--link {
@@ -2636,7 +2636,7 @@
     margin: 24px -32px 0;
     padding: 16px 32px;
     background: var(--panel);
-    border-top: 1px solid #424546;
+    border-top: 1px solid #434445;
   }
 
   /* The add row (Items' and Player Tools' Add a Condition), item notes, and

@@ -78,7 +78,7 @@ function draw(canvas: HTMLCanvasElement, nums: HTMLCanvasElement, q: Quat, size:
   const numCtx = nums.getContext("2d");
   if (!ctx || !numCtx) return;
   green ??= getComputedStyle(canvas).getPropertyValue("--frontiers-green").trim() || "#2dfc64";
-  const dark = "#181b1c";
+  const dark = "#191a1b";
   const { width: w, height: h } = canvas;
   ctx.clearRect(0, 0, w, h);
   // Room above and below for it to float (styles.css)
