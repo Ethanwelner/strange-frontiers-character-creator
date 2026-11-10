@@ -10,7 +10,7 @@ import "./styles.css";
 // src/app/cards.css)
 import "../app/buttons.css";
 import "../app/cards.css";
-// The hand-drawn edge on Ability cards
+// The hand-drawn edge on Condition cards
 import "../app/card-edges.js";
 
 // Rendered before this script finishes, so game-tools.php (which holds its

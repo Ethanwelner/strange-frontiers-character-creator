@@ -172,34 +172,20 @@
         min-width: 0;
     }
 
-    /* Conditions in grays: a mid gray edge, a light gray bar, dark text */
+    /* Conditions in grays: a mid gray edge, a light gray bar, dark text,
+       and a hand-drawn wobble on the edge. card-edges.js draws the edge as
+       a vector path in an <svg class="sf-card-edge"> behind the content,
+       the card's size, filled with its background and stroked 2px with
+       --sf-edge (a filter, the first try, stair-stepped). The card's own
+       edge is hidden by a transparent border-image, and --sf-edge follows
+       its states: the mid gray, gray on hover, green when picked. */
     &.sf-trait-card--condition {
         --card-edge: #646464;
-
-        > .sf-card-bar {
-            background-color: #b7b4b4;
-            color: var(--portfolio-black, #212121);
-        }
-    }
-
-    /* Abilities: a hand-drawn wobble on the edge. card-edges.js draws it
-       as a vector path in an <svg class="sf-card-edge"> behind the content,
-       the card's size, filled with its background and stroked 2px with
-       --sf-edge. A vector stays smooth, where a filter (the first try)
-       stair-stepped. The card's own edge is hidden by a transparent
-       border-image, and --sf-edge follows its states: the Conditions' mid
-       gray, Dreft's green on Isekai cards, gray on hover, green when
-       picked. */
-    &.sf-trait-card--ability {
-        --sf-edge: #646464;
+        --sf-edge: var(--card-edge);
         isolation: isolate;
         background-color: transparent;
         border-image: linear-gradient(transparent, transparent) 1;
         box-shadow: none;
-
-        &.sf-card--dreft {
-            --sf-edge: var(--frontiers-dreft, #1c372b);
-        }
 
         &:is(.is-selectable, .trait):hover:not(.selected) {
             --sf-edge: var(--portfolio-medium-gray, #969696);
@@ -234,19 +220,20 @@
             border-color: var(--sf-edge);
         }
 
-        /* The bar's background, just inside the 2px line: the card's own
-           2px edge, which the line covers */
+        /* The light gray bar, just inside the 2px line: the card's own 2px
+           edge, which the line covers */
         > .sf-card-bar {
             position: relative;
             isolation: isolate;
             background-color: transparent;
+            color: var(--portfolio-black, #212121);
 
             &::before {
                 content: "";
                 position: absolute;
                 inset: 0;
                 z-index: -1;
-                background-color: var(--card-edge);
+                background-color: #b7b4b4;
                 border-radius: 10px 10px 0 0;
             }
         }

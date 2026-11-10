@@ -1,7 +1,7 @@
 /* ========================================
    STRANGE FRONTIERS CARD EDGES
    ========================================
-   The hand-drawn wobble on Ability cards' edges, drawn as a vector path so
+   The hand-drawn wobble on Condition cards' edges, drawn as a vector path so
    it stays smooth at any size: a pixel filter would stair-step it.
 
      strange-frontiers-character-creator  src/app/card-edges.js (this file)
@@ -11,7 +11,7 @@
    imports, so the same file runs in the creator and Player Tools (imported
    by their main.tsx) and on the site (a <script> in javascript-loads.php).
 
-   Each Ability card (.sf-trait-card--ability) gets an <svg class=
+   Each Condition card (.sf-trait-card--condition) gets an <svg class=
    "sf-card-edge"> behind its content: a rounded rectangle the card's size,
    its outline nudged in and out by a slow, smooth wave. The card's name
    seeds the wave, so a card keeps its own wobble every time it's drawn.
@@ -26,7 +26,7 @@
     window.sfCardEdges = true;
 
     var SVG_NS = "http://www.w3.org/2000/svg";
-    var CARDS = ".sf-trait-card--ability";
+    var CARDS = ".sf-trait-card--condition";
     var RADIUS = 12; // the card's corner radius
     var STROKE = 2; // the edge's width, centered on the outline
     var AMPLITUDE = 1.2; // how far the outline wanders, in px
@@ -179,7 +179,7 @@
                         scan(node);
                     }
                 });
-                // A card that becomes an Ability card, or one whose edge a
+                // A card that becomes a Condition card, or one whose edge a
                 // render removed
                 if (m.type === "attributes" || m.removedNodes.length) {
                     var card = m.target.closest && m.target.closest(CARDS);
