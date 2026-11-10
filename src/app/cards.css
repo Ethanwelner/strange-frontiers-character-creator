@@ -484,6 +484,30 @@
     flex-wrap: nowrap;
 }
 
+/* With badges, the top line is a badge tall (the badge and its margins:
+   1lh + .7rem + 2px, worked out here so the chevron's own line height
+   doesn't change it). Equip, the name and the chevron each take that
+   height, so they stay on the name's line when the badges wrap under it,
+   instead of centering on the taller card. */
+@property --sf-item-line {
+    syntax: "<length>";
+    inherits: true;
+    initial-value: 0px;
+}
+
+.sf-item-card .sf-item-summary:has(.equipment-stat) {
+    --sf-item-line: calc(1lh + .7rem + 2px);
+    align-items: flex-start;
+
+    > :is(.sf-item-equip, .sf-item-expand) {
+        height: var(--sf-item-line);
+    }
+
+    .sf-item-main > .equipment-name {
+        line-height: var(--sf-item-line);
+    }
+}
+
 /* The name and its badges between Equip and the chevron: the name takes what
    its line leaves, the badges sit at the right, and they wrap under it one
    at a time as the room runs out, still at the right */
@@ -537,6 +561,8 @@
     display: inline-flex;
     align-items: center;
     gap: 4px;
+    /* Bootstrap's label margin would push it off the name's line */
+    margin: 0;
     cursor: pointer;
 
     input[type="checkbox"] {

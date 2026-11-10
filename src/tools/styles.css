@@ -879,17 +879,25 @@
     }
   }
 
-  /* Below 1400px, where the d20 column narrows, the sections tighten: 1rem
-     between the boxes and the column beside them, as the sheet's own boxes
-     do (src/app/styles.css) */
-  @media (max-width: 1399px) {
+  /* At 1768px and below, the sections tighten: 16px between the boxes, as
+     the sheet's own sections do (src/app/styles.css), and 24px between the
+     sheet and the d20 column */
+  @media (max-width: 1768px) {
     .tools-body {
-      column-gap: 1rem;
+      column-gap: 24px;
     }
 
     .tools-tracker,
     .builder-panel .sheet-embedded .c-sheet {
-      gap: 1rem;
+      gap: 16px;
+    }
+  }
+
+  /* Below 1400px, where the d20 column narrows, 1rem between the sheet and
+     the column too */
+  @media (max-width: 1399px) {
+    .tools-body {
+      column-gap: 1rem;
     }
   }
 }

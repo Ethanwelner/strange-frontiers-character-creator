@@ -2345,14 +2345,17 @@
     }
   }
 
-  /* Below 1400px, where Player Tools' d20 column narrows, the sheet's
-     sections tighten: 1rem between its boxes and inside each one (an
-     Item's card keeps its own) */
-  @media (max-width: 1399px) {
+  /* At 1768px and below, the sheet's sections tighten to 16px apart,
+     across and down */
+  @media (max-width: 1768px) {
     :is(.c-sheet, .sheet-row, .sheet-row > .sheet-side-stack, .sheet-side-row, .sheet-lower, .sheet-pair, .sheet-move-row) {
-      gap: 1rem;
+      gap: 16px;
     }
+  }
 
+  /* Below 1400px, where Player Tools' d20 column narrows, each box's
+     padding tightens to 1rem too (an Item's card keeps its own) */
+  @media (max-width: 1399px) {
     .builder-panel .c-sheet-box:not(.sf-item-card) {
       padding: 1rem;
     }
@@ -2812,10 +2815,18 @@
 
   /* Each entry's type, as an icon in place of a "Knowledge:" or "Language:"
      label: a graduation cap or speech bubbles, in the text color */
+  /* A full 1.5 line for each entry, like the site's sample sheet: the link
+     buttons' tighter line let their text stick out a pixel, which made the
+     list scroll even when everything fit */
   .knowledge-list li {
     display: flex;
     align-items: center;
     gap: 6px;
+    line-height: 1.5;
+
+    .sf-btn {
+      line-height: inherit;
+    }
   }
 
   .knowledge-list .icon {
