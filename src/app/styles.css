@@ -2109,6 +2109,25 @@
   /* The picker's rows: the inventory's item card, with room on the left
      for the count's circle, and a large checkbox at its right. In two
      columns once there's room. */
+  /* In the popup, the title, the tabs and the search stay put and only the
+     list scrolls, inside the tab box (the popup's scroll inner) */
+  .item-picker-popup .item-picker > .tech-fields {
+    flex: 0 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+
+    > * {
+      flex: none;
+    }
+
+    > .item-pick-list {
+      flex: 0 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+    }
+  }
+
   .item-pick-list {
     list-style: none;
     display: grid;
@@ -2354,7 +2373,7 @@
      that doesn't scroll has no fade. Browsers without scroll timelines
      (Firefox, for now) keep the hard edge. */
   @supports (animation-timeline: scroll()) {
-    .condition-search-list {
+    :is(.condition-search-list, .item-picker-popup .item-pick-list) {
       mask-image: linear-gradient(to bottom, #000 calc(100% - var(--sf-list-fade)), transparent);
       animation: sf-list-fade linear both;
       animation-timeline: scroll(self);
@@ -2367,7 +2386,7 @@
      parts; Firefox, which has no such parts, a thin bar in the same colors.
      The site sets scrollbar-color on the page, which makes Chrome skip
      -webkit- parts, so it's reset here. */
-  :is(.tools-chat-log, .tools-chat-form textarea, .condition-search-list) {
+  :is(.tools-chat-log, .tools-chat-form textarea, .condition-search-list, .item-picker-popup .item-pick-list) {
     scrollbar-color: auto;
     scrollbar-width: auto;
 

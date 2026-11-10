@@ -47,7 +47,7 @@ function ItemPicker({ onAdd, custom }: { onAdd: (picked: { stock: StockItem; qty
   const shown = STOCK.filter((i) => i.category === tab && matches(i));
   const count = [...picked.values()].reduce((n, q) => n + q, 0);
   return (
-    <div className="item-picker">
+    <div className="item-picker sf-popup-grow">
       <div className="tech-fields tech-fields-light">
         <div className="tech-field-tab-list" role="tablist" aria-label="Item category">
           {categories.map((c) => (
@@ -214,7 +214,7 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
       </SheetTitle>
 
       {adding && (
-        <Popup label="Add items" onClose={() => setAdding(false)} size="wide" className="sheet-add-popup item-picker-popup">
+        <Popup label="Add items" onClose={() => setAdding(false)} size="wide" scroll="inner" className="sheet-add-popup item-picker-popup">
           <h3 className="subhead">Add items</h3>
           {/* Most items come from the game's list: search, check, set counts */}
           <ItemPicker
