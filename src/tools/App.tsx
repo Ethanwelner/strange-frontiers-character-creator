@@ -2,12 +2,11 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent } f
 import { endpointCreate } from "../ai/remote.js";
 import { content, contentErrors } from "../app/content.js";
 import { slug, toBuild, type Draft } from "../app/draft.js";
-import { DescriptionBox, Icon, LorePopup, NameField, Notice, Portrait } from "../app/components/ui.js";
+import { Icon, LorePopup, Notice } from "../app/components/ui.js";
 import { describe } from "../app/check.js";
 import { checkPlay, creatorDraft, load, playBuild, pointsToPlace, save, startPlay, type Play } from "./play.js";
 import { Chat } from "./components/Chat.js";
 import { Tracker } from "./components/Tracker.js";
-import { CharacterLine } from "../app/components/CharacterLine.js";
 import { Button } from "../app/components/Button.js";
 
 export function ToolsApp() {
@@ -74,35 +73,8 @@ export function ToolsApp() {
 
       <div className="section unlimited white-bg builder-panel">
         <div className={`container builder-body tools-body${play ? "" : " no-side"}`}>
-          {/* The character and the tracker, in a box like the creator's sheet once a character is in,
-              with the level in a blob over its top left corner */}
-          <div className={`tools-column${play ? " tools-box" : ""}`}>
-            {play && (
-              <div className="level-badge level-blob" aria-label={`Level ${play.draft.level}`}>
-                <span className="level-badge-label">Level</span>
-                <span className="level-badge-number">{play.draft.level}</span>
-              </div>
-            )}
-            {/* Level up, as a green + in the blob's top right corner, that turns into Cancel
-                while the level up is open and throws its points away. Points the character
-                already has to place come first, so it waits while there are any. */}
-            {play &&
-              (levelDraft && levelDraft.level > play.draft.level ? (
-                <Button size="pill" tone="primary" className="tools-level-up" onClick={() => setLevelDraft(undefined)}>
-                  Cancel
-                </Button>
-              ) : (
-                <Button
-                  size="pill"
-                  tone="primary"
-                  className="tools-level-up"
-                  aria-label="Level up"
-                  disabled={Boolean(levelDraft) || pointsToPlace(play.draft, content)}
-                  onClick={() => setLevelDraft({ ...play.draft, level: play.draft.level + 1 })}
-                >
-                  <Icon name="plus" />
-                </Button>
-              ))}
+          {/* The character's sheet, once a character is in (Tracker, in the sheet's play context) */}
+          <div className="tools-column">
             <main>
               {contentErrors.length > 0 && <div className="notice bad">Content failed to load: {contentErrors.join("; ")}</div>}
               {notice && (
@@ -144,91 +116,81 @@ export function ToolsApp() {
                   onChange={setPlay}
                   levelDraft={levelDraft}
                   onLevelDraft={setLevelDraft}
-                  head={
-                    <header className="step-head tools-character">
-                      {/* Download character and Switch character as gray badges, then any rules
-                              problems as the creator's red chip, which opens them as a list,
-                              in the box's top right corner */}
-                      <div className="hero-bar tools-actions">
-                        <Button size="pill" onClick={exportBuild}>
-                          <Icon name="download" />
-                          Download character
-                        </Button>
-                        <Button size="pill" onClick={() => setConfirmingSwitch(true)}>
-                          <Icon name="switch" />
-                          Switch character
-                        </Button>
-                        {!result.ok && (
-                          <ul className="issues step-issues tools-issues">
-                            <li>
-                              <Button kind="bare" onClick={() => setShowingIssues(true)}>
-                                {result.errors.length} rules {result.errors.length === 1 ? "problem" : "problems"}
-                              </Button>
-                            </li>
-                          </ul>
-                        )}
-                      </div>
-                      {/* The portrait and the name's column, then the description, as on the creator's sheet */}
-                      <div className="sheet-head-who">
-                        <Portrait
-                          className="tools-portrait"
-                          portrait={play.draft.portrait}
-                          name={play.draft.name}
-                          onChange={(portrait) => setPlay({ ...play, draft: { ...play.draft, portrait } })}
-                        />
-                        <div className="tools-character-main">
-                          {/* The name, with the creator's pen to edit it */}
-                          <div className="tools-character-head">
-                            <NameField
-                              className="sheet-name tools-name"
-                              heading="h2"
-                              name={play.draft.name}
-                              onChange={(name) => setPlay({ ...play, draft: { ...play.draft, name } })}
-                            />
-                            {confirmingSwitch && (
-                              <LorePopup label="Switch character" onClose={closeSwitch} className="tools-switch-popup">
-                                <h3 className="lore-modal-title">Switch character</h3>
-                                <p>Put {play.draft.name || "this character"} away? Their tracker, items and chat are cleared.</p>
-                                <div className="tools-switch-actions">
-                                  <Button
-                                    tone="dark"
-                                    onClick={() => {
-                                      setPlay(undefined);
-                                      setLevelDraft(undefined);
-                                      setConfirmingSwitch(false);
-                                      setNotice(undefined);
-                                    }}
-                                  >
-                                    Switch character
-                                  </Button>
-                                  <Button onClick={closeSwitch}>
-                                    Cancel
-                                  </Button>
-                                </div>
-                              </LorePopup>
-                            )}
-                          </div>
-                          {/* Kind, age, gender, height, weight, Origin, Profession and Past, as on the creator's sheet */}
-                          <CharacterLine draft={play.draft} onLooks={(looks) => setPlay({ ...play, draft: { ...play.draft, ...looks } })} />
-                          {showingIssues && !result.ok && (
-                            <LorePopup label="Rules problems" onClose={closeIssues} className="tools-issues-popup">
-                              <h3 className="lore-modal-title">Rules problems</h3>
-                              <ul className="tools-issue-list">
-                                {result.errors.map((e, i) => (
-                                  <li key={i}>{describe(e, play.draft)}</li>
-                                ))}
-                              </ul>
-                            </LorePopup>
-                          )}
-                        </div>
-                      </div>
-                      <DescriptionBox
-                        description={play.draft.description}
-                        onChange={(description) => setPlay({ ...play, draft: { ...play.draft, description } })}
-                      />
-                    </header>
+                  corner={
+                    // Level up, a green + on the blob's corner, that turns into Cancel while the
+                    // level up is open and throws its points away. Points the character already
+                    // has to place come first, so it waits while there are any.
+                    levelDraft && levelDraft.level > play.draft.level ? (
+                      <Button size="pill" tone="primary" className="tools-level-up" onClick={() => setLevelDraft(undefined)}>
+                        Cancel
+                      </Button>
+                    ) : (
+                      <Button
+                        size="pill"
+                        tone="primary"
+                        className="tools-level-up"
+                        aria-label="Level up"
+                        disabled={Boolean(levelDraft) || pointsToPlace(play.draft, content)}
+                        onClick={() => setLevelDraft({ ...play.draft, level: play.draft.level + 1 })}
+                      >
+                        <Icon name="plus" />
+                      </Button>
+                    )
+                  }
+                  actions={
+                    // Download character and Switch character as gray badges, then any rules
+                    // problems as the creator's red chip, which opens them as a list
+                    <div className="hero-bar tools-actions">
+                      <Button size="pill" onClick={exportBuild}>
+                        <Icon name="download" />
+                        Download character
+                      </Button>
+                      <Button size="pill" onClick={() => setConfirmingSwitch(true)}>
+                        <Icon name="switch" />
+                        Switch character
+                      </Button>
+                      {!result.ok && (
+                        <ul className="issues step-issues tools-issues">
+                          <li>
+                            <Button kind="bare" onClick={() => setShowingIssues(true)}>
+                              {result.errors.length} rules {result.errors.length === 1 ? "problem" : "problems"}
+                            </Button>
+                          </li>
+                        </ul>
+                      )}
+                    </div>
                   }
                 />
+              )}
+              {play && confirmingSwitch && (
+                <LorePopup label="Switch character" onClose={closeSwitch} className="tools-switch-popup">
+                  <h3 className="lore-modal-title">Switch character</h3>
+                  <p>Put {play.draft.name || "this character"} away? Their tracker, items and chat are cleared.</p>
+                  <div className="tools-switch-actions">
+                    <Button
+                      tone="dark"
+                      onClick={() => {
+                        setPlay(undefined);
+                        setLevelDraft(undefined);
+                        setConfirmingSwitch(false);
+                        setNotice(undefined);
+                      }}
+                    >
+                      Switch character
+                    </Button>
+                    <Button onClick={closeSwitch}>Cancel</Button>
+                  </div>
+                </LorePopup>
+              )}
+              {play && result && showingIssues && !result.ok && (
+                <LorePopup label="Rules problems" onClose={closeIssues} className="tools-issues-popup">
+                  <h3 className="lore-modal-title">Rules problems</h3>
+                  <ul className="tools-issue-list">
+                    {result.errors.map((e, i) => (
+                      <li key={i}>{describe(e, play.draft)}</li>
+                    ))}
+                  </ul>
+                </LorePopup>
               )}
             </main>
           </div>

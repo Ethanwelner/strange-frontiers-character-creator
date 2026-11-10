@@ -1,0 +1,805 @@
+/* ========================================
+   STRANGE FRONTIERS CHARACTER SHEET
+   ========================================
+   One stylesheet for the character sheet's layout, wherever it's drawn.
+   Player Tools' sheet is the reference:
+
+     strange-frontiers-character-creator  src/app/sheet.css (this file)
+                                          src/app/components/sheet-layout.tsx
+     portfolio_site                       css/sf-sheet.css (a copy)
+                                          php/rpg/components/sheet.php
+
+   Both copies must stay identical: change it in the creator, then copy it
+   to the site. The components in both repos draw the same markup and take
+   the same context (play, build or sample), whose rules say which parts of
+   the sheet are drawn there (see sheet-layout.tsx).
+
+   This is the layout: the sheet's lighter box with the level's blob on its
+   corner, the darker boxes inside it and how they sit together, their ruled
+   titles, and the lists in them. What goes in a box (the stat block, the
+   cards, the name and portrait) is its own component's. The sheet carries
+   its own colors, so it looks the same on any page that holds it. */
+
+.sf-sheet {
+    --sheet-frame: var(--panel-box, #343638);
+    --sheet-box: var(--panel, #292b2c);
+    --sheet-edge: var(--card-border, #5c5e60);
+    --sheet-text: var(--panel-text, #e7e8e9);
+    --sheet-soft: var(--panel-soft, #b2b3b4);
+    --sheet-rule: rgb(255 255 255 / 18%);
+    --sheet-gap: 20px;
+    container: sheet / inline-size;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sheet-gap);
+    padding: 1rem;
+    background-color: var(--sheet-frame);
+    border: 1px solid var(--sheet-edge);
+    border-radius: 12px;
+    box-shadow: 0 4px 10px #00000030;
+    color: var(--sheet-text);
+}
+
+/* At 1768px and below, the sheet's boxes tighten to 16px apart, across and
+   down */
+@media (max-width: 1768px) {
+    .sf-sheet {
+        --sheet-gap: 16px;
+    }
+}
+
+/* ---- The level: a 96px blob centered between the corner of the sheet and
+   the corner of the box inside it, half the sheet's 1rem padding in. A tiny
+   "Level" over the number, in Bebas. The blob, in the site's black, slowly
+   morphs between two lopsided shapes while it turns (after
+   codepen.io/myjessijess/pen/MWWgMwL), and its purple glow slowly pulses.
+   It's a pseudo-element so the number stays upright. With reduced motion it
+   holds still. ---- */
+
+.sf-sheet-level {
+    position: absolute;
+    z-index: 1;
+    top: calc(.5rem - 48px);
+    left: calc(.5rem - 48px);
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 96px;
+    height: 96px;
+    color: var(--sheet-text);
+    font-family: var(--title, 'bebas_neueregular');
+    line-height: 1;
+
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+        background-color: var(--portfolio-black, #1e1f20);
+        box-shadow: 0 0 5px 0 var(--frontiers-lore-on-black, #a67bf0);
+        animation:
+            sf-sheet-blob-morph 8s ease-in-out infinite,
+            sf-sheet-blob-spin 20s linear infinite,
+            sf-sheet-blob-glow 3s ease-in-out infinite alternate;
+
+        @media (prefers-reduced-motion: reduce) {
+            animation: none;
+        }
+    }
+}
+
+/* 4px down, so Level and the number sit centered together in the blob */
+.sf-sheet-level-label {
+    margin-top: 4px;
+    font-size: .875rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+}
+
+/* Bebas has one weight */
+.sf-sheet-level-number {
+    font-size: 3rem;
+    font-weight: 400;
+}
+
+/* What sits on the blob's top right corner (play: Level up) */
+.sf-sheet-corner {
+    position: absolute;
+    z-index: 2;
+    top: calc(.5rem - 48px);
+    left: calc(.5rem + 48px - 20px);
+}
+
+/* From 1200px to 1399px the site's column runs nearly to the page's edges,
+   so the blob comes in off the corner, its left edge 12px inside the
+   sheet's */
+@media (min-width: 1200px) and (max-width: 1399.98px) {
+    .sf-sheet-level {
+        left: 11px;
+    }
+
+    .sf-sheet-corner {
+        left: calc(11px + 96px - 20px);
+    }
+}
+
+/* Narrower screens: a 56px blob, further in */
+@media (max-width: 991px) {
+    .sf-sheet-level {
+        top: -24px;
+        left: -8px;
+        width: 56px;
+        height: 56px;
+    }
+
+    .sf-sheet-level-label {
+        font-size: .5rem;
+    }
+
+    .sf-sheet-level-number {
+        font-size: 1.75rem;
+    }
+
+    .sf-sheet-corner {
+        top: -24px;
+        left: calc(-8px + 56px - 14px);
+    }
+}
+
+/* On phones the sheet reaches within a few px of the screen's edge, so the
+   blob comes in to stay on screen */
+@media (max-width: 767px) {
+    .sf-sheet-level {
+        left: -3px;
+    }
+
+    .sf-sheet-corner {
+        left: calc(-3px + 56px - 14px);
+    }
+}
+
+@keyframes sf-sheet-blob-morph {
+    0%,
+    100% {
+        border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    }
+    50% {
+        border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+    }
+}
+
+@keyframes sf-sheet-blob-spin {
+    to {
+        rotate: 1turn;
+    }
+}
+
+/* #a67bf0 (--frontiers-lore-on-black), swelling from a faint 5px to a
+   bright 16px and back */
+@keyframes sf-sheet-blob-glow {
+    from {
+        box-shadow: 0 0 5px 0 rgb(166 123 240 / 45%);
+    }
+    to {
+        box-shadow: 0 0 16px 0 rgb(166 123 240 / 100%);
+    }
+}
+
+/* ---- The darker boxes ---- */
+
+.sf-sheet-box {
+    box-sizing: border-box;
+    min-width: 0;
+    padding: 20px;
+    background-color: var(--sheet-box);
+    border-radius: 12px;
+}
+
+/* Below 1400px each box's padding tightens to 1rem */
+@media (max-width: 1399px) {
+    .sf-sheet-box {
+        padding: 1rem;
+    }
+}
+
+/* A box's title, with a rule running out to the right */
+.sf-sheet-title {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 20px;
+    min-width: 0;
+    margin: 0 0 20px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 24px;
+    color: inherit;
+
+    &::after {
+        content: "";
+        flex: 1;
+        min-width: 2rem;
+        height: 1px;
+        background-color: var(--sheet-rule);
+    }
+}
+
+/* A title with something along its line after the rule: the picks left, or
+   an Add button. When the line gets too narrow for the whole button, it keeps
+   just "Add" (the full name stays its label). */
+.sf-sheet-title-row {
+    container: sheet-title / inline-size;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 0 0 20px;
+
+    > .sf-sheet-title {
+        margin: 0;
+    }
+}
+
+@container sheet-title (width < 260px) {
+    .sf-sheet-add-noun {
+        display: none;
+    }
+}
+
+.sf-sheet-add {
+    flex: none;
+}
+
+/* The picks left to spend, along the Skills title's line */
+.sf-sheet-aside {
+    flex: none;
+    font-size: .875rem;
+    color: var(--sheet-soft);
+}
+
+.sf-sheet-empty {
+    margin: 0;
+    font-size: .875rem;
+    color: var(--sheet-soft);
+}
+
+/* ---- The head: the portrait and name, then the description, two equal
+   columns from 1200px; under that the description drops under them ---- */
+
+.sf-sheet-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 24px 40px;
+
+    > .sf-sheet-who {
+        flex: 1 1 26rem;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: 12px 32px;
+        min-width: 0;
+    }
+
+    > .sf-sheet-description {
+        flex: 1 1 26rem;
+        align-self: stretch;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+    }
+}
+
+/* The name and the character's line beside the portrait while 10rem is
+   left there, under it otherwise, and under it from 1200px to 1359px,
+   where the head's two columns are narrow */
+.sf-sheet-main {
+    flex: 1 1 10rem;
+    min-width: 0;
+}
+
+@media (min-width: 1200px) and (max-width: 1359.98px) {
+    .sf-sheet-main {
+        flex-basis: 100%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .sf-sheet-head:has(> .sf-sheet-description) {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+}
+
+/* From 992px to 1399px, 24px between the columns */
+@media (min-width: 992px) and (max-width: 1399px) {
+    .sf-sheet-head {
+        column-gap: 24px;
+    }
+}
+
+/* ---- Resources at full (build and sample): each name and value in a
+   centered row that wraps. Player Tools' live resources are its own. ---- */
+
+.sf-resources {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 16px 48px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.sf-resource {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--title, 'bebas_neueregular');
+    font-weight: 400;
+    line-height: 1;
+}
+
+.sf-resource-name {
+    min-width: 2ch;
+    font-size: 1.5rem;
+    font-weight: 400;
+}
+
+.sf-resource-value {
+    font-size: 2rem;
+    white-space: nowrap;
+
+    > .sf-resource-max {
+        color: var(--sheet-soft);
+    }
+}
+
+/* ---- The stats, then beside them Movement and the resistances over the
+   Conditions and Items. The stats take only the width they need, and the
+   rest sit beside them whenever 13rem is left; under them, the Conditions
+   and Items share a line 3 parts to 4 once there's room for both. By the
+   sheet's own width, so Player Tools' chat column counts. ---- */
+
+.sf-sheet-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: var(--sheet-gap);
+
+    > * {
+        flex: 1 1 100%;
+        min-width: 0;
+    }
+
+    /* Its own width, or the whole line when nothing fits beside it (the
+       side's far larger grow keeps the extra off it otherwise) */
+    > .sf-sheet-stats {
+        flex: 1 1 auto;
+    }
+
+    > .sf-sheet-side {
+        flex: 1000 1 13rem;
+        display: flex;
+        flex-direction: column;
+        gap: var(--sheet-gap);
+    }
+}
+
+.sf-sheet-side-row {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: var(--sheet-gap);
+
+    > .sf-sheet-conditions {
+        flex: 3 1 13rem;
+        min-width: 0;
+    }
+
+    > .sf-sheet-items {
+        flex: 4 1 20rem;
+        min-width: 0;
+    }
+}
+
+/* Movement's small box and the resistances', on one line */
+.sf-sheet-move-row {
+    display: flex;
+    align-items: stretch;
+    gap: var(--sheet-gap);
+
+    > :last-child {
+        flex: 1;
+        min-width: 0;
+    }
+}
+
+/* Once the side drops under the stats, Movement and the resistances go
+   first, under the resources and over the stats. Player Tools and the
+   creator measure where the row wraps (.is-single); the site's static sheet
+   draws them twice (.sf-sheet-row--twice) and goes by the sheet's width,
+   which its fixed stats make safe. */
+.sf-sheet-row.is-single > .sf-sheet-side > .sf-sheet-move-row,
+.sf-sheet-row--twice > .sf-sheet-move-row {
+    display: none;
+}
+
+.sf-sheet-row.is-single > .sf-sheet-side {
+    flex-basis: 100%;
+}
+
+@container sheet (width < 780px) {
+    .sf-sheet-row--twice > .sf-sheet-move-row {
+        display: flex;
+    }
+
+    .sf-sheet-row--twice > .sf-sheet-side {
+        flex-basis: 100%;
+
+        > .sf-sheet-move-row {
+            display: none;
+        }
+    }
+}
+
+/* The small boxes' titles sit closer to what they hold */
+:is(.sf-sheet-move, .sf-sheet-resistances) .sf-sheet-title {
+    margin-bottom: 12px;
+}
+
+:is(.sf-sheet-conditions, .sf-sheet-items) .sf-sheet-title-row {
+    margin-bottom: 16px;
+}
+
+/* Movement: a running figure, then the number running into its unit, "10m" */
+.sf-sheet-move-value {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.375rem;
+
+    > .sf-sheet-move-number {
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+    }
+}
+
+/* The icons, over the pages' own icon sizes */
+.sf-sheet :is(.sf-sheet-move-value, .sf-resistance) > svg {
+    flex: none;
+    width: 1.5em;
+    height: 1.5em;
+    margin: 0;
+    vertical-align: 0;
+    fill: currentColor;
+}
+
+.sf-sheet-move-unit {
+    margin-left: 4px;
+    font-family: var(--title, 'bebas_neueregular');
+    font-size: 1rem;
+    font-weight: normal;
+}
+
+/* Each damage type resisted: its icon, then the total, along a line that
+   wraps, with its sources in a popover above it on hover or focus */
+.sf-resistance-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.sf-resistance {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.375rem;
+    cursor: default;
+    border-radius: 4px;
+
+    > .sf-resistance-total {
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--sheet-soft);
+        outline-offset: 3px;
+    }
+
+    &:is(:hover, :focus-visible) > .sf-resistance-pop {
+        display: block;
+    }
+}
+
+.sf-resistance-pop {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    z-index: 20;
+    width: max-content;
+    max-width: 16rem;
+    padding: 10px 12px;
+    transform: translateX(-50%);
+    border: 1px solid var(--sheet-edge);
+    border-radius: 8px;
+    background-color: var(--sheet-frame);
+    color: var(--sheet-text);
+    font-size: .8rem;
+    box-shadow: 0 4px 16px rgb(0 0 0 / 40%);
+
+    ul {
+        display: grid;
+        gap: 4px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    li {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+    }
+}
+
+.sf-resistance-pop-title {
+    display: block;
+    margin-bottom: 6px;
+}
+
+.sf-resistance-pop-total {
+    font-weight: 700;
+}
+
+.sf-sheet-muted {
+    color: var(--sheet-soft);
+}
+
+/* ---- The Knowledges across the whole sheet first, then the Abilities and
+   Skills side by side, sharing the width equally once the sheet is 900px
+   wide, and stacked below that. Anything else takes a line of its own
+   under them. ---- */
+
+.sf-sheet-lower,
+.sf-sheet-pair {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: var(--sheet-gap);
+
+    > * {
+        flex: 1 1 100%;
+        min-width: 0;
+    }
+}
+
+@container sheet (width >= 900px) {
+    .sf-sheet-pair > * {
+        flex: 1 1 0;
+    }
+}
+
+/* Knowledges and Languages, each a link to its card, in as many 14rem
+   columns as the sheet's width holds, so the box stays short. A full 1.5
+   line for each, so nothing sticks out and makes the list scroll. */
+.sf-sheet-knowledge-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(14rem, 100%), 1fr));
+    gap: 12px 24px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 14px;
+
+    li {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        line-height: 1.5;
+    }
+
+    .sf-sheet & li > svg {
+        flex: none;
+        width: 1.25em;
+        height: 1em;
+        margin: 0;
+        fill: currentColor;
+    }
+
+    .sf-btn {
+        line-height: inherit;
+    }
+}
+
+/* The Traits as cards, as many 256px columns as fit (the box's whole width
+   when it's narrower), each card as tall as the others in its row */
+.sf-sheet-traits {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(256px, 100%), 1fr));
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    > li {
+        display: flex;
+        flex-direction: column;
+
+        > .sf-card {
+            flex: 1;
+        }
+    }
+
+    /* A closed Skill card keeps its own height in a row with an open one */
+    > li:has(> .sf-card.is-closed:not(.has-keep)) {
+        align-self: start;
+    }
+}
+
+/* Conditions' and Items' cards, one under another */
+.sf-sheet-cards {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* Room for the item cards' count circles, which hang past their left edge
+   and the list would clip once it scrolls; the margins give the room back */
+.sf-sheet-items .sf-sheet-cards {
+    padding: 0 14px;
+    margin: 0 -14px;
+}
+
+/* The character's cards on the sheet only show what they are: no pointer
+   or hover border, unlike the cards that pick a Trait */
+.sf-sheet .sf-card {
+    cursor: default;
+
+    &:hover {
+        border-color: var(--card-edge, var(--card-border));
+    }
+}
+
+/* Contacts and features, one to a line */
+.sf-sheet-features {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: .875rem;
+
+    + .sf-sheet-title {
+        margin-top: 24px;
+    }
+}
+
+.sf-sheet-traits + .sf-sheet-title {
+    margin-top: 24px;
+}
+
+/* ---- A long list (Knowledges, Abilities, Skills, Conditions, Items) stops
+   at 60vh and scrolls inside its box, so one long column doesn't leave the
+   one beside it far shorter. The Items stop sooner on a tall screen, at
+   640px. Printed, they run their full length. ---- */
+
+.sf-sheet-scroll {
+    max-height: 60vh;
+    overflow-y: auto;
+
+    /* A slim rounded handle: no track or arrows (Firefox gets a thin bar in
+       the same colors). The site sets scrollbar-color on the page, which
+       makes Chrome skip the -webkit- parts, so it's reset here. */
+    scrollbar-color: auto;
+    scrollbar-width: auto;
+
+    /* A 16px lane with the 6px handle at its right edge: 10px clear of the
+       content, and 5px in from the ends */
+    &::-webkit-scrollbar {
+        width: 16px;
+    }
+
+    &::-webkit-scrollbar-track,
+    &::-webkit-scrollbar-corner {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-button {
+        display: none;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgb(255 255 255 / 25%) padding-box;
+        border: 5px solid transparent;
+        border-width: 5px 0 5px 10px;
+        /* Each corner's radius is its border plus 3px, so the visible handle
+           is a 6px pill with round ends whatever the borders are */
+        border-radius: 13px 3px 3px 13px / 8px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: rgb(255 255 255 / 40%) padding-box;
+    }
+
+    @supports not selector(::-webkit-scrollbar) {
+        scrollbar-width: thin;
+        scrollbar-color: rgb(255 255 255 / 25%) transparent;
+    }
+
+    /* It fades out over its last 48px into the box's gray instead of
+       cutting off hard, and the fade goes as it reaches the bottom (a
+       scroll-driven animation on its own scroll, so a list that doesn't
+       scroll has no fade). Browsers without scroll timelines keep the hard
+       edge. */
+    @supports (animation-timeline: scroll()) {
+        mask-image: linear-gradient(to bottom, #000 calc(100% - var(--sf-sheet-fade)), transparent);
+        animation: sf-sheet-fade linear both;
+        animation-timeline: scroll(self);
+    }
+}
+
+.sf-sheet-scroll--short {
+    max-height: min(60vh, 640px);
+}
+
+@property --sf-sheet-fade {
+    syntax: "<length>";
+    inherits: false;
+    initial-value: 0px;
+}
+
+/* 48px of fade until the last 5% of the scroll, then down to none */
+@keyframes sf-sheet-fade {
+    0%,
+    95% {
+        --sf-sheet-fade: 48px;
+    }
+
+    100% {
+        --sf-sheet-fade: 0px;
+    }
+}
+
+/* Printed, the sheet goes light, with dark text, on white paper */
+@media print {
+    .sf-sheet {
+        --sheet-frame: var(--portfolio-near-white, #f6f6f6);
+        --sheet-box: var(--portfolio-white, #ffffff);
+        --sheet-edge: var(--portfolio-light-gray, #d9d9d9);
+        --sheet-text: var(--portfolio-black, #1e1f20);
+        --sheet-soft: var(--portfolio-gray, #626466);
+        --sheet-rule: rgb(0 0 0 / 15%);
+        box-shadow: none;
+    }
+
+    .sf-sheet-box {
+        border: 1px solid var(--sheet-edge);
+    }
+
+    .sf-sheet-level::before {
+        animation: none;
+    }
+
+    .sf-sheet-scroll {
+        max-height: none;
+        overflow: visible;
+        mask-image: none;
+        animation: none;
+    }
+}

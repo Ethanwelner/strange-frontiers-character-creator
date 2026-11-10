@@ -1,6 +1,5 @@
-import { useCallback, useLayoutEffect, useRef, useState, type ReactNode } from "react";
-import { FREE_TEXT_POOLS, isFreeTextPool, MP_PER_MAGIC, type BuildResult } from "../../engine/validate.js";
-import { STAT_GROUPS, type StatId } from "../../schema/index.js";
+import { useCallback, useMemo, useState, type ReactNode } from "react";
+import { FREE_TEXT_POOLS, isFreeTextPool, type BuildResult } from "../../engine/validate.js";
 import { coreStatsShown } from "../check.js";
 import { sheetStatGroups, StatBlock } from "./stats.js";
 import { content, kindById, packageById, traitById } from "../content.js";
@@ -10,12 +9,11 @@ import type { HeldCondition } from "../conditions.js";
 import { CharacterLine } from "./CharacterLine.js";
 import { Conditions } from "./Conditions.js";
 import { Items } from "./Items.js";
-import { askerName, baseStats, DescriptionBox, Effect, Icon, LorePopup, NameField, Portrait, StepHeader, title, TraitAction, traitName } from "./ui.js";
+import { askerName, DescriptionBox, Effect, Icon, LorePopup, NameField, Portrait, StepHeader, title, TraitAction, traitName } from "./ui.js";
+import { FullResources, SHEET_RULES, SheetLayout, SheetTitle, type SheetContext } from "./sheet-layout.js";
+import { Resistances } from "./Resistances.js";
 import { CardChip, TraitCard, traitCardKind } from "./cards.js";
 import { Button } from "./Button.js";
-
-// Each resource's full name, shown on hover, as in Player Tools
-export const RESOURCE_NAMES = { hp: "Hit Points", vp: "Vibe Points", sp: "Savvy Points", mp: "Mana Points" } as const;
 
 const SOURCE = /^(kind|origin|profession|past) ([a-z0-9-]+)( choice)?$/;
 const TRAIT_CHOICE = /^trait ([a-z0-9-]+) choice$/;
@@ -112,53 +110,14 @@ function TraitModal({ held, places, draft, onClose }: { held: Held; places: stri
   );
 }
 
-// The Conditions' and Items' boxes, straight into the stats' row, or, with a
-// box to go over them (`stack`), in a column with it beside the stats. The
-// box (`top`) leaves the column for the top of the row when the row is a
-// single column.
-function MaybeStack({ stack, top, children }: { stack: boolean; top?: ReactNode; children: ReactNode }) {
-  if (!stack) return <>{children}</>;
-  return (
-    <div className="sheet-side-stack">
-      {top}
-      <div className="sheet-side-row">{children}</div>
-    </div>
-  );
-}
-
-// Movement, from the Kind, in a small box of its own to the left of the
-// resistances, under its ruled title, a running figure before the number.
-// The number runs into its unit, "10m", with the m in the titles' Bebas.
-export function MovementBox({ movement }: { movement?: string }) {
-  const parts = movement?.match(/^\s*([\d.]+)\s*([a-z]+)\s*$/i);
-  return (
-    <div className="c-sheet-box sheet-movement">
-      <h3 className="subhead" title="Movement">Move</h3>
-      <div className="sheet-movement-value" title="Movement">
-      <Icon name="person-running" label="Movement" />
-      <span className="num">
-        {parts ? (
-          <>
-            {parts[1]}
-            <span className="sheet-movement-unit">{parts[2]}</span>
-          </>
-        ) : (
-          (movement ?? "–")
-        )}
-      </span>
-      </div>
-    </div>
-  );
-}
-
-// Laid out like the sample character sheet on the site's Mechanics tab.
-// Knowledges and Languages are a list of links, as on that sheet, each opening
-// its card; the other Traits are cards.
-//
-// Game Tools shows it `embedded` under its tracker, which already has the
-// name, level, background, the Kind's features, resources and the actions:
-// there the sheet keeps only the stats, Knowledges and Traits.
+// The character sheet, in the shared layout (sheet-layout.tsx), filled for
+// its context: the creator's Sheet step (build) or Player Tools (play). The
+// context's rules say what it draws; Player Tools hands in what only it has
+// (its live resources, its stats editor, Level up and its actions).
+// Knowledges and Languages are a list of links, each opening its card; the
+// other Traits are cards.
 export function Sheet({
+  context,
   draft,
   result,
   onExport,
@@ -167,47 +126,49 @@ export function Sheet({
   onLooks,
   onPortrait,
   onDescription,
-  embedded = false,
-  statsSlot,
-  resistancesSlot,
-  traitsAction,
   items,
   onItems,
   conditions,
   onConditions,
   hp,
+  corner,
+  actions,
+  resources,
+  stats,
+  traitsAction,
 }: {
+  context: Exclude<SheetContext, "sample">;
   draft: Draft;
   result: BuildResult;
+  // build: Download and Import, over the sheet
   onExport?: () => void;
   onImport?: () => void;
-  onName?: (name?: string) => void;
-  embedded?: boolean;
-  // Stands in for the stats column, as Player Tools' stats editor does
-  statsSlot?: ReactNode;
-  // A box over the Conditions and Items, beside the stats, like Player Tools' resistances
-  resistancesSlot?: ReactNode;
-  // Shown at the right end of the Traits title's line, like Player Tools' "Traits available"
-  traitsAction?: ReactNode;
-  onLooks?: (looks: Looks) => void;
-  // Changes the portrait from the sheet; without it the sheet only shows it.
-  onPortrait?: (portrait?: string) => void;
-  // Edits the description; without it the sheet shows the description as text.
-  onDescription?: (description?: string) => void;
-  // The Conditions, beside the stats, and the Items, in the last column,
-  // with the current HP the Conditions go by (full if not given)
-  items?: Item[];
-  onItems?: (items: Item[]) => void;
-  conditions?: HeldCondition[];
-  onConditions?: (conditions: HeldCondition[]) => void;
+  onName: (name?: string) => void;
+  onLooks: (looks: Looks) => void;
+  onPortrait: (portrait?: string) => void;
+  onDescription: (description?: string) => void;
+  // The Conditions and the Items, with the current HP the Conditions go by
+  // (full if not given)
+  items: Item[];
+  onItems: (items: Item[]) => void;
+  conditions: HeldCondition[];
+  onConditions: (conditions: HeldCondition[]) => void;
   hp?: number;
+  // play: Level up, on the level's corner, and Download, Switch and the rules problems
+  corner?: ReactNode;
+  actions?: ReactNode;
+  // play: the live resources, and the stats (the plain block, or the Stats step while placing points)
+  resources?: ReactNode;
+  stats?: ReactNode;
+  // play: Add traits, beside the picks left
+  traitsAction?: ReactNode;
 }) {
+  const rules = SHEET_RULES[context];
   const packages = [draft.origin, draft.profession, draft.past].map((id) => (id ? packageById.get(id) : undefined));
-  const base = baseStats(draft);
   const summary = result.summary;
   const groups = coreStatsShown(draft, content, result);
   // MP shows once the character can level Magic or has any.
-  const resources = groups.includes("magic") || (summary?.resources.mp ?? 0) > 0 ? (["hp", "vp", "sp", "mp"] as const) : (["hp", "vp", "sp"] as const);
+  const shown = groups.includes("magic") || (summary?.resources.mp ?? 0) > 0 ? (["hp", "vp", "sp", "mp"] as const) : (["hp", "vp", "sp"] as const);
   // Contacts, as the player wrote them.
   const records = draft.choices.flatMap((c) =>
     c.from === "contact" ? c.traits.map((text) => ({ text, noun: FREE_TEXT_POOLS[c.from]!, from: askerName(c) })) : [],
@@ -215,10 +176,10 @@ export function Sheet({
   // Places and the like go on their Trait's box, like "Which seas: the Mende
   // coast" or a Hunter's quarry. Contacts get their own list.
   const places = (trait: string) => draft.choices.filter((c) => c.trait === trait && c.from !== "contact" && isFreeTextPool(c.from)).flatMap((c) => c.traits);
-  const held = summary?.traits ?? [];
+  const held = useMemo(() => summary?.traits ?? [], [summary]);
   const isKnowledge = (h: Held) => traitById.get(h.trait)?.category === "knowledge";
   const isLanguage = (h: Held) => !!traitById.get(h.trait)?.types.includes("language");
-  // Knowledges, then Languages, as on the sample sheet
+  // Knowledges, then Languages
   const knowledges = [...held.filter((h) => isKnowledge(h) && !isLanguage(h)), ...held.filter(isLanguage)];
   const others = held.filter((h) => !isKnowledge(h));
   // The other Traits in a box per category: Skills, then Abilities, then any
@@ -239,7 +200,7 @@ export function Sheet({
   // The universal and background picks left, together
   const banked = summary ? summary.picks.universal.banked + summary.picks.background.banked : 0;
   const traitCards = (list: Held[], accordion = false, keepEffect = false) => (
-    <ul className="sheet-traits">
+    <ul className={`sf-sheet-traits${accordion ? " sf-sheet-scroll" : ""}`}>
       {list.map((h) => (
         <li key={h.trait}>
           <HeldTraitCard
@@ -254,41 +215,15 @@ export function Sheet({
   );
   const [open, setOpen] = useState<string>();
   const closeModal = useCallback(() => setOpen(undefined), []);
-  // Whether the Conditions and Items have wrapped under the stats, leaving a
-  // single column: then the resistances go first, under HP and over the stats.
-  // Moving them doesn't change where the row wraps, so this settles.
-  const row = useRef<HTMLDivElement>(null);
-  const [singleColumn, setSingleColumn] = useState(false);
-  const hasResistances = Boolean(resistancesSlot);
-  useLayoutEffect(() => {
-    const el = row.current;
-    if (!el || !hasResistances) return;
-    const check = () => {
-      const stats = el.querySelector(":scope > .sheet-body");
-      const side = el.querySelector(":scope > .sheet-side-stack");
-      if (stats && side) setSingleColumn(side.getBoundingClientRect().top > stats.getBoundingClientRect().top + 1);
-    };
-    check();
-    const observer = new ResizeObserver(check);
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [hasResistances]);
-  // Movement's small box, then the resistances', on one line
-  const resistancesBox = resistancesSlot && (
-    <div className="sheet-move-row">
-      <MovementBox movement={summary?.movement} />
-      <div className="c-sheet-box sheet-resistances">{resistancesSlot}</div>
-    </div>
-  );
   const opened = held.find((h) => h.trait === open);
-  // The Kind's features sit at the top, under HP, VP and SP; the packages' at the bottom.
-  const features = [
-    ...packages.flatMap((p) => (p?.features ?? []).map((f) => ({ ...f, from: p!.name }))),
-  ];
+  // The packages' features, at the bottom
+  const features = packages.flatMap((p) => (p?.features ?? []).map((f) => ({ ...f, from: p!.name })));
+  // The resistances come from everything in effect: Traits, Conditions and Items
+  const inEffect = useMemo(() => [...held, ...conditions], [held, conditions]);
 
   return (
-    <section className={`sheet${embedded ? " sheet-embedded" : ""}`}>
-      {!embedded && (
+    <section className={`sheet sheet--${context}`}>
+      {context === "build" && (
         <>
           <StepHeader title="Sheet" />
           {/* Whether the build is legal, then Download, Import and Print, above the sheet */}
@@ -309,160 +244,105 @@ export function Sheet({
           </div>
         </>
       )}
-      <div className="c-sheet">
-        {!embedded && (
-          <div className="level-badge level-blob" aria-label={`Level ${draft.level}`}>
-            <span className="level-badge-label">Level</span>
-            <span className="level-badge-number">{draft.level}</span>
-          </div>
-        )}
-
-        {!embedded && (
-          <div className="c-sheet-box sheet-head">
-            {/* The portrait and the name's column, together as wide as the sheet's first two columns */}
-            <div className="sheet-head-who">
-              <Portrait className="sheet-portrait" portrait={draft.portrait} name={draft.name} onChange={onPortrait} />
-              <div className="sheet-head-main">
-                <NameField className="sheet-name" heading="h2" name={draft.name} onChange={onName ?? (() => {})} />
-                {/* Kind, age, gender, height, weight, Origin, Profession and Past, as in Player Tools */}
-                <CharacterLine draft={draft} onLooks={onLooks ?? (() => {})} />
+      <SheetLayout
+        context={context}
+        level={draft.level}
+        corner={corner}
+        actions={actions}
+        head={{
+          who: (
+            <>
+              <Portrait className="sf-sheet-portrait" portrait={draft.portrait} name={draft.name} onChange={rules.edit ? onPortrait : undefined} />
+              <div className="sf-sheet-main">
+                <NameField className="sheet-name" heading="h2" name={draft.name} onChange={onName} />
+                {/* Kind, age, gender, height, weight, Origin, Profession and Past */}
+                <CharacterLine draft={draft} onLooks={onLooks} />
               </div>
-            </div>
-            {/* The description, editable at any time and lined up over the Conditions and Items; an AI build fills it with its summary */}
-            <DescriptionBox description={draft.description} onChange={onDescription} />
-          </div>
-        )}
-
-        {/* HP, VP, SP and MP at full, like Player Tools' tracker without its controls or bars */}
-        {!embedded && (
-          <div className="c-sheet-box">
-            <div className="tools-resources sheet-resources">
-              {resources.map((r) => (
-                <div key={r} className="tools-resource">
-                  <div className="tools-resource-value">
-                    <strong className={`tools-resource-name resource-${r}`} title={RESOURCE_NAMES[r]}>
-                      {r.toUpperCase()}
-                    </strong>
-                    <span className="num">
-                      {summary?.resources[r] ?? "–"}
-                      <span className="muted"> / {summary?.resources[r] ?? "–"}</span>
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* The stats, the Conditions and the Items, each in a box of its own */}
-        <div className="sheet-row" ref={row}>
-          {singleColumn && resistancesBox}
-          <div className="c-sheet-box sheet-body">
-            {statsSlot ? (
-              <div className="sheet-stats">{statsSlot}</div>
-            ) : (
-              <div className="sheet-stats">
-                {/* The stat block with each stat's maximum */}
-                <StatBlock max groups={sheetStatGroups(draft, result)} />
-              </div>
-            )}
-          </div>
-          {onItems && onConditions && (
-            // The Conditions and the Items, each in its own box along the row;
-            // with resistances, under them, together beside the stats
-            <MaybeStack stack={hasResistances} top={!singleColumn && resistancesBox}>
-              <div className="c-sheet-box sheet-conditions">
-                <Conditions conditions={conditions ?? []} hp={hp ?? summary?.resources.hp ?? 0} maxHp={summary?.resources.hp ?? 0} onChange={onConditions} />
-              </div>
-              <div className="c-sheet-box sheet-items">
-                <Items items={items ?? []} onChange={onItems} />
-              </div>
-            </MaybeStack>
-          )}
-        </div>
-
-        {/* The Knowledges in their own box, first along the row */}
-        <div className="sheet-lower">
-          <div className="c-sheet-box sheet-side">
-            <h3 className="subhead">Knowledges</h3>
-            {knowledges.length > 0 ? (
-              <ul className="knowledge-list">
-                {knowledges.map((h) => {
-                  const t = traitById.get(h.trait);
-                  return (
-                    <li key={h.trait}>
-                      {isLanguage(h) ? <Icon name="language" label="Language" /> : <Icon name="knowledge" label="Knowledge" />}
-                      <Button kind="link" onClick={() => setOpen(h.trait)}>
-                        {traitName(h.trait)}
-                        {t?.ranked || h.rank > 1 ? ` (${h.rank})` : ""}
-                      </Button>
-                    </li>
-                  );
-                })}
-              </ul>
-            ) : (
-              <p className="empty">None yet.</p>
-            )}
-          </div>
-          {/* Then the Abilities, the Skills, and any other Traits, each in a box along the row */}
-          {/* The Abilities and the Skills share a row of their own, split equally */}
-          <div className="sheet-pair">
-            <div className="c-sheet-box sheet-abilities">
-              <h3 className="subhead">Abilities</h3>
-              {abilities.length > 0 ? traitCards(abilities, true, true) : <p className="empty">No Abilities yet.</p>}
-            </div>
-            <div className="c-sheet-box sheet-skills">
-              {/* The Skills title, then along its line the picks the character
-                  still has to spend on Traits, then the action, if any */}
-              <div className="sheet-traits-head">
-                <h3 className="subhead">Skills</h3>
-                {summary && (
-                  <span className="sheet-banked">
-                    {banked} {banked === 1 ? "pick" : "picks"} available
-                  </span>
-                )}
-                {traitsAction}
-              </div>
-              {skills.length > 0 ? traitCards(skills, true) : <p className="empty">No Skills yet.</p>}
-            </div>
-          </div>
-          {(rest.length > 0 || records.length > 0 || features.length > 0) && (
-            <div className="c-sheet-box sheet-other">
+            </>
+          ),
+          // Editable at any time; an AI build fills it with its summary
+          description:
+            rules.edit || draft.description ? <DescriptionBox description={draft.description} onChange={rules.edit ? onDescription : undefined} /> : undefined,
+        }}
+        resources={
+          rules.resources === "live" && resources ? resources : <FullResources resources={shown.map((r) => ({ id: r, max: summary?.resources[r] }))} />
+        }
+        stats={stats ?? <StatBlock max={rules.statMax} groups={sheetStatGroups(draft, result)} />}
+        movement={summary?.movement}
+        resistances={<Resistances items={items} held={inEffect} />}
+        conditions={
+          <Conditions conditions={conditions} hp={hp ?? summary?.resources.hp ?? 0} maxHp={summary?.resources.hp ?? 0} onChange={onConditions} />
+        }
+        items={<Items items={items} onChange={onItems} />}
+        knowledges={
+          knowledges.length > 0 ? (
+            <ul className="sf-sheet-knowledge-list sf-sheet-scroll">
+              {knowledges.map((h) => {
+                const t = traitById.get(h.trait);
+                return (
+                  <li key={h.trait}>
+                    {isLanguage(h) ? <Icon name="language" label="Language" /> : <Icon name="knowledge" label="Knowledge" />}
+                    <Button kind="link" onClick={() => setOpen(h.trait)}>
+                      {traitName(h.trait)}
+                      {t?.ranked || h.rank > 1 ? ` (${h.rank})` : ""}
+                    </Button>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            <p className="sf-sheet-empty">None yet.</p>
+          )
+        }
+        abilities={abilities.length > 0 ? traitCards(abilities, true, true) : <p className="sf-sheet-empty">No Abilities yet.</p>}
+        skills={skills.length > 0 ? traitCards(skills, true) : <p className="sf-sheet-empty">No Skills yet.</p>}
+        skillsAside={
+          summary && (
+            <>
+              <span className="sf-sheet-aside">
+                {banked} {banked === 1 ? "pick" : "picks"} available
+              </span>
+              {rules.addTraits && traitsAction}
+            </>
+          )
+        }
+        other={
+          (rest.length > 0 || records.length > 0 || features.length > 0) && (
+            <>
               {rest.length > 0 && (
                 <>
-                  <h3 className="subhead">Other Traits</h3>
+                  <SheetTitle>Other Traits</SheetTitle>
                   {traitCards(rest)}
                 </>
               )}
               {records.length > 0 && (
                 <>
-                  <h3 className="subhead">Contacts</h3>
-                  <ul className="features">
+                  <SheetTitle>Contacts</SheetTitle>
+                  <ul className="sf-sheet-features">
                     {records.map((r, i) => (
                       <li key={i}>
-                        <strong>{r.text}</strong> <span className="muted">({r.noun} from {r.from})</span>
+                        <strong>{r.text}</strong> <span className="sf-sheet-muted">({r.noun} from {r.from})</span>
                       </li>
                     ))}
                   </ul>
                 </>
               )}
-
               {features.length > 0 && (
                 <>
-                  <h3 className="subhead">Features</h3>
-                  <ul className="features">
+                  <SheetTitle>Features</SheetTitle>
+                  <ul className="sf-sheet-features">
                     {features.map((f, i) => (
                       <li key={i}>
-                        <strong>{f.name}</strong> <span className="muted">({f.from})</span>. {f.description}
+                        <strong>{f.name}</strong> <span className="sf-sheet-muted">({f.from})</span>. {f.description}
                       </li>
                     ))}
                   </ul>
                 </>
               )}
-            </div>
-          )}
-        </div>
-      </div>
+            </>
+          )
+        }
+      />
       {opened && <TraitModal held={opened} places={places(opened.trait)} draft={draft} onClose={closeModal} />}
     </section>
   );

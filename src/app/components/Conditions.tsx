@@ -4,6 +4,7 @@ import { CONDITION_TYPES, conditionTypes, hpConditions, playConditions, withCond
 import { Effect, LorePopup, Sign, TraitAction } from "./ui.js";
 import { CardNote, TraitCard } from "./cards.js";
 import { Button } from "./Button.js";
+import { SheetTitle } from "./sheet-layout.js";
 
 // The Conditions, the same on the Character Creator's sheet and in Player
 // Tools: the ones HP decides (from `hp` of `maxHp`), and the temporary ones
@@ -33,19 +34,23 @@ export function Conditions({
   return (
     <section className="tools-conditions-side" aria-label="Conditions">
       {/* Add Condition at the right end of the title's line, opening the dropdown in a popup */}
-      <div className="sheet-section-head">
-        <h4 className="rule">Conditions</h4>
-        <Button size="small" tone="condition" className="sheet-section-add" aria-label="Add Condition" onClick={() => setAdding(true)}>
-          Add<span className="sheet-section-add-noun"> Condition</span>
-        </Button>
-      </div>
+      <SheetTitle
+        as="h4"
+        aside={
+          <Button size="small" tone="condition" className="sf-sheet-add" aria-label="Add Condition" onClick={() => setAdding(true)}>
+            Add<span className="sf-sheet-add-noun"> Condition</span>
+          </Button>
+        }
+      >
+        Conditions
+      </SheetTitle>
       {adding && (
         <LorePopup label="Add a Condition" onClose={() => setAdding(false)} className="sheet-add-popup">
           <h3 className="subhead">Add a Condition</h3>
           <ConditionSearch options={options} onPick={add} />
         </LorePopup>
       )}
-      <ul className="tools-conditions">
+      <ul className="tools-conditions sf-sheet-cards sf-sheet-scroll">
         {fromHp.map((id) => {
           const t = traitById.get(id);
           return (

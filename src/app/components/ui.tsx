@@ -365,22 +365,16 @@ export function Portrait({
 // at any time with onChange; an AI build fills it with its summary.
 export function DescriptionBox({ description, onChange }: { description?: string; onChange?: (description?: string) => void }) {
   if (!onChange) {
-    return description ? (
-      <div className="sheet-description">
-        <p>{description}</p>
-      </div>
-    ) : null;
+    return description ? <p>{description}</p> : null;
   }
   return (
-    <div className="sheet-description">
-      <textarea
-        aria-label="Description"
-        value={description ?? ""}
-        maxLength={4000}
-        placeholder="Who they are, how they look, what they want."
-        onChange={(e) => onChange(e.target.value || undefined)}
-      />
-    </div>
+    <textarea
+      aria-label="Description"
+      value={description ?? ""}
+      maxLength={4000}
+      placeholder="Who they are, how they look, what they want."
+      onChange={(e) => onChange(e.target.value || undefined)}
+    />
   );
 }
 
