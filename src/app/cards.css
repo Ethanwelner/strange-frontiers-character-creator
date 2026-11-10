@@ -19,9 +19,9 @@
 
 .sf-card,
 .sf-item-card {
-    --card-bg: var(--portfolio-black, #212121);
-    --card-text: #e8e8e8;
-    --card-soft: #b3b3b3;
+    --card-bg: var(--portfolio-black, #1f2122);
+    --card-text: #e7e8e9;
+    --card-soft: #b2b3b4;
     color: var(--card-text);
 }
 
@@ -32,19 +32,19 @@
     margin: .15rem .25rem .15rem 0;
     padding: .2rem .5rem;
     border-radius: 4px;
-    background: var(--portfolio-gray, #525252);
+    background: var(--portfolio-gray, #505254);
     color: var(--portfolio-white, #fff);
     font-size: .875rem;
     font-weight: 600;
     white-space: nowrap;
 
     &.sf-chip--muted {
-        background: var(--portfolio-light-gray, #eaeaea);
-        color: var(--portfolio-black, #212121);
+        background: var(--portfolio-light-gray, #e9eaeb);
+        color: var(--portfolio-black, #1f2122);
     }
 
     &.sf-chip--accent {
-        background: #6b6b6b;
+        background: #696b6d;
     }
 
     &.sf-chip--bad {
@@ -55,7 +55,7 @@
 /* ---- Trait and Background cards: a 1px edge the color of the bar ---- */
 
 .sf-card {
-    --card-edge: #181818;
+    --card-edge: #161819;
     position: relative;
     width: 100%;
     background-color: var(--card-bg);
@@ -174,11 +174,11 @@
 
     /* Conditions in grays: a mid gray edge, a light gray bar, dark text */
     &.sf-trait-card--condition {
-        --card-edge: #646464;
+        --card-edge: #626466;
 
         > .sf-card-bar {
             background-color: #b7b4b4;
-            color: var(--portfolio-black, #212121);
+            color: var(--portfolio-black, #1f2122);
         }
     }
 }
@@ -223,7 +223,7 @@
 .sf-card-action {
     margin: 0;
     padding-left: 10px;
-    border-left: 2px solid var(--portfolio-medium-gray, #969696);
+    border-left: 2px solid var(--portfolio-medium-gray, #949798);
     font-size: .9rem;
 
     > p {
@@ -343,7 +343,7 @@
         cursor: pointer;
 
         &:hover:not(.selected) {
-            border-color: var(--portfolio-medium-gray, #969696);
+            border-color: var(--portfolio-medium-gray, #949798);
         }
     }
 }
