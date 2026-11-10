@@ -181,6 +181,25 @@
             color: var(--portfolio-black, #212121);
         }
     }
+
+    /* Abilities: a sketchy, hand-drawn edge (tmrDevelops' "Hand Drawn
+       Border Effects" CodePen, its solid version). Uneven elliptical corners
+       make each side bow a little, like a line drawn by hand. The card clips
+       its bar to that shape, so a picked card's check sits just inside the
+       corner instead of over it. */
+    &.sf-trait-card--ability {
+        border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+        overflow: clip;
+
+        > .sf-card-bar {
+            border-radius: 0;
+        }
+
+        &.selected::after {
+            top: 6px;
+            right: 6px;
+        }
+    }
 }
 
 /* A Trait card's category and flags, a row of chips at the top of its
