@@ -551,11 +551,6 @@
     padding: 0;
   }
 
-  /* The character's Traits, at least 360px wide each */
-  .sheet-embedded .sheet-traits {
-    grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr));
-  }
-
   /* Level up, Download character, Switch character and the rules problems
      chip, in a row at the right of the name, 8px apart */
   /* Download character, Switch character and any rules problems, above the
