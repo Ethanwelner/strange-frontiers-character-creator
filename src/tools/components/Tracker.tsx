@@ -192,6 +192,7 @@ export function Tracker({
             hide={heldIds}
             newFrom={play.draft.traits.length}
             picksBelow
+            hints={false}
           />
           <div className="sf-popup-foot">
             {/* Green and glitching, like Add items, once the picks change the character's Traits */}

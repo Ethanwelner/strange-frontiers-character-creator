@@ -23,6 +23,9 @@ interface Props {
   // The Traits picked go under the tab box instead of at the end of it, so
   // they stay in view (Player Tools' Choose Traits popup)
   picksBelow?: boolean;
+  // The help: that unspent picks are banked, and under the tabs what each
+  // tab's picks are for (the creator's step); Player Tools' popup goes without
+  hints?: boolean;
 }
 
 // What a Trait needs before it can be picked, as the site writes it:
@@ -58,7 +61,7 @@ const LIST_HELP: Record<string, string> = {
   wielder: "Wielder Skills, one per weapon. They're ordinary Skills, kept on their own tab so they don't crowd the rest.",
 };
 
-export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom, picksBelow = false }: Props) {
+export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom, picksBelow = false, hints = true }: Props) {
   // A pick type, or a Trait list, like Magic
   const [chosen, setTab] = useState<TraitTab>("universal");
   const [query, setQuery] = useState("");
@@ -157,7 +160,7 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom, p
   return (
     <section className="sf-popup-grow">
       <StepHeader title="Traits">
-        Spend picks on Traits. Unspent picks are banked for later.
+        Spend picks on Traits.{hints && " Unspent picks are banked for later."}
       </StepHeader>
 
       <div className="tech-fields tech-fields-light picker-box">
@@ -187,13 +190,15 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom, p
             );
           })}
         </div>
-        <p className="hint">
-          {typeof tab === "string"
-            ? PICK_HELP[tab]
-            : (LIST_HELP[tab.list] ??
-                `Traits built on ${title(tab.list)}, or closely related to it. Any character can take one whose stat requirements they meet.`) +
-              " Traits on this character's Background Trait list take a Background pick while one is left; the rest take Universal picks."}
-        </p>
+        {hints && (
+          <p className="hint">
+            {typeof tab === "string"
+              ? PICK_HELP[tab]
+              : (LIST_HELP[tab.list] ??
+                  `Traits built on ${title(tab.list)}, or closely related to it. Any character can take one whose stat requirements they meet.`) +
+                " Traits on this character's Background Trait list take a Background pick while one is left; the rest take Universal picks."}
+          </p>
+        )}
 
         <div className="filters traits-filters">
           <input type="search" placeholder="Search name or tag" value={query} onChange={(e) => setQuery(e.target.value)} aria-label="Search Traits" />
