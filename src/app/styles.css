@@ -2941,6 +2941,54 @@
     background-color: var(--portfolio-red);
   }
 
+  /* On screen, each colored piece of the sheet glows 4px in its own color:
+     the core stat badges, the points in each group's color and its darker
+     bonus shade, HP, VP, SP and MP's names, and Player Tools' meters.
+     Names are text, so theirs is a text-shadow. Print stays flat. */
+  @media screen {
+    .c-sheet [class*="stat-group-"] {
+      .stat-badge {
+        box-shadow: 0 0 4px var(--stat-bonus);
+      }
+
+      .stat.filled {
+        box-shadow: 0 0 4px var(--stat-color);
+      }
+
+      .stat.default {
+        box-shadow: 0 0 4px var(--stat-bonus);
+      }
+
+      .stat.over {
+        box-shadow: 0 0 4px var(--portfolio-red);
+      }
+    }
+
+    .tools-resource-name {
+      text-shadow: 0 0 4px currentColor;
+    }
+
+    .tools-meter > span {
+      box-shadow: 0 0 4px var(--meter-color);
+    }
+
+    .tools-meter-hp {
+      --meter-color: var(--frontiers-hp);
+    }
+
+    .tools-meter-vp {
+      --meter-color: var(--frontiers-vp);
+    }
+
+    .tools-meter-sp {
+      --meter-color: var(--frontiers-sp);
+    }
+
+    .tools-meter-mp {
+      --meter-color: var(--frontiers-mp);
+    }
+  }
+
   .call-response li {
     display: flex;
     flex-direction: column;
