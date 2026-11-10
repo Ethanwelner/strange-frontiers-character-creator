@@ -2971,14 +2971,6 @@
     overflow-y: auto;
   }
 
-  /* Ability cards' corner dot sits just outside the card (cards.css), so
-     their scrolling list makes room for it above and to the left without
-     moving the cards */
-  .sheet-abilities > .sheet-traits {
-    margin: -7px 0 0 -7px;
-    padding: 7px 0 0 7px;
-  }
-
   /* The Items stop sooner on a tall screen: 60vh, but no more than 640px */
   .tools-items > .tools-item-list {
     max-height: min(60vh, 640px);
