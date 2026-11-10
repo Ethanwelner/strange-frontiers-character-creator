@@ -77,11 +77,11 @@ export function Conditions({
               >
                 {t?.ranked && (
                   <div className="stepper tools-rank">
-                    <Button round="lg" onClick={() => update(c, { rank: c.rank - 1 })} disabled={c.rank <= 1} aria-label="Lower rank">
+                    <Button round="sm" onClick={() => update(c, { rank: c.rank - 1 })} disabled={c.rank <= 1} aria-label="Lower rank">
                       <Sign is="minus" />
                     </Button>
                     <span className="num">{c.rank}</span>
-                    <Button round="lg" onClick={() => update(c, { rank: c.rank + 1 })} aria-label="Raise rank">
+                    <Button round="sm" onClick={() => update(c, { rank: c.rank + 1 })} aria-label="Raise rank">
                       <Sign is="plus" />
                     </Button>
                   </div>

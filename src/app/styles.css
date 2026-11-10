@@ -2228,7 +2228,9 @@
     margin: 0;
   }
 
+  /* A ranked Condition's − and +, the Stats' size (28px), 6px from the rank */
   .tools-rank {
+    gap: 6px;
     margin: 4px 0;
   }
 
