@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from "react";
-import { LorePopup, Sign, title } from "./ui.js";
+import { Popup } from "./popup.js";
+import { Sign, title } from "./ui.js";
 import { ItemCard } from "./cards.js";
 import { content, itemById } from "../content.js";
 import { ITEM_CATEGORIES, stockItemNamed, withItem, type Item, type ItemCategory } from "../items.js";
@@ -213,7 +214,7 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
       </SheetTitle>
 
       {adding && (
-        <LorePopup label="Add items" onClose={() => setAdding(false)} className="sheet-add-popup item-picker-popup">
+        <Popup label="Add items" onClose={() => setAdding(false)} size="wide" className="sheet-add-popup item-picker-popup">
           <h3 className="subhead">Add items</h3>
           {/* Most items come from the game's list: search, check, set counts */}
           <ItemPicker
@@ -241,7 +242,7 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
               </form>
             }
           />
-        </LorePopup>
+        </Popup>
       )}
 
       {items.length === 0 ? (

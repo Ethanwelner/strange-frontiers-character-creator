@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
+import { Popup } from "./popup.js";
 import { content, traitById } from "../content.js";
 import { CONDITION_TYPES, conditionTypes, hpConditions, playConditions, withCondition, withoutCondition, type ConditionType, type HeldCondition } from "../conditions.js";
-import { Effect, LorePopup, Sign, TraitAction } from "./ui.js";
+import { Effect, Sign, TraitAction } from "./ui.js";
 import { CardNote, TraitCard } from "./cards.js";
 import { Button } from "./Button.js";
 import { SheetTitle } from "./sheet-layout.js";
@@ -45,10 +46,10 @@ export function Conditions({
         Conditions
       </SheetTitle>
       {adding && (
-        <LorePopup label="Add a Condition" onClose={() => setAdding(false)} className="sheet-add-popup">
+        <Popup label="Add a Condition" onClose={() => setAdding(false)} size="narrow" className="sheet-add-popup">
           <h3 className="subhead">Add a Condition</h3>
           <ConditionSearch options={options} onPick={add} />
-        </LorePopup>
+        </Popup>
       )}
       <ul className="tools-conditions sf-sheet-cards sf-sheet-scroll">
         {fromHp.map((id) => {

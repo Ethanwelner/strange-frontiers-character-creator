@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
+import { Popup } from "../app/components/popup.js";
 import { endpointCreate } from "../ai/remote.js";
 import { content, contentErrors } from "../app/content.js";
 import { slug, toBuild, type Draft } from "../app/draft.js";
-import { Icon, LorePopup, Notice } from "../app/components/ui.js";
+import { Icon, Notice } from "../app/components/ui.js";
 import { describe } from "../app/check.js";
 import { checkPlay, creatorDraft, load, playBuild, pointsToPlace, save, startPlay, type Play } from "./play.js";
 import { Chat } from "./components/Chat.js";
@@ -163,8 +164,7 @@ export function ToolsApp() {
                 />
               )}
               {play && confirmingSwitch && (
-                <LorePopup label="Switch character" onClose={closeSwitch} className="tools-switch-popup">
-                  <h3 className="lore-modal-title">Switch character</h3>
+                <Popup label="Switch character" title="Switch character" onClose={closeSwitch} size="narrow" className="tools-switch-popup">
                   <p>Put {play.draft.name || "this character"} away? Their tracker, items and chat are cleared.</p>
                   <div className="tools-switch-actions">
                     <Button
@@ -180,17 +180,16 @@ export function ToolsApp() {
                     </Button>
                     <Button onClick={closeSwitch}>Cancel</Button>
                   </div>
-                </LorePopup>
+                </Popup>
               )}
               {play && result && showingIssues && !result.ok && (
-                <LorePopup label="Rules problems" onClose={closeIssues} className="tools-issues-popup">
-                  <h3 className="lore-modal-title">Rules problems</h3>
+                <Popup label="Rules problems" title="Rules problems" onClose={closeIssues} className="tools-issues-popup">
                   <ul className="tools-issue-list">
                     {result.errors.map((e, i) => (
                       <li key={i}>{describe(e, play.draft)}</li>
                     ))}
                   </ul>
-                </LorePopup>
+                </Popup>
               )}
             </main>
           </div>

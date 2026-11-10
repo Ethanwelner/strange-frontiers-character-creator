@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState, type ReactNode } from "react";
+import { Popup } from "../../app/components/popup.js";
 import type { BuildResult } from "../../engine/validate.js";
 import { content } from "../../app/content.js";
 import type { Draft } from "../../app/draft.js";
@@ -7,7 +8,7 @@ import { RESOURCE_NAMES } from "../../app/components/sheet-layout.js";
 import { StatsStep } from "../../app/components/StatsStep.js";
 import { sheetStatGroups, StatBlock } from "../../app/components/stats.js";
 import { TraitsStep } from "../../app/components/TraitsStep.js";
-import { Icon, LorePopup, Sign } from "../../app/components/ui.js";
+import { Icon, Sign } from "../../app/components/ui.js";
 import { checkPlay, currentOf, maxOf, pointsToPlace, RESOURCES, withResource, type Play, type ResourceKey } from "../play.js";
 import { Button } from "../../app/components/Button.js";
 
@@ -182,7 +183,7 @@ export function Tracker({
 
       {/* The creator's Traits step, without the Traits the character already has */}
       {traitDraft && traitResult && (
-        <LorePopup label="Choose Traits" onClose={closeTraits} className="tools-traits-popup">
+        <Popup label="Choose Traits" onClose={closeTraits} size="wide" className="tools-traits-popup">
           <TraitsStep
             draft={traitDraft}
             campaign={{ startingLevel: traitDraft.level }}
@@ -205,7 +206,7 @@ export function Tracker({
               Submit
             </Button>
           </div>
-        </LorePopup>
+        </Popup>
       )}
     </section>
   );

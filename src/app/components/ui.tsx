@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Popup } from "./popup.js";
 import { MAX_LEVEL } from "../../ai/level.js";
 import { STAT_GROUPS, type StatBlock, type StatId } from "../../schema/index.js";
 import { kindById, packageById, traitById } from "../content.js";
@@ -87,42 +88,6 @@ export function Notice({ children, fades, bad, onDismiss }: { children: string; 
       <Button kind="link" onClick={onDismiss} aria-label="Dismiss">
         ✕
       </Button>
-    </div>
-  );
-}
-
-// Something's card in the site's lore popup (.lore-modal), like a Knowledge
-// opened from the sheet. Escape, the backdrop and the close button shut it,
-// and focus goes back to whatever opened it.
-export function LorePopup({ label, onClose, children, className = "" }: { label: string; onClose: () => void; children: ReactNode; className?: string }) {
-  const close = useRef<HTMLButtonElement>(null);
-  const shut = useRef(onClose);
-  shut.current = onClose;
-  useEffect(() => {
-    const opener = document.activeElement as HTMLElement | null;
-    close.current?.focus();
-    document.documentElement.classList.add("lore-modal-open");
-    const onKey = (e: globalThis.KeyboardEvent) => {
-      if (e.key === "Escape") shut.current();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      document.documentElement.classList.remove("lore-modal-open");
-      opener?.focus();
-    };
-  }, []);
-  return (
-    <div className={`lore-modal is-open ${className}`} role="dialog" aria-modal="true" aria-label={label} onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="lore-modal-panel">
-        <Button ref={close} round="lg" tone="light" className="lore-modal-close" aria-label="Close" onClick={onClose}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true">
-            <path d="M2 2l16 16M18 2L2 18" fill="none" stroke="currentColor" strokeWidth="2" />
-          </svg>
-        </Button>
-        {/* The content scrolls inside the panel, so the close button stays on its corner */}
-        <div className="lore-modal-scroll">{children}</div>
-      </div>
     </div>
   );
 }
@@ -335,8 +300,7 @@ export function Portrait({
       />
       {error && !open && <p className="portrait-error">{error}</p>}
       {open && portrait && (
-        <LorePopup label="Portrait" onClose={close} className="portrait-popup">
-          <h3 className="lore-modal-title">Portrait</h3>
+        <Popup label="Portrait" title="Portrait" onClose={close} size="narrow" className="portrait-popup">
           <img className="portrait-large" src={portrait} alt={alt} />
           {error && <p className="portrait-error">{error}</p>}
           <div className="portrait-actions">
@@ -354,7 +318,7 @@ export function Portrait({
               Remove
             </Button>
           </div>
-        </LorePopup>
+        </Popup>
       )}
     </div>
   );
