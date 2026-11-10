@@ -67,29 +67,9 @@
     padding-bottom: var(--sf-creator-top, 24px);
   }
 
-  /* The first box: the portrait, then beside it the name, the character
-     line and the resources under them; the assistant has the right column
-     from the top, like the creator's character box. */
-  .tools-character {
-    display: flex;
-    align-items: flex-start;
-    gap: 24px;
-  }
-
-  /* With the description as the other half; it drops under the portrait
-     and name when there isn't room (src/app) */
-  .tools-character:has(> .sheet-description) {
-    flex-wrap: wrap;
-  }
-
   /* Level up, a green + (Cancel while leveling), round like the rules
-     problems chip, in the top right corner of the level blob's 96px square
-     (the blob sits half its padding in from the box's corner, src/app) */
+     problems chip, on the level blob's corner (.sf-sheet-corner places it) */
   .tools-level-up {
-    position: absolute;
-    z-index: 2;
-    top: calc(0.5rem - 48px);
-    left: calc(0.5rem + 48px - 20px);
     /* A green pill (buttons.css), as tall as it is wide around its + */
     padding: 0.5rem;
 
@@ -101,17 +81,6 @@
       width: 1rem;
       height: 1rem;
     }
-
-    /* The 56px blob on narrower screens, at -24px / -8px */
-    @media (max-width: 991px) {
-      top: -24px;
-      left: calc(-8px + 56px - 14px);
-    }
-  }
-
-  .tools-character-main {
-    flex: 1;
-    min-width: 0;
   }
 
   /* The left column: the character, then the tool under it */
@@ -122,65 +91,11 @@
     min-width: 0;
   }
 
-  /* With a character in, it's laid out like the creator's sheet: the sheet's
-     lighter gray, its border and round corners, with the level's blob
-     (.level-badge) over the top left corner and the zones in darker boxes:
-     the name over the resources, the stats, Conditions and Items columns,
-     and the Knowledges beside the Traits */
-  .tools-box {
-    position: relative;
-    padding: 1rem;
-    background-color: var(--panel-box);
-    border: 1px solid var(--card-border);
-    border-radius: 12px;
-    box-shadow: 0 4px 10px #00000030;
-  }
-
-  /* The sheet inside it has the shadow already, from the box */
-  .builder-panel .tools-box .c-sheet {
-    box-shadow: none;
-  }
-
-  /* 20px between the boxes */
+  /* The sheet, and any notice over it, 20px apart */
   .tools-tracker {
     display: flex;
     flex-direction: column;
     gap: 20px;
-  }
-
-  /* The first box, dark like the sheet's boxes, with the name 24px above
-     the resources */
-  /* The header box, and the resources' box under it, dark and borderless like
-     the sheet's */
-  .tools-head,
-  .tools-resources-box,
-  .sheet-movement {
-    background-color: var(--panel);
-    border-color: transparent;
-  }
-
-  /* The name and its pen, from the creator's Sheet, in the tab title style */
-  .tools-name {
-    margin-bottom: 20px;
-
-    h2 {
-      margin: 0;
-    }
-  }
-
-  /* The name, with the badges (Level up and the rest) at the right end of
-     its line */
-  .tools-character-head {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 8px 24px;
-
-    .tools-name {
-      flex: 1;
-      min-width: 0;
-    }
   }
 
   /* The rules problems chip, at the top left of the panel; it opens the list */
@@ -274,11 +189,6 @@
   }
 
 
-  .tools-tracker > .sheet-embedded {
-    margin-top: 0;
-    padding-top: 0;
-  }
-
   /* The sheet's stats: the creator's Stats step without its "Stats" title,
      instructions or box. With no points to add it reads like the sheet: no
      points-placed line, no − and +, no per-group counts, and no faded
@@ -311,19 +221,6 @@
     flex-wrap: wrap;
     gap: 12px;
     margin-top: 24px;
-  }
-
-  /* Add traits, at the right end of the Traits title's line */
-  .sheet-traits-head {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    margin: 0 0 24px;
-
-    .subhead {
-      flex: 1;
-      margin: 0;
-    }
   }
 
   /* The creator's Traits step in a wide popup on the panel's dark gray, with
@@ -380,7 +277,7 @@
        corners clip the conversation sliding up under the d20's */
     border-radius: 16px;
     overflow: clip;
-    /* The sheet's shadow (.tools-box), as a filter so it follows the d20
+    /* The sheet's shadow (.sf-sheet), as a filter so it follows the d20
        and the chat box where they show, not the column's own box, which
        runs past the window at the top and end of the page */
     filter: drop-shadow(0 4px 10px #00000030);
@@ -527,22 +424,8 @@
     white-space: nowrap;
   }
 
-  /* The sheet under the first box: its columns and Traits keep their own
-     boxes, without the sheet's outer one, which the left column's box
-     stands in for */
-  .builder-panel .sheet-embedded .c-sheet {
-    gap: 20px;
-    margin-top: 0;
-    background: none;
-    border: none;
-    border-radius: 0;
-    padding: 0;
-  }
-
-  /* Level up, Download character, Switch character and the rules problems
-     chip, in a row at the right of the name, 8px apart */
   /* Download character, Switch character and any rules problems, above the
-     sheet (.tools-box) at its right edge, right aligned, 1rem clear of it */
+     sheet (.sf-sheet) at its right edge, right aligned, 1rem clear of it */
   .tools-actions {
     position: absolute;
     bottom: calc(100% + 1rem);
@@ -795,10 +678,9 @@
     }
   }
 
-  /* At the same widths the sheet's sections sit 24px apart side to side:
-     its columns, the character box's matching columns, and HP, VP and SP */
+  /* At the same widths HP, VP and SP sit 24px apart, like the head's columns
+     (sheet.css) */
   @media (min-width: 992px) and (max-width: 1399px) {
-    .tools-character:has(> .sheet-description),
     .tools-resources {
       column-gap: 24px;
     }
@@ -870,8 +752,7 @@
       column-gap: 24px;
     }
 
-    .tools-tracker,
-    .builder-panel .sheet-embedded .c-sheet {
+    .tools-tracker {
       gap: 16px;
     }
   }

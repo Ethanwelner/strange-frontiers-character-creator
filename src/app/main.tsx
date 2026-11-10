@@ -11,6 +11,7 @@ import "./styles.css";
 import "./buttons.css";
 import "./cards.css";
 import "./stats.css";
+import "./sheet.css";
 
 // Rendered before this script finishes, so creator.php (which holds its first
 // paint for this script) slides in showing the builder, not an empty page.

@@ -1,6 +1,7 @@
 import { useId, useMemo } from "react";
 import { content } from "../content.js";
 import { Icon } from "./ui.js";
+import { SheetTitle } from "./sheet-layout.js";
 import { DAMAGE_TYPES, resistancesOf, type DamageType } from "../resistances.js";
 import type { Item } from "../items.js";
 
@@ -20,16 +21,16 @@ export function Resistances({ items, held }: { items: Item[]; held: { trait: str
     return { type, own, total: own.filter((r) => !r.where).reduce((n, r) => n + r.amount, 0) };
   }).filter((t) => t.total !== 0 || t.own.some((r) => r.where && r.amount !== 0));
   return (
-    <div className="sheet-resistances">
-      <h3 className="subhead">Resistances</h3>
+    <>
+      <SheetTitle>Resistances</SheetTitle>
       {shown.length ? (
-        <ul className="sheet-resistance-list">
+        <ul className="sf-resistance-list">
           {shown.map(({ type, own, total }, i) => (
-            <li key={type} className="sheet-resistance" tabIndex={0} aria-describedby={`${id}-${i}`}>
+            <li key={type} className="sf-resistance" tabIndex={0} aria-describedby={`${id}-${i}`}>
               <Icon name={damageIcon(type)} label={type} />
-              <span className="num">{total}</span>
-              <div className="sheet-resistance-pop" role="tooltip" id={`${id}-${i}`}>
-                <strong className="sheet-resistance-pop-title">
+              <span className="sf-resistance-total">{total}</span>
+              <div className="sf-resistance-pop" role="tooltip" id={`${id}-${i}`}>
+                <strong className="sf-resistance-pop-title">
                   {type} {total}
                 </strong>
                 <ul>
@@ -37,9 +38,9 @@ export function Resistances({ items, held }: { items: Item[]; held: { trait: str
                     <li key={j} className={r.where ? "is-partial" : undefined}>
                       <span>
                         {r.from}
-                        {r.where && <span className="muted"> ({r.where})</span>}
+                        {r.where && <span className="sf-sheet-muted"> ({r.where})</span>}
                       </span>
-                      <span className="num">{r.where && r.amount > 0 ? `+${r.amount}` : r.amount}</span>
+                      <span className="sf-resistance-pop-total">{r.where && r.amount > 0 ? `+${r.amount}` : r.amount}</span>
                     </li>
                   ))}
                 </ul>
@@ -48,8 +49,8 @@ export function Resistances({ items, held }: { items: Item[]; held: { trait: str
           ))}
         </ul>
       ) : (
-        <p className="empty">None.</p>
+        <p className="sf-sheet-empty">None.</p>
       )}
-    </div>
+    </>
   );
 }

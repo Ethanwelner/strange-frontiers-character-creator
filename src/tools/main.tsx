@@ -11,6 +11,7 @@ import "./styles.css";
 import "../app/buttons.css";
 import "../app/cards.css";
 import "../app/stats.css";
+import "../app/sheet.css";
 
 // Rendered before this script finishes, so game-tools.php (which holds its
 // first paint for this script) slides in showing the tools, not an empty page.

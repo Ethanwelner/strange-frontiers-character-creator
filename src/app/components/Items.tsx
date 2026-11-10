@@ -5,6 +5,7 @@ import { content, itemById } from "../content.js";
 import { ITEM_CATEGORIES, stockItemNamed, withItem, type Item, type ItemCategory } from "../items.js";
 import type { Item as StockItem } from "../../schema/index.js";
 import { Button } from "./Button.js";
+import { SheetTitle } from "./sheet-layout.js";
 
 // Stock items to suggest while typing a name, money left out until wealth has rules.
 // Natural weapons a Trait grants, like a Haymaker, come with the Trait rather
@@ -200,12 +201,16 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
   return (
     <section className="tools-items">
       {/* Add item at the right end of the title's line, opening the add form in a popup */}
-      <div className="sheet-section-head">
-        <h4 className="rule">Items</h4>
-        <Button size="small" tone="item" className="sheet-section-add" aria-label="Add item" onClick={() => setAdding(true)}>
-          Add<span className="sheet-section-add-noun"> item</span>
-        </Button>
-      </div>
+      <SheetTitle
+        as="h4"
+        aside={
+          <Button size="small" tone="item" className="sf-sheet-add" aria-label="Add item" onClick={() => setAdding(true)}>
+            Add<span className="sf-sheet-add-noun"> item</span>
+          </Button>
+        }
+      >
+        Items
+      </SheetTitle>
 
       {adding && (
         <LorePopup label="Add items" onClose={() => setAdding(false)} className="sheet-add-popup item-picker-popup">
@@ -240,9 +245,9 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
       )}
 
       {items.length === 0 ? (
-        <p className="empty">No Items yet.</p>
+        <p className="sf-sheet-empty">No Items yet.</p>
       ) : (
-        <ul className="tools-item-list">
+        <ul className="tools-item-list sf-sheet-cards sf-sheet-scroll sf-sheet-scroll--short">
           {items.map((item) => {
             const stock = item.item ? itemById.get(item.item) : undefined;
             return (

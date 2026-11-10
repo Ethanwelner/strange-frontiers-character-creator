@@ -2,18 +2,18 @@ import { useCallback, useMemo, useState, type ReactNode } from "react";
 import type { BuildResult } from "../../engine/validate.js";
 import { content } from "../../app/content.js";
 import type { Draft } from "../../app/draft.js";
-import { RESOURCE_NAMES, Sheet } from "../../app/components/Sheet.js";
+import { Sheet } from "../../app/components/Sheet.js";
+import { RESOURCE_NAMES } from "../../app/components/sheet-layout.js";
 import { StatsStep } from "../../app/components/StatsStep.js";
 import { sheetStatGroups, StatBlock } from "../../app/components/stats.js";
 import { TraitsStep } from "../../app/components/TraitsStep.js";
 import { Icon, LorePopup, Sign } from "../../app/components/ui.js";
-import { Resistances } from "../../app/components/Resistances.js";
 import { checkPlay, currentOf, maxOf, pointsToPlace, RESOURCES, withResource, type Play, type ResourceKey } from "../play.js";
 import { Button } from "../../app/components/Button.js";
 
-// The character's name (`head`, from the app) over HP, VP, SP and MP, each
-// with its current value against the max the engine works out, in the first
-// of the sheet's boxes, then the rest of the character sheet in its own boxes.
+// The character sheet in its play context (sheet-layout.tsx): HP, VP, SP and
+// MP live, each with its current value against the max the engine works out,
+// and Level up and the app's actions (`corner`, `actions`, from the app).
 //
 // The sheet's stats are the plain stat block, which becomes the creator's
 // Stats step, with its + and −, whenever there are points to add. Level up (beside the name) hands this a
@@ -28,15 +28,17 @@ export function Tracker({
   onChange,
   levelDraft,
   onLevelDraft,
-  head,
+  corner,
+  actions,
 }: {
   play: Play;
   result: BuildResult;
   onChange: (p: Play) => void;
   levelDraft?: Draft;
   onLevelDraft: (d?: Draft) => void;
-  // The first box: the portrait, name and character line
-  head: ReactNode;
+  // Level up, on the level's corner, and Download, Switch and the rules problems
+  corner: ReactNode;
+  actions: ReactNode;
 }) {
   // MP shows once the character has any.
   const shown = RESOURCES.filter((r) => r !== "mp" || maxOf(result, r) > 0);
@@ -54,8 +56,6 @@ export function Tracker({
   const traitResult = useMemo(() => (traitDraft ? checkPlay(traitDraft, content) : undefined), [traitDraft]);
   const banked = (result.summary?.picks.universal.banked ?? 0) + (result.summary?.picks.background.banked ?? 0);
   const heldIds = useMemo(() => new Set(result.summary?.traits.map((h) => h.trait) ?? []), [result]);
-  // The Traits and Conditions the character has now, for their resistances
-  const held = useMemo(() => [...(result.summary?.traits ?? []), ...play.conditions], [result, play.conditions]);
 
   // The stats are the stat block. While there are points to add (after Level
   // up, or when the character has points it never placed) they're the
@@ -85,15 +85,8 @@ export function Tracker({
     </div>
   );
 
-  return (
-    <section className="tools-tracker">
-      {!result.summary && <div className="notice bad">The engine couldn't read this character, so its maximums aren't known. Check the sheet below.</div>}
-
-      {/* The character's header, in a box like the sheet's head */}
-      <div className="c-sheet-box tools-head">{head}</div>
-
-      {/* HP, VP, SP and MP, in their own box under it */}
-      <div className="c-sheet-box tools-resources-box">
+  // HP, VP, SP and MP, live
+  const resources = (
         <div className="tools-resources">
           {shown.map((r) => {
             const cur = currentOf(play, result, r);
@@ -153,15 +146,25 @@ export function Tracker({
             );
           })}
         </div>
-      </div>
+  );
+  const draft = play.draft;
 
-      {/* The rest of the character sheet: stats, Conditions and Items, then Knowledges beside the Traits */}
+  return (
+    <section className="tools-tracker">
+      {!result.summary && <div className="notice bad">The engine couldn't read this character, so its maximums aren't known. Check the sheet below.</div>}
+
       <Sheet
-        draft={play.draft}
+        context="play"
+        draft={draft}
         result={result}
-        embedded
-        statsSlot={stats}
-        resistancesSlot={<Resistances items={play.items} held={held} />}
+        corner={corner}
+        actions={actions}
+        resources={resources}
+        stats={stats}
+        onName={(name) => onChange({ ...play, draft: { ...draft, name } })}
+        onLooks={(looks) => onChange({ ...play, draft: { ...draft, ...looks } })}
+        onPortrait={(portrait) => onChange({ ...play, draft: { ...draft, portrait } })}
+        onDescription={(description) => onChange({ ...play, draft: { ...draft, description } })}
         items={play.items}
         onItems={(items) => onChange({ ...play, items })}
         conditions={play.conditions}
@@ -170,8 +173,8 @@ export function Tracker({
         traitsAction={
           // Add traits, like Items' and Conditions' add buttons; the picks left show under the title
           banked > 0 && (
-            <Button size="small" tone="primary" className="sheet-section-add" aria-label="Add traits" onClick={() => setTraitDraft(play.draft)}>
-              Add<span className="sheet-section-add-noun"> traits</span>
+            <Button size="small" tone="primary" className="sf-sheet-add" aria-label="Add traits" onClick={() => setTraitDraft(play.draft)}>
+              Add<span className="sf-sheet-add-noun"> traits</span>
             </Button>
           )
         }

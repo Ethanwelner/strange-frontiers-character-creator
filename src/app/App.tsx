@@ -6,7 +6,6 @@ import { CharacterStep } from "./components/CharacterStep.js";
 import { ChoicesStep } from "./components/ChoicesStep.js";
 import { DescribeBox } from "./components/DescribeBox.js";
 import { StatsStep } from "./components/StatsStep.js";
-import { Resistances } from "./components/Resistances.js";
 import { Sheet } from "./components/Sheet.js";
 import { TraitsStep } from "./components/TraitsStep.js";
 import { Arrow, Notice, type Looks } from "./components/ui.js";
@@ -245,6 +244,7 @@ export function App() {
               {step === "traits" && <TraitsStep draft={draft} campaign={campaign} result={result} onChange={setDraft} />}
               {step === "sheet" && (
                 <Sheet
+                  context="build"
                   draft={draft}
                   result={result}
                   onExport={exportBuild}
@@ -253,11 +253,10 @@ export function App() {
                   onLooks={(looks) => setDraft({ ...draft, ...looks })}
                   onPortrait={(portrait) => setDraft({ ...draft, portrait })}
                   onDescription={(description) => setDraft({ ...draft, description })}
-                  items={draft.items}
+                  items={draft.items ?? []}
                   onItems={(items) => setDraft({ ...draft, items })}
-                  conditions={draft.conditions}
+                  conditions={draft.conditions ?? []}
                   onConditions={(conditions) => setDraft({ ...draft, conditions })}
-                  resistancesSlot={<Resistances items={draft.items ?? []} held={[...(result.summary?.traits ?? []), ...(draft.conditions ?? [])]} />}
                 />
               )}
 
