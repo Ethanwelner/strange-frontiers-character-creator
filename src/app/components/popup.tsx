@@ -22,14 +22,22 @@ import { Button } from "./Button.js";
 //   card   a card on its own, like a Knowledge or a Kind: the card is the
 //          popup's edge, with no panel around it, and a smaller light X
 //   title  a title over the content, clear of the X
+//   scroll "panel" (the content scrolls as one, under the X) or "inner" (the
+//          panel holds still, and the part marked .sf-popup-grow takes the
+//          room left and scrolls inside: Add items' list under its tabs)
 //
 // `className` is for what's inside: a popup's own content styles hang off it.
 
 export type PopupTone = "light" | "dark";
 export type PopupSize = "narrow" | "default" | "wide";
 
-export function popupClass({ tone = "dark", size = "default", card = false }: { tone?: PopupTone; size?: PopupSize; card?: boolean }, className = "") {
-  return ["sf-popup", "is-open", `sf-popup--${tone}`, size !== "default" && `sf-popup--${size}`, card && "sf-popup--card", className].filter(Boolean).join(" ");
+export function popupClass(
+  { tone = "dark", size = "default", card = false, scroll = "panel" }: { tone?: PopupTone; size?: PopupSize; card?: boolean; scroll?: "panel" | "inner" },
+  className = "",
+) {
+  return ["sf-popup", "is-open", `sf-popup--${tone}`, size !== "default" && `sf-popup--${size}`, card && "sf-popup--card", scroll === "inner" && "sf-popup--inner", className]
+    .filter(Boolean)
+    .join(" ");
 }
 
 export function Popup({
@@ -39,6 +47,7 @@ export function Popup({
   tone = "dark",
   size = "default",
   card = false,
+  scroll = "panel",
   title,
   className = "",
 }: {
@@ -49,6 +58,7 @@ export function Popup({
   tone?: PopupTone;
   size?: PopupSize;
   card?: boolean;
+  scroll?: "panel" | "inner";
   title?: ReactNode;
   className?: string;
 }) {
@@ -70,7 +80,7 @@ export function Popup({
     };
   }, []);
   return (
-    <div className={popupClass({ tone, size, card }, className)} role="dialog" aria-modal="true" aria-label={label} onClick={(e) => e.target === e.currentTarget && onClose()}>
+    <div className={popupClass({ tone, size, card, scroll }, className)} role="dialog" aria-modal="true" aria-label={label} onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className="sf-popup-panel">
         <Button ref={close} round="lg" tone={tone === "dark" ? "light" : "dark"} className="sf-popup-close" aria-label="Close" onClick={onClose}>
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true">

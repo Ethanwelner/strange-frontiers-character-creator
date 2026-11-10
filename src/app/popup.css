@@ -19,6 +19,11 @@
      size   narrow (480px), the default (720px) or wide (1100px)
      card   a card on its own: the card is the popup's edge, with no panel
             around it, and a smaller light X on its corner
+     scroll panel (the panel's content scrolls as one) or inner (the panel
+            holds still and a part of its content scrolls inside it)
+
+   A popup's actions (Add items, Submit) go in a foot (.sf-popup-foot) that
+   stays at the bottom of the panel while the content scrolls.
 
    The X is the round button (css/sf-buttons.css). What's inside is its
    own component's. */
@@ -32,6 +37,8 @@ html.sf-popup-open {
    It fades in and out. ---- */
 
 .sf-popup {
+    /* The panel's padding around its content */
+    --popup-pad: 32px;
     --popup-panel: var(--portfolio-white, #ffffff);
     --popup-text: var(--portfolio-black, #1e1f20);
     position: fixed;
@@ -93,7 +100,7 @@ html.sf-popup-open {
     flex: 0 1 auto;
     min-height: 0;
     overflow-y: auto;
-    padding: 32px;
+    padding: var(--popup-pad);
     border-radius: inherit;
 }
 
@@ -106,6 +113,48 @@ html.sf-popup-open {
 
 .sf-popup-body > :last-child {
     margin-bottom: 0;
+}
+
+/* ---- scroll inner: the panel holds still, its title and anything else
+   staying put, while the part marked .sf-popup-grow takes the room left
+   and scrolls inside (its own content says which part of it scrolls). Its
+   foot stays under it. ---- */
+
+.sf-popup--inner .sf-popup-scroll {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    > * {
+        flex: none;
+    }
+
+    > .sf-popup-grow {
+        flex: 0 1 auto;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+/* ---- The foot: the popup's actions, right aligned over a rule, as wide
+   as the panel and held to its bottom edge from the first scroll to the
+   last (it takes the place of the panel's bottom padding, so there's none
+   left to scroll into view under it) ---- */
+
+.sf-popup-foot {
+    position: sticky;
+    bottom: calc(-1 * var(--popup-pad));
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 12px;
+    margin: 24px calc(-1 * var(--popup-pad)) calc(-1 * var(--popup-pad));
+    padding: 16px var(--popup-pad);
+    background: var(--popup-panel);
+    border-top: 1px solid var(--card-border, #5c5e60);
+    border-radius: 0 0 8px 8px;
 }
 
 /* ---- The X: half outside the panel's top right corner ---- */
@@ -172,11 +221,8 @@ html.sf-popup-open {
 
 @media (max-width: 767px) {
     .sf-popup {
+        --popup-pad: 24px;
         padding: 24px 16px;
-    }
-
-    .sf-popup-scroll {
-        padding: 24px;
     }
 
     /* Small enough that its outer half fits the 16px beside the panel */

@@ -192,7 +192,7 @@ export function Tracker({
             hide={heldIds}
             newFrom={play.draft.traits.length}
           />
-          <div className="tools-traits-submit">
+          <div className="sf-popup-foot">
             {/* Green and glitching, like Add items, once the picks change the character's Traits */}
             <Button
               tone={JSON.stringify(traitDraft.traits) !== JSON.stringify(play.draft.traits) ? "primary" : "gray"}

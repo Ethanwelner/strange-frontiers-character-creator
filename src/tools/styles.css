@@ -223,18 +223,6 @@
     margin-top: 24px;
   }
 
-  /* The Traits popup's Submit, under the creator's Traits step */
-  .tools-traits-submit {
-    position: sticky;
-    bottom: -32px;
-    display: flex;
-    justify-content: flex-end;
-    margin: 24px -32px -32px;
-    padding: 16px 32px;
-    background: var(--panel);
-    border-top: 1px solid var(--card-border);
-  }
-
   /* The d20 and the assistant, in the right column, stay in view while the
      tools scroll, like the creator's character box. The column never
      scrolls on its own: the conversation takes the column's leftover

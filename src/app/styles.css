@@ -2109,6 +2109,44 @@
   /* The picker's rows: the inventory's item card, with room on the left
      for the count's circle, and a large checkbox at its right. In two
      columns once there's room. */
+  /* In the popup, the title, the tabs and the search stay put and only the
+     list scrolls, inside the tab box (the popup's scroll inner) */
+  .item-picker-popup .item-picker > .tech-fields {
+    flex: 0 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+
+    > * {
+      flex: none;
+    }
+
+    /* The search sits close under the tabs, with more room between it and
+       the cards */
+    > .tech-field-tab-list {
+      margin-bottom: 20px;
+    }
+
+    > .filters {
+      margin: 0 0 32px;
+
+      input[type="search"] {
+        padding: 0.6rem 0.9rem;
+        font-size: 1rem;
+      }
+    }
+
+    /* Pulled left by its 14px of room for the count circles, so the cards'
+       edges line up with the tabs and the search, the circles hanging into
+       the box's margin */
+    > .item-pick-list {
+      flex: 0 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      margin-left: -14px;
+    }
+  }
+
   .item-pick-list {
     list-style: none;
     display: grid;
@@ -2177,20 +2215,6 @@
       outline: 2px solid var(--portfolio-white);
       outline-offset: 2px;
     }
-  }
-
-  /* Add items stays in view at the popup's foot while the cards scroll,
-     like Player Tools' Traits Submit */
-  .item-picker-submit {
-    position: sticky;
-    bottom: -32px;
-    z-index: 1;
-    display: flex;
-    justify-content: flex-end;
-    margin: 24px -32px 0;
-    padding: 16px 32px;
-    background: var(--panel);
-    border-top: 1px solid #424446;
   }
 
   /* The add row (Items' and Player Tools' Add a Condition), item notes, and
@@ -2368,7 +2392,7 @@
      that doesn't scroll has no fade. Browsers without scroll timelines
      (Firefox, for now) keep the hard edge. */
   @supports (animation-timeline: scroll()) {
-    .condition-search-list {
+    :is(.condition-search-list, .item-picker-popup .item-pick-list) {
       mask-image: linear-gradient(to bottom, #000 calc(100% - var(--sf-list-fade)), transparent);
       animation: sf-list-fade linear both;
       animation-timeline: scroll(self);
@@ -2381,7 +2405,7 @@
      parts; Firefox, which has no such parts, a thin bar in the same colors.
      The site sets scrollbar-color on the page, which makes Chrome skip
      -webkit- parts, so it's reset here. */
-  :is(.tools-chat-log, .tools-chat-form textarea, .condition-search-list) {
+  :is(.tools-chat-log, .tools-chat-form textarea, .condition-search-list, .item-picker-popup .item-pick-list) {
     scrollbar-color: auto;
     scrollbar-width: auto;
 
