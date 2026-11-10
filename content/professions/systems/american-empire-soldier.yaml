@@ -14,7 +14,6 @@ grants:
   - { trait: the-imperial-military }
   - { trait: imperial-service-record }
 backgroundTraits:
-  - weapons
   - military-tactics
   - wilderness-lore
   - wielder-machine-gun

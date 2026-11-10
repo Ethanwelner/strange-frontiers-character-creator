@@ -10,7 +10,6 @@ grants:
   - { trait: vigilance }
   - { trait: military-tactics }
 backgroundTraits:
-  - weapons
   - wilderness-lore
   - navigation
   - wielder-grenade
