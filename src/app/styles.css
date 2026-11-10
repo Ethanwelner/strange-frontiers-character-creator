@@ -2154,6 +2154,27 @@
     }
   }
 
+  /* The rest of a picker popup's content keeps its own height; only the
+     tab box gives way */
+  .sf-popup--inner .sf-popup-grow > :not(.picker-box) {
+    flex: none;
+  }
+
+  /* Choose Traits' picked Traits, under the tab box and over the foot,
+     scrolling on their own once there are many */
+  .traits-picked {
+    margin-top: 24px;
+
+    > .subhead {
+      margin: 0 0 12px;
+    }
+
+    > .picks {
+      max-height: min(25vh, 220px);
+      overflow-y: auto;
+    }
+  }
+
   /* Add items' list is pulled left by its 14px of room for the count
      circles, so the cards' edges line up with the tabs and the search, the
      circles hanging into the box's margin */
@@ -2428,7 +2449,7 @@
      parts; Firefox, which has no such parts, a thin bar in the same colors.
      The site sets scrollbar-color on the page, which makes Chrome skip
      -webkit- parts, so it's reset here. */
-  :is(.tools-chat-log, .tools-chat-form textarea, .condition-search-list, .sf-popup--inner .picker-scroll) {
+  :is(.tools-chat-log, .tools-chat-form textarea, .condition-search-list, .sf-popup--inner .picker-scroll, .traits-picked > .picks) {
     scrollbar-color: auto;
     scrollbar-width: auto;
 

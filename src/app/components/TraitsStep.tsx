@@ -20,6 +20,9 @@ interface Props {
   // Picks from this index on are this round's (Game Tools' popup): only
   // those are listed, as "Traits selected", and only they can be removed.
   newFrom?: number;
+  // The Traits picked go under the tab box instead of at the end of it, so
+  // they stay in view (Player Tools' Choose Traits popup)
+  picksBelow?: boolean;
 }
 
 // What a Trait needs before it can be picked, as the site writes it:
@@ -55,7 +58,7 @@ const LIST_HELP: Record<string, string> = {
   wielder: "Wielder Skills, one per weapon. They're ordinary Skills, kept on their own tab so they don't crowd the rest.",
 };
 
-export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom }: Props) {
+export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom, picksBelow = false }: Props) {
   // A pick type, or a Trait list, like Magic
   const [chosen, setTab] = useState<TraitTab>("universal");
   const [query, setQuery] = useState("");
@@ -107,8 +110,34 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom }:
     else onChange(addPick(draft, id, rank, pick));
   };
 
+  // The Traits picked here, with Remove: in the tab box under the Traits, or
+  // with picksBelow under the box, held over the popup's foot
+  const picks = (
+    <>
+      <h3 className="subhead">{newFrom === undefined ? "Picks spent" : "Traits selected"}</h3>
+      {draft.traits.length <= (newFrom ?? 0) ? (
+        <p className="empty">{newFrom === undefined ? "No picks spent yet." : "No Traits selected yet."}</p>
+      ) : (
+        <ul className="picks">
+          {draft.traits.map((p, i) => i < (newFrom ?? 0) ? null : (
+            <li key={i}>
+              <span>
+                <strong>{traitName(p.trait)}</strong> rank {p.rank ?? 1} <span className="muted">· {p.pick} pick</span>
+                {!traitById.has(p.trait) && <Chip tone="bad">unknown</Chip>}
+              </span>
+              <Button kind="link" onClick={() => remove(i)} aria-label={`Remove ${traitName(p.trait)} rank ${p.rank ?? 1}`}>
+                Remove
+              </Button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </>
+  );
+
   // In Player Tools' Choose Traits popup (its scroll inner), the tabs, hint
-  // and search stay put and only the Traits and picks scroll (.picker-scroll)
+  // and search stay put and only the Traits scroll (.picker-scroll), with the
+  // Traits picked under the box
   return (
     <section className="sf-popup-grow">
       <StepHeader title="Traits">
@@ -245,26 +274,10 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom }:
             </div>
           ))}
 
-          <h3 className="subhead">{newFrom === undefined ? "Picks spent" : "Traits selected"}</h3>
-          {draft.traits.length <= (newFrom ?? 0) ? (
-            <p className="empty">{newFrom === undefined ? "No picks spent yet." : "No Traits selected yet."}</p>
-          ) : (
-            <ul className="picks">
-              {draft.traits.map((p, i) => i < (newFrom ?? 0) ? null : (
-                <li key={i}>
-                  <span>
-                    <strong>{traitName(p.trait)}</strong> rank {p.rank ?? 1} <span className="muted">· {p.pick} pick</span>
-                    {!traitById.has(p.trait) && <Chip tone="bad">unknown</Chip>}
-                  </span>
-                  <Button kind="link" onClick={() => remove(i)} aria-label={`Remove ${traitName(p.trait)} rank ${p.rank ?? 1}`}>
-                    Remove
-                  </Button>
-                </li>
-              ))}
-            </ul>
-          )}
+          {!picksBelow && picks}
         </div>
       </div>
+      {picksBelow && <div className="traits-picked">{picks}</div>}
     </section>
   );
 }
