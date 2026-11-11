@@ -742,6 +742,35 @@
     font-weight: 400;
 }
 
+/* A chassis (ChassisCard): under its description, a rule, then its
+   Physical stats and the Traits it gives, 12px apart. The stat block keeps
+   its own colors on the card's black; its groups sit 16px apart here. */
+.sf-chassis {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #6d6a5a;
+
+    .sf-stats {
+        gap: 16px;
+    }
+}
+
+.sf-chassis-traits {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sf-chassis-label {
+    margin: 0;
+    color: #d6d1b4;
+    font-size: .75rem;
+    font-weight: 600;
+}
+
 /* An open card's chips the top line leaves out: its category, then its
    value, how it Attacks and the slot it takes */
 .equipment-chips {

@@ -4,6 +4,7 @@ import { parseDamage } from "../../engine/damage.js";
 import { itemBadges, itemUses } from "../items.js";
 import { parseResistances } from "../resistances.js";
 import { damageIcon } from "./Resistances.js";
+import { StatBlock, type BlockGroup } from "./stats.js";
 import { Icon, SettingIcon, title } from "./ui.js";
 
 // The card components: one per kind of card, so a new card can't drift from
@@ -12,6 +13,8 @@ import { Icon, SettingIcon, title } from "./ui.js";
 //   TraitCard       Knowledges, Languages, Skills, Abilities and spells,
 //                   Conditions, Circumstances and Other Traits
 //   ItemCard        Weapons, wearables, equipment and natural weapons
+//   ChassisCard     An AI Core's chassis: an Item card holding Physical
+//                   stats and Traits
 //   BackgroundCard  Kinds, Origins, Professions and Pasts
 //
 // These, the Character Creator's and Player Tools', are the reference for
@@ -32,6 +35,7 @@ import { Icon, SettingIcon, title } from "./ui.js";
 //                    fold  opens and closes from its chevron, and only there
 //                    edit  Edit and Remove, and the fields to edit it
 //                    note  Note, and its field
+//                    body  More of the card, under its description
 //   Background card  select  a card to pick, in a radio group
 //
 // A card without fold is always open. The site's pages are static, so there
@@ -244,6 +248,8 @@ function ItemBadges({ stock }: { stock: StockItem }) {
  * fold   Opens and closes from its chevron, and only there.
  * edit   Edit's pen and, while editing, Remove and `fields`.
  * note   Note's pen and label, and `field` while it's shown.
+ * body   More of the card, under its description while it's open, like a
+ *        chassis's stats and Traits.
  */
 export function ItemCard({
   name,
@@ -254,6 +260,7 @@ export function ItemCard({
   fold,
   edit,
   note,
+  body,
   className = "",
   as: Root = "div",
   children,
@@ -266,6 +273,7 @@ export function ItemCard({
   fold?: { open: boolean; onToggle: () => void };
   edit?: { editing: boolean; onToggle: () => void; onRemove: () => void; fields: ReactNode };
   note?: { shown: boolean; onToggle: () => void; field: ReactNode };
+  body?: ReactNode;
   className?: string;
   as?: "div" | "li";
   children?: ReactNode;
@@ -336,6 +344,7 @@ export function ItemCard({
               {uses && <p className="equipment-effect">{uses}</p>}
             </div>
           )}
+          {body}
           {note && (
             <div className="sf-item-note-line">
               {/* Note, a pen and its label, opening the notes field at its right */}
@@ -352,6 +361,43 @@ export function ItemCard({
       )}
       {children}
     </Root>
+  );
+}
+
+/**
+ * A Chassis card: the body an AI Core inhabits, an Item card that holds part
+ * of a character sheet. Its top line and chips are an Item card's (its
+ * armor as a resistances badge, through `stock`); open, under its
+ * description, its Physical core and focus stats as a stat block, then the
+ * Traits it gives whoever inhabits it, as Trait cards (`traits`). An AI
+ * Core has no Physical stats of its own: its chassis's are its.
+ *
+ * physical  The Physical core stat and its focus stats.
+ * traits    Trait cards.
+ * Everything else is ItemCard's.
+ */
+export function ChassisCard({
+  physical,
+  traits,
+  className = "",
+  ...item
+}: Omit<Parameters<typeof ItemCard>[0], "body"> & { physical: Omit<BlockGroup, "group">; traits?: ReactNode }) {
+  return (
+    <ItemCard
+      {...item}
+      className={`sf-chassis-card${className ? ` ${className}` : ""}`}
+      body={
+        <div className="sf-chassis">
+          <StatBlock groups={[{ group: "physical", ...physical }]} />
+          {traits && (
+            <div className="sf-chassis-traits">
+              <h5 className="sf-chassis-label">Traits</h5>
+              {traits}
+            </div>
+          )}
+        </div>
+      }
+    />
   );
 }
 
