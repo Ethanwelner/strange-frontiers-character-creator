@@ -439,6 +439,7 @@ export function ItemCard({
  *
  * physical  The Physical core stat and its focus stats.
  * hp        Its HP now, when it's taken damage; full without it.
+ * hpBonus   More max HP from its Traits, like Reinforced's +10.
  * onHpChange  Keeps its HP elsewhere (Player Tools); without it the card
  *           keeps its own as its − and + change it.
  * attacks   Item cards.
@@ -448,6 +449,7 @@ export function ItemCard({
 export function ChassisCard({
   physical,
   hp,
+  hpBonus = 0,
   onHpChange,
   attacks,
   traits,
@@ -456,11 +458,12 @@ export function ChassisCard({
 }: Omit<Parameters<typeof ItemCard>[0], "body" | "badges" | "resistsInChips"> & {
   physical: Omit<BlockGroup, "group">;
   hp?: number;
+  hpBonus?: number;
   onHpChange?: (hp: number) => void;
   attacks?: ReactNode;
   traits?: ReactNode;
 }) {
-  const maxHp = BASE_HP + physical.stats.reduce((sum, s) => sum + s.value, 0);
+  const maxHp = BASE_HP + physical.stats.reduce((sum, s) => sum + s.value, 0) + hpBonus;
   return (
     <ItemCard
       {...item}
