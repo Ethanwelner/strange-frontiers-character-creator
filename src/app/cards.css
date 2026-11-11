@@ -645,11 +645,9 @@
     }
 }
 
-/* The chevron (fold), a little apart from the rest, pointing up while open.
-   It's the only place that opens and closes the card. */
+/* The chevron (fold), pointing up while open. It's the only place that
+   opens and closes the card. */
 .sf-item-icon.sf-item-expand {
-    margin-left: 4px;
-
     svg {
         width: 12px;
         height: 8px;
