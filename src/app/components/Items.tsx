@@ -3,7 +3,7 @@ import { Popup } from "./popup.js";
 import { Effect, Icon, Sign, title } from "./ui.js";
 import { ChassisCard, ItemCard, TraitCard, traitCardKind } from "./cards.js";
 import { content, itemById, traitById } from "../content.js";
-import { STAT_CAP, STAT_GROUPS, type StatId } from "../../schema/index.js";
+import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { BASE_HP, type BuildSummary } from "../../engine/validate.js";
 import { kitCostOf } from "../../engine/wealth.js";
 
@@ -35,7 +35,8 @@ function chassisParts(stock: StockItem) {
   return {
     // Its full HP, as the engine works them out for an AI Core inhabiting it
     maxHp: BASE_HP + c.stats.endurance + c.stats.power + c.stats.grace + traits.reduce((n, t) => n + (t.resources.hp ?? 0), 0),
-    physical: { core: c.core, stats: STAT_GROUPS.physical.map((s: StatId) => ({ id: s, value: c.stats[s as keyof typeof c.stats], bonus: 0, max: STAT_CAP })) },
+    // A chassis's stats are fixed: no slot past them is open
+    physical: { core: c.core, stats: STAT_GROUPS.physical.map((s: StatId) => ({ id: s, value: c.stats[s as keyof typeof c.stats], bonus: 0, max: c.stats[s as keyof typeof c.stats] })) },
     hpBonus: traits.reduce((n, t) => n + (t.resources.hp ?? 0), 0),
     attacks: c.attacks.length
       ? c.attacks.flatMap((id) => {

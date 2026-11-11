@@ -1,7 +1,7 @@
 import { useRef, type ReactNode } from "react";
 import type { StatGroup } from "../../engine/build.js";
 import { MP_PER_MAGIC, type BuildResult } from "../../engine/validate.js";
-import { STAT_CAP, STAT_GROUPS, type StatId } from "../../schema/index.js";
+import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { Button } from "./Button.js";
 import { coreStatsShown } from "../check.js";
 import { content } from "../content.js";
@@ -121,8 +121,8 @@ export function CoreBar({ bonus = 0, value }: { bonus?: number; value: number })
 // A character's stats from its check, as a sheet shows them: the core stats
 // it has or can level, and each focus stat with the Kind's bonus and any
 // free bonus points placed counted as bonus points. An AI Core's Physical
-// stats are its inhabited chassis's, drawn against the usual cap of 20
-// rather than its own maximums of 0.
+// stats are its inhabited chassis's, with no room past them: no Level can
+// raise them.
 export function sheetStatGroups(draft: Draft, result: BuildResult): BlockGroup[] {
   const base = baseStats(draft);
   const summary = result.summary;
@@ -131,7 +131,9 @@ export function sheetStatGroups(draft: Draft, result: BuildResult): BlockGroup[]
     core: summary?.coreStats[g] ?? draft.core[g],
     bonus: summary?.coreBonus[g] ?? 0,
     stats: STAT_GROUPS[g].map((s: StatId) => {
-      if (summary?.chassis && g === "physical") return { id: s, value: summary.stats[s], bonus: 0, max: STAT_CAP };
+      // Points can't go into them, so past the chassis's numbers the slots
+      // are unavailable, as an AI Core's own Physical slots are
+      if (summary?.chassis && g === "physical") return { id: s, value: summary.stats[s], bonus: 0, max: summary.stats[s] };
       const bonus = (base?.[s]?.bonus ?? 0) + (draft.startPoints?.[s] ?? 0);
       return { id: s, value: summary?.stats[s] ?? bonus, bonus, max: base?.[s]?.max ?? 0 };
     }),
