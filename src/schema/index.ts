@@ -97,6 +97,11 @@ export const Kind = BaseEntry.extend({
   // How far the Kind moves in a full Movement Action during an Incident, as
   // the Sheet words it, like "10 m" (the default) or "-" for a bodiless AI Core.
   movement: z.string().optional(),
+  // A core apart from the body, like the AI Core's Armored Core: an item with
+  // its own HP, destroyed separately from its chassis. A Kind with a core
+  // inhabits a chassis (an Item with `chassis`), which gives it its Physical
+  // stats, HP, Attacks and Traits.
+  core: z.object({ hp: z.number().int().min(1) }).optional(),
 });
 export type Kind = z.infer<typeof Kind>;
 
@@ -203,10 +208,24 @@ export const Trait = BaseEntry.extend({
 export type Trait = z.infer<typeof Trait>;
 
 // The creator's rough item categories, as the sheet's Items column sorts them.
-export const ITEM_CATEGORIES = ["weapon", "armor", "gear", "consumable", "currency", "other"] as const;
+export const ITEM_CATEGORIES = ["weapon", "armor", "gear", "consumable", "currency", "chassis", "other"] as const;
 
 // The site's Items page categories.
-export const ItemType = z.enum(["weapon", "wearable", "equipment", "structure", "vehicle", "animal", "misc"]);
+export const ItemType = z.enum(["weapon", "wearable", "equipment", "structure", "vehicle", "animal", "chassis", "misc"]);
+
+// The body an AI Core inhabits, from the Sheet's Chassis tab: its Physical
+// core stat and focus stats (core × 3 points), how far it moves, its built-in
+// Attacks (stock items, like natural weapons) and the Traits it gives whoever
+// inhabits it. Its HP are a character's: 10 plus its Physical focus stats,
+// plus its Traits' HP, like Reinforced's.
+export const Chassis = z.object({
+  core: z.number().int().min(0),
+  stats: z.object({ endurance: z.number().int().min(0).max(STAT_CAP), power: z.number().int().min(0).max(STAT_CAP), grace: z.number().int().min(0).max(STAT_CAP) }),
+  movement: z.string().optional(),
+  attacks: z.array(Id).default([]),
+  traits: z.array(Id).default([]),
+});
+export type Chassis = z.infer<typeof Chassis>;
 
 // A stock item, from the Sheet's Items tab. No item needs a Trait: a related
 // Trait only removes the penalty for unfamiliarity.
@@ -244,5 +263,7 @@ export const Item = BaseEntry.extend({
   value: z.number().int().min(0).optional(),
   currency: z.string().optional(),
   notes: z.string().optional(),
+  // A chassis: equipped, an AI Core inhabits it.
+  chassis: Chassis.optional(),
 });
 export type Item = z.infer<typeof Item>;

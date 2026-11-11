@@ -1,0 +1,14 @@
+id: mounted-machine-gun
+name: "Mounted Machine Gun"
+status: draft
+plane: earth
+summary: "A heavy automatic gun on a turret in the frame's body. It can't be taken off or disarmed."
+tags: [ranged, firearm, built-in, chassis]
+type: weapon
+category: weapon
+damage: "7 Piercing"
+attackType: "Ranged"
+maxRange: "600 m"
+attackStat: "Grace"
+reload: "Full"
+notes: "Built into the Combat Walker Chassis; the Machine Gun's numbers."

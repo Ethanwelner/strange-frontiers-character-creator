@@ -1,8 +1,9 @@
 import { useState, type ReactNode } from "react";
 import { Popup } from "./popup.js";
-import { Sign, title } from "./ui.js";
-import { ItemCard } from "./cards.js";
-import { content, itemById } from "../content.js";
+import { Effect, Sign, title } from "./ui.js";
+import { ChassisCard, ItemCard, TraitCard, traitCardKind } from "./cards.js";
+import { content, itemById, traitById } from "../content.js";
+import { STAT_CAP, STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { ITEM_CATEGORIES, stockItemNamed, withItem, type Item, type ItemCategory } from "../items.js";
 import type { Item as StockItem } from "../../schema/index.js";
 import { Button } from "./Button.js";
@@ -11,10 +12,37 @@ import { SheetTitle } from "./sheet-layout.js";
 // Stock items to suggest while typing a name, money left out until wealth has rules.
 // Natural weapons a Trait grants, like a Haymaker, come with the Trait rather
 // than being picked up, so they aren't stock items. The universal ones every
-// character has, Fists and Kick, are, for a player who wants them listed.
+// character has, Fists and Kick, are, for a player who wants them listed. A
+// chassis's built-in weapons come with the chassis. Chassis are free for now,
+// like every item, until wealth has rules.
 const STOCK = content.items
-  .filter((i) => i.category !== "currency" && (!i.tags.includes("natural weapon") || i.tags.includes("universal")))
+  .filter((i) => i.category !== "currency" && !i.tags.includes("built-in") && (!i.tags.includes("natural weapon") || i.tags.includes("universal")))
   .sort((a, b) => a.name.localeCompare(b.name));
+
+// A chassis's parts from content, for its card: its Physical stats, its
+// built-in Attacks as item cards, the Traits it gives as Trait cards, and
+// the HP those Traits add, like Reinforced's
+function chassisParts(stock: StockItem) {
+  const c = stock.chassis!;
+  const traits = c.traits.flatMap((id) => traitById.get(id) ?? []);
+  return {
+    physical: { core: c.core, stats: STAT_GROUPS.physical.map((s: StatId) => ({ id: s, value: c.stats[s as keyof typeof c.stats], bonus: 0, max: STAT_CAP })) },
+    hpBonus: traits.reduce((n, t) => n + (t.resources.hp ?? 0), 0),
+    attacks: c.attacks.length
+      ? c.attacks.flatMap((id) => {
+          const a = itemById.get(id);
+          return a ? [<ItemCard key={id} name={a.name} stock={a} category={a.category} />] : [];
+        })
+      : undefined,
+    traits: traits.length
+      ? traits.map((t) => (
+          <TraitCard key={t.id} kind={traitCardKind(t)} name={t.name} plane={t.plane}>
+            <Effect text={t.effect} />
+          </TraitCard>
+        ))
+      : undefined,
+  };
+}
 
 // Add item's picker, like the Traits step: a tab per category, each with a
 // search, over the game's items as the inventory's item cards. A large
@@ -77,8 +105,8 @@ function ItemPicker({ onAdd, custom }: { onAdd: (picked: { stock: StockItem; qty
             const open = opened.has(i.id);
             return (
               <li key={i.id} className={`item-pick-row${selected ? " selected" : ""}`}>
-                {/* The inventory's item card, without Equip, which waits until the character has it */}
-                <ItemCard
+                {/* The inventory's item card (a chassis's, for a chassis), without Equip, which waits until the character has it */}
+                <ItemOrChassisCard
                   className="item-pick"
                   name={i.name}
                   stock={i}
@@ -99,7 +127,7 @@ function ItemPicker({ onAdd, custom }: { onAdd: (picked: { stock: StockItem; qty
                       </Button>
                     </div>
                   )}
-                </ItemCard>
+                </ItemOrChassisCard>
                 {/* The large checkbox that picks it */}
                 <input type="checkbox" className="item-pick-check" aria-label={`Add ${i.name}`} checked={selected} onChange={() => toggle(i.id)} />
               </li>
@@ -131,7 +159,28 @@ function ItemPicker({ onAdd, custom }: { onAdd: (picked: { stock: StockItem; qty
 // the Character Creator and on Player Tools' Tracker. A name the game's stock
 // items know (content/items) adds that item, with its category, description
 // and details; anything else is what the player writes.
-export function Items({ items, onChange }: { items: Item[]; onChange: (items: Item[]) => void }) {
+// An item's card, or for a chassis its ChassisCard: the same top line and
+// options, holding its Physical stats, Attacks and Traits. `hp` is the
+// inhabited chassis's live HP, in Player Tools.
+function ItemOrChassisCard({ hp, ...props }: Parameters<typeof ItemCard>[0] & { hp?: { value?: number; onChange?: (hp: number) => void } }) {
+  if (!props.stock?.chassis) return <ItemCard {...props} />;
+  const { body: _body, badges: _badges, resistsInChips: _r, ...item } = props;
+  return <ChassisCard {...item} {...chassisParts(props.stock)} hp={hp?.value} onHpChange={hp?.onChange} />;
+}
+
+// The character's inventory. An AI Core inhabits the one chassis it has
+// equipped: equipping another moves it there. `inhabitedHp` is that
+// chassis's HP, live in Player Tools (the character's HP, which the chassis
+// sets); without it the card keeps its own.
+export function Items({
+  items,
+  onChange,
+  inhabitedHp,
+}: {
+  items: Item[];
+  onChange: (items: Item[]) => void;
+  inhabitedHp?: { value?: number; onChange?: (hp: number) => void };
+}) {
   // Add item's popup: the game's items to pick from, or a custom item the
   // player names and sorts
   const [name, setName] = useState("");
@@ -168,6 +217,11 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
   };
 
   const update = (item: Item, change: Partial<Item>) => onChange(items.map((i) => (i === item ? { ...i, ...change } : i)));
+  const isChassis = (i: Item) => Boolean(i.item && itemById.get(i.item)?.chassis);
+  // Equipping a chassis moves the AI Core into it, out of any other
+  const equip = (item: Item, equipped: boolean) =>
+    onChange(items.map((i) => (i === item ? { ...i, equipped } : equipped && isChassis(item) && isChassis(i) ? { ...i, equipped: false } : i)));
+  const inhabited = items.find((i) => i.equipped && isChassis(i));
   const remove = (item: Item) => onChange(items.filter((i) => i !== item));
   const countOf = (n: string) => Math.max(1, Math.round(Number(n)) || 1);
   // The items checked in the picker, as the game describes them
@@ -252,14 +306,15 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
           {items.map((item) => {
             const stock = item.item ? itemById.get(item.item) : undefined;
             return (
-              <ItemCard
+              <ItemOrChassisCard
                 key={item.id}
                 as="li"
                 name={item.name}
                 stock={stock}
                 category={item.category}
                 count={item.qty}
-                equip={{ checked: item.equipped, onChange: (equipped) => update(item, { equipped }) }}
+                hp={item === inhabited ? inhabitedHp : undefined}
+                equip={{ checked: item.equipped, onChange: (equipped) => equip(item, equipped) }}
                 fold={{ open: expanded.has(item.id), onToggle: () => toggleExpanded(item) }}
                 edit={{
                   editing: editing.has(item.id),

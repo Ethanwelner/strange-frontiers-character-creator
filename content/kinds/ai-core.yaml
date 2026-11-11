@@ -31,3 +31,5 @@ stats:
   intuition: { bonus: 3, max: 20 }
   memory: { bonus: 3, max: 20 }
 movement: "-"
+# Armored Core: the core is an item with its own 10 HP, apart from its chassis.
+core: { hp: 10 }

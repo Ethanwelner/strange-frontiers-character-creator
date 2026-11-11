@@ -1,0 +1,15 @@
+id: courier-drone-chassis
+name: "Courier Drone Chassis"
+status: placeholder
+plane: earth
+summary: "A light, fast frame on four rotors, for carrying messages and small parcels."
+tags: [chassis, ai-core, drone]
+type: chassis
+category: chassis
+resistances: "1 Blunt"
+value: 30000
+currency: "ERC"
+chassis:
+  core: 2
+  stats: { endurance: 1, power: 1, grace: 4 }
+  traits: [mechanical, non-humanoid, flight]

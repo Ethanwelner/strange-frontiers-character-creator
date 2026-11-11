@@ -50,6 +50,14 @@ for (const trait of traits) {
 for (const item of items) {
   if (item.value !== undefined && !item.currency) errors.push(`items/${item.id}: value ${item.value} has no currency`);
   if (item.damage && !parseDamage(item.damage)) errors.push(`items/${item.id}: damage "${item.damage}" isn't amounts and damage types`);
+  if (item.chassis) {
+    const c = item.chassis;
+    const points = c.stats.endurance + c.stats.power + c.stats.grace;
+    if (points !== c.core * 3) errors.push(`items/${item.id}: chassis focus stats add up to ${points}; Physical ${c.core} gives ${c.core * 3}`);
+    for (const ref of c.traits) if (!traitIds.has(ref)) errors.push(`items/${item.id}: chassis Trait "${ref}" doesn't exist`);
+    for (const ref of c.attacks) if (!items.some((i) => i.id === ref)) errors.push(`items/${item.id}: chassis Attack "${ref}" isn't an item`);
+    if (item.category !== "chassis") errors.push(`items/${item.id}: a chassis needs category chassis`);
+  }
 }
 
 console.log(`${kinds.length} Kinds, ${packages.length} packages, ${traits.length} Traits, ${items.length} items`);
