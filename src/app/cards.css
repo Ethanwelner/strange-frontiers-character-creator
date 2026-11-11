@@ -916,6 +916,18 @@
     }
 }
 
+/* HP or MP with − and + (ItemResource): the name, −, the value over its
+   max, +, centered on one line like the sheet's trackers, the buttons the
+   smallest round ones */
+.equipment-resource {
+    align-items: center;
+    flex: none;
+
+    .sf-btn {
+        flex: none;
+    }
+}
+
 /* A damage formula's total, muted after it */
 .sf-damage-total {
     color: #a29d82;
