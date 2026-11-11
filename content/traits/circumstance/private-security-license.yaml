@@ -1,0 +1,13 @@
+id: private-security-license
+name: "Private Security License"
+status: draft
+plane: earth
+summary: "Licensed to work private security."
+tags: [security, license, law, private-security]
+category: circumstance
+conveyed: true
+choices:
+  - choose: 1
+    from: detail
+    note: "What the license covers"
+effect: "This character holds a private security license, which lets it do the work the license covers, like carrying weapons or detaining people on a client's property, wherever the license is recognized."

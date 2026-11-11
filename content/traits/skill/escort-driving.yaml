@@ -1,0 +1,11 @@
+id: escort-driving
+name: "Escort Driving"
+status: draft
+plane: any
+summary: "Driving to keep a passenger alive."
+tags: [security, driving, bodyguard, private-security]
+category: skill
+ranked: true
+minStats: { grace: 3, intuition: 3 }
+prerequisites: [pilot-ground-vehicle]
+effect: "Rank *5 added to Skill Check rolls involving evasive driving or pursuit while carrying a passenger this character is protecting."

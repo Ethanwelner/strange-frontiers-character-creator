@@ -1,0 +1,10 @@
+id: executive-protection
+name: "Executive Protection"
+status: draft
+plane: any
+summary: "How protection details are planned and run."
+tags: [security, bodyguard, private-security]
+category: knowledge
+ranked: true
+minStats: { memory: 3, intuition: 3 }
+effect: "This character has knowledge of executive protection and can be assumed to be familiar with advance work, safe routes, venue sweeps and how a protection detail is run."

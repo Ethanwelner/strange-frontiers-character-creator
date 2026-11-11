@@ -1,0 +1,10 @@
+id: crowd-control
+name: "Crowd Control"
+status: draft
+plane: any
+summary: "Moving, holding back and clearing crowds."
+tags: [security, police, social, private-security]
+category: skill
+ranked: true
+minStats: { demeanor: 4, persuasion: 2 }
+effect: "This character is capable of moving, holding back or clearing a calm crowd without a Skill Check. Rank *5 added to Skill Check rolls involving controlling a crowd that isn't calm."

@@ -1,0 +1,12 @@
+id: wielder-stun-baton
+name: "Wielder: Stun Baton"
+status: draft
+plane: earth
+summary: "Fighting with, and maintaining, a stun baton."
+tags: [combat, melee, nonlethal, police, private-security]
+category: skill
+list: wielder
+ranked: true
+minStats: { power: 2, grace: 2 }
+effect: "- Rank *5 added to skill check rolls involving a Stun Baton.\n- +3 to Attack Rolls made with a Stun Baton.\n- This character is capable of performing the basic tasks of maintaining a Stun Baton without a skill check."
+modifiers: "Attack Rolls +3 (Stun Baton)"

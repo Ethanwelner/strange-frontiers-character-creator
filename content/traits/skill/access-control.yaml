@@ -1,0 +1,10 @@
+id: access-control
+name: "Access Control"
+status: draft
+plane: any
+summary: "Checking who gets through the door."
+tags: [security, guard, checkpoint, private-security]
+category: skill
+ranked: true
+minStats: { memory: 3, demeanor: 3 }
+effect: "This character is capable of checking IDs, passes and credentials without a Skill Check. Rank *5 added to Skill Check rolls involving spotting forged documents, false credentials or a Cover Identity."
