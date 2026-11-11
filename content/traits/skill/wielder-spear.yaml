@@ -8,5 +8,5 @@ category: skill
 list: wielder
 ranked: true
 minStats: { grace: 3, power: 3, endurance: 2 }
-effect: "- Rank *5 added to skill check rolls involving a Spear.\n- +3 to Attack Rolls made with a Spear, at any Rank.\n- This character is capable of performing the basic tasks of maintaining a Spear without a skill check."
+effect: "- Rank *5 added to skill check rolls involving a Spear.\n- +3 to Attack Rolls made with a Spear.\n- This character is capable of performing the basic tasks of maintaining a Spear without a skill check."
 modifiers: "Attack Rolls +3 (Spear)"

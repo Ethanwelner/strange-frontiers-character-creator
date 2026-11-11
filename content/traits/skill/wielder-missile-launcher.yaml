@@ -8,5 +8,5 @@ category: skill
 list: wielder
 ranked: true
 minStats: { intuition: 3, logic: 2, endurance: 3 }
-effect: "- Rank *5 added to skill check rolls involving a Missile Launcher.\n- +3 to Attack Rolls made with a Missile Launcher, at any Rank.\n- This character is capable of performing the basic tasks of maintaining a Missile Launcher without a skill check."
+effect: "- Rank *5 added to skill check rolls involving a Missile Launcher.\n- +3 to Attack Rolls made with a Missile Launcher.\n- This character is capable of performing the basic tasks of maintaining a Missile Launcher without a skill check."
 modifiers: "Attack Rolls +3 (Missile Launcher)"
