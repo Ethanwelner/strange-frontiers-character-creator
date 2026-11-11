@@ -1750,24 +1750,6 @@
     color: var(--frontiers-mp);
   }
 
-  /* At creation, the Items column's Kit Points: what's left of what Wealth
-     gives, the dearest Kit Cost allowed and the cash the rest becomes, small
-     and soft under the title, red once the items cost too much */
-  .sf-kit-line {
-    margin: 0 0 12px;
-    color: var(--panel-soft, #b3b3b3);
-    font-size: .8125rem;
-
-    strong {
-      color: var(--panel-text, #e7e8e9);
-      font-weight: 600;
-    }
-
-    &.is-over strong {
-      color: var(--portfolio-red, #e2574c);
-    }
-  }
-
   /* Money, by currency, as badges along the Items title's line before Add
      item, in the item cards' olive: coins, the amount in Bebas, the
      currency. Clicked, a badge becomes a field for a change or a total. */
@@ -1806,6 +1788,16 @@
 
     &:is(:hover, :focus-visible) {
       border-color: #b5ae86;
+    }
+  }
+
+  /* Wealth, a badge like the cash's but not a button: its rating, and at
+     creation the Kit Points left, red once the items cost too much */
+  .sf-wealth-badge {
+    cursor: help;
+
+    &.is-over .sf-wealth-kit {
+      color: var(--portfolio-red, #e2574c);
     }
   }
 

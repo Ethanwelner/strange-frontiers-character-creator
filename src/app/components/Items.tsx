@@ -229,6 +229,34 @@ function CashBadges({ cash, currency, onChange }: { cash: Record<string, number>
   );
 }
 
+// Wealth as a badge in the cash badges' style, before them: the rating, and
+// at creation (`kit`) the Kit Points left of what it gives, red once the
+// items cost too much. Its title says the rest: the dearest Kit Cost allowed,
+// the cash the points left become in play, and any free chassis.
+function WealthBadge({ wealth, kit }: { wealth: number; kit?: Kit }) {
+  const sign = wealth > 0 ? `+${wealth}` : `${wealth}`;
+  const over = kit && kit.spent > kit.budget;
+  const details = kit
+    ? [
+        `Wealth ${sign}: ${kit.budget} Kit Points for starting items, each up to Kit Cost ${kit.ceiling}`,
+        `${kit.budget - kit.spent} left`,
+        ...(kit.left > 0 ? [`the rest becomes ${kit.cash.amount.toLocaleString("en-US")} ${kit.cash.currency} in play`] : []),
+        ...(kit.freeChassis ? [`${itemById.get(kit.freeChassis)?.name ?? "a chassis"} free`] : []),
+      ].join("; ")
+    : `Wealth ${sign}`;
+  return (
+    <span className={`sf-cash-badge sf-wealth-badge${over ? " is-over" : ""}`} title={details} aria-label={details}>
+      <span className="sf-cash-amount">{sign}</span> Wealth
+      {kit && (
+        <span className="sf-wealth-kit">
+          {" "}
+          · <span className="sf-cash-amount">{kit.budget - kit.spent}</span>/{kit.budget} Kit
+        </span>
+      )}
+    </span>
+  );
+}
+
 // An item's card, or for a chassis its ChassisCard: the same top line and
 // options, holding its Physical stats, Attacks and Traits. `hp` is a
 // chassis's HP, kept on the character's item; a picker's card keeps its own.
@@ -247,9 +275,8 @@ function ItemOrChassisCard({ hp, ...props }: Parameters<typeof ItemCard>[0] & { 
 // the inhabited one's are the character's HP (Player Tools' tracker).
 //
 // At creation (`kit`, from the check), each stock item shows its Kit Cost,
-// and the title's line says how many Kit Points are left of what Wealth
-// gives, the dearest Kit Cost it allows, and the starting cash the rest
-// becomes in play.
+// and the Wealth badge by the title says how many Kit Points are left of
+// what Wealth gives (WealthBadge).
 //
 // Money is a badge by the title (CashBadges), not an item: `cash`, in
 // `currency` first (the Origin's), changed with `onCash`.
@@ -260,6 +287,7 @@ export function Items({
   cash,
   currency = "ERC",
   onCash,
+  wealth,
 }: {
   items: Item[];
   onChange: (items: Item[]) => void;
@@ -267,6 +295,7 @@ export function Items({
   cash?: Record<string, number>;
   currency?: string;
   onCash?: (cash: Record<string, number>) => void;
+  wealth?: number;
 }) {
   // Add item's popup: the game's items to pick from, or a custom item the
   // player names and sorts
@@ -346,6 +375,7 @@ export function Items({
         as="h4"
         aside={
           <>
+            {wealth !== undefined && <WealthBadge wealth={wealth} kit={kit} />}
             {onCash && <CashBadges cash={cash ?? {}} currency={currency} onChange={(c, n) => onCash({ ...cash, [c]: n })} />}
             <Button size="small" tone="item" className="sf-sheet-add" aria-label="Add item" onClick={() => setAdding(true)}>
               Add<span className="sf-sheet-add-noun"> item</span>
@@ -355,16 +385,6 @@ export function Items({
       >
         Items
       </SheetTitle>
-      {kit && (
-        <p className={`sf-kit-line${kit.spent > kit.budget ? " is-over" : ""}`}>
-          <strong>
-            {kit.budget - kit.spent} of {kit.budget} Kit Points left
-          </strong>
-          {" "}· items up to Kit Cost {kit.ceiling}
-          {kit.left > 0 && ` · the rest becomes ${kit.cash.amount.toLocaleString("en-US")} ${kit.cash.currency} in play`}
-          {kit.freeChassis && ` · ${itemById.get(kit.freeChassis)?.name ?? "a chassis"} free`}
-        </p>
-      )}
 
       {adding && (
         <Popup label="Add items" onClose={() => setAdding(false)} size="wide" scroll="inner" className="sheet-add-popup item-picker-popup">

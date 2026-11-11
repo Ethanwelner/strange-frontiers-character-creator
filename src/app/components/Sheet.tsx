@@ -288,7 +288,6 @@ export function Sheet({
         }
         stats={stats ?? <StatBlock max={rules.statMax} groups={sheetStatGroups(draft, result)} />}
         movement={summary?.movement}
-        wealth={summary?.wealth}
         resistances={<Resistances items={items} held={inEffect} />}
         conditions={
           <Conditions conditions={conditions} hp={hp ?? summary?.resources.hp ?? 0} maxHp={summary?.resources.hp ?? 0} onChange={onConditions} />
@@ -299,6 +298,7 @@ export function Sheet({
             onChange={onItems}
             kit={context === "build" ? summary?.kit : undefined}
             cash={draft.cash}
+            wealth={summary?.wealth}
             currency={summary?.kit.cash.currency}
             onCash={onCash}
           />
