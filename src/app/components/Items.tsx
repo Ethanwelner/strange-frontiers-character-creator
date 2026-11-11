@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { Popup } from "./popup.js";
-import { Effect, Sign, title } from "./ui.js";
+import { Effect, Icon, Sign, title } from "./ui.js";
 import { ChassisCard, ItemCard, TraitCard, traitCardKind } from "./cards.js";
 import { content, itemById, traitById } from "../content.js";
 import { STAT_CAP, STAT_GROUPS, type StatId } from "../../schema/index.js";
@@ -171,6 +171,64 @@ function ItemPicker({ onAdd, custom, kit }: { onAdd: (picked: { stock: StockItem
 // the Character Creator and on Player Tools' Tracker. A name the game's stock
 // items know (content/items) adds that item, with its category, description
 // and details; anything else is what the player writes.
+// Money, by currency, as badges at the right of the Items title, before Add
+// item: coins, the amount and the currency. The character's own currency
+// always shows, even at 0; others once it holds any. Clicking one opens a
+// field that takes a change ("+50", "-20") or a new total ("300"), applied
+// with Enter or by leaving it; Escape puts it away. Money can't go below 0.
+function CashBadges({ cash, currency, onChange }: { cash: Record<string, number>; currency: string; onChange: (currency: string, amount: number) => void }) {
+  const [editing, setEditing] = useState<string>();
+  const [text, setText] = useState("");
+  const shown = [currency, ...Object.keys(cash).filter((c) => c !== currency && cash[c])];
+  const apply = (c: string) => {
+    const m = text.trim().replace(/[−–]/g, "-").match(/^([+-])?\s*(\d[\d,]*)$/);
+    if (m) {
+      const n = Number(m[2]!.replace(/,/g, ""));
+      const now = cash[c] ?? 0;
+      onChange(c, Math.max(0, m[1] === "+" ? now + n : m[1] === "-" ? now - n : n));
+    }
+    setEditing(undefined);
+  };
+  return (
+    <span className="sf-cash">
+      {shown.map((c) =>
+        editing === c ? (
+          <input
+            key={c}
+            type="text"
+            inputMode="numeric"
+            className="sf-cash-field"
+            aria-label={`Change ${c}: +50, -20 or a new total`}
+            placeholder={`+50, −20 or 300 ${c}`}
+            autoFocus
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") apply(c);
+              if (e.key === "Escape") setEditing(undefined);
+            }}
+            onBlur={() => apply(c)}
+          />
+        ) : (
+          <button
+            key={c}
+            type="button"
+            className="sf-cash-badge"
+            title={`${c}: click to add, spend or set`}
+            onClick={() => {
+              setText("");
+              setEditing(c);
+            }}
+          >
+            <Icon name="coins" />
+            <span className="sf-cash-amount">{(cash[c] ?? 0).toLocaleString("en-US")}</span> {c}
+          </button>
+        ),
+      )}
+    </span>
+  );
+}
+
 // An item's card, or for a chassis its ChassisCard: the same top line and
 // options, holding its Physical stats, Attacks and Traits. `hp` is a
 // chassis's HP, kept on the character's item; a picker's card keeps its own.
@@ -192,7 +250,24 @@ function ItemOrChassisCard({ hp, ...props }: Parameters<typeof ItemCard>[0] & { 
 // and the title's line says how many Kit Points are left of what Wealth
 // gives, the dearest Kit Cost it allows, and the starting cash the rest
 // becomes in play.
-export function Items({ items, onChange, kit }: { items: Item[]; onChange: (items: Item[]) => void; kit?: Kit }) {
+//
+// Money is a badge by the title (CashBadges), not an item: `cash`, in
+// `currency` first (the Origin's), changed with `onCash`.
+export function Items({
+  items,
+  onChange,
+  kit,
+  cash,
+  currency = "ERC",
+  onCash,
+}: {
+  items: Item[];
+  onChange: (items: Item[]) => void;
+  kit?: Kit;
+  cash?: Record<string, number>;
+  currency?: string;
+  onCash?: (cash: Record<string, number>) => void;
+}) {
   // Add item's popup: the game's items to pick from, or a custom item the
   // player names and sorts
   const [name, setName] = useState("");
@@ -270,9 +345,12 @@ export function Items({ items, onChange, kit }: { items: Item[]; onChange: (item
       <SheetTitle
         as="h4"
         aside={
-          <Button size="small" tone="item" className="sf-sheet-add" aria-label="Add item" onClick={() => setAdding(true)}>
-            Add<span className="sf-sheet-add-noun"> item</span>
-          </Button>
+          <>
+            {onCash && <CashBadges cash={cash ?? {}} currency={currency} onChange={(c, n) => onCash({ ...cash, [c]: n })} />}
+            <Button size="small" tone="item" className="sf-sheet-add" aria-label="Add item" onClick={() => setAdding(true)}>
+              Add<span className="sf-sheet-add-noun"> item</span>
+            </Button>
+          </>
         }
       >
         Items

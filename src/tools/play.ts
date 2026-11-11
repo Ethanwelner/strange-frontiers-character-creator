@@ -5,6 +5,7 @@
 import type { Content } from "../engine/parse.js";
 import { bonusPointsOf, FOCUS_POINTS_PER_LEVEL, validateBuild, type BuildResult } from "../engine/validate.js";
 import { STAT_GROUPS } from "../schema/index.js";
+import { CURRENCY_OF_ITEM } from "../engine/wealth.js";
 import { fromBuild, toBuild, type Draft } from "../app/draft.js";
 import { readItems, withItem, withoutItem, type Item } from "../app/items.js";
 import { readConditions, withCondition, withoutCondition, type HeldCondition } from "../app/conditions.js";
@@ -133,9 +134,24 @@ export function withStartingCash(play: Play, content: Content): Play {
   const draft = { ...play.draft, kitCashed: true };
   const kit = validateBuild(toBuild({ ...play.draft, items: play.items }), content, { startingLevel: play.draft.level }).summary?.kit;
   if (!kit || kit.cash.amount <= 0) return { ...play, draft };
-  const stock = content.items.find((i) => i.id === (kit.cash.currency === "Luras" ? "luras" : "earth-reserve-credits"));
-  const cash = { ...(stock ? { item: stock.id } : {}), name: stock?.name ?? kit.cash.currency, qty: kit.cash.amount, category: "currency" as const, equipped: false };
-  return { ...play, draft, items: withItem(play.items, cash) };
+  return { ...play, draft: withCash(draft, kit.cash.currency, kit.cash.amount) };
+}
+
+// Money added to (or taken from) a character, by currency
+export function withCash(draft: Draft, currency: string, amount: number): Draft {
+  return { ...draft, cash: { ...draft.cash, [currency]: (draft.cash?.[currency] ?? 0) + amount } };
+}
+
+// Currency a saved session kept as items (before the cash badge) moves into
+// the character's cash.
+function moveCurrency(play: Play): Play {
+  let draft = play.draft;
+  const items = play.items.filter((i) => {
+    const currency = i.item ? CURRENCY_OF_ITEM[i.item] : undefined;
+    if (currency) draft = withCash(draft, currency, i.qty);
+    return !currency;
+  });
+  return items.length === play.items.length ? play : { ...play, draft, items };
 }
 
 // A new session for an imported build: full resources, carrying the build's
@@ -155,13 +171,13 @@ export function load(): Play | undefined {
     if (!raw) return undefined;
     const saved = JSON.parse(raw) as Partial<Play>;
     if (!saved.draft) return undefined;
-    return {
+    return moveCurrency({
       draft: fromBuild(saved.draft),
       current: saved.current && typeof saved.current === "object" ? saved.current : {},
       items: readItems(saved.items),
       conditions: readConditions(saved.conditions),
       chat: Array.isArray(saved.chat) ? saved.chat : [],
-    };
+    });
   } catch {
     return undefined;
   }

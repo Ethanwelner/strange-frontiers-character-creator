@@ -19,6 +19,10 @@ export const ERC_PER: Record<string, number> = { ERC: 1, Luras: 10 };
 // under 100,000, 4 under 1,000,000, and 5 anything dearer.
 const BANDS = [100, 1_000, 10_000, 100_000, 1_000_000];
 
+// Money a character holds, by currency: the stock currency items' ids and
+// the short names the sheet's cash badge uses.
+export const CURRENCY_OF_ITEM: Record<string, string> = { "earth-reserve-credits": "ERC", luras: "Luras", "imperial-dollars": "ID", renminbi: "RMB" };
+
 // An AI Core's first chassis is free up to this Kit Cost.
 export const FREE_CHASSIS_COST = 3;
 

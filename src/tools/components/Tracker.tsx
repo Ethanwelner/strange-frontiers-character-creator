@@ -168,6 +168,7 @@ export function Tracker({
         onDescription={(description) => onChange({ ...play, draft: { ...draft, description } })}
         items={play.items}
         onItems={(items) => onChange({ ...play, items })}
+        onCash={(cash) => onChange({ ...play, draft: { ...play.draft, cash } })}
         conditions={play.conditions}
         onConditions={(conditions) => onChange({ ...play, conditions })}
         hp={currentOf(play, result, "hp")}

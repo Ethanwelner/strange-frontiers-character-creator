@@ -255,6 +255,7 @@ export function App() {
                   onDescription={(description) => setDraft({ ...draft, description })}
                   items={draft.items ?? []}
                   onItems={(items) => setDraft({ ...draft, items })}
+                  onCash={(cash) => setDraft({ ...draft, cash })}
                   conditions={draft.conditions ?? []}
                   onConditions={(conditions) => setDraft({ ...draft, conditions })}
                 />

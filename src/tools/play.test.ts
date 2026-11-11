@@ -24,11 +24,14 @@ describe("a character in play", () => {
     const left = result.summary!.kit;
     const cashed = withStartingCash(play, content);
     expect(cashed.draft.kitCashed).toBe(true);
-    const cash = cashed.items.find((i) => i.category === "currency");
-    expect(cash).toMatchObject({ qty: left.cash.amount, name: expect.stringContaining(left.cash.currency === "Luras" ? "Luras" : "ERC") });
+    expect(cashed.draft.cash).toEqual({ [left.cash.currency]: left.cash.amount });
     // A second time, or after a round trip through a file, nothing more
     expect(withStartingCash(cashed, content)).toBe(cashed);
-    expect(withStartingCash(startPlay(playBuild(cashed)), content).items.filter((i) => i.category === "currency")).toHaveLength(1);
+    expect(withStartingCash(startPlay(playBuild(cashed)), content).draft.cash).toEqual({ [left.cash.currency]: left.cash.amount });
+    // Currency a file kept as items becomes cash
+    const old = startPlay({ ...grosh, items: [{ item: "luras", name: "Luras", qty: 30, category: "currency" }, { item: "rope", name: "Rope", qty: 1 }] });
+    expect(old.draft.cash).toEqual({ Luras: 30 });
+    expect(old.items.map((i) => i.name)).toEqual(["Rope"]);
   });
 
   it("keeps an AI Core's HP on each chassis, so a chassis it left remembers its damage", () => {

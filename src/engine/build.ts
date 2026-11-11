@@ -95,6 +95,9 @@ export const Build = z.object({
   // The Kit Points left at creation became starting cash when the character
   // first went into play. Cosmetic to the rules check.
   kitCashed: z.boolean().optional(),
+  // Money, by currency, like { ERC: 400 }: a badge by the Items title rather
+  // than items. Cosmetic to the rules check.
+  cash: z.record(z.string(), z.number().int()).optional(),
 });
 export type Build = z.infer<typeof Build>;
 export type BuildInput = z.input<typeof Build>;
