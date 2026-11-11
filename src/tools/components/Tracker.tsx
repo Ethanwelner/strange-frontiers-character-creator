@@ -171,7 +171,6 @@ export function Tracker({
         conditions={play.conditions}
         onConditions={(conditions) => onChange({ ...play, conditions })}
         hp={currentOf(play, result, "hp")}
-        onHp={(hp) => set("hp", hp)}
         traitsAction={
           // Add traits, like Items' and Conditions' add buttons; the picks left show under the title
           banked > 0 && (

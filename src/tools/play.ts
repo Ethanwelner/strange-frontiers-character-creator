@@ -63,12 +63,22 @@ export function maxOf(result: BuildResult, r: ResourceKey): number {
 }
 
 // The resources a character has: MP once it has any, core HP for a Kind with
-// a core (the AI Core).
+// a core (the AI Core), and HP only while that Kind is in a chassis: a
+// bodiless AI Core has its core's HP alone.
 export function shownResources(result: BuildResult): ResourceKey[] {
-  return RESOURCES.filter((r) => (r !== "mp" && r !== "core") || maxOf(result, r) > 0);
+  const bodiless = Boolean(result.summary?.coreHp) && !result.summary?.chassis;
+  return RESOURCES.filter((r) => (r === "hp" ? !bodiless : (r !== "mp" && r !== "core") || maxOf(result, r) > 0));
+}
+
+// The item an AI Core inhabits, from the check: its HP are the character's.
+export function inhabitedChassis(play: Play, result: BuildResult): Item | undefined {
+  const id = result.summary?.chassis?.item;
+  return id ? play.items.find((i) => i.equipped && i.item === id) : undefined;
 }
 
 export function currentOf(play: Play, result: BuildResult, r: ResourceKey): number {
+  const chassis = r === "hp" ? inhabitedChassis(play, result) : undefined;
+  if (chassis) return chassis.hp ?? maxOf(result, r);
   return play.current[r] ?? maxOf(result, r);
 }
 
@@ -78,6 +88,12 @@ export function currentOf(play: Play, result: BuildResult, r: ResourceKey): numb
 export function withResource(play: Play, result: BuildResult, r: ResourceKey, value: number): Play {
   const max = maxOf(result, r);
   const v = r === "hp" || r === "core" ? Math.round(value) : Math.max(0, Math.round(value));
+  // An AI Core's HP are its inhabited chassis's, kept on the chassis
+  const chassis = r === "hp" ? inhabitedChassis(play, result) : undefined;
+  if (chassis) {
+    const { hp: _hp, ...rest } = chassis;
+    return { ...play, items: play.items.map((i) => (i === chassis ? (v === max ? rest : { ...rest, hp: v }) : i)) };
+  }
   const current = { ...play.current };
   if (v === max) delete current[r];
   else current[r] = v;

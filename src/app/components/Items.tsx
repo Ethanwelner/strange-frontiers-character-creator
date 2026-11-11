@@ -4,6 +4,7 @@ import { Effect, Sign, title } from "./ui.js";
 import { ChassisCard, ItemCard, TraitCard, traitCardKind } from "./cards.js";
 import { content, itemById, traitById } from "../content.js";
 import { STAT_CAP, STAT_GROUPS, type StatId } from "../../schema/index.js";
+import { BASE_HP } from "../../engine/validate.js";
 import { ITEM_CATEGORIES, stockItemNamed, withItem, type Item, type ItemCategory } from "../items.js";
 import type { Item as StockItem } from "../../schema/index.js";
 import { Button } from "./Button.js";
@@ -26,6 +27,8 @@ function chassisParts(stock: StockItem) {
   const c = stock.chassis!;
   const traits = c.traits.flatMap((id) => traitById.get(id) ?? []);
   return {
+    // Its full HP, as the engine works them out for an AI Core inhabiting it
+    maxHp: BASE_HP + c.stats.endurance + c.stats.power + c.stats.grace + traits.reduce((n, t) => n + (t.resources.hp ?? 0), 0),
     physical: { core: c.core, stats: STAT_GROUPS.physical.map((s: StatId) => ({ id: s, value: c.stats[s as keyof typeof c.stats], bonus: 0, max: STAT_CAP })) },
     hpBonus: traits.reduce((n, t) => n + (t.resources.hp ?? 0), 0),
     attacks: c.attacks.length
@@ -160,27 +163,22 @@ function ItemPicker({ onAdd, custom }: { onAdd: (picked: { stock: StockItem; qty
 // items know (content/items) adds that item, with its category, description
 // and details; anything else is what the player writes.
 // An item's card, or for a chassis its ChassisCard: the same top line and
-// options, holding its Physical stats, Attacks and Traits. `hp` is the
-// inhabited chassis's live HP, in Player Tools.
-function ItemOrChassisCard({ hp, ...props }: Parameters<typeof ItemCard>[0] & { hp?: { value?: number; onChange?: (hp: number) => void } }) {
+// options, holding its Physical stats, Attacks and Traits. `hp` is a
+// chassis's HP, kept on the character's item; a picker's card keeps its own.
+function ItemOrChassisCard({ hp, ...props }: Parameters<typeof ItemCard>[0] & { hp?: { value?: number; onChange: (hp: number | undefined) => void } }) {
   if (!props.stock?.chassis) return <ItemCard {...props} />;
   const { body: _body, badges: _badges, resistsInChips: _r, ...item } = props;
-  return <ChassisCard {...item} {...chassisParts(props.stock)} hp={hp?.value} onHpChange={hp?.onChange} />;
+  const { maxHp, ...parts } = chassisParts(props.stock);
+  // At full, the item stores no HP, so a chassis that gains HP stays full
+  const onHpChange = hp ? (v: number) => hp.onChange(v === maxHp ? undefined : v) : undefined;
+  return <ChassisCard {...item} {...parts} hp={hp?.value} onHpChange={onHpChange} />;
 }
 
 // The character's inventory. An AI Core inhabits the one chassis it has
-// equipped: equipping another moves it there. `inhabitedHp` is that
-// chassis's HP, live in Player Tools (the character's HP, which the chassis
-// sets); without it the card keeps its own.
-export function Items({
-  items,
-  onChange,
-  inhabitedHp,
-}: {
-  items: Item[];
-  onChange: (items: Item[]) => void;
-  inhabitedHp?: { value?: number; onChange?: (hp: number) => void };
-}) {
+// equipped: equipping another moves it there. Each chassis keeps its own HP
+// on the item, so it remembers its damage while the AI Core is in another;
+// the inhabited one's are the character's HP (Player Tools' tracker).
+export function Items({ items, onChange }: { items: Item[]; onChange: (items: Item[]) => void }) {
   // Add item's popup: the game's items to pick from, or a custom item the
   // player names and sorts
   const [name, setName] = useState("");
@@ -221,7 +219,6 @@ export function Items({
   // Equipping a chassis moves the AI Core into it, out of any other
   const equip = (item: Item, equipped: boolean) =>
     onChange(items.map((i) => (i === item ? { ...i, equipped } : equipped && isChassis(item) && isChassis(i) ? { ...i, equipped: false } : i)));
-  const inhabited = items.find((i) => i.equipped && isChassis(i));
   const remove = (item: Item) => onChange(items.filter((i) => i !== item));
   const countOf = (n: string) => Math.max(1, Math.round(Number(n)) || 1);
   // The items checked in the picker, as the game describes them
@@ -313,7 +310,7 @@ export function Items({
                 stock={stock}
                 category={item.category}
                 count={item.qty}
-                hp={item === inhabited ? inhabitedHp : undefined}
+                hp={isChassis(item) ? { value: item.hp, onChange: (hp) => update(item, { hp }) } : undefined}
                 equip={{ checked: item.equipped, onChange: (equipped) => equip(item, equipped) }}
                 fold={{ open: expanded.has(item.id), onToggle: () => toggleExpanded(item) }}
                 edit={{

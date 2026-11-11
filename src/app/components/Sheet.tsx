@@ -136,7 +136,6 @@ export function Sheet({
   conditions,
   onConditions,
   hp,
-  onHp,
   corner,
   actions,
   resources,
@@ -160,8 +159,6 @@ export function Sheet({
   conditions: HeldCondition[];
   onConditions: (conditions: HeldCondition[]) => void;
   hp?: number;
-  // play: changes the current HP, from the inhabited chassis's card
-  onHp?: (hp: number) => void;
   // play: Level up, on the level's corner, and Download, Switch and the rules problems
   corner?: ReactNode;
   actions?: ReactNode;
@@ -278,7 +275,8 @@ export function Sheet({
           ) : (
             <FullResources
               resources={[
-                ...shown.map((r) => ({ id: r, max: summary?.resources[r] })),
+                // A bodiless AI Core (in no chassis) has its core's HP alone
+                ...shown.filter((r) => r !== "hp" || !summary?.coreHp || summary.chassis).map((r) => ({ id: r, max: summary?.resources[r] })),
                 // An AI Core's own HP, apart from its chassis's
                 ...(summary?.coreHp ? [{ id: "core" as const, max: summary.coreHp }] : []),
               ]}
@@ -291,7 +289,7 @@ export function Sheet({
         conditions={
           <Conditions conditions={conditions} hp={hp ?? summary?.resources.hp ?? 0} maxHp={summary?.resources.hp ?? 0} onChange={onConditions} />
         }
-        items={<Items items={items} onChange={onItems} inhabitedHp={onHp ? { value: hp, onChange: onHp } : undefined} />}
+        items={<Items items={items} onChange={onItems} />}
         knowledges={
           knowledges.length > 0 ? (
             <ul className="sf-sheet-knowledge-list sf-sheet-scroll">
