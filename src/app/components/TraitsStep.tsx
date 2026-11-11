@@ -26,6 +26,9 @@ interface Props {
   // The help: that unspent picks are banked, and under the tabs what each
   // tab's picks are for (the creator's step); Player Tools' popup goes without
   hints?: boolean;
+  // Trait categories left out entirely, with no checkbox, like Player Tools'
+  // Conditions, which have their own Add a Condition
+  skip?: ReadonlySet<string>;
 }
 
 // What a Trait needs before it can be picked, as the site writes it:
@@ -61,7 +64,7 @@ const LIST_HELP: Record<string, string> = {
   wielder: "Wielder Skills, one per weapon. They're ordinary Skills, kept on their own tab so they don't crowd the rest.",
 };
 
-export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom, picksBelow = false, hints = true }: Props) {
+export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom, picksBelow = false, hints = true, skip }: Props) {
   // A pick type, or a Trait list, like Magic
   const [chosen, setTab] = useState<TraitTab>("universal");
   const [query, setQuery] = useState("");
@@ -91,6 +94,7 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom, p
   const shown = options.filter(
     (o) =>
       !hide?.has(o.trait.id) &&
+      !skip?.has(o.trait.category) &&
       !hidden.has(o.trait.category) &&
       (!hideRejected || o.reasons.length === 0 || taken.has(o.trait.id)) &&
       (!q || o.trait.name.toLowerCase().includes(q) || o.trait.tags.some((t) => t.toLowerCase().includes(q))),
@@ -202,7 +206,7 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom, p
 
         <div className="filters traits-filters">
           <input type="search" placeholder="Search name or tag" value={query} onChange={(e) => setQuery(e.target.value)} aria-label="Search Traits" />
-          {TraitCategory.options.map((c) => (
+          {TraitCategory.options.filter((c) => !skip?.has(c)).map((c) => (
             <label key={c} className="check">
               <input type="checkbox" checked={!hidden.has(c)} onChange={() => toggleCategory(c)} /> {GROUP_TITLE[c]}
             </label>
