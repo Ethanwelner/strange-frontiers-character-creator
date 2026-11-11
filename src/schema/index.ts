@@ -40,6 +40,9 @@ const BaseEntry = z.object({
   summary: z.string().min(1),
   tags: z.array(z.string()).default([]),
   lore: z.string().optional(),
+  // How characters from it are named, shown under the Character step's name
+  // and given to the AI builder. Kinds and Origins use it.
+  naming: z.string().optional(),
 });
 
 export const StatRange = z

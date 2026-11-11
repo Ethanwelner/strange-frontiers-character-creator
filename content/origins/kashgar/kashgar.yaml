@@ -4,6 +4,7 @@ status: placeholder
 plane: earth
 region: kashgar
 summary: "You grew up on Kashgar, the largest Ark in the settled systems and the heart of the AI diaspora. Your neighbors were as likely to be AI Cores as people, Kashgari security watched every deck, and home never stayed anywhere for long."
+naming: "Names follow the language the character grew up speaking, from anywhere in the Settled Systems."
 tags: [ark, kashgar, ai, space, urban]
 lore: kashgar
 type: origin

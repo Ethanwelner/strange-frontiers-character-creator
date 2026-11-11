@@ -4,6 +4,7 @@ status: placeholder
 plane: isekai
 region: dreft
 summary: The “Brine Dwarves.” Averaging four feet and well over 250 pounds. Most live along the coast; a few hold out in mountaintop villages where the air is thin and cold.
+naming: "Guwain names sound Germanic."
 tags: [dwarf, sea, diving, mountains]
 features:
   - name: Stout

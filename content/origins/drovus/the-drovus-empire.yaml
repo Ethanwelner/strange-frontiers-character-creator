@@ -5,6 +5,7 @@ status: placeholder
 plane: isekai
 region: drovus
 summary: "You grew up in the Drovus Empire, which has spent the last decade swallowing its neighbors, the Sunrise Princedoms among them."
+naming: "Drovus names have a Roman, Latin sound. Commoners have family names, and titles go in front."
 tags: [drovus, empire, isekai, military]
 lore: drovus-empire
 type: origin

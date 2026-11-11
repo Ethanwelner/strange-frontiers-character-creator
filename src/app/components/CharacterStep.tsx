@@ -1,4 +1,5 @@
 import type { Draft } from "../draft.js";
+import { content } from "../content.js";
 import { KindCards } from "./KindCards.js";
 import { LevelStepper, LooksFields, Portrait, StepHeader } from "./ui.js";
 
@@ -11,6 +12,8 @@ interface Props {
 
 // The character's portrait, name, the level the campaign starts it at, its age, gender, height and weight, and its Kind.
 export function CharacterStep({ draft, startingLevel, onChange, onStartingLevel }: Props) {
+  // How the chosen Kind and Origin name their people, under the name box
+  const naming = [content.kinds.find((k) => k.id === draft.kind)?.naming, content.packages.find((p) => p.id === draft.origin)?.naming].filter(Boolean);
   return (
     <section>
       <StepHeader title="Character">
@@ -24,6 +27,7 @@ export function CharacterStep({ draft, startingLevel, onChange, onStartingLevel 
         <label className="field name-field">
           <span className="field-label">Character Name</span>
           <input value={draft.name ?? ""} placeholder="Unnamed character" onChange={(e) => onChange({ ...draft, name: e.target.value || undefined })} />
+          {naming.length > 0 && <span className="hint name-hint">{naming.join(" ")}</span>}
         </label>
         <div className="looks-fields">
           <LooksFields looks={draft} onChange={(looks) => onChange({ ...draft, ...looks })} fieldClass="field name-field" />

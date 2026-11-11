@@ -1359,6 +1359,12 @@
     .name-field {
       margin-bottom: 0;
     }
+
+    /* How the Kind and Origin name their people, under the name box */
+    .name-hint {
+      display: block;
+      margin-top: 6px;
+    }
   }
 
   .looks-fields {

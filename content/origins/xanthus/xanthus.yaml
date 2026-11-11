@@ -4,6 +4,7 @@ status: placeholder
 plane: earth
 region: xanthus
 summary: "You grew up aboard Xanthus, the free Ark built around an iron asteroid: a pariah state, a model democracy and a haven for anyone escaping poverty or persecution."
+naming: "Names follow the language the character’s family brought with them to the Ark."
 tags: [xanthus, ark, space, democracy, refugee]
 lore: xanthus
 type: origin

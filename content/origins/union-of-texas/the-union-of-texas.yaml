@@ -4,6 +4,7 @@ status: placeholder
 plane: earth
 region: union-of-texas
 summary: "You grew up in the Union of Texas, an embittered, impoverished military republic that has spent 130 years preparing for a war with the Empire that never came."
+naming: "American names, in English."
 tags: [union-of-texas, earth, military]
 lore: union-of-texas
 type: origin

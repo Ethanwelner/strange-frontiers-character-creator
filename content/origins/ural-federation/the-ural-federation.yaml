@@ -4,6 +4,7 @@ status: placeholder
 plane: earth
 region: ural-federation
 summary: "You grew up in the Ural Federation, among the tribal statelets of the steppe and the thawed Siberian breadbasket, in a melting pot of native peoples, climate refugees and the last of the Russian diaspora."
+naming: "Russian names, or names from the steppe’s native peoples."
 tags: [ural-federation, earth, tribal, steppe]
 lore: ural-federation
 type: origin
