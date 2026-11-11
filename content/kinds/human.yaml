@@ -3,6 +3,7 @@ name: Human
 status: draft
 plane: earth
 summary: "The humanity of Earth Baseline."
+naming: "A Human’s name follows the language and nation of their Origin."
 tags: [generalist, earth]
 features:
   - name: Generalists

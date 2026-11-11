@@ -4,6 +4,7 @@ status: placeholder
 plane: isekai
 region: dreft
 summary: "The “High Orcs.” A polyphenic Kind: every Tatot is born either orcoid or goblinoid. Goblinoids are small, with plentiful mana."
+naming: "Tatot names have harsher sounds, often with apostrophes, or are a single syllable."
 tags: [tatot, goblinoid, merchant, magic]
 features:
   - name: Goblinoid

@@ -4,6 +4,7 @@ status: placeholder
 plane: isekai
 region: dreft
 summary: "The “High Orcs.” A polyphenic Kind: every Tatot is born either orcoid or goblinoid. Orcoids are larger and stronger, have no mana, and are largely immune to sunsickness."
+naming: "Tatot names have harsher sounds, often with apostrophes, or are a single syllable."
 tags: [tatot, orcoid, merchant]
 features:
   - name: Orcoid

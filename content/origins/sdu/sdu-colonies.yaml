@@ -4,6 +4,7 @@ status: placeholder
 plane: earth
 region: sdu
 summary: "You grew up in the Union’s stellar or planar territories: the Martian Association, the Antiluna colony, New Persia on Pairidaeza, or aboard one of the Union’s Arks."
+naming: "Names follow the language of the colony or Ark the character grew up on, like Persian on New Persia."
 tags: [sdu, colonies, mars, ark, space]
 lore: stellar-democratic-union
 type: origin

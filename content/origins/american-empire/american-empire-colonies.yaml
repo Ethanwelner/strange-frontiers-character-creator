@@ -4,6 +4,7 @@ status: placeholder
 plane: earth
 region: american-empire
 summary: "You grew up in the Empire’s stellar territories, in New Columbia on Luna or aboard the capital Ark, New York, a long way from the Earth the Empire still calls home."
+naming: "American names, from the Empire’s English-speaking culture."
 tags: [american-empire, colonies, luna, ark, space]
 lore: american-empire
 type: origin

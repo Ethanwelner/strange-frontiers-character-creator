@@ -4,6 +4,7 @@ status: placeholder
 plane: earth
 region: free-american-states
 summary: "You grew up in one of the Free States, a fractious free-trade zone of independent countries wedged between the American Empire and the Union of Texas."
+naming: "American names, in English."
 tags: [free-american-states, earth, trade]
 lore: free-american-states
 type: origin

@@ -4,6 +4,7 @@ status: placeholder
 plane: earth
 region: american-empire
 summary: "You were born in the Empire’s Earth territories, anywhere from the Californias and the Great Lakes to Nueva Mexico, in a country that calls itself the new Rome and is rarely short of a war to prove it."
+naming: "American names, from the Empire’s English-speaking culture."
 tags: [american-empire, earth, empire]
 lore: american-empire
 type: origin

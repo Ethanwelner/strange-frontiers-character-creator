@@ -13,7 +13,7 @@ How you work:
 3. Call submit_build with the concept, a one- or two-sentence summary of the character for the player, and a reason for each choice. If the engine sends problems back, fix them and submit again.
 
 The concept:
-- name: the character's name. Use the player's if they gave one; otherwise make one up that fits the character's Kind, home and past. Every character gets a name.
+- name: the character's name. Use the player's if they gave one; otherwise make one up that fits the character's Kind, home and past, following the Naming notes on its Kind and Origin. Every character gets a name.
 - One Kind, one origin, one profession and one past.
 - focus: the two to four stats that matter most for this character (its priority stats), most important first. The engine puts most of each level's stat points into these, and spreads a few into the other stats as the level rises, so a high-level character isn't helpless outside their specialty.
 - magic: optional. How many levels go to the Magic core stat. Only a character holding a Trait that opens Magic can level it: Magic Access, which every Kind of Dreft but the Orcoid Tatot gets through its Magical Heritage. Each Magic level gives 3 MP (Mana Points) but no focus points, so it buys no Traits: give a spellcaster or a magical character one or two, and leave it at 0 for anyone else.
@@ -41,6 +41,7 @@ export function contentIndex(content: Content): string {
     const resources = Object.entries(k.resources).map(([r, n]) => `+${n} ${r.toUpperCase()}`).join(", ");
     lines.push(
       `- ${k.id}: ${k.name}. ${k.summary} Tags: ${k.tags.join(", ") || "none"}. Trait access: ${k.traitAccess.join(", ") || "none"}.` +
+        `${k.naming ? ` Naming: ${k.naming}` : ""}` +
         `${grants ? ` Grants: ${grants}.` : ""}${resources ? ` Resources: ${resources}.` : ""}`,
     );
     lines.push(`  Stats: ${stats(k.stats)}${k.freePoints ? `. Plus ${k.freePoints} free bonus points, placed by the engine` : ""}`);
@@ -52,6 +53,7 @@ export function contentIndex(content: Content): string {
       const choices = p.choices.map((c) => `${c.choose} from ${c.from}`).join(", ");
       lines.push(
         `- ${p.id}: ${p.name}${p.region ? ` (${p.region})` : ""}. ${p.summary} Tags: ${p.tags.join(", ") || "none"}.` +
+          `${p.naming ? ` Naming: ${p.naming}` : ""}` +
           ` Grants: ${grants || "none"}.${choices ? ` Choices: ${choices}.` : ""}` +
           `${p.bonusPoints.length ? ` Bonus points (placed by the engine): ${p.bonusPoints.map((b) => `${b.count} ${b.group}`).join(", ")}.` : ""}` +
           `${Object.keys(p.coreBonus).length ? ` Core bonus: ${Object.entries(p.coreBonus).map(([g, n]) => `+${n} ${g}`).join(", ")} (if the character can level it).` : ""}` +

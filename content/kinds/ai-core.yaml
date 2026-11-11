@@ -3,6 +3,7 @@ name: AI Core
 status: placeholder
 plane: earth
 summary: "A sentient, self-contained machine mind, capable of inhabiting different forms and of lightning-fast computation."
+naming: "An AI Core is named with a number and a word, like 18/Dialectic. The number is its place in the batch of 20 it was made in. The word is the Core’s own choice, naming a place or idea that matters to it."
 tags: [ai-core, artificial-intelligence, machine, earth, kashgar]
 features:
   - name: Creatures of Logic

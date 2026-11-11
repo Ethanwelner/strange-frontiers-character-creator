@@ -4,6 +4,7 @@ status: placeholder
 plane: earth
 region: chinese-empire
 summary: "You were born in the Empire of China’s Earth territories, from Wuhan to the old nations of Southeast Asia, during a golden age the corporate syndicates are starting to suspect is ending."
+naming: "Chinese names, family name first, or names from the old nations of Southeast Asia."
 tags: [chinese-empire, earth, empire, corporate]
 lore: chinese-empire
 type: origin
