@@ -1,0 +1,10 @@
+id: threat-assessment
+name: "Threat Assessment"
+status: draft
+plane: any
+summary: "Picking out who in the room means trouble."
+tags: [security, awareness, guard, private-security]
+category: skill
+ranked: true
+minStats: { intuition: 4, empathy: 2 }
+effect: "This character is capable of telling whether someone in view is carrying an openly worn or poorly hidden weapon without a Skill Check. Rank *5 added to Skill Check rolls involving spotting hostile intent in a crowd."

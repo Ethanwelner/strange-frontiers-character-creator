@@ -1,0 +1,10 @@
+id: corporate-security
+name: "Corporate Security"
+status: draft
+plane: earth
+summary: "Private security firms, client contracts and corporate jurisdiction across the Settled Systems."
+tags: [security, corporate, law, private-security]
+category: knowledge
+ranked: true
+minStats: { memory: 3, intuition: 2 }
+effect: "This character has knowledge of corporate security and can be assumed to be familiar with how private security firms and client contracts work, who hires guards, and what they're allowed to do on whose property."

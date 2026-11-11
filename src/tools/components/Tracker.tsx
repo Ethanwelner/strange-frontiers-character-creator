@@ -37,6 +37,9 @@ import { Button } from "../../app/components/Button.js";
 // and they add a lot to the tracker. The − and + still change any resource.
 const SHOW_AMOUNTS = false;
 
+// Conditions have their own Add a Condition, so Choose Traits leaves them out
+const NO_CONDITIONS: ReadonlySet<string> = new Set(["condition"]);
+
 export function Tracker({
   play,
   result,
@@ -271,6 +274,7 @@ export function Tracker({
             newFrom={play.draft.traits.length}
             picksBelow
             hints={false}
+            skip={NO_CONDITIONS}
           />
           <div className="sf-popup-foot">
             {/* Green and glitching, like Add items, once the picks change the character's Traits */}

@@ -1,0 +1,9 @@
+id: security-contractor
+name: "Security Contractor"
+status: draft
+plane: earth
+summary: "On the payroll of a private security firm."
+tags: [security, employment, corporate, private-security]
+category: circumstance
+conveyed: true
+effect: "This character is employed by a private security firm. It gets paid, can call on the firm for backup and gear, and wears its uniform, but it follows the firm's orders and goes where the contract sends it."

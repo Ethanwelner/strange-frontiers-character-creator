@@ -1,0 +1,11 @@
+id: cuff
+name: "Cuff"
+status: draft
+plane: any
+summary: "Getting restraints on someone who doesn't want them."
+tags: [combat, security, police, restraint, private-security]
+category: ability
+minStats: { power: 3, grace: 3 }
+prerequisites: [grappler]
+effect: "This character gains the Restrain Action."
+action: "Restrain: With Handcuffs or similar restraints in hand, this character may make an Attack Roll with Grace against a Prone, Rooted or Incapacitated character within 1 m. On a Solid Hit or better, the target gains the Restrained Condition."

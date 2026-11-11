@@ -1,0 +1,12 @@
+id: wielder-taser
+name: "Wielder: Taser"
+status: draft
+plane: earth
+summary: "Fighting with, and maintaining, a taser."
+tags: [combat, ranged, nonlethal, police, private-security]
+category: skill
+list: wielder
+ranked: true
+minStats: { grace: 3, intuition: 2 }
+effect: "- Rank *5 added to skill check rolls involving a Taser.\n- +3 to Attack Rolls made with a Taser.\n- This character is capable of performing the basic tasks of maintaining a Taser without a skill check."
+modifiers: "Attack Rolls +3 (Taser)"

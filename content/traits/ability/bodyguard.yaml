@@ -1,0 +1,10 @@
+id: bodyguard
+name: "Bodyguard"
+status: draft
+plane: any
+summary: "Stepping between a client and the shot."
+tags: [combat, security, bodyguard, private-security]
+category: ability
+minStats: { grace: 4, intuition: 4 }
+effect: "This character gains the Cover Action."
+action: "Cover: Once per Round, when a character within 1 m that this character has declared it is guarding is targeted by an Attack, this character may become the target instead, using its own Defense. If it is holding a shield, it gains +2 Defense against that Attack."

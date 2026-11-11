@@ -1,0 +1,10 @@
+id: restrained
+name: "Restrained"
+status: draft
+plane: any
+summary: "Cuffed, tied or otherwise held."
+tags: [combat, restraint]
+category: condition
+conveyed: true
+temporary: "Lost when the restraints come off, or on a successful Power or Grace Skill Check to escape them (15 for handcuffs)."
+effect: "This character can't make Attack Actions."
