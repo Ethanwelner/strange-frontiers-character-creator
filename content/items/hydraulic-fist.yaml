@@ -1,0 +1,13 @@
+id: hydraulic-fist
+name: "Hydraulic Fist"
+status: draft
+plane: earth
+summary: "A work fist on a hydraulic arm, built to bend steel."
+tags: [natural weapon, built-in, chassis]
+type: weapon
+category: weapon
+damage: "2 Blunt + Power"
+attackType: "Melee"
+maxRange: "1 m"
+attackStat: "Power"
+notes: "Built into the Industrial Laborer Chassis."

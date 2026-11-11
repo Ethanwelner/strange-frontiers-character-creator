@@ -1750,6 +1750,11 @@
     color: var(--frontiers-mp);
   }
 
+  /* An AI Core's core HP: the HP red, paled, apart from its chassis's HP */
+  .resource-core {
+    color: color-mix(in srgb, var(--frontiers-hp) 55%, white);
+  }
+
   /* Player Tools' live HP, VP, SP and MP: the name, the value and a meter in
      its color, as many across as fit, with -, + and restore beside the value
      and an amount field under the meter. Sheets that show them at full use
@@ -1824,6 +1829,10 @@
 
   .tools-meter-mp > span {
     background: var(--frontiers-mp);
+  }
+
+  .tools-meter-core > span {
+    background: color-mix(in srgb, var(--frontiers-hp) 55%, white);
   }
 
   /* Above the sheet, on the right, clear of the level badge on its left corner */
@@ -2456,6 +2465,10 @@
 
     .tools-meter-mp {
       --meter-color: var(--frontiers-mp);
+    }
+
+    .tools-meter-core {
+      --meter-color: color-mix(in srgb, var(--frontiers-hp) 55%, white);
     }
   }
 

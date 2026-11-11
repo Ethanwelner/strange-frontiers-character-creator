@@ -884,3 +884,43 @@ describe("rule 13: Magic", () => {
     ]);
   });
 });
+
+describe("rule 15: an AI Core inhabits a chassis", () => {
+  const aiCore = { ...human, kind: "ai-core", traits: [], levels: [{ group: "mental" as const, points: { logic: 3 } }] };
+  const item = (id: string, name: string, equipped = true) => ({ item: id, name, qty: 1, category: "chassis" as const, equipped });
+  const walker = item("combat-walker-chassis", "Combat Walker Chassis");
+
+  it("takes the inhabited chassis's Physical stats, HP, Movement and Traits", () => {
+    const r = check({ ...aiCore, items: [walker] });
+    expectLegal(r);
+    const s = r.summary!;
+    expect(s.chassis).toEqual({ item: "combat-walker-chassis", name: "Combat Walker Chassis" });
+    expect(s.coreStats.physical).toBe(6);
+    expect(s.stats).toMatchObject({ endurance: 10, power: 5, grace: 3, logic: 6 });
+    // 10, plus the chassis's 18 Physical focus points, plus Reinforced's 10
+    expect(s.resources.hp).toBe(38);
+    expect(s.coreHp).toBe(10);
+    expect(s.movement).toBe("10 m");
+    expect(s.traits.map((t) => t.trait)).toEqual(expect.arrayContaining(["mechanical", "non-humanoid", "reinforced"]));
+  });
+
+  it("gets nothing from a chassis it only carries", () => {
+    const s = check({ ...aiCore, items: [item("combat-walker-chassis", "Combat Walker Chassis", false)] }).summary!;
+    expect(s.chassis).toBeUndefined();
+    expect(s.stats).toMatchObject({ endurance: 0, power: 0, grace: 0 });
+    expect(s.resources.hp).toBe(10);
+    expect(s.movement).toBe("-");
+  });
+
+  it("inhabits one chassis at a time", () => {
+    const r = check({ ...aiCore, items: [walker, item("courier-drone-chassis", "Courier Drone Chassis")] });
+    expect(codes(r)).toEqual(["chassis"]);
+  });
+
+  it("does nothing for a Kind without a core", () => {
+    const r = check({ ...human, items: [walker] });
+    expect(r.warnings.map((w) => w.code)).toContain("chassis");
+    expect(r.summary!.chassis).toBeUndefined();
+    expect(r.summary!.coreHp).toBeUndefined();
+  });
+});

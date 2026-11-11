@@ -1,0 +1,16 @@
+id: industrial-laborer-chassis
+name: "Industrial Laborer Chassis"
+status: placeholder
+plane: earth
+summary: "A heavy work frame on treads and hydraulic arms, built for cargo bays and shipyards."
+tags: [chassis, ai-core, industrial]
+type: chassis
+category: chassis
+resistances: "2 Blunt, 2 Slashing, 1 Piercing"
+value: 85000
+currency: "ERC"
+chassis:
+  core: 4
+  stats: { endurance: 5, power: 5, grace: 2 }
+  attacks: [hydraulic-fist]
+  traits: [mechanical, non-humanoid, cargo-handling]

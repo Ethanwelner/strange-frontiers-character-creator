@@ -18,6 +18,9 @@ export interface Item {
   category: ItemCategory;
   equipped: boolean;
   notes?: string;
+  // A chassis's HP now, kept with it so it remembers its damage while the
+  // AI Core is in another. Missing means full.
+  hp?: number;
 }
 
 export const newId = () => Math.random().toString(36).slice(2, 10);
@@ -55,6 +58,7 @@ export function readItems(input: unknown): Item[] {
         category,
         equipped: i.equipped === true,
         ...(typeof i.notes === "string" && i.notes ? { notes: i.notes } : {}),
+        ...(typeof i.hp === "number" && Number.isFinite(i.hp) ? { hp: Math.round(i.hp) } : {}),
       },
     ];
   });

@@ -24,6 +24,7 @@ import {
   removeCondition,
   removeItem,
   RESOURCES,
+  shownResources,
   withResource,
   type ItemCategory,
   type Play,
@@ -164,7 +165,7 @@ const name = (content: Content, id: string) => content.traits.find((t) => t.id =
 // The tracker as it stands, read from the play: what get_state returns.
 export function stateOf(play: Play, result: BuildResult, content: Content) {
   const resources = Object.fromEntries(
-    RESOURCES.filter((r) => r !== "mp" || maxOf(result, r) > 0).map((r) => [r, { current: currentOf(play, result, r), max: maxOf(result, r) }]),
+    shownResources(result).map((r) => [r, { current: currentOf(play, result, r), max: maxOf(result, r) }]),
   ) as Partial<Record<ResourceKey, { current: number; max: number }>>;
   return {
     level: play.draft.level,
@@ -218,7 +219,7 @@ export function sheetText(play: Play, result: BuildResult, content: Content): st
       `Focus stats: ${(Object.keys(STAT_GROUPS) as (keyof typeof STAT_GROUPS)[])
         .flatMap((g) => STAT_GROUPS[g].map((st) => `${st} ${s.stats[st]}`))
         .join(", ")}`,
-      `Resources (current/max): ${RESOURCES.filter((r) => maxOf(result, r) > 0 || r !== "mp")
+      `Resources (current/max): ${shownResources(result)
         .map((r) => `${r.toUpperCase()} ${currentOf(play, result, r)}/${maxOf(result, r)}`)
         .join(", ")}`,
       `Movement: ${s.movement}`,

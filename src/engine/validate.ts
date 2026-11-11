@@ -24,7 +24,8 @@ export type IssueCode =
   | "rank-stats"
   | "min-stats"
   | "prerequisite"
-  | "core-access";
+  | "core-access"
+  | "chassis";
 
 export interface Issue {
   code: IssueCode;
@@ -77,8 +78,14 @@ export interface BuildSummary {
   // can add to any of them.
   resources: Record<"hp" | "vp" | "sp" | "mp", number>;
   // A full Movement Action in an Incident, from the Kind: "10 m" unless the
-  // Kind says otherwise.
+  // Kind says otherwise. A character in a chassis moves as the chassis does.
   movement: string;
+  // The chassis a Kind with a core (the AI Core) inhabits: the one chassis
+  // among its equipped items. Its Physical stats, HP, Attacks and Traits are
+  // the character's while it's inhabited.
+  chassis?: { item: string; name: string };
+  // A Kind's core HP, apart from the chassis's (the AI Core's 10).
+  coreHp?: number;
   picks: Record<PickKind, PickCount>;
   traits: HeldTrait[];
   // Traits the build may spend background picks on.
@@ -317,6 +324,18 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     background: { available: STATS.reduce((n, s) => n + Math.floor(stats[s] / 2), 0), spent: 0, banked: 0 },
   };
 
+  // Rule 15: a Kind with a core (the AI Core) inhabits a chassis, the one
+  // equipped item that is one. Two at once is an error. Another Kind
+  // equipping a chassis gets nothing from it.
+  const inhabited = build.items.filter((i) => i.equipped && i.item && content.items.find((it) => it.id === i.item)?.chassis);
+  const chassisItem = kind?.core && inhabited.length ? content.items.find((it) => it.id === inhabited[0]!.item) : undefined;
+  const chassis = chassisItem?.chassis;
+  if (kind?.core && inhabited.length > 1) {
+    error("chassis", `${kind.name} inhabits one chassis at a time, but ${inhabited.map((i) => i.name).join(" and ")} are all equipped`, "items");
+  } else if (kind && !kind.core && inhabited.length) {
+    warn("chassis", `${kind.name} can't inhabit a chassis, so ${inhabited[0]!.name} does nothing; only a Kind with a core, like the AI Core, can`, "items");
+  }
+
   // Rule 6: package grants come free; ranks from several packages don't stack.
   const held = new Map<string, HeldTrait>();
   const hold = (id: string, rank: number, source: string) => {
@@ -331,6 +350,8 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     }
   };
   for (const g of kind?.grants ?? []) hold(g.trait, g.rank ?? 1, `kind ${kind!.id}`);
+  // Rule 15: the inhabited chassis's Traits, held while it's inhabited
+  for (const t of chassis?.traits ?? []) hold(t, 1, `chassis ${chassisItem!.id}`);
   for (const pkg of packages) {
     for (const g of pkg.grants) hold(g.trait, g.rank ?? 1, `${pkg.type} ${pkg.id}`);
   }
@@ -538,6 +559,14 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
   }
   for (const g of Object.keys(coreStats) as StatGroup[]) coreStats[g] += coreBonus[g];
 
+  // Rule 15: the inhabited chassis's Physical core and focus stats are the
+  // character's from here on: for Trait requirements, HP and the sheet. Its
+  // picks (rule 5) stay its own stats'.
+  if (chassis) {
+    coreStats.physical = chassis.core;
+    for (const st of STAT_GROUPS.physical) stats[st] = chassis.stats[st as keyof typeof chassis.stats];
+  }
+
   // Rule 14: a Trait list, like Magic, is open to every character. Its Traits
   // are held to their stat requirements like any other (rule 12), so a Magic 1
   // Trait is out of reach until the character can level Magic.
@@ -585,7 +614,9 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
       coreBonus,
       coreAccess: [...coreAccess],
       resources,
-      movement: kind?.movement ?? DEFAULT_MOVEMENT,
+      movement: chassis ? (chassis.movement ?? DEFAULT_MOVEMENT) : (kind?.movement ?? DEFAULT_MOVEMENT),
+      ...(chassisItem ? { chassis: { item: chassisItem.id, name: chassisItem.name } } : {}),
+      ...(kind?.core ? { coreHp: kind.core.hp } : {}),
       picks,
       traits: [...held.values()],
       backgroundList: [...backgroundList].sort(),

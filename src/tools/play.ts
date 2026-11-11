@@ -12,7 +12,8 @@ import { readConditions, withCondition, withoutCondition, type HeldCondition } f
 export { ITEM_CATEGORIES, type Item, type ItemCategory } from "../app/items.js";
 export { HP_CONDITIONS, hpConditions, playConditions, type HeldCondition } from "../app/conditions.js";
 
-export const RESOURCES = ["hp", "vp", "sp", "mp"] as const;
+// HP, VP, SP and MP, and an AI Core's core HP, apart from its chassis's.
+export const RESOURCES = ["hp", "vp", "sp", "mp", "core"] as const;
 export type ResourceKey = (typeof RESOURCES)[number];
 
 export interface ChatMessage {
@@ -32,9 +33,10 @@ export interface Play {
 }
 
 // An established character's build is checked at its own level: the
-// campaign's starting level only matters at creation.
-export function checkPlay(draft: Draft, content: Content): BuildResult {
-  return validateBuild(toBuild(draft), content, { startingLevel: draft.level });
+// campaign's starting level only matters at creation. The play's items count,
+// so an AI Core's inhabited chassis gives it its Physical stats and HP.
+export function checkPlay(draft: Draft, content: Content, items?: Item[]): BuildResult {
+  return validateBuild(toBuild(items ? { ...draft, items } : draft), content, { startingLevel: draft.level });
 }
 
 // Whether a character has stat points left to place: a core point per level,
@@ -56,10 +58,27 @@ export function pointsToPlace(draft: Draft, content: Content): boolean {
 }
 
 export function maxOf(result: BuildResult, r: ResourceKey): number {
+  if (r === "core") return result.summary?.coreHp ?? 0;
   return result.summary?.resources[r] ?? 0;
 }
 
+// The resources a character has: MP once it has any, core HP for a Kind with
+// a core (the AI Core), and HP only while that Kind is in a chassis: a
+// bodiless AI Core has its core's HP alone.
+export function shownResources(result: BuildResult): ResourceKey[] {
+  const bodiless = Boolean(result.summary?.coreHp) && !result.summary?.chassis;
+  return RESOURCES.filter((r) => (r === "hp" ? !bodiless : (r !== "mp" && r !== "core") || maxOf(result, r) > 0));
+}
+
+// The item an AI Core inhabits, from the check: its HP are the character's.
+export function inhabitedChassis(play: Play, result: BuildResult): Item | undefined {
+  const id = result.summary?.chassis?.item;
+  return id ? play.items.find((i) => i.equipped && i.item === id) : undefined;
+}
+
 export function currentOf(play: Play, result: BuildResult, r: ResourceKey): number {
+  const chassis = r === "hp" ? inhabitedChassis(play, result) : undefined;
+  if (chassis) return chassis.hp ?? maxOf(result, r);
   return play.current[r] ?? maxOf(result, r);
 }
 
@@ -68,7 +87,13 @@ export function currentOf(play: Play, result: BuildResult, r: ResourceKey): numb
 // stored as missing, so a level up that raises the max keeps the character full.
 export function withResource(play: Play, result: BuildResult, r: ResourceKey, value: number): Play {
   const max = maxOf(result, r);
-  const v = r === "hp" ? Math.round(value) : Math.max(0, Math.round(value));
+  const v = r === "hp" || r === "core" ? Math.round(value) : Math.max(0, Math.round(value));
+  // An AI Core's HP are its inhabited chassis's, kept on the chassis
+  const chassis = r === "hp" ? inhabitedChassis(play, result) : undefined;
+  if (chassis) {
+    const { hp: _hp, ...rest } = chassis;
+    return { ...play, items: play.items.map((i) => (i === chassis ? (v === max ? rest : { ...rest, hp: v }) : i)) };
+  }
   const current = { ...play.current };
   if (v === max) delete current[r];
   else current[r] = v;

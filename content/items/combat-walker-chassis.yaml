@@ -1,0 +1,16 @@
+id: combat-walker-chassis
+name: "Combat Walker Chassis"
+status: placeholder
+plane: earth
+summary: "A squat, armored frame on four legs, with a machine gun built into its body."
+tags: [chassis, ai-core, combat, military]
+type: chassis
+category: chassis
+resistances: "3 Blunt, 3 Slashing, 4 Piercing"
+value: 400000
+currency: "ERC"
+chassis:
+  core: 6
+  stats: { endurance: 10, power: 5, grace: 3 }
+  attacks: [mounted-machine-gun]
+  traits: [mechanical, non-humanoid, reinforced]

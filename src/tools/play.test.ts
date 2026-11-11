@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { loadContent } from "../engine/content.js";
 import { fromBuild } from "../app/draft.js";
 import { applyTool, ask, sheetText, trackerLine } from "./chat.js";
-import { addCondition, addItem, checkPlay, currentOf, hpConditions, maxOf, playBuild, playConditions, pointsToPlace, removeItem, startPlay, withResource } from "./play.js";
+import { addCondition, addItem, checkPlay, currentOf, hpConditions, maxOf, playBuild, playConditions, pointsToPlace, removeItem, shownResources, startPlay, withResource } from "./play.js";
 import type { CreateMessage } from "../ai/anthropic.js";
 
 const { content } = loadContent();
@@ -16,6 +16,35 @@ const grosh = Object.fromEntries(Object.entries(example).filter(([key]) => !EXTR
 const fresh = () => startPlay(grosh);
 
 describe("a character in play", () => {
+  it("keeps an AI Core's HP on each chassis, so a chassis it left remembers its damage", () => {
+    const chassis = (item: string, name: string, equipped: boolean) => ({ id: item, item, name, qty: 1, category: "chassis" as const, equipped });
+    const swap = (p: ReturnType<typeof fresh>, to: string) => ({ ...p, items: p.items.map((i) => ({ ...i, equipped: i.item === to })) });
+    let play = startPlay({ ...grosh, kind: "ai-core", items: [] });
+    play = { ...play, items: [chassis("industrial-laborer-chassis", "Industrial Laborer Chassis", true), chassis("combat-walker-chassis", "Combat Walker Chassis", false)] };
+    let result = checkPlay(play.draft, content, play.items);
+    expect(maxOf(result, "hp")).toBe(22);
+    expect(maxOf(result, "core")).toBe(10);
+    play = withResource(play, result, "hp", 15);
+    expect(play.current.hp).toBeUndefined();
+    expect(play.items[0]!.hp).toBe(15);
+    // In the Combat Walker: its own full 38
+    play = swap(play, "combat-walker-chassis");
+    result = checkPlay(play.draft, content, play.items);
+    expect(currentOf(play, result, "hp")).toBe(38);
+    play = withResource(play, result, "hp", 30);
+    // Back in the Laborer: still 15, and the Walker keeps its 30
+    play = swap(play, "industrial-laborer-chassis");
+    result = checkPlay(play.draft, content, play.items);
+    expect(currentOf(play, result, "hp")).toBe(15);
+    expect(play.items[1]!.hp).toBe(30);
+    // Back to full stores nothing
+    expect(withResource(play, result, "hp", 22).items[0]!.hp).toBeUndefined();
+    // Out of every chassis, it has its core's HP alone
+    const bodiless = { ...play, items: play.items.map((i) => ({ ...i, equipped: false })) };
+    expect(shownResources(checkPlay(bodiless.draft, content, bodiless.items))).toEqual(["vp", "sp", "core"]);
+    expect(shownResources(result)).toEqual(["hp", "vp", "sp", "core"]);
+  });
+
   it("checks the build at its own level, not a campaign's starting level", () => {
     const play = fresh();
     const result = checkPlay(play.draft, content);

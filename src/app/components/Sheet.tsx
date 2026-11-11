@@ -3,7 +3,7 @@ import { Popup } from "./popup.js";
 import { FREE_TEXT_POOLS, isFreeTextPool, type BuildResult } from "../../engine/validate.js";
 import { coreStatsShown } from "../check.js";
 import { sheetStatGroups, StatBlock } from "./stats.js";
-import { content, kindById, packageById, traitById } from "../content.js";
+import { content, itemById, kindById, packageById, traitById } from "../content.js";
 import type { Draft, Looks } from "../draft.js";
 import type { Item } from "../items.js";
 import type { HeldCondition } from "../conditions.js";
@@ -19,6 +19,7 @@ import { Button } from "./Button.js";
 const SOURCE = /^(kind|origin|profession|past) ([a-z0-9-]+)( choice)?$/;
 const TRAIT_CHOICE = /^trait ([a-z0-9-]+) choice$/;
 const TRAIT_GRANT = /^trait ([a-z0-9-]+)$/;
+const CHASSIS = /^chassis ([a-z0-9-]+)$/;
 
 // "origin dreft" → "Dreft (origin)", "kind isek" → "Isek (kind)",
 // "trait additional-language choice" →
@@ -29,6 +30,9 @@ function source(s: string) {
   // Conveyed by another Trait, like Magic Access by Magical Heritage
   const g = TRAIT_GRANT.exec(s);
   if (g) return traitName(g[1]!);
+  // Given by the chassis an AI Core inhabits
+  const c = CHASSIS.exec(s);
+  if (c) return itemById.get(c[1]!)?.name ?? c[1]!;
   const m = SOURCE.exec(s);
   if (!m) return s;
   const name = m[1] === "kind" ? kindById.get(m[2]!)?.name : packageById.get(m[2]!)?.name;
@@ -266,7 +270,18 @@ export function Sheet({
             rules.edit || draft.description ? <DescriptionBox description={draft.description} onChange={rules.edit ? onDescription : undefined} /> : undefined,
         }}
         resources={
-          rules.resources === "live" && resources ? resources : <FullResources resources={shown.map((r) => ({ id: r, max: summary?.resources[r] }))} />
+          rules.resources === "live" && resources ? (
+            resources
+          ) : (
+            <FullResources
+              resources={[
+                // A bodiless AI Core (in no chassis) has its core's HP alone
+                ...shown.filter((r) => r !== "hp" || !summary?.coreHp || summary.chassis).map((r) => ({ id: r, max: summary?.resources[r] })),
+                // An AI Core's own HP, apart from its chassis's
+                ...(summary?.coreHp ? [{ id: "core" as const, max: summary.coreHp }] : []),
+              ]}
+            />
+          )
         }
         stats={stats ?? <StatBlock max={rules.statMax} groups={sheetStatGroups(draft, result)} />}
         movement={summary?.movement}

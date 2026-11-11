@@ -81,7 +81,7 @@ export function SheetTitle({ children, aside, as: Tag = "h3" }: { children: Reac
 
 // HP, VP, SP and MP at their maximums (build and sample), each name in its
 // color with its full name on hover
-export const RESOURCE_NAMES = { hp: "Hit Points", vp: "Vibe Points", sp: "Savvy Points", mp: "Mana Points" } as const;
+export const RESOURCE_NAMES = { hp: "Hit Points", vp: "Vibe Points", sp: "Savvy Points", mp: "Mana Points", core: "Core HP (an AI Core's own, apart from its chassis's)" } as const;
 
 export function FullResources({ resources }: { resources: { id: keyof typeof RESOURCE_NAMES; max?: number }[] }) {
   return (

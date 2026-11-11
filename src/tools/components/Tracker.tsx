@@ -9,7 +9,7 @@ import { StatsStep } from "../../app/components/StatsStep.js";
 import { sheetStatGroups, StatBlock } from "../../app/components/stats.js";
 import { TraitsStep } from "../../app/components/TraitsStep.js";
 import { Icon, Sign } from "../../app/components/ui.js";
-import { checkPlay, currentOf, maxOf, pointsToPlace, RESOURCES, withResource, type Play, type ResourceKey } from "../play.js";
+import { checkPlay, currentOf, maxOf, pointsToPlace, shownResources, withResource, type Play, type ResourceKey } from "../play.js";
 import { Button } from "../../app/components/Button.js";
 
 // The character sheet in its play context (sheet-layout.tsx): HP, VP, SP and
@@ -42,7 +42,7 @@ export function Tracker({
   actions: ReactNode;
 }) {
   // MP shows once the character has any.
-  const shown = RESOURCES.filter((r) => r !== "mp" || maxOf(result, r) > 0);
+  const shown = shownResources(result);
   const [amounts, setAmounts] = useState<Partial<Record<ResourceKey, string>>>({});
   const set = (r: ResourceKey, value: number) => onChange(withResource(play, result, r, value));
   const apply = (r: ResourceKey, sign: 1 | -1) => {
@@ -54,7 +54,7 @@ export function Tracker({
 
   const [traitDraft, setTraitDraft] = useState<Draft>();
   const closeTraits = useCallback(() => setTraitDraft(undefined), []);
-  const traitResult = useMemo(() => (traitDraft ? checkPlay(traitDraft, content) : undefined), [traitDraft]);
+  const traitResult = useMemo(() => (traitDraft ? checkPlay(traitDraft, content, play.items) : undefined), [traitDraft, play.items]);
   const banked = (result.summary?.picks.universal.banked ?? 0) + (result.summary?.picks.background.banked ?? 0);
   const heldIds = useMemo(() => new Set(result.summary?.traits.map((h) => h.trait) ?? []), [result]);
 
@@ -137,10 +137,10 @@ export function Tracker({
                     onKeyDown={(e) => e.key === "Enter" && apply(r, -1)}
                   />
                   <Button onClick={() => apply(r, -1)}>
-                    {r === "hp" ? "Damage" : "Spend"}
+                    {r === "hp" || r === "core" ? "Damage" : "Spend"}
                   </Button>
                   <Button onClick={() => apply(r, 1)}>
-                    {r === "hp" ? "Heal" : "Gain"}
+                    {r === "hp" ? "Heal" : r === "core" ? "Repair" : "Gain"}
                   </Button>
                 </div>
               </div>

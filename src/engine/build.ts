@@ -50,6 +50,9 @@ export const BuildItem = z.object({
   category: z.enum(ITEM_CATEGORIES).default("gear"),
   equipped: z.boolean().default(false),
   notes: z.string().optional(),
+  // A chassis's HP now (missing is full); it keeps its damage while the AI
+  // Core is in another chassis. Cosmetic to the rules check.
+  hp: z.number().int().optional(),
 });
 export type BuildItem = z.infer<typeof BuildItem>;
 

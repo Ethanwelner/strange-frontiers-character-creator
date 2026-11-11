@@ -26,7 +26,7 @@ export function ToolsApp() {
 
   useEffect(() => save(play), [play]);
 
-  const result = useMemo(() => (play ? checkPlay(play.draft, content) : undefined), [play?.draft]);
+  const result = useMemo(() => (play ? checkPlay(play.draft, content, play.items) : undefined), [play?.draft, play?.items]);
   const fromCreator = useMemo(() => (play ? undefined : creatorDraft()), [play]);
 
   const importFile = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -202,7 +202,7 @@ export function ToolsApp() {
                 create={create}
                 model={__SF_AI__.model}
                 onChange={setPlay}
-                check={(p) => checkPlay(p.draft, content)}
+                check={(p) => checkPlay(p.draft, content, p.items)}
               />
             </aside>
           )}

@@ -1,0 +1,15 @@
+id: humanoid-service-chassis
+name: "Humanoid Service Chassis"
+status: placeholder
+plane: earth
+summary: "A person-shaped frame of ordinary height, built to work among people and use what they use."
+tags: [chassis, ai-core, humanoid]
+type: chassis
+category: chassis
+resistances: "1 Blunt"
+value: 45000
+currency: "ERC"
+chassis:
+  core: 2
+  stats: { endurance: 2, power: 2, grace: 2 }
+  traits: [mechanical]
