@@ -17,3 +17,5 @@ choices:
 backgroundTraits:
   - commerce
   - high-society
+# Wealth at creation (engine/wealth.ts)
+wealth: 2

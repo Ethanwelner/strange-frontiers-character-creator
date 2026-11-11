@@ -133,6 +133,7 @@ export function Sheet({
   onDescription,
   items,
   onItems,
+  onCash,
   conditions,
   onConditions,
   hp,
@@ -156,6 +157,8 @@ export function Sheet({
   // (full if not given)
   items: Item[];
   onItems: (items: Item[]) => void;
+  // The character's money, by currency (draft.cash), changed from its badge
+  onCash?: (cash: Record<string, number>) => void;
   conditions: HeldCondition[];
   onConditions: (conditions: HeldCondition[]) => void;
   hp?: number;
@@ -289,7 +292,17 @@ export function Sheet({
         conditions={
           <Conditions conditions={conditions} hp={hp ?? summary?.resources.hp ?? 0} maxHp={summary?.resources.hp ?? 0} onChange={onConditions} />
         }
-        items={<Items items={items} onChange={onItems} />}
+        items={
+          <Items
+            items={items}
+            onChange={onItems}
+            kit={context === "build" ? summary?.kit : undefined}
+            cash={draft.cash}
+            wealth={summary?.wealth}
+            currency={summary?.kit.cash.currency}
+            onCash={onCash}
+          />
+        }
         knowledges={
           knowledges.length > 0 ? (
             <ul className="sf-sheet-knowledge-list sf-sheet-scroll">

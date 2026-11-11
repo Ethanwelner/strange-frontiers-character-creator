@@ -124,6 +124,9 @@ export const BackgroundPackage = BaseEntry.extend({
   // Only Magic for now: a bonus to a stat with focus stats would also need
   // the focus points it unlocks.
   coreBonus: z.partialRecord(z.enum(["magic"]), z.number().int().min(1)).default({}),
+  // Added to the character's Wealth, which sets its starting Kit Points and
+  // the dearest item it can start with, like Privileged Upbringing's +2.
+  wealth: z.number().int().default(0),
   choices: z.array(TraitChoice).default([]),
   // Traits this package puts on the character's Background Trait list.
   backgroundTraits: z.array(Id).default([]),
@@ -188,6 +191,8 @@ export const Trait = BaseEntry.extend({
   choices: z.array(TraitChoice).default([]),
   // Added to the character's HP, VP, SP or MP for each rank held.
   resources: Resources.default({}),
+  // Added to the character's Wealth, once per rank, like a Family Fortune.
+  wealth: z.number().int().default(0),
   // Core stats beyond Physical, Social and Mental that holding this Trait
   // lets a character level, like Magic Access's Magic.
   coreAccess: z.array(z.enum(["magic"])).default([]),
@@ -265,5 +270,8 @@ export const Item = BaseEntry.extend({
   notes: z.string().optional(),
   // A chassis: equipped, an AI Core inhabits it.
   chassis: Chassis.optional(),
+  // Its Kit Cost at character creation, 0 (Basic) to 5, when it shouldn't be
+  // the one its value works out to (engine/wealth.ts).
+  kitCost: z.number().int().min(0).max(5).optional(),
 });
 export type Item = z.infer<typeof Item>;

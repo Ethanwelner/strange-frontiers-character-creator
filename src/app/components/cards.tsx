@@ -300,6 +300,7 @@ export function ItemResource({ kind, max, value, onChange }: { kind: "hp" | "mp"
  *        chassis's stats and Traits.
  * badges More of the top line, after its badges, like a chassis's HP.
  * mp     An enchanted Item's stored MP, with − and + (ItemResource).
+ * chips  More chips after its category, like its Kit Cost at creation.
  * resistsInChips  Its resistances badge leads the chips line instead of
  *        sitting on the top line (a chassis, whose top line holds its HP).
  */
@@ -316,6 +317,7 @@ export function ItemCard({
   badges,
   mp,
   resistsInChips,
+  chips: extraChips,
   className = "",
   as: Root = "div",
   children,
@@ -332,6 +334,7 @@ export function ItemCard({
   badges?: ReactNode;
   mp?: { max: number; value?: number; onChange?: (value: number) => void };
   resistsInChips?: boolean;
+  chips?: string[];
   className?: string;
   as?: "div" | "li";
   children?: ReactNode;
@@ -391,6 +394,11 @@ export function ItemCard({
           <div className="equipment-chips">
             {resistsInChips && stock && <ResistBadge stock={stock} />}
             <span className="chip">{title(category)}</span>
+            {extraChips?.map((c) => (
+              <span key={c} className="chip">
+                {c}
+              </span>
+            ))}
             {chips.map((b) => (
               <span key={b} className="chip">
                 {b}

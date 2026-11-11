@@ -9,6 +9,7 @@ import type { DescribeResult, OpenChoice, Reason } from "../ai/types.js";
 import { STAT_GROUPS, type StatId } from "../schema/index.js";
 import { FOCUS_POINTS_PER_LEVEL } from "../engine/validate.js";
 import { readItems, type Item } from "./items.js";
+import { CURRENCY_OF_ITEM } from "../engine/wealth.js";
 import { readConditions, type HeldCondition } from "./conditions.js";
 
 // Gender, a cosmetic detail like age. Unlisted, the default, is left out of the build.
@@ -48,6 +49,12 @@ export interface Draft {
   items?: Item[];
   // Temporary Conditions, like the items, shared with Player Tools
   conditions?: HeldCondition[];
+  // Whether the Kit Points left at creation have become starting cash, once,
+  // when the character first went into play
+  kitCashed?: boolean;
+  // Money, by currency, like { ERC: 400 }, shown as a badge by the Items
+  // title instead of as items
+  cash?: Record<string, number>;
 }
 
 export const STEPS = ["character", "background", "stats", "traits", "choices", "sheet"] as const;
@@ -172,6 +179,22 @@ export function genderText(d: Pick<Draft, "gender" | "customGender">): string | 
   return d.gender[0]!.toUpperCase() + d.gender.slice(1);
 }
 
+// Items and money from a build. Money a build kept as currency items (as
+// they were before the cash badge) moves into cash.
+function readMoney(b: Record<string, unknown>): Pick<Draft, "items" | "cash"> {
+  const all = Array.isArray(b.items) ? readItems(b.items) : [];
+  const cash: Record<string, number> = {};
+  if (b.cash && typeof b.cash === "object" && !Array.isArray(b.cash)) {
+    for (const [c, n] of Object.entries(b.cash as Record<string, unknown>)) if (typeof n === "number" && Number.isFinite(n)) cash[c] = Math.round(n);
+  }
+  const items = all.filter((i) => {
+    const currency = i.item ? CURRENCY_OF_ITEM[i.item] : undefined;
+    if (currency) cash[currency] = (cash[currency] ?? 0) + i.qty;
+    return !currency;
+  });
+  return { ...(items.length ? { items } : {}), ...(Object.keys(cash).length ? { cash } : {}) };
+}
+
 // Takes any object shaped roughly like a Build. Fields are kept as they are,
 // so the engine can report what's wrong with them.
 export function fromBuild(input: unknown): Draft {
@@ -203,8 +226,9 @@ export function fromBuild(input: unknown): Draft {
     ...(b.core && typeof b.core === "object" ? savedPool(b) : levelsToPool(levels)),
     traits: array<TraitPick>(b.traits).map((t) => ({ ...t, rank: t.rank ?? 1 })),
     choices: array<ChoiceAnswer>(b.choices),
-    ...(Array.isArray(b.items) && b.items.length ? { items: readItems(b.items) } : {}),
+    ...readMoney(b),
     ...(Array.isArray(b.conditions) && b.conditions.length ? { conditions: readConditions(b.conditions) } : {}),
+    ...(b.kitCashed === true ? { kitCashed: true } : {}),
   };
 }
 

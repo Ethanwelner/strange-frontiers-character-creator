@@ -105,7 +105,7 @@ const withFixtures: Content = { ...content, traits: [...content.traits, ...fixtu
 // These fixtures are level 1 characters; the default campaign starts at 3.
 const L1 = { startingLevel: 1 };
 
-function check(build: BuildInput, c: Content = content, campaign: { startingLevel: number } = L1) {
+function check(build: BuildInput, c: Content = content, campaign: { startingLevel: number; kit?: boolean } = L1) {
   return validateBuild(build, c, campaign);
 }
 
@@ -886,12 +886,14 @@ describe("rule 13: Magic", () => {
 });
 
 describe("rule 15: an AI Core inhabits a chassis", () => {
+  // In play, where the starting kit's Wealth rules don't apply
+  const play = (build: BuildInput) => check(build, content, { ...L1, kit: false });
   const aiCore = { ...human, kind: "ai-core", traits: [], levels: [{ group: "mental" as const, points: { logic: 3 } }] };
   const item = (id: string, name: string, equipped = true) => ({ item: id, name, qty: 1, category: "chassis" as const, equipped });
   const walker = item("combat-walker-chassis", "Combat Walker Chassis");
 
   it("takes the inhabited chassis's Physical stats, HP, Movement and Traits", () => {
-    const r = check({ ...aiCore, items: [walker] });
+    const r = play({ ...aiCore, items: [walker] });
     expectLegal(r);
     const s = r.summary!;
     expect(s.chassis).toEqual({ item: "combat-walker-chassis", name: "Combat Walker Chassis" });
@@ -913,7 +915,7 @@ describe("rule 15: an AI Core inhabits a chassis", () => {
   });
 
   it("inhabits one chassis at a time", () => {
-    const r = check({ ...aiCore, items: [walker, item("courier-drone-chassis", "Courier Drone Chassis")] });
+    const r = play({ ...aiCore, items: [walker, item("courier-drone-chassis", "Courier Drone Chassis")] });
     expect(codes(r)).toEqual(["chassis"]);
   });
 
@@ -922,5 +924,43 @@ describe("rule 15: an AI Core inhabits a chassis", () => {
     expect(r.warnings.map((w) => w.code)).toContain("chassis");
     expect(r.summary!.chassis).toBeUndefined();
     expect(r.summary!.coreHp).toBeUndefined();
+  });
+});
+
+describe("rule 16: Wealth buys the starting kit", () => {
+  // The fixture's Past, the Noble Household, gives Wealth +2; cleared here
+  // for a character of Wealth 0
+  const plain = { ...content, packages: content.packages.map((p) => (p.id === "noble-household" ? { ...p, wealth: 0 } : p)) };
+  const own = (item: string, qty = 1) => ({ item, name: item, qty, category: "gear" as const, equipped: false });
+
+  it("gives Wealth 0 three Kit Points and items up to Kit Cost 1", () => {
+    const s = check({ ...human, items: [own("pistol"), own("backpack", 5)] }, plain).summary!;
+    expect(s.wealth).toBe(0);
+    expect(s.kit).toMatchObject({ budget: 3, ceiling: 1, spent: 1, left: 2 });
+    // An Isekai Origin's starting cash is in Luras: 2 points × 100 ERC ÷ 10
+    expect(s.kit.cash).toEqual({ amount: 20, currency: "Luras" });
+  });
+
+  it("stops at the budget and the ceiling", () => {
+    expect(codes(check({ ...human, items: [own("pistol", 4)] }, plain))).toEqual(["kit-budget"]);
+    expect(codes(check({ ...human, items: [own("chainmail")] }, plain))).toEqual(["kit-ceiling"]);
+  });
+
+  it("lets a wealthy character start with more, and dearer", () => {
+    const r = check({ ...human, items: [own("voidsuit"), own("chainmail"), own("pistol", 2)] });
+    expectLegal(r);
+    expect(r.summary!.kit).toMatchObject({ budget: 7, ceiling: 3, spent: 7, left: 0 });
+  });
+
+  it("gives an AI Core one chassis up to Kit Cost 3 free, past its ceiling", () => {
+    const aiCore = { ...human, kind: "ai-core", traits: [], levels: [{ group: "mental" as const, points: { logic: 3 } }] };
+    const r = check({ ...aiCore, items: [{ ...own("industrial-laborer-chassis"), category: "chassis", equipped: true }] }, plain);
+    expectLegal(r);
+    expect(r.summary!.kit).toMatchObject({ spent: 0, freeChassis: "industrial-laborer-chassis" });
+    expect(codes(check({ ...aiCore, items: [{ ...own("combat-walker-chassis"), category: "chassis", equipped: true }] }, plain))).toEqual(["kit-budget", "kit-ceiling"]);
+  });
+
+  it("doesn't apply in play", () => {
+    expectLegal(check({ ...human, items: [own("power-armor")] }, content, { ...L1, kit: false }));
   });
 });

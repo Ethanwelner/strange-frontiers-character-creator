@@ -37,6 +37,8 @@ export function PackageGrants({ pkg }: { pkg: BackgroundPackage }) {
           chips: [
             ...pkg.bonusPoints.map((b) => `+${b.count} ${title(b.group)} focus ${b.count === 1 ? "point" : "points"}`),
             ...Object.entries(pkg.coreBonus).map(([g, n]) => `+${n} ${title(g)}`),
+            // Its Wealth, which sets the starting kit (engine/wealth.ts)
+            ...(pkg.wealth ? [`${pkg.wealth > 0 ? "+" : ""}${pkg.wealth} Wealth`] : []),
           ],
         },
         { label: "Grants", accent: true, chips: chipLabels(pkg.grants) },

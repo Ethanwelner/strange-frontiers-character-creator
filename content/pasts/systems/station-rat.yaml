@@ -12,3 +12,5 @@ grants:
 backgroundTraits:
   - spacefaring
   - engineering
+# Wealth at creation (engine/wealth.ts)
+wealth: -1

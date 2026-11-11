@@ -13,3 +13,5 @@ grants:
   - { trait: the-sunrise-princedoms }
 backgroundTraits:
   - bureaucracy
+# Wealth at creation (engine/wealth.ts)
+wealth: -1

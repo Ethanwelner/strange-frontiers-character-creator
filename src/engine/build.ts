@@ -92,6 +92,12 @@ export const Build = z.object({
   choices: z.array(ChoiceAnswer).default([]),
   items: z.array(BuildItem).default([]),
   conditions: z.array(BuildCondition).default([]),
+  // The Kit Points left at creation became starting cash when the character
+  // first went into play. Cosmetic to the rules check.
+  kitCashed: z.boolean().optional(),
+  // Money, by currency, like { ERC: 400 }: a badge by the Items title rather
+  // than items. Cosmetic to the rules check.
+  cash: z.record(z.string(), z.number().int()).optional(),
 });
 export type Build = z.infer<typeof Build>;
 export type BuildInput = z.input<typeof Build>;
@@ -99,6 +105,10 @@ export type BuildInput = z.input<typeof Build>;
 // Per-campaign settings the GM controls.
 export interface Campaign {
   startingLevel: number;
+  // Whether the starting-kit rules apply: Kit Points and the dearest item a
+  // character's Wealth allows. True at creation; Player Tools turns them off,
+  // since items picked up in play aren't bought from the starting kit.
+  kit?: boolean;
 }
 
 export const DEFAULT_CAMPAIGN: Campaign = { startingLevel: 3 };

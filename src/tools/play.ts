@@ -5,6 +5,7 @@
 import type { Content } from "../engine/parse.js";
 import { bonusPointsOf, FOCUS_POINTS_PER_LEVEL, validateBuild, type BuildResult } from "../engine/validate.js";
 import { STAT_GROUPS } from "../schema/index.js";
+import { CURRENCY_OF_ITEM } from "../engine/wealth.js";
 import { fromBuild, toBuild, type Draft } from "../app/draft.js";
 import { readItems, withItem, withoutItem, type Item } from "../app/items.js";
 import { readConditions, withCondition, withoutCondition, type HeldCondition } from "../app/conditions.js";
@@ -36,7 +37,7 @@ export interface Play {
 // campaign's starting level only matters at creation. The play's items count,
 // so an AI Core's inhabited chassis gives it its Physical stats and HP.
 export function checkPlay(draft: Draft, content: Content, items?: Item[]): BuildResult {
-  return validateBuild(toBuild(items ? { ...draft, items } : draft), content, { startingLevel: draft.level });
+  return validateBuild(toBuild(items ? { ...draft, items } : draft), content, { startingLevel: draft.level, kit: false });
 }
 
 // Whether a character has stat points left to place: a core point per level,
@@ -125,6 +126,34 @@ export function removeCondition(play: Play, trait: string): Play {
   return { ...play, conditions: withoutCondition(play.conditions, trait) };
 }
 
+// The Kit Points a new character had left become starting cash, in its
+// Origin's currency, the first time it goes into play, and only then
+// (kitCashed). Checked with the starting-kit rules, as at creation.
+export function withStartingCash(play: Play, content: Content): Play {
+  if (play.draft.kitCashed) return play;
+  const draft = { ...play.draft, kitCashed: true };
+  const kit = validateBuild(toBuild({ ...play.draft, items: play.items }), content, { startingLevel: play.draft.level }).summary?.kit;
+  if (!kit || kit.cash.amount <= 0) return { ...play, draft };
+  return { ...play, draft: withCash(draft, kit.cash.currency, kit.cash.amount) };
+}
+
+// Money added to (or taken from) a character, by currency
+export function withCash(draft: Draft, currency: string, amount: number): Draft {
+  return { ...draft, cash: { ...draft.cash, [currency]: (draft.cash?.[currency] ?? 0) + amount } };
+}
+
+// Currency a saved session kept as items (before the cash badge) moves into
+// the character's cash.
+function moveCurrency(play: Play): Play {
+  let draft = play.draft;
+  const items = play.items.filter((i) => {
+    const currency = i.item ? CURRENCY_OF_ITEM[i.item] : undefined;
+    if (currency) draft = withCash(draft, currency, i.qty);
+    return !currency;
+  });
+  return items.length === play.items.length ? play : { ...play, draft, items };
+}
+
 // A new session for an imported build: full resources, carrying the build's
 // items and Conditions. From then on the play's own are the ones that count.
 export function startPlay(build: unknown): Play {
@@ -142,13 +171,13 @@ export function load(): Play | undefined {
     if (!raw) return undefined;
     const saved = JSON.parse(raw) as Partial<Play>;
     if (!saved.draft) return undefined;
-    return {
+    return moveCurrency({
       draft: fromBuild(saved.draft),
       current: saved.current && typeof saved.current === "object" ? saved.current : {},
       items: readItems(saved.items),
       conditions: readConditions(saved.conditions),
       chat: Array.isArray(saved.chat) ? saved.chat : [],
-    };
+    });
   } catch {
     return undefined;
   }

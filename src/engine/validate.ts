@@ -4,6 +4,7 @@
 import { OPEN_CORE_STATS, STAT_CAP, STAT_GROUPS, StatId, type BackgroundPackage, type StatBlock, type Trait, type TraitChoice } from "../schema/index.js";
 import { Build, DEFAULT_CAMPAIGN, type Campaign, type PickKind, type StatGroup } from "./build.js";
 import type { Content } from "./content.js";
+import { clampWealth, FREE_CHASSIS_COST, kitBudget, kitCeiling, kitCostOf, startingCash } from "./wealth.js";
 
 export type IssueCode =
   | "schema"
@@ -25,7 +26,9 @@ export type IssueCode =
   | "min-stats"
   | "prerequisite"
   | "core-access"
-  | "chassis";
+  | "chassis"
+  | "kit-budget"
+  | "kit-ceiling";
 
 export interface Issue {
   code: IssueCode;
@@ -86,6 +89,13 @@ export interface BuildSummary {
   chassis?: { item: string; name: string };
   // A Kind's core HP, apart from the chassis's (the AI Core's 10).
   coreHp?: number;
+  // Wealth, -1 to 4, from the packages and Traits (engine/wealth.ts)
+  wealth: number;
+  // The starting kit: the Kit Points Wealth gives (budget) and the dearest
+  // Kit Cost it allows (ceiling), what the items cost (spent), the points
+  // left, the chassis an AI Core gets free, and the cash the points left
+  // become in play, in the Origin's currency.
+  kit: { budget: number; ceiling: number; spent: number; left: number; freeChassis?: string; cash: { amount: number; currency: string } };
   picks: Record<PickKind, PickCount>;
   traits: HeldTrait[];
   // Traits the build may spend background picks on.
@@ -604,6 +614,34 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     for (const r of RESOURCES) resources[r] += (bonus[r] ?? 0) * h.rank;
   }
 
+  // Rule 16: Wealth, from the packages and Traits, buys the starting kit.
+  // Each item costs its Kit Cost per unit (Basic items nothing); the total
+  // can't pass the budget, and no item can cost more than the ceiling. An AI
+  // Core's dearest chassis up to Kit Cost 3 is free, ceiling or not.
+  // Currency and items the player writes in (the GM prices those) cost
+  // nothing. Only at creation: items found in play aren't bought from it.
+  const wealth = clampWealth(packages.reduce((n, p) => n + p.wealth, 0) + [...held.values()].reduce((n, h) => n + (traits.get(h.trait)?.wealth ?? 0) * h.rank, 0));
+  const budget = kitBudget(wealth);
+  const ceiling = kitCeiling(wealth);
+  const priced = build.items.flatMap((bi, index) => {
+    const stock = bi.item ? content.items.find((it) => it.id === bi.item) : undefined;
+    return stock && stock.category !== "currency" ? [{ bi, index, stock, cost: kitCostOf(stock) }] : [];
+  });
+  const freeChassis = kind?.core
+    ? priced.filter((p) => p.stock.chassis && p.cost <= FREE_CHASSIS_COST && p.bi.qty > 0).sort((a, b) => b.cost - a.cost)[0]
+    : undefined;
+  const spent = priced.reduce((n, p) => n + p.cost * p.bi.qty, 0) - (freeChassis?.cost ?? 0);
+  if (campaign.kit !== false) {
+    if (spent > budget) error("kit-budget", `The starting items cost ${spent} Kit Points, but Wealth ${wealth} gives ${budget}`, "items");
+    for (const p of priced) {
+      if (p.cost > ceiling && !(p === freeChassis && p.bi.qty === 1)) {
+        error("kit-ceiling", `${p.stock.name} costs ${p.cost} Kit Points; Wealth ${wealth} can start with items up to ${ceiling}`, `items[${p.index}]`);
+      }
+    }
+  }
+  const currency = packages.find((p) => p.type === "origin")?.plane === "isekai" ? "Luras" : "ERC";
+  const left = Math.max(0, budget - spent);
+
   return {
     ok: errors.length === 0,
     errors,
@@ -617,6 +655,8 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
       movement: chassis ? (chassis.movement ?? DEFAULT_MOVEMENT) : (kind?.movement ?? DEFAULT_MOVEMENT),
       ...(chassisItem ? { chassis: { item: chassisItem.id, name: chassisItem.name } } : {}),
       ...(kind?.core ? { coreHp: kind.core.hp } : {}),
+      wealth,
+      kit: { budget, ceiling, spent, left, ...(freeChassis ? { freeChassis: freeChassis.stock.id } : {}), cash: { amount: startingCash(left, currency), currency } },
       picks,
       traits: [...held.values()],
       backgroundList: [...backgroundList].sort(),

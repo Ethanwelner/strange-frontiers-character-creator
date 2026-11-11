@@ -1,10 +1,16 @@
 import { useState, type ReactNode } from "react";
 import { Popup } from "./popup.js";
-import { Effect, Sign, title } from "./ui.js";
+import { Effect, Icon, Sign, title } from "./ui.js";
 import { ChassisCard, ItemCard, TraitCard, traitCardKind } from "./cards.js";
 import { content, itemById, traitById } from "../content.js";
-import { STAT_CAP, STAT_GROUPS, type StatId } from "../../schema/index.js";
-import { BASE_HP } from "../../engine/validate.js";
+import { STAT_GROUPS, type StatId } from "../../schema/index.js";
+import { BASE_HP, type BuildSummary } from "../../engine/validate.js";
+import { kitCostOf } from "../../engine/wealth.js";
+
+type Kit = BuildSummary["kit"];
+
+// An item's Kit Cost as a chip, at creation: Basic for 0
+const kitChip = (stock: StockItem | undefined) => (stock ? [kitCostOf(stock) ? `Kit Cost ${kitCostOf(stock)}` : "Basic"] : undefined);
 import { ITEM_CATEGORIES, stockItemNamed, withItem, type Item, type ItemCategory } from "../items.js";
 import type { Item as StockItem } from "../../schema/index.js";
 import { Button } from "./Button.js";
@@ -29,7 +35,8 @@ function chassisParts(stock: StockItem) {
   return {
     // Its full HP, as the engine works them out for an AI Core inhabiting it
     maxHp: BASE_HP + c.stats.endurance + c.stats.power + c.stats.grace + traits.reduce((n, t) => n + (t.resources.hp ?? 0), 0),
-    physical: { core: c.core, stats: STAT_GROUPS.physical.map((s: StatId) => ({ id: s, value: c.stats[s as keyof typeof c.stats], bonus: 0, max: STAT_CAP })) },
+    // A chassis's stats are fixed: no slot past them is open
+    physical: { core: c.core, stats: STAT_GROUPS.physical.map((s: StatId) => ({ id: s, value: c.stats[s as keyof typeof c.stats], bonus: 0, max: c.stats[s as keyof typeof c.stats] })) },
     hpBonus: traits.reduce((n, t) => n + (t.resources.hp ?? 0), 0),
     attacks: c.attacks.length
       ? c.attacks.flatMap((id) => {
@@ -52,7 +59,7 @@ function chassisParts(stock: StockItem) {
 // checkbox at each card's right picks it, with a count to set; Add items
 // adds every picked one, from any tab. The last tab, Custom, holds the form
 // for an item the game doesn't have.
-function ItemPicker({ onAdd, custom }: { onAdd: (picked: { stock: StockItem; qty: number }[]) => void; custom: ReactNode }) {
+function ItemPicker({ onAdd, custom, kit }: { onAdd: (picked: { stock: StockItem; qty: number }[]) => void; custom: ReactNode; kit?: Kit }) {
   const categories = ITEM_CATEGORIES.filter((c) => STOCK.some((i) => i.category === c));
   const [tab, setTab] = useState<ItemCategory | "custom">(categories[0]!);
   const [query, setQuery] = useState("");
@@ -77,6 +84,8 @@ function ItemPicker({ onAdd, custom }: { onAdd: (picked: { stock: StockItem; qty
   };
   const shown = STOCK.filter((i) => i.category === tab && matches(i));
   const count = [...picked.values()].reduce((n, q) => n + q, 0);
+  // At creation, what the picks cost in Kit Points
+  const cost = [...picked].reduce((n, [id, q]) => n + kitCostOf(itemById.get(id)!) * q, 0);
   return (
     <div className="item-picker sf-popup-grow">
       <div className="tech-fields tech-fields-light picker-box">
@@ -110,10 +119,11 @@ function ItemPicker({ onAdd, custom }: { onAdd: (picked: { stock: StockItem; qty
               <li key={i.id} className={`item-pick-row${selected ? " selected" : ""}`}>
                 {/* The inventory's item card (a chassis's, for a chassis), without Equip, which waits until the character has it */}
                 <ItemOrChassisCard
-                  className="item-pick"
+                  className={`item-pick${kit && kitCostOf(i) > kit.ceiling && !(i.chassis && kitCostOf(i) <= 3) ? " is-over-kit" : ""}`}
                   name={i.name}
                   stock={i}
                   category={i.category}
+                  chips={kit ? kitChip(i) : undefined}
                   count={selected ? qty : undefined}
                   fold={{ open, onToggle: () => toggleOpen(i.id) }}
                 >
@@ -150,7 +160,7 @@ function ItemPicker({ onAdd, custom }: { onAdd: (picked: { stock: StockItem; qty
             disabled={count === 0}
             onClick={() => onAdd([...picked].map(([id, qty]) => ({ stock: itemById.get(id)!, qty })).filter((p) => p.stock))}
           >
-            {count === 0 ? "Add items" : `Add ${count} ${count === 1 ? "item" : "items"}`}
+            {count === 0 ? "Add items" : `Add ${count} ${count === 1 ? "item" : "items"}${kit && cost ? ` (${cost} Kit ${cost === 1 ? "Point" : "Points"})` : ""}`}
           </Button>
         </div>
       )}
@@ -162,6 +172,92 @@ function ItemPicker({ onAdd, custom }: { onAdd: (picked: { stock: StockItem; qty
 // the Character Creator and on Player Tools' Tracker. A name the game's stock
 // items know (content/items) adds that item, with its category, description
 // and details; anything else is what the player writes.
+// Money, by currency, as badges at the right of the Items title, before Add
+// item: coins, the amount and the currency. The character's own currency
+// always shows, even at 0; others once it holds any. Clicking one opens a
+// field that takes a change ("+50", "-20") or a new total ("300"), applied
+// with Enter or by leaving it; Escape puts it away. Money can't go below 0.
+function CashBadges({ cash, currency, onChange }: { cash: Record<string, number>; currency: string; onChange: (currency: string, amount: number) => void }) {
+  const [editing, setEditing] = useState<string>();
+  const [text, setText] = useState("");
+  const shown = [currency, ...Object.keys(cash).filter((c) => c !== currency && cash[c])];
+  const apply = (c: string) => {
+    const m = text.trim().replace(/[−–]/g, "-").match(/^([+-])?\s*(\d[\d,]*)$/);
+    if (m) {
+      const n = Number(m[2]!.replace(/,/g, ""));
+      const now = cash[c] ?? 0;
+      onChange(c, Math.max(0, m[1] === "+" ? now + n : m[1] === "-" ? now - n : n));
+    }
+    setEditing(undefined);
+  };
+  return (
+    <span className="sf-cash">
+      {shown.map((c) =>
+        editing === c ? (
+          <input
+            key={c}
+            type="text"
+            inputMode="numeric"
+            className="sf-cash-field"
+            aria-label={`Change ${c}: +50, -20 or a new total`}
+            placeholder={`+50, −20 or 300 ${c}`}
+            autoFocus
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") apply(c);
+              if (e.key === "Escape") setEditing(undefined);
+            }}
+            onBlur={() => apply(c)}
+          />
+        ) : (
+          <button
+            key={c}
+            type="button"
+            className="sf-cash-badge"
+            title={`${c}: click to add, spend or set`}
+            onClick={() => {
+              setText("");
+              setEditing(c);
+            }}
+          >
+            <Icon name="coins" />
+            <span className="sf-cash-amount">{(cash[c] ?? 0).toLocaleString("en-US")}</span> {c}
+          </button>
+        ),
+      )}
+    </span>
+  );
+}
+
+// Wealth as a badge in the cash badges' style, before them: the rating, and
+// at creation (`kit`) the Kit Points left of what it gives, red once the
+// items cost too much. Its title says the rest: the dearest Kit Cost allowed,
+// the cash the points left become in play, and any free chassis.
+function WealthBadge({ wealth, kit }: { wealth: number; kit?: Kit }) {
+  const sign = wealth > 0 ? `+${wealth}` : `${wealth}`;
+  const over = kit && kit.spent > kit.budget;
+  const details = kit
+    ? [
+        `Wealth ${sign}: ${kit.budget} Kit Points for starting items, each up to Kit Cost ${kit.ceiling}`,
+        `${kit.budget - kit.spent} left`,
+        ...(kit.left > 0 ? [`the rest becomes ${kit.cash.amount.toLocaleString("en-US")} ${kit.cash.currency} in play`] : []),
+        ...(kit.freeChassis ? [`${itemById.get(kit.freeChassis)?.name ?? "a chassis"} free`] : []),
+      ].join("; ")
+    : `Wealth ${sign}`;
+  return (
+    <span className={`sf-cash-badge sf-wealth-badge${over ? " is-over" : ""}`} title={details} aria-label={details}>
+      <span className="sf-cash-amount">{sign}</span> Wealth
+      {kit && (
+        <span className="sf-wealth-kit">
+          {" "}
+          · <span className="sf-cash-amount">{kit.budget - kit.spent}</span>/{kit.budget} Kit
+        </span>
+      )}
+    </span>
+  );
+}
+
 // An item's card, or for a chassis its ChassisCard: the same top line and
 // options, holding its Physical stats, Attacks and Traits. `hp` is a
 // chassis's HP, kept on the character's item; a picker's card keeps its own.
@@ -178,7 +274,30 @@ function ItemOrChassisCard({ hp, ...props }: Parameters<typeof ItemCard>[0] & { 
 // equipped: equipping another moves it there. Each chassis keeps its own HP
 // on the item, so it remembers its damage while the AI Core is in another;
 // the inhabited one's are the character's HP (Player Tools' tracker).
-export function Items({ items, onChange }: { items: Item[]; onChange: (items: Item[]) => void }) {
+//
+// At creation (`kit`, from the check), each stock item shows its Kit Cost,
+// and the Wealth badge by the title says how many Kit Points are left of
+// what Wealth gives (WealthBadge).
+//
+// Money is a badge by the title (CashBadges), not an item: `cash`, in
+// `currency` first (the Origin's), changed with `onCash`.
+export function Items({
+  items,
+  onChange,
+  kit,
+  cash,
+  currency = "ERC",
+  onCash,
+  wealth,
+}: {
+  items: Item[];
+  onChange: (items: Item[]) => void;
+  kit?: Kit;
+  cash?: Record<string, number>;
+  currency?: string;
+  onCash?: (cash: Record<string, number>) => void;
+  wealth?: number;
+}) {
   // Add item's popup: the game's items to pick from, or a custom item the
   // player names and sorts
   const [name, setName] = useState("");
@@ -256,9 +375,13 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
       <SheetTitle
         as="h4"
         aside={
-          <Button size="small" tone="item" className="sf-sheet-add" aria-label="Add item" onClick={() => setAdding(true)}>
-            Add<span className="sf-sheet-add-noun"> item</span>
-          </Button>
+          <>
+            {wealth !== undefined && <WealthBadge wealth={wealth} kit={kit} />}
+            {onCash && <CashBadges cash={cash ?? {}} currency={currency} onChange={(c, n) => onCash({ ...cash, [c]: n })} />}
+            <Button size="small" tone="item" className="sf-sheet-add" aria-label="Add item" onClick={() => setAdding(true)}>
+              Add<span className="sf-sheet-add-noun"> item</span>
+            </Button>
+          </>
         }
       >
         Items
@@ -269,6 +392,7 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
           <h3 className="subhead">Add items</h3>
           {/* Most items come from the game's list: search, check, set counts */}
           <ItemPicker
+            kit={kit}
             onAdd={addStock}
             custom={
               <form
@@ -311,6 +435,7 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                 category={item.category}
                 count={item.qty}
                 hp={isChassis(item) ? { value: item.hp, onChange: (hp) => update(item, { hp }) } : undefined}
+                chips={kit ? (item.item === kit.freeChassis ? ["Free chassis"] : kitChip(stock)) : undefined}
                 equip={{ checked: item.equipped, onChange: (equipped) => equip(item, equipped) }}
                 fold={{ open: expanded.has(item.id), onToggle: () => toggleExpanded(item) }}
                 edit={{

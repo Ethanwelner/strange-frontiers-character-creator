@@ -1,9 +1,10 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { loadContent } from "../engine/content.js";
+import { validateBuild } from "../engine/validate.js";
 import { fromBuild } from "../app/draft.js";
 import { applyTool, ask, sheetText, trackerLine } from "./chat.js";
-import { addCondition, addItem, checkPlay, currentOf, hpConditions, maxOf, playBuild, playConditions, pointsToPlace, removeItem, shownResources, startPlay, withResource } from "./play.js";
+import { addCondition, addItem, checkPlay, currentOf, hpConditions, maxOf, playBuild, playConditions, pointsToPlace, removeItem, shownResources, startPlay, withResource, withStartingCash } from "./play.js";
 import type { CreateMessage } from "../ai/anthropic.js";
 
 const { content } = loadContent();
@@ -14,8 +15,25 @@ const EXTRAS = ["age", "gender", "customGender", "height", "weight", "descriptio
 const example = JSON.parse(readFileSync(new URL("../../characters/grosh.json", import.meta.url), "utf8")) as Record<string, unknown>;
 const grosh = Object.fromEntries(Object.entries(example).filter(([key]) => !EXTRAS.includes(key)));
 const fresh = () => startPlay(grosh);
+const validateBuildWithKit = (p: ReturnType<typeof fresh>) => validateBuild(playBuild(p), content, { startingLevel: p.draft.level });
 
 describe("a character in play", () => {
+  it("turns the Kit Points left at creation into starting cash, once", () => {
+    const play = startPlay({ ...grosh, items: [] });
+    const result = validateBuildWithKit(play);
+    const left = result.summary!.kit;
+    const cashed = withStartingCash(play, content);
+    expect(cashed.draft.kitCashed).toBe(true);
+    expect(cashed.draft.cash).toEqual({ [left.cash.currency]: left.cash.amount });
+    // A second time, or after a round trip through a file, nothing more
+    expect(withStartingCash(cashed, content)).toBe(cashed);
+    expect(withStartingCash(startPlay(playBuild(cashed)), content).draft.cash).toEqual({ [left.cash.currency]: left.cash.amount });
+    // Currency a file kept as items becomes cash
+    const old = startPlay({ ...grosh, items: [{ item: "luras", name: "Luras", qty: 30, category: "currency" }, { item: "rope", name: "Rope", qty: 1 }] });
+    expect(old.draft.cash).toEqual({ Luras: 30 });
+    expect(old.items.map((i) => i.name)).toEqual(["Rope"]);
+  });
+
   it("keeps an AI Core's HP on each chassis, so a chassis it left remembers its damage", () => {
     const chassis = (item: string, name: string, equipped: boolean) => ({ id: item, item, name, qty: 1, category: "chassis" as const, equipped });
     const swap = (p: ReturnType<typeof fresh>, to: string) => ({ ...p, items: p.items.map((i) => ({ ...i, equipped: i.item === to })) });

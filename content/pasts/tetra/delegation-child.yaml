@@ -19,3 +19,5 @@ backgroundTraits:
   - diplomatic-protocol
   - politics
   - high-society
+# Wealth at creation (engine/wealth.ts)
+wealth: 1

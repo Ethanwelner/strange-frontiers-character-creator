@@ -1750,6 +1750,78 @@
     color: var(--frontiers-mp);
   }
 
+  /* Money, by currency, as badges along the Items title's line before Add
+     item, in the item cards' olive: coins, the amount in Bebas, the
+     currency. Clicked, a badge becomes a field for a change or a total. */
+  .sf-cash {
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .sf-cash-badge,
+  .sf-cash-field {
+    height: 28px;
+    padding: 0 10px;
+    background-color: #25241e;
+    border: 1px solid #6d6a5a;
+    border-radius: 14px;
+    color: #d6d1b4;
+    font-size: .8125rem;
+    font-weight: 600;
+  }
+
+  .sf-cash-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    cursor: pointer;
+
+    .icon {
+      width: 1em;
+      height: 1em;
+      fill: currentColor;
+    }
+
+    &:is(:hover, :focus-visible) {
+      border-color: #b5ae86;
+    }
+  }
+
+  /* Wealth, a badge like the cash's but not a button: its rating, and at
+     creation the Kit Points left, red once the items cost too much */
+  .sf-wealth-badge {
+    cursor: help;
+
+    &.is-over .sf-wealth-kit {
+      color: var(--portfolio-red, #e2574c);
+    }
+  }
+
+  .sf-cash-amount {
+    font-family: var(--title, 'bebas_neueregular');
+    font-size: 1.125rem;
+    font-weight: 400;
+    line-height: 1;
+  }
+
+  .sf-cash-field {
+    width: 11rem;
+    outline: none;
+
+    &:focus {
+      border-color: #b5ae86;
+    }
+  }
+
+  /* In Add item at creation, an item dearer than Wealth allows, faded */
+  .item-pick.is-over-kit {
+    opacity: .45;
+  }
+
   /* An AI Core's core HP: the HP red, paled, apart from its chassis's HP */
   .resource-core {
     color: color-mix(in srgb, var(--frontiers-hp) 55%, white);
