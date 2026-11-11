@@ -9,7 +9,16 @@ import { StatsStep } from "../../app/components/StatsStep.js";
 import { sheetStatGroups, StatBlock } from "../../app/components/stats.js";
 import { TraitsStep } from "../../app/components/TraitsStep.js";
 import { Icon, Sign } from "../../app/components/ui.js";
-import { checkPlay, currentOf, maxOf, pointsToPlace, shownResources, withResource, type Play, type ResourceKey } from "../play.js";
+import {
+  checkPlay,
+  currentOf,
+  maxOf,
+  pointsToPlace,
+  shownResources,
+  withResource,
+  type Play,
+  type ResourceKey,
+} from "../play.js";
 import { Button } from "../../app/components/Button.js";
 
 // The character sheet in its play context (sheet-layout.tsx): HP, VP, SP and
@@ -23,6 +32,11 @@ import { Button } from "../../app/components/Button.js";
 // the Level up badge (Cancel while leveling) throws a level up away. Traits available, under the
 // sheet's Traits title, opens the creator's Traits step in a popup, without
 // the Traits the character already has, and Submit keeps the picks.
+// Whether each resource has its amount field with Damage/Spend and
+// Heal/Gain under its meter. Off for now: Ethan wasn't sure they're needed,
+// and they add a lot to the tracker. The − and + still change any resource.
+const SHOW_AMOUNTS = false;
+
 export function Tracker({
   play,
   result,
@@ -43,8 +57,11 @@ export function Tracker({
 }) {
   // MP shows once the character has any.
   const shown = shownResources(result);
-  const [amounts, setAmounts] = useState<Partial<Record<ResourceKey, string>>>({});
-  const set = (r: ResourceKey, value: number) => onChange(withResource(play, result, r, value));
+  const [amounts, setAmounts] = useState<Partial<Record<ResourceKey, string>>>(
+    {},
+  );
+  const set = (r: ResourceKey, value: number) =>
+    onChange(withResource(play, result, r, value));
   const apply = (r: ResourceKey, sign: 1 | -1) => {
     const n = Number(amounts[r]);
     if (!Number.isFinite(n) || n <= 0) return;
@@ -54,9 +71,17 @@ export function Tracker({
 
   const [traitDraft, setTraitDraft] = useState<Draft>();
   const closeTraits = useCallback(() => setTraitDraft(undefined), []);
-  const traitResult = useMemo(() => (traitDraft ? checkPlay(traitDraft, content, play.items) : undefined), [traitDraft, play.items]);
-  const banked = (result.summary?.picks.universal.banked ?? 0) + (result.summary?.picks.background.banked ?? 0);
-  const heldIds = useMemo(() => new Set(result.summary?.traits.map((h) => h.trait) ?? []), [result]);
+  const traitResult = useMemo(
+    () => (traitDraft ? checkPlay(traitDraft, content, play.items) : undefined),
+    [traitDraft, play.items],
+  );
+  const banked =
+    (result.summary?.picks.universal.banked ?? 0) +
+    (result.summary?.picks.background.banked ?? 0);
+  const heldIds = useMemo(
+    () => new Set(result.summary?.traits.map((h) => h.trait) ?? []),
+    [result],
+  );
 
   // The stats are the stat block. While there are points to add (after Level
   // up, or when the character has points it never placed) they're the
@@ -77,7 +102,10 @@ export function Tracker({
             ready={!pointsToPlace(editing, content)}
             className="build-button"
             disabled={pointsToPlace(editing, content)}
-            onClick={() => (onChange({ ...play, draft: editing }), onLevelDraft(undefined))}
+            onClick={() => (
+              onChange({ ...play, draft: editing }),
+              onLevelDraft(undefined)
+            )}
           >
             Submit
           </Button>
@@ -88,71 +116,102 @@ export function Tracker({
 
   // HP, VP, SP and MP, live
   const resources = (
-        <div className="tools-resources">
-          {shown.map((r) => {
-            const cur = currentOf(play, result, r);
-            const max = maxOf(result, r);
-            const pct = max > 0 ? Math.max(0, Math.min(100, (cur / max) * 100)) : 0;
-            return (
-              <div key={r} className="tools-resource">
-                {/* HP, then −, the value, + and restore to full, on one line; the full name
+    <div className="tools-resources">
+      {shown.map((r) => {
+        const cur = currentOf(play, result, r);
+        const max = maxOf(result, r);
+        const pct = max > 0 ? Math.max(0, Math.min(100, (cur / max) * 100)) : 0;
+        return (
+          <div key={r} className="tools-resource">
+            {/* HP, then −, the value, + and restore to full, on one line; the full name
                     shows on hover */}
-                <div className="tools-resource-value">
-                  <strong className={`tools-resource-name resource-${r}`} title={RESOURCE_NAMES[r]}>
-                    {r.toUpperCase()}
-                  </strong>
-                  <Button round="md" onClick={() => set(r, cur - 1)} aria-label={`1 less ${r.toUpperCase()}`}>
-                    <Sign is="minus" />
-                  </Button>
-                  <span className="num" aria-live="polite">
-                    {/* Above the max (bonus points), the value takes the resource's color */}
-                    {cur > max ? <span className={`resource-${r}`} title={`Above the max of ${max}`}>{cur}</span> : cur}
-                    <span className="muted"> / {max}</span>
-                  </span>
-                  <Button round="md" onClick={() => set(r, cur + 1)} aria-label={`1 more ${r.toUpperCase()}`}>
-                    <Sign is="plus" />
-                  </Button>
-                  <Button
-                    round="md"
-                    onClick={() => set(r, max)}
-                    disabled={cur >= max}
-                    aria-label={`Restore ${r.toUpperCase()} to full`}
-                    title="Restore to full"
+            <div className="tools-resource-value">
+              <strong
+                className={`tools-resource-name resource-${r}`}
+                title={RESOURCE_NAMES[r]}
+              >
+                {r.toUpperCase()}
+              </strong>
+              <Button
+                round="md"
+                onClick={() => set(r, cur - 1)}
+                aria-label={`1 less ${r.toUpperCase()}`}
+              >
+                <Sign is="minus" />
+              </Button>
+              <span className="num" aria-live="polite">
+                {/* Above the max (bonus points), the value takes the resource's color */}
+                {cur > max ? (
+                  <span
+                    className={`resource-${r}`}
+                    title={`Above the max of ${max}`}
                   >
-                    <Icon name="restore" />
-                  </Button>
-                </div>
-                <div className={`tools-meter tools-meter-${r}`} aria-hidden="true">
-                  <span style={{ width: `${pct}%` }} />
-                </div>
-                <div className="tools-resource-apply">
-                  <input
-                    type="number"
-                    min={1}
-                    inputMode="numeric"
-                    placeholder="#"
-                    aria-label={`Amount of ${r.toUpperCase()}`}
-                    value={amounts[r] ?? ""}
-                    onChange={(e) => setAmounts({ ...amounts, [r]: e.target.value })}
-                    onKeyDown={(e) => e.key === "Enter" && apply(r, -1)}
-                  />
-                  <Button onClick={() => apply(r, -1)}>
-                    {r === "hp" || r === "core" ? "Damage" : "Spend"}
-                  </Button>
-                  <Button onClick={() => apply(r, 1)}>
-                    {r === "hp" ? "Heal" : r === "core" ? "Repair" : "Gain"}
-                  </Button>
-                </div>
+                    {cur}
+                  </span>
+                ) : (
+                  cur
+                )}
+                <span className="muted"> / {max}</span>
+              </span>
+              <Button
+                round="md"
+                onClick={() => set(r, cur + 1)}
+                aria-label={`1 more ${r.toUpperCase()}`}
+              >
+                <Sign is="plus" />
+              </Button>
+              <Button
+                round="md"
+                onClick={() => set(r, max)}
+                disabled={cur >= max}
+                aria-label={`Restore ${r.toUpperCase()} to full`}
+                title="Restore to full"
+              >
+                <Icon name="restore" />
+              </Button>
+            </div>
+            <div className={`tools-meter tools-meter-${r}`} aria-hidden="true">
+              <span style={{ width: `${pct}%` }} />
+            </div>
+            {/* An amount to take or give at once, hidden for now (SHOW_AMOUNTS):
+                    the − and + do the job with less on screen */}
+            {SHOW_AMOUNTS && (
+              <div className="tools-resource-apply">
+                <input
+                  type="number"
+                  min={1}
+                  inputMode="numeric"
+                  placeholder="#"
+                  aria-label={`Amount of ${r.toUpperCase()}`}
+                  value={amounts[r] ?? ""}
+                  onChange={(e) =>
+                    setAmounts({ ...amounts, [r]: e.target.value })
+                  }
+                  onKeyDown={(e) => e.key === "Enter" && apply(r, -1)}
+                />
+                <Button onClick={() => apply(r, -1)}>
+                  {r === "hp" || r === "core" ? "Damage" : "Spend"}
+                </Button>
+                <Button onClick={() => apply(r, 1)}>
+                  {r === "hp" ? "Heal" : r === "core" ? "Repair" : "Gain"}
+                </Button>
               </div>
-            );
-          })}
-        </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
   );
   const draft = play.draft;
 
   return (
     <section className="tools-tracker">
-      {!result.summary && <div className="notice bad">The engine couldn't read this character, so its maximums aren't known. Check the sheet below.</div>}
+      {!result.summary && (
+        <div className="notice bad">
+          The engine couldn't read this character, so its maximums aren't known.
+          Check the sheet below.
+        </div>
+      )}
 
       <Sheet
         context="play"
@@ -163,9 +222,15 @@ export function Tracker({
         resources={resources}
         stats={stats}
         onName={(name) => onChange({ ...play, draft: { ...draft, name } })}
-        onLooks={(looks) => onChange({ ...play, draft: { ...draft, ...looks } })}
-        onPortrait={(portrait) => onChange({ ...play, draft: { ...draft, portrait } })}
-        onDescription={(description) => onChange({ ...play, draft: { ...draft, description } })}
+        onLooks={(looks) =>
+          onChange({ ...play, draft: { ...draft, ...looks } })
+        }
+        onPortrait={(portrait) =>
+          onChange({ ...play, draft: { ...draft, portrait } })
+        }
+        onDescription={(description) =>
+          onChange({ ...play, draft: { ...draft, description } })
+        }
         items={play.items}
         onItems={(items) => onChange({ ...play, items })}
         onCash={(cash) => onChange({ ...play, draft: { ...play.draft, cash } })}
@@ -175,7 +240,13 @@ export function Tracker({
         traitsAction={
           // Add traits, like Items' and Conditions' add buttons; the picks left show under the title
           banked > 0 && (
-            <Button size="small" tone="primary" className="sf-sheet-add" aria-label="Add traits" onClick={() => setTraitDraft(play.draft)}>
+            <Button
+              size="small"
+              tone="primary"
+              className="sf-sheet-add"
+              aria-label="Add traits"
+              onClick={() => setTraitDraft(play.draft)}
+            >
               Add<span className="sf-sheet-add-noun"> traits</span>
             </Button>
           )
@@ -184,7 +255,13 @@ export function Tracker({
 
       {/* The creator's Traits step, without the Traits the character already has */}
       {traitDraft && traitResult && (
-        <Popup label="Choose Traits" onClose={closeTraits} size="wide" scroll="inner" className="tools-traits-popup">
+        <Popup
+          label="Choose Traits"
+          onClose={closeTraits}
+          size="wide"
+          scroll="inner"
+          className="tools-traits-popup"
+        >
           <TraitsStep
             draft={traitDraft}
             campaign={{ startingLevel: traitDraft.level }}
@@ -198,8 +275,16 @@ export function Tracker({
           <div className="sf-popup-foot">
             {/* Green and glitching, like Add items, once the picks change the character's Traits */}
             <Button
-              tone={JSON.stringify(traitDraft.traits) !== JSON.stringify(play.draft.traits) ? "primary" : "gray"}
-              ready={JSON.stringify(traitDraft.traits) !== JSON.stringify(play.draft.traits)}
+              tone={
+                JSON.stringify(traitDraft.traits) !==
+                JSON.stringify(play.draft.traits)
+                  ? "primary"
+                  : "gray"
+              }
+              ready={
+                JSON.stringify(traitDraft.traits) !==
+                JSON.stringify(play.draft.traits)
+              }
               className="build-button"
               onClick={() => {
                 onChange({ ...play, draft: traitDraft });
