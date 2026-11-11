@@ -5,7 +5,7 @@ import { content, contentErrors } from "../app/content.js";
 import { slug, toBuild, type Draft } from "../app/draft.js";
 import { Icon, Notice } from "../app/components/ui.js";
 import { describe } from "../app/check.js";
-import { checkPlay, creatorDraft, load, playBuild, pointsToPlace, save, startPlay, type Play } from "./play.js";
+import { checkPlay, creatorDraft, load, playBuild, pointsToPlace, save, startPlay, withStartingCash, type Play } from "./play.js";
 import { Chat } from "./components/Chat.js";
 import { Tracker } from "./components/Tracker.js";
 import { Button } from "../app/components/Button.js";
@@ -34,7 +34,7 @@ export function ToolsApp() {
     e.target.value = "";
     if (!file) return;
     try {
-      setPlay(startPlay(JSON.parse(await file.text())));
+      setPlay(withStartingCash(startPlay(JSON.parse(await file.text())), content));
       setNotice({ text: `Imported ${file.name}.`, fades: true });
     } catch (err) {
       setNotice({ text: `Couldn't import ${file.name}: ${err instanceof Error ? err.message : String(err)}` });
@@ -93,7 +93,7 @@ export function ToolsApp() {
                   </p>
                   <div className="tools-start-options">
                     {fromCreator && (
-                      <Button className="build-button" onClick={() => setPlay(startPlay(toBuild(fromCreator)))}>
+                      <Button className="build-button" onClick={() => setPlay(withStartingCash(startPlay(toBuild(fromCreator)), content))}>
                         Use {fromCreator.name ?? "the character"} from the Character Creator
                       </Button>
                     )}

@@ -285,11 +285,12 @@ export function Sheet({
         }
         stats={stats ?? <StatBlock max={rules.statMax} groups={sheetStatGroups(draft, result)} />}
         movement={summary?.movement}
+        wealth={summary?.wealth}
         resistances={<Resistances items={items} held={inEffect} />}
         conditions={
           <Conditions conditions={conditions} hp={hp ?? summary?.resources.hp ?? 0} maxHp={summary?.resources.hp ?? 0} onChange={onConditions} />
         }
-        items={<Items items={items} onChange={onItems} />}
+        items={<Items items={items} onChange={onItems} kit={context === "build" ? summary?.kit : undefined} />}
         knowledges={
           knowledges.length > 0 ? (
             <ul className="sf-sheet-knowledge-list sf-sheet-scroll">

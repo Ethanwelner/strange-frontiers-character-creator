@@ -127,6 +127,22 @@ function MoveBox({ movement }: { movement?: string }) {
   );
 }
 
+// Wealth, -1 to 4: coins, then the rating with its sign. It sets the
+// starting kit at creation and stays on the sheet as a rating in play.
+function WealthBox({ wealth }: { wealth?: number }) {
+  return (
+    <div className="sf-sheet-box sf-sheet-move sf-sheet-wealth">
+      <SheetTitle>
+        <span title="Wealth">Wealth</span>
+      </SheetTitle>
+      <div className="sf-sheet-move-value" title="Wealth">
+        <Icon name="coins" label="Wealth" />
+        <span className="sf-sheet-move-number">{wealth === undefined ? "–" : wealth > 0 ? `+${wealth}` : wealth}</span>
+      </div>
+    </div>
+  );
+}
+
 export interface SheetLayoutProps {
   context: SheetContext;
   level: number;
@@ -138,6 +154,7 @@ export interface SheetLayoutProps {
   resources: ReactNode;
   stats: ReactNode;
   movement?: string;
+  wealth?: number;
   // The resistances' title and list
   resistances: ReactNode;
   // The Conditions' and the Items' title and list
@@ -153,7 +170,7 @@ export interface SheetLayoutProps {
 }
 
 export function SheetLayout(props: SheetLayoutProps) {
-  const { context, level, head, resources, stats, movement, resistances, conditions, items, knowledges, abilities, skills, skillsAside, other } = props;
+  const { context, level, head, resources, stats, movement, wealth, resistances, conditions, items, knowledges, abilities, skills, skillsAside, other } = props;
   const rules = SHEET_RULES[context];
   // Whether the side has wrapped under the stats, leaving a single column:
   // then Movement and the resistances go first, under the resources and over
@@ -177,6 +194,7 @@ export function SheetLayout(props: SheetLayoutProps) {
   const moveRow = (
     <div className="sf-sheet-move-row">
       <MoveBox movement={movement} />
+      <WealthBox wealth={wealth} />
       <div className="sf-sheet-box sf-sheet-resistances">{resistances}</div>
     </div>
   );

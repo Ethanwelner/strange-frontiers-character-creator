@@ -20,3 +20,5 @@ backgroundTraits:
   - bureaucracy
   - biology
   - starships
+# Wealth at creation (engine/wealth.ts)
+wealth: 1

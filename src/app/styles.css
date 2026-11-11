@@ -1750,6 +1750,29 @@
     color: var(--frontiers-mp);
   }
 
+  /* At creation, the Items column's Kit Points: what's left of what Wealth
+     gives, the dearest Kit Cost allowed and the cash the rest becomes, small
+     and soft under the title, red once the items cost too much */
+  .sf-kit-line {
+    margin: 0 0 12px;
+    color: var(--panel-soft, #b3b3b3);
+    font-size: .8125rem;
+
+    strong {
+      color: var(--panel-text, #e7e8e9);
+      font-weight: 600;
+    }
+
+    &.is-over strong {
+      color: var(--portfolio-red, #e2574c);
+    }
+  }
+
+  /* In Add item at creation, an item dearer than Wealth allows, faded */
+  .item-pick.is-over-kit {
+    opacity: .45;
+  }
+
   /* An AI Core's core HP: the HP red, paled, apart from its chassis's HP */
   .resource-core {
     color: color-mix(in srgb, var(--frontiers-hp) 55%, white);

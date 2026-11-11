@@ -1,9 +1,10 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { loadContent } from "../engine/content.js";
+import { validateBuild } from "../engine/validate.js";
 import { fromBuild } from "../app/draft.js";
 import { applyTool, ask, sheetText, trackerLine } from "./chat.js";
-import { addCondition, addItem, checkPlay, currentOf, hpConditions, maxOf, playBuild, playConditions, pointsToPlace, removeItem, shownResources, startPlay, withResource } from "./play.js";
+import { addCondition, addItem, checkPlay, currentOf, hpConditions, maxOf, playBuild, playConditions, pointsToPlace, removeItem, shownResources, startPlay, withResource, withStartingCash } from "./play.js";
 import type { CreateMessage } from "../ai/anthropic.js";
 
 const { content } = loadContent();
@@ -14,8 +15,22 @@ const EXTRAS = ["age", "gender", "customGender", "height", "weight", "descriptio
 const example = JSON.parse(readFileSync(new URL("../../characters/grosh.json", import.meta.url), "utf8")) as Record<string, unknown>;
 const grosh = Object.fromEntries(Object.entries(example).filter(([key]) => !EXTRAS.includes(key)));
 const fresh = () => startPlay(grosh);
+const validateBuildWithKit = (p: ReturnType<typeof fresh>) => validateBuild(playBuild(p), content, { startingLevel: p.draft.level });
 
 describe("a character in play", () => {
+  it("turns the Kit Points left at creation into starting cash, once", () => {
+    const play = startPlay({ ...grosh, items: [] });
+    const result = validateBuildWithKit(play);
+    const left = result.summary!.kit;
+    const cashed = withStartingCash(play, content);
+    expect(cashed.draft.kitCashed).toBe(true);
+    const cash = cashed.items.find((i) => i.category === "currency");
+    expect(cash).toMatchObject({ qty: left.cash.amount, name: expect.stringContaining(left.cash.currency === "Luras" ? "Luras" : "ERC") });
+    // A second time, or after a round trip through a file, nothing more
+    expect(withStartingCash(cashed, content)).toBe(cashed);
+    expect(withStartingCash(startPlay(playBuild(cashed)), content).items.filter((i) => i.category === "currency")).toHaveLength(1);
+  });
+
   it("keeps an AI Core's HP on each chassis, so a chassis it left remembers its damage", () => {
     const chassis = (item: string, name: string, equipped: boolean) => ({ id: item, item, name, qty: 1, category: "chassis" as const, equipped });
     const swap = (p: ReturnType<typeof fresh>, to: string) => ({ ...p, items: p.items.map((i) => ({ ...i, equipped: i.item === to })) });

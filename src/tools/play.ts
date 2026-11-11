@@ -36,7 +36,7 @@ export interface Play {
 // campaign's starting level only matters at creation. The play's items count,
 // so an AI Core's inhabited chassis gives it its Physical stats and HP.
 export function checkPlay(draft: Draft, content: Content, items?: Item[]): BuildResult {
-  return validateBuild(toBuild(items ? { ...draft, items } : draft), content, { startingLevel: draft.level });
+  return validateBuild(toBuild(items ? { ...draft, items } : draft), content, { startingLevel: draft.level, kit: false });
 }
 
 // Whether a character has stat points left to place: a core point per level,
@@ -123,6 +123,19 @@ export function addCondition(play: Play, content: Content, trait: string, rank =
 
 export function removeCondition(play: Play, trait: string): Play {
   return { ...play, conditions: withoutCondition(play.conditions, trait) };
+}
+
+// The Kit Points a new character had left become starting cash, in its
+// Origin's currency, the first time it goes into play, and only then
+// (kitCashed). Checked with the starting-kit rules, as at creation.
+export function withStartingCash(play: Play, content: Content): Play {
+  if (play.draft.kitCashed) return play;
+  const draft = { ...play.draft, kitCashed: true };
+  const kit = validateBuild(toBuild({ ...play.draft, items: play.items }), content, { startingLevel: play.draft.level }).summary?.kit;
+  if (!kit || kit.cash.amount <= 0) return { ...play, draft };
+  const stock = content.items.find((i) => i.id === (kit.cash.currency === "Luras" ? "luras" : "earth-reserve-credits"));
+  const cash = { ...(stock ? { item: stock.id } : {}), name: stock?.name ?? kit.cash.currency, qty: kit.cash.amount, category: "currency" as const, equipped: false };
+  return { ...play, draft, items: withItem(play.items, cash) };
 }
 
 // A new session for an imported build: full resources, carrying the build's

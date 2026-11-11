@@ -4,7 +4,13 @@ import { Effect, Sign, title } from "./ui.js";
 import { ChassisCard, ItemCard, TraitCard, traitCardKind } from "./cards.js";
 import { content, itemById, traitById } from "../content.js";
 import { STAT_CAP, STAT_GROUPS, type StatId } from "../../schema/index.js";
-import { BASE_HP } from "../../engine/validate.js";
+import { BASE_HP, type BuildSummary } from "../../engine/validate.js";
+import { kitCostOf } from "../../engine/wealth.js";
+
+type Kit = BuildSummary["kit"];
+
+// An item's Kit Cost as a chip, at creation: Basic for 0
+const kitChip = (stock: StockItem | undefined) => (stock ? [kitCostOf(stock) ? `Kit Cost ${kitCostOf(stock)}` : "Basic"] : undefined);
 import { ITEM_CATEGORIES, stockItemNamed, withItem, type Item, type ItemCategory } from "../items.js";
 import type { Item as StockItem } from "../../schema/index.js";
 import { Button } from "./Button.js";
@@ -52,7 +58,7 @@ function chassisParts(stock: StockItem) {
 // checkbox at each card's right picks it, with a count to set; Add items
 // adds every picked one, from any tab. The last tab, Custom, holds the form
 // for an item the game doesn't have.
-function ItemPicker({ onAdd, custom }: { onAdd: (picked: { stock: StockItem; qty: number }[]) => void; custom: ReactNode }) {
+function ItemPicker({ onAdd, custom, kit }: { onAdd: (picked: { stock: StockItem; qty: number }[]) => void; custom: ReactNode; kit?: Kit }) {
   const categories = ITEM_CATEGORIES.filter((c) => STOCK.some((i) => i.category === c));
   const [tab, setTab] = useState<ItemCategory | "custom">(categories[0]!);
   const [query, setQuery] = useState("");
@@ -77,6 +83,8 @@ function ItemPicker({ onAdd, custom }: { onAdd: (picked: { stock: StockItem; qty
   };
   const shown = STOCK.filter((i) => i.category === tab && matches(i));
   const count = [...picked.values()].reduce((n, q) => n + q, 0);
+  // At creation, what the picks cost in Kit Points
+  const cost = [...picked].reduce((n, [id, q]) => n + kitCostOf(itemById.get(id)!) * q, 0);
   return (
     <div className="item-picker sf-popup-grow">
       <div className="tech-fields tech-fields-light picker-box">
@@ -110,10 +118,11 @@ function ItemPicker({ onAdd, custom }: { onAdd: (picked: { stock: StockItem; qty
               <li key={i.id} className={`item-pick-row${selected ? " selected" : ""}`}>
                 {/* The inventory's item card (a chassis's, for a chassis), without Equip, which waits until the character has it */}
                 <ItemOrChassisCard
-                  className="item-pick"
+                  className={`item-pick${kit && kitCostOf(i) > kit.ceiling && !(i.chassis && kitCostOf(i) <= 3) ? " is-over-kit" : ""}`}
                   name={i.name}
                   stock={i}
                   category={i.category}
+                  chips={kit ? kitChip(i) : undefined}
                   count={selected ? qty : undefined}
                   fold={{ open, onToggle: () => toggleOpen(i.id) }}
                 >
@@ -150,7 +159,7 @@ function ItemPicker({ onAdd, custom }: { onAdd: (picked: { stock: StockItem; qty
             disabled={count === 0}
             onClick={() => onAdd([...picked].map(([id, qty]) => ({ stock: itemById.get(id)!, qty })).filter((p) => p.stock))}
           >
-            {count === 0 ? "Add items" : `Add ${count} ${count === 1 ? "item" : "items"}`}
+            {count === 0 ? "Add items" : `Add ${count} ${count === 1 ? "item" : "items"}${kit && cost ? ` (${cost} Kit ${cost === 1 ? "Point" : "Points"})` : ""}`}
           </Button>
         </div>
       )}
@@ -178,7 +187,12 @@ function ItemOrChassisCard({ hp, ...props }: Parameters<typeof ItemCard>[0] & { 
 // equipped: equipping another moves it there. Each chassis keeps its own HP
 // on the item, so it remembers its damage while the AI Core is in another;
 // the inhabited one's are the character's HP (Player Tools' tracker).
-export function Items({ items, onChange }: { items: Item[]; onChange: (items: Item[]) => void }) {
+//
+// At creation (`kit`, from the check), each stock item shows its Kit Cost,
+// and the title's line says how many Kit Points are left of what Wealth
+// gives, the dearest Kit Cost it allows, and the starting cash the rest
+// becomes in play.
+export function Items({ items, onChange, kit }: { items: Item[]; onChange: (items: Item[]) => void; kit?: Kit }) {
   // Add item's popup: the game's items to pick from, or a custom item the
   // player names and sorts
   const [name, setName] = useState("");
@@ -263,12 +277,23 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
       >
         Items
       </SheetTitle>
+      {kit && (
+        <p className={`sf-kit-line${kit.spent > kit.budget ? " is-over" : ""}`}>
+          <strong>
+            {kit.budget - kit.spent} of {kit.budget} Kit Points left
+          </strong>
+          {" "}· items up to Kit Cost {kit.ceiling}
+          {kit.left > 0 && ` · the rest becomes ${kit.cash.amount.toLocaleString("en-US")} ${kit.cash.currency} in play`}
+          {kit.freeChassis && ` · ${itemById.get(kit.freeChassis)?.name ?? "a chassis"} free`}
+        </p>
+      )}
 
       {adding && (
         <Popup label="Add items" onClose={() => setAdding(false)} size="wide" scroll="inner" className="sheet-add-popup item-picker-popup">
           <h3 className="subhead">Add items</h3>
           {/* Most items come from the game's list: search, check, set counts */}
           <ItemPicker
+            kit={kit}
             onAdd={addStock}
             custom={
               <form
@@ -311,6 +336,7 @@ export function Items({ items, onChange }: { items: Item[]; onChange: (items: It
                 category={item.category}
                 count={item.qty}
                 hp={isChassis(item) ? { value: item.hp, onChange: (hp) => update(item, { hp }) } : undefined}
+                chips={kit ? (item.item === kit.freeChassis ? ["Free chassis"] : kitChip(stock)) : undefined}
                 equip={{ checked: item.equipped, onChange: (equipped) => equip(item, equipped) }}
                 fold={{ open: expanded.has(item.id), onToggle: () => toggleExpanded(item) }}
                 edit={{

@@ -15,3 +15,5 @@ backgroundTraits:
   - high-society
   - local-history
   - politics
+# Wealth at creation (engine/wealth.ts)
+wealth: 2

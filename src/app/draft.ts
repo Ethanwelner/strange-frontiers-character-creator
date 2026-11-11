@@ -48,6 +48,9 @@ export interface Draft {
   items?: Item[];
   // Temporary Conditions, like the items, shared with Player Tools
   conditions?: HeldCondition[];
+  // Whether the Kit Points left at creation have become starting cash, once,
+  // when the character first went into play
+  kitCashed?: boolean;
 }
 
 export const STEPS = ["character", "background", "stats", "traits", "choices", "sheet"] as const;
@@ -205,6 +208,7 @@ export function fromBuild(input: unknown): Draft {
     choices: array<ChoiceAnswer>(b.choices),
     ...(Array.isArray(b.items) && b.items.length ? { items: readItems(b.items) } : {}),
     ...(Array.isArray(b.conditions) && b.conditions.length ? { conditions: readConditions(b.conditions) } : {}),
+    ...(b.kitCashed === true ? { kitCashed: true } : {}),
   };
 }
 

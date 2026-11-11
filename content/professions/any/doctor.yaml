@@ -24,3 +24,5 @@ backgroundTraits:
   - parasapient-medicine
   - biology
   - chemistry
+# Wealth at creation (engine/wealth.ts)
+wealth: 1
