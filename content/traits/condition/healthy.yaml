@@ -7,4 +7,3 @@ tags: [health, site-example, hit-points]
 category: condition
 conveyed: true
 temporary: "A character or object gains this trait while they are at their maximum HP total"
-effect: "This Trait has no effect on its own."

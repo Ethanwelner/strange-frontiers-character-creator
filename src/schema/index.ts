@@ -172,7 +172,9 @@ export const Trait = BaseEntry.extend({
   // Conveyed Traits come from packages, choices or play, never from a level-up pick.
   conveyed: z.boolean().default(false),
   rpRequirement: z.string().optional(),
-  effect: z.string().min(1),
+  // Empty for a Trait that only marks a state, like Healthy, which other
+  // effects check for.
+  effect: z.string().default(""),
   // For a language Trait, which language it's a form of: Dreftan (Spoken) and
   // Dreftan (Written) are both `dreftan`.
   language: z.string().optional(),
