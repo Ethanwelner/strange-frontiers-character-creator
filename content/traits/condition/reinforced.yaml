@@ -1,0 +1,10 @@
+id: reinforced
+name: "Reinforced"
+status: draft
+plane: any
+summary: "Built or braced to take more punishment."
+tags: [hit-points, chassis, machine]
+category: condition
+background: true
+modifiers: "HP +10"
+effect: "This character or item has +10 Hit Points."
