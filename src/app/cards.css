@@ -742,6 +742,37 @@
     font-weight: 400;
 }
 
+/* A chassis (ChassisCard): under its description, a rule, then its
+   Physical stats, its Attacks and the Traits it gives, 12px apart. Its HP
+   sit on its top line in the MP readout's style (.equipment-mp). The stat
+   block keeps its own colors on the card's black; its groups sit 16px
+   apart here. */
+.sf-chassis {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #6d6a5a;
+
+    .sf-stats {
+        gap: 16px;
+    }
+}
+
+.sf-chassis-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sf-chassis-label {
+    margin: 0;
+    color: #d6d1b4;
+    font-size: .75rem;
+    font-weight: 600;
+}
+
 /* An open card's chips the top line leaves out: its category, then its
    value, how it Attacks and the slot it takes */
 .equipment-chips {
@@ -882,6 +913,18 @@
 
     .muted {
         color: var(--card-soft);
+    }
+}
+
+/* HP or MP with − and + (ItemResource): the name, −, the value over its
+   max, +, centered on one line like the sheet's trackers, the buttons the
+   smallest round ones */
+.equipment-resource {
+    align-items: center;
+    flex: none;
+
+    .sf-btn {
+        flex: none;
     }
 }
 

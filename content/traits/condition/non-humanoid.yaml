@@ -1,0 +1,9 @@
+id: non-humanoid
+name: "Non-humanoid"
+status: draft
+plane: any
+summary: "Not built like a person: no human hands, no humanoid body."
+tags: [machine, chassis, ai-core]
+category: condition
+background: true
+effect: "This character is incapable of wielding weapons designed for human hands or wearing equipment designed for use on humanoid bodies."

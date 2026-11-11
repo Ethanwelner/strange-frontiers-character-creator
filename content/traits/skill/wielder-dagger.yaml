@@ -8,5 +8,5 @@ category: skill
 list: wielder
 ranked: true
 minStats: { grace: 3, intuition: 2 }
-effect: "- Rank *5 added to skill check rolls involving a Dagger.\n- +3 to Attack Rolls made with a Dagger, at any Rank.\n- This character is capable of performing the basic tasks of maintaining a Dagger without a skill check."
+effect: "- Rank *5 added to skill check rolls involving a Dagger.\n- +3 to Attack Rolls made with a Dagger.\n- This character is capable of performing the basic tasks of maintaining a Dagger without a skill check."
 modifiers: "Attack Rolls +3 (Dagger)"

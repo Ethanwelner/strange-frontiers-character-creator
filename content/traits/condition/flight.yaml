@@ -1,0 +1,9 @@
+id: flight
+name: "Flight"
+status: draft
+plane: any
+summary: "Built to fly."
+tags: [movement, chassis, ai-core]
+category: condition
+background: true
+effect: "This character can fly, moving its full Movement distance through the air in any direction."

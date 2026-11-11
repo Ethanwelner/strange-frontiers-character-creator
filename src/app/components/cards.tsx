@@ -1,10 +1,13 @@
-import { Fragment, type HTMLAttributes, type KeyboardEvent, type ReactNode } from "react";
+import { Fragment, useState, type HTMLAttributes, type KeyboardEvent, type ReactNode } from "react";
 import type { Item as StockItem, Trait } from "../../schema/index.js";
 import { parseDamage } from "../../engine/damage.js";
+import { BASE_HP } from "../../engine/validate.js";
 import { itemBadges, itemUses } from "../items.js";
 import { parseResistances } from "../resistances.js";
 import { damageIcon } from "./Resistances.js";
-import { Icon, SettingIcon, title } from "./ui.js";
+import { StatBlock, type BlockGroup } from "./stats.js";
+import { Button } from "./Button.js";
+import { Icon, SettingIcon, Sign, title } from "./ui.js";
 
 // The card components: one per kind of card, so a new card can't drift from
 // the others.
@@ -12,6 +15,8 @@ import { Icon, SettingIcon, title } from "./ui.js";
 //   TraitCard       Knowledges, Languages, Skills, Abilities and spells,
 //                   Conditions, Circumstances and Other Traits
 //   ItemCard        Weapons, wearables, equipment and natural weapons
+//   ChassisCard     An AI Core's chassis: an Item card holding Physical
+//                   stats and Traits
 //   BackgroundCard  Kinds, Origins, Professions and Pasts
 //
 // These, the Character Creator's and Player Tools', are the reference for
@@ -32,6 +37,7 @@ import { Icon, SettingIcon, title } from "./ui.js";
 //                    fold  opens and closes from its chevron, and only there
 //                    edit  Edit and Remove, and the fields to edit it
 //                    note  Note, and its field
+//                    body  More of the card, under its description
 //   Background card  select  a card to pick, in a radio group
 //
 // A card without fold is always open. The site's pages are static, so there
@@ -158,9 +164,9 @@ const AREA = "Area of Effect: ";
 // each damage type's icon and number, all in one badge, with "or" between a
 // damage choice's options. Where a resistance applies, like a helmet's
 // (head), is left to the item's description.
-function ItemBadges({ stock }: { stock: StockItem }) {
+function ItemBadges({ stock, withResists = true }: { stock: StockItem; withResists?: boolean }) {
   const damage = stock.damage ? parseDamage(stock.damage) : undefined;
-  const resists = stock.resistances ? parseResistances(stock.resistances, stock.name) : [];
+  const resists = withResists && stock.resistances ? parseResistances(stock.resistances, stock.name) : [];
   if (!stock.damage && !resists.length && !stock.maxRange && !stock.areaOfEffect) return null;
   const ranged = stock.tags?.some((t) => t === "ranged" || t === "thrown");
   const lead = (name: "crosshairs" | "sword" | "range" | "burst" | "shield", label: string) => (
@@ -215,20 +221,66 @@ function ItemBadges({ stock }: { stock: StockItem }) {
           </span>
         </span>
       )}
-      {resists.length > 0 && (
-        <span className="sf-item-badge-group">
-          <span className="chip equipment-stat">
-            {lead("shield", "Resists")}
-            {resists.map((r, i) => (
-              <span key={i} className="equipment-stat-value">
-                <Icon name={damageIcon(r.type)} label={r.type} />
-                {r.amount}
-              </span>
-            ))}
-          </span>
-        </span>
-      )}
+      {resists.length > 0 && <ResistBadge stock={stock} />}
     </div>
+  );
+}
+
+// An item's resistances as one badge, led by a shield
+function ResistBadge({ stock }: { stock: StockItem }) {
+  const resists = stock.resistances ? parseResistances(stock.resistances, stock.name) : [];
+  if (!resists.length) return null;
+  return (
+    <span className="sf-item-badge-group">
+      <span className="chip equipment-stat">
+        <span className="item-stat-lead">
+          <Icon name="shield" label="Resists" />
+        </span>
+        {resists.map((r, i) => (
+          <span key={i} className="equipment-stat-value">
+            <Icon name={damageIcon(r.type)} label={r.type} />
+            {r.amount}
+          </span>
+        ))}
+      </span>
+    </span>
+  );
+}
+
+const RESOURCE_TITLES = { hp: "Hit Points", mp: "Mana Points" } as const;
+
+/**
+ * HP or MP on an Item's top line, as the character sheet's trackers: its
+ * name, −, the value over its max, +. − stops at 0; + goes past the max
+ * (bonus points), and the value then takes the resource's color. A
+ * chassis's HP, an enchanted Item's stored MP.
+ *
+ * value     Now. Full (max) without it.
+ * onChange  Keeps the value elsewhere; without it the readout keeps its own.
+ */
+export function ItemResource({ kind, max, value, onChange }: { kind: "hp" | "mp"; max: number; value?: number; onChange?: (value: number) => void }) {
+  const [own, setOwn] = useState(value ?? max);
+  const cur = onChange ? (value ?? max) : own;
+  const set = onChange ?? setOwn;
+  const name = kind.toUpperCase();
+  return (
+    <span className={`equipment-mp equipment-resource equipment-${kind}`}>
+      <strong className={`resource-name resource-${kind}`} title={RESOURCE_TITLES[kind]}>
+        {name}
+      </strong>
+      <Button round="xs" onClick={() => set(Math.max(0, cur - 1))} disabled={cur <= 0} aria-label={`1 less ${name}`}>
+        <Sign is="minus" />
+      </Button>
+      <span className="num" aria-live="polite">
+        <span className={`equipment-resource-now${cur > max ? ` resource-${kind}` : ""}`} title={cur > max ? `Above the max of ${max}` : undefined}>
+          {cur}
+        </span>
+        <span className="muted"> / {max}</span>
+      </span>
+      <Button round="xs" onClick={() => set(cur + 1)} aria-label={`1 more ${name}`}>
+        <Sign is="plus" />
+      </Button>
+    </span>
   );
 }
 
@@ -244,6 +296,12 @@ function ItemBadges({ stock }: { stock: StockItem }) {
  * fold   Opens and closes from its chevron, and only there.
  * edit   Edit's pen and, while editing, Remove and `fields`.
  * note   Note's pen and label, and `field` while it's shown.
+ * body   More of the card, under its description while it's open, like a
+ *        chassis's stats and Traits.
+ * badges More of the top line, after its badges, like a chassis's HP.
+ * mp     An enchanted Item's stored MP, with − and + (ItemResource).
+ * resistsInChips  Its resistances badge leads the chips line instead of
+ *        sitting on the top line (a chassis, whose top line holds its HP).
  */
 export function ItemCard({
   name,
@@ -254,6 +312,10 @@ export function ItemCard({
   fold,
   edit,
   note,
+  body,
+  badges,
+  mp,
+  resistsInChips,
   className = "",
   as: Root = "div",
   children,
@@ -266,6 +328,10 @@ export function ItemCard({
   fold?: { open: boolean; onToggle: () => void };
   edit?: { editing: boolean; onToggle: () => void; onRemove: () => void; fields: ReactNode };
   note?: { shown: boolean; onToggle: () => void; field: ReactNode };
+  body?: ReactNode;
+  badges?: ReactNode;
+  mp?: { max: number; value?: number; onChange?: (value: number) => void };
+  resistsInChips?: boolean;
   className?: string;
   as?: "div" | "li";
   children?: ReactNode;
@@ -296,7 +362,9 @@ export function ItemCard({
         {/* The name and its badges, which drop under it only when they don't fit beside it */}
         <span className="sf-item-main">
           <span className="equipment-name">{name}</span>
-          {stock && <ItemBadges stock={stock} />}
+          {stock && <ItemBadges stock={stock} withResists={!resistsInChips} />}
+          {mp && <ItemResource kind="mp" {...mp} />}
+          {badges}
         </span>
         {fold && <Chevron {...fold} label={name} className="sf-item-icon sf-item-expand" />}
       </div>
@@ -321,6 +389,7 @@ export function ItemCard({
           {/* The chips the top line leaves out: the category, then its value,
               how it Attacks and the slot it takes */}
           <div className="equipment-chips">
+            {resistsInChips && stock && <ResistBadge stock={stock} />}
             <span className="chip">{title(category)}</span>
             {chips.map((b) => (
               <span key={b} className="chip">
@@ -336,6 +405,7 @@ export function ItemCard({
               {uses && <p className="equipment-effect">{uses}</p>}
             </div>
           )}
+          {body}
           {note && (
             <div className="sf-item-note-line">
               {/* Note, a pen and its label, opening the notes field at its right */}
@@ -352,6 +422,72 @@ export function ItemCard({
       )}
       {children}
     </Root>
+  );
+}
+
+/**
+ * A Chassis card: the body an AI Core inhabits, an Item card that holds part
+ * of a character sheet. Its top line is an Item card's with its HP, which
+ * − and + change, as on a character sheet; its armor's resistances badge
+ * leads its chips (through `stock`). Open, under its
+ * description, its Physical core and focus stats as a stat block, its
+ * Attacks as Item cards (`attacks`, natural weapons) and the Traits it
+ * gives whoever inhabits it, as Trait cards (`traits`). Its HP sit on its
+ * top line, worked out as a character's are: 10 plus its Physical focus
+ * stats. An AI Core has no Physical stats of its own: its chassis's are
+ * its, and so are its HP.
+ *
+ * physical  The Physical core stat and its focus stats.
+ * hp        Its HP now, when it's taken damage; full without it.
+ * hpBonus   More max HP from its Traits, like Reinforced's +10.
+ * onHpChange  Keeps its HP elsewhere (Player Tools); without it the card
+ *           keeps its own as its − and + change it.
+ * attacks   Item cards.
+ * traits    Trait cards.
+ * Everything else is ItemCard's.
+ */
+export function ChassisCard({
+  physical,
+  hp,
+  hpBonus = 0,
+  onHpChange,
+  attacks,
+  traits,
+  className = "",
+  ...item
+}: Omit<Parameters<typeof ItemCard>[0], "body" | "badges" | "resistsInChips"> & {
+  physical: Omit<BlockGroup, "group">;
+  hp?: number;
+  hpBonus?: number;
+  onHpChange?: (hp: number) => void;
+  attacks?: ReactNode;
+  traits?: ReactNode;
+}) {
+  const maxHp = BASE_HP + physical.stats.reduce((sum, s) => sum + s.value, 0) + hpBonus;
+  return (
+    <ItemCard
+      {...item}
+      className={`sf-chassis-card${className ? ` ${className}` : ""}`}
+      resistsInChips
+      badges={<ItemResource kind="hp" max={maxHp} value={hp} onChange={onHpChange} />}
+      body={
+        <div className="sf-chassis">
+          <StatBlock groups={[{ group: "physical", ...physical }]} />
+          {attacks && (
+            <div className="sf-chassis-list">
+              <h5 className="sf-chassis-label">Attacks</h5>
+              {attacks}
+            </div>
+          )}
+          {traits && (
+            <div className="sf-chassis-list">
+              <h5 className="sf-chassis-label">Traits</h5>
+              {traits}
+            </div>
+          )}
+        </div>
+      }
+    />
   );
 }
 

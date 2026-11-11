@@ -8,5 +8,5 @@ category: skill
 list: wielder
 ranked: true
 minStats: { grace: 4, power: 4, endurance: 4 }
-effect: "- Rank *5 added to skill check rolls involving a Longsword.\n- +3 to Attack Rolls made with a Longsword, at any Rank.\n- This character is capable of performing the basic tasks of maintaining a Longsword without a skill check."
+effect: "- Rank *5 added to skill check rolls involving a Longsword.\n- +3 to Attack Rolls made with a Longsword.\n- This character is capable of performing the basic tasks of maintaining a Longsword without a skill check."
 modifiers: "Attack Rolls +3 (Longsword)"
