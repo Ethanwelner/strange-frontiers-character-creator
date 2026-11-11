@@ -99,6 +99,9 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom, p
       (!hideRejected || o.reasons.length === 0 || taken.has(o.trait.id)) &&
       (!q || o.trait.name.toLowerCase().includes(q) || o.trait.tags.some((t) => t.toLowerCase().includes(q))),
   );
+  // Only categories this tab has Traits in get a checkbox (no Starter Traits
+  // while the game has none)
+  const present = new Set(options.filter((o) => !hide?.has(o.trait.id) && !skip?.has(o.trait.category)).map((o) => o.trait.category));
   const groups = TraitCategory.options
     .map((c) => ({ category: c, options: shown.filter((o) => o.trait.category === c) }))
     .filter((g) => g.options.length > 0);
@@ -206,7 +209,7 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom, p
 
         <div className="filters traits-filters">
           <input type="search" placeholder="Search name or tag" value={query} onChange={(e) => setQuery(e.target.value)} aria-label="Search Traits" />
-          {TraitCategory.options.filter((c) => !skip?.has(c)).map((c) => (
+          {TraitCategory.options.filter((c) => present.has(c)).map((c) => (
             <label key={c} className="check">
               <input type="checkbox" checked={!hidden.has(c)} onChange={() => toggleCategory(c)} /> {GROUP_TITLE[c]}
             </label>
