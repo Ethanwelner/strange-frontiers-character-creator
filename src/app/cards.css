@@ -743,8 +743,10 @@
 }
 
 /* A chassis (ChassisCard): under its description, a rule, then its
-   Physical stats and the Traits it gives, 12px apart. The stat block keeps
-   its own colors on the card's black; its groups sit 16px apart here. */
+   Physical stats, its Attacks and the Traits it gives, 12px apart. Its HP
+   sit on its top line in the MP readout's style (.equipment-mp). The stat
+   block keeps its own colors on the card's black; its groups sit 16px
+   apart here. */
 .sf-chassis {
     display: flex;
     flex-direction: column;
@@ -758,7 +760,7 @@
     }
 }
 
-.sf-chassis-traits {
+.sf-chassis-list {
     display: flex;
     flex-direction: column;
     gap: 8px;

@@ -1,6 +1,7 @@
 import { Fragment, type HTMLAttributes, type KeyboardEvent, type ReactNode } from "react";
 import type { Item as StockItem, Trait } from "../../schema/index.js";
 import { parseDamage } from "../../engine/damage.js";
+import { BASE_HP } from "../../engine/validate.js";
 import { itemBadges, itemUses } from "../items.js";
 import { parseResistances } from "../resistances.js";
 import { damageIcon } from "./Resistances.js";
@@ -250,6 +251,7 @@ function ItemBadges({ stock }: { stock: StockItem }) {
  * note   Note's pen and label, and `field` while it's shown.
  * body   More of the card, under its description while it's open, like a
  *        chassis's stats and Traits.
+ * badges More of the top line, after its badges, like a chassis's HP.
  */
 export function ItemCard({
   name,
@@ -261,6 +263,7 @@ export function ItemCard({
   edit,
   note,
   body,
+  badges,
   className = "",
   as: Root = "div",
   children,
@@ -274,6 +277,7 @@ export function ItemCard({
   edit?: { editing: boolean; onToggle: () => void; onRemove: () => void; fields: ReactNode };
   note?: { shown: boolean; onToggle: () => void; field: ReactNode };
   body?: ReactNode;
+  badges?: ReactNode;
   className?: string;
   as?: "div" | "li";
   children?: ReactNode;
@@ -305,6 +309,7 @@ export function ItemCard({
         <span className="sf-item-main">
           <span className="equipment-name">{name}</span>
           {stock && <ItemBadges stock={stock} />}
+          {badges}
         </span>
         {fold && <Chevron {...fold} label={name} className="sf-item-icon sf-item-expand" />}
       </div>
@@ -368,29 +373,59 @@ export function ItemCard({
  * A Chassis card: the body an AI Core inhabits, an Item card that holds part
  * of a character sheet. Its top line and chips are an Item card's (its
  * armor as a resistances badge, through `stock`); open, under its
- * description, its Physical core and focus stats as a stat block, then the
- * Traits it gives whoever inhabits it, as Trait cards (`traits`). An AI
- * Core has no Physical stats of its own: its chassis's are its.
+ * description, its Physical core and focus stats as a stat block, its
+ * Attacks as Item cards (`attacks`, natural weapons) and the Traits it
+ * gives whoever inhabits it, as Trait cards (`traits`). Its HP sit on its
+ * top line, worked out as a character's are: 10 plus its Physical focus
+ * stats. An AI Core has no Physical stats of its own: its chassis's are
+ * its, and so are its HP.
  *
  * physical  The Physical core stat and its focus stats.
+ * hp        Its HP now, when it's taken damage; full without it.
+ * attacks   Item cards.
  * traits    Trait cards.
  * Everything else is ItemCard's.
  */
 export function ChassisCard({
   physical,
+  hp,
+  attacks,
   traits,
   className = "",
   ...item
-}: Omit<Parameters<typeof ItemCard>[0], "body"> & { physical: Omit<BlockGroup, "group">; traits?: ReactNode }) {
+}: Omit<Parameters<typeof ItemCard>[0], "body" | "badges"> & {
+  physical: Omit<BlockGroup, "group">;
+  hp?: number;
+  attacks?: ReactNode;
+  traits?: ReactNode;
+}) {
+  const maxHp = BASE_HP + physical.stats.reduce((sum, s) => sum + s.value, 0);
   return (
     <ItemCard
       {...item}
       className={`sf-chassis-card${className ? ` ${className}` : ""}`}
+      badges={
+        <span className="equipment-mp equipment-hp">
+          <strong className="resource-name resource-hp" title="Hit Points">
+            HP
+          </strong>
+          <span className="num">
+            {hp ?? maxHp}
+            <span className="muted"> / {maxHp}</span>
+          </span>
+        </span>
+      }
       body={
         <div className="sf-chassis">
           <StatBlock groups={[{ group: "physical", ...physical }]} />
+          {attacks && (
+            <div className="sf-chassis-list">
+              <h5 className="sf-chassis-label">Attacks</h5>
+              {attacks}
+            </div>
+          )}
           {traits && (
-            <div className="sf-chassis-traits">
+            <div className="sf-chassis-list">
               <h5 className="sf-chassis-label">Traits</h5>
               {traits}
             </div>
