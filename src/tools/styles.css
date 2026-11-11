@@ -137,6 +137,11 @@
     /* 36px between the sheet and the d20 and chat column */
     column-gap: 36px;
 
+    /* From 1768px down to 1400px, the d20 and chat column is 300px */
+    @media (min-width: 1400px) and (max-width: 1768px) {
+      grid-template-columns: minmax(0, 1fr) 300px;
+    }
+
     /* On smaller screens, before the column drops under the sheet at 991px,
        it narrows to 256px, 24px from the sheet, so the sheet keeps its room */
     @media (min-width: 992px) and (max-width: 1399px) {
