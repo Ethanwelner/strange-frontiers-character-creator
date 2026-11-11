@@ -446,7 +446,6 @@
    olive with the card's edge and a pale olive text */
 :is(.sf-item-card, .sf-card-action-badges) .chip {
     display: inline-block;
-    margin: .15rem .25rem .15rem 0;
     padding: .2rem .5rem;
     background-color: #25241e;
     border: 1px solid #6d6a5a;
@@ -484,8 +483,7 @@
     flex-wrap: nowrap;
 }
 
-/* With badges, the top line is a badge tall (the badge and its margins:
-   1lh + .7rem + 2px, worked out here so the chevron's own line height
+/* With badges, the top line is a badge tall (1lh + .4rem + 2px, worked out here so the chevron's own line height
    doesn't change it). Equip, the name and the chevron each take that
    height, so they stay on the name's line when the badges wrap under it,
    instead of centering on the taller card. */
@@ -496,7 +494,7 @@
 }
 
 .sf-item-card .sf-item-summary:has(.equipment-stat) {
-    --sf-item-line: calc(1lh + .7rem + 2px);
+    --sf-item-line: calc(1lh + .4rem + 2px);
     align-items: flex-start;
 
     > :is(.sf-item-equip, .sf-item-expand) {
@@ -645,11 +643,9 @@
     }
 }
 
-/* The chevron (fold), a little apart from the rest, pointing up while open.
-   It's the only place that opens and closes the card. */
+/* The chevron (fold), pointing up while open. It's the only place that
+   opens and closes the card. */
 .sf-item-icon.sf-item-expand {
-    margin-left: 4px;
-
     svg {
         width: 12px;
         height: 8px;

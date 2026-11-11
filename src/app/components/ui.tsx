@@ -103,6 +103,7 @@ export function Notice({ children, fades, bad, onDismiss }: { children: string; 
 // of the effect that does something different; other lines are paragraphs.
 export function Effect({ text }: { text: string }) {
   const lines = text.split("\n").map((l) => l.trim()).filter(Boolean);
+  if (!lines.length) return null;
   if (!lines.some((l) => l.startsWith("- "))) return <p className="sf-card-effect">{text}</p>;
   const blocks: (string | string[])[] = [];
   for (const l of lines) {

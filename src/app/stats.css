@@ -114,13 +114,21 @@
 }
 
 /* ---- Each focus stat: its name and number, then its bar, 15px in from
-   the badge and the title's rule ---- */
+   the badge and the title's rule (flush at 1768px and below) ---- */
 
 .sf-stat {
     display: flex;
     flex-direction: column;
     gap: 6px;
     padding-left: 15px;
+}
+
+/* At 1768px and below the bars sit flush with the group's left edge, so the
+   stats take 15px less width */
+@media (max-width: 1768px) {
+    .sf-stat {
+        padding-left: 0;
+    }
 }
 
 .sf-stat-label {
