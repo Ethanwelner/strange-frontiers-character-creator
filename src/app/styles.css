@@ -2224,6 +2224,11 @@
       flex: 0 1 auto;
       min-height: 0;
       overflow-y: auto;
+      /* Room on the right for a selected card's check badge, 12px past its
+         corner, so it doesn't scroll sideways; pulled into the box's
+         padding, so the cards still line up with the search */
+      padding-right: 12px;
+      margin-right: -12px;
 
       /* Its first title sits at the top of the scroll, not 40px down */
       > :first-child,
