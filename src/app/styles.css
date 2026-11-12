@@ -2106,7 +2106,8 @@
     }
   }
 
-  /* The add form on its own in a small popup, its title over it */
+  /* The add form on its own in a popup, its Bebas title over it, like
+     Choose Traits' */
   .sheet-add-popup {
     .subhead {
       margin: 0 0 24px;
