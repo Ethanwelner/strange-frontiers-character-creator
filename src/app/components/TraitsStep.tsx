@@ -267,7 +267,6 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom, p
                       <Effect text={t.effect} />
                       <TraitAction action={t.action} />
                       {requirements(t) && <CardNote>Needs {requirements(t)}</CardNote>}
-                      {t.tags.length > 0 && <p className="tags">{t.tags.map((tag) => `#${tag}`).join(" ")}</p>}
                       {selected && t.ranked && (
                         // The card's own click and keys toggle it, so the stepper keeps its events to itself.
                         <div className="rank-step" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
