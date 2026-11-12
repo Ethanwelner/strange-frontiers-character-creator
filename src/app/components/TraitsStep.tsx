@@ -167,7 +167,7 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom, p
   return (
     <section className="sf-popup-grow">
       <StepHeader title="Traits">
-        Spend picks on Traits.{hints && " Unspent picks are banked for later."}
+        {hints && "Unspent picks are banked for later."}
       </StepHeader>
 
       <div className="tech-fields tech-fields-light picker-box">
