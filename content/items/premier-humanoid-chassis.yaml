@@ -1,0 +1,15 @@
+id: premier-humanoid-chassis
+name: "Premier Humanoid Chassis"
+status: draft
+plane: earth
+summary: "A top-of-the-line humanoid frame, nearly indistinguishable from a person at a glance, that's strong, tough and quick in equal measure. Few AI Cores will ever own one."
+tags: [chassis, ai-core, humanoid, luxury]
+type: chassis
+category: chassis
+resistances: "3 Blunt, 3 Slashing, 3 Piercing"
+value: 2500000
+currency: "ERC"
+chassis:
+  core: 6
+  stats: { endurance: 6, power: 6, grace: 6 }
+  traits: [mechanical]

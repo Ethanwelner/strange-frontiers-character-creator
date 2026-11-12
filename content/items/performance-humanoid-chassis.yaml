@@ -1,0 +1,15 @@
+id: performance-humanoid-chassis
+name: "Performance Humanoid Chassis"
+status: draft
+plane: earth
+summary: "A light, finely balanced humanoid frame with fast, precise actuators, built for speed and fine work."
+tags: [chassis, ai-core, humanoid, advanced, agile]
+type: chassis
+category: chassis
+resistances: "1 Blunt"
+value: 220000
+currency: "ERC"
+chassis:
+  core: 4
+  stats: { endurance: 4, power: 2, grace: 6 }
+  traits: [mechanical]
