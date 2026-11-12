@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "A wave of rot that withers everything it passes over."
 tags: [magic, spell, death, attack]
+backgroundKeywords: [magic]
 category: ability
 types: [necromancy]
 ranked: true

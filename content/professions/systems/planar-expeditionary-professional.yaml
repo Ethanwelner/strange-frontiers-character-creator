@@ -4,6 +4,7 @@ status: placeholder
 plane: earth
 summary: "A member of the expedition teams that open new planes for the Explorers’ Lodge: surveying, raising the first gate platforms, and surviving whatever is waiting on the other side."
 tags: [planes, exploration, lodge, survey, wilderness]
+backgroundKeywords: [combat, science, wilderness, travel, exploration]
 lore: explorers-lodge
 type: profession
 grants:
@@ -12,9 +13,3 @@ grants:
   - { trait: planar-exploration }
   - { trait: the-explorers-lodge }
   - { trait: explorers-lodge-membership }
-backgroundTraits:
-  - wilderness-lore
-  - navigation
-  - biology
-  - wielder-shotgun
-  - wielder-flamethrower

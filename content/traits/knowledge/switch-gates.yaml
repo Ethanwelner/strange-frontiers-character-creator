@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "How switch gates are built, tuned and run."
 tags: [planes, switch gates, technology]
+backgroundKeywords: [engineering, exploration]
 category: knowledge
 ranked: true
 minStats: { memory: 3, logic: 3 }

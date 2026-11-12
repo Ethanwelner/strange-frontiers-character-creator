@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Building and maintaining the networks systems talk over."
 tags: [computers, networks, engineering]
+backgroundKeywords: [engineering, computers]
 category: skill
 ranked: true
 minStats: { logic: 4, memory: 4 }

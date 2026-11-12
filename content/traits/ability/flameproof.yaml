@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Protects a character or item from flames and heat."
 tags: [magic, spell, enchantment, defense, fire]
+backgroundKeywords: [magic]
 category: ability
 types: [enchantment, potion, artifact]
 ranked: true

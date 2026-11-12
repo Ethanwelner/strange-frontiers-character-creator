@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Books, poems, plays and stories, and the ideas they carry."
 tags: [literature, culture, scholar]
+backgroundKeywords: [scholarship]
 category: knowledge
 ranked: true
 minStats: { memory: 3, intuition: 2 }

@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Knowing who to pay, and how much."
 tags: [bribery, social, criminal]
+backgroundKeywords: [crime, social]
 category: skill
 minStats: { persuasion: 3, demeanor: 3 }
 effect: "- This character gains +5 to Persuasion rolls when offering a bribe.\n- This character can request Advantage when judging whether someone can be bought."

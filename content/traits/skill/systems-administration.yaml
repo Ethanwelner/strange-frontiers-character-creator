@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Keeping computers, accounts and records running."
 tags: [computers, administration]
+backgroundKeywords: [law, computers]
 category: skill
 minStats: { logic: 3, memory: 4 }
 effect: "This character gains +5 to rolls relating to managing, maintaining and auditing computer systems."

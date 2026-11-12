@@ -56,7 +56,7 @@ const GROUP_TITLE: Record<(typeof TraitCategory.options)[number], string> = {
 
 const PICK_HELP: Record<PickKind, string> = {
   universal: "Universal picks take any Trait that isn't a Background Trait, knowledge included at creation.",
-  background: "Background picks take only Traits on this character's Background Trait list.",
+  background: "Background picks take only Traits sharing a Background Keyword with this character's Origin, Profession or Past.",
 };
 
 // A Trait list's own help line, when it isn't built on a special stat like Magic.
@@ -221,7 +221,7 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom, p
 
         <div className="picker-scroll">
           {options.length === 0 && tab === "background" && (
-            <p className="empty">This character's Background Trait list is empty. It grows from package Background Traits and the Kind's Trait access.</p>
+            <p className="empty">This character's Background Trait list is empty. It grows from the packages' Background Keywords and the Kind's Trait access.</p>
           )}
           {options.length > 0 && shown.length === 0 && (
             <p className="empty">{hideRejected ? "No available Traits match. Turn off Hide unavailable to see why the rest are out." : "No Traits match."}</p>

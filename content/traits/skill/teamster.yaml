@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Driving and caring for draft animals and wagons."
 tags: [caravan, animals, driving]
+backgroundKeywords: [animals, piloting, travel]
 category: skill
 minStats: { empathy: 3, power: 2, endurance: 2 }
 effect: "This character gains +5 to the handling and care of draft animals, wagons, or other convoy related vehicles."

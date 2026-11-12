@@ -5,14 +5,12 @@ plane: earth
 region: tetra
 summary: "Child of a family working at one of the two dozen planar exploration and holding companies on Tetra, raised on talk of leases and attunements."
 tags: [corporate, planes, tetra, business]
+backgroundKeywords: [law, trade, corporate, exploration, tetra]
 lore: tetra-frontiers-co
 type: past
 grants:
   - { trait: tetra-frontiers-co }
   - { trait: haggler }
   - { trait: appraisal }
-backgroundTraits:
-  - commerce
-  - bureaucracy
 # Wealth at creation (engine/wealth.ts)
 wealth: 1

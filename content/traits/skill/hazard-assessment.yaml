@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Spotting what on a new plane will kill you."
 tags: [planes, exploration, safety]
+backgroundKeywords: [exploration, emergency]
 category: skill
 minStats: { intuition: 4, logic: 3, memory: 2 }
 effect: "This character gains +5 to Intuition and Logic rolls relating to identifying paraphysical, environmental or biological hazards."

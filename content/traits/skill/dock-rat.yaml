@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "At home on any dock, berth, or station."
 tags: [urban, ports, shipping]
+backgroundKeywords: [seafaring, travel]
 category: skill
 minStats: { memory: 3, persuasion: 2 }
 effect: "This character gains +3 to rolls in ports, stations, and docks to find a berth, a crew, or work off the books."

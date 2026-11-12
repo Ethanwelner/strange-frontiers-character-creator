@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Keeping a group working while everything goes wrong."
 tags: [leadership, crisis, emergency]
+backgroundKeywords: [leadership, emergency]
 category: skill
 minStats: { demeanor: 4, intuition: 3, persuasion: 3 }
 effect: "This character gains +5 to rolls relating to keeping a group acting together in a disaster or emergency."

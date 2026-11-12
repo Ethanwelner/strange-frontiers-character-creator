@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Getting what you want through threats and presence."
 tags: [intimidation, social, threat]
+backgroundKeywords: [social]
 category: skill
 ranked: true
 minStats: { demeanor: 3, power: 3 }

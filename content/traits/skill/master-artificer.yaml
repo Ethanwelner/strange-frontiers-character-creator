@@ -4,6 +4,7 @@ status: draft
 plane: isekai
 summary: "A crafter of true magical artifacts."
 tags: [magic, artifacts, crafting, expert]
+backgroundKeywords: [craft, exploration, magic]
 category: skill
 mastery: true
 minStats: { magic: 6, intuition: 4, grace: 4, memory: 5 }

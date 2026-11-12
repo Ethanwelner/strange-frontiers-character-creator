@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Wreathes a weapon in magical fire."
 tags: [magic, spell, enchantment, weapon, fire]
+backgroundKeywords: [magic]
 category: ability
 types: [enchantment, artifact]
 ranked: true

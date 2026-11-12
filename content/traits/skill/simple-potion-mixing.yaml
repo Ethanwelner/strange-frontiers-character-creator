@@ -4,6 +4,7 @@ status: draft
 plane: isekai
 summary: "Brewing simple potions from a known recipe."
 tags: [potions, alchemy, herbs]
+backgroundKeywords: [medicine, alchemy]
 category: skill
 ranked: true
 minStats: { memory: 3, intuition: 3 }

@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Roping, netting and pinning large creatures alive."
 tags: [monsters, animals, capture]
+backgroundKeywords: [police, parabiology, animals]
 category: skill
 minStats: { power: 4, grace: 3, endurance: 3 }
 effect: "This character gains +5 to Power and Grace rolls relating to restraining or capturing a large creature alive."

@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "How the physical world works: motion, energy, light and matter."
 tags: [science, physics]
+backgroundKeywords: [science]
 category: knowledge
 ranked: true
 minStats: { memory: 3, logic: 3 }

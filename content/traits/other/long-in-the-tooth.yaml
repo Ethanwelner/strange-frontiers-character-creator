@@ -4,6 +4,7 @@ status: draft
 plane: isekai
 summary: "An Orc who has kept their teeth long into age."
 tags: [orcs, age, prestige, social]
+backgroundKeywords: [nobility, social]
 category: other
 background: true
 minStats: { power: 10, endurance: 5, demeanor: 5 }

@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "The news outlets, feeds and networks of the Settled Systems, and who owns them."
 tags: [media, journalism, news]
+backgroundKeywords: [media]
 category: knowledge
 ranked: true
 minStats: { memory: 3, intuition: 2 }

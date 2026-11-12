@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Fighting with fists, feet, elbows and whatever else is attached."
 tags: [combat, unarmed, brawling]
+backgroundKeywords: [combat]
 category: skill
 ranked: true
 minStats: { power: 3, endurance: 3 }

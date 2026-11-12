@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Treating parasapient patients, whose bodies rarely work the way Earth Baseline medicine expects."
 tags: [medicine, parasapients, parabiology]
+backgroundKeywords: [medicine, parabiology]
 category: knowledge
 ranked: true
 minStats: { memory: 3, logic: 3, empathy: 2 }

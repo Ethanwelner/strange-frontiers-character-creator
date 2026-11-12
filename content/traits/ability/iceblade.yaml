@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Sheathes a weapon in magical frost."
 tags: [magic, spell, enchantment, weapon, ice, cold]
+backgroundKeywords: [magic]
 category: ability
 types: [enchantment, artifact]
 ranked: true

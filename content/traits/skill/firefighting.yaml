@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Putting fires out and working inside them."
 tags: [fire, rescue, labor]
+backgroundKeywords: [labor, emergency]
 category: skill
 ranked: true
 minStats: { endurance: 4, power: 2, logic: 2 }

@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "A faith that spirits fear."
 tags: [faith, spirits, expert]
+backgroundKeywords: [faith, magic]
 category: skill
 mastery: true
 minStats: { demeanor: 8, empathy: 6, memory: 6 }

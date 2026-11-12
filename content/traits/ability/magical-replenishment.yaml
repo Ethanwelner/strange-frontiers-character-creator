@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Pours the caster's own mana into another magic user."
 tags: [magic, spell, mana, support]
+backgroundKeywords: [magic]
 category: ability
 types: [restoration, potion]
 ranked: true

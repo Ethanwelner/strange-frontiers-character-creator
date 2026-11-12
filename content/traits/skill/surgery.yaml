@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Operating to repair serious injuries."
 tags: [medicine, surgery, healing]
+backgroundKeywords: [medicine]
 category: skill
 ranked: true
 minStats: { memory: 6, grace: 5, logic: 4 }

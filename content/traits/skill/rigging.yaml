@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Lines, knots, sails and climbing the masts."
 tags: [sailing, seafaring, climbing]
+backgroundKeywords: [seafaring, athletics]
 category: skill
 ranked: true
 minStats: { grace: 3, power: 2, memory: 2 }

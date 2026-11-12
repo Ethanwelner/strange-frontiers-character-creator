@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Reading dead languages and old scripts."
 tags: [scholarship, languages, history]
+backgroundKeywords: [diplomacy, scholarship]
 category: skill
 ranked: true
 minStats: { memory: 5, logic: 4, intuition: 3 }

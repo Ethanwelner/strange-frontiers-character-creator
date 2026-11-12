@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "The Bureau that licenses, inspects and polices planar exploration across the settled systems."
 tags: [bureau, planes, law, tetra]
+backgroundKeywords: [law, exploration, tetra]
 category: knowledge
 ranked: true
 minStats: { memory: 3 }

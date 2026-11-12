@@ -5,6 +5,7 @@ plane: isekai
 region: dreft
 summary: "The goods, routes and traders of Dreft’s western coast."
 tags: [trade, coast, merchant]
+backgroundKeywords: [trade, seafaring]
 category: knowledge
 ranked: true
 minStats: { memory: 3, intuition: 2 }

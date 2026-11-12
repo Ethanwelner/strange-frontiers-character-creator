@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Flying fighters in and out of combat."
 tags: [pilot, fighter, military, space]
+backgroundKeywords: [combat, military, piloting, space]
 category: skill
 ranked: true
 minStats: { grace: 5, intuition: 4, memory: 4 }

@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Poisons, venoms and their antidotes."
 tags: [medicine, poison, antidotes]
+backgroundKeywords: [medicine, alchemy]
 category: knowledge
 ranked: true
 minStats: { memory: 3, logic: 3 }

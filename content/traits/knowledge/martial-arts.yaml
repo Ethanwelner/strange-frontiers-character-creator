@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Fighting styles, schools and their masters."
 tags: [martial arts, combat, unarmed]
+backgroundKeywords: [combat]
 category: knowledge
 ranked: true
 minStats: { memory: 3 }

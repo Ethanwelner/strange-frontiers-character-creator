@@ -22,7 +22,7 @@ const goblinoid: ConceptInput = {
   focus: ["logic", "memory"],
   traits: [
     "tinkerer", "herbalism", "appraisal", "smooth-talker", "vigilance", "tracker", "survivalist",
-    "ambusher", "haggler", "streetwise", "sleight-of-hand", "teamster", "relic-handling", "schemer",
+    "ambusher", "haggler", "streetwise", "sleight-of-hand", "teamster", "relic-handling", "schemer", "lockpicking", "climber", "concealment", "jumper", "swimmer", "fishing", "cataloguing", "contortionist", "con-man",
   ],
   items: ["quarterstaff", "potion-kit", "writing-kit"],
 };

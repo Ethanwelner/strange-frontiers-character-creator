@@ -4,6 +4,7 @@ status: placeholder
 plane: any
 summary: "Someone the character can call on. Who it is is up to the player."
 tags: [contact, people, network]
+backgroundKeywords: [social]
 category: contact
 ranked: true
 effect: Placeholder. Effect not yet written.

@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Reaching an agreement both sides can live with."
 tags: [negotiation, trade, social]
+backgroundKeywords: [diplomacy, social, trade]
 category: skill
 ranked: true
 minStats: { persuasion: 4, empathy: 3, intuition: 2 }

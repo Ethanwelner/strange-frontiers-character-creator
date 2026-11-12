@@ -5,6 +5,7 @@ plane: earth
 region: tetra
 summary: "Grew up inside one of the sovereign territorial grounds that every UN member state keeps on Tetra, raised among diplomats and their staff."
 tags: [diplomacy, un, tetra, politics]
+backgroundKeywords: [politics, diplomacy, social, tetra, un]
 lore: tetra
 type: past
 grants:
@@ -15,9 +16,5 @@ choices:
   - choose: 1
     from: language
     note: "+1 Language"
-backgroundTraits:
-  - diplomatic-protocol
-  - politics
-  - high-society
 # Wealth at creation (engine/wealth.ts)
 wealth: 1

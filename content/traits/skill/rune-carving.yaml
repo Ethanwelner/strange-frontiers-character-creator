@@ -4,6 +4,7 @@ status: draft
 plane: isekai
 summary: "Carving and inscribing runes that hold magic."
 tags: [magic, runes, crafting]
+backgroundKeywords: [craft, magic]
 category: skill
 minStats: { grace: 3, memory: 3, magic: 1 }
 # On the Magic list: its own tab on the Traits step, open to every character.

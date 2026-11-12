@@ -4,6 +4,7 @@ status: placeholder
 plane: earth
 summary: "Implants, prosthetics and the medicine of joining people to machines."
 tags: [cybernetics, technology, medicine]
+backgroundKeywords: [engineering, medicine]
 category: knowledge
 ranked: true
 minStats: { memory: 3 }

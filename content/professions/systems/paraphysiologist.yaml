@@ -4,13 +4,10 @@ status: placeholder
 plane: earth
 summary: "Researches the strange forms and biologies of extraplanar creatures, like the ones made of ice, usually with one on the table."
 tags: [science, parabiology, research, anatomy]
+backgroundKeywords: [science, medicine, parabiology]
 type: profession
 grants:
   - { trait: research }
   - { trait: parabiology }
   - { trait: parazoology }
   - { trait: specimen-handling }
-backgroundTraits:
-  - biology
-  - chemistry
-  - medicine

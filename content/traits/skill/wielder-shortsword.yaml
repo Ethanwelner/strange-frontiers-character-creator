@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Fighting with, and maintaining, one-handed swords and sabers."
 tags: [combat, melee, swords]
+backgroundKeywords: [combat]
 category: skill
 list: wielder
 ranked: true

@@ -7,6 +7,7 @@ region: sorellion
 summary: "You grew up in the Kingdom of Sorellion, one of Dreft’s neighbors on Isekai."
 naming: "Sorellion names have a French sound. Commoners have family names, and titles go in front."
 tags: [sorellion, kingdom, isekai]
+backgroundKeywords: [nobility, trade, isekai, sorellion]
 lore: kingdom-of-sorellion
 type: origin
 bonusPoints:
@@ -17,8 +18,3 @@ choices:
   - choose: 1
     from: language
     note: "+1 Language"
-backgroundTraits:
-  - dreft
-  - heraldry
-  - courtly-manners
-  - haggler

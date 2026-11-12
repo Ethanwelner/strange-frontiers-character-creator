@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Seeing where a creature can be hurt."
 tags: [combat, monsters, tactics]
+backgroundKeywords: [combat, military, parabiology]
 category: ability
 minStats: { intuition: 5, logic: 3 }
 effect: "After spending a Full RP Action studying a creature during an Incident, this character gains +2 to Attack Rolls against creatures of that kind for the rest of the Incident."

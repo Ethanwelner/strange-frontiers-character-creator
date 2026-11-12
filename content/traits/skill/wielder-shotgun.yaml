@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Fighting with, and maintaining, shotguns."
 tags: [combat, firearms]
+backgroundKeywords: [combat]
 category: skill
 list: wielder
 ranked: true

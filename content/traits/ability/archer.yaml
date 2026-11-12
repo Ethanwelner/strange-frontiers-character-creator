@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Trained to shoot well, not just often."
 tags: [combat, ranged, archer]
+backgroundKeywords: [combat]
 category: ability
 ranked: true
 minStats: { grace: 4, intuition: 4, power: 2 }

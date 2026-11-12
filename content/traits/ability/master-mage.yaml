@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "A mage whose spells come cheaper."
 tags: [magic, metamagic, expert]
+backgroundKeywords: [magic]
 category: ability
 mastery: true
 minStats: { magic: 8, intuition: 4 }

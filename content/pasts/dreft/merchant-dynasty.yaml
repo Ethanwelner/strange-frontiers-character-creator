@@ -5,6 +5,7 @@ plane: isekai
 region: dreft
 summary: "Child of a trade family grown rich off the switch port, and resented for it."
 tags: [merchant, trade, wealth, family]
+backgroundKeywords: [law, leadership, social, trade, travel]
 type: past
 grants:
   - { trait: haggler }
@@ -14,8 +15,5 @@ choices:
   - choose: 1
     from: language
     note: "+1 Language"
-backgroundTraits:
-  - commerce
-  - high-society
 # Wealth at creation (engine/wealth.ts)
 wealth: 2

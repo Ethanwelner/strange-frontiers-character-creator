@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Getting answers out of people who don't want to give them."
 tags: [espionage, interrogation, social]
+backgroundKeywords: [police, espionage, social]
 category: skill
 ranked: true
 minStats: { demeanor: 4, empathy: 3, intuition: 3 }

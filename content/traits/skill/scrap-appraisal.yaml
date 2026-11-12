@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Knowing what a pile of scrap is worth."
 tags: [salvage, trade, valuation]
+backgroundKeywords: [trade, labor]
 category: skill
 minStats: { memory: 3, intuition: 3 }
 prerequisites: [salvage]

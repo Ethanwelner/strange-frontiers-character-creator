@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Hits that land heavy."
 tags: [combat, unarmed, boxing, punch]
+backgroundKeywords: [combat]
 category: skill
 ranked: true
 minStats: { power: 4, endurance: 2 }

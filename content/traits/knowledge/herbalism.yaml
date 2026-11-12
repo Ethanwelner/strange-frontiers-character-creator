@@ -4,6 +4,7 @@ status: placeholder
 plane: any
 summary: "Plants and what they do for, and to, people."
 tags: [herbs, healing, plants]
+backgroundKeywords: [medicine, wilderness]
 category: knowledge
 minStats: { memory: 3, intuition: 3 }
 effect: "This character has knowledge of herbalism and can be assumed to be familiar with the plants, techniques, and precautions involved with the practice."

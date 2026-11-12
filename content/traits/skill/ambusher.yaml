@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Setting and springing ambushes."
 tags: [ambush, hunting, combat]
+backgroundKeywords: [combat, stealth, wilderness]
 category: skill
 minStats: { intuition: 4, grace: 3 }
 effect: "This character gains +2 Priority and +2 to Attack Rolls and damage in the first Round of a combat Incident in instances where it has the element of surprise."

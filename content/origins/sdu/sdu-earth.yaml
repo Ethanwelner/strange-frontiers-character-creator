@@ -6,6 +6,7 @@ region: sdu
 summary: "You were born in the Union’s Earth territories, anywhere from core Europe to Japan, Brazil or Canada, in the largest and richest nation in the settled systems."
 naming: "Names follow the language of the part of the Union the character grew up in, from Europe to Japan, Brazil or Canada."
 tags: [sdu, earth, union]
+backgroundKeywords: [earth, sdu, tetra]
 lore: stellar-democratic-union
 type: origin
 # A free bonus point the player places in a Social stat.
@@ -18,9 +19,3 @@ choices:
   - choose: 1
     from: spoken-and-written-language
     note: "+1 Language (Spoken & Written)"
-backgroundTraits:
-  - union-politics
-  - tetra
-  - the-diplomatic-wing
-  - the-united-nations
-  - earth-baseline-technology

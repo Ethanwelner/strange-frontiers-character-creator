@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "The networks, software and hardware that run the settled systems."
 tags: [computers, technology, networks]
+backgroundKeywords: [engineering, computers]
 category: knowledge
 ranked: true
 minStats: { memory: 3, logic: 3 }

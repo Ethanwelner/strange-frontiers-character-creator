@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Designing experiments, reading the literature and getting results."
 tags: [science, research]
+backgroundKeywords: [science]
 category: skill
 ranked: true
 minStats: { logic: 4, memory: 3 }

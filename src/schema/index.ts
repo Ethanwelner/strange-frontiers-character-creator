@@ -31,6 +31,79 @@ export const Id = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "must be kebab-ca
 
 export const Status = z.enum(["placeholder", "draft", "final"]);
 
+// Background Keywords: what a background is about, and what a Trait is about.
+// A Background pick can buy any Trait sharing a keyword with one of the
+// character's Origin, Profession and Past. They're only for that, apart from
+// tags (loose search words) and types (the Sheet's Keywords, which effects
+// target). Topics first, then places.
+export const BACKGROUND_KEYWORDS = {
+  combat: "Fighting, weapons and armor",
+  military: "Soldiering, tactics and command in a war",
+  security: "Guarding people, places and things",
+  police: "Policing, arrests and questioning",
+  investigation: "Noticing, searching and working out what happened",
+  crime: "The underworld, theft, smuggling and the streets",
+  espionage: "Spycraft, codes and disguises",
+  stealth: "Hiding, sneaking and getting away",
+  law: "Laws, courts, contracts and paperwork",
+  politics: "Governments, factions and intrigue",
+  diplomacy: "Dealing with foreigners and other governments",
+  nobility: "Courts, titles, houses and high society",
+  leadership: "Leading, managing and speaking to crowds",
+  social: "Reading, persuading and handling people",
+  trade: "Buying, selling and money",
+  corporate: "Companies and how they run",
+  labor: "Industry, mining, building and salvage",
+  craft: "Making things by hand",
+  engineering: "Machines, technology and repair",
+  computers: "Computers, networks and AI",
+  science: "The sciences and research",
+  scholarship: "History, culture, books and teaching",
+  medicine: "Healing, first aid and surgery",
+  parabiology: "Parasapients, monsters and other planes' life",
+  wilderness: "Survival, hunting and the outdoors",
+  animals: "Riding, handling and caring for animals",
+  farming: "Farms and the countryside",
+  seafaring: "Ships, the sea and ports",
+  piloting: "Driving and flying anything",
+  space: "Stations, starships and life off a planet",
+  travel: "Roads, caravans, shipping and getting around",
+  exploration: "The planes, surveys, ruins and relics",
+  performance: "Art, music, theater and games",
+  faith: "Religion and ritual",
+  magic: "Spells, enchantments and the supernatural",
+  alchemy: "Potions, reagents and poisons",
+  athletics: "Running, climbing and toughness",
+  media: "Journalism and the news",
+  emergency: "Rescue and crisis response",
+  earth: "Earth",
+  "american-empire": "The American Empire",
+  "chinese-empire": "The Chinese Empire",
+  sdu: "The Stellar Democratic Union",
+  tetra: "Tetra",
+  dreft: "The Kingdom of Dreft",
+  kashgar: "Kashgar",
+  centafrica: "Centafrica",
+  india: "The Kingdom of India",
+  luna: "Luna",
+  mars: "Mars",
+  ark: "The Arks",
+  colonies: "The colonies",
+  isekai: "Isekai",
+  "switch-port": "The Switch Port",
+  "ural-federation": "The Ural Federation",
+  "free-american-states": "The Free American States",
+  xanthus: "Xanthus",
+  karsef: "The Kingdom of Karsef",
+  drovus: "The Drovus Empire",
+  sorellion: "The Kingdom of Sorellion",
+  guwain: "Guwain",
+  "union-of-texas": "The Union of Texas",
+  un: "The United Nations",
+} as const;
+export type BackgroundKeyword = keyof typeof BACKGROUND_KEYWORDS;
+export const BackgroundKeyword = z.enum(Object.keys(BACKGROUND_KEYWORDS) as [BackgroundKeyword, ...BackgroundKeyword[]]);
+
 const BaseEntry = z.object({
   id: Id,
   name: z.string().min(1),
@@ -131,8 +204,9 @@ export const BackgroundPackage = BaseEntry.extend({
   // the dearest item it can start with, like Privileged Upbringing's +2.
   wealth: z.number().int().default(0),
   choices: z.array(TraitChoice).default([]),
-  // Traits this package puts on the character's Background Trait list.
-  backgroundTraits: z.array(Id).default([]),
+  // The character's Background Trait list is every Trait sharing one of
+  // these with it (or with the character's other packages).
+  backgroundKeywords: z.array(BackgroundKeyword).default([]),
   features: z.array(Feature).default([]),
 });
 export type BackgroundPackage = z.infer<typeof BackgroundPackage>;
@@ -165,6 +239,9 @@ export const Trait = BaseEntry.extend({
   // The Sheet's Keywords: what other effects target (supernatural, injury,
   // cybernetic), potion and artifact, and a spell's school (elemental...).
   types: z.array(z.string()).default([]),
+  // What it's about, for Background picks: a character whose packages share
+  // one of these can buy it with one.
+  backgroundKeywords: z.array(BackgroundKeyword).default([]),
   ranked: z.boolean().default(false),
   // Each listed stat must be at least 3 × the new rank to rank up past 1.
   rankStats: z.array(StatId).default([]),

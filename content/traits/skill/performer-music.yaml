@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Playing an instrument or singing for an audience."
 tags: [music, performance, art]
+backgroundKeywords: [performance]
 category: skill
 ranked: true
 minStats: { grace: 3, persuasion: 3, intuition: 2 }

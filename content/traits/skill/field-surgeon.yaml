@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "A surgeon who can operate in a tent, in the dark, under fire."
 tags: [medicine, surgery, combat, expert]
+backgroundKeywords: [combat, medicine]
 category: skill
 mastery: true
 minStats: { grace: 8, memory: 8, demeanor: 6, logic: 5 }

@@ -5,6 +5,7 @@ plane: earth
 region: sdu
 summary: "The SDU’s territory on Mars and the people who run it."
 tags: [mars, colony, sdu]
+backgroundKeywords: [sdu, mars, colonies]
 category: knowledge
 ranked: true
 minStats: { memory: 3 }

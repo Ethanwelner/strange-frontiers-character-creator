@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Living as someone else, down to the details."
 tags: [espionage, deception, disguise]
+backgroundKeywords: [espionage, social]
 category: skill
 minStats: { demeanor: 4, memory: 4 }
 prerequisites: [disguise]

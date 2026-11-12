@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Loading, securing and moving freight, in gravity or out of it."
 tags: [cargo, shipping, labor]
+backgroundKeywords: [labor, travel]
 category: skill
 minStats: { power: 3, endurance: 2, logic: 2 }
 effect: "This character gains +3 to rolls relating to the handling, tracking, or maintenance of cargo."

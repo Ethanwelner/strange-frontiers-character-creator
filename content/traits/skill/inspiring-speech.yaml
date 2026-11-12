@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Moving a crowd with words."
 tags: [leadership, oratory, social]
+backgroundKeywords: [leadership, social]
 category: skill
 minStats: { persuasion: 5, demeanor: 3 }
 effect: "This character gains +5 to Persuasion rolls when addressing a group or crowd."

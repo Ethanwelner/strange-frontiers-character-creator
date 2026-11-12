@@ -5,6 +5,7 @@ plane: isekai
 region: dreft
 summary: The laws of the Kingdom of Dreft and how they’re enforced.
 tags: [law, dreft]
+backgroundKeywords: [law, dreft]
 category: knowledge
 ranked: true
 minStats: { memory: 3 }

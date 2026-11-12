@@ -4,18 +4,10 @@ status: placeholder
 plane: any
 summary: "A knight’s apprentice, learning to fight and ride by carrying their armor and minding their horse."
 tags: [squire, knight, nobility, military]
+backgroundKeywords: [combat, military, nobility, scholarship, animals]
 type: profession
 grants:
   - { trait: rider-basic-animals }
   - { trait: shield-wall }
   - { trait: court-etiquette }
   - { trait: heraldry }
-backgroundTraits:
-  - wielder-longsword
-  - courtly-manners
-  - animal-husbandry
-  - animal-lore
-  - local-history
-  - wielder-spear
-  - wielder-mace
-  - wielder-shortsword

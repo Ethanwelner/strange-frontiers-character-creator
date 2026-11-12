@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Getting a better price."
 tags: [trade, bargaining, merchant]
+backgroundKeywords: [social, trade]
 category: skill
 minStats: { persuasion: 4, intuition: 2 }
 effect: "This character gains +5 to Persuasion or Demeanor checks relating to haggling, bartering, and price negotiations."

@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Staying light on the feet and out of reach."
 tags: [combat, defense, agility]
+backgroundKeywords: [combat, athletics]
 category: skill
 minStats: { grace: 4, endurance: 2 }
 effect: "This character gains +2 Defense against Melee Attacks while Defending."

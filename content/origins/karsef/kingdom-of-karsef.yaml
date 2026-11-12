@@ -7,6 +7,7 @@ region: karsef
 summary: "You grew up in the Kingdom of Karsef, across the Corsine Pass from Dreft, and an old rival of it."
 naming: "Karsefi names follow the language the character grew up speaking. Commoners have family names, and titles go in front."
 tags: [karsef, kingdom, isekai, mountains]
+backgroundKeywords: [combat, nobility, wilderness, isekai, karsef]
 lore: kingdom-of-karsef
 type: origin
 bonusPoints:
@@ -17,9 +18,3 @@ choices:
   - choose: 1
     from: language
     note: "+1 Language"
-backgroundTraits:
-  - the-corsine-pass
-  - mountaineering
-  - dreft
-  - shield-wall
-  - military-tactics

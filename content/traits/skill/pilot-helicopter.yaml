@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Flying helicopters."
 tags: [pilot, helicopters, site-example]
+backgroundKeywords: [piloting]
 category: skill
 ranked: true
 minStats: { memory: 5, intuition: 3, grace: 3 }

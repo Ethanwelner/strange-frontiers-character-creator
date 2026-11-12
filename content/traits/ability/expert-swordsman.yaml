@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "A sword master, the kind people tell stories about."
 tags: [combat, melee, swordplay, expert]
+backgroundKeywords: [combat]
 category: ability
 mastery: true
 minStats: { grace: 8, power: 6, intuition: 6, endurance: 4 }

@@ -5,6 +5,7 @@ plane: earth
 region: ural-federation
 summary: "The customs and tribal laws of the Ural Federation’s statelets."
 tags: [law, ural-federation]
+backgroundKeywords: [law, ural-federation]
 category: knowledge
 ranked: true
 minStats: { memory: 3 }

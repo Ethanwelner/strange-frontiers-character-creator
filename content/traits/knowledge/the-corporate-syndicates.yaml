@@ -5,6 +5,7 @@ plane: earth
 region: chinese-empire
 summary: "The corporate syndicates that make up the Empire of China’s government, and their rivalries."
 tags: [corporate, politics, chinese-empire]
+backgroundKeywords: [politics, corporate, chinese-empire]
 category: knowledge
 ranked: true
 minStats: { memory: 3 }

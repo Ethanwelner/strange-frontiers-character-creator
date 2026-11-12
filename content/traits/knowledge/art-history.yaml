@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Artists, movements and famous works, and what they are worth."
 tags: [art, culture, history]
+backgroundKeywords: [scholarship, performance]
 category: knowledge
 ranked: true
 minStats: { memory: 3 }

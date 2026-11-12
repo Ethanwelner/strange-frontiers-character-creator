@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Carrying meaning, not just words, between languages."
 tags: [languages, diplomacy, translation]
+backgroundKeywords: [diplomacy]
 category: skill
 ranked: true
 minStats: { memory: 4, empathy: 3, intuition: 2 }

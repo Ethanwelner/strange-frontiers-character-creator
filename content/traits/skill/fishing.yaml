@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Line, net and trap."
 tags: [fishing, seafaring, survival, food]
+backgroundKeywords: [craft, wilderness, seafaring]
 category: skill
 ranked: true
 minStats: { intuition: 2, grace: 2 }

@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Turning any elemental spell to fire."
 tags: [magic, metamagic, fire]
+backgroundKeywords: [magic]
 category: ability
 minStats: { magic: 3, endurance: 3 }
 # On the Magic list: its own tab on the Traits step, open to every character.

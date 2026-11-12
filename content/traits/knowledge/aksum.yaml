@@ -6,6 +6,7 @@ plane: earth
 region: centafrica
 summary: "Aksum, Centafrica’s station on its elliptical orbit through the inner Sol System."
 tags: [centafrica, station, space]
+backgroundKeywords: [space, centafrica]
 category: knowledge
 ranked: true
 minStats: { memory: 3 }

@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Steady on a deck that won't hold still."
 tags: [sailing, seafaring, athletics]
+backgroundKeywords: [seafaring, athletics]
 category: ability
 minStats: { grace: 4, endurance: 2 }
 effect: "This character never needs a check to keep its footing on a moving deck, and can't be knocked Prone by a ship's motion. It fights from a deck or rigging without penalty."

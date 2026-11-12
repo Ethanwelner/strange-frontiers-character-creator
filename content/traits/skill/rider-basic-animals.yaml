@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Riding a simple animal as a mount."
 tags: [riding, animals, site-example]
+backgroundKeywords: [animals]
 category: skill
 ranked: true
 minStats: { grace: 4, empathy: 4, persuasion: 3 }

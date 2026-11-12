@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Making false documents, seals and signatures."
 tags: [espionage, forgery, crime]
+backgroundKeywords: [crime, espionage]
 category: skill
 ranked: true
 minStats: { grace: 4, memory: 3, intuition: 2 }

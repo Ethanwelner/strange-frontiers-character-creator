@@ -4,6 +4,7 @@ status: placeholder
 plane: isekai
 summary: The monsters of Isekai and how to deal with them.
 tags: [monsters, hunting]
+backgroundKeywords: [parabiology, wilderness]
 lore: isekai-monsters
 category: knowledge
 minStats: { memory: 3 }

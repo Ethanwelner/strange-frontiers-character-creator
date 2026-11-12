@@ -500,7 +500,7 @@ export function ChassisCard({
 }
 
 // What a Background card gives, as labeled rows of chips: Bonus, Grants,
-// Choose, Background list, or a Kind's Grants
+// Choose, Background Keywords, or a Kind's Grants
 export function BackgroundRows({ rows, children }: { rows: { label: string; chips: ReactNode[]; accent?: boolean }[]; children?: ReactNode }) {
   const shown = rows.filter((r) => r.chips.length > 0);
   if (!shown.length && !children) return null;

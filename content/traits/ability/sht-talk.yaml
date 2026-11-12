@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Running their mouth to throw people off."
 tags: [social, combat, distraction]
+backgroundKeywords: [combat, social]
 category: ability
 minStats: { persuasion: 4, demeanor: 3 }
 effect: "This character gains the Sh!t Talk Action."

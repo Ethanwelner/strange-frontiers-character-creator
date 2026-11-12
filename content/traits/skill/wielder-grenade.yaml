@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Throwing, launching and safely handling grenades."
 tags: [combat, explosives, military]
+backgroundKeywords: [combat, military]
 category: skill
 list: wielder
 ranked: true

@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Lets a character fly for a time."
 tags: [magic, spell, air, enchantment, movement]
+backgroundKeywords: [magic]
 category: ability
 types: [enchantment, potion, artifact]
 ranked: true

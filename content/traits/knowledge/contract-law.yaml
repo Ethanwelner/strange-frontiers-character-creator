@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "How agreements are made binding, and broken."
 tags: [law, contracts, trade]
+backgroundKeywords: [law, trade]
 category: knowledge
 ranked: true
 minStats: { memory: 3, logic: 3 }

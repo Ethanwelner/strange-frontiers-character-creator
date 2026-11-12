@@ -4,11 +4,9 @@ status: placeholder
 plane: any
 summary: "Grew up on the road with a company of performers, never in one town for long."
 tags: [performer, travel, troupe]
+backgroundKeywords: [social, scholarship, travel, performance]
 type: past
 grants:
   - { trait: performer-music }
   - { trait: smooth-talker }
   - { trait: sleight-of-hand }
-backgroundTraits:
-  - theater
-  - literature

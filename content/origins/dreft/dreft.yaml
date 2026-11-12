@@ -6,6 +6,7 @@ region: dreft
 summary: "Born and raised in the Kingdom of Dreft, whether in Port Herminst, a coastal town, a farming village or the mountains."
 naming: "Dreftian names have a medieval Spanish or German flair. Commoners have family names, and titles go in front, like Lady Grisht Walpurgis."
 tags: [kingdom, dreft, isekai]
+backgroundKeywords: [nobility, wilderness, farming, seafaring, travel, dreft, isekai]
 lore: dreft
 type: origin
 # A free bonus point the player places in a Physical stat.
@@ -17,15 +18,3 @@ grants:
   - { trait: dreftan }
 # Where in Dreft a character grew up isn't granted; it's bought with
 # background picks from this list.
-backgroundTraits:
-  - port-herminst
-  - glintl
-  - the-switch-port
-  - the-kings-woods
-  - the-corsine-pass
-  - seafaring
-  - coastal-trade
-  - farming
-  - mountaineering
-  - local-folklore
-  - karsef

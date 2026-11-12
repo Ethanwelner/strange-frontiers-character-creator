@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Stone magic cast cheaper and heavier."
 tags: [magic, metamagic, earth, stone, expert]
+backgroundKeywords: [magic]
 category: ability
 mastery: true
 minStats: { magic: 5, power: 5 }

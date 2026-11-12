@@ -5,6 +5,7 @@ plane: earth
 region: american-empire
 summary: "The history of the United States and the American Empire that replaced it."
 tags: [history, american-empire]
+backgroundKeywords: [scholarship, american-empire]
 category: knowledge
 ranked: true
 minStats: { memory: 3 }

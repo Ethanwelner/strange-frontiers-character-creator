@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Climbing walls, cliffs, rigging and trees."
 tags: [athletics, climbing]
+backgroundKeywords: [athletics]
 category: skill
 ranked: true
 minStats: { grace: 3, power: 3, endurance: 2 }

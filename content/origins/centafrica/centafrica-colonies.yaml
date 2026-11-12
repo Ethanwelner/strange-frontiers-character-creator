@@ -6,6 +6,7 @@ region: centafrica
 summary: "You grew up aboard Aksum, Centafrica’s station on its long elliptical orbit through the inner Sol System."
 naming: "Names from Centafrica’s peoples and languages, Swahili among them."
 tags: [centafrica, colonies, station, space]
+backgroundKeywords: [space, performance, earth, centafrica, colonies]
 lore: centafrica
 type: origin
 # A free bonus point the player places in a Mental stat.
@@ -20,13 +21,3 @@ choices:
   - choose: 1
     from: spoken-and-written-language
     note: "+1 Language (Spoken & Written)"
-backgroundTraits:
-  - aksum
-  - ports-and-stations
-  - spacefaring
-  - starships
-  - shipping-lanes
-  - music
-  - earth-baseline-technology
-  - french
-  - english

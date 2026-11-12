@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Speaking with spirits that are present."
 tags: [spirits, communication, supernatural]
+backgroundKeywords: [magic]
 category: skill
 minStats: { empathy: 4, intuition: 4 }
 effect: "This character gains +5 to rolls relating to communicating with a spirit that is present."

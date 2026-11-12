@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Learns new knowledge in a quarter of the time."
 tags: [learning, study, site-example]
+backgroundKeywords: [scholarship]
 category: skill
 mastery: true
 minStats: { memory: 5, logic: 5, intuition: 5 }

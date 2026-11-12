@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "A pilot good enough to fly almost anything they have training in, and most things like it."
 tags: [pilot, expert, site-example]
+backgroundKeywords: [piloting]
 category: skill
 mastery: true
 minStats: { memory: 5, intuition: 10, grace: 5 }

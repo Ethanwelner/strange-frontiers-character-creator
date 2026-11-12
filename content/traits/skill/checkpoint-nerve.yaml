@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Staying cool when the guards come knocking."
 tags: [smuggling, social, deception]
+backgroundKeywords: [crime, social]
 category: skill
 minStats: { demeanor: 4 }
 effect: "This character gains +3 to Persuasion or Demeanor rolls when dealing with customs officers, inspectors, and guards."

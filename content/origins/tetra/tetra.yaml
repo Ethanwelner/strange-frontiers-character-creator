@@ -6,6 +6,7 @@ region: tetra
 summary: "You grew up on Ark Tetra, the home of the UN and of planar exploration, and the capital of the SDU. Your early life was spent on a colossal drifting space station, where you learned the ways of city life and of living in space."
 naming: "Names follow the language the character grew up speaking, from anywhere in the Settled Systems."
 tags: [ark, tetra, space, sdu, un, urban, planar-exploration]
+backgroundKeywords: [space, earth, sdu, tetra, ark, un]
 lore: tetra
 type: origin
 # A free bonus point the player places in a Social stat, like the SDU's.
@@ -20,12 +21,3 @@ choices:
   - choose: 1
     from: spoken-and-written-language
     note: "+1 Language (Spoken & Written)"
-backgroundTraits:
-  - the-diplomatic-wing
-  - the-united-nations
-  - tetra-frontiers-co
-  - the-explorers-lodge
-  - planar-exploration
-  - ark-life
-  - earth-baseline-technology
-  - the-switch-port

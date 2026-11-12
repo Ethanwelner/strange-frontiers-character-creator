@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Reading what the other side hoped you wouldn't."
 tags: [law, contracts, awareness]
+backgroundKeywords: [investigation, law]
 category: skill
 minStats: { memory: 4, intuition: 3 }
 effect: "This character gains +5 to rolls relating to reading contracts, laws, regulations and other documents closely, such as spotting hidden clauses, omissions, loopholes and flaws."

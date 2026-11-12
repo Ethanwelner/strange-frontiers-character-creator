@@ -5,6 +5,7 @@ plane: earth
 region: chinese-empire
 summary: "The Jade Rabbit, the Empire of China’s colony on Luna."
 tags: [luna, colony, chinese-empire]
+backgroundKeywords: [chinese-empire, luna, colonies]
 category: knowledge
 ranked: true
 minStats: { memory: 3 }

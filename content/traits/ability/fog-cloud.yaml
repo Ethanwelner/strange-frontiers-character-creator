@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Summons a thick, rolling fog."
 tags: [magic, spell, water, air, stealth]
+backgroundKeywords: [magic]
 category: ability
 types: [conjuration, potion]
 ranked: true

@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Spoken in the Empire of China."
 tags: [language, javanese, earth]
+backgroundKeywords: [earth]
 category: knowledge
 types: [language]
 language: javanese

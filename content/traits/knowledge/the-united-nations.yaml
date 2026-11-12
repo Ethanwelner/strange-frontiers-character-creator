@@ -5,6 +5,7 @@ plane: earth
 region: tetra
 summary: "The UN and its institutions aboard Tetra."
 tags: [un, politics, tetra]
+backgroundKeywords: [politics, tetra, un]
 category: knowledge
 ranked: true
 minStats: { memory: 3 }

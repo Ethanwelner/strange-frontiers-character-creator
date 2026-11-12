@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Flying cargo trucks between stations, ships and planetary surfaces."
 tags: [pilot, trucks, shipping]
+backgroundKeywords: [piloting, travel]
 category: skill
 ranked: true
 minStats: { memory: 4, grace: 3, intuition: 3 }

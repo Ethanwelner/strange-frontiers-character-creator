@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Fixing circuits, wiring and devices."
 tags: [electronics, repair, technology]
+backgroundKeywords: [engineering]
 category: skill
 ranked: true
 minStats: { grace: 3, logic: 3, memory: 2 }

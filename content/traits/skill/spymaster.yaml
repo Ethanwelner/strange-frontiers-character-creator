@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "The one who runs the network."
 tags: [espionage, intelligence, expert]
+backgroundKeywords: [espionage]
 category: skill
 mastery: true
 minStats: { intuition: 8, persuasion: 6, memory: 6, demeanor: 6 }

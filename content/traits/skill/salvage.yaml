@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Stripping wrecks for whatever still works."
 tags: [salvage, wrecks, scavenging]
+backgroundKeywords: [labor]
 category: skill
 ranked: true
 minStats: { logic: 3, power: 3, intuition: 2 }

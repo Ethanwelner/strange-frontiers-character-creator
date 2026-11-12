@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "The faiths of Earth and its colonies."
 tags: [religion, faith, earth]
+backgroundKeywords: [faith, earth]
 category: knowledge
 ranked: true
 minStats: { memory: 3, empathy: 2 }

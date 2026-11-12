@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Staying alert on watch."
 tags: [guard, awareness]
+backgroundKeywords: [security, investigation]
 category: skill
 minStats: { intuition: 3, endurance: 2 }
 effect: "- This character gains +2 Priority and +2 Defense in the first Round of a combat Incident in which it was caught unaware or surprised.\n- This character gains +2 to Intuition checks relating to detecting ambushes or surprises."

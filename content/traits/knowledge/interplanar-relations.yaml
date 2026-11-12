@@ -4,6 +4,7 @@ status: placeholder
 plane: earth
 summary: "The diplomatic and business ties linking nations separated by entire realities."
 tags: [diplomacy, politics, trade, parasapients]
+backgroundKeywords: [politics, diplomacy, trade, parabiology]
 category: knowledge
 ranked: true
 minStats: { memory: 3, persuasion: 3 }

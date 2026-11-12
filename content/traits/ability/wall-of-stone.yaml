@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Raises a wall of stone out of the ground."
 tags: [magic, spell, earth, defense]
+backgroundKeywords: [magic]
 category: ability
 types: [elemental]
 ranked: true

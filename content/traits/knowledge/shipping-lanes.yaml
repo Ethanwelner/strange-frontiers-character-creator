@@ -4,6 +4,7 @@ status: placeholder
 plane: earth
 summary: "The routes, schedules and checkpoints of cargo traffic between stations, ships and surfaces."
 tags: [shipping, trade, space]
+backgroundKeywords: [trade, space, travel]
 category: knowledge
 ranked: true
 minStats: { memory: 3 }

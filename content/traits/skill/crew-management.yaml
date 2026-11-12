@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Running a crew's duties, shifts and squabbles."
 tags: [leadership, crew, management]
+backgroundKeywords: [leadership, corporate]
 category: skill
 ranked: true
 minStats: { persuasion: 3, empathy: 3, logic: 2 }

@@ -5,6 +5,7 @@ plane: earth
 region: chinese-empire
 summary: "The laws of the Empire of China, written and as the syndicates actually apply them."
 tags: [law, chinese-empire]
+backgroundKeywords: [law, chinese-empire]
 category: knowledge
 ranked: true
 minStats: { memory: 3 }

@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Keeping a vehicle in one piece under fire."
 tags: [pilot, combat, defense]
+backgroundKeywords: [combat, piloting]
 category: skill
 minStats: { grace: 5, intuition: 5 }
 prerequisiteTags: [pilot]

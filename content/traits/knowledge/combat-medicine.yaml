@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Treating wounds on the battlefield."
 tags: [medicine, combat, military]
+backgroundKeywords: [combat, military, medicine]
 category: knowledge
 ranked: true
 minStats: { memory: 3, logic: 2 }

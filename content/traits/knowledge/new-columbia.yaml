@@ -5,6 +5,7 @@ plane: earth
 region: american-empire
 summary: "The Empire’s colony on Luna."
 tags: [luna, colony, american-empire]
+backgroundKeywords: [american-empire, luna, colonies]
 category: knowledge
 ranked: true
 minStats: { memory: 3 }

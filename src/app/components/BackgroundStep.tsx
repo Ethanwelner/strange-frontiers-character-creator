@@ -27,6 +27,12 @@ function chipLabels(entries: { trait: string; rank?: number }[]): string[] {
   return labels;
 }
 
+// A Background Keyword as a chip: "american-empire" reads "American Empire".
+const ACRONYMS: Record<string, string> = { sdu: "SDU", un: "UN" };
+export function keywordLabel(keyword: string): string {
+  return ACRONYMS[keyword] ?? keyword.split("-").map((w) => w[0]!.toUpperCase() + w.slice(1)).join(" ");
+}
+
 export function PackageGrants({ pkg }: { pkg: BackgroundPackage }) {
   return (
     <BackgroundRows
@@ -43,7 +49,7 @@ export function PackageGrants({ pkg }: { pkg: BackgroundPackage }) {
         },
         { label: "Grants", accent: true, chips: chipLabels(pkg.grants) },
         { label: "Choose", chips: pkg.choices.map((c) => c.note ?? choiceLabel(c.choose, c.from)) },
-        { label: "Background list", chips: chipLabels(pkg.backgroundTraits.map((trait) => ({ trait }))) },
+        { label: "Background Keywords", chips: pkg.backgroundKeywords.map(keywordLabel) },
       ]}
     >
       {pkg.features.map((f) => (

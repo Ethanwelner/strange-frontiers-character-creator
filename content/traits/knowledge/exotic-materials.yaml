@@ -4,6 +4,7 @@ status: placeholder
 plane: earth
 summary: "The exotic materials paraphysics depends on: what they are, where they come from and what they do."
 tags: [exotic-materials, science]
+backgroundKeywords: [science]
 category: knowledge
 ranked: true
 minStats: { memory: 3, logic: 3 }

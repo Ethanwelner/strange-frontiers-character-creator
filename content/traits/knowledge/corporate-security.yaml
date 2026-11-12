@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Private security firms, client contracts and corporate jurisdiction across the Settled Systems."
 tags: [security, corporate, law, private-security]
+backgroundKeywords: [security, law, corporate]
 category: knowledge
 ranked: true
 minStats: { memory: 3, intuition: 2 }

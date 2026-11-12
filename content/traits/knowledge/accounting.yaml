@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Ledgers, accounts and following the money."
 tags: [accounting, trade, administration]
+backgroundKeywords: [law, trade]
 category: knowledge
 ranked: true
 minStats: { memory: 3, logic: 3 }

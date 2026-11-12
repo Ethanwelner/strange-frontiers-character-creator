@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Tumbling, juggling and feats of balance for a crowd."
 tags: [acrobatics, performance, agility]
+backgroundKeywords: [performance, athletics]
 category: skill
 ranked: true
 minStats: { grace: 4, endurance: 3, persuasion: 2 }

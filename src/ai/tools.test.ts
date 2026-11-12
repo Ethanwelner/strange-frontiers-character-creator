@@ -58,9 +58,11 @@ describe("search_traits", () => {
 
   it("returns only Traits on the build's Background list for background picks", () => {
     const build = { kind: "isek", origin: "dreft", profession: "caravaneer", past: "merchant-dynasty" };
-    const out = runTool("search_traits", { pick: "background", ...build, limit: 100 }, content, L1) as { traits: { id: string }[] };
     const list = validateBuild({ ...build, levels: [] }, content, L1).summary!.backgroundList;
-    expect(out.traits.map((t) => t.id).sort()).toEqual(list);
+    const out = runTool("search_traits", { pick: "background", ...build, limit: 100 }, content, L1) as { traits: { id: string }[] };
+    // Up to the limit, every one from the list.
+    expect(out.traits.length).toBe(Math.min(100, list.length));
+    for (const t of out.traits) expect(list).toContain(t.id);
     expect(out.traits.length).toBeGreaterThan(0);
   });
 
@@ -81,9 +83,9 @@ describe("packages and Kinds", () => {
     expect(out.choices).toEqual([expect.objectContaining({ from: "contact", leftForPlayer: true })]);
     const merchant = runTool("get_package", { id: "merchant-dynasty" }, content, L1) as { choices: { pool: { id: string }[] }[] };
     expect(merchant.choices[0]!.pool.map((t) => t.id)).toContain("english");
-    const dreft = runTool("get_package", { id: "dreft" }, content, L1) as { choices: unknown[]; backgroundTraits: { id: string }[] };
+    const dreft = runTool("get_package", { id: "dreft" }, content, L1) as { choices: unknown[]; backgroundKeywords: string[] };
     expect(dreft.choices).toEqual([]);
-    expect(dreft.backgroundTraits.map((t) => t.id)).toContain("glintl");
+    expect(dreft.backgroundKeywords).toContain("seafaring");
   });
 
   it("gets a Kind with its stats", () => {

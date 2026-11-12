@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Digging up the past carefully enough that there\u2019s something left to study."
 tags: [archeology, fieldwork, ruins]
+backgroundKeywords: [scholarship, exploration]
 category: skill
 minStats: { grace: 3, endurance: 2, memory: 2 }
 effect: "This character gains +5 to rolls relating to the unearthing or handling of artifacts."

@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Fighting with, and maintaining, bows."
 tags: [combat, ranged, archery]
+backgroundKeywords: [combat]
 category: skill
 list: wielder
 ranked: true

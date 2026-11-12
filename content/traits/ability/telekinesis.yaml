@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Moves objects without touching them."
 tags: [magic, spell, utility, movement]
+backgroundKeywords: [magic]
 category: ability
 types: [mentalism]
 ranked: true

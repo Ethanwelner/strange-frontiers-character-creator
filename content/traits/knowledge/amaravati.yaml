@@ -6,6 +6,7 @@ plane: earth
 region: kingdom-of-india
 summary: "Amaravati, the Kingdom of India’s station in high Earth orbit."
 tags: [india, station, orbit]
+backgroundKeywords: [space, india]
 category: knowledge
 ranked: true
 minStats: { memory: 3 }

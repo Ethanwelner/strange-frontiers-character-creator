@@ -5,6 +5,7 @@ plane: isekai
 region: dreft
 summary: How to behave at the royal court.
 tags: [court, nobility, etiquette]
+backgroundKeywords: [law, diplomacy, nobility]
 category: knowledge
 minStats: { memory: 2, demeanor: 3 }
 effect: "This character has knowledge of courtly etiquette and can be assumed to be familiar with the rules and manners expected in the royal halls of Isekai."

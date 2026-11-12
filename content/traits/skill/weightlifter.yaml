@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Lifting, carrying and hauling heavy loads."
 tags: [athletics, strength, lifting]
+backgroundKeywords: [labor, athletics]
 category: skill
 ranked: true
 minStats: { power: 5, endurance: 3 }

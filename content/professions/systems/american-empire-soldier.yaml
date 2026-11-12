@@ -5,6 +5,7 @@ plane: earth
 region: american-empire
 summary: "A soldier of the Imperial armed forces, trained for an Empire that is rarely short of a frontier to hold or a rival to stare down."
 tags: [military, soldier, american-empire, combat]
+backgroundKeywords: [combat, military, wilderness, american-empire]
 lore: american-empire
 type: profession
 grants:
@@ -13,11 +14,3 @@ grants:
   - { trait: vigilance }
   - { trait: the-imperial-military }
   - { trait: imperial-service-record }
-backgroundTraits:
-  - military-tactics
-  - wilderness-lore
-  - wielder-machine-gun
-  - wielder-grenade
-  - wielder-missile-launcher
-  - wielder-sniper-rifle
-  - wielder-mortar

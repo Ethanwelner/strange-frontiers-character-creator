@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "A touch that rots the flesh beneath it."
 tags: [magic, spell, death, attack]
+backgroundKeywords: [magic]
 category: ability
 types: [necromancy]
 ranked: true

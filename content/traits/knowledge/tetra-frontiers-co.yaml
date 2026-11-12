@@ -5,6 +5,7 @@ plane: isekai
 region: dreft
 summary: "The company that runs the switch port, and how it works."
 tags: [company, switch-port, tetra]
+backgroundKeywords: [corporate, tetra, switch-port]
 lore: tetra-frontiers-co
 category: knowledge
 minStats: { memory: 3 }

@@ -4,6 +4,7 @@ status: draft
 plane: isekai
 summary: "The faiths, temples and rites of Isekai's peoples."
 tags: [religion, faith, isekai]
+backgroundKeywords: [faith, isekai]
 category: knowledge
 ranked: true
 minStats: { memory: 3, empathy: 2 }

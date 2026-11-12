@@ -4,6 +4,7 @@ status: placeholder
 plane: any
 summary: "Muscle for a criminal outfit: collecting debts, guarding deals and making examples of people who talk."
 tags: [crime, enforcer, muscle]
+backgroundKeywords: [combat, police, crime, stealth, politics, social]
 type: profession
 grants:
   - { trait: streetwise }
@@ -14,12 +15,3 @@ choices:
   - choose: 1
     from: contact
     note: "+1 Contact"
-backgroundTraits:
-  - concealment
-  - schemer
-  - wielder-pistol
-  - criminal-underworld
-  - gambling
-  - law-enforcement
-  - wielder-dagger
-  - wielder-shotgun

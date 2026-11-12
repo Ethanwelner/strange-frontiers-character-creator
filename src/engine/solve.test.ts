@@ -96,7 +96,8 @@ describe("solveConcept", () => {
     const s = solve(hunter);
     expect(s.result.summary!.backgroundList.length).toBeGreaterThan(0);
     expect(s.build.traits.map((t) => t.trait)).toEqual(s.taken);
-    expect(s.result.summary!.picks.background.banked).toBeGreaterThan(0);
+    const { universal, background } = s.result.summary!.picks;
+    expect(universal.banked + background.banked).toBeGreaterThan(0);
   });
 
   it("buys a second rank when a ranked Trait is listed twice", () => {

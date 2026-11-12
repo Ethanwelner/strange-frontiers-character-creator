@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Lightning that leaps from one target to the next."
 tags: [magic, spell, lightning, attack]
+backgroundKeywords: [magic]
 category: ability
 types: [elemental]
 ranked: true

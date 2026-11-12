@@ -4,6 +4,7 @@ status: draft
 plane: isekai
 summary: "Restoring damaged magical artifacts."
 tags: [magic, artifacts, repair, crafting]
+backgroundKeywords: [craft, engineering, exploration, magic]
 category: skill
 minStats: { grace: 4, magic: 2, intuition: 3 }
 prerequisites: [enchanting]

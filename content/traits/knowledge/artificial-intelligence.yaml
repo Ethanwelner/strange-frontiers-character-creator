@@ -4,6 +4,7 @@ status: placeholder
 plane: earth
 summary: "How AI Cores and lesser machine minds are built, trained and kept running."
 tags: [ai, technology, science]
+backgroundKeywords: [engineering, computers, science]
 category: knowledge
 ranked: true
 minStats: { memory: 3, logic: 2 }

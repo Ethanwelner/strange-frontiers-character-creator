@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Breaking up voidships for parts and scrap."
 tags: [salvage, starships, industry]
+backgroundKeywords: [labor, piloting, space]
 category: knowledge
 ranked: true
 minStats: { memory: 3, logic: 2 }

@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Leaping gaps, walls and ditches."
 tags: [athletics, jumping]
+backgroundKeywords: [athletics]
 category: skill
 ranked: true
 minStats: { power: 3, grace: 3 }

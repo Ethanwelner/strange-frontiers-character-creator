@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "People tell you things they don't tell anyone else."
 tags: [faith, social, counsel]
+backgroundKeywords: [law, social, faith]
 category: skill
 minStats: { empathy: 4, demeanor: 3 }
 effect: "This character gains +5 to rolls relating to getting someone to confide in it. What's said in confidence stays there; using it against the person is a betrayal of the role."

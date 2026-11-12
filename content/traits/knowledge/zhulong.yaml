@@ -5,6 +5,7 @@ plane: earth
 region: chinese-empire
 summary: "The Empire of China’s Ark."
 tags: [ark, chinese-empire]
+backgroundKeywords: [chinese-empire, ark]
 lore: zhulong
 category: knowledge
 ranked: true

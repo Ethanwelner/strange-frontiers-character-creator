@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Flying armed voidships in combat."
 tags: [pilot, military, space]
+backgroundKeywords: [military, piloting, space]
 category: skill
 ranked: true
 minStats: { grace: 4, intuition: 4, memory: 4 }

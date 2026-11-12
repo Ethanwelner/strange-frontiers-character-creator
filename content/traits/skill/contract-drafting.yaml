@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Writing agreements that hold up."
 tags: [law, contracts, writing]
+backgroundKeywords: [law]
 category: skill
 ranked: true
 minStats: { logic: 4, memory: 4 }

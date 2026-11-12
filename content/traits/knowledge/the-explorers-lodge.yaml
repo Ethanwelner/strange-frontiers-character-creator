@@ -5,6 +5,7 @@ plane: earth
 region: tetra
 summary: "The Explorers’ Lodge: its members, its rules and how expeditions get handed out."
 tags: [lodge, exploration, tetra]
+backgroundKeywords: [exploration, tetra]
 lore: explorers-lodge
 category: knowledge
 ranked: true

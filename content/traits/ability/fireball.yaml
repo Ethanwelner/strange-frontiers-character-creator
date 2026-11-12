@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Hurls a ball of fire that bursts on impact."
 tags: [magic, spell, fire, attack]
+backgroundKeywords: [magic]
 category: ability
 types: [elemental, potion]
 ranked: true

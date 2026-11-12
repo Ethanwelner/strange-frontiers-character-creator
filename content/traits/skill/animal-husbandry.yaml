@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Raising, feeding and caring for livestock and working animals."
 tags: [animals, farming, care]
+backgroundKeywords: [medicine, animals, farming]
 category: skill
 ranked: true
 minStats: { empathy: 3, endurance: 2, intuition: 2 }

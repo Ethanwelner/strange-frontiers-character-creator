@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Driving cars, trucks and crawlers over land."
 tags: [pilot, driving, vehicles]
+backgroundKeywords: [engineering, piloting]
 category: skill
 ranked: true
 minStats: { grace: 2, intuition: 2, memory: 2 }

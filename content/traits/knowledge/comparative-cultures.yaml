@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "How peoples differ in custom, belief and manners."
 tags: [culture, diplomacy, society]
+backgroundKeywords: [diplomacy, scholarship]
 category: knowledge
 ranked: true
 minStats: { memory: 3, empathy: 2 }

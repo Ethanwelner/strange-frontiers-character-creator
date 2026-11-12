@@ -4,6 +4,7 @@ status: placeholder
 plane: earth
 summary: "The customs, media and politics of AI Cores and the communities around them."
 tags: [ai, culture, kashgar]
+backgroundKeywords: [computers, scholarship, kashgar]
 category: knowledge
 ranked: true
 minStats: { memory: 3, empathy: 2 }

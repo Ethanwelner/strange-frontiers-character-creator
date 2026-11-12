@@ -4,19 +4,10 @@ status: placeholder
 plane: any
 summary: "Mixes remedies and simple potions for the sick and injured, and sells them over the counter."
 tags: [potions, healing, herbs, trade]
+backgroundKeywords: [trade, science, medicine, alchemy]
 type: profession
 grants:
   - { trait: folk-remedies }
   - { trait: simple-potion-mixing }
   - { trait: haggler }
   - { trait: herbalism }
-backgroundTraits:
-  - medical-aid
-  - advanced-potion-mixing
-  - medicine
-  - alchemy
-  - pharmacology
-  - toxicology
-  - chemistry
-  - biology
-  - commerce

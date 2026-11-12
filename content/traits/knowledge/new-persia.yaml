@@ -5,6 +5,7 @@ plane: earth
 region: sdu
 summary: "The SDU’s planar territory on Pairidaeza."
 tags: [planes, colony, sdu]
+backgroundKeywords: [exploration, sdu, colonies]
 lore: pairidaeza
 category: knowledge
 ranked: true

@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Senses the magic nearby."
 tags: [magic, spell, senses, utility]
+backgroundKeywords: [magic]
 category: ability
 types: [divination, potion, artifact]
 ranked: true

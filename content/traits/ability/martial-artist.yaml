@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Trained in a fighting art without weapons."
 tags: [combat, unarmed, martial arts]
+backgroundKeywords: [combat]
 category: ability
 minStats: { grace: 5, power: 4, endurance: 4, intuition: 3 }
 prerequisites: [brawler, footwork]

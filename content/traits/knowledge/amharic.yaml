@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Spoken in Centafrica."
 tags: [language, amharic, earth]
+backgroundKeywords: [earth]
 category: knowledge
 types: [language]
 language: amharic

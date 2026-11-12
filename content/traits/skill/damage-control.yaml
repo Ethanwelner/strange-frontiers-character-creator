@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Sealing breaches and venting fires before a ship or station loses air."
 tags: [fire, rescue, space, station, ship]
+backgroundKeywords: [space, emergency]
 category: skill
 ranked: true
 minStats: { logic: 3, endurance: 3, grace: 2 }

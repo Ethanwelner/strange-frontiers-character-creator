@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "The guilds and unions of craftsmen and traders: their ranks, rules and rivalries."
 tags: [guild, craft, trade]
+backgroundKeywords: [trade, craft]
 category: knowledge
 ranked: true
 minStats: { memory: 3 }

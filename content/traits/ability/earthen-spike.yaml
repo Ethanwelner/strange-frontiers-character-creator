@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Drives a spike of stone up out of the ground."
 tags: [magic, spell, earth, attack]
+backgroundKeywords: [magic]
 category: ability
 types: [elemental]
 ranked: true

@@ -5,14 +5,10 @@ plane: isekai
 region: dreft
 summary: "Grew up in the sleepy Dreftian countryside, where the year turns on the harvest and every hedge has a story."
 tags: [rural, farming, village, folklore]
+backgroundKeywords: [combat, scholarship, wilderness, farming]
 type: past
 grants:
   - { trait: farming }
   - { trait: countryside-lore }
   - { trait: local-folklore }
   - { trait: teamster }
-backgroundTraits:
-  - animal-lore
-  - wilderness-lore
-  - wielder-sling
-  - wielder-bow

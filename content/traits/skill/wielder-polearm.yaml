@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Fighting with, and maintaining, long-hafted weapons like halberds, glaives and pikes."
 tags: [combat, melee, polearms]
+backgroundKeywords: [combat]
 category: skill
 list: wielder
 ranked: true

@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Fast over short distances."
 tags: [athletics, running, speed]
+backgroundKeywords: [athletics]
 category: ability
 minStats: { grace: 4, endurance: 3 }
 effect: "This character gains the Sprint Action."

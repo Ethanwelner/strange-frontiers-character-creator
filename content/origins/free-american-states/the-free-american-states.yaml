@@ -6,6 +6,7 @@ region: free-american-states
 summary: "You grew up in one of the Free States, a fractious free-trade zone of independent countries wedged between the American Empire and the Union of Texas."
 naming: "American names, in English."
 tags: [free-american-states, earth, trade]
+backgroundKeywords: [diplomacy, social, trade, earth, free-american-states]
 lore: free-american-states
 type: origin
 bonusPoints:
@@ -18,10 +19,3 @@ choices:
   - choose: 1
     from: language
     note: "+1 Language"
-backgroundTraits:
-  - spanish
-  - spanish-written
-  - the-union-of-texas
-  - haggler
-  - trade-law
-  - smooth-talker

@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Taking the weapon out of an opponent's hands."
 tags: [combat, unarmed, technique]
+backgroundKeywords: [combat]
 category: ability
 minStats: { grace: 5, intuition: 3 }
 prerequisites: [brawler]

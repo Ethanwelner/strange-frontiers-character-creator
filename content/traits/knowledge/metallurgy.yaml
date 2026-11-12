@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Metals and alloys: how they are smelted, worked and tempered."
 tags: [metal, smithing, craft]
+backgroundKeywords: [craft]
 category: knowledge
 ranked: true
 minStats: { memory: 3, logic: 2 }

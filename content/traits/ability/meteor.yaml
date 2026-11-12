@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Calls down a burning stone from the sky."
 tags: [magic, spell, fire, earth, attack]
+backgroundKeywords: [magic]
 category: ability
 types: [elemental]
 ranked: true

@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "How heavy machines are built and kept running."
 tags: [industry, machinery, engineering]
+backgroundKeywords: [labor, engineering]
 category: knowledge
 ranked: true
 minStats: { memory: 3, logic: 2 }

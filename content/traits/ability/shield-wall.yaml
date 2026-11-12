@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Fighting in formation behind a shield."
 tags: [combat, shield, military]
+backgroundKeywords: [combat, military]
 category: ability
 minStats: { endurance: 4, power: 3, demeanor: 2 }
 effect: "This character gains the Shieldwall Action."

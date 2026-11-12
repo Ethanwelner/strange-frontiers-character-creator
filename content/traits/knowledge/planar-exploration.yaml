@@ -5,6 +5,7 @@ plane: earth
 region: tetra
 summary: "How new planes are found, locked and opened, and who does the work."
 tags: [planes, exploration, tetra]
+backgroundKeywords: [exploration, tetra]
 category: knowledge
 ranked: true
 minStats: { memory: 3, logic: 2, intuition: 2 }

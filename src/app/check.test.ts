@@ -71,17 +71,20 @@ describe("traitOptions", () => {
     const ids = traitOptions(isek, bundled, campaign, "background")!.map((o) => o.trait.id);
     // Isek have military, guild and caravan access.
     expect(ids).toContain("shield-wall");
-    expect(ids).not.toContain("tracker");
+    expect(ids).not.toContain("thieves-cant");
   });
 
   it("keeps Wielder Skills on their own tab, spending a Background pick on the character's own", () => {
     const skills = traitOptions(human, bundled, campaign, "universal")!.map((o) => o.trait.id);
     expect(skills).not.toContain("wielder-shortsword");
     const wielder = new Map(traitOptions(human, bundled, campaign, { list: "wielder" })!.map((o) => [o.trait.id, o]));
-    // Royal Guard puts Wielder: Shortsword on the Background Trait list; Wielder: Bow isn't.
+    // Royal Guard's combat keyword puts Wielder: Shortsword on the Background Trait list.
     expect(wielder.get("wielder-shortsword")!.pick).toBe("background");
-    expect(wielder.get("wielder-bow")!.pick).toBe("universal");
-    expect(wielder.get("wielder-bow")!.reasons).toEqual([]);
+    // A doctor from university has no combat keyword, so it takes a Universal pick.
+    const doctor: Draft = { ...human, profession: "doctor", past: "university-educated" };
+    const bow = traitOptions(doctor, bundled, campaign, { list: "wielder" })!.find((o) => o.trait.id === "wielder-bow")!;
+    expect(bow.pick).toBe("universal");
+    expect(bow.reasons).toEqual([]);
   });
 
   it("gives the engine's reasons for picks it would reject", () => {

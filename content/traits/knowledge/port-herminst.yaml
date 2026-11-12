@@ -5,6 +5,7 @@ plane: isekai
 region: dreft
 summary: Knowing your way around Dreft’s capital and biggest port.
 tags: [city, port, capital]
+backgroundKeywords: [seafaring]
 lore: herminst
 category: knowledge
 ranked: true

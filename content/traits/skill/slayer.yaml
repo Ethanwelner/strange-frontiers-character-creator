@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "A veteran of fights against things that shouldn't exist."
 tags: [combat, monsters, expert]
+backgroundKeywords: [combat, parabiology]
 category: skill
 mastery: true
 minStats: { intuition: 8, grace: 6, power: 6, endurance: 6 }

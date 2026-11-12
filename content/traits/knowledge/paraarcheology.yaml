@@ -4,6 +4,7 @@ status: placeholder
 plane: earth
 summary: "The ruins and remains that parasapient civilizations have left behind on other planes."
 tags: [parabiology, archeology, history, ruins]
+backgroundKeywords: [scholarship, parabiology, exploration]
 category: knowledge
 ranked: true
 minStats: { memory: 3, intuition: 2 }

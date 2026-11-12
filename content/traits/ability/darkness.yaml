@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Fills a space with darkness no lamp can pierce."
 tags: [magic, spell, darkness, stealth]
+backgroundKeywords: [magic]
 category: ability
 types: [illusion, potion]
 ranked: true

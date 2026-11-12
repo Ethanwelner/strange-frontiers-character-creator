@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Burns away flames and eats away acid."
 tags: [magic, spell, healing, utility]
+backgroundKeywords: [magic]
 category: ability
 types: [restoration, potion]
 ranked: true

@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Representing a side and keeping the peace between powers."
 tags: [diplomacy, politics, social]
+backgroundKeywords: [politics, diplomacy, social]
 category: skill
 ranked: true
 minStats: { persuasion: 4, empathy: 4, demeanor: 3 }

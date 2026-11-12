@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Getting into systems that don't want you there."
 tags: [computers, hacking, security]
+backgroundKeywords: [security, computers]
 category: skill
 ranked: true
 minStats: { logic: 5, intuition: 4, memory: 3 }

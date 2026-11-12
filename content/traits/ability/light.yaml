@@ -4,6 +4,7 @@ status: placeholder
 plane: any
 summary: "Makes an object shine like a lamp."
 tags: [magic, spell, light, utility]
+backgroundKeywords: [magic]
 category: ability
 types: [illusion, potion, artifact]
 ranked: true

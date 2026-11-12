@@ -5,6 +5,7 @@ plane: earth
 region: american-empire
 summary: "The Empire’s Earth territories, from the Californias to Nueva Mexico."
 tags: [geography, american-empire, earth]
+backgroundKeywords: [earth, american-empire]
 category: knowledge
 ranked: true
 minStats: { memory: 3 }

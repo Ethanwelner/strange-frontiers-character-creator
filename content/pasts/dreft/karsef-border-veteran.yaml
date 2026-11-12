@@ -5,6 +5,7 @@ plane: isekai
 region: dreft
 summary: "Served in the skirmishes over the Corsine Pass, where Dreft and Karsef have been testing each other for generations."
 tags: [military, border, mountains, karsef, veteran]
+backgroundKeywords: [combat, military, wilderness, travel, karsef]
 lore: corsine-mountains
 type: past
 grants:
@@ -12,8 +13,3 @@ grants:
   - { trait: mountaineering }
   - { trait: the-corsine-pass }
   - { trait: karsef }
-backgroundTraits:
-  - wilderness-lore
-  - wielder-crossbow
-  - wielder-spear
-  - wielder-polearm

@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Fighting with, and maintaining, a taser."
 tags: [combat, ranged, nonlethal, police, private-security]
+backgroundKeywords: [combat, security, police]
 category: skill
 list: wielder
 ranked: true
