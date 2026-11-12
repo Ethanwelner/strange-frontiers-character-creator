@@ -2212,7 +2212,7 @@
     }
 
     > .filters {
-      margin: 0 0 32px;
+      margin: 0 0 24px;
 
       input[type="search"] {
         padding: 0.6rem 0.9rem;
