@@ -1191,8 +1191,8 @@
   }
 
   /* The Traits step's cards (cards.css), picked or not: the whole card
-     picks the Trait, and its lines run together, spaced by their own
-     margins */
+     picks the Trait, and its lines are spaced by the body's gap (.5rem,
+     cards.css), not their own margins */
   .sf-trait-card.trait {
     cursor: pointer;
 
@@ -1200,12 +1200,8 @@
       border-color: var(--portfolio-medium-gray);
     }
 
-    > .sf-card-body {
-      display: block;
-    }
-
-    .sf-card-tags {
-      gap: 0;
+    > .sf-card-body > * {
+      margin: 0;
     }
   }
 
@@ -1214,7 +1210,6 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-top: 0.5rem;
     cursor: default;
 
     .num {
