@@ -219,11 +219,17 @@ html.sf-popup-open {
     }
 }
 
-/* At 1768px and below, less padding inside the panel, and a smaller
-   title, so more of the content fits */
+/* At 1768px and below, less room over and under the panel and less padding
+   inside it, and a smaller title, so more of the content fits */
 @media (max-width: 1768px) {
     .sf-popup {
         --popup-pad: 24px;
+        padding-block: 36px;
+    }
+
+    /* A card on its own fills the taller room left */
+    .sf-popup--card :is(.sf-popup-scroll, .sf-popup-body) > .sf-card {
+        max-height: calc(100dvh - 72px);
     }
 
     .sf-popup-title,
