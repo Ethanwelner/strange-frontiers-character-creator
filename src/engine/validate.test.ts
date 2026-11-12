@@ -99,6 +99,17 @@ const fixtures = [
     types: ["language"],
     effect: "Test only.",
   }),
+  Trait.parse({
+    id: "additional-language",
+    name: "Additional Language",
+    status: "placeholder",
+    plane: "any",
+    summary: "Test fixture (the game has no such Trait): a ranked Trait whose choice is a language.",
+    category: "knowledge",
+    ranked: true,
+    effect: "Test only.",
+    choices: [{ choose: 1, from: "language", note: "+1 Language per rank" }],
+  }),
 ];
 const withFixtures: Content = { ...content, traits: [...content.traits, ...fixtures] };
 
@@ -555,14 +566,14 @@ describe("rule 6: Trait choices", () => {
   });
 
   it("asks a held Trait's choice, and holds the answer", () => {
-    const unanswered = check(withTraits(language));
+    const unanswered = check(withTraits(language), withFixtures);
     expect(unanswered.errors).toEqual([
       expect.objectContaining({ code: "choice", message: `Additional Language gives a choice of 1 language: pick it on the Choices step` }),
     ]);
     expect(unanswered.summary!.questions).toEqual([
       { by: "trait", id: "additional-language", name: "Additional Language", from: "language", count: 1, notes: ["+1 Language per rank"] },
     ]);
-    const r = check({ ...withTraits(language), choices: [{ trait: "additional-language", from: "language", traits: ["english"] }] });
+    const r = check({ ...withTraits(language), choices: [{ trait: "additional-language", from: "language", traits: ["english"] }] }, withFixtures);
     expectLegal(r);
     expect(r.summary!.traits.find((h) => h.trait === "english")!.sources).toEqual(["trait additional-language choice"]);
   });
@@ -587,12 +598,12 @@ describe("rule 6: Trait choices", () => {
   });
 
   it("rejects a language the build already holds", () => {
-    const r = check({ ...isek, traits: [...isek.traits!, language], choices: [...isek.choices!, { trait: "additional-language", from: "language", traits: ["dreftan"] }] });
+    const r = check({ ...isek, traits: [...isek.traits!, language], choices: [...isek.choices!, { trait: "additional-language", from: "language", traits: ["dreftan"] }] }, withFixtures);
     expect(codes(r)).toEqual(["duplicate-trait"]);
   });
 
   it("rejects an answer for a Trait the build doesn't hold", () => {
-    const r = check({ ...human, choices: [{ trait: "additional-language", from: "language", traits: ["english"] }] });
+    const r = check({ ...human, choices: [{ trait: "additional-language", from: "language", traits: ["english"] }] }, withFixtures);
     expect(r.errors).toEqual([
       expect.objectContaining({ code: "choice", message: "The build answers a choice for Additional Language, which it doesn't hold" }),
     ]);

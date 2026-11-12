@@ -8,7 +8,23 @@ import { Kind, Trait } from "../schema/index.js";
 // focus stats, out of reach for these level 1 fixtures, so the rules are tested
 // without their minimum stats. validate.test.ts checks the real ones.
 const loaded = loadContent().content;
-const content = { ...loaded, traits: loaded.traits.map((t) => (t.category === "knowledge" || t.category === "skill" || t.id === "shield-wall" ? { ...t, minStats: {} } : t)) };
+// A ranked Trait whose choice is a language, for the solver's language
+// answers (the game has no such Trait now)
+const additionalLanguage = Trait.parse({
+  id: "additional-language",
+  name: "Additional Language",
+  status: "placeholder",
+  plane: "any",
+  summary: "Test fixture: a ranked Trait whose choice is a language.",
+  category: "knowledge",
+  ranked: true,
+  effect: "Test only.",
+  choices: [{ choose: 1, from: "language", note: "+1 Language per rank" }],
+});
+const content = {
+  ...loaded,
+  traits: [...loaded.traits.map((t) => (t.category === "knowledge" || t.category === "skill" || t.id === "shield-wall" ? { ...t, minStats: {} } : t)), additionalLanguage],
+};
 const isek = content.kinds.find((k) => k.id === "isek")!.stats!;
 
 // These fixtures are level 1 characters; the default campaign starts at 3.

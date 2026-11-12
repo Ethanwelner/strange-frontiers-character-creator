@@ -268,8 +268,8 @@ export const Trait = BaseEntry.extend({
   // For a language Trait, which language it's a form of: Dreftan (Spoken) and
   // Dreftan (Written) are both `dreftan`.
   language: z.string().optional(),
-  // Asked when the Trait is held, e.g. which language an Additional Language
-  // is. A ranked Trait asks again for each rank.
+  // Asked when the Trait is held, e.g. who an Additional Contact is. A
+  // ranked Trait asks again for each rank.
   choices: z.array(TraitChoice).default([]),
   // Added to the character's HP, VP, SP or MP for each rank held.
   resources: Resources.default({}),

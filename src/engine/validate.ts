@@ -37,6 +37,8 @@ export interface Issue {
   path?: string;
   // For a choice nobody has picked yet, its pool, e.g. "spoken-and-written-language"
   pool?: string;
+  // For a Trait's unmet minimum stats, the stats that fall short, e.g. ["logic"]
+  stats?: string[];
 }
 
 export interface PickCount {
@@ -227,7 +229,7 @@ const aOrAn = (word: string) => (/^[aeiou]/.test(word) ? `an ${word}` : `a ${wor
 export function validateBuild(input: unknown, content: Content, campaign: Campaign = DEFAULT_CAMPAIGN): BuildResult {
   const errors: Issue[] = [];
   const warnings: Issue[] = [];
-  const error = (code: IssueCode, message: string, path?: string) => errors.push({ code, message, path });
+  const error = (code: IssueCode, message: string, path?: string, extra?: Partial<Issue>) => errors.push({ code, message, path, ...extra });
   const warn = (code: IssueCode, message: string, path?: string) => warnings.push({ code, message, path });
 
   const parsed = Build.safeParse(input);
@@ -602,7 +604,7 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     if (short.length) {
       const need = Object.entries(t.minStats).map(([s, min]) => `${s} ${min}`).join(", ");
       const have = short.map(([s]) => `${s} ${s in coreStats ? coreStats[s as StatGroup] : stats[s as StatId]}`).join(", ");
-      error("min-stats", `${label(t)} needs ${need} (has ${have})`, `traits[${byTrait.get(id)![0]!.index}]`);
+      error("min-stats", `${label(t)} needs ${need} (has ${have})`, `traits[${byTrait.get(id)![0]!.index}]`, { stats: short.map(([s]) => s) });
     }
   }
 

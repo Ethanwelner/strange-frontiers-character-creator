@@ -327,8 +327,8 @@ export function solveConcept(input: unknown, content: Content, campaign: Campaig
   let open = openPlaceholders(build, content);
   const check = (b: Build) => validateBuild({ ...b, choices: [...b.choices, ...open] }, content, campaign);
 
-  // Answers the choices of the Traits a build holds, like the language an
-  // Additional Language gives: the concept's valid answers first, then the
+  // Answers the choices of the Traits a build holds that pick from a pool of
+  // Traits: the concept's valid answers first, then the
   // first Traits in the pool, home first, that aren't held. Contacts stay with the player,
   // and pools with nothing in them get placeholders while checking.
   const answerTraitChoices = (b: Build): Build => {

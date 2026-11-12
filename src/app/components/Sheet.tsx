@@ -22,8 +22,8 @@ const TRAIT_GRANT = /^trait ([a-z0-9-]+)$/;
 const CHASSIS = /^chassis ([a-z0-9-]+)$/;
 
 // "origin dreft" → "Dreft (origin)", "kind isek" → "Isek (kind)",
-// "trait additional-language choice" →
-// "Additional Language (choice)"; pick sources read as they are.
+// "trait seafaring choice" →
+// "Seafaring (choice)"; pick sources read as they are.
 function source(s: string) {
   const t = TRAIT_CHOICE.exec(s);
   if (t) return `${traitName(t[1]!)} (choice)`;
