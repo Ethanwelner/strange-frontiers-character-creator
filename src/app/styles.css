@@ -2332,6 +2332,28 @@
     }
   }
 
+  /* At 1768px and below, the category checkboxes sit beside the search on
+     its line, Hide unavailable after them, wrapping under when there's no
+     room */
+  @media (max-width: 1768px) {
+    .sf-popup--inner .traits-filters {
+      row-gap: 12px;
+
+      &::after {
+        display: none;
+      }
+
+      > .check:not(.hide-unavailable) {
+        order: 1;
+        margin-top: 0;
+      }
+
+      .hide-unavailable {
+        order: 2;
+      }
+    }
+  }
+
   .item-pick-list {
     list-style: none;
     display: grid;
