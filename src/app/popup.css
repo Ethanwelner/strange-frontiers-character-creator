@@ -224,12 +224,12 @@ html.sf-popup-open {
 @media (max-width: 1768px) {
     .sf-popup {
         --popup-pad: 24px;
-        padding-block: 36px;
+        padding-block: 32px;
     }
 
     /* A card on its own fills the taller room left */
     .sf-popup--card :is(.sf-popup-scroll, .sf-popup-body) > .sf-card {
-        max-height: calc(100dvh - 72px);
+        max-height: calc(100dvh - 64px);
     }
 
     .sf-popup-title,
