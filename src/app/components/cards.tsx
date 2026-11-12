@@ -50,12 +50,12 @@ import { Icon, SettingIcon, Sign, title } from "./ui.js";
 export type TraitCardKind = "knowledge" | "language" | "skill" | "ability" | "condition" | "circumstance" | "other";
 
 // A Trait's card kind from its category: a Language is a Knowledge with the
-// language type, Contacts and Memberships are Circumstances, and starters
+// language type, Memberships are Circumstances, and starters
 // fall under Other.
 export function traitCardKind(t: Pick<Trait, "category" | "types"> | undefined): TraitCardKind {
   if (!t) return "other";
   if (t.category === "knowledge") return t.types.includes("language") ? "language" : "knowledge";
-  if (t.category === "contact" || t.category === "membership") return "circumstance";
+  if (t.category === "membership") return "circumstance";
   if (t.category === "starter") return "other";
   return t.category;
 }
