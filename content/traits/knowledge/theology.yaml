@@ -1,0 +1,15 @@
+id: theology
+name: "Theology"
+status: draft
+plane: any
+summary: "The scripture, doctrine and history of one faith."
+tags: [religion, faith, scholarship]
+category: knowledge
+ranked: true
+minStats: { memory: 4, logic: 2 }
+choices:
+  - choose: 1
+    from: detail
+    note: "Which faith"
+    perRank: false
+effect: "This character has knowledge of the theology of one faith and can be assumed to be familiar with its scripture, doctrine, schisms and history, and the arguments its scholars are still having."

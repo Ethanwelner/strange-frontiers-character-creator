@@ -1,0 +1,10 @@
+id: media-and-broadcasting
+name: "Media and Broadcasting"
+status: draft
+plane: earth
+summary: "The news outlets, feeds and networks of the Settled Systems, and who owns them."
+tags: [media, journalism, news]
+category: knowledge
+ranked: true
+minStats: { memory: 3, intuition: 2 }
+effect: "This character has knowledge of media and broadcasting and can be assumed to be familiar with the major news outlets and feeds of the Settled Systems, who owns them, and how a story gets from a source to a broadcast."

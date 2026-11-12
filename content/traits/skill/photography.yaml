@@ -1,0 +1,10 @@
+id: photography
+name: "Photography"
+status: draft
+plane: earth
+summary: "Getting the shot, and getting it in focus."
+tags: [journalism, art, camera]
+category: skill
+ranked: true
+minStats: { grace: 3, intuition: 3 }
+effect: "This character is capable of taking clear, usable photos and video in ordinary conditions without a Skill Check. Rank *5 added to Skill Check rolls involving photographing something in bad light, at a distance or on the move."

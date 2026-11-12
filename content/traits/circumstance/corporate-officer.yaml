@@ -1,0 +1,14 @@
+id: corporate-officer
+name: "Corporate Officer"
+status: draft
+plane: earth
+summary: "A title, an office and an expense account."
+tags: [corporate, money, authority]
+category: circumstance
+conveyed: true
+choices:
+  - choose: 1
+    from: detail
+    note: "Which company, and what title"
+temporary: "Lost if the character is fired or resigns"
+effect: "This character is an officer of a company, with authority over its department, staff who answer to it and an expense account for company business. It answers to the board, and the board reads the expense reports."

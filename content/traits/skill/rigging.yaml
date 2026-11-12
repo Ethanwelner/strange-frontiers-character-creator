@@ -1,0 +1,10 @@
+id: rigging
+name: "Rigging"
+status: draft
+plane: any
+summary: "Lines, knots, sails and climbing the masts."
+tags: [sailing, seafaring, climbing]
+category: skill
+ranked: true
+minStats: { grace: 3, power: 2, memory: 2 }
+effect: "This character is capable of tying any common knot, working a ship's sails and climbing its rigging in calm weather without a Skill Check. Rank *5 added to Skill Check rolls involving rigging in storms, under fire or in the dark."

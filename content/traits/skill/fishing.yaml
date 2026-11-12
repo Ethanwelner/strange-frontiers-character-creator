@@ -1,0 +1,10 @@
+id: fishing
+name: "Fishing"
+status: draft
+plane: any
+summary: "Line, net and trap."
+tags: [fishing, seafaring, survival, food]
+category: skill
+ranked: true
+minStats: { intuition: 2, grace: 2 }
+effect: "This character is capable of catching enough fish to feed itself wherever there are fish, with line, net or trap, without a Skill Check. Rank *5 added to Skill Check rolls involving fishing for more people, for a particular catch or in poor waters."

@@ -1,0 +1,10 @@
+id: weather-reading
+name: "Weather Reading"
+status: draft
+plane: any
+summary: "Knowing what the sky will do tomorrow."
+tags: [sailing, seafaring, wilderness, weather]
+category: skill
+ranked: true
+minStats: { intuition: 3, memory: 2 }
+effect: "This character is capable of telling the next day's weather from the sky, wind and water without a Skill Check. Rank *5 added to Skill Check rolls involving predicting storms or weather further out."

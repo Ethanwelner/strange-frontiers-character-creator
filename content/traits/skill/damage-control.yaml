@@ -1,0 +1,10 @@
+id: damage-control
+name: "Damage Control"
+status: draft
+plane: earth
+summary: "Sealing breaches and venting fires before a ship or station loses air."
+tags: [fire, rescue, space, station, ship]
+category: skill
+ranked: true
+minStats: { logic: 3, endurance: 3, grace: 2 }
+effect: "This character is capable of sealing a small hull breach and running a compartment's emergency systems without a Skill Check. Rank *5 added to Skill Check rolls involving sealing large breaches, stopping fires aboard a ship or station, or keeping a damaged compartment livable."

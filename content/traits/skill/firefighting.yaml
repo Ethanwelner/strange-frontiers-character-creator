@@ -1,0 +1,10 @@
+id: firefighting
+name: "Firefighting"
+status: draft
+plane: any
+summary: "Putting fires out and working inside them."
+tags: [fire, rescue, labor]
+category: skill
+ranked: true
+minStats: { endurance: 4, power: 2, logic: 2 }
+effect: "This character is capable of putting out small fires and using firefighting equipment without a Skill Check, and can put out the Burning Condition on a character within 1 m as an RP Action. Rank *5 added to Skill Check rolls involving fighting large fires or moving through smoke and heat."
