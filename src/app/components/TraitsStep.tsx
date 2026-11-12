@@ -45,7 +45,6 @@ const requirements = (t: Trait) =>
 const GROUP_TITLE: Record<(typeof TraitCategory.options)[number], string> = {
   knowledge: "Knowledges",
   skill: "Skills",
-  contact: "Contacts",
   starter: "Starter Traits",
   ability: "Abilities",
   condition: "Conditions",

@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { Popup } from "./popup.js";
-import { Effect, Icon, Sign, title } from "./ui.js";
+import { Effect, Icon, Sign, StepHeader, title } from "./ui.js";
 import { ChassisCard, ItemCard, TraitCard, traitCardKind } from "./cards.js";
 import { content, itemById, traitById } from "../content.js";
 import { STAT_GROUPS, type StatId } from "../../schema/index.js";
@@ -389,7 +389,7 @@ export function Items({
 
       {adding && (
         <Popup label="Add items" onClose={() => setAdding(false)} size="wide" scroll="inner" className="sheet-add-popup item-picker-popup">
-          <h3 className="subhead">Add items</h3>
+          <StepHeader title="Add items" />
           {/* Most items come from the game's list: search, check, set counts */}
           <ItemPicker
             kit={kit}
