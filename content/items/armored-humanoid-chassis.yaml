@@ -1,0 +1,15 @@
+id: armored-humanoid-chassis
+name: "Armored Humanoid Chassis"
+status: draft
+plane: earth
+summary: "A humanoid frame plated and braced over every joint, built to keep working while it takes fire."
+tags: [chassis, ai-core, humanoid, advanced, armored]
+type: chassis
+category: chassis
+resistances: "3 Blunt, 2 Slashing, 2 Piercing"
+value: 280000
+currency: "ERC"
+chassis:
+  core: 4
+  stats: { endurance: 7, power: 3, grace: 2 }
+  traits: [mechanical, reinforced]

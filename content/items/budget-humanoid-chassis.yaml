@@ -1,0 +1,14 @@
+id: budget-humanoid-chassis
+name: "Budget Humanoid Chassis"
+status: draft
+plane: earth
+summary: "A bare, mass-produced frame of ordinary height: cheap to buy, cheap to fix, and built to do as little as it can get away with."
+tags: [chassis, ai-core, humanoid, budget]
+type: chassis
+category: chassis
+value: 6000
+currency: "ERC"
+chassis:
+  core: 1
+  stats: { endurance: 1, power: 1, grace: 1 }
+  traits: [mechanical]

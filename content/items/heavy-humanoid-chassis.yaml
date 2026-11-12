@@ -1,0 +1,15 @@
+id: heavy-humanoid-chassis
+name: "Heavy Humanoid Chassis"
+status: draft
+plane: earth
+summary: "A broad-shouldered humanoid frame with oversized actuators, built to lift, haul and hit hard."
+tags: [chassis, ai-core, humanoid, advanced, strength]
+type: chassis
+category: chassis
+resistances: "2 Blunt, 1 Slashing, 1 Piercing"
+value: 250000
+currency: "ERC"
+chassis:
+  core: 4
+  stats: { endurance: 3, power: 7, grace: 2 }
+  traits: [mechanical]
