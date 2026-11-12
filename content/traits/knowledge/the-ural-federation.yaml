@@ -5,6 +5,7 @@ plane: earth
 region: ural-federation
 summary: "The Ural Federation: hundreds of tribal statelets across the steppe and the thawed Siberian breadbasket."
 tags: [ural-federation, politics]
+backgroundKeywords: [politics, ural-federation]
 lore: ural-federation
 category: knowledge
 ranked: true

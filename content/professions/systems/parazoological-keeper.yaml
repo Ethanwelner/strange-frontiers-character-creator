@@ -4,12 +4,9 @@ status: placeholder
 plane: earth
 summary: "Keeps extraplanar animals alive and contained in a lab, zoo or pet shop, and knows which enclosures not to stand near."
 tags: [animals, parabiology, zoo, care]
+backgroundKeywords: [security, science, medicine, parabiology, animals]
 type: profession
 grants:
   - { trait: specimen-handling }
   - { trait: parazoology }
   - { trait: vigilance }
-backgroundTraits:
-  - animal-lore
-  - biology
-  - security-systems

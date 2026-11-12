@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Fighting with, and maintaining, heavy automatic weapons fired from the hip, a bipod or a mount."
 tags: [combat, firearms, heavy weapons, military]
+backgroundKeywords: [modern-ranged, military]
 category: skill
 list: wielder
 ranked: true

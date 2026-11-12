@@ -5,6 +5,7 @@ plane: isekai
 region: dreft
 summary: "The forest east of the switch port, and what lives in it."
 tags: [forest, wilderness, monsters]
+backgroundKeywords: [parabiology, wilderness]
 lore: kings-woods
 category: knowledge
 ranked: true

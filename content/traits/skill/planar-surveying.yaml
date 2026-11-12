@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Mapping and assessing a newly opened plane in the field."
 tags: [planes, exploration, survey]
+backgroundKeywords: [exploration]
 category: skill
 ranked: true
 minStats: { logic: 4, memory: 3, endurance: 2 }

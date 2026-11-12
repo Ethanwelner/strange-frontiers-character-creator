@@ -6,6 +6,7 @@ region: lunar-industrial-syndicate
 summary: "You grew up a “citizen shareholder” of the Eighth Lunar Industrial Syndicate, on Earth, Luna or one of its outposts, in a nation run for its investors first."
 naming: "Names in English."
 tags: [lunar-industrial-syndicate, earth, luna, corporate]
+backgroundKeywords: [corporate, space, travel, earth, luna]
 lore: lunar-industrial-syndicate
 type: origin
 bonusPoints:
@@ -18,10 +19,3 @@ choices:
   - choose: 1
     from: language
     note: "+1 Language"
-backgroundTraits:
-  - portuguese
-  - portuguese-written
-  - the-corporate-syndicates
-  - ark-life
-  - starship-engineering
-  - cargo-handling

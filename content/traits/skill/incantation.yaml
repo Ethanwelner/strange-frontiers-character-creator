@@ -4,6 +4,7 @@ status: draft
 plane: isekai
 summary: "Casting spells by incantation."
 tags: [magic, spellcasting]
+backgroundKeywords: [magic]
 category: skill
 minStats: { magic: 1, memory: 3 }
 # On the Magic list: its own tab on the Traits step, open to every character.

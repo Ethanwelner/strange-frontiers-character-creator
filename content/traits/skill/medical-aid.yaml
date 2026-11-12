@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "First aid: stopping bleeding, dressing wounds and setting bones."
 tags: [medicine, first-aid, healing]
+backgroundKeywords: [medicine]
 category: skill
 ranked: true
 minStats: { empathy: 3, memory: 3, grace: 2 }

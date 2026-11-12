@@ -5,6 +5,7 @@ plane: earth
 region: kashgar
 summary: "The company that builds AI Cores, and how it works."
 tags: [ai, company, kashgar]
+backgroundKeywords: [corporate, computers, kashgar]
 lore: kashgar-mindworks
 category: knowledge
 minStats: { memory: 3 }

@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Lets a character see through walls and smoke for a time."
 tags: [magic, spell, senses, enchantment]
+backgroundKeywords: [magic]
 category: ability
 types: [divination, potion, artifact]
 ranked: true

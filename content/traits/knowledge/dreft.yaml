@@ -5,6 +5,7 @@ plane: isekai
 region: dreft
 summary: "The Kingdom of Dreft: its regions, its crown and its customs."
 tags: [kingdom, dreft]
+backgroundKeywords: [nobility, dreft]
 lore: dreft
 category: knowledge
 ranked: true

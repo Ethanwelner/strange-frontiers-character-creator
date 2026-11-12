@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Flying lighter-than-air craft."
 tags: [pilot, airships, aircraft]
+backgroundKeywords: [piloting]
 category: skill
 ranked: true
 minStats: { memory: 4, intuition: 3, grace: 2 }

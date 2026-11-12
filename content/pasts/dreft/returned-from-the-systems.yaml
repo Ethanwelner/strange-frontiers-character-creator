@@ -5,6 +5,7 @@ plane: isekai
 region: dreft
 summary: "Left Dreft for the settled systems and came back changed, like everyone who comes back."
 tags: [systems, traveler, technology, earth]
+backgroundKeywords: [engineering, space, earth]
 type: past
 grants:
   - { trait: tinkerer }
@@ -16,6 +17,3 @@ choices:
   - choose: 1
     from: language
     note: "+1 Language"
-backgroundTraits:
-  - starships
-  - spacefaring

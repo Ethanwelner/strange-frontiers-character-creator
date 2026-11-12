@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "How buildings and bridges are designed, built and brought down."
 tags: [building, masonry, engineering]
+backgroundKeywords: [labor, craft, engineering]
 category: knowledge
 ranked: true
 minStats: { memory: 3, logic: 2 }

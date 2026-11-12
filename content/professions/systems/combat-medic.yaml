@@ -4,19 +4,9 @@ status: placeholder
 plane: earth
 summary: "Keeps soldiers alive under fire, patching wounds in the middle of a fight."
 tags: [medicine, military, combat, healing]
+backgroundKeywords: [modern-ranged, military, science, medicine, wilderness]
 type: profession
 grants:
   - { trait: medical-aid }
   - { trait: military-drill }
   - { trait: vigilance }
-backgroundTraits:
-  - surgery
-  - survivalist
-  - wielder-rifle
-  - medicine
-  - pharmacology
-  - toxicology
-  - psychology
-  - biology
-  - military-tactics
-  - wielder-shotgun

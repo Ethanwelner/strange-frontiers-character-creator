@@ -6,6 +6,7 @@ region: kingdom-of-india
 summary: "You grew up in the Kingdom’s new homes beyond Earth: in Pataliputra, the planar capital where millions arrive every year, or aboard Amaravati, its station in high Earth orbit."
 naming: "Indian names, in Hindi or another of the Kingdom’s languages."
 tags: [india, colonies, planar, pataliputra, station]
+backgroundKeywords: [trade, wilderness, space, exploration, earth, india, colonies]
 lore: kingdom-of-india
 type: origin
 # A free bonus point the player places in a Social stat.
@@ -20,13 +21,3 @@ choices:
   - choose: 1
     from: spoken-and-written-language
     note: "+1 Language (Spoken & Written)"
-backgroundTraits:
-  - pataliputra
-  - amaravati
-  - indian-theology
-  - planar-exploration
-  - interplanar-relations
-  - ecology
-  - earth-baseline-technology
-  - english
-  - english-written

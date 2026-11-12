@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Driving to keep a passenger alive."
 tags: [security, driving, bodyguard, private-security]
+backgroundKeywords: [security, piloting]
 category: skill
 ranked: true
 minStats: { grace: 3, intuition: 3 }

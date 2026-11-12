@@ -5,6 +5,7 @@ plane: isekai
 region: dreft
 summary: "Practices magic outside the licensed system of Dreft and its neighboring kingdoms. Working far from the scrutiny of cities and trading posts, these mages are a mixed bag."
 tags: [witch, magic, unlicensed, folk]
+backgroundKeywords: [close-combat, science, medicine, wilderness, faith, magic, alchemy]
 type: profession
 # A bonus point in Magic, without a level, for a character who can level it.
 coreBonus: { magic: 1 }
@@ -13,8 +14,3 @@ grants:
   - { trait: countryside-lore }
   - { trait: magic-on-isekai }
   - { trait: herbalism }
-backgroundTraits:
-  - animal-lore
-  - wilderness-lore
-  - biology
-  - wielder-staff

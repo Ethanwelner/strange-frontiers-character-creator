@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Cooking at a professional level, for a crowd or a court."
 tags: [cooking, food, expert]
+backgroundKeywords: [craft]
 category: skill
 mastery: true
 minStats: { intuition: 5, memory: 4, empathy: 3 }

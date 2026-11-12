@@ -4,6 +4,7 @@ status: draft
 plane: isekai
 summary: "Brewing cures for poisons and toxins."
 tags: [potions, alchemy, poison, healing]
+backgroundKeywords: [medicine, alchemy]
 category: skill
 ranked: true
 minStats: { memory: 4, intuition: 3, logic: 2 }

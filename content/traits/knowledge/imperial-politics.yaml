@@ -5,6 +5,7 @@ plane: earth
 region: american-empire
 summary: "The Emperor, the Prince Regent, the Senate and who is feuding with whom."
 tags: [politics, american-empire, senate]
+backgroundKeywords: [politics, american-empire]
 lore: american-empire
 category: knowledge
 ranked: true

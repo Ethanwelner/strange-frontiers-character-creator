@@ -4,6 +4,7 @@ status: placeholder
 plane: earth
 summary: "The study of extraplanar life in all its forms, and why so many planes hold any at all."
 tags: [parabiology, science, life]
+backgroundKeywords: [science, parabiology]
 category: knowledge
 ranked: true
 minStats: { memory: 3, logic: 2, empathy: 2 }

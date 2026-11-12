@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Moving, fighting and following orders as part of a unit."
 tags: [military, discipline]
+backgroundKeywords: [military]
 category: skill
 minStats: { endurance: 3, demeanor: 3 }
 effect: "This character gains +3 to Demeanor and Persuasion rolls relating to commanding troops or giving orders to subordinates in military organizations."

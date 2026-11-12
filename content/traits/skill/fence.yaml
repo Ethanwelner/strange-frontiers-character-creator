@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Moving goods that can't be sold in the open."
 tags: [trade, criminal, black-market]
+backgroundKeywords: [crime, trade]
 category: skill
 minStats: { persuasion: 3, memory: 3 }
 effect: "This character gains +3 to Persuasion rolls when negotiating the price of stolen or contraband goods."

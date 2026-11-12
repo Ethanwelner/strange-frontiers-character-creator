@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Designing new devices and making them work."
 tags: [invention, engineering, science]
+backgroundKeywords: [craft, engineering, science]
 category: skill
 ranked: true
 minStats: { logic: 5, intuition: 4, memory: 3 }

@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Common animals: their habits, needs, dangers and uses."
 tags: [animals, nature]
+backgroundKeywords: [wilderness, animals]
 category: knowledge
 ranked: true
 minStats: { memory: 2, intuition: 2 }

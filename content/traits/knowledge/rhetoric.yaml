@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "The art of persuading an audience."
 tags: [rhetoric, oratory, persuasion]
+backgroundKeywords: [leadership, social]
 category: knowledge
 ranked: true
 minStats: { memory: 3, persuasion: 2 }

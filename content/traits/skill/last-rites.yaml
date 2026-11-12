@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Easing the dying, and seeing that the dead rest."
 tags: [faith, death, ritual]
+backgroundKeywords: [faith]
 category: skill
 minStats: { empathy: 4, memory: 3 }
 prerequisites: [rites-and-ceremonies]

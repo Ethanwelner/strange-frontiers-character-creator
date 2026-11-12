@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Finding the signal in a mountain of numbers."
 tags: [science, data, computers]
+backgroundKeywords: [computers, science]
 category: skill
 minStats: { logic: 5, memory: 3 }
 effect: "This character gains +5 to rolls relating to finding patterns, errors or meaning in data, records, readings or statistics."

@@ -4,6 +4,7 @@ status: draft
 plane: isekai
 summary: "Relics, enchanted items and their makers."
 tags: [magic, artifacts, relics]
+backgroundKeywords: [exploration, magic]
 category: knowledge
 ranked: true
 minStats: { memory: 3, intuition: 2 }

@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Talking people into things, or out of them."
 tags: [social, persuasion]
+backgroundKeywords: [social]
 category: skill
 minStats: { persuasion: 3, empathy: 2 }
 effect: "This character gains +2 to Persuasion or Demeanor rolls."

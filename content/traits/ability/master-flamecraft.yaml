@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Fire magic cast cheaper and hotter."
 tags: [magic, metamagic, fire, expert]
+backgroundKeywords: [magic]
 category: ability
 mastery: true
 minStats: { magic: 5, endurance: 5 }

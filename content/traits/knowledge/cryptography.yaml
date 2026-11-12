@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Codes and ciphers: making them, and breaking them."
 tags: [codes, secrets, spy]
+backgroundKeywords: [espionage]
 category: knowledge
 ranked: true
 minStats: { memory: 3, logic: 4 }

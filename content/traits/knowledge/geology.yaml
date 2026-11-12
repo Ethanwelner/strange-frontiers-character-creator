@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Rocks, ores and the ground they're found in."
 tags: [geology, mining, science]
+backgroundKeywords: [labor, science]
 category: knowledge
 ranked: true
 minStats: { memory: 3, logic: 2 }

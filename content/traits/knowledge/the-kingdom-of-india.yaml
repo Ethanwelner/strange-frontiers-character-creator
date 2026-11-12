@@ -5,6 +5,7 @@ plane: earth
 region: kingdom-of-india
 summary: "The Kingdom of India: its royal house, its temples and the regreening of the subcontinent."
 tags: [india, politics]
+backgroundKeywords: [politics, india]
 lore: kingdom-of-india
 category: knowledge
 ranked: true

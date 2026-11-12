@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Leading a party into the unknown and bringing it back."
 tags: [leadership, exploration, travel]
+backgroundKeywords: [leadership, travel, exploration]
 category: skill
 minStats: { demeanor: 4, intuition: 4, endurance: 3 }
 prerequisites: [expedition-logistics]

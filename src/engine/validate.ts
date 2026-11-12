@@ -100,6 +100,8 @@ export interface BuildSummary {
   traits: HeldTrait[];
   // Traits the build may spend background picks on.
   backgroundList: string[];
+  // The Background Keywords its packages give, which set most of that list.
+  backgroundKeywords: string[];
   // The Trait lists the build holds an opener for, like magic.
   traitLists: string[];
   // Every choice the build asks, packages first, answered or not.
@@ -429,15 +431,23 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     for (const q of questionsOf("package", pkg)) answer(q, `${pkg.type} ${pkg.id}`, false);
   }
 
-  // Rule 7: the Background Trait list is the packages' backgroundTraits plus
-  // Traits tagged with one of the Kind's traitAccess pools, plus the
-  // Background Traits on a Trait list, like Magic (rule 14).
+  // Rule 7: the Background Trait list is every Trait sharing a Background
+  // Keyword with one of the packages, plus Traits tagged with one of the
+  // Kind's traitAccess pools, plus the Background Traits on a Trait list,
+  // like Magic (rule 14).
   const access = new Set(kind?.traitAccess ?? []);
-  const backgroundList = new Set(packages.flatMap((p) => p.backgroundTraits));
+  const keywords = new Set<string>(packages.flatMap((p) => p.backgroundKeywords));
+  const backgroundList = new Set<string>();
   // Conveyed Traits never go on it: no pick can buy them.
   for (const t of content.traits) {
     if (t.conveyed) continue;
-    if (t.tags.some((tag) => access.has(tag)) || (t.list && t.background)) backgroundList.add(t.id);
+    if (
+      t.backgroundKeywords.some((k) => keywords.has(k)) ||
+      t.tags.some((tag) => access.has(tag)) ||
+      (t.list && t.background)
+    ) {
+      backgroundList.add(t.id);
+    }
   }
 
   // Group picks by Trait, keeping their positions for error paths.
@@ -660,6 +670,7 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
       picks,
       traits: [...held.values()],
       backgroundList: [...backgroundList].sort(),
+      backgroundKeywords: [...keywords].sort(),
       traitLists,
       questions,
     },

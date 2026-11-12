@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Conjures plain, filling food."
 tags: [magic, spell, survival]
+backgroundKeywords: [magic]
 category: ability
 types: [conjuration]
 ranked: true

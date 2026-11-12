@@ -4,6 +4,7 @@ status: draft
 plane: isekai
 summary: "Gathering and preparing the components magic needs."
 tags: [potions, alchemy, reagents]
+backgroundKeywords: [alchemy]
 category: skill
 minStats: { grace: 3, memory: 3 }
 effect: "This character gains +5 to rolls relating to gathering, preparing and preserving magical components."

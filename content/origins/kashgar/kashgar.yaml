@@ -6,6 +6,7 @@ region: kashgar
 summary: "You grew up on Kashgar, the largest Ark in the settled systems and the heart of the AI diaspora. Your neighbors were as likely to be AI Cores as people, Kashgari security watched every deck, and home never stayed anywhere for long."
 naming: "Names follow the language the character grew up speaking, from anywhere in the Settled Systems."
 tags: [ark, kashgar, ai, space, urban]
+backgroundKeywords: [engineering, computers, space, kashgar, ark]
 lore: kashgar
 type: origin
 # A free bonus point the player places in a Mental stat.
@@ -18,10 +19,3 @@ choices:
   - choose: 1
     from: spoken-and-written-language
     note: "+1 Language (Spoken & Written)"
-backgroundTraits:
-  - ark-life
-  - kashgar-mindworks
-  - artificial-intelligence
-  - cybernetics
-  - robotics
-  - earth-baseline-technology

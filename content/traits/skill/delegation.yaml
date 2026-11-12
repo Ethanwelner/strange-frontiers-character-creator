@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Handing work to the right person and getting it back done."
 tags: [leadership, management, corporate]
+backgroundKeywords: [leadership, corporate]
 category: skill
 minStats: { demeanor: 3, intuition: 3 }
 effect: "This character gains +5 to rolls relating to assigning tasks to subordinates or hired help and getting them done on time."

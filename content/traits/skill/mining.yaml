@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Getting ore, stone and ice out of the ground."
 tags: [mining, industry, labor]
+backgroundKeywords: [labor]
 category: skill
 ranked: true
 minStats: { power: 4, endurance: 4, logic: 2 }

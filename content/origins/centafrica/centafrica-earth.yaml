@@ -6,6 +6,7 @@ region: centafrica
 summary: "You were born in Centafrica, anywhere from Lagos to Kinshasa to Addis Ababa, in a vibrant democracy whose wealth is rarely spread evenly and whose people have long memories."
 naming: "Names from Centafrica’s peoples and languages, Swahili among them."
 tags: [centafrica, earth, democracy, culture]
+backgroundKeywords: [politics, trade, scholarship, earth, centafrica]
 lore: centafrica
 type: origin
 # A free bonus point the player places in a Social stat.
@@ -20,16 +21,3 @@ choices:
   - choose: 1
     from: spoken-and-written-language
     note: "+1 Language (Spoken & Written)"
-backgroundTraits:
-  - music
-  - art-history
-  - theater
-  - politics
-  - commerce
-  - earth-baseline-technology
-  - french
-  - french-written
-  - english
-  - lingala
-  - yoruba
-  - hausa

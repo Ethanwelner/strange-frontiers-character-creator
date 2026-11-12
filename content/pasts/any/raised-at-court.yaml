@@ -4,14 +4,11 @@ status: placeholder
 plane: any
 summary: "Grew up around a royal or noble court, among its manners, its rivalries and its whispers."
 tags: [court, nobility, intrigue]
+backgroundKeywords: [law, politics, nobility, social, scholarship]
 type: past
 grants:
   - { trait: courtly-manners }
   - { trait: court-etiquette }
   - { trait: heraldry }
-backgroundTraits:
-  - high-society
-  - politics
-  - local-history
 # Wealth at creation (engine/wealth.ts)
 wealth: 2

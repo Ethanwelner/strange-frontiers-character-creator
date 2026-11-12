@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "A body trained to the limits of what it can do."
 tags: [athletics, endurance, expert]
+backgroundKeywords: [athletics]
 category: skill
 mastery: true
 minStats: { endurance: 8, power: 6, grace: 6 }

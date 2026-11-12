@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Fighting with, and maintaining, a pistol."
 tags: [combat, firearms, sidearm]
+backgroundKeywords: [modern-ranged]
 category: skill
 list: wielder
 ranked: true

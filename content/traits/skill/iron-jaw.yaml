@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Takes a punch and stays standing."
 tags: [combat, boxing, toughness]
+backgroundKeywords: [hand-to-hand, athletics]
 category: skill
 minStats: { endurance: 5, demeanor: 3 }
 effect: "- This character can request Advantage on Endurance checks to resist the Unconscious Condition.\n- +2 to this character's Blunt Resistance for Attacks that hit their head."

@@ -5,6 +5,7 @@ plane: isekai
 region: dreft
 summary: "The common language of Dreft."
 tags: [language, dreft]
+backgroundKeywords: [dreft]
 category: knowledge
 types: [language]
 language: dreftan

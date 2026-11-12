@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Moving with purpose in free fall."
 tags: [athletics, space, zero-g, movement]
+backgroundKeywords: [space, athletics]
 category: skill
 ranked: true
 minStats: { grace: 4, intuition: 3, endurance: 2 }

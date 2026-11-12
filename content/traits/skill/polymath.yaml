@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "A scholar at home in every field."
 tags: [scholarship, knowledge, expert]
+backgroundKeywords: [scholarship]
 category: skill
 mastery: true
 minStats: { memory: 10, logic: 6, intuition: 6 }

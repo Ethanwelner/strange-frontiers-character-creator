@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Running a switch gate: tuning, monitoring and shutting down."
 tags: [planes, switch gates, technology]
+backgroundKeywords: [engineering, exploration]
 category: skill
 ranked: true
 minStats: { logic: 5, memory: 4, intuition: 3 }

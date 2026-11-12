@@ -4,12 +4,10 @@ status: placeholder
 plane: earth
 summary: "Digs up what parasapient civilizations left behind on other planes, before someone else sells it."
 tags: [science, archeology, ruins, fieldwork]
+backgroundKeywords: [science, scholarship, exploration]
 type: profession
 grants:
   - { trait: research }
   - { trait: excavation }
   - { trait: paraarcheology }
   - { trait: appraisal }
-backgroundTraits:
-  - local-history
-  - chemistry

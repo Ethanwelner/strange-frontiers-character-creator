@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Moving gracefully through noble society."
 tags: [court, nobility, social]
+backgroundKeywords: [law, nobility, social]
 category: skill
 minStats: { demeanor: 3, empathy: 2, memory: 2 }
 effect: "This character gains +3 to Persuasion or Demeanor rolls in situations where high society manners are relevant."

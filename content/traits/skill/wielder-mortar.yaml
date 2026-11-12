@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Crewing, aiming and maintaining mortars and light field artillery."
 tags: [combat, explosives, artillery, military]
+backgroundKeywords: [modern-ranged, military]
 category: skill
 list: wielder
 ranked: true

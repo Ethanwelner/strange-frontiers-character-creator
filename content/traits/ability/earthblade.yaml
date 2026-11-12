@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Weighs a weapon down with magical stone."
 tags: [magic, spell, enchantment, weapon, earth, stone]
+backgroundKeywords: [magic]
 category: ability
 types: [enchantment, artifact]
 ranked: true

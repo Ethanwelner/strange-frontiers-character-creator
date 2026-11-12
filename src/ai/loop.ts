@@ -70,8 +70,8 @@ function reasonTargets(build: Record<string, unknown>): Set<string> {
 }
 
 // "6 of 9 universal picks are unspent" when more than two universal picks are
-// banked. Background picks can only buy Traits from the packages' short
-// Background lists, so leaving some banked is normal.
+// banked. Background picks can only buy Traits sharing a Background Keyword
+// with the packages, so leaving some of those banked is normal.
 function unspentPicks(check: BuildCheck): string | undefined {
   const universal = check.summary?.picks.universal;
   if (!universal || universal.banked <= 2) return undefined;

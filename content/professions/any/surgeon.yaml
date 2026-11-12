@@ -4,18 +4,11 @@ status: placeholder
 plane: any
 summary: "Operates to repair what medicine alone can’t, from battlefield wounds to failing organs."
 tags: [medicine, surgery, healing, science]
+backgroundKeywords: [science, medicine]
 type: profession
 grants:
   - { trait: surgery }
   - { trait: medical-aid }
   - { trait: medicine }
-backgroundTraits:
-  - research
-  - cybernetics
-  - pharmacology
-  - pathology
-  - parasapient-medicine
-  - biology
-  - chemistry
 # Wealth at creation (engine/wealth.ts)
 wealth: 1

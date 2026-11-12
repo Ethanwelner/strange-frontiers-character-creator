@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Helping people through grief, fear and trauma."
 tags: [empathy, care, psychology]
+backgroundKeywords: [social, medicine]
 category: skill
 minStats: { empathy: 5, intuition: 3 }
 effect: "This character gains +5 to Empathy rolls relating to helping someone through grief, fear or trauma."

@@ -5,6 +5,7 @@ plane: earth
 region: american-empire
 summary: "The American Empire’s legal code, its courts and how they’re enforced."
 tags: [law, american-empire]
+backgroundKeywords: [law, american-empire]
 category: knowledge
 ranked: true
 minStats: { memory: 3 }

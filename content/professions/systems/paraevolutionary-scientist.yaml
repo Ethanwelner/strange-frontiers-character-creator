@@ -4,13 +4,10 @@ status: placeholder
 plane: earth
 summary: "Studies how extraplanar life came to be, from the history of flora floating in a sea of light to why it evolved at all."
 tags: [science, parabiology, research, evolution]
+backgroundKeywords: [science, scholarship, parabiology]
 type: profession
 grants:
   - { trait: research }
   - { trait: parabiology }
   - { trait: paraflora }
   - { trait: paraphysics }
-backgroundTraits:
-  - biology
-  - chemistry
-  - local-history

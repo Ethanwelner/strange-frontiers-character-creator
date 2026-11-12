@@ -5,6 +5,7 @@ plane: earth
 region: tetra
 summary: "Living and working aboard a drifting Ark, from the air recyclers to the corridors."
 tags: [ark, space, urban]
+backgroundKeywords: [space, ark]
 category: knowledge
 ranked: true
 minStats: { memory: 1, intuition: 2 }

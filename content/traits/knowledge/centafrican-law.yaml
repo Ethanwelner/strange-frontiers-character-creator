@@ -5,6 +5,7 @@ plane: earth
 region: centafrica
 summary: "The laws of Centafrica’s federal democratic republic and how they’re enforced."
 tags: [law, centafrica]
+backgroundKeywords: [law, centafrica]
 category: knowledge
 ranked: true
 minStats: { memory: 3 }

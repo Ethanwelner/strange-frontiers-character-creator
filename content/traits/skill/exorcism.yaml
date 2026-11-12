@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Driving a spirit out of the living."
 tags: [faith, spirits, exorcism, supernatural]
+backgroundKeywords: [faith, magic]
 category: skill
 ranked: true
 minStats: { demeanor: 5, empathy: 3, memory: 3 }

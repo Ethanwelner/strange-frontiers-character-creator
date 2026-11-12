@@ -6,6 +6,7 @@ region: chinese-empire
 summary: "You grew up in the Empire’s stellar territories, in Yùtù, the Jade Rabbit colony on Luna, or aboard the Ark Zhulong."
 naming: "Chinese names, family name first."
 tags: [chinese-empire, colonies, luna, ark, space]
+backgroundKeywords: [space, earth, chinese-empire, luna, ark, colonies]
 lore: chinese-empire
 type: origin
 # A free bonus point the player places in a Mental stat.
@@ -16,9 +17,3 @@ grants:
   - { trait: chinese-imperial-law, rank: 1 }
   - { trait: mandarin }
   - { trait: mandarin-written }
-backgroundTraits:
-  - yutu
-  - zhulong
-  - ark-life
-  - the-corporate-syndicates
-  - earth-baseline-technology

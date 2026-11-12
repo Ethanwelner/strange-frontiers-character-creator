@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "How protection details are planned and run."
 tags: [security, bodyguard, private-security]
+backgroundKeywords: [security]
 category: knowledge
 ranked: true
 minStats: { memory: 3, intuition: 3 }

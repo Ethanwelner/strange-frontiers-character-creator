@@ -5,6 +5,7 @@ status: draft
 plane: isekai
 summary: "The Kingdom of Sorellion, one of Dreft’s neighbors on Isekai."
 tags: [sorellion, kingdom, isekai]
+backgroundKeywords: [nobility, isekai, sorellion]
 category: knowledge
 ranked: true
 minStats: { memory: 3 }

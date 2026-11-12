@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Ice magic cast cheaper and colder."
 tags: [magic, metamagic, ice, cold, expert]
+backgroundKeywords: [magic]
 category: ability
 mastery: true
 minStats: { magic: 5, demeanor: 5 }

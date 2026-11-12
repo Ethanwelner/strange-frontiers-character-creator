@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Fighting with, and maintaining, crossbows."
 tags: [combat, ranged, archery]
+backgroundKeywords: [archaic-ranged]
 category: skill
 list: wielder
 ranked: true

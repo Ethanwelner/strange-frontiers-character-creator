@@ -4,20 +4,10 @@ status: placeholder
 plane: any
 summary: "Patrols the wild places, tracking dangerous beasts and guiding travelers through."
 tags: [ranger, wilderness, hunting]
+backgroundKeywords: [close-combat, archaic-ranged, wilderness, animals, travel]
 type: profession
 grants:
   - { trait: tracker }
   - { trait: survivalist }
   - { trait: vigilance }
   - { trait: countryside-lore }
-backgroundTraits:
-  - ambusher
-  - wielder-musket
-  - rider-basic-animals
-  - animal-husbandry
-  - wilderness-lore
-  - animal-lore
-  - navigation
-  - wielder-bow
-  - wielder-dagger
-  - wielder-throwing-weapon

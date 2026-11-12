@@ -5,6 +5,7 @@ plane: earth
 region: tetra
 summary: "Grew up among Tetra’s parasapient diasporas, the largest resident population of parasapients in the settled systems."
 tags: [parasapients, diaspora, tetra, urban]
+backgroundKeywords: [law, parabiology, tetra]
 lore: tetra
 type: past
 grants:
@@ -14,5 +15,3 @@ choices:
   - choose: 1
     from: language
     note: "+1 Language"
-backgroundTraits:
-  - bureaucracy

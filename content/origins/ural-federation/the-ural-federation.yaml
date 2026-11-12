@@ -6,6 +6,7 @@ region: ural-federation
 summary: "You grew up in the Ural Federation, among the tribal statelets of the steppe and the thawed Siberian breadbasket, in a melting pot of native peoples, climate refugees and the last of the Russian diaspora."
 naming: "Russian names, or names from the steppe’s native peoples."
 tags: [ural-federation, earth, tribal, steppe]
+backgroundKeywords: [wilderness, animals, farming, earth, chinese-empire, ural-federation]
 lore: ural-federation
 type: origin
 # A free bonus point the player places in a Physical stat.
@@ -20,15 +21,3 @@ choices:
   - choose: 1
     from: spoken-and-written-language
     note: "+1 Language (Spoken & Written)"
-backgroundTraits:
-  - farming
-  - countryside-lore
-  - wilderness-lore
-  - survivalist
-  - rider-basic-animals
-  - animal-husbandry
-  - the-chinese-empire
-  - earth-baseline-technology
-  - kazakh
-  - mongolian
-  - uyghur

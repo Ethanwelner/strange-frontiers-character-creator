@@ -4,6 +4,7 @@ status: draft
 plane: isekai
 summary: "The theory of binding magic into objects."
 tags: [magic, enchanting, theory]
+backgroundKeywords: [science, magic]
 category: knowledge
 ranked: true
 minStats: { memory: 4, magic: 1 }

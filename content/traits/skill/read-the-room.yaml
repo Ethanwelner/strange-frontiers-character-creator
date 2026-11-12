@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Sensing the mood of a crowd at a glance."
 tags: [empathy, social, awareness]
+backgroundKeywords: [investigation, social]
 category: skill
 minStats: { empathy: 3, intuition: 3 }
 effect: "This character gains +5 to Empathy and Intuition rolls relating to reading the mood or intentions of a group."

@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "How police and guards work: procedures, patrols, evidence and arrests."
 tags: [law, police, enforcement]
+backgroundKeywords: [police, law]
 category: knowledge
 ranked: true
 minStats: { memory: 3, intuition: 2 }

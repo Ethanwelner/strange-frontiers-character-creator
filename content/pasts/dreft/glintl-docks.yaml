@@ -5,6 +5,7 @@ plane: isekai
 region: dreft
 summary: "Grew up on the busy docks of Glintl, the other great trading port on Dreft’s western coast."
 tags: [port, docks, sea, trade, guwain]
+backgroundKeywords: [trade, seafaring, travel, performance, guwain]
 lore: glintl
 type: past
 grants:
@@ -12,7 +13,3 @@ grants:
   - { trait: coastal-trade }
   - { trait: glintl }
   - { trait: haggler }
-backgroundTraits:
-  - commerce
-  - navigation
-  - gambling

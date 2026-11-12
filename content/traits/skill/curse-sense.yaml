@@ -4,6 +4,7 @@ status: draft
 plane: isekai
 summary: "A feel for objects that are cursed or wrong."
 tags: [magic, curses, artifacts]
+backgroundKeywords: [exploration, magic]
 category: skill
 minStats: { intuition: 4, magic: 1 }
 # On the Magic list: its own tab on the Traits step, open to every character.

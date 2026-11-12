@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "A researcher who finds what others missed."
 tags: [science, invention, research, expert]
+backgroundKeywords: [craft, engineering, science]
 category: skill
 mastery: true
 minStats: { logic: 10, intuition: 8, memory: 6 }

@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Fighting with, and maintaining, a modern rifle."
 tags: [combat, firearms, military]
+backgroundKeywords: [modern-ranged, military]
 category: skill
 list: wielder
 ranked: true

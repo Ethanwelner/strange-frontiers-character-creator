@@ -606,13 +606,14 @@ describe("rule 6: Trait choices", () => {
 
 describe("rule 7: the Background Trait list", () => {
   it("rejects a background pick on a Trait that isn't on the list", () => {
-    const r = check({ ...human, traits: [{ trait: "tracker", pick: "background" }] });
+    const r = check({ ...human, traits: [{ trait: "thieves-cant", pick: "background" }] });
     expect(codes(r)).toEqual(["pick-type"]);
   });
 
-  it("includes the packages' backgroundTraits", () => {
+  it("includes Traits sharing a Background Keyword with the packages", () => {
+    const tracker = content.traits.find((t) => t.id === "tracker")!;
     const packages = content.packages.map((p) =>
-      p.id === "royal-guard" ? BackgroundPackage.parse({ ...p, backgroundTraits: ["tracker"] }) : p,
+      p.id === "royal-guard" ? BackgroundPackage.parse({ ...p, backgroundKeywords: [tracker.backgroundKeywords[0]] }) : p,
     );
     const r = check({ ...human, traits: [{ trait: "tracker", pick: "background" }] }, { ...content, packages });
     expectLegal(r);

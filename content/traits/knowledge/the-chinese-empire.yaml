@@ -5,6 +5,7 @@ plane: earth
 region: chinese-empire
 summary: "The Empire of China: the Wuhan Dynasty, its territories and its corporate syndicates."
 tags: [chinese-empire, politics]
+backgroundKeywords: [politics, chinese-empire]
 lore: chinese-empire
 category: knowledge
 ranked: true

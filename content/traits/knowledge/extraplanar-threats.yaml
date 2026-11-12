@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Dangerous beings and organisms from other planes."
 tags: [planes, monsters, parabiology]
+backgroundKeywords: [parabiology, exploration]
 category: knowledge
 ranked: true
 minStats: { memory: 3, intuition: 2 }

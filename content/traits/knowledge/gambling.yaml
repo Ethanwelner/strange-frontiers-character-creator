@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Games of chance: the odds, the tells, and the cheats."
 tags: [gambling, games, underworld]
+backgroundKeywords: [crime, performance]
 category: knowledge
 ranked: true
 minStats: { memory: 2, intuition: 3 }

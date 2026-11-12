@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Flying remote and semi-autonomous drones."
 tags: [pilot, drones, technology]
+backgroundKeywords: [engineering, piloting]
 category: skill
 ranked: true
 minStats: { intuition: 3, grace: 3, logic: 2 }

@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Running experiments cleanly, safely and repeatably."
 tags: [science, laboratory, research]
+backgroundKeywords: [science]
 category: skill
 ranked: true
 minStats: { grace: 3, logic: 3, memory: 3 }

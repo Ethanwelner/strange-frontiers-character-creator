@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Turning any elemental spell to ice."
 tags: [magic, metamagic, ice, cold]
+backgroundKeywords: [magic]
 category: ability
 minStats: { magic: 3, demeanor: 3 }
 # On the Magic list: its own tab on the Traits step, open to every character.

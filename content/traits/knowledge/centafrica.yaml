@@ -5,6 +5,7 @@ plane: earth
 region: centafrica
 summary: "Centafrica: its federal democracy, its storied universities and the unreconciled history of its founding."
 tags: [centafrica, politics]
+backgroundKeywords: [politics, centafrica]
 lore: centafrica
 category: knowledge
 ranked: true

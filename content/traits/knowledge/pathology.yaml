@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Disease: how it spreads, how it shows itself, and how it is stopped."
 tags: [medicine, disease, contagion]
+backgroundKeywords: [medicine]
 category: knowledge
 ranked: true
 minStats: { memory: 3, logic: 3, intuition: 2 }

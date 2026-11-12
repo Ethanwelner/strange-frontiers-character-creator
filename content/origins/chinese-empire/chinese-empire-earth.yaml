@@ -6,6 +6,7 @@ region: chinese-empire
 summary: "You were born in the Empire of China’s Earth territories, from Wuhan to the old nations of Southeast Asia, during a golden age the corporate syndicates are starting to suspect is ending."
 naming: "Chinese names, family name first, or names from the old nations of Southeast Asia."
 tags: [chinese-empire, earth, empire, corporate]
+backgroundKeywords: [corporate, earth, chinese-empire]
 lore: chinese-empire
 type: origin
 # A free bonus point the player places in a Mental stat.
@@ -16,6 +17,3 @@ grants:
   - { trait: chinese-imperial-law, rank: 1 }
   - { trait: mandarin }
   - { trait: mandarin-written }
-backgroundTraits:
-  - the-corporate-syndicates
-  - earth-baseline-technology

@@ -4,6 +4,7 @@ status: draft
 plane: isekai
 summary: "Telling a potion apart by its look, smell and taste."
 tags: [potions, alchemy, identification]
+backgroundKeywords: [investigation, alchemy]
 category: skill
 minStats: { intuition: 3, memory: 3 }
 effect: "This character gains +5 to rolls relating to identifying a potion and its strength."

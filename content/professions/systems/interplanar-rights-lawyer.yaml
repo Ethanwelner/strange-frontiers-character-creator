@@ -4,6 +4,7 @@ status: placeholder
 plane: earth
 summary: "Practices the law of the treatment and rights of beings from beyond the stars, and tests what counts as a person in court."
 tags: [law, rights, parasapients, courts]
+backgroundKeywords: [law, politics, parabiology]
 type: profession
 grants:
   - { trait: legal-advocacy }
@@ -13,8 +14,5 @@ choices:
   - choose: 1
     from: contact
     note: "+1 Contact"
-backgroundTraits:
-  - bureaucracy
-  - politics
 # Wealth at creation (engine/wealth.ts)
 wealth: 1

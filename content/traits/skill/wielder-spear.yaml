@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Fighting with, and maintaining, spears and lances."
 tags: [combat, melee, polearms]
+backgroundKeywords: [close-combat]
 category: skill
 list: wielder
 ranked: true

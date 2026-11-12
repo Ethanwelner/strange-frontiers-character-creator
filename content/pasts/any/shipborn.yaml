@@ -4,12 +4,9 @@ status: placeholder
 plane: any
 summary: "Born and raised aboard a ship, whether it sailed the sea or the stars, and never really at home on solid ground."
 tags: [ship, travel, family]
+backgroundKeywords: [engineering, piloting, space, travel]
 type: past
 grants:
   - { trait: cargo-handling }
   - { trait: tinkerer }
   - { trait: vigilance }
-backgroundTraits:
-  - navigation
-  - starships
-  - spacefaring

@@ -4,17 +4,10 @@ status: placeholder
 plane: earth
 summary: "Keeps starships running: reactors, drives, life support, and everything that rattles in between."
 tags: [engineering, starships, technology, space]
+backgroundKeywords: [engineering, science, piloting, space, travel]
 type: profession
 grants:
   - { trait: starship-engineering }
   - { trait: tinkerer }
   - { trait: exotic-materials }
   - { trait: ports-and-stations }
-backgroundTraits:
-  - programming
-  - cargo-handling
-  - robotics
-  - engineering
-  - physics
-  - starships
-  - spacefaring

@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Passing what you know on to others."
 tags: [teaching, scholarship, social]
+backgroundKeywords: [social, scholarship]
 category: skill
 ranked: true
 minStats: { empathy: 3, persuasion: 3, memory: 3 }

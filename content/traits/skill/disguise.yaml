@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Passing as someone else, through costume, makeup and manner."
 tags: [disguise, deception, spy]
+backgroundKeywords: [espionage, social]
 category: skill
 ranked: true
 minStats: { demeanor: 4, grace: 2, intuition: 2 }

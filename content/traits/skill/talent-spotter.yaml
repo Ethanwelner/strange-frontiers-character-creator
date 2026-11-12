@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Seeing who's good at what, and who isn't."
 tags: [leadership, judgment, social]
+backgroundKeywords: [leadership, social]
 category: skill
 minStats: { intuition: 4, empathy: 3 }
 effect: "This character gains +5 to Intuition rolls relating to judging a person's competence or fitness for a role."

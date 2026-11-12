@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Someone people follow without being told to."
 tags: [leadership, command, expert]
+backgroundKeywords: [military, leadership]
 category: skill
 mastery: true
 minStats: { demeanor: 8, persuasion: 8, empathy: 6 }

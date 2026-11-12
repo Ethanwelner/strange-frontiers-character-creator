@@ -4,6 +4,7 @@ status: placeholder
 plane: any
 summary: "Shields a character from one kind of elemental damage."
 tags: [magic, spell, enchantment, resistance]
+backgroundKeywords: [magic]
 category: ability
 types: [enchantment, potion, artifact]
 ranked: true

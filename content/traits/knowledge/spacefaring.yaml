@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Living and working in space: vacuum, zero gravity, airlocks and life support."
 tags: [space, station, survival]
+backgroundKeywords: [space]
 category: knowledge
 ranked: true
 minStats: { memory: 3, intuition: 2 }

@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "A diplomat who can talk a fight down."
 tags: [diplomacy, empathy, expert]
+backgroundKeywords: [diplomacy, social]
 category: skill
 mastery: true
 minStats: { empathy: 10, persuasion: 8, demeanor: 6 }

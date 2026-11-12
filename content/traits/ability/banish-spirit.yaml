@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Drives a possessing spirit out of its host."
 tags: [magic, spell, spirits, supernatural]
+backgroundKeywords: [magic]
 category: ability
 types: [necromancy, potion]
 ranked: true

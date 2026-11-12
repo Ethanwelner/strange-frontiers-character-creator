@@ -4,6 +4,7 @@ status: draft
 plane: isekai
 summary: "Handling magical relics without incident."
 tags: [magic, relics]
+backgroundKeywords: [exploration, magic]
 category: skill
 minStats: { grace: 3, intuition: 3, memory: 2 }
 # On the Magic list: its own tab on the Traits step, open to every character.

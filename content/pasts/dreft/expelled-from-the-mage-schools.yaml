@@ -5,12 +5,10 @@ plane: isekai
 region: dreft
 summary: "Studied at one of Port Herminst’s licensed schools of magic until something went wrong, and left with half an education and a secret."
 tags: [magic, scholar, herminst, disgrace]
+backgroundKeywords: [scholarship, magic]
 lore: isekai-magic
 type: past
 grants:
   - { trait: magic-on-isekai }
   - { trait: port-herminst }
   - { trait: concealment }
-backgroundTraits:
-  - literature
-  - local-history

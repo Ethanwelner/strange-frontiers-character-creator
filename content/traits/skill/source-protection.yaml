@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Keeping the people who talk to you safe."
 tags: [journalism, secrecy, security]
+backgroundKeywords: [security, espionage, media]
 category: skill
 minStats: { logic: 3, intuition: 3 }
 effect: "This character gains +5 to rolls relating to meeting, contacting and paying sources without their identity being discovered."

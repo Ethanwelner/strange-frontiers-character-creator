@@ -4,6 +4,7 @@ status: placeholder
 plane: earth
 summary: How people from Earth Baseline expect things to be done.
 tags: [earth, customs, foreigners]
+backgroundKeywords: [law, diplomacy, earth]
 category: knowledge
 ranked: true
 minStats: { memory: 1 }

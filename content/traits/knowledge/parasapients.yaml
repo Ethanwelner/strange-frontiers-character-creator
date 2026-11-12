@@ -4,6 +4,7 @@ status: placeholder
 plane: earth
 summary: "The sapient peoples of other planes: their bodies, their cultures, and how they live alongside humanity."
 tags: [parabiology, parasapients, cultures, people]
+backgroundKeywords: [social, scholarship, parabiology]
 category: knowledge
 ranked: true
 minStats: { memory: 3, empathy: 3 }

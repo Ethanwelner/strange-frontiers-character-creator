@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Finding, picking and keeping useful plants."
 tags: [herbs, gathering, potions]
+backgroundKeywords: [medicine, wilderness, alchemy]
 category: skill
 ranked: true
 minStats: { intuition: 3, memory: 2 }

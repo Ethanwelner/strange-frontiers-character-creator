@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Lightning magic cast cheaper and stronger."
 tags: [magic, metamagic, lightning, storm, expert]
+backgroundKeywords: [magic]
 category: ability
 mastery: true
 minStats: { magic: 5, logic: 5 }

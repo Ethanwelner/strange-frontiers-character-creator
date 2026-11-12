@@ -4,6 +4,7 @@ status: draft
 plane: isekai
 summary: "The theory and history of Elemental Magics."
 tags: [magic, elemental, site-example]
+backgroundKeywords: [magic]
 category: knowledge
 # On the Magic list: its own tab on the Traits step, open to every character.
 list: magic

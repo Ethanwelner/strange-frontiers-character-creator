@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Lets a character climb walls and walk on ceilings."
 tags: [magic, spell, enchantment, movement]
+backgroundKeywords: [magic]
 category: ability
 types: [enchantment, potion, artifact]
 ranked: true

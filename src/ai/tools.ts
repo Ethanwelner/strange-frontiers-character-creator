@@ -339,7 +339,7 @@ function getPackage(input: Record<string, unknown>, content: Content) {
         ? { ...c, leftForPlayer: true }
         : { ...c, pool: choicePool(c.from, content).map((t) => ({ id: t.id, name: t.name })) },
     ),
-    backgroundTraits: pkg.backgroundTraits.map((t) => ({ id: t, name: name(t) })),
+    backgroundKeywords: pkg.backgroundKeywords,
   };
 }
 

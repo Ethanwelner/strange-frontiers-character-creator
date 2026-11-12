@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Getting your way inside a company."
 tags: [corporate, social, politics]
+backgroundKeywords: [politics, social, corporate]
 category: skill
 ranked: true
 minStats: { persuasion: 4, intuition: 3 }

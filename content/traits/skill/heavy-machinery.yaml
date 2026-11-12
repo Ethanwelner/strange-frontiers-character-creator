@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Operating cranes, loaders, drills and excavators."
 tags: [industry, machinery, labor]
+backgroundKeywords: [labor, engineering]
 category: skill
 ranked: true
 minStats: { grace: 3, logic: 3, endurance: 2 }

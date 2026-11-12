@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Working with dangerous creatures without being eaten."
 tags: [monsters, animals, handling]
+backgroundKeywords: [parabiology, animals]
 category: skill
 ranked: true
 minStats: { empathy: 4, demeanor: 3, endurance: 2 }

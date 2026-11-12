@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "A salvager who can strip anything, safely."
 tags: [salvage, industry, expert]
+backgroundKeywords: [labor]
 category: skill
 mastery: true
 minStats: { logic: 6, power: 6, endurance: 6, intuition: 6 }

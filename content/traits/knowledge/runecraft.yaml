@@ -4,6 +4,7 @@ status: draft
 plane: isekai
 summary: "Runes of power and how they work."
 tags: [magic, runes, writing]
+backgroundKeywords: [magic]
 category: knowledge
 ranked: true
 minStats: { memory: 4, intuition: 2 }

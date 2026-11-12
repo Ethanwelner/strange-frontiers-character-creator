@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Healing a wounded comrade under fire."
 tags: [medicine, healing, combat]
+backgroundKeywords: [medicine]
 category: ability
 effect: "This character gains the Field Medicine Action."
 action: "Field Medicine: As a Full RP Action, this character may make a Grace or Memory check to reduce Severe Bleeding, Unconscious, temporary blindness or a concussion on a character within 1 m. For every 5 points the roll exceeds 10, one Rank of the Condition is removed."

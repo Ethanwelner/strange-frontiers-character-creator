@@ -4,6 +4,7 @@ status: placeholder
 plane: isekai
 summary: How magic works on Isekai.
 tags: [magic]
+backgroundKeywords: [magic]
 lore: isekai-magic
 category: knowledge
 # On the Magic list: its own tab on the Traits step, open to every character.

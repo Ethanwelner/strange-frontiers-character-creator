@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Maintaining and repairing a starship’s reactors, drives and life support."
 tags: [engineering, starships, technology, space]
+backgroundKeywords: [engineering, piloting, space]
 category: skill
 ranked: true
 minStats: { logic: 4, memory: 3, grace: 2 }

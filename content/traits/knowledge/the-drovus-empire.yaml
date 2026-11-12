@@ -4,6 +4,7 @@ status: placeholder
 plane: isekai
 summary: The empire that absorbed the Sunrise Princedoms.
 tags: [drovus, empire, foreign]
+backgroundKeywords: [diplomacy, drovus]
 lore: drovus-empire
 category: knowledge
 minStats: { memory: 3 }

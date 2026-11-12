@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "The rules of formal meetings between powers: precedence, ceremony and what not to say."
 tags: [diplomacy, etiquette, politics]
+backgroundKeywords: [politics, diplomacy, nobility]
 category: knowledge
 ranked: true
 minStats: { memory: 3, empathy: 3 }

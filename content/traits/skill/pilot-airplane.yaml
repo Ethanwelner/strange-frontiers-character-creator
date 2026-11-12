@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Flying fixed-wing aircraft in an atmosphere."
 tags: [pilot, aircraft, aviation]
+backgroundKeywords: [piloting]
 category: skill
 ranked: true
 minStats: { memory: 4, grace: 3, intuition: 3 }

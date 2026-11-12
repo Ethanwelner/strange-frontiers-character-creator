@@ -4,6 +4,7 @@ status: placeholder
 plane: earth
 summary: "The breakaway states the Empire still faces across a tense border."
 tags: [texas, foreign, politics]
+backgroundKeywords: [politics, diplomacy, union-of-texas]
 lore: union-of-texas
 category: knowledge
 minStats: { memory: 3 }

@@ -5,12 +5,10 @@ plane: isekai
 region: dreft
 summary: "Grew up in the shadow of Castle Tetra, among foreigners and the people who profit from them."
 tags: [switch-port, urban, caravan, foreigners]
+backgroundKeywords: [diplomacy, trade, wilderness, travel, switch-port]
 type: past
 grants:
   - { trait: streetwise }
   - { trait: sleight-of-hand }
   - { trait: caravan-routes }
   - { trait: earth-baseline-customs }
-backgroundTraits:
-  - commerce
-  - animal-lore

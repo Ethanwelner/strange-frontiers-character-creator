@@ -4,6 +4,7 @@ status: placeholder
 plane: earth
 summary: "Studies the cultures of parasapient peoples, usually by living among them for as long as they’ll allow it."
 tags: [science, parasapients, cultures, fieldwork]
+backgroundKeywords: [politics, science, scholarship, parabiology, exploration]
 type: profession
 grants:
   - { trait: research }
@@ -13,7 +14,3 @@ choices:
   - choose: 1
     from: language
     note: "+1 Language"
-backgroundTraits:
-  - local-history
-  - politics
-  - literature

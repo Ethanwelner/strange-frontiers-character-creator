@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Shins hardened by years of striking."
 tags: [combat, unarmed, martial arts, kick]
+backgroundKeywords: [hand-to-hand]
 category: skill
 ranked: true
 minStats: { endurance: 4, power: 3 }

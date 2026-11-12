@@ -5,12 +5,10 @@ plane: earth
 region: tetra
 summary: "Grew up around the hundreds of gate exploration projects running inside Tetra’s armored bulk, and knows a switch gate better than a playground."
 tags: [planes, switch-gates, research, tetra]
+backgroundKeywords: [engineering, science, exploration, tetra]
 lore: switch-gates
 type: past
 grants:
   - { trait: planar-exploration }
   - { trait: paraphysics }
   - { trait: tinkerer }
-backgroundTraits:
-  - physics
-  - engineering

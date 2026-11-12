@@ -4,6 +4,7 @@ status: draft
 plane: isekai
 summary: "Binding magic into objects."
 tags: [magic, enchanting, crafting, artifacts]
+backgroundKeywords: [craft, exploration, magic]
 category: skill
 minStats: { magic: 2, memory: 3, grace: 3 }
 prerequisites: [relic-handling]

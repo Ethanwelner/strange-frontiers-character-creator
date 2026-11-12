@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Throws a bolt of lightning."
 tags: [magic, spell, lightning, attack]
+backgroundKeywords: [magic]
 category: ability
 types: [elemental]
 ranked: true

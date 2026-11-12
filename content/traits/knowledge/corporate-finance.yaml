@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Balance sheets, shareholders and where a company's money really goes."
 tags: [corporate, money, business]
+backgroundKeywords: [trade, corporate]
 category: knowledge
 ranked: true
 minStats: { logic: 4, memory: 3 }

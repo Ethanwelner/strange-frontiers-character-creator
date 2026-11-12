@@ -5,6 +5,7 @@ plane: isekai
 region: dreft
 summary: The pass through the Corsine Mountains to Karsef.
 tags: [mountains, border, travel]
+backgroundKeywords: [wilderness, travel]
 category: knowledge
 ranked: true
 minStats: { memory: 2, endurance: 2 }

@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Breaks a target's thoughts apart."
 tags: [magic, spell, mind, attack]
+backgroundKeywords: [magic]
 category: ability
 types: [mentalism]
 ranked: true

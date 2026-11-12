@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "The Eighth Lunar Industrial Syndicate: a business cartel grown into a nation, with investors and citizen shareholders."
 tags: [lunar-industrial-syndicate, luna, corporate]
+backgroundKeywords: [corporate, luna]
 category: knowledge
 ranked: true
 minStats: { memory: 3 }

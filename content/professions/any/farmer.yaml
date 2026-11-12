@@ -4,18 +4,10 @@ status: placeholder
 plane: any
 summary: "Works the land, raising crops and livestock, wherever there’s land to work."
 tags: [farming, rural, labor]
+backgroundKeywords: [trade, labor, science, wilderness, animals, farming]
 type: profession
 grants:
   - { trait: teamster }
   - { trait: animal-husbandry }
   - { trait: simple-cooking }
   - { trait: farming }
-backgroundTraits:
-  - rider-basic-animals
-  - countryside-lore
-  - herbalism
-  - local-folklore
-  - animal-lore
-  - biology
-  - commerce
-  - wilderness-lore

@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Protects a character or item from acid and rust."
 tags: [magic, spell, enchantment, defense, acid, corrosion]
+backgroundKeywords: [magic]
 category: ability
 types: [enchantment, potion, artifact]
 ranked: true

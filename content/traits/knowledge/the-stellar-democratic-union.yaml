@@ -5,6 +5,7 @@ plane: earth
 region: sdu
 summary: "The SDU: its member states, its tiers of membership and how the Union holds together."
 tags: [sdu, politics]
+backgroundKeywords: [politics, sdu]
 lore: stellar-democratic-union
 category: knowledge
 ranked: true

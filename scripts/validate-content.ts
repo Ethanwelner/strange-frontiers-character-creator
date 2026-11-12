@@ -31,14 +31,11 @@ for (const kind of kinds) {
 }
 
 for (const pkg of packages) {
-  const refs = [...pkg.grants.map((g) => g.trait), ...pkg.backgroundTraits];
-  for (const ref of refs) {
+  for (const ref of pkg.grants.map((g) => g.trait)) {
     if (!traitIds.has(ref)) warnings.push(`${pkg.type} ${pkg.id}: Trait "${ref}" has no file yet`);
   }
-  // A Background Trait list is for picks, which can't buy Conveyed Traits.
-  for (const ref of pkg.backgroundTraits) {
-    if (traits.find((t) => t.id === ref)?.conveyed) errors.push(`${pkg.type} ${pkg.id}: Background Trait "${ref}" is Conveyed, so no pick could buy it`);
-  }
+  // Without Background Keywords, its Background picks have nothing to buy.
+  if (!pkg.backgroundKeywords.length) warnings.push(`${pkg.type} ${pkg.id}: no Background Keywords`);
 }
 for (const trait of traits) {
   for (const ref of trait.prerequisites) {

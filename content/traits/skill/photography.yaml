@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Getting the shot, and getting it in focus."
 tags: [journalism, art, camera]
+backgroundKeywords: [performance, media]
 category: skill
 ranked: true
 minStats: { grace: 3, intuition: 3 }

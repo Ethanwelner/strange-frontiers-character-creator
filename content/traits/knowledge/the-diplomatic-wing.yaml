@@ -5,6 +5,7 @@ plane: earth
 region: tetra
 summary: "Ark Tetra’s Diplomatic Wing, its embassies and its envoys."
 tags: [tetra, diplomacy, politics]
+backgroundKeywords: [politics, diplomacy, tetra]
 lore: diplomatic-wing
 category: knowledge
 ranked: true

@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Among the greatest mages of their age."
 tags: [magic, metamagic, expert]
+backgroundKeywords: [magic]
 category: ability
 mastery: true
 minStats: { magic: 12, intuition: 8 }

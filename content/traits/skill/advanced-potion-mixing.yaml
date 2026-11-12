@@ -4,6 +4,7 @@ status: draft
 plane: isekai
 summary: "Brewing complex, potent potions, and working out new ones."
 tags: [potions, alchemy, expert]
+backgroundKeywords: [alchemy]
 category: skill
 mastery: true
 minStats: { memory: 6, intuition: 6, logic: 4 }

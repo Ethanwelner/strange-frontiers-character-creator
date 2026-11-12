@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Spotting and stopping attacks on a system."
 tags: [computers, security, defense]
+backgroundKeywords: [security, computers]
 category: skill
 ranked: true
 minStats: { logic: 4, intuition: 4, memory: 3 }

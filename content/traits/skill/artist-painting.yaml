@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Painting, from portraits to murals."
 tags: [art, painting, craft]
+backgroundKeywords: [craft, performance]
 category: skill
 ranked: true
 minStats: { grace: 3, intuition: 3, memory: 2 }

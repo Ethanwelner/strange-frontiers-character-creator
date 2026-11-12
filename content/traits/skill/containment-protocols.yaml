@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Capturing, holding and moving dangerous specimens safely."
 tags: [parabiology, containment, safety]
+backgroundKeywords: [parabiology, emergency]
 category: skill
 minStats: { logic: 4, grace: 3, demeanor: 2 }
 effect: "This character gains +5 to rolls relating to capturing, containing or transporting dangerous creatures or extraplanar beings."

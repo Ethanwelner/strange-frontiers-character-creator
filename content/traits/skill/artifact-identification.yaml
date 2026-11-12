@@ -4,6 +4,7 @@ status: draft
 plane: isekai
 summary: "Working out what a magical artifact does before it does it."
 tags: [magic, relics, artifacts, identification]
+backgroundKeywords: [investigation, exploration, magic]
 category: skill
 minStats: { memory: 4, intuition: 4 }
 prerequisites: [relic-handling]

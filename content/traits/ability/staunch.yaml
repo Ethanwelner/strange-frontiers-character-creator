@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Closes a bleeding wound with a touch."
 tags: [magic, spell, healing]
+backgroundKeywords: [magic]
 category: ability
 types: [restoration, potion]
 ranked: true

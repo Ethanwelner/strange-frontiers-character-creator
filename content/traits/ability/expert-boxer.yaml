@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "A boxer at the top of the sport."
 tags: [combat, unarmed, boxing, expert]
+backgroundKeywords: [hand-to-hand]
 category: ability
 mastery: true
 minStats: { power: 8, grace: 6, endurance: 6, intuition: 4 }

@@ -5,6 +5,7 @@ plane: earth
 region: sdu
 summary: "The SDU’s colony in high Earth orbit."
 tags: [colony, orbit, sdu]
+backgroundKeywords: [space, sdu, colonies]
 category: knowledge
 ranked: true
 minStats: { memory: 3 }

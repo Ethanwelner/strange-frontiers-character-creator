@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Keeping the badly hurt alive until help arrives."
 tags: [medicine, trauma, healing]
+backgroundKeywords: [medicine]
 category: skill
 ranked: true
 minStats: { memory: 4, grace: 3, demeanor: 3 }

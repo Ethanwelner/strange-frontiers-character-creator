@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Flying large cargo voidships."
 tags: [pilot, freighters, shipping, space]
+backgroundKeywords: [piloting, space, travel]
 category: skill
 ranked: true
 minStats: { memory: 5, logic: 3, intuition: 3 }

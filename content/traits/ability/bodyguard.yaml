@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Stepping between a client and the shot."
 tags: [combat, security, bodyguard, private-security]
+backgroundKeywords: [hand-to-hand, security]
 category: ability
 minStats: { grace: 4, intuition: 4 }
 effect: "This character gains the Cover Action."

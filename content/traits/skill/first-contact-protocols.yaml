@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Talking to sapients nobody has talked to before."
 tags: [diplomacy, parasapients, exploration]
+backgroundKeywords: [diplomacy, parabiology, exploration]
 category: skill
 minStats: { empathy: 4, intuition: 4, memory: 3 }
 effect: "This character gains +5 to rolls relating to communicating with sapients who share no Language or customs with them."

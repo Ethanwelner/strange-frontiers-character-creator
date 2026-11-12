@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Plays, performers, stagecraft and the people who put on a show."
 tags: [theater, performance, culture]
+backgroundKeywords: [scholarship, performance]
 category: knowledge
 ranked: true
 minStats: { memory: 2, persuasion: 2 }

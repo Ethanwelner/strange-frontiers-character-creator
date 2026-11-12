@@ -4,6 +4,7 @@ status: placeholder
 plane: any
 summary: "Makes the ground grab at the legs of everyone nearby."
 tags: [magic, spell, earth, hindrance]
+backgroundKeywords: [magic]
 category: ability
 types: [conjuration, potion]
 ranked: true

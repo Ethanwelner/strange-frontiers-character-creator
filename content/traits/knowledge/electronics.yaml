@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Circuits, components and how devices work inside."
 tags: [electronics, technology, engineering]
+backgroundKeywords: [engineering]
 category: knowledge
 ranked: true
 minStats: { memory: 3, logic: 3 }

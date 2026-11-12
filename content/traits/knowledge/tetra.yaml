@@ -5,6 +5,7 @@ plane: earth
 region: tetra
 summary: "Ark Tetra: its wings, its people and how the station runs."
 tags: [tetra, ark, sdu]
+backgroundKeywords: [sdu, tetra, ark]
 lore: tetra
 category: knowledge
 ranked: true

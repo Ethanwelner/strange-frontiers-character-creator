@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Hides a character in a haze the eye can't make sense of."
 tags: [magic, spell, stealth, illusion]
+backgroundKeywords: [magic]
 category: ability
 types: [illusion, potion, artifact]
 ranked: true

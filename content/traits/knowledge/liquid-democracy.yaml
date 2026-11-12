@@ -5,6 +5,7 @@ plane: earth
 region: tetra
 summary: "Tetra’s Liquid Democracy: delegated votes, ward representatives and the Council of 11."
 tags: [tetra, politics, liquid-democracy, votes]
+backgroundKeywords: [politics, tetra]
 lore: tetra
 category: knowledge
 ranked: true

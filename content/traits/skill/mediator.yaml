@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Settling disputes between other people."
 tags: [diplomacy, mediation, social]
+backgroundKeywords: [diplomacy, social]
 category: skill
 minStats: { empathy: 4, persuasion: 3 }
 effect: "This character gains +5 to Empathy and Persuasion rolls relating to settling a dispute between other parties."

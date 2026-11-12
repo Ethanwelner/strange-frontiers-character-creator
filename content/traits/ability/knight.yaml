@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Trained to fight armored and on horseback."
 tags: [combat, mounted, cavalry, nobility]
+backgroundKeywords: [close-combat, military, nobility, animals]
 category: ability
 minStats: { power: 5, endurance: 5, grace: 3, demeanor: 3 }
 prerequisites: [rider-basic-animals]

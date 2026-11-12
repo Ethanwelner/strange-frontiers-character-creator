@@ -60,7 +60,7 @@ export function contentIndex(content: Content): string {
           ` Grants: ${grants || "none"}.${choices ? ` Choices: ${choices}.` : ""}` +
           `${p.bonusPoints.length ? ` Bonus points (placed by the engine): ${p.bonusPoints.map((b) => `${b.count} ${b.group}`).join(", ")}.` : ""}` +
           `${Object.keys(p.coreBonus).length ? ` Core bonus: ${Object.entries(p.coreBonus).map(([g, n]) => `+${n} ${g}`).join(", ")} (if the character can level it).` : ""}` +
-          `${p.backgroundTraits.length ? ` Background Traits: ${p.backgroundTraits.join(", ")}.` : ""}`,
+          `${p.backgroundKeywords.length ? ` Background Keywords: ${p.backgroundKeywords.join(", ")}.` : ""}`,
       );
     }
   }

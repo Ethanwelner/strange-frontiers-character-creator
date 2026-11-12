@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Getting back what was deleted, wiped or broken."
 tags: [computers, data, forensics]
+backgroundKeywords: [police, investigation, computers]
 category: skill
 minStats: { logic: 4, memory: 3 }
 effect: "This character gains +5 to rolls relating to recovering deleted, corrupted or damaged data, including data wiped or locked by a hacker to cover their tracks."

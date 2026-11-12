@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Turning a wild creature into a working one."
 tags: [monsters, animals, training]
+backgroundKeywords: [parabiology, animals]
 category: skill
 minStats: { empathy: 5, demeanor: 4 }
 prerequisites: [monster-handling]

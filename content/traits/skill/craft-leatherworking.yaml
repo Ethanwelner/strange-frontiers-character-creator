@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Tanning hides and making leather goods and armor."
 tags: [craft, leather, armor]
+backgroundKeywords: [craft]
 category: skill
 ranked: true
 minStats: { grace: 3, endurance: 2, intuition: 2 }

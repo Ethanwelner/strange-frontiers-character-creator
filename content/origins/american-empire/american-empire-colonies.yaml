@@ -6,6 +6,7 @@ region: american-empire
 summary: "You grew up in the Empire’s stellar territories, in New Columbia on Luna or aboard the capital Ark, New York, a long way from the Earth the Empire still calls home."
 naming: "American names, from the Empire’s English-speaking culture."
 tags: [american-empire, colonies, luna, ark, space]
+backgroundKeywords: [space, earth, american-empire, luna, ark, colonies]
 lore: american-empire
 type: origin
 # A free bonus point the player places in a Physical stat.
@@ -16,11 +17,3 @@ grants:
   - { trait: imperial-law, rank: 1 }
   - { trait: english }
   - { trait: english-written }
-backgroundTraits:
-  - new-columbia
-  - ark-new-york
-  - ark-life
-  - the-imperial-military
-  - imperial-politics
-  - earth-baseline-technology
-  - spanish

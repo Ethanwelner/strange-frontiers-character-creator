@@ -5,6 +5,7 @@ plane: earth
 region: xanthus
 summary: "Xanthus, the free Ark built around an iron asteroid, and the micro-nations that appear in its wake."
 tags: [xanthus, ark]
+backgroundKeywords: [ark, xanthus]
 lore: xanthus
 category: knowledge
 ranked: true

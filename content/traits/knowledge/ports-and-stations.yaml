@@ -4,6 +4,7 @@ status: placeholder
 plane: earth
 summary: "How docks, customs and station traffic control work, and how to get through them."
 tags: [ports, stations, space]
+backgroundKeywords: [seafaring, space]
 category: knowledge
 ranked: true
 minStats: { memory: 3 }

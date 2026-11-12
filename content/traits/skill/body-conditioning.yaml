@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "A body hardened by years of hits, drills and punishment."
 tags: [combat, toughness, training]
+backgroundKeywords: [hand-to-hand, athletics]
 category: skill
 ranked: true
 minStats: { endurance: 5, power: 3 }

@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Finding, claiming and working asteroids for ore and ice."
 tags: [mining, space, asteroid]
+backgroundKeywords: [labor, space]
 category: knowledge
 ranked: true
 minStats: { memory: 3 }

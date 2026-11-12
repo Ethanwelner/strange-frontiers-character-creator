@@ -4,6 +4,7 @@ status: placeholder
 plane: earth
 summary: "Catalogues whole new kingdoms of life, many of them reliant on exotic physics, out in the field and often alongside the Explorers’ Lodge."
 tags: [science, parabiology, fieldwork, ecology, lodge]
+backgroundKeywords: [science, parabiology, wilderness, exploration]
 lore: explorers-lodge
 type: profession
 grants:
@@ -11,7 +12,3 @@ grants:
   - { trait: field-sampling }
   - { trait: parabiology }
   - { trait: the-explorers-lodge }
-backgroundTraits:
-  - biology
-  - wilderness-lore
-  - animal-lore

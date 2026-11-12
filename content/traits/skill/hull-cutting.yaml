@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Cutting into hulls and bulkheads safely."
 tags: [salvage, space, cutting]
+backgroundKeywords: [labor, space]
 category: skill
 minStats: { power: 3, grace: 3, logic: 2 }
 effect: "This character gains +5 to rolls relating to cutting through hulls, bulkheads and other heavy plating."

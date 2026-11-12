@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "A practiced liar, in speech and in writing."
 tags: [lying, deception, social, site-example]
+backgroundKeywords: [social]
 category: skill
 minStats: { persuasion: 8, demeanor: 4, intuition: 4, memory: 4 }
 effect: "Add 5 to any skill check rolls that involve lying in either written or spoken form."

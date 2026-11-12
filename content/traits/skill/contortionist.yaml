@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Bending, folding and slipping out of tight spots."
 tags: [athletics, escape, flexibility]
+backgroundKeywords: [stealth, athletics]
 category: skill
 minStats: { grace: 5, endurance: 2 }
 effect: "This character gains +5 to Grace rolls relating to bending, twisting or squeezing their body, such as fitting through tight spaces, slipping free of bonds or holds, or hiding somewhere too small for them."

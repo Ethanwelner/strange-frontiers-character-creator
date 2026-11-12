@@ -5,6 +5,7 @@ plane: earth
 region: american-empire
 summary: "The Empire’s capital Ark and the absentee Emperor’s court aboard it."
 tags: [ark, new-york, american-empire]
+backgroundKeywords: [american-empire, ark]
 lore: new-york
 category: knowledge
 ranked: true

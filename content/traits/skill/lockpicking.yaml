@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Opening locks without the key."
 tags: [locks, theft, security]
+backgroundKeywords: [security, crime]
 category: skill
 ranked: true
 minStats: { grace: 4, intuition: 2 }

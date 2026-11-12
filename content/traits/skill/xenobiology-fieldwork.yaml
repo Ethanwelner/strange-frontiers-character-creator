@@ -4,6 +4,7 @@ status: draft
 plane: earth
 summary: "Working out how an alien organism lives, and what it needs."
 tags: [parabiology, science, fieldwork]
+backgroundKeywords: [science, parabiology, exploration]
 category: skill
 minStats: { logic: 4, intuition: 3, memory: 3 }
 effect: "This character gains +5 to rolls relating to identifying an unfamiliar organism's biology, needs and dangers in the field."

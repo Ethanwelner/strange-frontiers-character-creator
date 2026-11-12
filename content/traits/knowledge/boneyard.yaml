@@ -5,6 +5,7 @@ plane: earth
 region: sdu
 summary: "Boneyard, one of the Union’s Arks."
 tags: [ark, sdu]
+backgroundKeywords: [sdu, ark]
 lore: boneyard
 category: knowledge
 ranked: true

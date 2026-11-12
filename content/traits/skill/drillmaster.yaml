@@ -4,6 +4,7 @@ status: draft
 plane: any
 summary: "Training others in physical and fighting skills."
 tags: [teaching, training, military]
+backgroundKeywords: [military, scholarship]
 category: skill
 minStats: { demeanor: 4, persuasion: 3, endurance: 3 }
 effect: "This character gains +5 to rolls relating to training others in physical or fighting skills."
