@@ -2145,7 +2145,6 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    max-height: min(50vh, 420px);
     margin: 0;
     /* The slim scrollbar's lane keeps the handle 10px off the rows */
     padding: 0;
@@ -2236,8 +2235,8 @@
   }
 
   /* The rest of a picker popup's content keeps its own height; only the
-     tab box gives way */
-  .sf-popup--inner .sf-popup-grow > :not(.picker-box) {
+     tab box, or a list that scrolls (Add a Condition's), gives way */
+  .sf-popup--inner .sf-popup-grow > :not(.picker-box, .picker-scroll) {
     flex: none;
   }
 
