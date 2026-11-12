@@ -2253,6 +2253,31 @@
     }
   }
 
+  /* At 1768px and below, the Traits picked sit beside their title, on its
+     line, instead of under it */
+  @media (max-width: 1768px) {
+    .traits-picked {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 24px;
+
+      > .subhead {
+        margin: 0;
+        flex: none;
+
+        &::after {
+          display: none;
+        }
+      }
+
+      > :is(.picks, .empty) {
+        flex: 1 1 12rem;
+        margin: 0;
+      }
+    }
+  }
+
   /* Each Trait picked, its name then its X, along a line that wraps */
   .picks-row {
     display: flex;

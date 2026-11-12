@@ -219,6 +219,19 @@ html.sf-popup-open {
     }
 }
 
+/* At 1768px and below, less padding inside the panel, and a smaller
+   title, so more of the content fits */
+@media (max-width: 1768px) {
+    .sf-popup {
+        --popup-pad: 24px;
+    }
+
+    .sf-popup-title,
+    .sf-popup .step-head > h2 {
+        font-size: 1.25rem;
+    }
+}
+
 @media (max-width: 767px) {
     .sf-popup {
         --popup-pad: 24px;
