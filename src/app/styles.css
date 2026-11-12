@@ -2140,11 +2140,13 @@
     }
   }
 
+  /* It fills the popup's room, up to 768px on a tall window */
   .condition-search-list {
     list-style: none;
     display: flex;
     flex-direction: column;
     gap: 8px;
+    max-height: 768px;
     margin: 0;
     /* The slim scrollbar's lane keeps the handle 10px off the rows */
     padding: 0;
