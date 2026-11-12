@@ -5,7 +5,7 @@ plane: isekai
 region: dreft
 summary: "Hunts monsters for pay and glory. Hunting guilds keep posts and track the monster bounties put up by the kingdom or locals."
 tags: [hunter, monsters, guild, wilderness, combat]
-backgroundKeywords: [combat, trade, parabiology, wilderness]
+backgroundKeywords: [close-combat, archaic-ranged, trade, parabiology, wilderness]
 type: profession
 grants:
   - { trait: tracker }

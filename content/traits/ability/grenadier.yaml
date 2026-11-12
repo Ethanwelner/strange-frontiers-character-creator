@@ -4,7 +4,7 @@ status: draft
 plane: any
 summary: "Getting grenades over walls and around corners."
 tags: [combat, ranged, thrown, explosive]
-backgroundKeywords: [combat]
+backgroundKeywords: [modern-ranged]
 category: ability
 minStats: { grace: 3, intuition: 4, power: 3 }
 prerequisites: [wielder-throwing-weapon]

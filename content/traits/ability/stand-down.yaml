@@ -4,7 +4,7 @@ status: draft
 plane: any
 summary: "An order that's hard to ignore."
 tags: [combat, security, intimidation, police, private-security]
-backgroundKeywords: [combat, security, police, social]
+backgroundKeywords: [security, police, social]
 category: ability
 minStats: { demeanor: 5 }
 prerequisites: [intimidation]

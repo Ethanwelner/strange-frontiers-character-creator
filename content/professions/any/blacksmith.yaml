@@ -4,7 +4,7 @@ status: placeholder
 plane: any
 summary: "Works metal at the forge: tools, fittings, and now and then a blade."
 tags: [craft, smithing, trade]
-backgroundKeywords: [combat, trade, craft, engineering]
+backgroundKeywords: [close-combat, trade, craft, engineering]
 type: profession
 grants:
   - { trait: craft-smithing }

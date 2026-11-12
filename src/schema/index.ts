@@ -37,7 +37,10 @@ export const Status = z.enum(["placeholder", "draft", "final"]);
 // tags (loose search words) and types (the Sheet's Keywords, which effects
 // target). Topics first, then places.
 export const BACKGROUND_KEYWORDS = {
-  combat: "Fighting, weapons and armor",
+  "hand-to-hand": "Unarmed fighting: boxing, wrestling and martial arts",
+  "close-combat": "Melee fighting with weapons: blades, axes, maces and polearms",
+  "archaic-ranged": "Historical ranged weapons: bows, crossbows, slings, muskets and siege engines",
+  "modern-ranged": "Modern ranged weapons: guns, grenades, launchers and tasers",
   military: "Soldiering, tactics and command in a war",
   security: "Guarding people, places and things",
   police: "Policing, arrests and questioning",

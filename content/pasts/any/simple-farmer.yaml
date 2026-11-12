@@ -4,7 +4,7 @@ status: placeholder
 plane: any
 summary: "Grew up working the land, wherever there was land to work, and learned that the harvest waits for no one."
 tags: [farming, rural, family]
-backgroundKeywords: [combat, wilderness, farming]
+backgroundKeywords: [close-combat, archaic-ranged, wilderness, farming]
 type: past
 grants:
   - { trait: teamster }

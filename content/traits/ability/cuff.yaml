@@ -4,7 +4,7 @@ status: draft
 plane: any
 summary: "Getting restraints on someone who doesn't want them."
 tags: [combat, security, police, restraint, private-security]
-backgroundKeywords: [combat, security, police]
+backgroundKeywords: [hand-to-hand, security, police]
 category: ability
 minStats: { power: 3, grace: 3 }
 prerequisites: [grappler]

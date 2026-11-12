@@ -4,7 +4,7 @@ status: draft
 plane: any
 summary: "Dancing circles around a fight."
 tags: [combat, defense, agility, expert]
-backgroundKeywords: [combat, athletics]
+backgroundKeywords: [hand-to-hand, close-combat, athletics]
 category: skill
 mastery: true
 minStats: { grace: 6, endurance: 4, intuition: 3 }

@@ -4,7 +4,7 @@ status: draft
 plane: any
 summary: "An archer who rarely needs a second arrow."
 tags: [combat, ranged, archer, expert]
-backgroundKeywords: [combat]
+backgroundKeywords: [archaic-ranged]
 category: ability
 mastery: true
 minStats: { grace: 8, intuition: 6, power: 4, endurance: 4 }

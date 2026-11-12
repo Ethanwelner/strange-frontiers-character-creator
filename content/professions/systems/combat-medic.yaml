@@ -4,7 +4,7 @@ status: placeholder
 plane: earth
 summary: "Keeps soldiers alive under fire, patching wounds in the middle of a fight."
 tags: [medicine, military, combat, healing]
-backgroundKeywords: [combat, military, science, medicine, wilderness]
+backgroundKeywords: [modern-ranged, military, science, medicine, wilderness]
 type: profession
 grants:
   - { trait: medical-aid }

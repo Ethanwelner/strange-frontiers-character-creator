@@ -28,7 +28,7 @@ function chipLabels(entries: { trait: string; rank?: number }[]): string[] {
 }
 
 // A Background Keyword as a chip: "american-empire" reads "American Empire".
-const ACRONYMS: Record<string, string> = { sdu: "SDU", un: "UN" };
+const ACRONYMS: Record<string, string> = { sdu: "SDU", un: "UN", "hand-to-hand": "Hand-to-Hand" };
 export function keywordLabel(keyword: string): string {
   return ACRONYMS[keyword] ?? keyword.split("-").map((w) => w[0]!.toUpperCase() + w.slice(1)).join(" ");
 }

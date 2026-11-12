@@ -5,7 +5,7 @@ plane: isekai
 region: dreft
 summary: "Called up from a town or village to defend it from bandits and monsters when the crown’s soldiers are far away."
 tags: [militia, military, village, dreft]
-backgroundKeywords: [combat, military, wilderness, dreft]
+backgroundKeywords: [close-combat, archaic-ranged, military, wilderness, dreft]
 type: profession
 grants:
   - { trait: shield-wall }

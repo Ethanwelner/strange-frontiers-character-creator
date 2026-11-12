@@ -4,7 +4,7 @@ status: placeholder
 plane: any
 summary: "Keeps the peace in a town, city or station, and knows its streets and the people on them."
 tags: [police, law, enforcement]
-backgroundKeywords: [combat, security, police, investigation, crime, law, social, medicine]
+backgroundKeywords: [hand-to-hand, modern-ranged, security, police, investigation, crime, law, social, medicine]
 type: profession
 grants:
   - { trait: vigilance }

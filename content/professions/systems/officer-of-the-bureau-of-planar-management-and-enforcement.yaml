@@ -4,7 +4,7 @@ status: placeholder
 plane: earth
 summary: "Enforces the laws on planar exploration for the Bureau, inspecting gates and chasing down unregulated exploitation across the settled systems."
 tags: [law, enforcement, planes, bureau, tetra]
-backgroundKeywords: [combat, security, police, law, science, exploration, tetra]
+backgroundKeywords: [hand-to-hand, modern-ranged, security, police, law, science, exploration, tetra]
 type: profession
 grants:
   - { trait: investigation }

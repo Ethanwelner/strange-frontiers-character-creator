@@ -5,7 +5,7 @@ plane: isekai
 region: dreft
 summary: "An itinerant merchant trader, always moving between ports, cities, and kingdoms."
 tags: [caravan, trade, travel, merchant]
-backgroundKeywords: [combat, trade, wilderness, travel]
+backgroundKeywords: [close-combat, archaic-ranged, trade, wilderness, travel]
 type: profession
 grants:
   - { trait: teamster }

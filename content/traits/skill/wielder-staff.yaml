@@ -4,7 +4,7 @@ status: draft
 plane: any
 summary: "Fighting with, and maintaining, a staff or quarterstaff."
 tags: [combat, melee, staves]
-backgroundKeywords: [combat]
+backgroundKeywords: [close-combat]
 category: skill
 list: wielder
 ranked: true

@@ -4,7 +4,7 @@ status: placeholder
 plane: earth
 summary: "Flies fighters for a navy, a corporation or whoever is paying, and knows a dogfight from the inside."
 tags: [pilot, military, fighter, space]
-backgroundKeywords: [combat, military, science, piloting, space, travel]
+backgroundKeywords: [modern-ranged, military, science, piloting, space, travel]
 type: profession
 grants:
   - { trait: pilot-fighter }

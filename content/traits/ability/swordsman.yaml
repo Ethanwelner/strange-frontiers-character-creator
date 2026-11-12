@@ -4,7 +4,7 @@ status: draft
 plane: any
 summary: "Trained swordplay, beyond knowing which end to hold."
 tags: [combat, melee, swordplay]
-backgroundKeywords: [combat]
+backgroundKeywords: [close-combat]
 category: ability
 ranked: true
 minStats: { grace: 4, power: 3, intuition: 3 }

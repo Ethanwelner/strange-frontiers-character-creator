@@ -4,7 +4,7 @@ status: draft
 plane: any
 summary: "How battles are fought: formations, maneuvers and command."
 tags: [military, tactics, combat]
-backgroundKeywords: [combat, military]
+backgroundKeywords: [military]
 category: knowledge
 ranked: true
 minStats: { memory: 3, logic: 2 }

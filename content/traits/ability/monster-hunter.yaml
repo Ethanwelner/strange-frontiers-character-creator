@@ -4,7 +4,7 @@ status: draft
 plane: any
 summary: "Hunting and killing monsters and extraplanar beings."
 tags: [combat, monsters, hunting]
-backgroundKeywords: [combat, parabiology, wilderness]
+backgroundKeywords: [close-combat, archaic-ranged, parabiology, wilderness]
 category: ability
 ranked: true
 minStats: { grace: 4, intuition: 4, endurance: 3 }

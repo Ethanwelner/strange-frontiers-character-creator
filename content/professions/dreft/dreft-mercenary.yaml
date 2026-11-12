@@ -5,7 +5,7 @@ plane: isekai
 region: dreft
 summary: "Fights for whoever pays, guarding caravans, settling feuds and filling out noble armies in the succession crisis."
 tags: [mercenary, military, combat, dreft]
-backgroundKeywords: [combat, military, social, trade, wilderness, performance, dreft]
+backgroundKeywords: [hand-to-hand, close-combat, archaic-ranged, military, social, trade, wilderness, performance, dreft]
 type: profession
 grants:
   - { trait: wielder-longsword }

@@ -4,7 +4,7 @@ status: draft
 plane: any
 summary: "Directing a fight so allies move first and together."
 tags: [leadership, military, combat, tactics]
-backgroundKeywords: [combat, military, leadership]
+backgroundKeywords: [military, leadership]
 category: skill
 minStats: { demeanor: 5, intuition: 4, logic: 3 }
 prerequisites: [military-drill]

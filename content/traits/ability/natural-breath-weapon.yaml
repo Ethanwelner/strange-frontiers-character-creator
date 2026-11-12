@@ -4,7 +4,6 @@ status: draft
 plane: any
 summary: "A biology that lets the character use their breath as a tool or weapon."
 tags: [breath, natural-weapon, combat, site-example]
-backgroundKeywords: [combat]
 category: ability
 ranked: true
 background: true

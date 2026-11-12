@@ -5,7 +5,7 @@ plane: isekai
 region: dreft
 summary: "Works the merchant ships and fishing boats out of Glintl and Port Herminst, and knows every tavern on the coast."
 tags: [sailing, seafaring, sea, labor]
-backgroundKeywords: [combat, labor, seafaring, travel, athletics]
+backgroundKeywords: [hand-to-hand, close-combat, labor, seafaring, travel, athletics]
 type: profession
 grants:
   - { trait: pilot-sailing-ship }

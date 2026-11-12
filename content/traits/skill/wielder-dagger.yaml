@@ -4,7 +4,7 @@ status: draft
 plane: any
 summary: "Fighting with, and maintaining, daggers and knives."
 tags: [combat, melee, blades]
-backgroundKeywords: [combat]
+backgroundKeywords: [close-combat]
 category: skill
 list: wielder
 ranked: true
