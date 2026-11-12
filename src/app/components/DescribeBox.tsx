@@ -126,7 +126,7 @@ const EXAMPLES = [
   "A Guwain smuggler from the Glintl docks who knows every harbor inspector's price and every tavern on the coast.",
   "An Isek bard from Sorellion whose songs about the nobility mean leaving every town before morning.",
   "A Guwain squire whose knight died in the succession crisis, now sworn to whichever noble will feed them.",
-  "A citizen shareholder of the Lunar Industrial Syndicate, a station rat turned starship engineer who can fix anything with a wrench and a grudge.",
+  "A Citizen of the Lunar Industrial Syndicate, a station rat turned starship engineer who can fix anything with a wrench and a grudge.",
   "A Texan truck pilot hauling cargo between the systems, with a pistol under the seat and a debt to the wrong people.",
   "An AI Core spy for the Empire of China who has worn a dozen bodies and trusts none of them.",
   "A university-educated paraecologist from the Kingdom of India, cataloguing Murk Legs on a newly opened plane.",
