@@ -241,10 +241,11 @@ export async function describeCharacter(opts: DescribeOptions): Promise<Describe
           results.push({ call, isError: true, content: JSON.stringify({ rejected: true, picks, ...report }) });
           continue;
         }
-        if (check.accepted && !solved.build.items.length && !itemsAsked) {
+        // An AI Core's chassis alone doesn't count as carrying something
+        if (check.accepted && !solved.build.items.some((i) => i.category !== "chassis") && !itemsAsked) {
           progress("Build is legal; asking for items");
           itemsAsked = true;
-          const items = "The engine built a legal character, but it carries nothing. Submit again with the same concept and the items it would carry (from the Items in the index), with a reason for each.";
+          const items = "The engine built a legal character, but it carries nothing. Submit again with the same concept and the items it would carry (from the Items in the index), within its Wealth, with a reason for each. Kit 0 items are always affordable.";
           results.push({ call, isError: true, content: JSON.stringify({ rejected: true, items, ...report }) });
           continue;
         }
