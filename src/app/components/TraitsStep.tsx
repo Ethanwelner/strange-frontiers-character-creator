@@ -1,4 +1,4 @@
-import { useMemo, useState, type KeyboardEvent } from "react";
+import { Fragment, useMemo, useState, type KeyboardEvent } from "react";
 import type { Campaign, PickKind } from "../../engine/build.js";
 import type { BuildResult } from "../../engine/validate.js";
 import { TraitCategory, type Trait } from "../../schema/index.js";
@@ -33,16 +33,32 @@ interface Props {
 
 // What a Trait needs before it can be picked, as the site writes it:
 // "(Power 3) (Endurance 2) (Capable Student) (any Pilot Trait)": each
-// requirement in its own parens.
-const requirements = (t: Trait) =>
-  [
-    ...Object.entries(t.minStats).map(([s, n]) => `${title(s)} ${n}`),
-    ...t.prerequisites.map(traitName),
-    ...t.prerequisiteTags.map((tag) => `any ${title(tag)} Trait`),
-    ...(t.rpRequirement ? [t.rpRequirement] : []),
-  ]
-    .map((r) => `(${r})`)
-    .join(" ");
+// requirement in its own parens, a stat the character falls short of in red.
+function Requirements({ trait: t, short }: { trait: Trait; short: string[] }) {
+  const items = [
+    ...Object.entries(t.minStats).map(([s, n]) => ({ text: `${title(s)} ${n}`, unmet: short.includes(s) })),
+    ...t.prerequisites.map((id) => ({ text: traitName(id), unmet: false })),
+    ...t.prerequisiteTags.map((tag) => ({ text: `any ${title(tag)} Trait`, unmet: false })),
+    ...(t.rpRequirement ? [{ text: t.rpRequirement, unmet: false }] : []),
+  ];
+  if (!items.length) return null;
+  return (
+    <CardNote>
+      {items.map((r, i) => (
+        <Fragment key={i}>
+          {i > 0 && " "}
+          {r.unmet ? (
+            <span className="unmet" title="Not met yet">
+              ({r.text})
+            </span>
+          ) : (
+            `(${r.text})`
+          )}
+        </Fragment>
+      ))}
+    </CardNote>
+  );
+}
 
 // Group titles, in the schema's category order.
 const GROUP_TITLE: Record<(typeof TraitCategory.options)[number], string> = {
@@ -98,7 +114,7 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom, p
       !hide?.has(o.trait.id) &&
       !skip?.has(o.trait.category) &&
       !hidden.has(o.trait.category) &&
-      (!hideRejected || o.reasons.length === 0 || taken.has(o.trait.id)) &&
+      (!hideRejected || (o.reasons.length === 0 && o.shortStats.length === 0) || taken.has(o.trait.id)) &&
       (!q || o.trait.name.toLowerCase().includes(q) || o.trait.tags.some((t) => t.toLowerCase().includes(q))),
   );
   // Only categories this tab has Traits in get a checkbox (no Starter Traits
@@ -233,9 +249,10 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom, p
             <div key={g.category} className="trait-group">
               <h3 className="subhead">{GROUP_TITLE[g.category]}</h3>
               <ul className="trait-list">
-                {g.options.map(({ trait: t, rank, pick, reasons }) => {
+                {g.options.map(({ trait: t, rank, pick, reasons, shortStats }) => {
                   const selected = lastPick(t.id) >= 0;
-                  const rejected = !selected && reasons.length > 0;
+                  const blocked = reasons.length > 0 || shortStats.length > 0;
+                  const rejected = !selected && blocked;
                   const onKey = (e: KeyboardEvent) => {
                     if (e.key === "Enter" || e.key === " ") {
                       e.preventDefault();
@@ -266,7 +283,7 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom, p
                         {t.background && <CardChip tone="muted">Background</CardChip>}
                         {t.mastery && <CardChip tone="muted">Mastery</CardChip>}
                       </div>
-                      {requirements(t) && <CardNote>{requirements(t)}</CardNote>}
+                      <Requirements trait={t} short={shortStats} />
                       <p>{t.summary}</p>
                       <Effect text={t.effect} />
                       <TraitAction action={t.action} />
@@ -280,7 +297,7 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom, p
                           <span className="num">{heldRank.get(t.id) ?? 0}</span>
                           <Button
                             round="xs"
-                            disabled={reasons.length > 0}
+                            disabled={blocked}
                             title={reasons.join(" ") || undefined}
                             aria-label={`Take ${t.name} rank ${rank} with a ${pick} pick`}
                             onClick={() => onChange(addPick(draft, t.id, rank, pick))}
@@ -289,7 +306,7 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom, p
                           </Button>
                         </div>
                       )}
-                      {rejected && (
+                      {rejected && reasons.length > 0 && (
                         <ul className="reasons">
                           {reasons.map((r) => (
                             <li key={r}>{r}</li>

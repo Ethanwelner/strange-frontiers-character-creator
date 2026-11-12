@@ -169,11 +169,11 @@ describe("Trait choices", () => {
   });
 
   it("lists Trait choices in the Trait search results and the content index", () => {
-    const out = runTool("search_traits", { query: "additional language" }, content, L1) as { traits: { id: string; choices: unknown[] }[] };
+    const out = runTool("search_traits", { query: "additional contact" }, content, L1) as { traits: { id: string; choices: unknown[] }[] };
     const hit = out.traits[0];
-    expect(hit!.id).toBe("additional-language");
-    expect(hit!.choices).toEqual([{ choose: 1, from: "language", note: "+1 Language per rank" }]);
-    expect(contentIndex(content)).toContain("choices 1 from language per rank");
+    expect(hit!.id).toBe("additional-contact");
+    expect(hit!.choices).toEqual([{ choose: 1, from: "contact", note: "+1 Contact per rank" }]);
+    expect(contentIndex(content)).toContain("choices 1 from contact per rank");
   });
 });
 

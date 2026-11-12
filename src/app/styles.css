@@ -1235,6 +1235,12 @@
     }
   }
 
+  /* A requirement the character doesn't meet yet, in a card's
+     requirements: red, like the reasons */
+  .sf-card-note .unmet {
+    color: var(--portfolio-red);
+  }
+
   .reasons {
     margin: 0.4rem 0 0;
     padding-left: 1.1rem;

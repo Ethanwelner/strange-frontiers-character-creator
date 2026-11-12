@@ -83,8 +83,12 @@ export interface TraitOption {
   rank: number;
   // The pick that would buy it.
   pick: PickKind;
-  // Why the engine would reject it. Empty when the pick is legal.
+  // Why the engine would reject it. Empty when the pick is legal. Unmet
+  // minimum stats aren't written out here: they're in `shortStats`.
   reasons: string[];
+  // The minimum stats the character falls short of, e.g. ["logic"], shown
+  // red in the card's requirements
+  shortStats: string[];
 }
 
 // A Traits step tab: a pick type, or a Trait list, like Magic, whose Traits
@@ -96,7 +100,7 @@ export type TraitTab = PickKind | { list: string };
 // engine says need the other kind of pick; it keeps the rest, with reasons
 // when the engine rejects them for anything else. A list's tab offers only
 // that list's Traits. A Trait's own
-// choices, like which language an Additional Language is, are answered on the
+// choices, like who an Additional Contact is, are answered on the
 // Choices step afterward, so they don't count against it. Undefined until the
 // build is complete enough for the engine to check.
 export function traitOptions(draft: Draft, content: Content, campaign: Campaign, tab: TraitTab): TraitOption[] | undefined {
@@ -125,7 +129,8 @@ export function traitOptions(draft: Draft, content: Content, campaign: Campaign,
     if (typeof tab !== "string" && added.length && !trait.background) ({ pick, added } = attempt("universal"));
     // A Conveyed Trait can't be picked at all, and the wrong kind of pick is the other tab's.
     if (added.some((e) => e.code === "pick-type" || e.code === "conveyed")) continue;
-    options.push({ trait, rank, pick, reasons: added.map((e) => e.message) });
+    const shortStats = added.flatMap((e) => (e.code === "min-stats" ? (e.stats ?? []) : []));
+    options.push({ trait, rank, pick, reasons: added.filter((e) => e.code !== "min-stats").map((e) => e.message), shortStats });
   }
   return options;
 }

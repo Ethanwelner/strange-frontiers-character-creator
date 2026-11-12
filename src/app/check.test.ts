@@ -13,7 +13,21 @@ const campaign = { startingLevel: 1 };
 // checks the real ones.
 const bundled: Content = {
   ...appContent,
-  traits: appContent.traits.map((t) => (t.category === "knowledge" || t.category === "skill" || t.id === "shield-wall" ? { ...t, minStats: {} } : t)),
+  traits: [
+    ...appContent.traits.map((t) => (t.category === "knowledge" || t.category === "skill" || t.id === "shield-wall" ? { ...t, minStats: {} } : t)),
+    // A ranked Trait whose choice is a language (the game has none now)
+    Trait.parse({
+      id: "additional-language",
+      name: "Additional Language",
+      status: "placeholder",
+      plane: "any",
+      summary: "Test fixture: a ranked Trait whose choice is a language.",
+      category: "knowledge",
+      ranked: true,
+      effect: "Test only.",
+      choices: [{ choose: 1, from: "language", note: "+1 Language per rank" }],
+    }),
+  ],
   packages: appContent.packages.map((p) => ({ ...p, bonusPoints: [] })),
 };
 
@@ -39,7 +53,7 @@ describe("bundled content", () => {
       packages: c.packages.map((p) => p.id).sort(),
       traits: c.traits.map((t) => t.id).sort(),
     });
-    expect(ids(bundled)).toEqual(ids(disk));
+    expect(ids(appContent)).toEqual(ids(disk));
   });
 });
 

@@ -47,7 +47,7 @@ const CONCEPT_SCHEMA = {
     choices: {
       type: "array",
       description:
-        "Optional answers to package or Trait choices with a pool, like languages (an Additional Language Trait asks which one). " +
+        "Optional answers to package or Trait choices with a pool, like a package's \"+1 Language\". " +
         "Any you leave out are filled in. Never answer Contacts.",
       items: {
         type: "object",
