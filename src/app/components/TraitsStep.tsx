@@ -32,14 +32,17 @@ interface Props {
 }
 
 // What a Trait needs before it can be picked, as the site writes it:
-// "Power 3, Endurance 2, Capable Student, any Pilot Trait".
+// "(Power 3) (Endurance 2) (Capable Student) (any Pilot Trait)": each
+// requirement in its own parens.
 const requirements = (t: Trait) =>
   [
     ...Object.entries(t.minStats).map(([s, n]) => `${title(s)} ${n}`),
     ...t.prerequisites.map(traitName),
     ...t.prerequisiteTags.map((tag) => `any ${title(tag)} Trait`),
     ...(t.rpRequirement ? [t.rpRequirement] : []),
-  ].join(", ");
+  ]
+    .map((r) => `(${r})`)
+    .join(" ");
 
 // Group titles, in the schema's category order.
 const GROUP_TITLE: Record<(typeof TraitCategory.options)[number], string> = {
@@ -263,10 +266,10 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom, p
                         {t.background && <CardChip tone="muted">Background</CardChip>}
                         {t.mastery && <CardChip tone="muted">Mastery</CardChip>}
                       </div>
+                      {requirements(t) && <CardNote>{requirements(t)}</CardNote>}
                       <p>{t.summary}</p>
                       <Effect text={t.effect} />
                       <TraitAction action={t.action} />
-                      {requirements(t) && <CardNote>Needs {requirements(t)}</CardNote>}
                       {selected && t.ranked && (
                         // The card's own click and keys toggle it, so the stepper keeps its events to itself.
                         <div className="rank-step" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
