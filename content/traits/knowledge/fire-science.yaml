@@ -1,0 +1,10 @@
+id: fire-science
+name: "Fire Science"
+status: draft
+plane: any
+summary: "How fires start, spread and burn out."
+tags: [fire, rescue, safety]
+category: knowledge
+ranked: true
+minStats: { memory: 3, logic: 2 }
+effect: "This character has knowledge of fire science and can be assumed to be familiar with how fires start and spread, what puts each kind out, and how to read where a fire started after it's over."

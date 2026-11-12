@@ -1,0 +1,9 @@
+id: firemans-carry
+name: "Fireman’s Carry"
+status: draft
+plane: any
+summary: "Carrying someone out without slowing down."
+tags: [rescue, athletics, fire]
+category: ability
+minStats: { power: 4, endurance: 4 }
+effect: "This character can carry an Incapacitated, Unconscious or Asleep character of its own size or smaller and still take its Full Movement."

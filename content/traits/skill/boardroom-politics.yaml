@@ -1,0 +1,10 @@
+id: boardroom-politics
+name: "Boardroom Politics"
+status: draft
+plane: earth
+summary: "Getting your way inside a company."
+tags: [corporate, social, politics]
+category: skill
+ranked: true
+minStats: { persuasion: 4, intuition: 3 }
+effect: "This character is capable of telling who holds real power in a company's leadership without a Skill Check. Rank *5 added to Skill Check rolls involving winning over a board, building an alliance inside a company or forcing a rival out."

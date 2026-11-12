@@ -1,0 +1,10 @@
+id: corporate-finance
+name: "Corporate Finance"
+status: draft
+plane: earth
+summary: "Balance sheets, shareholders and where a company's money really goes."
+tags: [corporate, money, business]
+category: knowledge
+ranked: true
+minStats: { logic: 4, memory: 3 }
+effect: "This character has knowledge of corporate finance and can be assumed to be familiar with how companies raise, move and hide money, how to read their books, and who actually owns them."

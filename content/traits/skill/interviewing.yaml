@@ -1,0 +1,10 @@
+id: interviewing
+name: "Interviewing"
+status: draft
+plane: any
+summary: "Getting people to say more than they meant to."
+tags: [journalism, social, investigation]
+category: skill
+ranked: true
+minStats: { empathy: 3, persuasion: 3, memory: 2 }
+effect: "This character is capable of getting a willing subject's full account of events without a Skill Check. Rank *5 added to Skill Check rolls involving getting a reluctant subject to talk on the record."

@@ -1,0 +1,29 @@
+id: clergy
+name: "Clergy"
+status: placeholder
+plane: any
+summary: "Serves a faith and its people: leads services, keeps the rites, and sits with the sick and the grieving."
+tags: [faith, religion, clergy, counsel]
+type: profession
+grants:
+  - { trait: ordained }
+  - { trait: theology }
+  - { trait: rites-and-ceremonies }
+  - { trait: spiritual-counsel }
+choices:
+  - choose: 1
+    from: contact
+    note: "+1 Contact"
+backgroundTraits:
+  - confessor
+  - religions-of-the-settled-systems
+  - religions-of-isekai
+  - last-rites
+  - holy-conviction
+  - exorcism
+  - spirit-warding
+  - counselor
+  - mediator
+  - teaching
+  - inspiring-speech
+  - medical-aid

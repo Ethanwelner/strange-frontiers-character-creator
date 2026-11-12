@@ -1,0 +1,24 @@
+id: fire-and-rescue
+name: "Fire and Rescue"
+status: placeholder
+plane: earth
+summary: "Answers the alarm on a station, Ark or colony, where a fire doesn't just burn, it eats the air."
+tags: [fire, rescue, emergency, station]
+type: profession
+grants:
+  - { trait: firefighting }
+  - { trait: fire-science }
+  - { trait: casualty-extraction }
+  - { trait: medical-aid }
+backgroundTraits:
+  - damage-control
+  - firemans-carry
+  - eva-work
+  - hull-cutting
+  - hazard-assessment
+  - trauma-care
+  - heavy-machinery
+  - climber
+  - crisis-leadership
+  - ports-and-stations
+  - ark-life

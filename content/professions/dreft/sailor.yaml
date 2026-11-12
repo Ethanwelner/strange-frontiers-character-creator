@@ -1,0 +1,24 @@
+id: sailor
+name: "Sailor"
+status: placeholder
+plane: isekai
+region: dreft
+summary: "Works the merchant ships and fishing boats out of Glintl and Port Herminst, and knows every tavern on the coast."
+tags: [sailing, seafaring, sea, labor]
+type: profession
+grants:
+  - { trait: pilot-sailing-ship }
+  - { trait: rigging }
+  - { trait: seafaring }
+  - { trait: swimmer }
+backgroundTraits:
+  - sea-legs
+  - weather-reading
+  - fishing
+  - coastal-trade
+  - navigation
+  - climber
+  - brawler
+  - wielder-shortsword
+  - glintl
+  - port-herminst
