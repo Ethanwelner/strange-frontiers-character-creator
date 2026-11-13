@@ -1,12 +1,12 @@
 id: wielder-dagger
-name: "Wielder: Dagger"
+name: "Wield: Dagger"
 status: draft
 plane: any
 summary: "Fighting with, and maintaining, daggers and knives."
 tags: [combat, melee, blades]
 backgroundKeywords: [close-combat]
 category: skill
-list: wielder
+list: wield
 ranked: true
 minStats: { grace: 3, intuition: 2 }
 effect: "- Rank *5 added to skill check rolls involving a Dagger.\n- +3 to Attack Rolls made with a Dagger.\n- This character is capable of performing the basic tasks of maintaining a Dagger without a skill check."

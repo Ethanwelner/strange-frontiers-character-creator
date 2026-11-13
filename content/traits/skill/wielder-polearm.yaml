@@ -1,12 +1,12 @@
 id: wielder-polearm
-name: "Wielder: Polearm"
+name: "Wield: Polearm"
 status: draft
 plane: any
 summary: "Fighting with, and maintaining, long-hafted weapons like halberds, glaives and pikes."
 tags: [combat, melee, polearms]
 backgroundKeywords: [close-combat]
 category: skill
-list: wielder
+list: wield
 ranked: true
 minStats: { power: 4, grace: 3, endurance: 3 }
 effect: "- Rank *5 added to skill check rolls involving a Polearm.\n- +3 to Attack Rolls made with a Polearm.\n- This character is capable of performing the basic tasks of maintaining a Polearm without a skill check."

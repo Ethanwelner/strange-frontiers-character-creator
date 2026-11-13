@@ -1,12 +1,12 @@
 id: wielder-bow
-name: "Wielder: Bow"
+name: "Wield: Bow"
 status: draft
 plane: any
 summary: "Fighting with, and maintaining, bows."
 tags: [combat, ranged, archery]
 backgroundKeywords: [archaic-ranged]
 category: skill
-list: wielder
+list: wield
 ranked: true
 minStats: { grace: 3, power: 3, intuition: 3 }
 effect: "- Rank *5 added to skill check rolls involving a Bow.\n- +3 to Attack Rolls made with a Bow.\n- This character is capable of performing the basic tasks of maintaining a Bow without a skill check."

@@ -874,8 +874,8 @@ describe("rule 13: Magic", () => {
   it("opens the Magic list to every character, and leaves it to stat requirements (rule 14)", () => {
     const pick = (b: BuildInput, trait: string) => check({ ...b, traits: [{ trait, pick: "universal" }] }, loaded.content);
     // Every character gets the Magic list's tab.
-    expect(check(human).summary!.traitLists).toEqual(["magic", "wielder"]);
-    expect(check(isek).summary!.traitLists).toEqual(["magic", "wielder"]);
+    expect(check(human).summary!.traitLists).toEqual(["magic", "wield"]);
+    expect(check(isek).summary!.traitLists).toEqual(["magic", "wield"]);
     // A Human can't level Magic, so Incantation's Magic 1 keeps it out of reach.
     expect(pick(human, "incantation").errors.map((e) => e.message)).toContainEqual(expect.stringMatching(/Incantation .* needs .*magic 1/));
     // A Magic-related Trait with no Magic requirement is open to anyone who meets its stats.

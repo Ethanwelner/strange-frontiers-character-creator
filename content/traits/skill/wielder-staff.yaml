@@ -1,12 +1,12 @@
 id: wielder-staff
-name: "Wielder: Staff"
+name: "Wield: Staff"
 status: draft
 plane: any
 summary: "Fighting with, and maintaining, a staff or quarterstaff."
 tags: [combat, melee, staves]
 backgroundKeywords: [close-combat]
 category: skill
-list: wielder
+list: wield
 ranked: true
 minStats: { grace: 3, endurance: 2 }
 effect: "- Rank *5 added to skill check rolls involving a Staff.\n- +3 to Attack Rolls made with a Staff.\n- This character is capable of performing the basic tasks of maintaining a Staff without a skill check."

@@ -1,12 +1,12 @@
 id: wielder-shortsword
-name: "Wielder: Shortsword"
+name: "Wield: Shortsword"
 status: draft
 plane: any
 summary: "Fighting with, and maintaining, one-handed swords and sabers."
 tags: [combat, melee, swords]
 backgroundKeywords: [close-combat]
 category: skill
-list: wielder
+list: wield
 ranked: true
 minStats: { grace: 3, power: 2, endurance: 2 }
 effect: "- Rank *5 added to skill check rolls involving a Shortsword.\n- +3 to Attack Rolls made with a Shortsword.\n- This character is capable of performing the basic tasks of maintaining a Shortsword without a skill check."

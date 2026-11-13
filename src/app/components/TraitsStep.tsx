@@ -80,7 +80,7 @@ const PICK_HELP: Record<PickKind, string> = {
 
 // A Trait list's own help line, when it isn't built on a special stat like Magic.
 const LIST_HELP: Record<string, string> = {
-  wielder: "Wielder Skills, one per weapon. They're ordinary Skills, kept on their own tab so they don't crowd the rest.",
+  wield: "Wield Skills, one per weapon. They're ordinary Skills, kept on their own tab so they don't crowd the rest.",
 };
 
 export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom, picksBelow = false, hints = true, skip }: Props) {

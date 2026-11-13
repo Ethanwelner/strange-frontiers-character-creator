@@ -131,6 +131,26 @@
     fill: currentColor;
 }
 
+/* A Trait card's Rank, after its name: the number in a rounded square, in
+   the bar's text color, so it reads as a figure on the card rather than
+   part of the name */
+.sf-card-rank {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.5em;
+    height: 1.5em;
+    margin-left: .5em;
+    padding: 0 .3em;
+    border: 1.5px solid currentColor;
+    border-radius: 5px;
+    font-size: .8125em;
+    font-weight: 700;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    vertical-align: .1em;
+}
+
 .sf-card-chips {
     flex: none;
     display: flex;
