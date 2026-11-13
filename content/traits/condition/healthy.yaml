@@ -6,4 +6,4 @@ summary: "At full HP."
 tags: [health, site-example, hit-points]
 category: condition
 conveyed: true
-temporary: "A character or object gains this trait while they are at their maximum HP total"
+temporary: "This character is at their maximum HP"

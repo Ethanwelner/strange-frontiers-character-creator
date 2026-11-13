@@ -6,5 +6,4 @@ summary: "Carrying half their carry weight or less."
 tags: [encumbrance]
 category: condition
 conveyed: true
-temporary: "A character has this Trait while their equipped items weigh half their carry weight or less"
-effect: "This Trait has no effect on its own."
+temporary: "This character is at half their carry weight or less"
