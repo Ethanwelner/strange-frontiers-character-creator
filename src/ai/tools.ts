@@ -42,7 +42,7 @@ const CONCEPT_SCHEMA = {
       items: { type: "string" },
       description:
         "Item ids the character carries, most needed first (about 3 to 8): the weapon and armor they'd fight in, the tools and kits of their " +
-        "trade and Traits, and gear for how they live and travel. Only items from the character's own plane or any plane, within its Wealth (the Kit Costs in the index). List an item twice to carry two.",
+        "trade and Traits, and gear for how they live and travel. Only items from the character's own plane or any plane, within its Wealth (the Kit Costs in the index). List an item twice to carry two; a consumable comes in bundles, so twice is two bundles.",
     },
     choices: {
       type: "array",

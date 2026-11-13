@@ -2,7 +2,7 @@
 // (Decisions → Character creation). Deterministic: same build and content,
 // same result.
 import { OPEN_CORE_STATS, STAT_CAP, STAT_GROUPS, StatId, type BackgroundPackage, type StatBlock, type Trait, type TraitChoice } from "../schema/index.js";
-import { Build, DEFAULT_CAMPAIGN, type Campaign, type PickKind, type StatGroup } from "./build.js";
+import { Build, DEFAULT_CAMPAIGN, isCounted, type Campaign, type PickKind, type StatGroup } from "./build.js";
 import type { Content } from "./content.js";
 import { clampWealth, FREE_CHASSIS_COST, kitBudget, kitCeiling, kitCostOf, startingCash } from "./wealth.js";
 
@@ -627,7 +627,8 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
   }
 
   // Rule 16: Wealth, from the packages and Traits, buys the starting kit.
-  // Each item costs its Kit Cost per unit (Basic items nothing); the total
+  // Each item costs its Kit Cost (Basic items nothing), a counted one per
+  // bundle it takes (21 Arrows is two quivers); the total
   // can't pass the budget, and no item can cost more than the ceiling. An AI
   // Core's dearest chassis up to Kit Cost 3 is free, ceiling or not.
   // Currency and items the player writes in (the GM prices those) cost
@@ -637,12 +638,13 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
   const ceiling = kitCeiling(wealth);
   const priced = build.items.flatMap((bi, index) => {
     const stock = bi.item ? content.items.find((it) => it.id === bi.item) : undefined;
-    return stock && stock.category !== "currency" ? [{ bi, index, stock, cost: kitCostOf(stock) }] : [];
+    const units = isCounted(stock ?? bi) ? Math.ceil(bi.qty / (stock?.bundle ?? 1)) : bi.qty;
+    return stock && stock.category !== "currency" ? [{ bi, index, stock, cost: kitCostOf(stock), units }] : [];
   });
   const freeChassis = kind?.core
     ? priced.filter((p) => p.stock.chassis && p.cost <= FREE_CHASSIS_COST && p.bi.qty > 0).sort((a, b) => b.cost - a.cost)[0]
     : undefined;
-  const spent = priced.reduce((n, p) => n + p.cost * p.bi.qty, 0) - (freeChassis?.cost ?? 0);
+  const spent = priced.reduce((n, p) => n + p.cost * p.units, 0) - (freeChassis?.cost ?? 0);
   if (campaign.kit !== false) {
     if (spent > budget) error("kit-budget", `The starting items cost ${spent} Kit Points, but Wealth ${wealth} gives ${budget}`, "items");
     for (const p of priced) {

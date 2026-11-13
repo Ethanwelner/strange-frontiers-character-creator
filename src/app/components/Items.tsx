@@ -11,7 +11,7 @@ type Kit = BuildSummary["kit"];
 
 // An item's Kit Cost as a chip, at creation: Basic for 0
 const kitChip = (stock: StockItem | undefined) => (stock ? [kitCostOf(stock) ? `Kit Cost ${kitCostOf(stock)}` : "Basic"] : undefined);
-import { ITEM_CATEGORIES, stockItemNamed, withItem, type Item, type ItemCategory } from "../items.js";
+import { ITEM_CATEGORIES, isCounted, stockItemNamed, withItem, withStock, type Item, type ItemCategory } from "../items.js";
 import type { Item as StockItem } from "../../schema/index.js";
 import { Button } from "./Button.js";
 import { SheetTitle } from "./sheet-layout.js";
@@ -83,7 +83,9 @@ function ItemPicker({ onAdd, custom, kit }: { onAdd: (picked: { stock: StockItem
     return words.every((w) => hay.includes(w));
   };
   const shown = STOCK.filter((i) => i.category === tab && matches(i));
-  const count = [...picked.values()].reduce((n, q) => n + q, 0);
+  // How many cards the picks add: a consumable's bundles stack into one,
+  // anything else is one card each
+  const count = [...picked].reduce((n, [id, q]) => n + (isCounted(itemById.get(id)!) ? 1 : q), 0);
   // At creation, what the picks cost in Kit Points
   const cost = [...picked].reduce((n, [id, q]) => n + kitCostOf(itemById.get(id)!) * q, 0);
   return (
@@ -124,13 +126,13 @@ function ItemPicker({ onAdd, custom, kit }: { onAdd: (picked: { stock: StockItem
                   stock={i}
                   category={i.category}
                   chips={kit ? kitChip(i) : undefined}
-                  count={selected ? qty : undefined}
+                  count={selected ? (isCounted(i) ? qty * (i.bundle ?? 1) : qty) : undefined}
                   fold={{ open, onToggle: () => toggleOpen(i.id) }}
                 >
-                  {/* Picked, how many to add */}
+                  {/* Picked, how many to add: bundles of a bundled item (its circle shows the units), else items */}
                   {selected && (
                     <div className="rank-step item-pick-count">
-                      <span className="rank-label">Count</span>
+                      <span className="rank-label">{i.bundle ? `Bundles of ${i.bundle}` : "Count"}</span>
                       <Button round="xs" aria-label={`One fewer ${i.name}`} disabled={qty <= 1} onClick={() => setCount(i.id, qty - 1)}>
                         <Sign is="minus" />
                       </Button>
@@ -339,14 +341,11 @@ export function Items({
     onChange(items.map((i) => (i === item ? { ...i, equipped } : equipped && isChassis(item) && isChassis(i) ? { ...i, equipped: false } : i)));
   const remove = (item: Item) => onChange(items.filter((i) => i !== item));
   const countOf = (n: string) => Math.max(1, Math.round(Number(n)) || 1);
-  // The items checked in the picker, as the game describes them
+  // The items checked in the picker, as the game describes them: a
+  // consumable's count is in bundles (2 of Arrows is 40 arrows), anything
+  // else's in separate items
   const addStock = (picked: { stock: StockItem; qty: number }[]) => {
-    onChange(
-      picked.reduce(
-        (list, { stock, qty: n }) => withItem(list, { item: stock.id, name: stock.name, qty: n, category: stock.category, equipped: false }),
-        items,
-      ),
-    );
+    onChange(picked.reduce((list, { stock, qty: n }) => withStock(list, stock, n), items));
     setAdding(false);
   };
   // A custom item: whatever the player writes, unless the name is a stock
@@ -355,14 +354,7 @@ export function Items({
     if (!name.trim()) return;
     const stock = stockItemNamed(content.items, name);
     const count = countOf(qty);
-    onChange(
-      withItem(
-        items,
-        stock
-          ? { item: stock.id, name: stock.name, qty: count, category: stock.category, equipped: false }
-          : { name: name.trim(), qty: count, category, equipped: false },
-      ),
-    );
+    onChange(stock ? withStock(items, stock, count) : withItem(items, { name: name.trim(), qty: count, category, equipped: false }));
     setName("");
     setQty("1");
     setAdding(false);
@@ -438,7 +430,7 @@ export function Items({
                 name={item.name}
                 stock={stock}
                 category={item.category}
-                count={item.qty}
+                count={isCounted(item) ? item.qty : undefined}
                 hp={isChassis(item) ? { value: item.hp, onChange: (hp) => update(item, { hp }) } : undefined}
                 chips={kit ? (item.item === kit.freeChassis ? ["Free chassis"] : kitChip(stock)) : undefined}
                 equip={{ checked: item.equipped, onChange: (equipped) => equip(item, equipped) }}
@@ -447,17 +439,19 @@ export function Items({
                   editing: editing.has(item.id),
                   onToggle: () => toggleEditing(item),
                   onRemove: () => remove(item),
-                  // How many at the left, then the name. The category stays as the item has it.
+                  // A counted item's count at the left, then the name. The category stays as the item has it.
                   fields: (
                     <>
-                      <input
-                        type="number"
-                        min={0}
-                        className="tools-qty"
-                        aria-label={`How many ${item.name}`}
-                        value={item.qty}
-                        onChange={(e) => update(item, { qty: Math.max(0, Math.round(Number(e.target.value)) || 0) })}
-                      />
+                      {isCounted(item) && (
+                        <input
+                          type="number"
+                          min={0}
+                          className="tools-qty"
+                          aria-label={`How many ${item.name}`}
+                          value={item.qty}
+                          onChange={(e) => update(item, { qty: Math.max(0, Math.round(Number(e.target.value)) || 0) })}
+                        />
+                      )}
                       <input type="text" className="sf-item-name-field" aria-label="Item name" value={item.name} onChange={(e) => update(item, { name: e.target.value })} />
                     </>
                   ),

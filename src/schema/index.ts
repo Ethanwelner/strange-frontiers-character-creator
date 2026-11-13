@@ -345,6 +345,10 @@ export const Item = BaseEntry.extend({
   modifiers: z.string().optional(),
   // Limited uses, like "uses 1: when thrown".
   uses: z.string().optional(),
+  // How many come together, for a consumable bought by the quiver or box:
+  // Arrows come 20 to a bundle. Kit Cost and value are per bundle; a
+  // character's count is in single units. Missing is 1.
+  bundle: z.number().int().min(2).optional(),
   // The slot only one item can fill at a time, like Body Armor or Headwear.
   slot: z.string().optional(),
   // One value, in the currency of the item's plane of origin.

@@ -6,6 +6,7 @@ summary: "A pouch of smooth stones or lead shot."
 tags: [ammunition]
 type: misc
 category: consumable
-uses: "uses 20: when fired"
+uses: "uses 1: when fired"
+bundle: 20
 value: 5
 currency: "ERC"

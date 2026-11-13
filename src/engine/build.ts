@@ -3,6 +3,10 @@ import { Id, ITEM_CATEGORIES, StatId, STAT_GROUPS } from "../schema/index.js";
 
 export { ITEM_CATEGORIES };
 
+// Whether an item is counted: consumables are, in single units (20 Arrows);
+// everything else is one of a kind, so two Daggers are two items.
+export const isCounted = (item: { category: string }) => item.category === "consumable";
+
 export const StatGroup = z.enum(Object.keys(STAT_GROUPS) as [keyof typeof STAT_GROUPS]);
 export type StatGroup = z.infer<typeof StatGroup>;
 
@@ -53,6 +57,9 @@ export const BuildItem = z.object({
   // A chassis's HP now (missing is full); it keeps its damage while the AI
   // Core is in another chassis. Cosmetic to the rules check.
   hp: z.number().int().optional(),
+  // A counted item whose qty is in single units, as every build since
+  // bundles writes (app/items.ts readItems converts older ones).
+  units: z.literal(true).optional(),
 });
 export type BuildItem = z.infer<typeof BuildItem>;
 

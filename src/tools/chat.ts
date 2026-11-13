@@ -11,7 +11,7 @@ import { runTool, ToolError } from "../ai/tools.js";
 import type { Content } from "../engine/parse.js";
 import type { BuildResult } from "../engine/validate.js";
 import { genderText } from "../app/draft.js";
-import { itemDetails, stockItemNamed } from "../app/items.js";
+import { isCounted, itemDetails, stockItemNamed } from "../app/items.js";
 import { STAT_GROUPS, TraitCategory } from "../schema/index.js";
 import { roll } from "./dice.js";
 import {
@@ -109,7 +109,7 @@ export const CHAT_TOOLS: Tool[] = [
   {
     name: "add_item",
     description:
-      "Add an item to the character's inventory. Items with the same name stack. An item named like one of the game's stock items (Dagger, Rope, Medkit) becomes that item, with its category and details.",
+      "Add an item to the character's inventory. An item named like one of the game's stock items (Dagger, Rope, Medkit) becomes that item, with its category and details. Consumables are counted in single units and stack: qty 10 of Arrows adds 10 arrows, and leaving qty out adds one bundle (a quiver of 20). Anything else is one of a kind: qty 2 of Dagger adds two Daggers.",
     input_schema: {
       type: "object",
       properties: {
@@ -123,7 +123,7 @@ export const CHAT_TOOLS: Tool[] = [
   },
   {
     name: "remove_item",
-    description: "Remove an item, or some of a stack, from the inventory by name.",
+    description: "Remove an item from the inventory by name: qty of a consumable (10 arrows), or qty of the items with that name (one of two Daggers); all of them without qty.",
     input_schema: {
       type: "object",
       properties: { name: { type: "string" }, qty: { type: "integer", minimum: 1 } },
@@ -244,7 +244,7 @@ export function sheetText(play: Play, result: BuildResult, content: Content): st
           .map((i) => {
             const stock = content.items.find((x) => x.id === i.item);
             const details = stock ? itemDetails(stock) : "";
-            return `${i.qty > 1 ? `${i.qty}× ` : ""}${i.name} (${i.category}${i.equipped ? ", equipped" : ""}${details ? `; ${details}` : ""}${i.notes ? `; ${i.notes}` : ""})`;
+            return `${isCounted(i) ? `${i.qty}× ` : ""}${i.name} (${i.category}${i.equipped ? ", equipped" : ""}${details ? `; ${details}` : ""}${i.notes ? `; ${i.notes}` : ""})`;
           })
           .join(", ")}`
       : "Items: none",
@@ -310,9 +310,10 @@ export function applyTool(
       if (!itemName) throw new ToolError("An item needs a name.");
       const stock = stockItemNamed(content.items, itemName);
       const category = stock?.category ?? ((ITEM_CATEGORIES as readonly string[]).includes(String(input.category)) ? (input.category as ItemCategory) : "gear");
-      const qty = Math.max(1, int(input.qty) ?? 1);
+      // A consumable's qty is in units, one bundle when left out; anything else's is how many separate items
+      const qty = Math.max(1, int(input.qty) ?? (isCounted({ category }) ? (stock?.bundle ?? 1) : 1));
       const next = addItem(play, { ...(stock ? { item: stock.id } : {}), name: stock?.name ?? itemName, qty, category, equipped: false, notes: str(input.notes) });
-      return { play: next, result: { items: next.items }, change: `Added ${qty > 1 ? `${qty}× ` : ""}${itemName}` };
+      return { play: next, result: { items: next.items }, change: `Added ${qty > 1 ? `${qty}× ` : ""}${stock?.name ?? itemName}` };
     }
     case "remove_item": {
       const itemName = str(input.name);

@@ -121,11 +121,16 @@ describe("a character in play", () => {
   });
 
   it("carries the build's items into play, and the play's items back out", () => {
+    // Two of an item that isn't counted come in as two items
     const play = startPlay({ ...grosh, items: [{ name: "Rope", qty: 2, category: "gear" }, { name: "" }] });
-    expect(play.items).toMatchObject([{ name: "Rope", qty: 2, category: "gear", equipped: false }]);
+    expect(play.items).toMatchObject([
+      { name: "Rope", qty: 1, category: "gear", equipped: false },
+      { name: "Rope", qty: 1, category: "gear", equipped: false },
+    ]);
     expect(play.draft.items).toBeUndefined();
     const out = playBuild(addItem(play, { name: "Ration", qty: 3, category: "consumable", equipped: false }));
-    expect((out.items as { name: string }[]).map((i) => i.name)).toEqual(["Rope", "Ration"]);
+    expect((out.items as { name: string }[]).map((i) => i.name)).toEqual(["Rope", "Rope", "Ration"]);
+    expect((out.items as { qty: number; units?: true }[])[2]).toMatchObject({ qty: 3, units: true });
     expect(checkPlay(fromBuild(out), content).errors.filter((e) => e.code === "schema")).toEqual([]);
     // No items, no items field.
     expect(playBuild(fresh())).not.toHaveProperty("items");

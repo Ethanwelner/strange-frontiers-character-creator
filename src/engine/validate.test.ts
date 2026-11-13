@@ -952,6 +952,14 @@ describe("rule 16: Wealth buys the starting kit", () => {
     expect(s.kit.cash).toEqual({ amount: 20, currency: "Luras" });
   });
 
+  it("costs a counted item per bundle it takes", () => {
+    // Arrows priced at Kit Cost 1 a quiver of 20: 21 arrows take two quivers
+    const dear = { ...plain, items: plain.items.map((i) => (i.id === "arrows" ? { ...i, kitCost: 1 } : i)) };
+    const arrows = (qty: number) => ({ ...own("arrows", qty), category: "consumable" as const, units: true as const });
+    expect(check({ ...human, items: [arrows(20)] }, dear).summary!.kit).toMatchObject({ spent: 1 });
+    expect(check({ ...human, items: [arrows(21)] }, dear).summary!.kit).toMatchObject({ spent: 2 });
+  });
+
   it("stops at the budget and the ceiling", () => {
     expect(codes(check({ ...human, items: [own("pistol", 4)] }, plain))).toEqual(["kit-budget"]);
     expect(codes(check({ ...human, items: [own("chainmail")] }, plain))).toEqual(["kit-ceiling"]);
