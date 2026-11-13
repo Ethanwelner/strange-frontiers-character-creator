@@ -1,0 +1,15 @@
+id: lighten
+name: "Lighten"
+status: placeholder
+plane: any
+summary: "Makes an Item weigh less."
+tags: [magic, spell, enchantment, carry-weight]
+backgroundKeywords: [magic]
+category: ability
+types: [enchantment, potion, artifact]
+ranked: true
+minStats: { magic: 2 }
+# On the Magic list: its own tab on the Traits step, open to every character.
+list: magic
+effect: "This character gains the Cast Lighten Action."
+action: "Cast Lighten: This character may spend 1 MP to make an Item it touches weigh half as much for four hours. At Rank 3 or higher, it may spend 3 MP to make it weigh a quarter as much instead."

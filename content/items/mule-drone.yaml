@@ -1,0 +1,16 @@
+id: mule-drone
+name: "Mule Drone"
+status: draft
+plane: earth
+summary: "A four-legged cargo drone that follows its owner and carries the load."
+tags: [carry-weight, drone, robotics, modern]
+type: equipment
+category: gear
+value: 5000
+currency: "ERC"
+weight: 30
+# Equipped means it's along with the character: +40 kg carry weight, and it
+# carries itself
+carryBonus: 40
+carriesItself: true
+notes: "While equipped, it follows its owner and gives +40 kg carry weight. It walks on its own, so its weight doesn't count. It has its own HP and can be targeted."

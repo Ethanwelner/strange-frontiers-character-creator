@@ -35,14 +35,73 @@ export function itemLoad(item: { qty: number; equipped: boolean; category: strin
   return item.category === "consumable" ? (stock.weight * item.qty) / (stock.bundle ?? 1) : stock.weight * item.qty;
 }
 
+// What a stock item tells carry weight: its weight, bundle, tags (a shield's
+// `shield`) and the carry fields some items have.
+export interface CarryStock {
+  weight?: number;
+  bundle?: number;
+  tags?: string[];
+  carryBonus?: number;
+  carriesItself?: boolean;
+  holdsItems?: number;
+}
+
+export interface CarryResult {
+  load: number;
+  limit: number;
+  state: Encumbrance;
+  // Beast of Burden: still moves while Heavily Encumbered, at a quarter
+  beastOfBurden: boolean;
+}
+
+// The load, carry weight and encumbrance Condition for a character with
+// `physical` Physical, its items (each with its stock entry) and its held
+// Traits. Traits and items that change carry weight stack:
+//   Armor Training   equipped Armor but shields counts half; none at Rank 2+
+//   Arms Bearer      equipped Weapons don't count
+//   Shield Bearer    equipped shields don't count
+//   Pack Mule        +10 kg carry weight per Rank
+//   Beast of Burden  moves at a quarter of its Movement when Heavily Encumbered
+//   items            carryBonus adds carry weight; carriesItself doesn't count;
+//                    holdsItems: that many equipped Gear items don't count
+export function carryOf(
+  physical: number,
+  items: { qty: number; equipped: boolean; category: string; stock?: CarryStock }[],
+  held: { trait: string; rank: number }[] = [],
+): CarryResult {
+  const rank = (id: string) => held.find((h) => h.trait === id)?.rank ?? 0;
+  const armorRank = rank("armor-training");
+  const equipped = items.filter((i) => i.equipped);
+  const isShield = (i: (typeof items)[number]) => i.category === "armor" && (i.stock?.tags ?? []).includes("shield");
+  const share = (i: (typeof items)[number]) => {
+    if (i.stock?.carriesItself) return 0;
+    if (i.category === "weapon" && rank("arms-bearer")) return 0;
+    if (isShield(i)) return rank("shield-bearer") ? 0 : 1;
+    if (i.category === "armor" && armorRank) return armorRank >= 2 ? 0 : 0.5;
+    return 1;
+  };
+  // Gear a holder (a Bottomless Satchel) keeps, the heaviest first
+  const holds = equipped.reduce((n, i) => n + (i.stock?.holdsItems ?? 0) * i.qty, 0);
+  const inHolder = new Set(
+    equipped
+      .filter((i) => i.category === "gear" && !i.stock?.holdsItems && !i.stock?.carriesItself)
+      .sort((a, b) => itemLoad(b, b.stock) - itemLoad(a, a.stock))
+      .slice(0, holds),
+  );
+  const load = equipped.reduce((n, i) => n + (inHolder.has(i) ? 0 : itemLoad(i, i.stock) * share(i)), 0);
+  const bonus = equipped.reduce((n, i) => n + (i.stock?.carryBonus ?? 0) * i.qty, 0);
+  const limit = carryWeight(physical) + 10 * rank("pack-mule") + bonus;
+  return { load, limit, state: encumbrance(load, limit), beastOfBurden: rank("beast-of-burden") > 0 };
+}
+
 // Movement under an encumbrance Condition: halved when Encumbered, 0 when
-// Heavily Encumbered, as it is otherwise. Keeps the unit: "10 m" halves to
-// "5 m". Movement it can't read stays as it is.
-export function movementUnder(movement: string, state: Encumbrance): string {
+// Heavily Encumbered (a quarter with Beast of Burden), as it is otherwise.
+// Keeps the unit: "10 m" halves to "5 m". Movement it can't read stays as it is.
+export function movementUnder(movement: string, state: Encumbrance, beastOfBurden = false): string {
   if (state !== "encumbered" && state !== "heavily-encumbered") return movement;
   const m = movement.match(/^\s*([\d.]+)\s*(.*)$/);
   if (!m) return movement;
-  const n = state === "heavily-encumbered" ? 0 : Number(m[1]) / 2;
+  const n = state === "heavily-encumbered" ? (beastOfBurden ? Number(m[1]) / 4 : 0) : Number(m[1]) / 2;
   return `${Number.isInteger(n) ? n : n.toFixed(1)} ${m[2]}`.trim();
 }
 

@@ -1,0 +1,15 @@
+id: bottomless-satchel
+name: "Bottomless Satchel"
+status: draft
+plane: isekai
+summary: "A Dreftian leather satchel that holds far more than it should, and weighs the same full or empty."
+tags: [artifact, magic, storage, carry-weight]
+type: equipment
+category: gear
+slot: "Back"
+value: 1200
+currency: "Luras"
+weight: 1
+# Up to 10 equipped Gear Items inside it don't count toward carry weight
+holdsItems: 10
+notes: "Holds up to 10 Gear Items (not Weapons or Armor). Equipped Items inside it don't count toward carry weight."

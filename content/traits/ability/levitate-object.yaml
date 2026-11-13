@@ -1,0 +1,15 @@
+id: levitate-object
+name: "Levitate Object"
+status: placeholder
+plane: any
+summary: "Floats an Item along beside the caster."
+tags: [magic, spell, conjuration, carry-weight]
+backgroundKeywords: [magic]
+category: ability
+types: [conjuration]
+ranked: true
+minStats: { magic: 3 }
+# On the Magic list: its own tab on the Traits step, open to every character.
+list: magic
+effect: "This character gains the Cast Levitate Object Action."
+action: "Cast Levitate Object: This character may spend 2 MP to make an Item weighing up to 20 kg per Rank float alongside it for one hour. While it floats, the Item doesn't count toward carry weight."

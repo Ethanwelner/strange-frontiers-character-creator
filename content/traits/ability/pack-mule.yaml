@@ -1,0 +1,11 @@
+id: pack-mule
+name: "Pack Mule"
+status: draft
+plane: any
+summary: "Built to haul."
+tags: [carry-weight, labor]
+backgroundKeywords: [labor, athletics, military]
+category: ability
+ranked: true
+minStats: { power: 3 }
+effect: "This character's carry weight is 10 kg higher per Rank."

@@ -1,0 +1,11 @@
+id: second-wind
+name: "Second Wind"
+status: draft
+plane: any
+summary: "Finds the strength for one more push."
+tags: [carry-weight, athletics]
+backgroundKeywords: [athletics, military]
+category: ability
+minStats: { endurance: 4 }
+effect: "This character gains the Second Wind Action."
+action: "Second Wind: Once per Incident, this character may ignore its encumbrance Condition until the end of the next Round."

@@ -1,0 +1,14 @@
+id: unburden
+name: "Unburden"
+status: placeholder
+plane: any
+summary: "Lifts the weight off an ally for a moment."
+tags: [magic, spell, restoration, carry-weight]
+backgroundKeywords: [magic]
+category: ability
+types: [restoration]
+minStats: { magic: 2 }
+# On the Magic list: its own tab on the Traits step, open to every character.
+list: magic
+effect: "This character gains the Cast Unburden Action."
+action: "Cast Unburden: This character may spend 1 MP to treat a character within 10 m as one encumbrance Condition lighter until the end of the Round."

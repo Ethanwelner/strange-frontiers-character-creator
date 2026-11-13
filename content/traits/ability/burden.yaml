@@ -1,0 +1,15 @@
+id: burden
+name: "Burden"
+status: placeholder
+plane: any
+summary: "Makes a target's gear drag it down."
+tags: [magic, spell, enchantment, attack, carry-weight]
+backgroundKeywords: [magic]
+category: ability
+types: [enchantment, potion]
+ranked: true
+minStats: { magic: 3 }
+# On the Magic list: its own tab on the Traits step, open to every character.
+list: magic
+effect: "This character gains the Cast Burden Action."
+action: "Cast Burden: This character may spend 2 MP to Attack a character within 10 m (Attack Stat: Magic). On a hit, the target's equipped Items weigh 10 kg more per Rank for one minute."

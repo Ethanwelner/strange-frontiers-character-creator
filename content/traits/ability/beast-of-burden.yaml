@@ -1,0 +1,10 @@
+id: beast-of-burden
+name: "Beast of Burden"
+status: draft
+plane: any
+summary: "Keeps moving under a load that would pin anyone else."
+tags: [carry-weight, labor]
+backgroundKeywords: [labor, athletics]
+category: ability
+minStats: { power: 5, endurance: 5 }
+effect: "While Heavily Encumbered, this character can still move, at a quarter of its Movement."

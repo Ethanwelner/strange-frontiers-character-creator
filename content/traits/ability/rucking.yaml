@@ -1,0 +1,10 @@
+id: rucking
+name: "Rucking"
+status: draft
+plane: any
+summary: "Long marches under a full pack."
+tags: [carry-weight, military, travel]
+backgroundKeywords: [military, exploration, wilderness]
+category: ability
+minStats: { endurance: 3 }
+effect: "Lightly Encumbered doesn't give this character -1 Priority."

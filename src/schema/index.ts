@@ -358,6 +358,14 @@ export const Item = BaseEntry.extend({
   // Arrows). Missing for what isn't carried: money, animals, vehicles,
   // natural weapons and chassis.
   weight: z.number().min(0).optional(),
+  // Carry weight it adds while equipped, in kg, like a Hauler Exoframe's 30.
+  carryBonus: z.number().min(0).optional(),
+  // Equipped, its own weight doesn't count: it carries itself, like a Mule
+  // Drone walking alongside.
+  carriesItself: z.boolean().optional(),
+  // How many equipped Gear items (not Weapons or Armor) it holds whose weight
+  // doesn't count, the heaviest first, like a Bottomless Satchel's 10.
+  holdsItems: z.number().int().min(1).optional(),
   notes: z.string().optional(),
   // A chassis: equipped, an AI Core inhabits it.
   chassis: Chassis.optional(),

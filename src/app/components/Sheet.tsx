@@ -5,8 +5,8 @@ import { coreStatsShown } from "../check.js";
 import { sheetStatGroups, StatBlock } from "./stats.js";
 import { content, itemById, kindById, packageById, traitById } from "../content.js";
 import type { Draft, Looks } from "../draft.js";
-import { carriedLoad, type Item } from "../items.js";
-import { carryWeight, encumbrance, movementUnder, type Encumbrance } from "../../engine/carry.js";
+import { type Item } from "../items.js";
+import { carryOf, movementUnder } from "../../engine/carry.js";
 import type { HeldCondition } from "../conditions.js";
 import { CharacterLine } from "./CharacterLine.js";
 import { Conditions } from "./Conditions.js";
@@ -189,11 +189,11 @@ export function Sheet({
   const held = useMemo(() => summary?.traits ?? [], [summary]);
   // The equipped items' weight against the carry weight its Physical core
   // stat gives, and the encumbrance Condition that sets (engine/carry.ts)
-  const carry = useMemo(() => {
-    const limit = carryWeight(summary?.coreStats.physical ?? 0);
-    const load = carriedLoad(items);
-    return { load, limit, state: encumbrance(load, limit) as Encumbrance };
-  }, [items, summary]);
+  // and the Traits and items that change it, like Pack Mule
+  const carry = useMemo(
+    () => carryOf(summary?.coreStats.physical ?? 0, items.map((i) => ({ ...i, stock: i.item ? itemById.get(i.item) : undefined })), summary?.traits ?? []),
+    [items, summary],
+  );
   const isKnowledge = (h: Held) => traitById.get(h.trait)?.category === "knowledge";
   const isLanguage = (h: Held) => traitById.get(h.trait)?.category === "language";
   // Knowledges and Languages, each in a box of its own
@@ -316,7 +316,7 @@ export function Sheet({
           )
         }
         stats={stats ?? <StatBlock max={rules.statMax} groups={sheetStatGroups(draft, result)} />}
-        movement={summary?.movement && movementUnder(summary.movement, carry.state)}
+        movement={summary?.movement && movementUnder(summary.movement, carry.state, carry.beastOfBurden)}
         resistances={<Resistances items={items} held={inEffect} />}
         conditions={
           <Conditions
