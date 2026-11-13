@@ -1,0 +1,15 @@
+id: gravity-well
+name: "Gravity Well"
+status: placeholder
+plane: any
+summary: "Crushes an area under its own weight."
+tags: [magic, spell, conjuration, attack, carry-weight]
+backgroundKeywords: [magic]
+category: ability
+types: [conjuration]
+ranked: true
+minStats: { magic: 5 }
+# On the Magic list: its own tab on the Traits step, open to every character.
+list: magic
+effect: "This character gains the Cast Gravity Well Action."
+action: "Cast Gravity Well: This character may spend 4 MP to Attack with a temporary weapon that has the following profile: (Ranged) (max range 20 m) (2 Blunt per Rank) (Attack Stat: Magic) (area of effect: 2 m per Rank). Characters hit are treated as two encumbrance Conditions heavier until the end of the next Round."

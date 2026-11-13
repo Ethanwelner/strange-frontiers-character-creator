@@ -1,0 +1,13 @@
+id: reinforced-servos
+name: "Reinforced Servos"
+status: draft
+plane: earth
+summary: "Heavy-duty actuators fitted into a chassis's limbs."
+tags: [carry-weight, chassis, ai-core, upgrade, modern]
+type: equipment
+category: other
+value: 3000
+currency: "ERC"
+# Installed in the chassis an AI Core inhabits: +20 kg carry weight
+carryBonus: 20
+notes: "A chassis upgrade. While equipped, the chassis an AI Core inhabits gives +20 kg carry weight."

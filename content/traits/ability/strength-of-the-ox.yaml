@@ -1,0 +1,15 @@
+id: strength-of-the-ox
+name: "Strength of the Ox"
+status: placeholder
+plane: any
+summary: "Lends a character the back of an ox."
+tags: [magic, spell, enchantment, carry-weight]
+backgroundKeywords: [magic]
+category: ability
+types: [enchantment, potion]
+ranked: true
+minStats: { magic: 2 }
+# On the Magic list: its own tab on the Traits step, open to every character.
+list: magic
+effect: "This character gains the Cast Strength of the Ox Action."
+action: "Cast Strength of the Ox: This character may spend 2 MP to give a character it touches 10 kg more carry weight per Rank for one hour."

@@ -1,0 +1,16 @@
+id: hauler-exoframe
+name: "Hauler Exoframe"
+status: draft
+plane: earth
+summary: "A powered frame of struts and servos strapped over the body, for dock work, cargo holds and long hauls."
+tags: [carry-weight, labor, powered, modern]
+type: wearable
+category: gear
+slot: "Outerwear"
+value: 9000
+currency: "ERC"
+weight: 25
+# Equipped and powered: +30 kg carry weight, and its own weight doesn't count
+carryBonus: 30
+carriesItself: true
+notes: "While equipped, gives +30 kg carry weight, and its own weight doesn't count toward carry weight."

@@ -1,0 +1,10 @@
+id: anchored
+name: "Anchored"
+status: draft
+plane: any
+summary: "Hard to shift when weighed down."
+tags: [combat, carry-weight]
+backgroundKeywords: [close-combat, labor]
+category: ability
+minStats: { endurance: 4 }
+effect: "While Encumbered or Heavily Encumbered, this character may request Advantage on rolls to resist being pushed, knocked prone or moved against its will."

@@ -238,7 +238,7 @@ function CashBadges({ cash, currency, onChange }: { cash: Record<string, number>
 // Condition the load gives.
 function CarryBadge({ load, limit, state }: { load: number; limit: number; state: string }) {
   const condition = traitById.get(state)?.name ?? state;
-  const details = `Equipped items weigh ${kg(load)} kg of a ${limit} kg carry weight (${CARRY_BASE} kg + ${CARRY_PER_PHYSICAL} kg per Physical): ${condition}`;
+  const details = `Equipped items weigh ${kg(load)} kg of a ${limit} kg carry weight (${CARRY_BASE} kg + ${CARRY_PER_PHYSICAL} kg per Physical, plus any Traits or items that add to it): ${condition}`;
   const over = state === "encumbered" || state === "heavily-encumbered";
   return (
     <span className={`sf-cash-badge sf-carry-badge${over ? " is-over" : ""}`} title={details} aria-label={details}>

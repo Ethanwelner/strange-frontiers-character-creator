@@ -12,7 +12,7 @@ import type { Content } from "../engine/parse.js";
 import type { BuildResult } from "../engine/validate.js";
 import { genderText } from "../app/draft.js";
 import { isCounted, itemDetails, stockItemNamed } from "../app/items.js";
-import { carryWeight, encumbrance, itemLoad, kg, movementUnder } from "../engine/carry.js";
+import { carryOf as carryFor, kg, movementUnder } from "../engine/carry.js";
 import { STAT_GROUPS, TraitCategory } from "../schema/index.js";
 import { roll } from "./dice.js";
 import {
@@ -166,9 +166,12 @@ const name = (content: Content, id: string) => content.traits.find((t) => t.id =
 // The equipped items' weight against the carry weight, and the encumbrance
 // Condition it gives (engine/carry.ts)
 function carryOf(play: Play, result: BuildResult, content: Content) {
-  const limit = carryWeight(result.summary?.coreStats.physical ?? 0);
-  const load = play.items.reduce((n, i) => n + itemLoad(i, content.items.find((x) => x.id === i.item)), 0);
-  return { load: kg(load), limit, state: encumbrance(load, limit) };
+  const c = carryFor(
+    result.summary?.coreStats.physical ?? 0,
+    play.items.map((i) => ({ ...i, stock: content.items.find((x) => x.id === i.item) })),
+    result.summary?.traits ?? [],
+  );
+  return { ...c, load: kg(c.load) };
 }
 
 // The tracker as it stands, read from the play: what get_state returns.
@@ -226,7 +229,7 @@ export function sheetText(play: Play, result: BuildResult, content: Content): st
   if (kind?.features.length) lines.push(`Kind features: ${kind.features.map((f) => `${f.name}: ${f.description}`).join(" | ")}`);
   if (s) {
     const carry = carryOf(play, result, content);
-    const moved = movementUnder(s.movement, carry.state);
+    const moved = movementUnder(s.movement, carry.state, carry.beastOfBurden);
     lines.push(
       `Core stats: ${s.coreAccess.map((g) => `${g} ${s.coreStats[g]}`).join(", ")}`,
       `Focus stats: ${(Object.keys(STAT_GROUPS) as (keyof typeof STAT_GROUPS)[])

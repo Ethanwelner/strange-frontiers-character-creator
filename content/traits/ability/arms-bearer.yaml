@@ -1,0 +1,10 @@
+id: arms-bearer
+name: "Arms Bearer"
+status: draft
+plane: any
+summary: "Carries a weapon like it's part of the arm."
+tags: [combat, weapon, carry-weight]
+backgroundKeywords: [military, close-combat, archaic-ranged, modern-ranged]
+category: ability
+minStats: { power: 3, grace: 3 }
+effect: "This character's equipped Weapons don't count toward carry weight."

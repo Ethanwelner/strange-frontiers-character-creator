@@ -1,0 +1,11 @@
+id: armor-training
+name: "Armor Training"
+status: draft
+plane: any
+summary: "Used to living in armor."
+tags: [combat, armor, carry-weight]
+backgroundKeywords: [military, close-combat]
+category: ability
+ranked: true
+minStats: { endurance: 4 }
+effect: "This character's equipped Armor, other than shields, counts half its weight toward carry weight. At Rank 2 or higher, it doesn't count at all."

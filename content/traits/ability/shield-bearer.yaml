@@ -1,0 +1,10 @@
+id: shield-bearer
+name: "Shield Bearer"
+status: draft
+plane: any
+summary: "A shield on the arm all day, every day."
+tags: [combat, shield, carry-weight]
+backgroundKeywords: [close-combat, military]
+category: ability
+minStats: { power: 4 }
+effect: "This character's equipped shields don't count toward carry weight."
