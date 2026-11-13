@@ -88,15 +88,15 @@ describe("traitOptions", () => {
     expect(ids).not.toContain("thieves-cant");
   });
 
-  it("keeps Wielder Skills on their own tab, spending a Background pick on the character's own", () => {
+  it("keeps Wield Skills on their own tab, spending a Background pick on the character's own", () => {
     const skills = traitOptions(human, bundled, campaign, "universal")!.map((o) => o.trait.id);
     expect(skills).not.toContain("wielder-shortsword");
-    const wielder = new Map(traitOptions(human, bundled, campaign, { list: "wielder" })!.map((o) => [o.trait.id, o]));
-    // Royal Guard's close-combat keyword puts Wielder: Shortsword on the Background Trait list.
-    expect(wielder.get("wielder-shortsword")!.pick).toBe("background");
-    // Wielder: Pistol is modern-ranged, which none of its packages have.
-    expect(wielder.get("wielder-pistol")!.pick).toBe("universal");
-    expect(wielder.get("wielder-pistol")!.reasons).toEqual([]);
+    const wield = new Map(traitOptions(human, bundled, campaign, { list: "wield" })!.map((o) => [o.trait.id, o]));
+    // Royal Guard's close-combat keyword puts Wield: Shortsword on the Background Trait list.
+    expect(wield.get("wielder-shortsword")!.pick).toBe("background");
+    // Wield: Pistol is modern-ranged, which none of its packages have.
+    expect(wield.get("wielder-pistol")!.pick).toBe("universal");
+    expect(wield.get("wielder-pistol")!.reasons).toEqual([]);
   });
 
   it("gives the engine's reasons for picks it would reject", () => {

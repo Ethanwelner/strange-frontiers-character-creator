@@ -1,12 +1,12 @@
 id: wielder-musket
-name: "Wielder: Musket"
+name: "Wield: Musket"
 status: draft
 plane: any
 summary: "Fighting with, and maintaining, a musket."
 tags: [combat, firearms, muskets, site-example]
 backgroundKeywords: [archaic-ranged]
 category: skill
-list: wielder
+list: wield
 ranked: true
 minStats: { grace: 3, power: 2, intuition: 3 }
 effect: "- Rank *5 added to skill check rolls involving a Musket.\n- +3 to Attack Rolls made with a Musket.\n- This character is capable of performing the basic tasks of maintaining a Musket without a skill check."

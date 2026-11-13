@@ -1,12 +1,12 @@
 id: wielder-flamethrower
-name: "Wielder: Flamethrower"
+name: "Wield: Flamethrower"
 status: draft
 plane: earth
 summary: "Fighting with, and maintaining, flamethrowers and their fuel tanks."
 tags: [combat, heavy weapons, fire]
 backgroundKeywords: [modern-ranged]
 category: skill
-list: wielder
+list: wield
 ranked: true
 minStats: { endurance: 3, power: 3 }
 effect: "- Rank *5 added to skill check rolls involving a Flamethrower.\n- +3 to Attack Rolls made with a Flamethrower.\n- This character is capable of performing the basic tasks of maintaining a Flamethrower without a skill check."

@@ -43,7 +43,7 @@ type Held = NonNullable<BuildResult["summary"]>["traits"][number];
 
 // Where a held Trait came from, as badges: Origin, Profession or Past for a
 // Trait selected from that package's choices in the Background step. A
-// package's grants (a Knight's Wielder: Longsword) come with it rather than
+// package's grants (a Knight's Wield: Longsword) come with it rather than
 // being selected, and a Trait bought with a pick isn't one, even from a
 // package's Background Keywords, so neither gets a badge; nor does the Kind's.
 function sourceBadges(held: Held): string[] {

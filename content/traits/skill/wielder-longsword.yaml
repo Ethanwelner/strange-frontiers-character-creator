@@ -1,12 +1,12 @@
 id: wielder-longsword
-name: "Wielder: Longsword"
+name: "Wield: Longsword"
 status: draft
 plane: any
 summary: "Fighting with, and maintaining, a longsword."
 tags: [combat, melee, swords, site-example]
 backgroundKeywords: [close-combat]
 category: skill
-list: wielder
+list: wield
 ranked: true
 minStats: { grace: 4, power: 4, endurance: 4 }
 effect: "- Rank *5 added to skill check rolls involving a Longsword.\n- +3 to Attack Rolls made with a Longsword.\n- This character is capable of performing the basic tasks of maintaining a Longsword without a skill check."

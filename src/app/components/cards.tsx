@@ -60,9 +60,10 @@ export function traitCardKind(t: Pick<Trait, "category" | "types"> | undefined):
 
 // The kinds of Trait card shown by an icon before the name, in place of a
 // category chip
-export const KIND_ICON: Partial<Record<TraitCardKind, { icon: "knowledge" | "language"; label: string }>> = {
+export const KIND_ICON: Partial<Record<TraitCardKind, { icon: "knowledge" | "language" | "skill"; label: string }>> = {
   knowledge: { icon: "knowledge", label: "Knowledge" },
   language: { icon: "language", label: "Language" },
+  skill: { icon: "skill", label: "Skill" },
 };
 
 // Isekai's cards take Dreft's green bar and edge
@@ -96,7 +97,8 @@ const foldClass = (fold: { open: boolean } | undefined) => (fold ? (fold.open ? 
 
 /**
  * A Trait card: the name bar (its kind's icon, so far a Knowledge's
- * mortarboard or a Language's speech bubbles, the setting's mark, the name, its Rank, then
+ * mortarboard, a Language's speech bubbles or a Skill's pencil and
+ * wrench, the setting's mark, the name, its Rank in a rounded square, then
  * `chips` at the right), then the body (`children`).
  *
  * fold     Opens and closes from the chevron at the end of the bar.
@@ -141,7 +143,11 @@ export function TraitCard({
           {KIND_ICON[kind] && <Icon name={KIND_ICON[kind].icon} label={KIND_ICON[kind].label} className="sf-card-kind-icon" />}
           <SettingIcon plane={plane} />
           {name}
-          {rank !== undefined ? ` (${rank})` : ""}
+          {rank !== undefined && (
+            <span className="sf-card-rank" title={`Rank ${rank}`} aria-label={`Rank ${rank}`}>
+              {rank}
+            </span>
+          )}
         </span>
         {(hasChips || fold || actions) && (
           <span className="sf-card-chips">

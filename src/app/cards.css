@@ -120,8 +120,8 @@
 }
 
 /* A Trait card's kind as an icon before its name, in the bar's text
-   color, in place of a category chip: so far a Knowledge's mortarboard or a
-   Language's speech bubbles */
+   color, in place of a category chip: so far a Knowledge's mortarboard, a
+   Language's speech bubbles or a Skill's pencil and wrench */
 .sf-trait-card .sf-card-name > .sf-card-kind-icon {
     flex-shrink: 0;
     width: 1.3em;
@@ -129,6 +129,26 @@
     margin-right: .45em;
     vertical-align: -.2em;
     fill: currentColor;
+}
+
+/* A Trait card's Rank, after its name: the number in a rounded square, in
+   the bar's text color, so it reads as a figure on the card rather than
+   part of the name */
+.sf-card-rank {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.5em;
+    height: 1.5em;
+    margin-left: .5em;
+    padding: 0 .3em;
+    border: 1.5px solid currentColor;
+    border-radius: 5px;
+    font-size: .8125em;
+    font-weight: 700;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    vertical-align: .1em;
 }
 
 .sf-card-chips {

@@ -123,7 +123,7 @@ export function traitOptions(draft: Draft, content: Content, campaign: Campaign,
     });
     // A list's tab spends a Background pick when the Trait is on this
     // character's Background Trait list and one is left, like a Soldier's
-    // Wielder: Rifle, and a Universal pick otherwise. A Background-only Trait
+    // Wield: Rifle, and a Universal pick otherwise. A Background-only Trait
     // only ever takes a Background pick.
     let { pick, added } = attempt(typeof tab === "string" ? tab : "background");
     if (typeof tab !== "string" && added.length && !trait.background) ({ pick, added } = attempt("universal"));

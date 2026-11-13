@@ -230,7 +230,7 @@
     }
 }
 
-/* A Knowledges, Languages or Items title's icon, before its name */
+/* A Knowledges, Languages, Skills or Items title's icon, before its name */
 .sf-sheet-title-label {
     display: inline-flex;
     align-items: center;
@@ -243,9 +243,14 @@
         fill: currentColor;
     }
 
-    /* The backpack is narrower than the others: the same height, its own width */
+    /* The backpack and the Skills' square are narrower than the others:
+       the same height, their own width */
     .sf-sheet & > .icon-backpack {
         width: .875em;
+    }
+
+    .sf-sheet & > .icon-skill {
+        width: 1em;
     }
 }
 

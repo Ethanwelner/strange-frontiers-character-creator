@@ -69,7 +69,7 @@ export const SHEET_RULES: Record<SheetContext, SheetRules> = {
 };
 
 // A box's ruled title, with anything along its line after the rule
-export function SheetTitle({ children, aside, as: Tag = "h3", icon }: { children: ReactNode; aside?: ReactNode; as?: "h3" | "h4"; icon?: "knowledge" | "language" | "backpack" }) {
+export function SheetTitle({ children, aside, as: Tag = "h3", icon }: { children: ReactNode; aside?: ReactNode; as?: "h3" | "h4"; icon?: "knowledge" | "language" | "skill" | "backpack" }) {
   const title = (
     <Tag className="sf-sheet-title">
       {icon ? (
@@ -240,7 +240,7 @@ export function SheetLayout(props: SheetLayoutProps) {
             {abilities}
           </div>
           <div className="sf-sheet-box sf-sheet-skills">
-            <SheetTitle aside={skillsAside}>Skills</SheetTitle>
+            <SheetTitle icon="skill" aside={skillsAside}>Skills</SheetTitle>
             {skills}
           </div>
         </div>

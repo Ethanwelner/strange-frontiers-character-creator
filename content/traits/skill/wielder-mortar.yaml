@@ -1,12 +1,12 @@
 id: wielder-mortar
-name: "Wielder: Mortar"
+name: "Wield: Mortar"
 status: draft
 plane: earth
 summary: "Crewing, aiming and maintaining mortars and light field artillery."
 tags: [combat, explosives, artillery, military]
 backgroundKeywords: [modern-ranged, military]
 category: skill
-list: wielder
+list: wield
 ranked: true
 minStats: { logic: 3, intuition: 3, endurance: 2 }
 effect: "- Rank *5 added to skill check rolls involving a Mortar.\n- +3 to Attack Rolls made with a Mortar.\n- This character is capable of performing the basic tasks of maintaining a Mortar without a skill check."
