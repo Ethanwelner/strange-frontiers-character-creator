@@ -1,0 +1,11 @@
+id: lightly-encumbered
+name: "Lightly Encumbered"
+status: draft
+plane: any
+summary: "Carrying more than half their carry weight."
+tags: [encumbrance, combat]
+category: condition
+conveyed: true
+temporary: "A character has this Trait while their equipped items weigh more than half their carry weight, up to all of it"
+effect: "This character has -1 Priority."
+modifiers: "Priority -1"

@@ -5,7 +5,8 @@ import { coreStatsShown } from "../check.js";
 import { sheetStatGroups, StatBlock } from "./stats.js";
 import { content, itemById, kindById, packageById, traitById } from "../content.js";
 import type { Draft, Looks } from "../draft.js";
-import type { Item } from "../items.js";
+import { carriedLoad, type Item } from "../items.js";
+import { carryWeight, encumbrance, movementUnder, type Encumbrance } from "../../engine/carry.js";
 import type { HeldCondition } from "../conditions.js";
 import { CharacterLine } from "./CharacterLine.js";
 import { Conditions } from "./Conditions.js";
@@ -186,6 +187,13 @@ export function Sheet({
   // coast" or a Hunter's quarry. Contacts get their own list.
   const places = (trait: string) => draft.choices.filter((c) => c.trait === trait && c.from !== "contact" && isFreeTextPool(c.from)).flatMap((c) => c.traits);
   const held = useMemo(() => summary?.traits ?? [], [summary]);
+  // The equipped items' weight against the carry weight its Physical core
+  // stat gives, and the encumbrance Condition that sets (engine/carry.ts)
+  const carry = useMemo(() => {
+    const limit = carryWeight(summary?.coreStats.physical ?? 0);
+    const load = carriedLoad(items);
+    return { load, limit, state: encumbrance(load, limit) as Encumbrance };
+  }, [items, summary]);
   const isKnowledge = (h: Held) => traitById.get(h.trait)?.category === "knowledge";
   const isLanguage = (h: Held) => traitById.get(h.trait)?.category === "language";
   // Knowledges and Languages, each in a box of its own
@@ -308,15 +316,22 @@ export function Sheet({
           )
         }
         stats={stats ?? <StatBlock max={rules.statMax} groups={sheetStatGroups(draft, result)} />}
-        movement={summary?.movement}
+        movement={summary?.movement && movementUnder(summary.movement, carry.state)}
         resistances={<Resistances items={items} held={inEffect} />}
         conditions={
-          <Conditions conditions={conditions} hp={hp ?? summary?.resources.hp ?? 0} maxHp={summary?.resources.hp ?? 0} onChange={onConditions} />
+          <Conditions
+            conditions={conditions}
+            hp={hp ?? summary?.resources.hp ?? 0}
+            maxHp={summary?.resources.hp ?? 0}
+            encumbrance={summary ? carry.state : undefined}
+            onChange={onConditions}
+          />
         }
         items={
           <Items
             items={items}
             onChange={onItems}
+            carry={summary ? carry : undefined}
             kit={context === "build" ? summary?.kit : undefined}
             cash={draft.cash}
             wealth={summary?.wealth}

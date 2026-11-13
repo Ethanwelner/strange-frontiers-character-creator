@@ -12,6 +12,7 @@ import type { Content } from "../engine/parse.js";
 import type { BuildResult } from "../engine/validate.js";
 import { genderText } from "../app/draft.js";
 import { isCounted, itemDetails, stockItemNamed } from "../app/items.js";
+import { carryWeight, encumbrance, itemLoad, kg, movementUnder } from "../engine/carry.js";
 import { STAT_GROUPS, TraitCategory } from "../schema/index.js";
 import { roll } from "./dice.js";
 import {
@@ -162,6 +163,14 @@ export const CHAT_TOOLS: Tool[] = [
 
 const name = (content: Content, id: string) => content.traits.find((t) => t.id === id)?.name ?? id;
 
+// The equipped items' weight against the carry weight, and the encumbrance
+// Condition it gives (engine/carry.ts)
+function carryOf(play: Play, result: BuildResult, content: Content) {
+  const limit = carryWeight(result.summary?.coreStats.physical ?? 0);
+  const load = play.items.reduce((n, i) => n + itemLoad(i, content.items.find((x) => x.id === i.item)), 0);
+  return { load: kg(load), limit, state: encumbrance(load, limit) };
+}
+
 // The tracker as it stands, read from the play: what get_state returns.
 export function stateOf(play: Play, result: BuildResult, content: Content) {
   const resources = Object.fromEntries(
@@ -171,6 +180,7 @@ export function stateOf(play: Play, result: BuildResult, content: Content) {
     level: play.draft.level,
     resources,
     hpConditions: hpConditions(currentOf(play, result, "hp"), maxOf(result, "hp")).map((id) => name(content, id)),
+    carry: (({ load, limit, state }) => ({ load, limit, state, condition: name(content, state) }))(carryOf(play, result, content)),
     conditions: play.conditions.map((c) => ({ id: c.trait, name: name(content, c.trait), rank: c.rank, ...(c.note ? { note: c.note } : {}) })),
     items: play.items.map((i) => {
       const stock = content.items.find((x) => x.id === i.item);
@@ -190,7 +200,8 @@ export function stateOf(play: Play, result: BuildResult, content: Content) {
 export function trackerLine(play: Play, result: BuildResult, content: Content): string {
   const s = stateOf(play, result, content);
   const res = Object.entries(s.resources).map(([r, v]) => `${r.toUpperCase()} ${v.current}/${v.max}`);
-  return [res.join(", "), s.hpConditions.join(", "), ...s.conditions.map((c) => c.name + (c.rank > 1 ? ` (${c.rank})` : ""))].filter(Boolean).join("; ");
+  // The encumbrance Condition once it does something
+  return [res.join(", "), s.hpConditions.join(", "), s.carry.state !== "unencumbered" ? s.carry.condition : "", ...s.conditions.map((c) => c.name + (c.rank > 1 ? ` (${c.rank})` : ""))].filter(Boolean).join("; ");
 }
 
 // The character as Claude sees it: the engine's numbers, what's on the
@@ -214,6 +225,8 @@ export function sheetText(play: Play, result: BuildResult, content: Content): st
   if (looks.length) lines.push(`${looks.join(", ")} (cosmetic, no rules effect)`);
   if (kind?.features.length) lines.push(`Kind features: ${kind.features.map((f) => `${f.name}: ${f.description}`).join(" | ")}`);
   if (s) {
+    const carry = carryOf(play, result, content);
+    const moved = movementUnder(s.movement, carry.state);
     lines.push(
       `Core stats: ${s.coreAccess.map((g) => `${g} ${s.coreStats[g]}`).join(", ")}`,
       `Focus stats: ${(Object.keys(STAT_GROUPS) as (keyof typeof STAT_GROUPS)[])
@@ -222,7 +235,8 @@ export function sheetText(play: Play, result: BuildResult, content: Content): st
       `Resources (current/max): ${shownResources(result)
         .map((r) => `${r.toUpperCase()} ${currentOf(play, result, r)}/${maxOf(result, r)}`)
         .join(", ")}`,
-      `Movement: ${s.movement}`,
+      `Movement: ${moved}${moved !== s.movement ? ` (${s.movement} unencumbered)` : ""}`,
+      `Carry weight: ${carry.limit} kg (20 kg + 10 kg per Physical). Equipped items weigh ${carry.load} kg: ${name(content, carry.state)}. Only equipped items count.`,
       `Banked picks: ${s.picks.universal.banked} universal, ${s.picks.background.banked} background`,
       "Traits:",
       ...s.traits.map((h) => {

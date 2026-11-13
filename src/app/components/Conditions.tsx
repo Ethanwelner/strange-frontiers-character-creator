@@ -8,22 +8,26 @@ import { Button, RemoveX } from "./Button.js";
 import { SheetTitle } from "./sheet-layout.js";
 
 // The Conditions, the same on the Character Creator's sheet and in Player
-// Tools: the ones HP decides (from `hp` of `maxHp`), and the temporary ones
+// Tools: the ones HP decides (from `hp` of `maxHp`), the encumbrance one the
+// equipped items' weight decides (`encumbrance`), and the temporary ones
 // the player adds, with Add a Condition above them. They sit in the sheet's
 // last column, above the Items.
 export function Conditions({
   conditions,
   hp,
   maxHp,
+  encumbrance,
   onChange,
 }: {
   conditions: HeldCondition[];
   hp: number;
   maxHp: number;
+  encumbrance?: string;
   onChange: (conditions: HeldCondition[]) => void;
 }) {
   const options = useMemo(() => playConditions(content), []);
   const fromHp = hpConditions(hp, maxHp);
+  const fromLoad = encumbrance ? traitById.get(encumbrance) : undefined;
   // Add Condition's popup, open or not
   const [adding, setAdding] = useState(false);
   const add = (id: string) => {
@@ -65,6 +69,14 @@ export function Conditions({
             </li>
           );
         })}
+        {fromLoad && (
+          <li key={fromLoad.id}>
+            <TraitCard kind="condition" name={fromLoad.name}>
+              <CardNote>From carried weight. {fromLoad.temporary}</CardNote>
+              <Effect text={fromLoad.effect} />
+            </TraitCard>
+          </li>
+        )}
         {conditions.map((c) => {
           const t = traitById.get(c.trait);
           return (

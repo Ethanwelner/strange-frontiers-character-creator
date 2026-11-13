@@ -1793,6 +1793,16 @@
     }
   }
 
+  /* The carried weight, a badge like the cash's but not a button: the
+     equipped items' kg of the carry weight, red once Encumbered */
+  .sf-carry-badge {
+    cursor: help;
+
+    &.is-over {
+      color: var(--portfolio-red, #e2574c);
+    }
+  }
+
   /* Wealth, a badge like the cash's but not a button: its rating, and at
      creation the Kit Points left, red once the items cost too much */
   .sf-wealth-badge {

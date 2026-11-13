@@ -1,0 +1,11 @@
+id: heavily-encumbered
+name: "Heavily Encumbered"
+status: draft
+plane: any
+summary: "Carrying more than double their carry weight."
+tags: [encumbrance, combat]
+category: condition
+conveyed: true
+temporary: "A character has this Trait while their equipped items weigh more than double their carry weight"
+effect: "This character can't move, and has -1 Priority."
+modifiers: "Movement 0, Priority -1"
