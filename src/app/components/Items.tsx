@@ -233,7 +233,7 @@ function CashBadges({ cash, currency, onChange }: { cash: Record<string, number>
 }
 
 // The equipped items' weight against the carry weight, as a badge in the
-// cash badges' style, before Wealth: "12.5 / 40 kg", red once the character
+// cash badges' style, before Wealth: a hanging weight, then "12.5/40 kg", red once the character
 // is Encumbered. Its title says what the carry weight comes from and the
 // Condition the load gives.
 function CarryBadge({ load, limit, state }: { load: number; limit: number; state: string }) {
@@ -242,6 +242,7 @@ function CarryBadge({ load, limit, state }: { load: number; limit: number; state
   const over = state === "encumbered" || state === "heavily-encumbered";
   return (
     <span className={`sf-cash-badge sf-carry-badge${over ? " is-over" : ""}`} title={details} aria-label={details}>
+      <Icon name="weight-hanging" />
       <span className="sf-cash-amount">{kg(load)}</span>/{limit} kg
     </span>
   );
