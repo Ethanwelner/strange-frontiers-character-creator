@@ -1,0 +1,10 @@
+id: filipino
+name: "Filipino (Spoken)"
+status: draft
+plane: earth
+summary: "Spoken in the Empire of China."
+tags: [language, filipino, earth]
+backgroundKeywords: [earth]
+category: language
+language: filipino
+effect: "This character is conversational in the Filipino language and can speak it."

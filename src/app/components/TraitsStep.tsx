@@ -6,7 +6,7 @@ import { traitOptions, type TraitTab } from "../check.js";
 import { content, traitById } from "../content.js";
 import { addPick, type Draft } from "../draft.js";
 import { Chip, Effect, Sign, StepHeader, title, TraitAction, traitName } from "./ui.js";
-import { CardChip, CardNote, TraitCard, traitCardKind } from "./cards.js";
+import { CardChip, CardNote, KIND_ICON, TraitCard, traitCardKind } from "./cards.js";
 import { Button, RemoveX } from "./Button.js";
 
 interface Props {
@@ -63,6 +63,7 @@ function Requirements({ trait: t, short }: { trait: Trait; short: string[] }) {
 // Group titles, in the schema's category order.
 const GROUP_TITLE: Record<(typeof TraitCategory.options)[number], string> = {
   knowledge: "Knowledges",
+  language: "Languages",
   skill: "Skills",
   starter: "Starter Traits",
   ability: "Abilities",
@@ -277,10 +278,10 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom, p
                         onKeyDown: onKey,
                       }}
                     >
-                      {(traitCardKind(t) !== "knowledge" || t.ranked || t.background || t.mastery) && (
-                        // A Knowledge says so with the icon in its bar
+                      {(!KIND_ICON[traitCardKind(t)] || t.ranked || t.background || t.mastery) && (
+                        // A Knowledge or Language says so with the icon in its bar
                         <div className="sf-card-tags">
-                          {traitCardKind(t) !== "knowledge" && <CardChip>{title(t.category)}</CardChip>}
+                          {!KIND_ICON[traitCardKind(t)] && <CardChip>{title(t.category)}</CardChip>}
                           {t.ranked && <CardChip tone="muted">Ranked</CardChip>}
                           {t.background && <CardChip tone="muted">Background</CardChip>}
                           {t.mastery && <CardChip tone="muted">Mastery</CardChip>}

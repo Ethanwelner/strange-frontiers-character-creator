@@ -1,0 +1,11 @@
+id: dreftan
+name: "Dreftan (Spoken)"
+status: placeholder
+plane: isekai
+region: dreft
+summary: "The common language of Dreft."
+tags: [language, dreft]
+backgroundKeywords: [dreft]
+category: language
+language: dreftan
+effect: This character is conversational in the Dreftan language and can speak it.

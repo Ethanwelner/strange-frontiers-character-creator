@@ -569,7 +569,7 @@
     color: var(--sheet-soft);
 }
 
-/* ---- The Knowledges across the whole sheet first, then the Abilities and
+/* ---- The Knowledges and Languages side by side first, then the Abilities and
    Skills side by side, sharing the width equally once the sheet is 900px
    wide, and stacked below that. Anything else takes a line of its own
    under them. ---- */
@@ -590,6 +590,12 @@
 @container sheet (width >= 900px) {
     .sf-sheet-pair > * {
         flex: 1 1 0;
+    }
+
+    /* The Knowledges take two thirds of the row, the Languages, fewer and
+       shorter, the rest */
+    .sf-sheet-pair--lists > .sf-sheet-knowledges {
+        flex-grow: 2;
     }
 }
 

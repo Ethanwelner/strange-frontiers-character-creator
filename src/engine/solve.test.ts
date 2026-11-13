@@ -163,7 +163,7 @@ describe("solveConcept", () => {
     // Spoken Dreftan comes with the Dreft Origin, so the solver takes the next language instead.
     expect(languageOf(solve(asked(["dreftan"])))).toEqual(["dreftan-written"]);
     // With a third language in content, the concept's pick wins over pool order.
-    const cant = Trait.parse({ id: "trade-cant", name: "Trade Cant", status: "placeholder", plane: "isekai", summary: "Test fixture.", category: "knowledge", types: ["language"], effect: "Test only." });
+    const cant = Trait.parse({ id: "trade-cant", name: "Trade Cant", status: "placeholder", plane: "isekai", summary: "Test fixture.", category: "language", effect: "Test only." });
     const s = solveConcept(asked(["trade-cant"]), { ...content, traits: [...content.traits, cant] }, L1) as Solution;
     expect(languageOf(s)).toEqual(["trade-cant"]);
     expect(s.result.ok).toBe(true);

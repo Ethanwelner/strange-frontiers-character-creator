@@ -13,7 +13,7 @@ import { Items } from "./Items.js";
 import { askerName, DescriptionBox, Effect, Icon, NameField, Portrait, StepHeader, title, TraitAction, traitName } from "./ui.js";
 import { FullResources, SHEET_RULES, SheetLayout, SheetTitle, type SheetContext } from "./sheet-layout.js";
 import { Resistances } from "./Resistances.js";
-import { CardChip, TraitCard, traitCardKind } from "./cards.js";
+import { CardChip, KIND_ICON, TraitCard, traitCardKind } from "./cards.js";
 import { Button } from "./Button.js";
 
 const SOURCE = /^(kind|origin|profession|past) ([a-z0-9-]+)( choice)?$/;
@@ -92,8 +92,8 @@ function HeldTraitCard({
     >
       {/* The category, then where the Trait came from, on one line */}
       <div className="sf-card-tags">
-        {/* A Knowledge says so with the icon in its bar */}
-        {!t ? <CardChip tone="bad">not in content yet</CardChip> : traitCardKind(t) !== "knowledge" && <CardChip>{title(t.category)}</CardChip>}
+        {/* A Knowledge or Language says so with the icon in its bar */}
+        {!t ? <CardChip tone="bad">not in content yet</CardChip> : !KIND_ICON[traitCardKind(t)] && <CardChip>{title(t.category)}</CardChip>}
         <span className="sf-card-note">From {held.sources.map(source).join(", ")}</span>
       </div>
       {!keepEffect && effect}
@@ -107,7 +107,7 @@ function HeldTraitCard({
   );
 }
 
-// A Knowledge's card, opened from the sheet's list in the site's lore popup.
+// A Knowledge's or Language's card, opened from the sheet's lists in the site's lore popup.
 function TraitModal({ held, places, draft, onClose }: { held: Held; places: string[]; draft: Draft; onClose: () => void }) {
   return (
     <Popup label={traitName(held.trait)} onClose={onClose} card>
@@ -187,16 +187,38 @@ export function Sheet({
   const places = (trait: string) => draft.choices.filter((c) => c.trait === trait && c.from !== "contact" && isFreeTextPool(c.from)).flatMap((c) => c.traits);
   const held = useMemo(() => summary?.traits ?? [], [summary]);
   const isKnowledge = (h: Held) => traitById.get(h.trait)?.category === "knowledge";
-  const isLanguage = (h: Held) => !!traitById.get(h.trait)?.types.includes("language");
-  // Knowledges, then Languages
-  const knowledges = [...held.filter((h) => isKnowledge(h) && !isLanguage(h)), ...held.filter(isLanguage)];
-  const others = held.filter((h) => !isKnowledge(h));
+  const isLanguage = (h: Held) => traitById.get(h.trait)?.category === "language";
+  // Knowledges and Languages, each in a box of its own
+  const knowledges = held.filter(isKnowledge);
+  const languages = held.filter(isLanguage);
+  const others = held.filter((h) => !isKnowledge(h) && !isLanguage(h));
   // The other Traits in a box per category: Skills, then Abilities, then any
   // left over (Circumstances and the like) in a box of their own
   const categoryOf = (h: Held) => traitById.get(h.trait)?.category;
   const skills = others.filter((h) => categoryOf(h) === "skill");
   const abilities = others.filter((h) => categoryOf(h) === "ability");
   const rest = others.filter((h) => categoryOf(h) !== "skill" && categoryOf(h) !== "ability");
+  // Knowledges and Languages are a list of links, each opening its card,
+  // after its kind's icon
+  const linkList = (list: Held[], kind: "knowledge" | "language") =>
+    list.length > 0 ? (
+      <ul className="sf-sheet-knowledge-list sf-sheet-scroll">
+        {list.map((h) => {
+          const t = traitById.get(h.trait);
+          return (
+            <li key={h.trait}>
+              <Icon name={kind} label={kind === "language" ? "Language" : "Knowledge"} />
+              <Button kind="link" onClick={() => setOpen(h.trait)}>
+                {traitName(h.trait)}
+                {t?.ranked || h.rank > 1 ? ` (${h.rank})` : ""}
+              </Button>
+            </li>
+          );
+        })}
+      </ul>
+    ) : (
+      <p className="sf-sheet-empty">None yet.</p>
+    );
   // Skills and Abilities open from their chevrons, like the item cards.
   // Closed, a Skill shows its name's bar alone and an Ability its name and
   // effect; open, both add the badge, where it came from and any Action.
@@ -304,26 +326,8 @@ export function Sheet({
             onCash={onCash}
           />
         }
-        knowledges={
-          knowledges.length > 0 ? (
-            <ul className="sf-sheet-knowledge-list sf-sheet-scroll">
-              {knowledges.map((h) => {
-                const t = traitById.get(h.trait);
-                return (
-                  <li key={h.trait}>
-                    {isLanguage(h) ? <Icon name="language" label="Language" /> : <Icon name="knowledge" label="Knowledge" />}
-                    <Button kind="link" onClick={() => setOpen(h.trait)}>
-                      {traitName(h.trait)}
-                      {t?.ranked || h.rank > 1 ? ` (${h.rank})` : ""}
-                    </Button>
-                  </li>
-                );
-              })}
-            </ul>
-          ) : (
-            <p className="sf-sheet-empty">None yet.</p>
-          )
-        }
+        knowledges={linkList(knowledges, "knowledge")}
+        languages={linkList(languages, "language")}
         abilities={abilities.length > 0 ? traitCards(abilities, true, true) : <p className="sf-sheet-empty">No Abilities yet.</p>}
         skills={skills.length > 0 ? traitCards(skills, true) : <p className="sf-sheet-empty">No Skills yet.</p>}
         skillsAside={

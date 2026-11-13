@@ -15,8 +15,9 @@ import { Icon } from "./ui.js";
 //   resources  HP, VP, SP and MP
 //   stats      the stat block
 //   side       Movement and the resistances, over the Conditions and Items
-//   lower      the Knowledges, then the Abilities beside the Skills, then
-//              any other Traits, contacts and features
+//   lower      the Knowledges beside the Languages, then the Abilities
+//              beside the Skills, then any other Traits, contacts and
+//              features
 //
 // The layout fills each box with what it's handed. Each sheet's context
 // (play, build or sample, under the same names on both sides) sets rules
@@ -144,6 +145,7 @@ export interface SheetLayoutProps {
   conditions: ReactNode;
   items: ReactNode;
   knowledges: ReactNode;
+  languages: ReactNode;
   abilities: ReactNode;
   skills: ReactNode;
   // Along the Skills title's line: the picks left, and Add traits
@@ -153,7 +155,7 @@ export interface SheetLayoutProps {
 }
 
 export function SheetLayout(props: SheetLayoutProps) {
-  const { context, level, head, resources, stats, movement, resistances, conditions, items, knowledges, abilities, skills, skillsAside, other } = props;
+  const { context, level, head, resources, stats, movement, resistances, conditions, items, knowledges, languages, abilities, skills, skillsAside, other } = props;
   const rules = SHEET_RULES[context];
   // Whether the side has wrapped under the stats, leaving a single column:
   // then Movement and the resistances go first, under the resources and over
@@ -210,9 +212,15 @@ export function SheetLayout(props: SheetLayoutProps) {
       </div>
 
       <div className="sf-sheet-lower">
-        <div className="sf-sheet-box sf-sheet-knowledges">
-          <SheetTitle>Knowledges</SheetTitle>
-          {knowledges}
+        <div className="sf-sheet-pair sf-sheet-pair--lists">
+          <div className="sf-sheet-box sf-sheet-knowledges">
+            <SheetTitle>Knowledges</SheetTitle>
+            {knowledges}
+          </div>
+          <div className="sf-sheet-box sf-sheet-languages">
+            <SheetTitle>Languages</SheetTitle>
+            {languages}
+          </div>
         </div>
         <div className="sf-sheet-pair">
           <div className="sf-sheet-box sf-sheet-abilities">
