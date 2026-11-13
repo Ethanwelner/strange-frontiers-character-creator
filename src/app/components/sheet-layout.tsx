@@ -11,7 +11,8 @@ import { Icon } from "./ui.js";
 // stylesheet: src/app/sheet.css here, css/sf-sheet.css (a copy) there.
 //
 //   level      the blob on the corner, and what sits on its corner
-//   head       the portrait and name, then the description
+//   head       the portrait and name, and the description in a box of its
+//              own beside them
 //   resources  HP, VP, SP and MP
 //   stats      the stat block
 //   side       Movement and the resistances, over the Conditions and Items
@@ -203,9 +204,12 @@ export function SheetLayout(props: SheetLayoutProps) {
       {rules.levelUp && props.corner && <div className="sf-sheet-corner">{props.corner}</div>}
       {rules.actions && props.actions}
 
-      <div className="sf-sheet-box sf-sheet-head">
-        <div className="sf-sheet-who">{head.who}</div>
-        {head.description && <div className="sf-sheet-description">{head.description}</div>}
+      {/* The portrait and name in one box, the description in another beside it */}
+      <div className="sf-sheet-head-row">
+        <div className="sf-sheet-box sf-sheet-head">
+          <div className="sf-sheet-who">{head.who}</div>
+        </div>
+        {head.description && <div className="sf-sheet-box sf-sheet-description">{head.description}</div>}
       </div>
 
       <div className="sf-sheet-box sf-sheet-resources">{resources}</div>

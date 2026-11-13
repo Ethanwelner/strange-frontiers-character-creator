@@ -294,31 +294,33 @@
     color: var(--sheet-soft);
 }
 
-/* ---- The head: the portrait and name, then the description, two equal
-   columns from 1200px; under that the description drops under them ---- */
+/* ---- The head: the portrait and name in one box, the description in
+   another beside it, two equal columns from 1200px; under that the
+   description's box drops under. Neither has a title. ---- */
 
-.sf-sheet-head {
+.sf-sheet-head-row {
     display: flex;
     flex-wrap: wrap;
-    align-items: flex-start;
-    gap: 24px 40px;
+    align-items: stretch;
+    gap: var(--sheet-gap);
 
-    > .sf-sheet-who {
+    > * {
         flex: 1 1 26rem;
-        display: flex;
-        flex-wrap: wrap;
-        align-items: flex-start;
-        gap: 12px 32px;
         min-width: 0;
     }
 
     > .sf-sheet-description {
-        flex: 1 1 26rem;
-        align-self: stretch;
         display: flex;
         flex-direction: column;
-        min-width: 0;
     }
+}
+
+.sf-sheet-head > .sf-sheet-who {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 12px 32px;
+    min-width: 0;
 }
 
 /* The name and the character's line beside the portrait while 10rem is
@@ -336,16 +338,9 @@
 }
 
 @media (min-width: 1200px) {
-    .sf-sheet-head:has(> .sf-sheet-description) {
+    .sf-sheet-head-row:has(> .sf-sheet-description) {
         display: grid;
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    }
-}
-
-/* From 992px to 1399px, 24px between the columns */
-@media (min-width: 992px) and (max-width: 1399px) {
-    .sf-sheet-head {
-        column-gap: 24px;
     }
 }
 
