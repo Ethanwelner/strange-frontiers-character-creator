@@ -12,4 +12,5 @@ areaOfEffect: "3 m per Rank"
 uses: "uses 1: when thrown"
 value: 40
 currency: "Luras"
+weight: 0.4
 notes: "Brewed at a Rank: the brewer's Rank in Silence. Value is per Rank."

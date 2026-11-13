@@ -10,3 +10,4 @@ uses: "uses 1: when taken"
 bundle: 6
 value: 15
 currency: "ERC"
+weight: 0.1

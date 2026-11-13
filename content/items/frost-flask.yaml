@@ -14,4 +14,5 @@ onHit: "Characters and Items damaged by it gain one rank of the Frozen Condition
 uses: "uses 1: when thrown"
 value: 40
 currency: "Luras"
+weight: 0.4
 notes: "Brewed at a Rank: the brewer's Rank in Hoarfrost. Value is per Rank."

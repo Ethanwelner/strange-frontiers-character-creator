@@ -13,3 +13,4 @@ attackStat: "Power"
 onHit: "Solid Hit or better: the target loses its next Action"
 value: 150
 currency: "ERC"
+weight: 0.7

@@ -10,3 +10,4 @@ resistances: "1 Blunt, 3 Slashing, 1 Piercing"
 slot: "Body Armor"
 value: 1200
 currency: "ERC"
+weight: 12

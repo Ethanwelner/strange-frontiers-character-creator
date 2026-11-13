@@ -10,3 +10,4 @@ resistances: "2 Cold"
 slot: "Outerwear"
 value: 60
 currency: "ERC"
+weight: 2

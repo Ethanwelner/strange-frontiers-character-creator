@@ -10,3 +10,4 @@ resistances: "1 Blunt, 1 Slashing, 1 Cold"
 slot: "Outerwear"
 value: 200
 currency: "ERC"
+weight: 2

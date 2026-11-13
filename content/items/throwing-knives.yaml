@@ -12,3 +12,4 @@ attackStat: "Grace"
 uses: "uses 6: when thrown, until recovered"
 value: 80
 currency: "ERC"
+weight: 1.2

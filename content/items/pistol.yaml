@@ -13,3 +13,4 @@ attackStat: "Grace"
 reload: "Partial"
 value: 600
 currency: "ERC"
+weight: 0.9

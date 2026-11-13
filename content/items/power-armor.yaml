@@ -10,3 +10,4 @@ resistances: "6 Blunt, 6 Slashing, 6 Piercing, 2 Heat, 2 Cold, 2 Radiation"
 slot: "Body Armor"
 value: 250000
 currency: "ERC"
+weight: 150

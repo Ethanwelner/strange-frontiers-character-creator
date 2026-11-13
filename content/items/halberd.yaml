@@ -12,3 +12,4 @@ maxRange: "3 m"
 attackStat: "Power"
 value: 500
 currency: "ERC"
+weight: 3

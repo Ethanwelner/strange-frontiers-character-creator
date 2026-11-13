@@ -9,3 +9,4 @@ category: consumable
 uses: "uses 1: when eaten"
 value: 12
 currency: "ERC"
+weight: 0.5

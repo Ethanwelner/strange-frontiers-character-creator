@@ -10,3 +10,4 @@ uses: "uses 1: per tank, about an hour"
 slot: "Face"
 value: 600
 currency: "ERC"
+weight: 1.5

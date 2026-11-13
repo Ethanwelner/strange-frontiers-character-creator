@@ -12,3 +12,4 @@ maxRange: "3 m"
 attackStat: "Grace / Power"
 value: 150
 currency: "ERC"
+weight: 2

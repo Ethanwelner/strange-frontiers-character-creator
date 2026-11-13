@@ -9,4 +9,5 @@ category: consumable
 uses: "uses 1: when drunk or poured"
 value: 20
 currency: "Luras"
+weight: 0.3
 notes: "Brewed at a Rank: the brewer's Rank in Cleanse. Value is per Rank."

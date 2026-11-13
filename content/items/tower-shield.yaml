@@ -11,3 +11,4 @@ modifiers: "Defense +6 (when Defending)"
 slot: "Off Hand"
 value: 300
 currency: "ERC"
+weight: 10

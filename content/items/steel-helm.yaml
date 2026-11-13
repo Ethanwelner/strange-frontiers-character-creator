@@ -10,3 +10,4 @@ resistances: "3 Blunt, 4 Slashing, 2 Piercing (head)"
 slot: "Headwear"
 value: 250
 currency: "ERC"
+weight: 2

@@ -10,3 +10,4 @@ resistances: "2 Cold, 4 Electrical (hands)"
 slot: "Gloves"
 value: 50
 currency: "ERC"
+weight: 0.5

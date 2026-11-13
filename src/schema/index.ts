@@ -354,6 +354,10 @@ export const Item = BaseEntry.extend({
   // One value, in the currency of the item's plane of origin.
   value: z.number().int().min(0).optional(),
   currency: z.string().optional(),
+  // Its weight in kilograms, per bundle for a bundled item (a quiver of 20
+  // Arrows). Missing for what isn't carried: money, animals, vehicles,
+  // natural weapons and chassis.
+  weight: z.number().min(0).optional(),
   notes: z.string().optional(),
   // A chassis: equipped, an AI Core inhabits it.
   chassis: Chassis.optional(),

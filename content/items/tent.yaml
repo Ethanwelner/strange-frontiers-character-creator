@@ -8,3 +8,4 @@ type: structure
 category: gear
 value: 200
 currency: "ERC"
+weight: 5

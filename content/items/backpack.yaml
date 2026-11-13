@@ -9,3 +9,4 @@ category: gear
 slot: "Back"
 value: 80
 currency: "ERC"
+weight: 1.5

@@ -10,3 +10,4 @@ resistances: "1 Blunt, 6 Radiation, 1 Corrosive"
 slot: "Body Armor"
 value: 1500
 currency: "ERC"
+weight: 12
