@@ -69,7 +69,7 @@ export const SHEET_RULES: Record<SheetContext, SheetRules> = {
 };
 
 // A box's ruled title, with anything along its line after the rule
-export function SheetTitle({ children, aside, as: Tag = "h3", icon }: { children: ReactNode; aside?: ReactNode; as?: "h3" | "h4"; icon?: "knowledge" | "language" | "skill" | "backpack" }) {
+export function SheetTitle({ children, aside, as: Tag = "h3", icon }: { children: ReactNode; aside?: ReactNode; as?: "h3" | "h4"; icon?: "knowledge" | "language" | "skill" | "ability" | "condition" | "backpack" | "shield" | "person-running" }) {
   const title = (
     <Tag className="sf-sheet-title">
       {icon ? (
@@ -120,11 +120,10 @@ function MoveBox({ movement }: { movement?: string }) {
   const parts = movement?.match(/^\s*([\d.]+)\s*([a-z]+)\s*$/i);
   return (
     <div className="sf-sheet-box sf-sheet-move">
-      <SheetTitle>
+      <SheetTitle icon="person-running">
         <span title="Movement">Move</span>
       </SheetTitle>
       <div className="sf-sheet-move-value" title="Movement">
-        <Icon name="person-running" label="Movement" />
         <span className="sf-sheet-move-number">
           {parts ? (
             <>
@@ -236,7 +235,7 @@ export function SheetLayout(props: SheetLayoutProps) {
         </div>
         <div className="sf-sheet-pair">
           <div className="sf-sheet-box sf-sheet-abilities">
-            <SheetTitle>Abilities</SheetTitle>
+            <SheetTitle icon="ability">Abilities</SheetTitle>
             {abilities}
           </div>
           <div className="sf-sheet-box sf-sheet-skills">

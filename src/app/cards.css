@@ -121,7 +121,8 @@
 
 /* A Trait card's kind as an icon before its name, in the bar's text
    color, in place of a category chip: so far a Knowledge's mortarboard, a
-   Language's speech bubbles or a Skill's pencil and wrench */
+   Language's speech bubbles, a Skill's pencil and wrench, an Ability's
+   weightlifter or a Condition's figure in its viewfinder */
 .sf-trait-card .sf-card-name > .sf-card-kind-icon {
     flex-shrink: 0;
     width: 1.3em;
@@ -131,18 +132,19 @@
     fill: currentColor;
 }
 
-/* A Trait card's Rank, after its name: the number in a rounded square, in
-   the bar's text color, so it reads as a figure on the card rather than
-   part of the name */
+/* A Trait card's Rank, after its kind's icon and before its name: the
+   number in a rounded square, in the bar's text color with its border at
+   half strength, so it reads as a figure on the card rather than part of
+   the name */
 .sf-card-rank {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     min-width: 1.5em;
     height: 1.5em;
-    margin-left: .5em;
+    margin-right: .45em;
     padding: 0 .3em;
-    border: 1.5px solid currentColor;
+    border: 1.5px solid color-mix(in srgb, currentColor 50%, transparent);
     border-radius: 5px;
     font-size: .8125em;
     font-weight: 700;

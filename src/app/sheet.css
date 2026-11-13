@@ -230,7 +230,8 @@
     }
 }
 
-/* A Knowledges, Languages, Skills or Items title's icon, before its name */
+/* A Knowledges, Languages, Skills, Abilities, Conditions, Items,
+   Resistances or Move title's icon, before its name */
 .sf-sheet-title-label {
     display: inline-flex;
     align-items: center;
@@ -243,13 +244,14 @@
         fill: currentColor;
     }
 
-    /* The backpack and the Skills' square are narrower than the others:
+    /* The backpack and the running figure, and the Skills', Abilities',
+       Conditions' and Resistances' squares, are narrower than the others:
        the same height, their own width */
-    .sf-sheet & > .icon-backpack {
+    .sf-sheet & > :is(.icon-backpack, .icon-person-running) {
         width: .875em;
     }
 
-    .sf-sheet & > .icon-skill {
+    .sf-sheet & > :is(.icon-skill, .icon-ability, .icon-condition, .icon-shield) {
         width: 1em;
     }
 }
@@ -483,7 +485,8 @@
     margin-bottom: 16px;
 }
 
-/* Movement: a running figure, then the number running into its unit, "10m" */
+/* Movement: the number running into its unit, "10m" (the running figure
+   leads the box's title) */
 .sf-sheet-move-value {
     display: flex;
     align-items: center;
