@@ -266,6 +266,9 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom, p
                       as="li"
                       kind={traitCardKind(t)}
                       name={t.name}
+                      // A ranked Trait's Rank in the bar's square, as everywhere else: the
+                      // Rank held, or the one a pick would take
+                      rank={t.ranked ? (heldRank.get(t.id) ?? rank) : undefined}
                       plane={t.plane}
                       className={`trait${selected ? " selected" : ""}${rejected ? " rejected" : ""}`}
                       rootProps={{
@@ -278,11 +281,10 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom, p
                         onKeyDown: onKey,
                       }}
                     >
-                      {(!KIND_ICON[traitCardKind(t)] || t.ranked || t.background || t.mastery) && (
+                      {(!KIND_ICON[traitCardKind(t)] || t.background || t.mastery) && (
                         // A Knowledge or Language says so with the icon in its bar
                         <div className="sf-card-tags">
                           {!KIND_ICON[traitCardKind(t)] && <CardChip>{title(t.category)}</CardChip>}
-                          {t.ranked && <CardChip tone="muted">Ranked</CardChip>}
                           {t.background && <CardChip tone="muted">Background</CardChip>}
                           {t.mastery && <CardChip tone="muted">Mastery</CardChip>}
                         </div>
