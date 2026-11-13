@@ -37,6 +37,7 @@ export function Conditions({
       {/* Add Condition at the right end of the title's line, opening the dropdown in a popup */}
       <SheetTitle
         as="h4"
+        icon="condition"
         aside={
           <Button size="small" tone="condition" className="sf-sheet-add" aria-label="Add Condition" onClick={() => setAdding(true)}>
             Add<span className="sf-sheet-add-noun"> Condition</span>
