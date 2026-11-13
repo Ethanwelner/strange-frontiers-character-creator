@@ -127,30 +127,25 @@
     flex-shrink: 0;
     width: 1.3em;
     height: 1.15em;
-    margin-right: .45em;
-    vertical-align: -.2em;
     fill: currentColor;
 }
 
 /* A Trait card's Rank, after its kind's icon and before its name: the
    number in a rounded square, in the bar's text color with its border at
-   half strength, so it reads as a figure on the card rather than part of
-   the name */
+   30%, so it reads as a figure on the card rather than part of the name */
 .sf-card-rank {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     min-width: 1.5em;
     height: 1.5em;
-    margin-right: .45em;
     padding: 0 .3em;
-    border: 1.5px solid color-mix(in srgb, currentColor 50%, transparent);
+    border: 1.5px solid color-mix(in srgb, currentColor 30%, transparent);
     border-radius: 5px;
     font-size: .8125em;
     font-weight: 700;
     line-height: 1;
     font-variant-numeric: tabular-nums;
-    vertical-align: .1em;
 }
 
 .sf-card-chips {
@@ -194,8 +189,17 @@
         font-size: 1rem;
         font-weight: 600;
 
+        /* The kind's icon, the Rank, the setting's mark and the name in a
+           row, spaced by the gap rather than each one's margin */
         > .sf-card-name {
+            display: flex;
+            align-items: center;
+            gap: .45em;
             min-width: 0;
+
+            > .setting-icon {
+                margin-right: 0;
+            }
         }
     }
 
