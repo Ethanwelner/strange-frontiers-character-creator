@@ -60,10 +60,11 @@ export function traitCardKind(t: Pick<Trait, "category" | "types"> | undefined):
 
 // The kinds of Trait card shown by an icon before the name, in place of a
 // category chip
-export const KIND_ICON: Partial<Record<TraitCardKind, { icon: "knowledge" | "language" | "skill" | "condition"; label: string }>> = {
+export const KIND_ICON: Partial<Record<TraitCardKind, { icon: "knowledge" | "language" | "skill" | "ability" | "condition"; label: string }>> = {
   knowledge: { icon: "knowledge", label: "Knowledge" },
   language: { icon: "language", label: "Language" },
   skill: { icon: "skill", label: "Skill" },
+  ability: { icon: "ability", label: "Ability" },
   condition: { icon: "condition", label: "Condition" },
 };
 
@@ -98,8 +99,8 @@ const foldClass = (fold: { open: boolean } | undefined) => (fold ? (fold.open ? 
 
 /**
  * A Trait card: the name bar (its kind's icon, so far a Knowledge's
- * mortarboard, a Language's speech bubbles, a Skill's pencil and wrench
- * or a Condition's figure in its viewfinder, the setting's mark, the name,
+ * mortarboard, a Language's speech bubbles, a Skill's pencil and wrench,
+ * an Ability's weightlifter or a Condition's figure in its viewfinder, the setting's mark, the name,
  * its Rank in a rounded square, then `chips` at the right), then the body (`children`).
  *
  * fold     Opens and closes from the chevron at the end of the bar.
