@@ -92,7 +92,8 @@ function HeldTraitCard({
     >
       {/* The category, then where the Trait came from, on one line */}
       <div className="sf-card-tags">
-        {t ? <CardChip>{title(t.category)}</CardChip> : <CardChip tone="bad">not in content yet</CardChip>}
+        {/* A Knowledge says so with the icon in its bar */}
+        {!t ? <CardChip tone="bad">not in content yet</CardChip> : traitCardKind(t) !== "knowledge" && <CardChip>{title(t.category)}</CardChip>}
         <span className="sf-card-note">From {held.sources.map(source).join(", ")}</span>
       </div>
       {!keepEffect && effect}

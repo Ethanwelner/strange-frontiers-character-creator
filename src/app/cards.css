@@ -119,6 +119,17 @@
     }
 }
 
+/* A Trait card's kind as an icon before its name, in the bar's text
+   color, in place of a category chip: so far a Knowledge's mortarboard */
+.sf-trait-card .sf-card-name > .sf-card-kind-icon {
+    flex-shrink: 0;
+    width: 1.3em;
+    height: 1.15em;
+    margin-right: .45em;
+    vertical-align: -.2em;
+    fill: currentColor;
+}
+
 .sf-card-chips {
     flex: none;
     display: flex;

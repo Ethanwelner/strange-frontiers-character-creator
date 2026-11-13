@@ -277,12 +277,15 @@ export function TraitsStep({ draft, campaign, result, onChange, hide, newFrom, p
                         onKeyDown: onKey,
                       }}
                     >
-                      <div className="sf-card-tags">
-                        <CardChip>{title(t.category)}</CardChip>
-                        {t.ranked && <CardChip tone="muted">Ranked</CardChip>}
-                        {t.background && <CardChip tone="muted">Background</CardChip>}
-                        {t.mastery && <CardChip tone="muted">Mastery</CardChip>}
-                      </div>
+                      {(traitCardKind(t) !== "knowledge" || t.ranked || t.background || t.mastery) && (
+                        // A Knowledge says so with the icon in its bar
+                        <div className="sf-card-tags">
+                          {traitCardKind(t) !== "knowledge" && <CardChip>{title(t.category)}</CardChip>}
+                          {t.ranked && <CardChip tone="muted">Ranked</CardChip>}
+                          {t.background && <CardChip tone="muted">Background</CardChip>}
+                          {t.mastery && <CardChip tone="muted">Mastery</CardChip>}
+                        </div>
+                      )}
                       <Requirements trait={t} short={shortStats} />
                       <p>{t.summary}</p>
                       <Effect text={t.effect} />

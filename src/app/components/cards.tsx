@@ -90,7 +90,8 @@ function Chevron({ open, label, onToggle, className }: { open: boolean; label: s
 const foldClass = (fold: { open: boolean } | undefined) => (fold ? (fold.open ? " is-open" : " is-closed") : "");
 
 /**
- * A Trait card: the name bar (the setting's mark, the name, its Rank, then
+ * A Trait card: the name bar (its kind's icon, so far only a Knowledge's
+ * mortarboard, the setting's mark, the name, its Rank, then
  * `chips` at the right), then the body (`children`).
  *
  * fold     Opens and closes from the chevron at the end of the bar.
@@ -132,6 +133,7 @@ export function TraitCard({
     <Root className={classes} {...rootProps}>
       <div className="sf-card-bar">
         <span className="sf-card-name">
+          {kind === "knowledge" && <Icon name="knowledge" label="Knowledge" className="sf-card-kind-icon" />}
           <SettingIcon plane={plane} />
           {name}
           {rank !== undefined ? ` (${rank})` : ""}
