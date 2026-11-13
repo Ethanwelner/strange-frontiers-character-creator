@@ -6,6 +6,6 @@ summary: "Carrying more than their carry weight."
 tags: [encumbrance, combat]
 category: condition
 conveyed: true
-temporary: "A character has this Trait while their equipped items weigh more than their carry weight, up to double it"
+temporary: "This character is over their carry weight, up to double it"
 effect: "This character's Movement is halved, and they have -1 Priority."
 modifiers: "Movement halved, Priority -1"

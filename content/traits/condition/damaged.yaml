@@ -6,4 +6,4 @@ summary: "An object below its full HP."
 tags: [objects, damage, site-example, hit-points]
 category: condition
 conveyed: true
-temporary: "An object gains this trait if it is below its maximum HP total"
+temporary: "This object is below its maximum HP"

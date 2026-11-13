@@ -6,4 +6,4 @@ summary: "Below half HP."
 tags: [health, injury, site-example, hit-points]
 category: condition
 conveyed: true
-temporary: "A character gains this trait while they are below half their maximum HP total"
+temporary: "This character is below half their maximum HP"

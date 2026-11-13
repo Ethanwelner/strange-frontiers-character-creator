@@ -6,6 +6,6 @@ summary: "Carrying more than half their carry weight."
 tags: [encumbrance, combat]
 category: condition
 conveyed: true
-temporary: "A character has this Trait while their equipped items weigh more than half their carry weight, up to all of it"
+temporary: "This character is over half their carry weight, up to all of it"
 effect: "This character has -1 Priority."
 modifiers: "Priority -1"
