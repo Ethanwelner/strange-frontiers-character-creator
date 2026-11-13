@@ -373,6 +373,7 @@ export function Items({
       {/* Add item at the right end of the title's line, opening the add form in a popup */}
       <SheetTitle
         as="h4"
+        icon="backpack"
         aside={
           <Button size="small" tone="item" className="sf-sheet-add" aria-label="Add item" onClick={() => setAdding(true)}>
             Add<span className="sf-sheet-add-noun"> item</span>
