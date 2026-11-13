@@ -11,3 +11,4 @@ uses: "uses 1: per air tank"
 slot: "Body Armor"
 value: 50000
 currency: "ERC"
+weight: 15

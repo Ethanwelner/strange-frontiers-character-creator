@@ -12,4 +12,5 @@ areaOfEffect: "2 m per Rank"
 uses: "uses 1: when thrown"
 value: 20
 currency: "Luras"
+weight: 0.4
 notes: "Brewed at a Rank: the brewer's Rank in Gust. Value is per Rank."

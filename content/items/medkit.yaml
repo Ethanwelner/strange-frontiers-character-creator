@@ -9,3 +9,4 @@ category: gear
 uses: "uses 10: per treatment"
 value: 250
 currency: "ERC"
+weight: 2

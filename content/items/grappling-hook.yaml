@@ -8,3 +8,4 @@ type: equipment
 category: gear
 value: 50
 currency: "ERC"
+weight: 1.5

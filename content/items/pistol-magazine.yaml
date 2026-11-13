@@ -9,3 +9,4 @@ category: consumable
 uses: "uses 1: per reload"
 value: 30
 currency: "ERC"
+weight: 0.3

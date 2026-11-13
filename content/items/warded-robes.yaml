@@ -11,4 +11,5 @@ resistances: "3 Metaphysical, 1 Cold"
 slot: "Body Armor"
 value: 400
 currency: "Luras"
+weight: 2
 notes: "Suggested by Claude; check with the magic pass."

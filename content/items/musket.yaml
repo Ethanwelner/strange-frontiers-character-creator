@@ -13,3 +13,4 @@ attackStat: "Grace"
 reload: "Full"
 value: 1500
 currency: "ERC"
+weight: 5

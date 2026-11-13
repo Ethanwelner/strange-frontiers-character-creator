@@ -14,4 +14,5 @@ onHit: "Characters damaged by it gain the Temporarily Deafened Condition"
 uses: "uses 1: when thrown"
 value: 40
 currency: "Luras"
+weight: 0.4
 notes: "Brewed at a Rank: the brewer's Rank in Thunderclap. Value is per Rank."

@@ -116,18 +116,24 @@ export function itemDetails(stock: StockItem): string {
     stock.uses ?? "",
     stock.slot ? `Slot: ${stock.slot}` : "",
     stock.value !== undefined && stock.currency ? `${stock.value.toLocaleString("en-US")} ${stock.currency}${stock.bundle ? ` per ${stock.bundle}` : ""}` : "",
+    weightText(stock),
   ]
     .filter(Boolean)
     .join("; ");
   return line.charAt(0).toUpperCase() + line.slice(1);
 }
 
+// A stock item's weight, like "1.5 kg" or for a bundle "1.5 kg per 20"
+export const weightText = (stock: StockItem) => (stock.weight !== undefined ? `${stock.weight} kg${stock.bundle ? ` per ${stock.bundle}` : ""}` : "");
+
 // A stock item's rules that read as badges, under an open card's top line:
-// its cost, how it Attacks, and the slot it takes, like "60 ERC",
-// "Melee Attack", "Max Range: 1 m", "Grace" (the Attack Stat), "Slot: Headwear".
+// its cost and weight, how it Attacks, and the slot it takes, like "60 ERC",
+// "0.5 kg", "Melee Attack", "Max Range: 1 m", "Grace" (the Attack Stat),
+// "Slot: Headwear".
 export function itemBadges(stock: StockItem): string[] {
   return [
     stock.value !== undefined && stock.currency ? `${stock.value.toLocaleString("en-US")} ${stock.currency}${stock.bundle ? ` per ${stock.bundle}` : ""}` : "",
+    weightText(stock),
     stock.attackType ? `${stock.attackType} Attack` : "",
     stock.maxRange ? `Max Range: ${stock.maxRange}` : "",
     stock.attackStat ? stock.attackStat : "",

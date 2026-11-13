@@ -10,3 +10,4 @@ resistances: "1 Blunt, 2 Slashing, 2 Cold"
 slot: "Body Armor"
 value: 80
 currency: "Luras"
+weight: 9

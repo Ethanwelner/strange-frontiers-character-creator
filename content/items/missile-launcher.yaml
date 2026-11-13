@@ -14,3 +14,4 @@ areaOfEffect: "5 m"
 reload: "Full"
 value: 25000
 currency: "ERC"
+weight: 12

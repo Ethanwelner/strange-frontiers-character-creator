@@ -13,3 +13,4 @@ attackStat: "Power"
 uses: "uses 1: burns about an hour"
 value: 5
 currency: "ERC"
+weight: 0.5

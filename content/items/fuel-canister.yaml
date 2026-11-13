@@ -9,3 +9,4 @@ category: consumable
 uses: "uses 1: per refill"
 value: 150
 currency: "ERC"
+weight: 10

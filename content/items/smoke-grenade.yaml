@@ -12,3 +12,4 @@ areaOfEffect: "5 m"
 uses: "uses 1: when thrown"
 value: 40
 currency: "ERC"
+weight: 0.5

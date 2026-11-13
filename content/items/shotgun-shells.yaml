@@ -10,3 +10,4 @@ uses: "uses 1: when fired"
 bundle: 25
 value: 25
 currency: "ERC"
+weight: 1.2
