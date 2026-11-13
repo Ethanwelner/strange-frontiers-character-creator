@@ -6,6 +6,7 @@ summary: "A strip of strong painkillers."
 tags: [medical, drug]
 type: misc
 category: consumable
-uses: "uses 6: when taken"
+uses: "uses 1: when taken"
+bundle: 6
 value: 15
 currency: "ERC"

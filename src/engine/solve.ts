@@ -8,7 +8,7 @@
 // concept lists. Deterministic and browser-safe.
 import { z } from "zod";
 import { STAT_CAP, STAT_GROUPS, StatId, type StatBlock, type Trait } from "../schema/index.js";
-import { Build, ChoiceAnswer, DEFAULT_CAMPAIGN, type BuildItem, type Campaign, type LevelAllocation, type PickKind, type StatGroup } from "./build.js";
+import { Build, ChoiceAnswer, DEFAULT_CAMPAIGN, isCounted, type BuildItem, type Campaign, type LevelAllocation, type PickKind, type StatGroup } from "./build.js";
 import type { Content } from "./content.js";
 import { answers, bonusPointsOf, choicePool, coreAccessOf, isFreeTextPool, FOCUS_POINTS_PER_LEVEL, validateBuild, type BuildResult } from "./validate.js";
 
@@ -241,8 +241,10 @@ export function rankFocus(concept: Concept, content: Content): string[] {
 
 // The concept's items as the build carries them. Unknown items, money (until
 // wealth has rules) and items from the other plane are skipped: a character
-// from Dreft doesn't start with a pistol. Weapons are equipped, and so is the
-// first item listed for each slot, like Body Armor.
+// from Dreft doesn't start with a pistol. A consumable's qty is in bundles
+// and becomes units (1 Arrows is 20 arrows); anything else becomes that many
+// separate items. Weapons are equipped, and so is the first item listed for
+// each slot, like Body Armor.
 export function solveItems(concept: Concept, content: Content): { items: BuildItem[]; skipped: SkippedItem[] } {
   const plane = content.packages.find((p) => p.id === concept.origin && p.type === "origin")?.plane;
   const items: BuildItem[] = [];
@@ -262,14 +264,18 @@ export function solveItems(concept: Concept, content: Content): { items: BuildIt
       skipped.push({ item: id, reason: reason! });
       continue;
     }
-    const held = items.find((i) => i.item === item.id);
-    if (held) {
-      held.qty += qty;
+    if (isCounted(item)) {
+      const units = qty * (item.bundle ?? 1);
+      const held = items.find((i) => i.item === item.id);
+      if (held) held.qty += units;
+      else items.push({ item: item.id, name: item.name, qty: units, category: item.category, equipped: false, units: true });
       continue;
     }
-    const equipped = item.category === "weapon" || (!!item.slot && !slots.has(item.slot));
-    if (item.slot) slots.add(item.slot);
-    items.push({ item: item.id, name: item.name, qty, category: item.category, equipped });
+    for (let n = 0; n < qty; n++) {
+      const equipped = item.category === "weapon" || (!!item.slot && !slots.has(item.slot));
+      if (item.slot) slots.add(item.slot);
+      items.push({ item: item.id, name: item.name, qty: 1, category: item.category, equipped });
+    }
   }
   return { items, skipped };
 }

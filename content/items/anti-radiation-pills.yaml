@@ -6,6 +6,7 @@ summary: "Pills that limit the harm of radiation exposure."
 tags: [medical, radiation]
 type: misc
 category: consumable
-uses: "uses 4: when taken"
+uses: "uses 1: when taken"
+bundle: 4
 value: 30
 currency: "ERC"

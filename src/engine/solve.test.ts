@@ -280,14 +280,16 @@ describe("rank stats among the priority stats", () => {
 });
 
 describe("solveItems", () => {
-  it("packs the listed items, stacking repeats and equipping weapons and the first item for each slot", () => {
-    const s = solve({ ...hunter, items: ["longbow", "arrows", "arrows", "leather-armor", "gambeson", { item: "trail-rations", qty: 3 }] });
+  it("packs the listed items: consumables by the bundle, in units; anything else one item each, weapons and the first item for each slot equipped", () => {
+    const s = solve({ ...hunter, items: ["longbow", "arrows", "arrows", "leather-armor", "gambeson", { item: "trail-rations", qty: 3 }, { item: "dagger", qty: 2 }] });
     expect(s.build.items).toEqual([
       { item: "longbow", name: "Longbow", qty: 1, category: "weapon", equipped: true },
-      { item: "arrows", name: "Arrows", qty: 2, category: "consumable", equipped: false },
+      { item: "arrows", name: "Arrows", qty: 40, category: "consumable", equipped: false, units: true },
       { item: "leather-armor", name: "Leather Armor", qty: 1, category: "armor", equipped: true },
       { item: "gambeson", name: "Gambeson", qty: 1, category: "armor", equipped: false },
-      { item: "trail-rations", name: "Trail Rations", qty: 3, category: "consumable", equipped: false },
+      { item: "trail-rations", name: "Trail Rations", qty: 3, category: "consumable", equipped: false, units: true },
+      { item: "dagger", name: "Dagger", qty: 1, category: "weapon", equipped: true },
+      { item: "dagger", name: "Dagger", qty: 1, category: "weapon", equipped: true },
     ]);
     expect(s.skippedItems).toEqual([]);
   });
