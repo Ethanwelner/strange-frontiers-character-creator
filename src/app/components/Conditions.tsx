@@ -62,7 +62,7 @@ export function Conditions({
           return (
             <li key={id}>
               <TraitCard kind="condition" name={t?.name ?? id}>
-                <CardNote>From HP. {t?.temporary}</CardNote>
+                <CardNote>{t?.temporary}</CardNote>
                 {t && <Effect text={t.effect} />}
                 <TraitAction action={t?.action} />
               </TraitCard>
@@ -72,7 +72,7 @@ export function Conditions({
         {fromLoad && (
           <li key={fromLoad.id}>
             <TraitCard kind="condition" name={fromLoad.name}>
-              <CardNote>From carried weight. {fromLoad.temporary}</CardNote>
+              <CardNote>{fromLoad.temporary}</CardNote>
               <Effect text={fromLoad.effect} />
             </TraitCard>
           </li>
