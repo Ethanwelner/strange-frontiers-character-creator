@@ -22,7 +22,7 @@ export function Resistances({ items, held }: { items: Item[]; held: { trait: str
   }).filter((t) => t.total !== 0 || t.own.some((r) => r.where && r.amount !== 0));
   return (
     <>
-      <SheetTitle>Resistances</SheetTitle>
+      <SheetTitle icon="shield">Resistances</SheetTitle>
       {shown.length ? (
         <ul className="sf-resistance-list">
           {shown.map(({ type, own, total }, i) => (

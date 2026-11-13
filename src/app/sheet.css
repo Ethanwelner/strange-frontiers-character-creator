@@ -230,8 +230,8 @@
     }
 }
 
-/* A Knowledges, Languages, Skills, Abilities, Conditions or Items title's
-   icon, before its name */
+/* A Knowledges, Languages, Skills, Abilities, Conditions, Items or
+   Resistances title's icon, before its name */
 .sf-sheet-title-label {
     display: inline-flex;
     align-items: center;
@@ -244,13 +244,13 @@
         fill: currentColor;
     }
 
-    /* The backpack and the Skills', Abilities' and Conditions' squares are
-       narrower than the others: the same height, their own width */
+    /* The backpack and the Skills', Abilities', Conditions' and Resistances'
+       squares are narrower than the others: the same height, their own width */
     .sf-sheet & > .icon-backpack {
         width: .875em;
     }
 
-    .sf-sheet & > :is(.icon-skill, .icon-ability, .icon-condition) {
+    .sf-sheet & > :is(.icon-skill, .icon-ability, .icon-condition, .icon-shield) {
         width: 1em;
     }
 }
