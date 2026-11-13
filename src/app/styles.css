@@ -1747,15 +1747,20 @@
     color: var(--frontiers-mp);
   }
 
-  /* Money, by currency, as badges along the Items title's line before Add
-     item, in the item cards' olive: coins, the amount in Bebas, the
-     currency. Clicked, a badge becomes a field for a change or a total. */
-  .sf-cash {
-    display: inline-flex;
+  /* Wealth, then money by currency, as badges on a line over the Items
+     list, in the item cards' olive: coins, the amount in Bebas, the
+     currency. Clicked, a money badge becomes a field for a change or a
+     total. */
+  .sf-items-money {
+    display: flex;
     flex-wrap: wrap;
-    justify-content: flex-end;
+    align-items: center;
     gap: 6px;
-    min-width: 0;
+    margin: 0 0 16px;
+  }
+
+  .sf-cash {
+    display: contents;
   }
 
   .sf-cash-badge,

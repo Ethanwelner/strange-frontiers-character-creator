@@ -172,8 +172,7 @@ function ItemPicker({ onAdd, custom, kit }: { onAdd: (picked: { stock: StockItem
 // the Character Creator and on Player Tools' Tracker. A name the game's stock
 // items know (content/items) adds that item, with its category, description
 // and details; anything else is what the player writes.
-// Money, by currency, as badges at the right of the Items title, before Add
-// item: coins, the amount and the currency. The character's own currency
+// Money, by currency, as badges over the Items list, after Wealth: coins, the amount and the currency. The character's own currency
 // always shows, even at 0; others once it holds any. Clicking one opens a
 // field that takes a change ("+50", "-20") or a new total ("300"), applied
 // with Enter or by leaving it; Escape puts it away. Money can't go below 0.
@@ -375,17 +374,22 @@ export function Items({
       <SheetTitle
         as="h4"
         aside={
-          <>
-            {wealth !== undefined && <WealthBadge wealth={wealth} kit={kit} />}
-            {onCash && <CashBadges cash={cash ?? {}} currency={currency} onChange={(c, n) => onCash({ ...cash, [c]: n })} />}
-            <Button size="small" tone="item" className="sf-sheet-add" aria-label="Add item" onClick={() => setAdding(true)}>
-              Add<span className="sf-sheet-add-noun"> item</span>
-            </Button>
-          </>
+          <Button size="small" tone="item" className="sf-sheet-add" aria-label="Add item" onClick={() => setAdding(true)}>
+            Add<span className="sf-sheet-add-noun"> item</span>
+          </Button>
         }
       >
         Items
       </SheetTitle>
+
+      {/* Wealth and money on a line of their own over the list, so the
+          title's line keeps room on small screens */}
+      {(wealth !== undefined || onCash) && (
+        <div className="sf-items-money">
+          {wealth !== undefined && <WealthBadge wealth={wealth} kit={kit} />}
+          {onCash && <CashBadges cash={cash ?? {}} currency={currency} onChange={(c, n) => onCash({ ...cash, [c]: n })} />}
+        </div>
+      )}
 
       {adding && (
         <Popup label="Add items" onClose={() => setAdding(false)} size="wide" scroll="inner" className="sheet-add-popup item-picker-popup">
