@@ -49,16 +49,21 @@ import { Icon, SettingIcon, Sign, title } from "./ui.js";
 // gray bar
 export type TraitCardKind = "knowledge" | "language" | "skill" | "ability" | "condition" | "circumstance" | "other";
 
-// A Trait's card kind from its category: a Language is a Knowledge with the
-// language type, Memberships are Circumstances, and starters
-// fall under Other.
+// A Trait's card kind from its category: Memberships are Circumstances, and
+// starters fall under Other.
 export function traitCardKind(t: Pick<Trait, "category" | "types"> | undefined): TraitCardKind {
   if (!t) return "other";
-  if (t.category === "knowledge") return t.types.includes("language") ? "language" : "knowledge";
   if (t.category === "membership") return "circumstance";
   if (t.category === "starter") return "other";
   return t.category;
 }
+
+// The kinds of Trait card shown by an icon before the name, in place of a
+// category chip
+export const KIND_ICON: Partial<Record<TraitCardKind, { icon: "knowledge" | "language"; label: string }>> = {
+  knowledge: { icon: "knowledge", label: "Knowledge" },
+  language: { icon: "language", label: "Language" },
+};
 
 // Isekai's cards take Dreft's green bar and edge
 export const cardRegionClass = (plane: string | undefined) => (plane === "isekai" ? " sf-card--dreft" : "");
@@ -90,7 +95,8 @@ function Chevron({ open, label, onToggle, className }: { open: boolean; label: s
 const foldClass = (fold: { open: boolean } | undefined) => (fold ? (fold.open ? " is-open" : " is-closed") : "");
 
 /**
- * A Trait card: the name bar (the setting's mark, the name, its Rank, then
+ * A Trait card: the name bar (its kind's icon, so far a Knowledge's
+ * mortarboard or a Language's speech bubbles, the setting's mark, the name, its Rank, then
  * `chips` at the right), then the body (`children`).
  *
  * fold     Opens and closes from the chevron at the end of the bar.
@@ -132,6 +138,7 @@ export function TraitCard({
     <Root className={classes} {...rootProps}>
       <div className="sf-card-bar">
         <span className="sf-card-name">
+          {KIND_ICON[kind] && <Icon name={KIND_ICON[kind].icon} label={KIND_ICON[kind].label} className="sf-card-kind-icon" />}
           <SettingIcon plane={plane} />
           {name}
           {rank !== undefined ? ` (${rank})` : ""}

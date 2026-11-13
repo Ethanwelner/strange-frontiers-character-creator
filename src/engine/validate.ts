@@ -127,9 +127,9 @@ export const MP_PER_MAGIC = 3;
 // Choice pools the engine knows how to resolve. Others (and pools with no
 // Traits in them yet) can't be checked, so answers to them only warn.
 const POOLS: Record<string, (t: Trait) => boolean> = {
-  language: (t) => t.types.includes("language"),
-  "dreftian-language": (t) => t.types.includes("language") && t.region === "dreft",
-  "spoken-language": (t) => t.types.includes("language") && !t.tags.includes("writing"),
+  language: (t) => t.category === "language",
+  "dreftian-language": (t) => t.category === "language" && t.region === "dreft",
+  "spoken-language": (t) => t.category === "language" && !t.tags.includes("writing"),
 };
 
 // A pool answered with a spoken language that brings its written form too.
@@ -138,7 +138,7 @@ export const SPOKEN_AND_WRITTEN = "spoken-and-written-language";
 // The written form of a spoken language Trait, matched by `language`.
 export function writtenForm(spoken: Trait, content: Content): Trait | undefined {
   if (!spoken.language) return undefined;
-  return content.traits.find((t) => t.language === spoken.language && t.types.includes("language") && t.tags.includes("writing"));
+  return content.traits.find((t) => t.language === spoken.language && t.category === "language" && t.tags.includes("writing"));
 }
 
 // Pools the player answers in their own words instead of with Trait ids. A

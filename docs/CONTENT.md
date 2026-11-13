@@ -44,7 +44,7 @@ Every tab's Description is `summary`, Tags is `tags`, and Notes is for anything 
 | Packages: Choices | `choices`, with the Sheet text as their `note`: "+1 Contact" is `from: contact`, "+1 Language" is `from: language`, "+1 Language (Spoken & Written)" is `from: spoken-and-written-language` |
 | Packages: Background Keywords | `backgroundKeywords`, lowercase, like `[hand-to-hand, modern-ranged, security, police, investigation]`. A Background pick can buy any Trait sharing one of them with one of the character's Origin, Profession and Past |
 | Traits: Background Keywords | `backgroundKeywords`, from the same list: what the Trait is about, like Access Control's `[security]`. A Trait with none can only take a Background pick through a Kind's Trait Access or a Trait list |
-| Traits: Category | `category`; Language rows are `knowledge` with `types: [language]`. "X (Spoken)" has id `x` and "X (Written)" `x-written`, both with `language: x`, which pairs them for spoken-and-written choices |
+| Traits: Category | `category`; Language rows (the Languages tab) are `language`, in `content/traits/language/`. "X (Spoken)" has id `x` and "X (Written)" `x-written`, both with `language: x`, which pairs them for spoken-and-written choices |
 | Traits: Ranked, Conveyed | `ranked`, `conveyed` |
 | Traits: Effect | `effect`, left empty for a Trait that only marks a state other effects check for, like Healthy. Each part of an effect that does something different can be its own bullet: in the Sheet, a line per bullet starting with `- ` in the cell; in YAML, the same lines joined with `\n` (like the Wielder skills). Lines without `- ` show as paragraphs |
 | Traits: Stat Requirements | `minStats` (focus or core: "Power 3", "Physical 5") |

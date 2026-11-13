@@ -1,0 +1,10 @@
+id: mandarin-written
+name: "Mandarin (Written)"
+status: placeholder
+plane: earth
+summary: "The language of the Empire of China."
+tags: [language, mandarin, earth, writing]
+backgroundKeywords: [earth]
+category: language
+language: mandarin
+effect: This character can read and write the Mandarin language.

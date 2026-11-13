@@ -95,8 +95,7 @@ const fixtures = [
     status: "placeholder",
     plane: "isekai",
     summary: "Test fixture: a third language.",
-    category: "knowledge",
-    types: ["language"],
+    category: "language",
     effect: "Test only.",
   }),
   Trait.parse({

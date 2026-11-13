@@ -216,6 +216,7 @@ export type BackgroundPackage = z.infer<typeof BackgroundPackage>;
 
 export const TraitCategory = z.enum([
   "knowledge",
+  "language",
   "skill",
   "starter",
   "ability",

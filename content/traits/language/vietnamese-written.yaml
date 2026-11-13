@@ -1,0 +1,10 @@
+id: vietnamese-written
+name: "Vietnamese (Written)"
+status: draft
+plane: earth
+summary: "Spoken in the Empire of China."
+tags: [language, vietnamese, earth, writing]
+backgroundKeywords: [earth]
+category: language
+language: vietnamese
+effect: "This character can read and write the Vietnamese language."

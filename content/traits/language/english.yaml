@@ -1,0 +1,10 @@
+id: english
+name: "English (Spoken)"
+status: placeholder
+plane: earth
+summary: "One of the common languages of Earth Baseline."
+tags: [language, english, earth]
+backgroundKeywords: [earth]
+category: language
+language: english
+effect: This character is conversational in the English language and can speak it.
