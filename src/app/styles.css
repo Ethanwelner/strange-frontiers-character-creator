@@ -2047,7 +2047,7 @@
     align-items: center;
     gap: 2px;
     /* Pulled in top and bottom so the bar keeps its height */
-    margin: -4px 0 -4px 8px;
+    margin: -4px 0; /* the name's gap spaces it from the name */
     vertical-align: middle;
 
     .tools-rank-btn {
