@@ -120,8 +120,8 @@
 }
 
 /* A Trait card's kind as an icon before its name, in the bar's text
-   color, in place of a category chip: so far a Knowledge's mortarboard or a
-   Language's speech bubbles */
+   color, in place of a category chip: so far a Knowledge's mortarboard, a
+   Language's speech bubbles or an Ability's pencil and wrench */
 .sf-trait-card .sf-card-name > .sf-card-kind-icon {
     flex-shrink: 0;
     width: 1.3em;

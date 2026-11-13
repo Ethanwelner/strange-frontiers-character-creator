@@ -60,9 +60,10 @@ export function traitCardKind(t: Pick<Trait, "category" | "types"> | undefined):
 
 // The kinds of Trait card shown by an icon before the name, in place of a
 // category chip
-export const KIND_ICON: Partial<Record<TraitCardKind, { icon: "knowledge" | "language"; label: string }>> = {
+export const KIND_ICON: Partial<Record<TraitCardKind, { icon: "knowledge" | "language" | "ability"; label: string }>> = {
   knowledge: { icon: "knowledge", label: "Knowledge" },
   language: { icon: "language", label: "Language" },
+  ability: { icon: "ability", label: "Ability" },
 };
 
 // Isekai's cards take Dreft's green bar and edge
@@ -96,7 +97,8 @@ const foldClass = (fold: { open: boolean } | undefined) => (fold ? (fold.open ? 
 
 /**
  * A Trait card: the name bar (its kind's icon, so far a Knowledge's
- * mortarboard or a Language's speech bubbles, the setting's mark, the name, its Rank, then
+ * mortarboard, a Language's speech bubbles or an Ability's pencil and
+ * wrench, the setting's mark, the name, its Rank, then
  * `chips` at the right), then the body (`children`).
  *
  * fold     Opens and closes from the chevron at the end of the bar.
