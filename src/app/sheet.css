@@ -230,6 +230,20 @@
     }
 }
 
+/* A Knowledges or Languages title's icon, before its name */
+.sf-sheet-title-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    .sf-sheet & > .sf-sheet-title-icon {
+        flex: none;
+        width: 1.25em;
+        height: 1em;
+        fill: currentColor;
+    }
+}
+
 /* A title with something along its line after the rule: the picks left, or
    an Add button. When the line gets too narrow for the whole button, it keeps
    just "Add" (the full name stays its label). */
@@ -612,18 +626,7 @@
     font-size: 14px;
 
     li {
-        display: flex;
-        align-items: center;
-        gap: 6px;
         line-height: 1.5;
-    }
-
-    .sf-sheet & li > svg {
-        flex: none;
-        width: 1.25em;
-        height: 1em;
-        margin: 0;
-        fill: currentColor;
     }
 
     .sf-btn {

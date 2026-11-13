@@ -198,16 +198,14 @@ export function Sheet({
   const skills = others.filter((h) => categoryOf(h) === "skill");
   const abilities = others.filter((h) => categoryOf(h) === "ability");
   const rest = others.filter((h) => categoryOf(h) !== "skill" && categoryOf(h) !== "ability");
-  // Knowledges and Languages are a list of links, each opening its card,
-  // after its kind's icon
-  const linkList = (list: Held[], kind: "knowledge" | "language") =>
+  // Knowledges and Languages are a list of links, each opening its card
+  const linkList = (list: Held[]) =>
     list.length > 0 ? (
       <ul className="sf-sheet-knowledge-list sf-sheet-scroll">
         {list.map((h) => {
           const t = traitById.get(h.trait);
           return (
             <li key={h.trait}>
-              <Icon name={kind} label={kind === "language" ? "Language" : "Knowledge"} />
               <Button kind="link" onClick={() => setOpen(h.trait)}>
                 {traitName(h.trait)}
                 {t?.ranked || h.rank > 1 ? ` (${h.rank})` : ""}
@@ -326,8 +324,8 @@ export function Sheet({
             onCash={onCash}
           />
         }
-        knowledges={linkList(knowledges, "knowledge")}
-        languages={linkList(languages, "language")}
+        knowledges={linkList(knowledges)}
+        languages={linkList(languages)}
         abilities={abilities.length > 0 ? traitCards(abilities, true, true) : <p className="sf-sheet-empty">No Abilities yet.</p>}
         skills={skills.length > 0 ? traitCards(skills, true) : <p className="sf-sheet-empty">No Skills yet.</p>}
         skillsAside={

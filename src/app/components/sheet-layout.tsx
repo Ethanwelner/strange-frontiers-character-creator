@@ -69,8 +69,20 @@ export const SHEET_RULES: Record<SheetContext, SheetRules> = {
 };
 
 // A box's ruled title, with anything along its line after the rule
-export function SheetTitle({ children, aside, as: Tag = "h3" }: { children: ReactNode; aside?: ReactNode; as?: "h3" | "h4" }) {
-  const title = <Tag className="sf-sheet-title">{children}</Tag>;
+export function SheetTitle({ children, aside, as: Tag = "h3", icon }: { children: ReactNode; aside?: ReactNode; as?: "h3" | "h4"; icon?: "knowledge" | "language" }) {
+  const title = (
+    <Tag className="sf-sheet-title">
+      {icon ? (
+        // The section's kind as an icon before its name, like its cards'
+        <span className="sf-sheet-title-label">
+          <Icon name={icon} className="sf-sheet-title-icon" />
+          {children}
+        </span>
+      ) : (
+        children
+      )}
+    </Tag>
+  );
   if (!aside) return title;
   return (
     <div className="sf-sheet-title-row">
@@ -214,11 +226,11 @@ export function SheetLayout(props: SheetLayoutProps) {
       <div className="sf-sheet-lower">
         <div className="sf-sheet-pair sf-sheet-pair--lists">
           <div className="sf-sheet-box sf-sheet-knowledges">
-            <SheetTitle>Knowledges</SheetTitle>
+            <SheetTitle icon="knowledge">Knowledges</SheetTitle>
             {knowledges}
           </div>
           <div className="sf-sheet-box sf-sheet-languages">
-            <SheetTitle>Languages</SheetTitle>
+            <SheetTitle icon="language">Languages</SheetTitle>
             {languages}
           </div>
         </div>
