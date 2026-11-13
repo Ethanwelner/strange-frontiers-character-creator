@@ -189,6 +189,23 @@ describe("the assistant's tools", () => {
     expect(trackerLine(play, result, content)).toMatch(new RegExp(`^HP 0/${maxOf(result, "hp")}, VP \\d+/\\d+, SP \\d+/\\d+; Dead$`));
   });
 
+  it("weighs the equipped items against the carry weight, naming the encumbrance once it does something", () => {
+    const base = fresh();
+    const result = checkPlay(base.draft, content);
+    const limit = 20 + 10 * (result.summary?.coreStats.physical ?? 0);
+    const plate = { item: "plate-armor", name: "Plate Armor", qty: 1, category: "armor" as const, equipped: true };
+    // Enough Plate Armor (25 kg each) to pass double the carry weight
+    const stack = Math.floor((2 * limit) / 25) + 1;
+    const heavy = { ...base, items: Array.from({ length: stack }, (_, n) => ({ ...plate, id: `p${n}` })) };
+    const state = applyTool("get_state", {}, heavy, result, content).result as { carry: { load: number; limit: number; state: string } };
+    expect(state.carry).toMatchObject({ load: 25 * stack, limit, state: "heavily-encumbered" });
+    expect(trackerLine(heavy, result, content)).toContain("Heavily Encumbered");
+    // Unequipped, it weighs nothing
+    const stowed = { ...heavy, items: heavy.items.map((i) => ({ ...i, equipped: false })) };
+    expect((applyTool("get_state", {}, stowed, result, content).result as { carry: { load: number } }).carry.load).toBe(0);
+    expect(trackerLine(stowed, result, content)).not.toContain("Encumbered");
+  });
+
   it("refuses Conditions that aren't Condition Traits", () => {
     const play = fresh();
     const result = checkPlay(play.draft, content);

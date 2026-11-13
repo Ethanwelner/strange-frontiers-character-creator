@@ -2,6 +2,7 @@
 // Creator's sheet and Player Tools. They travel in the build as
 // `conditions` (BuildCondition in engine/build.ts), like the items.
 import type { Content } from "../engine/parse.js";
+import { ENCUMBRANCE } from "../engine/carry.js";
 
 // A temporary Condition Trait the character has picked up, like Severe
 // Bleeding or Irradiated (2).
@@ -23,11 +24,16 @@ export function hpConditions(hp: number, max: number): string[] {
   return ["injured", ...(hp < max / 2 ? ["severely-injured"] : []), ...(hp < max / 4 ? ["incapacitated"] : [])];
 }
 
+// The Conditions the carried weight decides on its own (engine/carry.ts)
+export { ENCUMBRANCE };
+
 // Temporary Conditions a character can pick up: conveyed Condition Traits
-// that end, minus the ones HP decides and the ones for objects.
+// that end, minus the ones HP and carried weight decide and the ones for
+// objects.
 export function playConditions(content: Content) {
+  const decided = new Set<string>([...HP_CONDITIONS, ...ENCUMBRANCE]);
   return content.traits
-    .filter((t) => t.category === "condition" && t.temporary && !(HP_CONDITIONS as readonly string[]).includes(t.id))
+    .filter((t) => t.category === "condition" && t.temporary && !decided.has(t.id))
     .filter((t) => !/\bobject\b/i.test(t.temporary ?? "") || /\bcharacter\b/i.test(t.temporary ?? ""))
     .sort((a, b) => a.name.localeCompare(b.name));
 }

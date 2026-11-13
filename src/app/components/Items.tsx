@@ -6,6 +6,7 @@ import { content, itemById, traitById } from "../content.js";
 import { STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { BASE_HP, type BuildSummary } from "../../engine/validate.js";
 import { kitCostOf } from "../../engine/wealth.js";
+import { CARRY_BASE, CARRY_PER_PHYSICAL, kg } from "../../engine/carry.js";
 
 type Kit = BuildSummary["kit"];
 
@@ -231,6 +232,22 @@ function CashBadges({ cash, currency, onChange }: { cash: Record<string, number>
   );
 }
 
+// The equipped items' weight against the carry weight, as a badge in the
+// cash badges' style, before Wealth: a hanging weight, then "12.5/40 kg", red once the character
+// is Encumbered. Its title says what the carry weight comes from and the
+// Condition the load gives.
+function CarryBadge({ load, limit, state }: { load: number; limit: number; state: string }) {
+  const condition = traitById.get(state)?.name ?? state;
+  const details = `Equipped items weigh ${kg(load)} kg of a ${limit} kg carry weight (${CARRY_BASE} kg + ${CARRY_PER_PHYSICAL} kg per Physical): ${condition}`;
+  const over = state === "encumbered" || state === "heavily-encumbered";
+  return (
+    <span className={`sf-cash-badge sf-carry-badge${over ? " is-over" : ""}`} title={details} aria-label={details}>
+      <Icon name="weight-hanging" />
+      <span className="sf-cash-amount">{kg(load)}</span>/{limit} kg
+    </span>
+  );
+}
+
 // Wealth as a badge in the cash badges' style, before them: the rating, and
 // at creation (`kit`) the Kit Points left of what it gives, red once the
 // items cost too much. Its title says the rest: the dearest Kit Cost allowed,
@@ -290,9 +307,13 @@ export function Items({
   currency = "ERC",
   onCash,
   wealth,
+  carry,
 }: {
   items: Item[];
   onChange: (items: Item[]) => void;
+  // The equipped items' weight (load) against the carry weight (limit), in
+  // kg, and the encumbrance Condition that sets
+  carry?: { load: number; limit: number; state: string };
   kit?: Kit;
   cash?: Record<string, number>;
   currency?: string;
@@ -375,10 +396,11 @@ export function Items({
         Items
       </SheetTitle>
 
-      {/* Wealth and money on a line of their own over the list, so the
-          title's line keeps room on small screens */}
-      {(wealth !== undefined || onCash) && (
+      {/* The carried weight, Wealth and money on a line of their own over
+          the list, so the title's line keeps room on small screens */}
+      {(carry || wealth !== undefined || onCash) && (
         <div className="sf-items-money">
+          {carry && <CarryBadge {...carry} />}
           {wealth !== undefined && <WealthBadge wealth={wealth} kit={kit} />}
           {onCash && <CashBadges cash={cash ?? {}} currency={currency} onChange={(c, n) => onCash({ ...cash, [c]: n })} />}
         </div>

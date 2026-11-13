@@ -10,6 +10,7 @@
 import { ITEM_CATEGORIES, isCounted } from "../engine/build.js";
 import type { Item as StockItem } from "../schema/index.js";
 import { attackText, damageText } from "../engine/damage.js";
+import { itemLoad } from "../engine/carry.js";
 import { itemById } from "./content.js";
 
 export { ITEM_CATEGORIES };
@@ -71,6 +72,10 @@ export function withoutItem(items: Item[], name: string, qty?: number): Item[] {
   if (qty === undefined || qty >= item.qty) return items.filter((i) => i !== item);
   return items.map((i) => (i === item ? { ...i, qty: i.qty - qty } : i));
 }
+
+// What the equipped items weigh, in kg (engine/carry.ts): the load against
+// the carry weight
+export const carriedLoad = (items: Item[]) => items.reduce((n, i) => n + itemLoad(i, i.item ? itemById.get(i.item) : undefined), 0);
 
 // A counted item's count with its name, "20 Arrows"; anything else, its name.
 export const itemLabel = (item: Pick<Item, "name" | "qty" | "category">) => (isCounted(item) ? `${item.qty} ${item.name}` : item.name);
