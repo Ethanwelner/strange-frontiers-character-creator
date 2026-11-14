@@ -115,6 +115,18 @@
     left: calc(.5rem + 48px - 20px);
 }
 
+/* What straddles the sheet's top edge on the right, half in and half out
+   like the blob, its right side on the boxes' right edge (build: whether
+   the build is legal) */
+.sf-sheet-badge {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    right: 1rem;
+    transform: translateY(-50%);
+    display: flex;
+}
+
 /* From 1200px to 1399px the site's column runs nearly to the page's edges,
    so the blob comes in off the corner, its left edge 12px inside the
    sheet's */

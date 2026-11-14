@@ -264,9 +264,8 @@ export function Sheet({
       {context === "build" && (
         <>
           <StepHeader title="Sheet" />
-          {/* Whether the build is legal, then Load Into Player Tools, Download, Import and Print, above the sheet */}
+          {/* Load Into Player Tools, Download, Import and Print, above the sheet */}
           <div className="sheet-actions">
-            <span className={`status ${result.ok ? "good" : "bad"}`}>{result.ok ? "Legal" : `${result.errors.length} ${result.errors.length === 1 ? "error" : "errors"}`}</span>
             {/* Player Tools reads this character from the creator's saved data; the query asks it to bring the character in */}
             <a className={sfButton({ tone: "primary", ready: result.ok })} href={`${toolsPage()}?from=creator`}>
               <Icon name="play" />
@@ -291,6 +290,12 @@ export function Sheet({
         context={context}
         level={draft.level}
         corner={corner}
+        badge={
+          // Whether the build is legal, on the sheet's top edge
+          context === "build" && (
+            <span className={`status ${result.ok ? "good" : "bad"}`}>{result.ok ? "Legal" : `${result.errors.length} ${result.errors.length === 1 ? "error" : "errors"}`}</span>
+          )
+        }
         actions={actions}
         head={{
           who: (
