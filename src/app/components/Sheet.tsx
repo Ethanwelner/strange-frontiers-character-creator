@@ -358,6 +358,7 @@ export function Sheet({
             wealth={summary?.wealth}
             currency={summary?.kit.cash.currency}
             onCash={onCash}
+            inhabits={Boolean(kindById.get(draft.kind ?? "")?.core)}
           />
         }
         knowledges={linkList(knowledges)}

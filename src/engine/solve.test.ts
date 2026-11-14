@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { loadContent } from "./content.js";
-import { allocateLevels, Concept, rankFocus, solveConcept, type ConceptInput, type Solution } from "./solve.js";
+import { allocateLevels, Concept, rankFocus, solveConcept, solveItems, type ConceptInput, type Solution } from "./solve.js";
 import { validateBuild } from "./validate.js";
 import { Kind, Trait } from "../schema/index.js";
 
@@ -302,5 +302,12 @@ describe("solveItems", () => {
       { item: "luras", reason: "money isn't handed out yet" },
       { item: "lightsaber", reason: 'Item "lightsaber" doesn\'t exist' },
     ]);
+  });
+
+  it("equips an AI Core's first chassis, which it inhabits, and only for a Kind with a core", () => {
+    const items = ["humanoid-service-chassis", "courier-drone-chassis"];
+    const equipped = (kind: string) => solveItems({ kind, origin: "kashgar", items } as unknown as Concept, content).items.map((i) => i.equipped);
+    expect(equipped("ai-core")).toEqual([true, false]);
+    expect(equipped("human")).toEqual([false, false]);
   });
 });

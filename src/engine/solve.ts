@@ -244,12 +244,14 @@ export function rankFocus(concept: Concept, content: Content): string[] {
 // from Dreft doesn't start with a pistol. A consumable's qty is in bundles
 // and becomes units (1 Arrows is 20 arrows); anything else becomes that many
 // separate items. Weapons are equipped, and so is the first item listed for
-// each slot, like Body Armor.
+// each slot, like Body Armor, and an AI Core's first chassis, which it
+// inhabits.
 export function solveItems(concept: Concept, content: Content): { items: BuildItem[]; skipped: SkippedItem[] } {
   const plane = content.packages.find((p) => p.id === concept.origin && p.type === "origin")?.plane;
   const items: BuildItem[] = [];
   const skipped: SkippedItem[] = [];
   const slots = new Set<string>();
+  let inhabits = Boolean(content.kinds.find((k) => k.id === concept.kind)?.core);
   for (const entry of concept.items) {
     const { item: id, qty } = typeof entry === "string" ? { item: entry, qty: 1 } : entry;
     const item = content.items.find((i) => i.id === id);
@@ -272,7 +274,9 @@ export function solveItems(concept: Concept, content: Content): { items: BuildIt
       continue;
     }
     for (let n = 0; n < qty; n++) {
-      const equipped = item.category === "weapon" || (!!item.slot && !slots.has(item.slot));
+      const chassis = Boolean(item.chassis) && inhabits;
+      if (chassis) inhabits = false;
+      const equipped = item.category === "weapon" || chassis || (!!item.slot && !slots.has(item.slot));
       if (item.slot) slots.add(item.slot);
       items.push({ item: item.id, name: item.name, qty: 1, category: item.category, equipped });
     }
