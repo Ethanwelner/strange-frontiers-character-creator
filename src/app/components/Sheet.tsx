@@ -264,13 +264,13 @@ export function Sheet({
       {context === "build" && (
         <>
           <StepHeader title="Sheet" />
-          {/* Whether the build is legal, then Play in Player Tools, Download, Import and Print, above the sheet */}
+          {/* Whether the build is legal, then Load Into Player Tools, Download, Import and Print, above the sheet */}
           <div className="sheet-actions">
             <span className={`status ${result.ok ? "good" : "bad"}`}>{result.ok ? "Legal" : `${result.errors.length} ${result.errors.length === 1 ? "error" : "errors"}`}</span>
             {/* Player Tools reads this character from the creator's saved data; the query asks it to bring the character in */}
-            <a className={sfButton({ tone: "primary" })} href={`${toolsPage()}?from=creator`}>
+            <a className={sfButton({ tone: "primary", ready: result.ok })} href={`${toolsPage()}?from=creator`}>
               <Icon name="play" />
-              Play in Player Tools
+              Load Into Player Tools
             </a>
             <Button onClick={onExport}>
               <Icon name="download" />

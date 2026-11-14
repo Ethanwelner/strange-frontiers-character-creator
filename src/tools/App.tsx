@@ -11,7 +11,7 @@ import { Tracker } from "./components/Tracker.js";
 import { Button } from "../app/components/Button.js";
 import { creatorPage } from "../app/pages.js";
 
-// The character the Character Creator's Play in Player Tools button sent
+// The character the Character Creator's Load Into Player Tools button sent
 // (tools page?from=creator), read from the creator's saved data.
 const sentFromCreator = () => (new URLSearchParams(location.search).get("from") === "creator" ? creatorDraft() : undefined);
 const playOf = (draft: Draft) => withStartingCash(startPlay(toBuild(draft)), content);
