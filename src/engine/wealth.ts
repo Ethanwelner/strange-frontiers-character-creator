@@ -4,7 +4,9 @@
 // spend on its starting items (its budget) and the dearest item it can start
 // with (its ceiling). What's left becomes starting cash in its Origin's
 // currency once it's in play. Wealth comes from the Origin, Profession and
-// Past, and from Traits, and stays on the sheet as a rating afterwards.
+// Past, and from Traits, and stays on the sheet as a rating afterwards. A
+// character made above level 1 has had a lifetime to gather things, so its
+// kit is bought with more: its kit Wealth adds 1 for every 5 levels.
 import type { Item } from "../schema/index.js";
 
 export const WEALTH_MIN = -1;
@@ -39,10 +41,16 @@ export function kitCostOf(item: Item): number {
 
 export const clampWealth = (n: number) => Math.max(WEALTH_MIN, Math.min(WEALTH_MAX, n));
 
-// Kit Points to spend on starting items: 3 + 2 × Wealth
+// What a character's level adds to the Wealth its starting kit is bought
+// with: +1 at levels 5 to 9, +2 at 10 to 14, +3 at 15 to 19, +4 at 20.
+export const LEVELS_PER_KIT_WEALTH = 5;
+export const levelKitWealth = (level: number) => Math.max(0, Math.floor(level / LEVELS_PER_KIT_WEALTH));
+
+// Kit Points to spend on starting items: 3 + 2 × Wealth (kit Wealth, with
+// the level's bonus)
 export const kitBudget = (wealth: number) => Math.max(0, 3 + 2 * wealth);
 
-// The dearest Kit Cost a starting item can have: Wealth + 1
+// The dearest Kit Cost a starting item can have: Wealth + 1 (kit Wealth)
 export const kitCeiling = (wealth: number) => Math.max(0, wealth + 1);
 
 // Starting cash for points left over, in a currency: Luras for an Isekai

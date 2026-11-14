@@ -257,7 +257,7 @@ function WealthBadge({ wealth, kit }: { wealth: number; kit?: Kit }) {
   const over = kit && kit.spent > kit.budget;
   const details = kit
     ? [
-        `Wealth ${sign}: ${kit.budget} Kit Points for starting items, each up to Kit Cost ${kit.ceiling}`,
+        `Wealth ${sign}${kit.fromLevel ? `, +${kit.fromLevel} from level` : ""}: ${kit.budget} Kit Points for starting items, each up to Kit Cost ${kit.ceiling}`,
         `${kit.budget - kit.spent} left`,
         ...(kit.left > 0 ? [`the rest becomes ${kit.cash.amount.toLocaleString("en-US")} ${kit.cash.currency} in play`] : []),
         ...(kit.freeChassis ? [`${itemById.get(kit.freeChassis)?.name ?? "a chassis"} free`] : []),
@@ -266,6 +266,13 @@ function WealthBadge({ wealth, kit }: { wealth: number; kit?: Kit }) {
   return (
     <span className={`sf-cash-badge sf-wealth-badge${over ? " is-over" : ""}`} title={details} aria-label={details}>
       <span className="sf-cash-amount">{sign}</span> Wealth
+      {/* A character made above level 1 buys its kit with more */}
+      {kit && kit.fromLevel > 0 && (
+        <span className="sf-wealth-level">
+          {" "}
+          · <span className="sf-cash-amount">+{kit.fromLevel}</span> from level
+        </span>
+      )}
       {kit && (
         <span className="sf-wealth-kit">
           {" "}

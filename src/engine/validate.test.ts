@@ -3,6 +3,7 @@ import { BackgroundPackage, Kind, Trait } from "../schema/index.js";
 import { loadContent, type Content } from "./content.js";
 import type { BuildInput } from "./build.js";
 import { validateBuild, type IssueCode } from "./validate.js";
+import { levelKitWealth } from "./wealth.js";
 
 const loaded = loadContent();
 // Knowledges and Skills (and Shield Wall, a Skill until it became an Ability)
@@ -981,5 +982,16 @@ describe("rule 16: Wealth buys the starting kit", () => {
 
   it("doesn't apply in play", () => {
     expectLegal(check({ ...human, items: [own("power-armor")] }, content, { ...L1, kit: false }));
+  });
+
+  it("buys a higher-level character's kit with 1 more Wealth for every 5 levels", () => {
+    expect([1, 4, 5, 9, 10, 15, 20].map(levelKitWealth)).toEqual([0, 0, 1, 1, 2, 3, 4]);
+    // A level 20 character of Wealth 0 has kit Wealth 4: 11 Kit Points, items up to Kit Cost 5
+    const at = (level: number) => check({ ...human, level, items: [own("power-armor")] }, plain, { startingLevel: level });
+    expect(at(20).summary!.kit).toMatchObject({ fromLevel: 4, budget: 11, ceiling: 5 });
+    expect(at(20).errors.map((e) => e.code)).not.toContain("kit-ceiling");
+    expect(at(1).summary!.kit).toMatchObject({ fromLevel: 0, budget: 3, ceiling: 1 });
+    expect(at(1).errors.find((e) => e.code === "kit-ceiling")?.message).toMatch(/Wealth 0 can start/);
+    expect(at(10).errors.find((e) => e.code === "kit-ceiling")?.message).toMatch(/Wealth 0 \(\+2 from level 10\) can start with items up to 3/);
   });
 });
