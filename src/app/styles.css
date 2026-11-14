@@ -1927,19 +1927,47 @@
 
   .sheet-actions {
     display: flex;
+    flex-wrap: wrap;
     justify-content: flex-end;
     gap: 0.75rem;
     align-items: center;
+  }
 
-    /* The status as a small badge, shaped like the step's error chips */
-    .status {
-      font-family: var(--body);
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0;
-      line-height: 1.2;
-      padding: 0.5rem 1rem;
-      border-radius: 999px;
+  /* The status as a small badge, shaped like the step's error chips, on the
+     sheet's top edge (sheet.css places it) */
+  .sf-sheet-badge .status {
+    font-family: var(--body);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 1.2;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+  }
+
+  /* The errors badge is a button that opens their list */
+  .sf-sheet-badge button.status {
+    border: 0;
+    cursor: pointer;
+
+    &:hover,
+    &:focus-visible {
+      filter: brightness(1.15);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--portfolio-white);
+      outline-offset: 2px;
+    }
+  }
+
+  /* A popup's list of rules problems (the creator's Sheet and Player Tools) */
+  .issue-list {
+    margin: 0;
+    padding-left: 1.25rem;
+
+    li + li {
+      margin-top: 8px;
     }
   }
 
@@ -2819,7 +2847,8 @@
     .notice,
     .step-head,
     .name-edit,
-    .sheet-actions button {
+    .sheet-actions button,
+    .sheet-actions a {
       display: none !important;
     }
 

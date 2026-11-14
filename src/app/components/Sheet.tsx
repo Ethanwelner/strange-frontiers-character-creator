@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState, type ReactNode } from "react";
 import { Popup } from "./popup.js";
 import { FREE_TEXT_POOLS, isFreeTextPool, type BuildResult } from "../../engine/validate.js";
-import { coreStatsShown } from "../check.js";
+import { coreStatsShown, describe } from "../check.js";
 import { sheetStatGroups, StatBlock } from "./stats.js";
 import { content, itemById, kindById, packageById, traitById } from "../content.js";
 import type { Draft, Looks } from "../draft.js";
@@ -15,7 +15,8 @@ import { askerName, DescriptionBox, Effect, Icon, NameField, Portrait, StepHeade
 import { FullResources, SHEET_RULES, SheetLayout, SheetTitle, type SheetContext } from "./sheet-layout.js";
 import { Resistances } from "./Resistances.js";
 import { CardChip, KIND_ICON, TraitCard, traitCardKind } from "./cards.js";
-import { Button } from "./Button.js";
+import { Button, sfButton } from "./Button.js";
+import { toolsPage } from "../pages.js";
 
 const SOURCE = /^(kind|origin|profession|past) ([a-z0-9-]+)( choice)?$/;
 const TRAIT_CHOICE = /^trait ([a-z0-9-]+) choice$/;
@@ -251,6 +252,10 @@ export function Sheet({
     </ul>
   );
   const [open, setOpen] = useState<string>();
+  // The build's errors, listed in a popup opened from the error badge
+  const [showingIssues, setShowingIssues] = useState(false);
+  const closeIssues = useCallback(() => setShowingIssues(false), []);
+  const errorList = useMemo(() => [...new Set(result.errors.map((e) => describe(e, draft)))], [result, draft]);
   const closeModal = useCallback(() => setOpen(undefined), []);
   const opened = held.find((h) => h.trait === open);
   // The packages' features, at the bottom
@@ -263,9 +268,13 @@ export function Sheet({
       {context === "build" && (
         <>
           <StepHeader title="Sheet" />
-          {/* Whether the build is legal, then Download, Import and Print, above the sheet */}
+          {/* Load Into Player Tools, Download, Import and Print, above the sheet */}
           <div className="sheet-actions">
-            <span className={`status ${result.ok ? "good" : "bad"}`}>{result.ok ? "Legal" : `${result.errors.length} ${result.errors.length === 1 ? "error" : "errors"}`}</span>
+            {/* Player Tools reads this character from the creator's saved data; the query asks it to bring the character in */}
+            <a className={sfButton({ tone: "primary", ready: result.ok })} href={`${toolsPage()}?from=creator`}>
+              <Icon name="play" />
+              Load Into Player Tools
+            </a>
             <Button onClick={onExport}>
               <Icon name="download" />
               Download
@@ -285,6 +294,18 @@ export function Sheet({
         context={context}
         level={draft.level}
         corner={corner}
+        badge={
+          // Whether the build is legal, on the sheet's top edge; the errors
+          // badge opens the list of them
+          context === "build" &&
+          (result.ok ? (
+            <span className="status good">Legal</span>
+          ) : (
+            <button type="button" className="status bad" aria-haspopup="dialog" onClick={() => setShowingIssues(true)}>
+              {result.errors.length} {result.errors.length === 1 ? "error" : "errors"}
+            </button>
+          ))
+        }
         actions={actions}
         head={{
           who: (
@@ -337,6 +358,7 @@ export function Sheet({
             wealth={summary?.wealth}
             currency={summary?.kit.cash.currency}
             onCash={onCash}
+            inhabits={Boolean(kindById.get(draft.kind ?? "")?.core)}
           />
         }
         knowledges={linkList(knowledges)}
@@ -391,6 +413,15 @@ export function Sheet({
         }
       />
       {opened && <TraitModal held={opened} places={places(opened.trait)} draft={draft} onClose={closeModal} />}
+      {showingIssues && errorList.length > 0 && (
+        <Popup label="Rules problems" title="Rules problems" onClose={closeIssues}>
+          <ul className="issue-list">
+            {errorList.map((text) => (
+              <li key={text}>{text}</li>
+            ))}
+          </ul>
+        </Popup>
+      )}
     </section>
   );
 }

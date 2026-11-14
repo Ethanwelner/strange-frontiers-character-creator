@@ -257,7 +257,7 @@ function WealthBadge({ wealth, kit }: { wealth: number; kit?: Kit }) {
   const over = kit && kit.spent > kit.budget;
   const details = kit
     ? [
-        `Wealth ${sign}: ${kit.budget} Kit Points for starting items, each up to Kit Cost ${kit.ceiling}`,
+        `Wealth ${sign}${kit.fromLevel ? `, +${kit.fromLevel} from level` : ""}: ${kit.budget} Kit Points for starting items, each up to Kit Cost ${kit.ceiling}`,
         `${kit.budget - kit.spent} left`,
         ...(kit.left > 0 ? [`the rest becomes ${kit.cash.amount.toLocaleString("en-US")} ${kit.cash.currency} in play`] : []),
         ...(kit.freeChassis ? [`${itemById.get(kit.freeChassis)?.name ?? "a chassis"} free`] : []),
@@ -266,6 +266,13 @@ function WealthBadge({ wealth, kit }: { wealth: number; kit?: Kit }) {
   return (
     <span className={`sf-cash-badge sf-wealth-badge${over ? " is-over" : ""}`} title={details} aria-label={details}>
       <span className="sf-cash-amount">{sign}</span> Wealth
+      {/* A character made above level 1 buys its kit with more */}
+      {kit && kit.fromLevel > 0 && (
+        <span className="sf-wealth-level">
+          {" "}
+          · <span className="sf-cash-amount">+{kit.fromLevel}</span> from level
+        </span>
+      )}
       {kit && (
         <span className="sf-wealth-kit">
           {" "}
@@ -308,8 +315,12 @@ export function Items({
   onCash,
   wealth,
   carry,
+  inhabits,
 }: {
   items: Item[];
+  // A Kind with a core (the AI Core): a chassis added while it's in none is
+  // equipped, so it inhabits it
+  inhabits?: boolean;
   onChange: (items: Item[]) => void;
   // The equipped items' weight (load) against the carry weight (limit), in
   // kg, and the encumbrance Condition that sets
@@ -360,13 +371,19 @@ export function Items({
   // Equipping a chassis moves the AI Core into it, out of any other
   const equip = (item: Item, equipped: boolean) =>
     onChange(items.map((i) => (i === item ? { ...i, equipped } : equipped && isChassis(item) && isChassis(i) ? { ...i, equipped: false } : i)));
+  // An AI Core in no chassis moves into the first one added
+  const inhabitFirst = (next: Item[]) => {
+    if (!inhabits || next.some((i) => i.equipped && isChassis(i))) return next;
+    const first = next.find((i) => !items.includes(i) && isChassis(i));
+    return first ? next.map((i) => (i === first ? { ...i, equipped: true } : i)) : next;
+  };
   const remove = (item: Item) => onChange(items.filter((i) => i !== item));
   const countOf = (n: string) => Math.max(1, Math.round(Number(n)) || 1);
   // The items checked in the picker, as the game describes them: a
   // consumable's count is in bundles (2 of Arrows is 40 arrows), anything
   // else's in separate items
   const addStock = (picked: { stock: StockItem; qty: number }[]) => {
-    onChange(picked.reduce((list, { stock, qty: n }) => withStock(list, stock, n), items));
+    onChange(inhabitFirst(picked.reduce((list, { stock, qty: n }) => withStock(list, stock, n), items)));
     setAdding(false);
   };
   // A custom item: whatever the player writes, unless the name is a stock
@@ -375,7 +392,7 @@ export function Items({
     if (!name.trim()) return;
     const stock = stockItemNamed(content.items, name);
     const count = countOf(qty);
-    onChange(stock ? withStock(items, stock, count) : withItem(items, { name: name.trim(), qty: count, category, equipped: false }));
+    onChange(stock ? inhabitFirst(withStock(items, stock, count)) : withItem(items, { name: name.trim(), qty: count, category, equipped: false }));
     setName("");
     setQty("1");
     setAdding(false);

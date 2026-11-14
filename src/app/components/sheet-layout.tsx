@@ -144,6 +144,9 @@ export interface SheetLayoutProps {
   level: number;
   // On the blob's corner (play: Level up)
   corner?: ReactNode;
+  // Straddling the sheet's top edge on the right, like the blob on the left
+  // (build: whether the build is legal)
+  badge?: ReactNode;
   // Over the sheet (play: Download, Switch and the rules problems)
   actions?: ReactNode;
   head: { who: ReactNode; description?: ReactNode };
@@ -201,6 +204,7 @@ export function SheetLayout(props: SheetLayoutProps) {
         <span className="sf-sheet-level-number">{level}</span>
       </div>
       {rules.levelUp && props.corner && <div className="sf-sheet-corner">{props.corner}</div>}
+      {props.badge && <div className="sf-sheet-badge">{props.badge}</div>}
       {rules.actions && props.actions}
 
       <div className="sf-sheet-box sf-sheet-head">
