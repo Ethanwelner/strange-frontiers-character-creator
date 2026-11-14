@@ -17,17 +17,20 @@ export function Conditions({
   hp,
   maxHp,
   encumbrance,
-  onChange,
+  onChange: change,
 }: {
   conditions: HeldCondition[];
   hp: number;
   maxHp: number;
   encumbrance?: string;
-  onChange: (conditions: HeldCondition[]) => void;
+  // Without it (a Game Master's view), the Conditions can't be changed
+  onChange?: (conditions: HeldCondition[]) => void;
 }) {
   const options = useMemo(() => playConditions(content), []);
   const fromHp = hpConditions(hp, maxHp);
   const fromLoad = encumbrance ? traitById.get(encumbrance) : undefined;
+  const onChange = change ?? (() => {});
+  const editable = Boolean(change);
   // Add Condition's popup, open or not
   const [adding, setAdding] = useState(false);
   const add = (id: string) => {
@@ -43,9 +46,11 @@ export function Conditions({
         as="h4"
         icon="condition"
         aside={
-          <Button size="small" tone="condition" className="sf-sheet-add" aria-label="Add Condition" onClick={() => setAdding(true)}>
-            Add<span className="sf-sheet-add-noun"> Condition</span>
-          </Button>
+          editable && (
+            <Button size="small" tone="condition" className="sf-sheet-add" aria-label="Add Condition" onClick={() => setAdding(true)}>
+              Add<span className="sf-sheet-add-noun"> Condition</span>
+            </Button>
+          )
         }
       >
         Conditions
@@ -89,7 +94,8 @@ export function Conditions({
                 name={
                   <>
                     {t?.name ?? c.trait}
-                    {t?.ranked && (
+                    {t?.ranked && !editable && ` (${c.rank})`}
+                    {t?.ranked && editable && (
                       <span className="stepper tools-rank">
                         <Button kind="bare" className="tools-rank-btn" onClick={() => update(c, { rank: c.rank - 1 })} disabled={c.rank <= 1} aria-label="Lower rank">
                           <Sign is="minus" />
@@ -103,7 +109,7 @@ export function Conditions({
                   </>
                 }
                 actions={
-                  <RemoveX label={`Remove ${t?.name ?? c.trait}`} onClick={() => onChange(withoutCondition(conditions, c.trait))} />
+                  editable && <RemoveX label={`Remove ${t?.name ?? c.trait}`} onClick={() => onChange(withoutCondition(conditions, c.trait))} />
                 }
               >
                 {t?.temporary && (

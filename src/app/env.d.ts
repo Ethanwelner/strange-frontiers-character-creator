@@ -4,4 +4,6 @@ declare const __SF_AI__: {
   endpoint: string;
   model: string;
   toolsEndpoint: string;
+  // Game Master tables (src/table/table.ts)
+  tableEndpoint: string;
 };

@@ -152,18 +152,19 @@ export function Sheet({
   // build: Download and Import, over the sheet
   onExport?: () => void;
   onImport?: () => void;
-  onName: (name?: string) => void;
-  onLooks: (looks: Looks) => void;
-  onPortrait: (portrait?: string) => void;
-  onDescription: (description?: string) => void;
+  // view: none of these, so nothing can be changed
+  onName?: (name?: string) => void;
+  onLooks?: (looks: Looks) => void;
+  onPortrait?: (portrait?: string) => void;
+  onDescription?: (description?: string) => void;
   // The Conditions and the Items, with the current HP the Conditions go by
   // (full if not given)
   items: Item[];
-  onItems: (items: Item[]) => void;
+  onItems?: (items: Item[]) => void;
   // The character's money, by currency (draft.cash), changed from its badge
   onCash?: (cash: Record<string, number>) => void;
   conditions: HeldCondition[];
-  onConditions: (conditions: HeldCondition[]) => void;
+  onConditions?: (conditions: HeldCondition[]) => void;
   hp?: number;
   // play: Level up, on the level's corner, and Download, Switch and the rules problems
   corner?: ReactNode;
@@ -312,9 +313,9 @@ export function Sheet({
             <>
               <Portrait className="sf-sheet-portrait" portrait={draft.portrait} name={draft.name} onChange={rules.edit ? onPortrait : undefined} />
               <div className="sf-sheet-main">
-                <NameField className="sheet-name" heading="h2" name={draft.name} onChange={onName} />
+                <NameField className="sheet-name" heading="h2" name={draft.name} onChange={rules.edit ? onName : undefined} />
                 {/* Kind, age, gender, height, weight, Origin, Profession and Past */}
-                <CharacterLine draft={draft} onLooks={onLooks} />
+                <CharacterLine draft={draft} onLooks={rules.edit ? onLooks : undefined} />
               </div>
             </>
           ),
@@ -345,19 +346,19 @@ export function Sheet({
             hp={hp ?? summary?.resources.hp ?? 0}
             maxHp={summary?.resources.hp ?? 0}
             encumbrance={summary ? carry.state : undefined}
-            onChange={onConditions}
+            onChange={rules.edit ? onConditions : undefined}
           />
         }
         items={
           <Items
             items={items}
-            onChange={onItems}
+            onChange={rules.edit ? onItems : undefined}
             carry={summary ? carry : undefined}
             kit={context === "build" ? summary?.kit : undefined}
             cash={draft.cash}
             wealth={summary?.wealth}
             currency={summary?.kit.cash.currency}
-            onCash={onCash}
+            onCash={rules.edit ? onCash : undefined}
             inhabits={Boolean(kindById.get(draft.kind ?? "")?.core)}
           />
         }

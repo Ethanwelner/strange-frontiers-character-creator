@@ -12,7 +12,7 @@ const LABELS = ["Kind", "Origin", "Profession", "Past"];
 // Profession and Past stacked under it, each a plain label in the builder's
 // field label style over its value. The Kind and background link to their cards;
 // the looks have pens to edit them in place.
-export function CharacterLine({ draft, onLooks }: { draft: Draft; onLooks: (looks: Looks) => void }) {
+export function CharacterLine({ draft, onLooks }: { draft: Draft; onLooks?: (looks: Looks) => void }) {
   // The Kind or background package whose card is open
   const [showing, setShowing] = useState<string>();
   const close = useCallback(() => setShowing(undefined), []);

@@ -40,10 +40,13 @@ import { Icon } from "./ui.js";
 //           it, as it would look in play, with nothing to change. Resources
 //           at full, each stat's maximum, cards and links that open.
 //
+//   view    Game Master tools: a player's character as it is right now,
+//           with nothing to change. Resources live, without their controls.
+//
 // A slot a context doesn't allow isn't drawn, even when it's handed one.
 // The site's pages are static, so only sample exists there.
 
-export type SheetContext = "play" | "build" | "sample";
+export type SheetContext = "play" | "build" | "sample" | "view";
 
 export interface SheetRules {
   // Level up, on the blob's corner
@@ -66,6 +69,7 @@ export const SHEET_RULES: Record<SheetContext, SheetRules> = {
   play: { levelUp: true, actions: true, resources: "live", statMax: false, statEdit: true, edit: true, addTraits: true },
   build: { levelUp: false, actions: false, resources: "full", statMax: true, statEdit: false, edit: true, addTraits: false },
   sample: { levelUp: false, actions: false, resources: "full", statMax: true, statEdit: false, edit: false, addTraits: false },
+  view: { levelUp: false, actions: true, resources: "live", statMax: false, statEdit: false, edit: false, addTraits: false },
 };
 
 // A box's ruled title, with anything along its line after the rule

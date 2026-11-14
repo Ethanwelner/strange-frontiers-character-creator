@@ -10,13 +10,35 @@ const label = (g: string) => g[0]!.toUpperCase() + g.slice(1);
 // creator's gender dropdown for the gender, with a field for the player's own
 // word under Custom, and free text for height and weight. Enter or leaving
 // the field keeps it; Escape puts it back.
-export function LooksLine({ looks, onChange }: { looks: Looks; onChange: (looks: Looks) => void }) {
+export function LooksLine({ looks, onChange: change }: { looks: Looks; onChange?: (looks: Looks) => void }) {
+  const onChange = change ?? (() => {});
   const [editing, setEditing] = useState<"age" | "gender" | "height" | "weight">();
   const [age, setAge] = useState("");
   // The height or weight being edited
   const [size, setSize] = useState("");
   const [gender, setGender] = useState<string>("unlisted");
   const [custom, setCustom] = useState("");
+  // Without onChange (a Game Master's view), the values alone
+  if (!change) {
+    const values: [string, string | number][] = [
+      ["Age", looks.age ?? "—"],
+      ["Gender", genderText(looks) ?? "Unlisted"],
+      ["Height", looks.height ?? "—"],
+      ["Weight", looks.weight ?? "—"],
+    ];
+    return (
+      <>
+        {values.map(([label, value]) => (
+          <span key={label} className="tools-line-item tools-look">
+            <span className="field-label">{label}</span>
+            <span className="tools-look-row">
+              <strong className="tools-look-value">{value}</strong>
+            </span>
+          </span>
+        ))}
+      </>
+    );
+  }
 
   const startAge = () => {
     setAge(looks.age === undefined ? "" : String(looks.age));

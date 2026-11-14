@@ -1,0 +1,153 @@
+/* The Game Master tools: the creator's and Player Tools' styles plus these,
+   under .sf-gm. */
+.sf-gm {
+  /* Make a table: the name and the button on one line, wrapping on phones */
+  .gm-make {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    margin: 24px 0 12px;
+  }
+
+  .gm-make-name {
+    flex: 1 1 280px;
+    max-width: 480px;
+  }
+
+  /* The table's name and player count, with the join code across from them */
+  .gm-table-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px 32px;
+  }
+
+  .gm-table-title h2 {
+    margin: 0;
+  }
+
+  .gm-table-count {
+    margin: 4px 0 0;
+    color: var(--panel-soft);
+  }
+
+  .gm-offline {
+    color: var(--portfolio-red);
+  }
+
+  .gm-table-code {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  /* The code as people read it out, big */
+  .gm-code {
+    font-family: var(--title);
+    font-size: 2.25rem;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    color: var(--portfolio-green);
+  }
+
+  .gm-table-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .gm-recovery-hint {
+    margin: 8px 0 0;
+  }
+
+  .gm-lost {
+    margin-top: 16px;
+  }
+
+  .gm-empty {
+    margin-top: 32px;
+    color: var(--panel-soft);
+  }
+
+  /* The players, as cards in a grid that fills the width */
+  .gm-players {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin: 32px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .gm-player {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    height: 100%;
+    padding: 20px;
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    background: var(--panel-box);
+    color: var(--panel-text);
+  }
+
+  .gm-player-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .gm-player-name {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+
+  .gm-player-line {
+    margin: 4px 0 0;
+    font-size: 0.875rem;
+    color: var(--panel-soft);
+  }
+
+  /* Whether they're here: green while they are, gray once they've gone */
+  .gm-presence {
+    flex: none;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--panel-soft);
+    white-space: nowrap;
+
+    &.is-here {
+      color: var(--portfolio-green);
+    }
+  }
+
+  .gm-meters {
+    display: grid;
+    gap: 10px;
+  }
+
+  .gm-player-conditions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+      padding: 2px 10px;
+      border-radius: 999px;
+      background: var(--portfolio-black);
+      font-size: 0.75rem;
+    }
+  }
+
+  .gm-player-open {
+    align-self: flex-start;
+    margin-top: auto;
+  }
+}

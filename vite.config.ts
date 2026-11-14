@@ -56,6 +56,9 @@ export default defineConfig(({ command, mode }) => {
     // Game Tools' assistant always runs in the browser, through the local AI
     // server in development and the site's game-tools-api.php in a build.
     toolsEndpoint: env.VITE_SF_TOOLS_ENDPOINT || (dev ? "api/messages" : "game-tools-api.php"),
+    // Game Master tables: the site's game-table-api.php, in development
+    // through the proxy below to the site's own PHP server.
+    tableEndpoint: env.VITE_SF_TABLE_ENDPOINT || "game-table-api.php",
   };
 
   return {
@@ -65,7 +68,13 @@ export default defineConfig(({ command, mode }) => {
     base: "./",
     server: {
       // The AI server (src/server/), started alongside Vite by `npm run dev`.
-      proxy: { "/api": `http://127.0.0.1:${process.env.AI_PORT ?? 8787}` },
+      // Game Master tables go to the site's PHP server (its serve.sh, or the
+      // portfolio launch config), on SF_SITE_PORT (43145 by default).
+      proxy: {
+        "/api": `http://127.0.0.1:${process.env.AI_PORT ?? 8787}`,
+        // Keeping the page's own host, so the API's same-site check passes as on the site
+        "/game-table-api.php": { target: `http://127.0.0.1:${env.SF_SITE_PORT || 43145}`, changeOrigin: false },
+      },
     },
     test: {
       // Session worktrees under .claude/ are full copies of the repo.
