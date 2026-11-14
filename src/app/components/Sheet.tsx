@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState, type ReactNode } from "react";
 import { Popup } from "./popup.js";
 import { FREE_TEXT_POOLS, isFreeTextPool, type BuildResult } from "../../engine/validate.js";
-import { coreStatsShown } from "../check.js";
+import { coreStatsShown, describe } from "../check.js";
 import { sheetStatGroups, StatBlock } from "./stats.js";
 import { content, itemById, kindById, packageById, traitById } from "../content.js";
 import type { Draft, Looks } from "../draft.js";
@@ -252,6 +252,10 @@ export function Sheet({
     </ul>
   );
   const [open, setOpen] = useState<string>();
+  // The build's errors, listed in a popup opened from the error badge
+  const [showingIssues, setShowingIssues] = useState(false);
+  const closeIssues = useCallback(() => setShowingIssues(false), []);
+  const errorList = useMemo(() => [...new Set(result.errors.map((e) => describe(e, draft)))], [result, draft]);
   const closeModal = useCallback(() => setOpen(undefined), []);
   const opened = held.find((h) => h.trait === open);
   // The packages' features, at the bottom
@@ -291,10 +295,16 @@ export function Sheet({
         level={draft.level}
         corner={corner}
         badge={
-          // Whether the build is legal, on the sheet's top edge
-          context === "build" && (
-            <span className={`status ${result.ok ? "good" : "bad"}`}>{result.ok ? "Legal" : `${result.errors.length} ${result.errors.length === 1 ? "error" : "errors"}`}</span>
-          )
+          // Whether the build is legal, on the sheet's top edge; the errors
+          // badge opens the list of them
+          context === "build" &&
+          (result.ok ? (
+            <span className="status good">Legal</span>
+          ) : (
+            <button type="button" className="status bad" aria-haspopup="dialog" onClick={() => setShowingIssues(true)}>
+              {result.errors.length} {result.errors.length === 1 ? "error" : "errors"}
+            </button>
+          ))
         }
         actions={actions}
         head={{
@@ -402,6 +412,15 @@ export function Sheet({
         }
       />
       {opened && <TraitModal held={opened} places={places(opened.trait)} draft={draft} onClose={closeModal} />}
+      {showingIssues && errorList.length > 0 && (
+        <Popup label="Rules problems" title="Rules problems" onClose={closeIssues}>
+          <ul className="issue-list">
+            {errorList.map((text) => (
+              <li key={text}>{text}</li>
+            ))}
+          </ul>
+        </Popup>
+      )}
     </section>
   );
 }

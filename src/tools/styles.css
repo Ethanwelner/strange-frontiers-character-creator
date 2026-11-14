@@ -117,15 +117,6 @@
   }
 
   /* The rules problems popup: a bulleted list */
-  .tools-issue-list {
-    margin: 0;
-    padding-left: 1.25rem;
-
-    li + li {
-      margin-top: 8px;
-    }
-  }
-
   /* A Kind's or package's card in its popup: the creator's card, unclickable */
   .tools-background-card {
     cursor: default;

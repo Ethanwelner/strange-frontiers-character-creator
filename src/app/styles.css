@@ -1945,6 +1945,32 @@
     border-radius: 999px;
   }
 
+  /* The errors badge is a button that opens their list */
+  .sf-sheet-badge button.status {
+    border: 0;
+    cursor: pointer;
+
+    &:hover,
+    &:focus-visible {
+      filter: brightness(1.15);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--portfolio-white);
+      outline-offset: 2px;
+    }
+  }
+
+  /* A popup's list of rules problems (the creator's Sheet and Player Tools) */
+  .issue-list {
+    margin: 0;
+    padding-left: 1.25rem;
+
+    li + li {
+      margin-top: 8px;
+    }
+  }
+
   /* The line under the character's name, the same on the creator's Sheet
      and in Player Tools (components/CharacterLine.tsx) */
   /* Kind, age, gender, height and weight on one row, 24px apart, then Origin, Profession

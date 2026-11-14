@@ -223,7 +223,7 @@ export function ToolsApp() {
               )}
               {play && result && showingIssues && !result.ok && (
                 <Popup label="Rules problems" title="Rules problems" onClose={closeIssues} className="tools-issues-popup">
-                  <ul className="tools-issue-list">
+                  <ul className="issue-list">
                     {result.errors.map((e, i) => (
                       <li key={i}>{describe(e, play.draft)}</li>
                     ))}
