@@ -1,0 +1,10 @@
+id: igbo
+name: "Igbo (Spoken)"
+status: draft
+plane: earth
+summary: "One of the common languages of Earth Baseline."
+tags: [language, igbo, earth]
+backgroundKeywords: [earth]
+category: language
+language: igbo
+effect: "This character is conversational in the Igbo language and can speak it."
