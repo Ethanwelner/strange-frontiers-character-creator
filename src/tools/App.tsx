@@ -9,11 +9,28 @@ import { checkPlay, creatorDraft, load, playBuild, pointsToPlace, save, startPla
 import { Chat } from "./components/Chat.js";
 import { Tracker } from "./components/Tracker.js";
 import { Button } from "../app/components/Button.js";
+import { creatorPage } from "../app/pages.js";
+
+// The character the Character Creator's Play in Player Tools button sent
+// (tools page?from=creator), read from the creator's saved data.
+const sentFromCreator = () => (new URLSearchParams(location.search).get("from") === "creator" ? creatorDraft() : undefined);
+const playOf = (draft: Draft) => withStartingCash(startPlay(toBuild(draft)), content);
 
 export function ToolsApp() {
-  const [play, setPlay] = useState<Play | undefined>(load);
+  // A character sent from the creator comes straight in when Player Tools is
+  // empty, and asks first when it would replace the one here.
+  const [sent] = useState(sentFromCreator);
+  const [play, setPlay] = useState<Play | undefined>(() => load() ?? (sent && playOf(sent)));
+  const [incoming, setIncoming] = useState<Draft | undefined>(() => (sent && load() ? sent : undefined));
+  const closeIncoming = useCallback(() => setIncoming(undefined), []);
   // A passing notice fades on its own; an error stays.
-  const [notice, setNotice] = useState<{ text: string; fades?: boolean }>();
+  const [notice, setNotice] = useState<{ text: string; fades?: boolean } | undefined>(() =>
+    sent && !load() ? { text: `Brought in ${sent.name || "the character"} from the Character Creator.`, fades: true } : undefined,
+  );
+  // The request is used up: a reload doesn't send the character again.
+  useEffect(() => {
+    if (location.search) history.replaceState(history.state, "", location.pathname + location.hash);
+  }, []);
   // Switching characters asks in a popup; native confirm() dialogs are blocked in some browsers.
   const [confirmingSwitch, setConfirmingSwitch] = useState(false);
   const closeSwitch = useCallback(() => setConfirmingSwitch(false), []);
@@ -93,7 +110,7 @@ export function ToolsApp() {
                   </p>
                   <div className="tools-start-options">
                     {fromCreator && (
-                      <Button className="build-button" onClick={() => setPlay(withStartingCash(startPlay(toBuild(fromCreator)), content))}>
+                      <Button className="build-button" onClick={() => setPlay(playOf(fromCreator))}>
                         Use {fromCreator.name ?? "the character"} from the Character Creator
                       </Button>
                     )}
@@ -103,7 +120,7 @@ export function ToolsApp() {
                     </Button>
                   </div>
                   <p className="hint">
-                    A character file is the JSON the <a href="creator.php">Character Creator</a> exports from its Sheet. Everything here stays in this browser.
+                    A character file is the JSON the <a href={creatorPage()}>Character Creator</a> exports from its Sheet. Everything here stays in this browser.
                   </p>
                 </section>
               )}
@@ -179,6 +196,28 @@ export function ToolsApp() {
                       Switch character
                     </Button>
                     <Button onClick={closeSwitch}>Cancel</Button>
+                  </div>
+                </Popup>
+              )}
+              {play && incoming && (
+                <Popup label="Bring in a character" title="Bring in a character" onClose={closeIncoming} size="narrow" className="tools-switch-popup">
+                  <p>
+                    Replace {play.draft.name || "this character"} with {incoming.name || "the character"} from the Character Creator?{" "}
+                    {play.draft.name || "This character"}’s tracker, items and chat are cleared.
+                  </p>
+                  <div className="tools-switch-actions">
+                    <Button
+                      tone="dark"
+                      onClick={() => {
+                        setPlay(playOf(incoming));
+                        setLevelDraft(undefined);
+                        setIncoming(undefined);
+                        setNotice({ text: `Brought in ${incoming.name || "the character"} from the Character Creator.`, fades: true });
+                      }}
+                    >
+                      Bring in {incoming.name || "the character"}
+                    </Button>
+                    <Button onClick={closeIncoming}>Keep {play.draft.name || "this character"}</Button>
                   </div>
                 </Popup>
               )}

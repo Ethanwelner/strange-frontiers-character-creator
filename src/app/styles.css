@@ -1927,6 +1927,7 @@
 
   .sheet-actions {
     display: flex;
+    flex-wrap: wrap;
     justify-content: flex-end;
     gap: 0.75rem;
     align-items: center;
@@ -2819,7 +2820,8 @@
     .notice,
     .step-head,
     .name-edit,
-    .sheet-actions button {
+    .sheet-actions button,
+    .sheet-actions a {
       display: none !important;
     }
 

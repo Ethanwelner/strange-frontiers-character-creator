@@ -15,7 +15,8 @@ import { askerName, DescriptionBox, Effect, Icon, NameField, Portrait, StepHeade
 import { FullResources, SHEET_RULES, SheetLayout, SheetTitle, type SheetContext } from "./sheet-layout.js";
 import { Resistances } from "./Resistances.js";
 import { CardChip, KIND_ICON, TraitCard, traitCardKind } from "./cards.js";
-import { Button } from "./Button.js";
+import { Button, sfButton } from "./Button.js";
+import { toolsPage } from "../pages.js";
 
 const SOURCE = /^(kind|origin|profession|past) ([a-z0-9-]+)( choice)?$/;
 const TRAIT_CHOICE = /^trait ([a-z0-9-]+) choice$/;
@@ -263,9 +264,14 @@ export function Sheet({
       {context === "build" && (
         <>
           <StepHeader title="Sheet" />
-          {/* Whether the build is legal, then Download, Import and Print, above the sheet */}
+          {/* Whether the build is legal, then Play in Player Tools, Download, Import and Print, above the sheet */}
           <div className="sheet-actions">
             <span className={`status ${result.ok ? "good" : "bad"}`}>{result.ok ? "Legal" : `${result.errors.length} ${result.errors.length === 1 ? "error" : "errors"}`}</span>
+            {/* Player Tools reads this character from the creator's saved data; the query asks it to bring the character in */}
+            <a className={sfButton({ tone: "primary" })} href={`${toolsPage()}?from=creator`}>
+              <Icon name="play" />
+              Play in Player Tools
+            </a>
             <Button onClick={onExport}>
               <Icon name="download" />
               Download
