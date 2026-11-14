@@ -78,6 +78,17 @@ export function Tracker({
     () => (traitDraft ? checkPlay(traitDraft, content, play.items) : undefined),
     [traitDraft, play.items],
   );
+  // The Traits step tries each Trait against the draft, so it gets the play's
+  // items too: an AI Core's inhabited chassis gives it the Physical stats a
+  // Trait asks for. Kit Costs only matter at creation.
+  const traitDraftWithItems = useMemo(
+    () => (traitDraft ? { ...traitDraft, items: play.items } : undefined),
+    [traitDraft, play.items],
+  );
+  const traitCampaign = useMemo(
+    () => ({ startingLevel: traitDraft?.level ?? play.draft.level, kit: false }),
+    [traitDraft?.level, play.draft.level],
+  );
   const banked =
     (result.summary?.picks.universal.banked ?? 0) +
     (result.summary?.picks.background.banked ?? 0);
@@ -257,7 +268,7 @@ export function Tracker({
       />
 
       {/* The creator's Traits step, without the Traits the character already has */}
-      {traitDraft && traitResult && (
+      {traitDraft && traitDraftWithItems && traitResult && (
         <Popup
           label="Choose Traits"
           onClose={closeTraits}
@@ -266,10 +277,10 @@ export function Tracker({
           className="tools-traits-popup"
         >
           <TraitsStep
-            draft={traitDraft}
-            campaign={{ startingLevel: traitDraft.level }}
+            draft={traitDraftWithItems}
+            campaign={traitCampaign}
             result={traitResult}
-            onChange={setTraitDraft}
+            onChange={({ items: _items, ...d }) => setTraitDraft({ ...d, items: traitDraft.items })}
             hide={heldIds}
             newFrom={play.draft.traits.length}
             picksBelow
