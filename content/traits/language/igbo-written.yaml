@@ -1,0 +1,10 @@
+id: igbo-written
+name: "Igbo (Written)"
+status: draft
+plane: earth
+summary: "One of the common languages of Earth Baseline."
+tags: [language, igbo, earth, writing]
+backgroundKeywords: [earth]
+category: language
+language: igbo
+effect: "This character can read and write the Igbo language."

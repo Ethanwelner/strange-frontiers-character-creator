@@ -1,0 +1,10 @@
+id: shona
+name: "Shona (Spoken)"
+status: draft
+plane: earth
+summary: "One of the common languages of Earth Baseline."
+tags: [language, shona, earth]
+backgroundKeywords: [earth]
+category: language
+language: shona
+effect: "This character is conversational in the Shona language and can speak it."

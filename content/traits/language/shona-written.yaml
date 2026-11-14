@@ -1,0 +1,10 @@
+id: shona-written
+name: "Shona (Written)"
+status: draft
+plane: earth
+summary: "One of the common languages of Earth Baseline."
+tags: [language, shona, earth, writing]
+backgroundKeywords: [earth]
+category: language
+language: shona
+effect: "This character can read and write the Shona language."
