@@ -416,7 +416,8 @@
 
 /* ---- Kind cards (KindCard; the site's sf_card_kind): a thin gunmetal
    border running in to a 2px line in the card's key color (silver, or
-   Dreft's green for Isekai), with a star in the top left corner, around a
+   Dreft's green for Isekai), with a large cut-out at the top left holding
+   a star, around a
    dark field with a starfield and a compass. The frame is four corner pieces
    (one SVG, turned; only the top left has a star) joined by straight edges,
    so the card grows with its text. ---- */
@@ -427,26 +428,45 @@
     position: relative;
     /* The key color: silver for The Settled Systems (and anything else),
        Dreft's green for Isekai (sf-kind-card--dreft, below) */
-    --key-hi: #ffffff;
-    --key-light: #c3c8cf;
-    --key-mid: #7b8189;
-    --key-label: #b4bac2;
-    --key-soft: #e6e9ed;
-    --key-line: rgb(180 186 194 / 35%);
-    --key-name: linear-gradient(180deg, #ffffff 10%, #c9ced5 50%, #7b8189 90%);
-    --kind-key: linear-gradient(90deg, var(--key-mid), var(--key-light) 25%, var(--key-hi) 50%, var(--key-light) 75%, var(--key-mid));
-    --kind-key-v: linear-gradient(180deg, var(--key-mid), var(--key-light) 25%, var(--key-hi) 50%, var(--key-light) 75%, var(--key-mid));
-    --kind-text: #d9dcdf;
-    --kind-muted: #9a9fa6;
+    /* Every color here is from the palette (css/tokens.css and the
+       component library's Colors): White, Text, Soft Text, Medium Gray,
+       Condition Edge, Gray, Panel Box, Panel, Card, Card Edge, Dreft and
+       Green */
+    --key-label: #b2b3b4;
+    --key-soft: #e7e8e9;
+    --key-line: #343638;
+    --key-name: linear-gradient(180deg, #ffffff 10%, #e7e8e9 50%, #949798 90%);
+    /* The frame line's gradient, quieter than the text's key colors (the
+       corner star's SVG gradient matches it: KIND_KEY_STOPS) */
+    --line-hi: #b2b3b4;
+    --line-light: #949798;
+    --line-mid: #626466;
+    --kind-key: linear-gradient(90deg, var(--line-mid), var(--line-light) 25%, var(--line-hi) 50%, var(--line-light) 75%, var(--line-mid));
+    --kind-key-v: linear-gradient(180deg, var(--line-mid), var(--line-light) 25%, var(--line-hi) 50%, var(--line-light) 75%, var(--line-mid));
+    --kind-text: #e7e8e9;
+    --kind-muted: #949798;
+    --kind-shadow: drop-shadow(0 0 1px rgb(0 0 0 / 80%)) drop-shadow(0 14px 18px rgb(0 0 0 / 40%));
     display: flex;
     flex-direction: column;
-    border-radius: 16px;
+    /* Drop shadows, so they follow the cut-out corner */
+    filter: var(--kind-shadow);
+    color: var(--kind-text);
+}
+
+/* The gunmetal plate: a thin band around the field that stops 40px short
+   of the top left corner on both edges, leaving the field's cut-out and
+   the star in it clear */
+.sf-kind-plate {
+    position: absolute;
+    inset: 0;
+    border-radius: 0 12px 12px;
     background:
         repeating-linear-gradient(90deg, rgb(255 255 255 / 3%) 0 1px, transparent 1px 3px),
         linear-gradient(145deg, rgb(255 255 255 / 22%), transparent 30%, transparent 70%, rgb(255 255 255 / 12%)),
-        linear-gradient(160deg, #6a6d72, #3b3d41 45%, #2c2e31 60%, #55585d);
-    box-shadow: 0 0 0 1px #1a1b1d, inset 0 1px 0 rgb(255 255 255 / 25%), 0 18px 40px rgb(0 0 0 / 45%);
-    color: var(--kind-text);
+        linear-gradient(160deg, #626466, #343638 45%, #292b2c 60%, #505254);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 25%);
+    -webkit-mask: linear-gradient(to right, transparent 40px, #000 40px), linear-gradient(to bottom, transparent 40px, #000 40px);
+    mask: linear-gradient(to right, transparent 40px, #000 40px), linear-gradient(to bottom, transparent 40px, #000 40px);
 }
 
 .sf-kind-panel {
@@ -456,17 +476,16 @@
     flex-direction: column;
 }
 
-/* The dark field inside the key-colored line: the silver runs in to it.
-   Its top left steps in around the star on the same 18px arc as the line,
-   and its other corners round off with the line's */
+/* The dark field inside the key-colored line, 6px in from the card's edge.
+   A 24px quarter-circle is cut out of its top left corner (about the
+   corner itself), and its other corners round off with the line's */
 .sf-kind-field {
     position: absolute;
-    inset: 10px;
+    inset: 6px;
     border-radius: 0 6px 6px;
-    background: radial-gradient(ellipse at 50% 42%, #2a2b2e 0%, #18191b 55%, #0d0e0f 100%);
-    box-shadow: inset 0 0 18px rgb(0 0 0 / 70%);
-    -webkit-mask: radial-gradient(circle at 0 0, transparent 18px, #000 18.5px);
-    mask: radial-gradient(circle at 0 0, transparent 18px, #000 18.5px);
+    background: radial-gradient(ellipse at 50% 42%, #1f2122 0%, #1f2122 40%, #161819 100%);
+    -webkit-mask: radial-gradient(circle at 0 0, transparent 24px, #000 24.5px);
+    mask: radial-gradient(circle at 0 0, transparent 24px, #000 24.5px);
     overflow: hidden;
 }
 
@@ -480,9 +499,9 @@
     transform: translate(-50%, -50%);
     pointer-events: none;
 }
-.sf-kind-rose-light { fill: #2e3033; }
-.sf-kind-rose-dark { fill: #232427; }
-.sf-kind-rose-ring { fill: none; stroke: #232427; }
+.sf-kind-rose-light { fill: #292b2c; }
+.sf-kind-rose-dark { fill: #161819; }
+.sf-kind-rose-ring { fill: none; stroke: #292b2c; }
 
 /* The starfield, after the site's night sky (css/rpg-night.css): dots that
    pulse slowly and a few four-pointed twinkles that flare now and then */
@@ -534,7 +553,7 @@
 .sf-kind-corner--bl { bottom: 0; left: 0; transform: scaleY(-1); }
 .sf-kind-corner--br { bottom: 0; right: 0; transform: scale(-1); }
 
-/* The straight edges between the corners: the 2px key-colored line 10px in from
+/* The straight edges between the corners: the 2px key-colored line 6px in from
    the card's edge, matching the corner pieces */
 .sf-kind-edge { position: absolute; pointer-events: none; }
 .sf-kind-edge--top, .sf-kind-edge--bottom {
@@ -543,23 +562,23 @@
     height: 2px;
     background: var(--kind-key);
 }
-.sf-kind-edge--top { top: 9px; }
-.sf-kind-edge--bottom { bottom: 9px; }
+.sf-kind-edge--top { top: 5px; }
+.sf-kind-edge--bottom { bottom: 5px; }
 .sf-kind-edge--left, .sf-kind-edge--right {
     top: 100px;
     bottom: 100px;
     width: 2px;
     background: var(--kind-key-v);
 }
-.sf-kind-edge--left { left: 9px; }
-.sf-kind-edge--right { right: 9px; }
+.sf-kind-edge--left { left: 5px; }
+.sf-kind-edge--right { right: 5px; }
 
 .sf-kind-content {
     position: relative;
     display: flex;
     flex: 1;
     flex-direction: column;
-    padding: 30px 26px 24px;
+    padding: 28px 22px 20px;
     container-type: inline-size;
     font-size: .875rem;
     line-height: 1.5;
@@ -620,17 +639,10 @@
 .sf-kind-num { font-variant-numeric: tabular-nums; color: var(--key-soft); }
 .sf-kind-num span { color: var(--kind-muted); }
 
-.sf-kind-grants { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 14px; }
+.sf-kind-grants { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; margin-bottom: 14px; }
+/* Its Grants are the cards' usual accent chips */
+.sf-kind-grants .sf-chip { margin: 0; }
 .sf-kind-grants .sf-kind-label { margin: 0 4px 0 0; }
-.sf-kind-chip {
-    padding: 1px 10px;
-    border: 1px solid var(--key-mid);
-    border-radius: 999px;
-    background: linear-gradient(180deg, color-mix(in srgb, var(--key-light) 18%, transparent), color-mix(in srgb, var(--key-mid) 12%, transparent));
-    font-size: .75rem;
-    color: var(--key-soft);
-}
-
 .sf-kind-features { margin: 0 0 18px; padding: 0; list-style: none; }
 .sf-kind-features li { margin-bottom: 8px; }
 .sf-kind-features strong { color: var(--key-soft); }
@@ -651,26 +663,20 @@
 }
 .sf-kind-foot span { font-size: .625rem; }
 
-/* Isekai's cards key on Dreft's green (--frontiers-dreft, #1c372b, lifted
-   so it reads on the dark field), with a hint of it in the field */
+/* Isekai's cards key on the palette's greens: Dreft (#1c372b) and Green
+   (#47b767) */
 .sf-kind-card--dreft {
-    --key-hi: #d4f2e0;
-    --key-light: #8fcfaa;
-    --key-mid: #4f8f6d;
-    --key-label: #7fbf98;
-    --key-soft: #c9ead6;
-    --key-line: rgb(127 191 152 / 35%);
-    --key-name: linear-gradient(180deg, #e2f7ea 10%, #8fcfaa 50%, #2f6249 90%);
+    --line-hi: #47b767;
+    --line-light: #47b767;
+    --line-mid: #1c372b;
+    --key-label: #47b767;
+    --key-line: #1c372b;
+    --key-name: linear-gradient(180deg, #e7e8e9 10%, #47b767 90%);
 }
-.sf-kind-card--dreft .sf-kind-rose-light { fill: #28352e; }
-.sf-kind-card--dreft .sf-kind-rose-dark { fill: #1e2722; }
-.sf-kind-card--dreft .sf-kind-rose-ring { stroke: #1e2722; }
-.sf-kind-card--dreft .sf-kind-field {
-    background: radial-gradient(ellipse at 50% 42%, #24302a 0%, #161c19 55%, #0c0f0d 100%);
-}
-
+.sf-kind-card--dreft .sf-kind-rose-light { fill: #1c372b; }
+.sf-kind-card--dreft .sf-kind-rose-ring { stroke: #1c372b; }
 @media (max-width: 480px) {
-    .sf-kind-content { padding: 28px 20px 22px; }
+    .sf-kind-content { padding: 26px 18px 18px; }
     .sf-kind-foot { gap: 6px; font-size: .875rem; letter-spacing: .06em; }
 }
 
@@ -678,8 +684,8 @@
    on its corner while picked, as the other cards' */
 .sf-kind-card.is-selectable { cursor: pointer; }
 .sf-kind-card.is-selectable:hover:not(.selected),
-.sf-kind-card.is-selectable:focus-visible { box-shadow: 0 0 0 1px #1a1b1d, 0 0 0 3px var(--portfolio-medium-gray, #949798), 0 18px 40px rgb(0 0 0 / 45%); outline: none; }
-.sf-kind-card.selected { box-shadow: 0 0 0 1px #1a1b1d, 0 0 0 3px var(--portfolio-green, #47b767), 0 18px 40px rgb(0 0 0 / 45%); }
+.sf-kind-card.is-selectable:focus-visible { filter: drop-shadow(0 0 1px #949798) drop-shadow(0 0 1px #949798) drop-shadow(0 0 1px #949798) var(--kind-shadow); outline: none; }
+.sf-kind-card.selected { filter: drop-shadow(0 0 1px #47b767) drop-shadow(0 0 1px #47b767) drop-shadow(0 0 1.5px #47b767) var(--kind-shadow); }
 .sf-kind-card.selected::after {
     content: "✓";
     position: absolute;

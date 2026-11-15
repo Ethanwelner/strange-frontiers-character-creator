@@ -610,14 +610,17 @@ export function BackgroundCard({
 // ---------------------------------------------------------------------------
 // The Kind card: a thin gunmetal border running in to a 2px line in the
 // card's key color (silver for The Settled Systems, Dreft's green for
-// Isekai), with a four-pointed star in the top left corner, around a dark
-// field with a faint starfield and an eight-point compass. The site draws the
+// Isekai), around a dark field with a large quarter-circle cut out of its
+// top left corner and a four-pointed star in the cut-out; the gunmetal stops
+// short of the cut-out. The field holds a faint starfield and an
+// eight-point compass. The site draws the
 // same markup from sf_card_kind() in php/rpg/components/cards.php.
 
-// The key color's gradient for the frame's line and star
+// The key color's gradient for the frame's line and star, in palette
+// colors: Soft Text, Medium Gray and Condition Edge; Green and Dreft
 const KIND_KEY_STOPS = {
-  silver: ["#ffffff", "#c3c8cf", "#7b8189", "#e3e6ea", "#9aa0a8"],
-  green: ["#d4f2e0", "#6fb38d", "#2c5a44", "#a6dcbc", "#4f8f6d"],
+  silver: ["#b2b3b4", "#949798", "#626466", "#b2b3b4", "#949798"],
+  green: ["#47b767", "#47b767", "#1c372b", "#47b767", "#1c372b"],
 };
 
 // A four-pointed star
@@ -679,14 +682,16 @@ function KindStars({ seed }: { seed: string }) {
 }
 
 // One corner of the frame, drawn top left; CSS turns it for the others. The
-// line runs 10px in from the card's edge. At the top left it steps in around
-// the star on an 18px arc; the other three corners are simply rounded.
+// line runs 6px in from the card's edge, along the field's edge. At the top
+// left it follows a 24px quarter-circle cut out of the field, with the star
+// in the cut-out (the gunmetal stops short of it); the other three corners
+// are simply rounded.
 function KindCorner({ where, gradient }: { where: "tl" | "tr" | "bl" | "br"; gradient: string }) {
   const star = where === "tl";
   return (
     <svg className={`sf-kind-corner sf-kind-corner--${where}`} viewBox="0 0 100 100" aria-hidden="true" focusable="false">
-      <path fill="none" stroke={`url(#${gradient})`} strokeWidth="2" d={star ? "M100 10H28A18 18 0 0 1 10 28V100" : "M100 10H16A6 6 0 0 0 10 16V100"} />
-      {star && <path fill={`url(#${gradient})`} d={kindStar(13.5, 13.5, 8)} />}
+      <path fill="none" stroke={`url(#${gradient})`} strokeWidth="2" d={star ? "M100 6H30A24 24 0 0 1 6 30V100" : "M100 6H12A6 6 0 0 0 6 12V100"} />
+      {star && <path fill={`url(#${gradient})`} d={kindStar(13, 13, 7.5)} />}
     </svg>
   );
 }
@@ -733,6 +738,7 @@ export function KindCard({
       {...(select ? { role: "radio", "aria-checked": select.selected, "aria-label": k.name, tabIndex: 0, onClick: select.onSelect, onKeyDown: onKey } : {})}
     >
       <div className="sf-kind-panel">
+        <span className="sf-kind-plate" aria-hidden="true" />
         <svg className="sf-kind-defs" aria-hidden="true" focusable="false">
           <defs>
             <linearGradient id={gradient} gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="100" y2="100">
@@ -789,9 +795,9 @@ export function KindCard({
             <div className="sf-kind-grants">
               <span className="sf-kind-label">Grants</span>
               {k.grants.map((g) => (
-                <span key={g.trait} className="sf-kind-chip">
+                <CardChip key={g.trait} tone="accent">
                   {traitName(g.trait)}
-                </span>
+                </CardChip>
               ))}
             </div>
           )}
