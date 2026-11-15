@@ -561,9 +561,10 @@
     pointer-events: none;
 }
 
-/* The orbits: the solar system's rings, sun and planets in faded silver, in
-   an SVG twice the field's width centered on it, its lines 1px whatever its
-   size */
+/* The orbits: the solar system's rings, sun and planets in one solid faded
+   silver (mixed into the field's color, so the rings don't show through the
+   planets), in an SVG twice the field's width centered on it, its lines 1px
+   whatever its size */
 .sf-kind-orbits {
     position: absolute;
     top: 50%;
@@ -573,9 +574,9 @@
     transform: translate(-50%, -50%);
     pointer-events: none;
 }
-.sf-kind-orbit { fill: none; stroke: color-mix(in srgb, var(--sf-gray-200) 18%, transparent); stroke-width: 1px; vector-effect: non-scaling-stroke; }
-.sf-kind-orbit-sun { fill: color-mix(in srgb, var(--sf-gray-200) 45%, transparent); }
-.sf-kind-orbit-planet { fill: color-mix(in srgb, var(--sf-gray-200) 40%, transparent); }
+.sf-kind-orbits { --orbit: color-mix(in srgb, var(--sf-gray-200) 25%, var(--sf-gray-900)); }
+.sf-kind-orbit { fill: none; stroke: var(--orbit); stroke-width: 1px; vector-effect: non-scaling-stroke; }
+.sf-kind-orbit-sun, .sf-kind-orbit-planet { fill: var(--orbit); }
 
 /* The starfields, after the site's night sky (css/rpg-night.css): dots that
    pulse slowly and a few four-pointed twinkles that flare now and then.
