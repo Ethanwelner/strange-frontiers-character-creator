@@ -440,12 +440,18 @@
        corner star's SVG gradient matches it: KIND_KEY_STOPS) */
     /* The frame line: solid Medium Gray (#949798) */
     --kind-line: var(--sf-gray-300);
+    /* The field behind the content (Card Edge). Everything drawn on it is
+       mixed into this color */
+    --kind-field: var(--sf-gray-900);
     --kind-text: var(--sf-gray-100);
     --kind-muted: var(--sf-gray-300);
-    --kind-shadow: drop-shadow(0 0 1px rgb(0 0 0 / 80%)) drop-shadow(0 14px 18px rgb(0 0 0 / 40%));
+    /* The other cards' diffuse floating shadow (box-shadow: 0 4px 10px
+       #00000030), as a drop-shadow so it follows the cut-out corner */
+    --kind-shadow: drop-shadow(0 4px 10px #00000030);
     display: flex;
     flex-direction: column;
-    /* Drop shadows, so they follow the cut-out corner */
+    /* Drop shadows on the whole card, so they follow the cut-out corner and
+       fall only outside it; nothing inside casts its own */
     filter: var(--kind-shadow);
     color: var(--kind-text);
 }
@@ -456,7 +462,9 @@
 .sf-kind-plate {
     position: absolute;
     inset: 0;
-    border-radius: 0 12px 12px;
+    /* Curved about the same center as the frame line and the field inside
+       it (17px, 6px in), so the band runs an even width around the corners */
+    border-radius: 0 23px 23px;
     /* Solid Gray, so a page of cards stays calm */
     background: var(--sf-gray-500);
     -webkit-mask: linear-gradient(to right, transparent 40px, #000 40px), linear-gradient(to bottom, transparent 40px, #000 40px);
@@ -476,8 +484,8 @@
 .sf-kind-field {
     position: absolute;
     inset: 6px;
-    border-radius: 0 6px 6px;
-    background: var(--sf-gray-900);
+    border-radius: 0 17px 17px;
+    background: var(--kind-field);
     -webkit-mask: radial-gradient(circle at 0 0, transparent 24px, #000 24.5px);
     mask: radial-gradient(circle at 0 0, transparent 24px, #000 24.5px);
     overflow: hidden;
@@ -506,7 +514,7 @@
     aspect-ratio: 1;
     transform: translate(-50%, -50%);
     border-radius: 50%;
-    background: color-mix(in srgb, var(--sf-gray-200) 10%, var(--sf-gray-900));
+    background: color-mix(in srgb, var(--sf-gray-200) 10%, var(--kind-field));
     box-shadow: 0 0 40px 6px rgb(255 255 255 / 4%);
 }
 .sf-kind-planet {
@@ -515,7 +523,7 @@
     aspect-ratio: 1;
     transform: translate(-50%, -50%);
     border-radius: 50%;
-    background: var(--sf-gray-900);
+    background: var(--kind-field);
     box-shadow: inset 0 calc(-1 * var(--lit, 2px)) 0 0 color-mix(in srgb, var(--sf-gray-200) 22%, transparent);
 }
 
@@ -536,9 +544,9 @@
     transform: translate(-50%, -50%);
     pointer-events: none;
 }
-.sf-kind-rose-light { fill: color-mix(in srgb, var(--sf-gray-700) 75%, var(--sf-gray-900)); }
-.sf-kind-rose-dark { fill: color-mix(in srgb, var(--sf-gray-800) 75%, var(--sf-gray-900)); }
-.sf-kind-rose-ring { fill: none; stroke: color-mix(in srgb, var(--sf-gray-800) 75%, var(--sf-gray-900)); }
+.sf-kind-rose-light { fill: color-mix(in srgb, var(--sf-gray-700) 75%, var(--kind-field)); }
+.sf-kind-rose-dark { fill: color-mix(in srgb, var(--sf-gray-800) 75%, var(--kind-field)); }
+.sf-kind-rose-ring { fill: none; stroke: color-mix(in srgb, var(--sf-gray-800) 75%, var(--kind-field)); }
 
 /* The planet: a dark disc a little narrower than the card, centered in the
    lower part of the field behind the content, so its curve and both sides
@@ -553,7 +561,7 @@
     aspect-ratio: 1;
     transform: translateX(-50%);
     border-radius: 50%;
-    background: var(--sf-gray-900);
+    background: var(--kind-field);
     border: 1.5px solid color-mix(in srgb, var(--sf-gray-200) 30%, transparent);
     box-shadow:
         inset 0 0 18px -6px color-mix(in srgb, var(--sf-gray-200) 22%, transparent),
@@ -574,7 +582,10 @@
     transform: translate(-50%, -50%);
     pointer-events: none;
 }
-.sf-kind-orbits { --orbit: color-mix(in srgb, var(--sf-gray-200) 18%, var(--sf-gray-900)); }
+.sf-kind-orbits { --orbit: color-mix(in srgb, var(--sf-gray-200) 18%, var(--kind-field)); }
+/* On Isekai cards the solar system is Dreft Shade, a dark green as bright
+   as the gray */
+.sf-kind-card--dreft .sf-kind-orbits { --orbit: var(--sf-green-850); }
 .sf-kind-orbit { fill: none; stroke: var(--orbit); stroke-width: 1px; vector-effect: non-scaling-stroke; }
 .sf-kind-orbit-sun, .sf-kind-orbit-planet { fill: var(--orbit); }
 /* Each planet circles the sun, counterclockwise, in its own year (set on it
@@ -636,7 +647,6 @@
     height: 100px;
     pointer-events: none;
     color: var(--kind-line);
-    filter: drop-shadow(0 1px 1px rgb(0 0 0 / 60%));
 }
 .sf-kind-corner--tl { top: 0; left: 0; }
 .sf-kind-corner--tr { top: 0; right: 0; transform: scaleX(-1); }
