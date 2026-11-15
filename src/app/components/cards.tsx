@@ -711,7 +711,7 @@ function KindStars({ seed, dense = false }: { seed: string; dense?: boolean }) {
 // and a few planets riding them. One SVG twice the field's width (cqw), so
 // the spacing holds on cards of any height: 100 units are the field's width.
 // Each planet is [ring, angle in degrees from the right, radius]. They circle
-// the sun slowly, each ring's year growing with its distance (12s × ring^1.5,
+// the sun slowly, each ring's year growing with its distance (24s × ring^1.5,
 // as a real system's would), so they never line up. The site's copy is in
 // sf_card_kind_orbits().
 const KIND_ORBIT_GAP = 9;
@@ -736,7 +736,7 @@ function KindOrbits() {
         const a = (deg * Math.PI) / 180;
         const d = KIND_ORBIT_GAP * ring;
         return (
-          <g key={i} className="sf-kind-orbit-turn" style={{ animationDuration: `${Math.round(12 * ring ** 1.5)}s` }}>
+          <g key={i} className="sf-kind-orbit-turn" style={{ animationDuration: `${Math.round(24 * ring ** 1.5)}s` }}>
             <circle className="sf-kind-orbit-planet" cx={(100 + d * Math.cos(a)).toFixed(2)} cy={(100 - d * Math.sin(a)).toFixed(2)} r={r} />
           </g>
         );
