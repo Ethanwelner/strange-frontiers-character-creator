@@ -610,7 +610,8 @@ export function BackgroundCard({
 // ---------------------------------------------------------------------------
 // The Kind card: a thin gunmetal border running in to a 2px line in the
 // card's key color (silver for The Settled Systems, Dreft's green for
-// Isekai), with a four-pointed star in the top left corner, around a dark
+// Isekai), with a large quarter-circle cut out of its top left corner and a
+// four-pointed star in the cut-out, around a dark
 // field with a faint starfield and an eight-point compass. The site draws the
 // same markup from sf_card_kind() in php/rpg/components/cards.php.
 
@@ -679,14 +680,16 @@ function KindStars({ seed }: { seed: string }) {
 }
 
 // One corner of the frame, drawn top left; CSS turns it for the others. The
-// line runs 10px in from the card's edge. At the top left it steps in around
-// the star on an 18px arc; the other three corners are simply rounded.
+// line runs 6px in from the card's edge. At the top left the card has a
+// 60px quarter-circle cut out of it, with the star in the cut-out, and the
+// line follows it 6px in (a 66px arc about the corner); the other three
+// corners are simply rounded.
 function KindCorner({ where, gradient }: { where: "tl" | "tr" | "bl" | "br"; gradient: string }) {
   const star = where === "tl";
   return (
     <svg className={`sf-kind-corner sf-kind-corner--${where}`} viewBox="0 0 100 100" aria-hidden="true" focusable="false">
-      <path fill="none" stroke={`url(#${gradient})`} strokeWidth="2" d={star ? "M100 10H28A18 18 0 0 1 10 28V100" : "M100 10H16A6 6 0 0 0 10 16V100"} />
-      {star && <path fill={`url(#${gradient})`} d={kindStar(13.5, 13.5, 8)} />}
+      <path fill="none" stroke={`url(#${gradient})`} strokeWidth="2" d={star ? "M100 6H65.7A66 66 0 0 1 6 65.7V100" : "M100 6H12A6 6 0 0 0 6 12V100"} />
+      {star && <path fill={`url(#${gradient})`} d={kindStar(20, 20, 15)} />}
     </svg>
   );
 }
@@ -733,6 +736,7 @@ export function KindCard({
       {...(select ? { role: "radio", "aria-checked": select.selected, "aria-label": k.name, tabIndex: 0, onClick: select.onSelect, onKeyDown: onKey } : {})}
     >
       <div className="sf-kind-panel">
+        <span className="sf-kind-plate" aria-hidden="true" />
         <svg className="sf-kind-defs" aria-hidden="true" focusable="false">
           <defs>
             <linearGradient id={gradient} gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="100" y2="100">
