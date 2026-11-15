@@ -151,12 +151,18 @@
 }
 
 /* The slots hold a set size, shrinking only when the column is too narrow
-   for all 20 */
+   for all 20: narrow 10px columns of bars and circles, centered on the
+   row. Magic's diamonds keep the wider 20px cells */
 .sf-stat-line {
     display: grid;
-    grid-template-columns: repeat(20, minmax(0, 20px));
+    grid-template-columns: repeat(20, minmax(0, 10px));
+    align-items: center;
     gap: 4px;
     width: 100%;
+
+    &:has(.sf-stat-slot--diamond) {
+        grid-template-columns: repeat(20, minmax(0, 20px));
+    }
 }
 
 .sf-stat-slot {
@@ -165,12 +171,15 @@
     width: 100%;
 }
 
+/* Every other point a circle as wide as the bars */
 .sf-stat-slot--dot {
     border-radius: 50%;
 }
 
+/* The rest tall bars, twice as tall as they're wide */
 .sf-stat-slot--square {
-    border-radius: 4px;
+    aspect-ratio: 1 / 2;
+    border-radius: 3px;
 }
 
 /* Magic's points: the same slots, turned into diamonds that fit the cell */
