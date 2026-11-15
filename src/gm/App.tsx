@@ -298,7 +298,7 @@ export function GmApp() {
               )}
 
               {opened?.play && opened.result && (
-                // The sheet in its own popup size (up to 1280px), scrolling as one
+                // The sheet in its own popup size (up to 1368px), scrolling as one
                 <Popup label={opened.seat.name} onClose={closeSheet} size="sheet" className="gm-sheet-popup">
                   <Sheet
                     context="view"

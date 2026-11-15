@@ -18,7 +18,7 @@ import { Button } from "./Button.js";
 //          dark X, on its light pages)
 //   size   "narrow" (480px: a question, a portrait, a small form), the
 //          default (720px: lore, a list), "wide" (1100px: a picker of
-//          cards) or "sheet" (1280px, kept clear of the screen's sides: a
+//          cards) or "sheet" (1368px, kept clear of the screen's sides: a
 //          character sheet)
 //   card   a card on its own, like a Knowledge or a Kind: the card is the
 //          popup's edge, with no panel around it, and a smaller light X
