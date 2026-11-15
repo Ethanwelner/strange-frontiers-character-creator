@@ -165,6 +165,40 @@
     }
 }
 
+/* A sheet in a popup (the Game Master's view of a player's) is drawn as on a
+   small screen, whatever the screen: the 56px blob, inside the popup's
+   padding so the scrolling panel doesn't cut it off, the boxes' tighter
+   padding and gaps, and the head's columns stacked. */
+.sf-popup .sf-sheet {
+    --sheet-gap: 16px;
+    --sheet-box-pad: 1rem;
+    /* Room over the blob for its glow, under the panel's top edge */
+    margin-top: 12px;
+
+    .sf-sheet-level {
+        top: -24px;
+        left: -8px;
+        width: 56px;
+        height: 56px;
+    }
+
+    .sf-sheet-level-label {
+        font-size: .5rem;
+    }
+
+    .sf-sheet-level-number {
+        font-size: 1.75rem;
+    }
+
+    .sf-sheet-head:has(> .sf-sheet-description) {
+        display: flex;
+    }
+
+    .sf-sheet-main {
+        flex-basis: 10rem;
+    }
+}
+
 /* On phones the sheet reaches within a few px of the screen's edge, so the
    blob comes in to stay on screen */
 @media (max-width: 767px) {
