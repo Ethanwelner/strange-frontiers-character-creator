@@ -682,15 +682,15 @@ function KindStars({ seed }: { seed: string }) {
 
 // One corner of the frame, drawn top left; CSS turns it for the others. The
 // line runs 6px in from the card's edge, along the field's edge. At the top
-// left it follows a 64px quarter-circle cut out of the field, with the star
+// left it follows a 36px quarter-circle cut out of the field, with the star
 // in the cut-out (the gunmetal stops short of it); the other three corners
 // are simply rounded.
 function KindCorner({ where, gradient }: { where: "tl" | "tr" | "bl" | "br"; gradient: string }) {
   const star = where === "tl";
   return (
     <svg className={`sf-kind-corner sf-kind-corner--${where}`} viewBox="0 0 100 100" aria-hidden="true" focusable="false">
-      <path fill="none" stroke={`url(#${gradient})`} strokeWidth="2" d={star ? "M100 6H70A64 64 0 0 1 6 70V100" : "M100 6H12A6 6 0 0 0 6 12V100"} />
-      {star && <path fill={`url(#${gradient})`} d={kindStar(26, 26, 19)} />}
+      <path fill="none" stroke={`url(#${gradient})`} strokeWidth="2" d={star ? "M100 6H42A36 36 0 0 1 6 42V100" : "M100 6H12A6 6 0 0 0 6 12V100"} />
+      {star && <path fill={`url(#${gradient})`} d={kindStar(17, 17, 11)} />}
     </svg>
   );
 }
