@@ -773,6 +773,14 @@
     max-height: 60vh;
     overflow-y: auto;
 
+    /* Room for condition cards' corner brackets, which sit half outside
+       each card, so they don't make the list scroll; the margin takes it
+       back so nothing moves */
+    &:has(.sf-trait-card--condition) {
+        padding: 2px;
+        margin: -2px;
+    }
+
     /* A slim rounded handle: no track or arrows (Firefox gets a thin bar in
        the same colors). The site sets scrollbar-color on the page, which
        makes Chrome skip the -webkit- parts, so it's reset here. */
