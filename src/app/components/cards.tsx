@@ -647,8 +647,8 @@ const KIND_PLANETS: [string, number, number][] = [
 
 // The other card backgrounds, kept as options (KindCard's `background`):
 // "compass", the first one, an eight-point compass over a faint starfield,
-// and "planet", a dark planet's disc under a dense starfield. "sun", above,
-// is the default.
+// "planet", a dark planet's disc under a dense starfield, and "orbits", a
+// solar system's rings over the faint starfield. "sun", above, is the default.
 
 // The compass: eight long diamonds meeting at the middle, each split down its
 // length into a light and a dark face. The four cardinal ones are as wide as
@@ -706,9 +706,42 @@ function KindStars({ seed, dense = false }: { seed: string; dense?: boolean }) {
   );
 }
 
+// "orbits": an abstract solar system over the faint starfield, its sun in the
+// middle of the field, evenly spaced rings running out past the card's edges
+// and a few planets riding them. One SVG twice the field's width (cqw), so
+// the spacing holds on cards of any height: 100 units are the field's width.
+// Each planet is [ring, angle in degrees from the right, radius]. The site's
+// copy is in sf_card_kind_orbits().
+const KIND_ORBIT_GAP = 9;
+const KIND_ORBIT_RINGS = 11;
+const KIND_ORBIT_PLANETS: [number, number, number][] = [
+  [2, 200, 1.1],
+  [3, 110, 1.3],
+  [5, 300, 1.6],
+  [6, 160, 1.2],
+  [8, 35, 1.8],
+  [10, 220, 1.4],
+];
+
+function KindOrbits() {
+  return (
+    <svg className="sf-kind-orbits" viewBox="0 0 200 200" aria-hidden="true" focusable="false">
+      {Array.from({ length: KIND_ORBIT_RINGS }, (_, i) => (
+        <circle key={i} className="sf-kind-orbit" cx="100" cy="100" r={KIND_ORBIT_GAP * (i + 1)} />
+      ))}
+      <circle className="sf-kind-orbit-sun" cx="100" cy="100" r="3" />
+      {KIND_ORBIT_PLANETS.map(([ring, deg, r], i) => {
+        const a = (deg * Math.PI) / 180;
+        const d = KIND_ORBIT_GAP * ring;
+        return <circle key={i} className="sf-kind-orbit-planet" cx={(100 + d * Math.cos(a)).toFixed(2)} cy={(100 - d * Math.sin(a)).toFixed(2)} r={r} />;
+      })}
+    </svg>
+  );
+}
+
 // The Kind card's background, behind its content
-export type KindBackground = "sun" | "compass" | "planet";
-export const KIND_BACKGROUNDS: KindBackground[] = ["sun", "compass", "planet"];
+export type KindBackground = "sun" | "compass" | "planet" | "orbits";
+export const KIND_BACKGROUNDS: KindBackground[] = ["sun", "compass", "planet", "orbits"];
 
 // One corner of the frame, drawn top left; CSS turns it for the others. The
 // line runs 6px in from the card's edge, along the field's edge. At the top
@@ -750,7 +783,7 @@ export function KindCard({
   kind: Kind;
   lore?: boolean;
   // What's drawn behind the content: the sun and planets (the default), the
-  // compass or the planet
+  // compass, the planet or the orbits
   background?: KindBackground;
   select?: { selected: boolean; onSelect: () => void };
   className?: string;
@@ -811,6 +844,12 @@ export function KindCard({
             <>
               <KindStars seed={k.id} dense />
               <span className="sf-kind-globe" />
+            </>
+          )}
+          {background === "orbits" && (
+            <>
+              <KindStars seed={k.id} />
+              <KindOrbits />
             </>
           )}
         </div>

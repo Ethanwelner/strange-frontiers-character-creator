@@ -521,8 +521,9 @@
 
 /* ---- The other Kind card backgrounds, kept as options (KindCard's
    `background`; sf_card_kind()'s): "compass", an eight-point compass over a
-   faint starfield, and "planet", a dark planet's disc under a dense
-   starfield. The sun and planets above are the default ("sun") ---- */
+   faint starfield, "planet", a dark planet's disc under a dense starfield,
+   and "orbits", a solar system's rings over the faint starfield. The sun
+   and planets above are the default ("sun") ---- */
 
 /* The compass: two palette steps up from the field (Card Edge), Panel and
    Card, so no part of it is darker than its background */
@@ -559,6 +560,22 @@
         0 0 10px color-mix(in srgb, var(--sf-gray-200) 12%, transparent);
     pointer-events: none;
 }
+
+/* The orbits: the solar system's rings, sun and planets in faded silver, in
+   an SVG twice the field's width centered on it, its lines 1px whatever its
+   size */
+.sf-kind-orbits {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200cqw;
+    height: 200cqw;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+.sf-kind-orbit { fill: none; stroke: color-mix(in srgb, var(--sf-gray-200) 18%, transparent); stroke-width: 1px; vector-effect: non-scaling-stroke; }
+.sf-kind-orbit-sun { fill: color-mix(in srgb, var(--sf-gray-200) 45%, transparent); }
+.sf-kind-orbit-planet { fill: color-mix(in srgb, var(--sf-gray-200) 40%, transparent); }
 
 /* The starfields, after the site's night sky (css/rpg-night.css): dots that
    pulse slowly and a few four-pointed twinkles that flare now and then.
