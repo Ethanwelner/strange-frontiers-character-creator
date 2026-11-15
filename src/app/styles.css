@@ -66,8 +66,8 @@
 
   input,
   select {
-    background: var(--portfolio-white);
-    color: var(--portfolio-black);
+    background: var(--sf-gray-0);
+    color: var(--sf-gray-800);
     border: 1px solid var(--rule);
     border-radius: 4px;
     padding: 0.45rem 0.6rem;
@@ -78,11 +78,11 @@
   select:focus,
   textarea:focus {
     outline: none;
-    border-color: var(--portfolio-black);
+    border-color: var(--sf-gray-800);
   }
 
   :focus-visible {
-    outline: 2px solid var(--frontiers-green);
+    outline: 2px solid var(--sf-neon-500);
     outline-offset: 2px;
   }
 
@@ -95,17 +95,17 @@
 
 .sf-creator {
   /* Builder colors on top of css/tokens.css */
-  --card-bg: #eeeff0;
-  --card-border: #d3d4d5;
-  --good-on-light: #2e8a4a;
+  --card-bg: var(--sf-gray-100);
+  --card-border: var(--sf-gray-150);
+  --good-on-light: var(--sf-green-600);
   --rule: rgb(0 0 0 / 15%);
   --rule-on-black: rgb(255 255 255 / 25%);
   /* The dark builder panel and the box each step sits in */
-  --panel: #292b2c;
-  --panel-box: #343638;
-  --panel-text: #e7e8e9;
-  --panel-soft: #b2b3b4;
-  --panel-good: #6fd18a;
+  --panel: var(--sf-gray-700);
+  --panel-box: var(--sf-gray-600);
+  --panel-text: var(--sf-gray-100);
+  --panel-soft: var(--sf-gray-200);
+  --panel-good: var(--sf-green-300);
   --title: "bebas_neueregular", Impact, "Arial Narrow", sans-serif;
   --body: "Open Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
 
@@ -114,15 +114,15 @@
   line-height: 1.25;
 
   .builder-panel :focus-visible {
-    outline-color: var(--portfolio-white);
+    outline-color: var(--sf-gray-0);
   }
 
   .builder-panel :is(.level-card, .choice, .sf-sheet, .notice) :focus-visible {
-    outline-color: var(--portfolio-black);
+    outline-color: var(--sf-gray-800);
   }
 
   .muted {
-    color: var(--portfolio-gray);
+    color: var(--sf-gray-500);
   }
 
   /* Bootstrap's .small, at the site's .tiny-text size */
@@ -136,7 +136,7 @@
   }
 
   .bad {
-    color: var(--portfolio-red);
+    color: var(--sf-crimson-500);
   }
 
   .num {
@@ -148,12 +148,12 @@
   }
 
   .hint {
-    color: var(--portfolio-gray);
+    color: var(--sf-gray-500);
     font-size: 0.9rem;
   }
 
   .empty {
-    color: var(--portfolio-gray);
+    color: var(--sf-gray-500);
     font-style: italic;
   }
 
@@ -201,7 +201,7 @@
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: 1fr;
     min-height: max(50vh, 668px);
-    color: var(--portfolio-white);
+    color: var(--sf-gray-0);
     padding-top: var(--sf-creator-top, 24px);
   }
 
@@ -245,7 +245,7 @@
     display: inline-flex;
     align-items: baseline;
     gap: 1rem;
-    color: var(--portfolio-white);
+    color: var(--sf-gray-0);
   }
 
   /* .title.hero-title.frontiers-accent over .title.section-title */
@@ -281,7 +281,7 @@
   .rpg-tab.is-active {
     background: var(--panel);
     /* The site's active tab is black on white, with !important */
-    color: var(--portfolio-white) !important;
+    color: var(--sf-gray-0) !important;
     box-shadow: 0 1px 0 var(--panel);
   }
 
@@ -298,8 +298,8 @@
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: var(--portfolio-green);
-    color: var(--portfolio-white);
+    background: var(--sf-green-500);
+    color: var(--sf-gray-0);
     font-family: var(--body);
     font-size: 0.7rem;
     font-weight: 600;
@@ -342,16 +342,16 @@
     }
 
     .hint {
-      color: #c8c9ca;
+      color: var(--sf-gray-150);
     }
 
     .sf-btn--link {
-      --sf-link: var(--frontiers-lore-on-black);
+      --sf-link: var(--sf-purple-400);
     }
 
     .notice {
       margin: 0.75rem 0 0;
-      color: var(--portfolio-black);
+      color: var(--sf-gray-800);
     }
   }
 
@@ -385,7 +385,7 @@
     gap: 6px;
 
     input::placeholder {
-      color: #989b9c;
+      color: var(--sf-gray-300);
     }
   }
 
@@ -479,7 +479,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 0.9rem;
-    color: #c8c9ca;
+    color: var(--sf-gray-150);
   }
 
   /* The last build's status and summary, 48px below Build it, then its
@@ -504,11 +504,11 @@
   }
 
   .describe-status.good {
-    color: var(--frontiers-green);
+    color: var(--sf-neon-500);
   }
 
   .describe-status.bad {
-    color: #ff5c86;
+    color: var(--sf-crimson-300);
   }
 
   .ai-reasons {
@@ -525,7 +525,7 @@
   .builder-panel {
     --rule: rgb(255 255 255 / 18%);
     /* Card edges fade into the dark box instead of outlining it in light gray */
-    --card-border: #5c5e60;
+    --card-border: var(--sf-gray-400);
     position: relative;
     /* Clear of the site's .white-bg; the gray is the layer below */
     background: none;
@@ -567,10 +567,10 @@
   /* Printed, cards, notices and the sheet stay light, with their own dark text */
   .builder-panel :is(.level-card, .choice, .sf-sheet, .notice) {
     --rule: rgb(0 0 0 / 15%);
-    color: var(--portfolio-black);
+    color: var(--sf-gray-800);
 
     :is(.muted, .hint, .empty) {
-      color: var(--portfolio-gray);
+      color: var(--sf-gray-500);
     }
 
     .good:not(.status) {
@@ -582,14 +582,14 @@
      like the rest, with dark text */
   @media print {
     :is(.sf-card, .sf-item-card) {
-      --card-bg: #eeeff0;
-      --card-text: var(--portfolio-black);
-      --card-soft: var(--portfolio-gray);
+      --card-bg: var(--sf-gray-100);
+      --card-text: var(--sf-gray-800);
+      --card-soft: var(--sf-gray-500);
     }
 
     .sf-stats {
-      --stat-text: var(--portfolio-black);
-      --stat-soft: var(--portfolio-gray);
+      --stat-text: var(--sf-gray-800);
+      --stat-soft: var(--sf-gray-500);
       --stat-rule: rgb(0 0 0 / 15%);
     }
   }
@@ -598,7 +598,7 @@
   @media screen {
     .builder-panel,
     .sf-popup {
-      --card-bg: var(--portfolio-black);
+      --card-bg: var(--sf-gray-800);
     }
 
     .builder-panel :is(.level-card, .choice, .notice) {
@@ -614,17 +614,17 @@
       }
 
       :focus-visible {
-        outline-color: var(--portfolio-white);
+        outline-color: var(--sf-gray-0);
       }
 
       /* Black chips would vanish into the black card. A Cast Action's
          badges keep the item badges' olive. */
       .chip:not(.chip-muted, .chip-accent, .chip-bad) {
-        background: var(--portfolio-gray);
+        background: var(--sf-gray-500);
       }
 
       .chip-accent {
-        background: #696b6d;
+        background: var(--sf-gray-400);
       }
     }
 
@@ -632,16 +632,16 @@
        header bar (--card-edge), and a soft shadow under them, like the
        cards (cards.css) */
     :is(.builder-panel, .sf-popup) .headed {
-      --card-edge: #161819;
+      --card-edge: var(--sf-gray-900);
       border: 1px solid var(--card-edge);
       box-shadow: 0 4px 10px #00000030;
 
       &.region-dreft {
-        --card-edge: var(--frontiers-dreft);
+        --card-edge: var(--sf-green-900);
       }
 
       &.selected {
-        box-shadow: 0 0 0 1px var(--portfolio-green), 0 4px 10px #00000030;
+        box-shadow: 0 0 0 1px var(--sf-green-500), 0 4px 10px #00000030;
       }
 
       > .card-head {
@@ -652,7 +652,7 @@
     /* The black header bars go a shade darker than the card under them */
     :is(.builder-panel, .sf-popup) {
       .headed:not(.region-dreft) > .card-head {
-        background-color: #161819;
+        background-color: var(--sf-gray-900);
       }
     }
 
@@ -662,8 +662,8 @@
     }
 
     .builder-panel .notice.bad {
-      border-color: var(--portfolio-red);
-      background: color-mix(in srgb, var(--portfolio-red) 22%, var(--panel));
+      border-color: var(--sf-crimson-500);
+      background: color-mix(in srgb, var(--sf-crimson-500) 22%, var(--panel));
     }
   }
 
@@ -693,11 +693,11 @@
       }
 
       :focus-visible {
-        outline-color: var(--portfolio-white);
+        outline-color: var(--sf-gray-0);
       }
 
       .sf-btn--link {
-        --sf-link: var(--frontiers-lore-on-black);
+        --sf-link: var(--sf-purple-400);
       }
     }
   }
@@ -706,8 +706,8 @@
     display: flex;
     justify-content: space-between;
     gap: 1rem;
-    background: var(--portfolio-near-white);
-    border: 1px solid var(--portfolio-light-gray);
+    background: var(--sf-gray-50);
+    border: 1px solid var(--sf-gray-100);
     border-radius: 4px;
     padding: 0.75rem 1rem;
     margin-bottom: 1rem;
@@ -722,9 +722,9 @@
   /* An opaque tint, so the error reads the same on the light panels and on
      the dark hero, where a see-through one left dark text on near-black */
   .notice.bad {
-    border-color: var(--portfolio-red);
-    color: var(--portfolio-black);
-    background: color-mix(in srgb, var(--portfolio-red) 6%, var(--portfolio-white));
+    border-color: var(--sf-crimson-500);
+    color: var(--sf-gray-800);
+    background: color-mix(in srgb, var(--sf-crimson-500) 6%, var(--sf-gray-0));
   }
 
   /* Step title in the titles' Bebas, then the step's description. Only the
@@ -755,8 +755,8 @@
     padding: 0.5rem 1rem;
     border: 0;
     border-radius: 999px;
-    background: var(--portfolio-red);
-    color: var(--portfolio-white);
+    background: var(--sf-crimson-500);
+    color: var(--sf-gray-0);
     font-size: 0.75rem;
     font-weight: 600;
     line-height: 1.2;
@@ -965,8 +965,8 @@
     padding: 10px 16px;
     align-items: center;
     border-radius: 11px 11px 0 0;
-    background: var(--portfolio-black);
-    color: var(--portfolio-white);
+    background: var(--sf-gray-800);
+    color: var(--sf-gray-0);
 
     h3 {
       margin: 0;
@@ -975,7 +975,7 @@
     .chip-muted,
     .muted {
       background: rgb(255 255 255 / 15%);
-      color: var(--portfolio-white);
+      color: var(--sf-gray-0);
     }
 
     .muted {
@@ -985,7 +985,7 @@
   }
 
   .headed.region-dreft > .card-head {
-    background: var(--frontiers-dreft);
+    background: var(--sf-green-900);
   }
 
   .features {
@@ -1002,8 +1002,8 @@
      (cards.css). */
   .chip {
     display: inline-block;
-    background: var(--portfolio-black);
-    color: var(--portfolio-white);
+    background: var(--sf-gray-800);
+    color: var(--sf-gray-0);
     border-radius: 4px;
     padding: 0.2rem 0.5rem;
     margin: 0.15rem 0.25rem 0.15rem 0;
@@ -1013,16 +1013,16 @@
   }
 
   .chip-muted {
-    background: var(--portfolio-light-gray);
-    color: var(--portfolio-black);
+    background: var(--sf-gray-100);
+    color: var(--sf-gray-800);
   }
 
   .chip-accent {
-    background: var(--portfolio-gray);
+    background: var(--sf-gray-500);
   }
 
   .chip-bad {
-    background: var(--portfolio-red);
+    background: var(--sf-crimson-500);
   }
 
   .chips {
@@ -1139,11 +1139,11 @@
      squares outlined in the picker's color (the Traits' green, the
      Conditions' header gray), filled in it with a dark check when on */
   .traits-filters {
-    --check-color: var(--frontiers-green, #2dfc64);
+    --check-color: var(--sf-neon-500);
   }
 
   .condition-search {
-    --check-color: #b7b4b4;
+    --check-color: var(--sf-gray-200);
   }
 
   :is(.traits-filters, .condition-search) .check input[type="checkbox"] {
@@ -1164,7 +1164,7 @@
     }
 
     &:focus-visible {
-      outline: 2px solid var(--portfolio-white, #fff);
+      outline: 2px solid var(--sf-gray-0);
       outline-offset: 2px;
     }
   }
@@ -1197,7 +1197,7 @@
     cursor: pointer;
 
     &:hover:not(.selected) {
-      border-color: var(--portfolio-medium-gray);
+      border-color: var(--sf-gray-300);
     }
 
     > .sf-card-body > * {
@@ -1238,13 +1238,13 @@
   /* A requirement the character doesn't meet yet, in a card's
      requirements: red, like the reasons */
   .sf-card-note .unmet {
-    color: var(--portfolio-red);
+    color: var(--sf-crimson-500);
   }
 
   .reasons {
     margin: 0.4rem 0 0;
     padding-left: 1.1rem;
-    color: #b8063a;
+    color: var(--sf-crimson-700);
     font-weight: 600;
   }
 
@@ -1303,7 +1303,7 @@
     }
 
     input::placeholder {
-      color: var(--portfolio-medium-gray);
+      color: var(--sf-gray-300);
     }
   }
 
@@ -1413,12 +1413,12 @@
   }
 
   button.portrait {
-    color: var(--portfolio-white);
+    color: var(--sf-gray-0);
     cursor: pointer;
 
     &:hover,
     &:focus-visible {
-      border-color: var(--frontiers-green);
+      border-color: var(--sf-neon-500);
     }
   }
 
@@ -1462,7 +1462,7 @@
     align-items: center;
     justify-content: center;
     background: rgb(0 0 0 / 0.55);
-    color: var(--portfolio-white);
+    color: var(--sf-gray-0);
     opacity: 0;
     transition: opacity 0.15s ease;
 
@@ -1507,7 +1507,7 @@
     max-width: 200px;
     margin: 0;
     font-size: 0.75rem;
-    color: var(--portfolio-red);
+    color: var(--sf-crimson-500);
   }
 
   .field-label {
@@ -1534,18 +1534,18 @@
   }
 
   .status.good {
-    background: var(--portfolio-green);
-    color: var(--portfolio-black);
+    background: var(--sf-green-500);
+    color: var(--sf-gray-800);
   }
 
   .status.bad {
-    background: var(--portfolio-red);
-    color: var(--portfolio-white);
+    background: var(--sf-crimson-500);
+    color: var(--sf-gray-0);
   }
 
   .status.warn {
-    background: var(--portfolio-yellow);
-    color: var(--portfolio-black);
+    background: var(--sf-yellow-600);
+    color: var(--sf-gray-800);
   }
 
   /* The level and background packages, between the name and the stats */
@@ -1607,17 +1607,17 @@
   .issues li {
     font-size: 0.88rem;
     padding: 0.4rem 0.6rem;
-    border-left: 3px solid var(--portfolio-red);
-    background: var(--portfolio-white);
+    border-left: 3px solid var(--sf-crimson-500);
+    background: var(--sf-gray-0);
     margin-bottom: 0.4rem;
   }
 
   .issues.warn li {
-    border-left-color: var(--portfolio-yellow);
+    border-left-color: var(--sf-yellow-600);
   }
 
   .issues .sf-btn--link {
-    --sf-link: var(--portfolio-black);
+    --sf-link: var(--sf-gray-800);
     font-weight: 300;
   }
 
@@ -1732,19 +1732,19 @@
 
   /* HP, VP, SP and MP in their colors (css/tokens.css): red, purple, yellow, blue */
   .resource-hp {
-    color: var(--frontiers-hp);
+    color: var(--sf-red-500);
   }
 
   .resource-vp {
-    color: var(--frontiers-vp);
+    color: var(--sf-purple-500);
   }
 
   .resource-sp {
-    color: var(--frontiers-sp);
+    color: var(--sf-yellow-400);
   }
 
   .resource-mp {
-    color: var(--frontiers-mp);
+    color: var(--sf-blue-400);
   }
 
   /* Wealth, then money by currency, as badges on a line over the Items
@@ -1767,10 +1767,10 @@
   .sf-cash-field {
     height: 28px;
     padding: 0 10px;
-    background-color: #25241e;
-    border: 1px solid #6d6a5a;
+    background-color: var(--sf-olive-900);
+    border: 1px solid var(--sf-olive-600);
     border-radius: 14px;
-    color: #d6d1b4;
+    color: var(--sf-olive-100);
     font-size: .8125rem;
     font-weight: 600;
   }
@@ -1789,7 +1789,7 @@
     }
 
     &:is(:hover, :focus-visible) {
-      border-color: #b5ae86;
+      border-color: var(--sf-olive-300);
     }
   }
 
@@ -1799,7 +1799,7 @@
     cursor: help;
 
     &.is-over {
-      color: var(--portfolio-red, #e2574c);
+      color: var(--sf-crimson-500);
     }
   }
 
@@ -1809,7 +1809,7 @@
     cursor: help;
 
     &.is-over .sf-wealth-kit {
-      color: var(--portfolio-red, #e2574c);
+      color: var(--sf-crimson-500);
     }
   }
 
@@ -1825,7 +1825,7 @@
     outline: none;
 
     &:focus {
-      border-color: #b5ae86;
+      border-color: var(--sf-olive-300);
     }
   }
 
@@ -1836,7 +1836,7 @@
 
   /* An AI Core's core HP: the HP red, paled, apart from its chassis's HP */
   .resource-core {
-    color: color-mix(in srgb, var(--frontiers-hp) 55%, white);
+    color: color-mix(in srgb, var(--sf-red-500) 55%, white);
   }
 
   /* Player Tools' live HP, VP, SP and MP: the name, the value and a meter in
@@ -1894,29 +1894,29 @@
     > span {
       display: block;
       height: 100%;
-      background: var(--frontiers-green);
+      background: var(--sf-neon-500);
       transition: width 200ms;
     }
   }
 
   .tools-meter-hp > span {
-    background: var(--frontiers-hp);
+    background: var(--sf-red-500);
   }
 
   .tools-meter-vp > span {
-    background: var(--frontiers-vp);
+    background: var(--sf-purple-500);
   }
 
   .tools-meter-sp > span {
-    background: var(--frontiers-sp);
+    background: var(--sf-yellow-400);
   }
 
   .tools-meter-mp > span {
-    background: var(--frontiers-mp);
+    background: var(--sf-blue-400);
   }
 
   .tools-meter-core > span {
-    background: color-mix(in srgb, var(--frontiers-hp) 55%, white);
+    background: color-mix(in srgb, var(--sf-red-500) 55%, white);
   }
 
   /* Above the sheet, on the right, clear of the level badge on its left corner */
@@ -1956,7 +1956,7 @@
     }
 
     &:focus-visible {
-      outline: 2px solid var(--portfolio-white);
+      outline: 2px solid var(--sf-gray-0);
       outline-offset: 2px;
     }
   }
@@ -2000,7 +2000,7 @@
   /* The Kind and background links in the sheet's lighter purple, like the
      Knowledges', which reads better on the dark box */
   .tools-line .sf-btn--link {
-    --sf-link: var(--frontiers-lore-on-black);
+    --sf-link: var(--sf-purple-400);
   }
 
   /* Age, gender, height and weight's value with a small pen that opens its field in place
@@ -2424,8 +2424,8 @@
 
   /* Picked, the card takes the Traits' green edge */
   .builder-panel .item-pick-row.selected > .sf-item-card {
-    border-color: var(--portfolio-green) !important;
-    box-shadow: 0 0 0 1px var(--portfolio-green), 0 4px 10px #00000030;
+    border-color: var(--sf-green-500) !important;
+    box-shadow: 0 0 0 1px var(--sf-green-500), 0 4px 10px #00000030;
   }
 
   .item-pick .item-pick-count {
@@ -2442,31 +2442,31 @@
     width: 32px;
     height: 32px;
     margin: 10px 0 0;
-    background-color: #25241e;
-    border: 2px solid #6d6a5a;
+    background-color: var(--sf-olive-900);
+    border: 2px solid var(--sf-olive-600);
     border-radius: 6px;
     cursor: pointer;
     transition: background-color 150ms, border-color 150ms;
 
     &:hover {
-      border-color: var(--portfolio-green);
+      border-color: var(--sf-green-500);
     }
 
     &:checked {
-      background-color: var(--portfolio-green);
-      border-color: var(--portfolio-green);
+      background-color: var(--sf-green-500);
+      border-color: var(--sf-green-500);
     }
 
     &:checked::after {
       content: "✓";
-      color: var(--portfolio-white);
+      color: var(--sf-gray-0);
       font-size: 1.1rem;
       font-weight: 700;
       line-height: 1;
     }
 
     &:focus-visible {
-      outline: 2px solid var(--portfolio-white);
+      outline: 2px solid var(--sf-gray-0);
       outline-offset: 2px;
     }
   }
@@ -2498,7 +2498,7 @@
     .builder-panel :is(input:not([type="checkbox"], [type="radio"], [type="range"], [type="file"]), select),
     .sf-sheet-description textarea {
       color-scheme: dark;
-      background-color: var(--portfolio-black);
+      background-color: var(--sf-gray-800);
       color: var(--panel-text);
       border-color: transparent;
 
@@ -2583,12 +2583,12 @@
   /* An item card's edit fields keep its dark olive over the panel's
      field styles */
   .builder-panel .sf-item-card :is(input:not([type="checkbox"]), select) {
-    background-color: #25241e;
+    background-color: var(--sf-olive-900);
   }
 
   /* The add form's fields match the cards' */
   .builder-panel .tools-items .tools-add :is(input, select) {
-    background-color: #25241e;
+    background-color: var(--sf-olive-900);
   }
 
   /* The stats' box: the stat block, or in Player Tools the Stats step and
@@ -2618,23 +2618,23 @@
     }
 
     .tools-meter-hp {
-      --meter-color: var(--frontiers-hp);
+      --meter-color: var(--sf-red-500);
     }
 
     .tools-meter-vp {
-      --meter-color: var(--frontiers-vp);
+      --meter-color: var(--sf-purple-500);
     }
 
     .tools-meter-sp {
-      --meter-color: var(--frontiers-sp);
+      --meter-color: var(--sf-yellow-400);
     }
 
     .tools-meter-mp {
-      --meter-color: var(--frontiers-mp);
+      --meter-color: var(--sf-blue-400);
     }
 
     .tools-meter-core {
-      --meter-color: color-mix(in srgb, var(--frontiers-hp) 55%, white);
+      --meter-color: color-mix(in srgb, var(--sf-red-500) 55%, white);
     }
   }
 
@@ -2855,8 +2855,8 @@
     .builder-panel.unlimited {
       padding: 0;
       /* Printed sheets stay on white paper */
-      background: var(--portfolio-white);
-      color: var(--portfolio-black);
+      background: var(--sf-gray-0);
+      color: var(--sf-gray-800);
     }
 
     .builder-panel .container {
@@ -2875,7 +2875,7 @@
 
 @media print {
   html:has(.sf-creator) {
-    background: var(--portfolio-white);
+    background: var(--sf-gray-0);
   }
 }
 

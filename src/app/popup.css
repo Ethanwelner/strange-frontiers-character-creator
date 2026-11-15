@@ -39,8 +39,8 @@ html.sf-popup-open {
 .sf-popup {
     /* The panel's padding around its content */
     --popup-pad: 32px;
-    --popup-panel: var(--portfolio-white, #ffffff);
-    --popup-text: var(--portfolio-black, #1e1f20);
+    --popup-panel: var(--sf-gray-0);
+    --popup-text: var(--sf-gray-800);
     position: fixed;
     inset: 0;
     z-index: 100;
@@ -63,11 +63,11 @@ html.sf-popup-open {
 }
 
 .sf-popup--dark {
-    --popup-panel: var(--panel, #292b2c);
-    --popup-text: var(--panel-text, #e7e8e9);
+    --popup-panel: var(--panel, var(--sf-gray-700));
+    --popup-text: var(--panel-text, var(--sf-gray-100));
 
     :focus-visible {
-        outline-color: var(--portfolio-white, #ffffff);
+        outline-color: var(--sf-gray-0);
     }
 }
 
@@ -164,7 +164,7 @@ html.sf-popup-open {
     margin: 24px calc(-1 * var(--popup-pad)) calc(-1 * var(--popup-pad));
     padding: 16px var(--popup-pad);
     background: var(--popup-panel);
-    border-top: 1px solid var(--card-border, #5c5e60);
+    border-top: 1px solid var(--card-border, var(--sf-gray-400));
     border-radius: 0 0 8px 8px;
 }
 
@@ -218,9 +218,9 @@ html.sf-popup-open {
 
     .sf-btn.sf-popup-close {
         --sf-btn-size: 28px;
-        --sf-btn-bg: var(--portfolio-near-white, #f6f6f6);
-        --sf-btn-fg: var(--portfolio-black, #1e1f20);
-        --sf-btn-mix: var(--portfolio-black, #1e1f20);
+        --sf-btn-bg: var(--sf-gray-50);
+        --sf-btn-fg: var(--sf-gray-800);
+        --sf-btn-mix: var(--sf-gray-800);
         --sf-btn-keep: 75%;
 
         svg {

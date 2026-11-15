@@ -18,10 +18,10 @@
    only adds its own layout around it. */
 
 .sf-stats {
-    --stat-text: #e7e8e9;
-    --stat-soft: #b2b3b4;
+    --stat-text: var(--sf-gray-100);
+    --stat-soft: var(--sf-gray-200);
     --stat-rule: rgb(255 255 255 / 18%);
-    --stat-open: #888a8c;
+    --stat-open: var(--sf-gray-350);
     display: flex;
     flex-direction: column;
     gap: 32px;
@@ -33,7 +33,7 @@
    trackers, with bonus points and the badge a darker shade ---- */
 
 .sf-stat-group {
-    --stat-color: var(--frontiers-green, #4ed37b);
+    --stat-color: var(--sf-neon-500);
     --stat-bonus: color-mix(in srgb, var(--stat-color) 50%, black);
     display: flex;
     flex-direction: column;
@@ -41,19 +41,19 @@
 }
 
 .sf-stat-group--physical {
-    --stat-color: var(--frontiers-hp);
+    --stat-color: var(--sf-red-500);
 }
 
 .sf-stat-group--social {
-    --stat-color: var(--frontiers-vp);
+    --stat-color: var(--sf-purple-500);
 }
 
 .sf-stat-group--mental {
-    --stat-color: var(--frontiers-sp);
+    --stat-color: var(--sf-yellow-400);
 }
 
 .sf-stat-group--magic {
-    --stat-color: var(--frontiers-mp);
+    --stat-color: var(--sf-blue-400);
 }
 
 /* The badge (and with edit, its − and +), then the title with a rule
@@ -81,7 +81,7 @@
     padding: 0;
     border-radius: 50%;
     background-color: var(--stat-bonus);
-    color: #ffffff;
+    color: var(--sf-gray-0);
     line-height: 1;
 }
 
@@ -201,7 +201,7 @@
 
 /* A point past the stat's maximum */
 .sf-stat-slot.is-over {
-    background-color: var(--portfolio-red, #e2574c);
+    background-color: var(--sf-crimson-500);
 }
 
 /* On screen, each colored piece glows 3px in its own color. Print stays
@@ -217,7 +217,7 @@
     }
 
     .sf-stat-slot.is-over {
-        box-shadow: 0 0 3px var(--portfolio-red, #e2574c);
+        box-shadow: 0 0 3px var(--sf-crimson-500);
     }
 }
 
@@ -246,15 +246,15 @@
     }
 
     &.is-good {
-        color: var(--panel-good, #7fdc9b);
+        color: var(--panel-good, var(--sf-green-300));
     }
 
     &.is-bad {
-        color: var(--portfolio-red, #e2574c);
+        color: var(--sf-crimson-500);
     }
 
     &.is-mp {
-        color: var(--frontiers-mp);
+        color: var(--sf-blue-400);
     }
 }
 

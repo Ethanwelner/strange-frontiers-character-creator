@@ -35,10 +35,10 @@
    creator wears too. */
 
 .sf-btn {
-    --sf-btn-bg: var(--portfolio-gray, #505254);
-    --sf-btn-fg: var(--portfolio-white, #fff);
+    --sf-btn-bg: var(--sf-gray-500);
+    --sf-btn-fg: var(--sf-gray-0);
     /* Hover mixes the fill this much of itself with --sf-btn-mix */
-    --sf-btn-mix: var(--portfolio-white, #fff);
+    --sf-btn-mix: var(--sf-gray-0);
     --sf-btn-keep: 80%;
 
     appearance: none;
@@ -66,7 +66,7 @@
     }
 
     &:focus-visible {
-        outline: 2px solid var(--frontiers-green, #2dfc64);
+        outline: 2px solid var(--sf-neon-500);
         outline-offset: 2px;
     }
 
@@ -115,38 +115,38 @@
 /* ---- Tone ---- */
 
 .sf-btn--primary {
-    --sf-btn-bg: var(--frontiers-green, #2dfc64);
-    --sf-btn-fg: var(--portfolio-black, #1f2122);
+    --sf-btn-bg: var(--sf-neon-500);
+    --sf-btn-fg: var(--sf-gray-800);
     --sf-btn-keep: 75%;
 }
 
 .sf-btn--dark {
-    --sf-btn-bg: var(--portfolio-black, #1f2122);
+    --sf-btn-bg: var(--sf-gray-800);
     --sf-btn-keep: 66%;
 }
 
 .sf-btn--light {
-    --sf-btn-bg: var(--portfolio-near-white, #f9fafb);
-    --sf-btn-fg: var(--portfolio-black, #1f2122);
-    --sf-btn-mix: var(--portfolio-black, #1f2122);
+    --sf-btn-bg: var(--sf-gray-50);
+    --sf-btn-fg: var(--sf-gray-800);
+    --sf-btn-mix: var(--sf-gray-800);
     --sf-btn-keep: 75%;
 }
 
 .sf-btn--danger {
-    --sf-btn-bg: var(--portfolio-red, #eb0844);
-    --sf-btn-mix: var(--portfolio-black, #1f2122);
+    --sf-btn-bg: var(--sf-crimson-500);
+    --sf-btn-mix: var(--sf-gray-800);
 }
 
 /* A section's own color: the Conditions' header gray, the Items' olive */
 .sf-btn--condition {
-    --sf-btn-bg: #b7b4b4;
-    --sf-btn-fg: var(--portfolio-black, #1f2122);
+    --sf-btn-bg: var(--sf-gray-200);
+    --sf-btn-fg: var(--sf-gray-800);
     --sf-btn-keep: 75%;
 }
 
 .sf-btn--item {
-    --sf-btn-bg: #b5ae86;
-    --sf-btn-fg: var(--portfolio-black, #1f2122);
+    --sf-btn-bg: var(--sf-olive-300);
+    --sf-btn-fg: var(--sf-gray-800);
     --sf-btn-keep: 75%;
 }
 
@@ -156,7 +156,7 @@
 
     &:hover:not(:disabled, [aria-disabled="true"]) {
         background-color: transparent;
-        color: var(--frontiers-green, #2dfc64);
+        color: var(--sf-neon-500);
     }
 }
 
@@ -236,7 +236,7 @@
 
     display: inline-block;
     padding: 0;
-    color: var(--sf-link, var(--frontiers-lore, #884ddc));
+    color: var(--sf-link, var(--sf-purple-700));
     font-family: inherit;
     font-size: inherit;
     font-weight: 600;
@@ -249,7 +249,7 @@
 
     &:hover:not(:disabled, [aria-disabled="true"]) {
         background-color: transparent;
-        color: var(--sf-link, var(--frontiers-lore, #884ddc));
+        color: var(--sf-link, var(--sf-purple-700));
         text-decoration: underline;
     }
 }
@@ -269,13 +269,13 @@
 
 @keyframes sf-glitch-small-glow {
     0%, 40%, 50%, 60%, 90%, 95%, 100% {
-        filter: drop-shadow(0 0 2px rgb(45 252 100 / 35%)) drop-shadow(-1.5px 0 0 rgb(0 255 255 / 60%)) drop-shadow(1.5px 0 0 rgb(255 0 0 / 60%));
+        filter: drop-shadow(0 0 2px color-mix(in srgb, var(--sf-neon-500) 35%, transparent)) drop-shadow(-1.5px 0 0 rgb(0 255 255 / 60%)) drop-shadow(1.5px 0 0 rgb(255 0 0 / 60%));
     }
     45%, 75% {
-        filter: drop-shadow(0 0 4px rgb(45 252 100 / 70%)) drop-shadow(-3px 0 0 rgb(0 255 255 / 85%)) drop-shadow(3px 0 0 rgb(255 0 0 / 75%));
+        filter: drop-shadow(0 0 4px color-mix(in srgb, var(--sf-neon-500) 70%, transparent)) drop-shadow(-3px 0 0 rgb(0 255 255 / 85%)) drop-shadow(3px 0 0 rgb(255 0 0 / 75%));
     }
     97.5% {
-        filter: drop-shadow(0 0 2px rgb(45 252 100 / 0%)) drop-shadow(-1.5px 0 0 rgb(0 255 255 / 60%)) drop-shadow(4px 0 0 rgb(255 0 0 / 90%));
+        filter: drop-shadow(0 0 2px color-mix(in srgb, var(--sf-neon-500) 0%, transparent)) drop-shadow(-1.5px 0 0 rgb(0 255 255 / 60%)) drop-shadow(4px 0 0 rgb(255 0 0 / 90%));
     }
 }
 

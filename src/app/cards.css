@@ -19,9 +19,9 @@
 
 .sf-card,
 .sf-item-card {
-    --card-bg: var(--portfolio-black, #1f2122);
-    --card-text: #e7e8e9;
-    --card-soft: #b2b3b4;
+    --card-bg: var(--sf-gray-800);
+    --card-text: var(--sf-gray-100);
+    --card-soft: var(--sf-gray-200);
     color: var(--card-text);
 }
 
@@ -32,30 +32,30 @@
     margin: .15rem .25rem .15rem 0;
     padding: .2rem .5rem;
     border-radius: 4px;
-    background: var(--portfolio-gray, #505254);
-    color: var(--portfolio-white, #fff);
+    background: var(--sf-gray-500);
+    color: var(--sf-gray-0);
     font-size: .875rem;
     font-weight: 600;
     white-space: nowrap;
 
     &.sf-chip--muted {
-        background: var(--portfolio-light-gray, #e9eaeb);
-        color: var(--portfolio-black, #1f2122);
+        background: var(--sf-gray-100);
+        color: var(--sf-gray-800);
     }
 
     &.sf-chip--accent {
-        background: #696b6d;
+        background: var(--sf-gray-400);
     }
 
     &.sf-chip--bad {
-        background: var(--portfolio-red, #eb0844);
+        background: var(--sf-crimson-500);
     }
 }
 
 /* ---- Trait and Background cards: a 1px edge the color of the bar ---- */
 
 .sf-card {
-    --card-edge: #161819;
+    --card-edge: var(--sf-gray-900);
     position: relative;
     width: 100%;
     background-color: var(--card-bg);
@@ -66,19 +66,19 @@
 
     /* Isekai's cards: Dreft's green bar and edge */
     &.sf-card--dreft {
-        --card-edge: var(--frontiers-dreft, #1c372b);
+        --card-edge: var(--sf-green-900);
     }
 
     > .sf-card-bar {
         border-radius: 10px 10px 0 0;
         background-color: var(--card-edge);
-        color: var(--portfolio-white, #fff);
+        color: var(--sf-gray-0);
     }
 
     /* A picked card (a picker's): a green ring and a check on its corner */
     &.selected {
-        border-color: var(--portfolio-green, #47b767);
-        box-shadow: 0 0 0 1px var(--portfolio-green, #47b767), 0 4px 10px #00000030;
+        border-color: var(--sf-green-500);
+        box-shadow: 0 0 0 1px var(--sf-green-500), 0 4px 10px #00000030;
     }
 
     &.selected::after {
@@ -92,8 +92,8 @@
         width: 28px;
         height: 28px;
         border-radius: 50%;
-        background: var(--portfolio-green, #47b767);
-        color: var(--portfolio-white, #fff);
+        background: var(--sf-green-500);
+        color: var(--sf-gray-0);
         font-size: .9rem;
         font-weight: 600;
     }
@@ -212,11 +212,11 @@
 
     /* Conditions in grays: a mid gray edge, a light gray bar, dark text */
     &.sf-trait-card--condition {
-        --card-edge: #626466;
+        --card-edge: var(--sf-gray-400);
 
         > .sf-card-bar {
-            background-color: #b7b4b4;
-            color: var(--portfolio-black, #1f2122);
+            background-color: var(--sf-gray-200);
+            color: var(--sf-gray-800);
         }
     }
 }
@@ -261,7 +261,7 @@
 .sf-card-action {
     margin: 0;
     padding-left: 10px;
-    border-left: 2px solid var(--portfolio-medium-gray, #949798);
+    border-left: 2px solid var(--sf-gray-300);
     font-size: .9rem;
 
     > p {
@@ -366,7 +366,7 @@
 
         .sf-chip--muted {
             background: rgb(255 255 255 / 15%);
-            color: var(--portfolio-white, #fff);
+            color: var(--sf-gray-0);
         }
     }
 
@@ -381,7 +381,7 @@
         cursor: pointer;
 
         &:hover:not(.selected) {
-            border-color: var(--portfolio-medium-gray, #949798);
+            border-color: var(--sf-gray-300);
         }
     }
 }
@@ -432,16 +432,16 @@
        component library's Colors): White, Text, Soft Text, Medium Gray,
        Condition Edge, Gray, Panel Box, Panel, Card, Card Edge, Dreft and
        Green */
-    --key-label: #b2b3b4;
-    --key-soft: #e7e8e9;
-    --key-line: #343638;
-    --key-name: #e7e8e9;
+    --key-label: var(--sf-gray-200);
+    --key-soft: var(--sf-gray-100);
+    --key-line: var(--sf-gray-600);
+    --key-name: var(--sf-gray-100);
     /* The frame line's gradient, quieter than the text's key colors (the
        corner star's SVG gradient matches it: KIND_KEY_STOPS) */
     /* The frame line: solid Medium Gray (#949798) */
-    --kind-line: #949798;
-    --kind-text: #e7e8e9;
-    --kind-muted: #949798;
+    --kind-line: var(--sf-gray-300);
+    --kind-text: var(--sf-gray-100);
+    --kind-muted: var(--sf-gray-300);
     --kind-shadow: drop-shadow(0 0 1px rgb(0 0 0 / 80%)) drop-shadow(0 14px 18px rgb(0 0 0 / 40%));
     display: flex;
     flex-direction: column;
@@ -458,7 +458,7 @@
     inset: 0;
     border-radius: 0 12px 12px;
     /* Solid Gray, so a page of cards stays calm */
-    background: #505254;
+    background: var(--sf-gray-500);
     -webkit-mask: linear-gradient(to right, transparent 40px, #000 40px), linear-gradient(to bottom, transparent 40px, #000 40px);
     mask: linear-gradient(to right, transparent 40px, #000 40px), linear-gradient(to bottom, transparent 40px, #000 40px);
 }
@@ -477,7 +477,7 @@
     position: absolute;
     inset: 6px;
     border-radius: 0 6px 6px;
-    background: #161819;
+    background: var(--sf-gray-900);
     -webkit-mask: radial-gradient(circle at 0 0, transparent 24px, #000 24.5px);
     mask: radial-gradient(circle at 0 0, transparent 24px, #000 24.5px);
     overflow: hidden;
@@ -495,9 +495,9 @@
     transform: translate(-50%, -50%);
     pointer-events: none;
 }
-.sf-kind-rose-light { fill: #292b2c; }
-.sf-kind-rose-dark { fill: #1f2122; }
-.sf-kind-rose-ring { fill: none; stroke: #1f2122; }
+.sf-kind-rose-light { fill: var(--sf-gray-700); }
+.sf-kind-rose-dark { fill: var(--sf-gray-800); }
+.sf-kind-rose-ring { fill: none; stroke: var(--sf-gray-800); }
 
 /* The starfield, after the site's night sky (css/rpg-night.css): dots that
    pulse slowly and a few four-pointed twinkles that flare now and then */
@@ -507,7 +507,7 @@
     width: 1px;
     height: 1px;
     border-radius: 50%;
-    background: #fff;
+    background: var(--sf-gray-0);
     animation: sf-kind-pulse 6s ease-in-out infinite;
 }
 .sf-kind-dot.is-big { width: 2px; height: 2px; }
@@ -627,9 +627,9 @@
 @container (max-width: 230px) {
     .sf-kind-stats { grid-template-columns: 1fr; max-width: 180px; margin-inline: auto; }
 }
-.sf-kind-stats .sf-kind-label--physical { color: var(--frontiers-hp, #e2574c); }
-.sf-kind-stats .sf-kind-label--social { color: var(--frontiers-vp, #9b7bff); }
-.sf-kind-stats .sf-kind-label--mental { color: var(--frontiers-sp, #f2c94c); }
+.sf-kind-stats .sf-kind-label--physical { color: var(--sf-red-500); }
+.sf-kind-stats .sf-kind-label--social { color: var(--sf-purple-500); }
+.sf-kind-stats .sf-kind-label--mental { color: var(--sf-yellow-400); }
 .sf-kind-stat { display: flex; justify-content: space-between; gap: 4px; }
 .sf-kind-stat abbr { font-family: 'bebas_neueregular', sans-serif; letter-spacing: .06em; text-decoration: none; cursor: help; }
 .sf-kind-num { font-variant-numeric: tabular-nums; color: var(--key-soft); }
@@ -662,14 +662,14 @@
 /* Isekai's cards key on the palette's greens: Dreft (#1c372b) and Green
    (#47b767) */
 .sf-kind-card--dreft {
-    --kind-line: var(--frontiers-dreft-mid, #327749);
-    --key-label: #47b767;
-    --key-line: #1c372b;
+    --kind-line: var(--sf-green-700);
+    --key-label: var(--sf-green-500);
+    --key-line: var(--sf-green-900);
 }
 /* Isekai's band is Dreft, under the lighter Dreft Mid line, as Settled
    Systems' Gray sits under Medium Gray */
 .sf-kind-card--dreft .sf-kind-plate {
-    background: var(--frontiers-dreft, #1c372b);
+    background: var(--sf-green-900);
 }
 @media (max-width: 480px) {
     .sf-kind-content { padding: 26px 18px 18px; }
@@ -680,8 +680,8 @@
    on its corner while picked, as the other cards' */
 .sf-kind-card.is-selectable { cursor: pointer; }
 .sf-kind-card.is-selectable:hover:not(.selected),
-.sf-kind-card.is-selectable:focus-visible { filter: drop-shadow(0 0 1px #949798) drop-shadow(0 0 1px #949798) drop-shadow(0 0 1px #949798) var(--kind-shadow); outline: none; }
-.sf-kind-card.selected { filter: drop-shadow(0 0 1px #47b767) drop-shadow(0 0 1px #47b767) drop-shadow(0 0 1.5px #47b767) var(--kind-shadow); }
+.sf-kind-card.is-selectable:focus-visible { filter: drop-shadow(0 0 1px var(--sf-gray-300)) drop-shadow(0 0 1px var(--sf-gray-300)) drop-shadow(0 0 1px var(--sf-gray-300)) var(--kind-shadow); outline: none; }
+.sf-kind-card.selected { filter: drop-shadow(0 0 1px var(--sf-green-500)) drop-shadow(0 0 1px var(--sf-green-500)) drop-shadow(0 0 1.5px var(--sf-green-500)) var(--kind-shadow); }
 .sf-kind-card.selected::after {
     content: "✓";
     position: absolute;
@@ -694,8 +694,8 @@
     width: 28px;
     height: 28px;
     border-radius: 50%;
-    background: var(--portfolio-green, #47b767);
-    color: var(--portfolio-white, #fff);
+    background: var(--sf-green-500);
+    color: var(--sf-gray-0);
     font-size: .9rem;
     font-weight: 600;
 }
@@ -711,7 +711,7 @@
     width: 100%;
     padding: 12px 12px 12px 22px;
     background-color: var(--card-bg);
-    border: 1px solid #6d6a5a;
+    border: 1px solid var(--sf-olive-600);
     border-radius: 12px;
     box-shadow: 0 4px 10px #00000030;
     font-size: 14px;
@@ -725,7 +725,7 @@
 
     /* Its fields in a darker olive to match */
     :is(input:not([type="checkbox"]), select) {
-        background-color: #25241e;
+        background-color: var(--sf-olive-900);
     }
 
     p {
@@ -738,10 +738,10 @@
 :is(.sf-item-card, .sf-card-action-badges) .chip {
     display: inline-block;
     padding: .2rem .5rem;
-    background-color: #25241e;
-    border: 1px solid #6d6a5a;
+    background-color: var(--sf-olive-900);
+    border: 1px solid var(--sf-olive-600);
     border-radius: 4px;
-    color: #d6d1b4;
+    color: var(--sf-olive-100);
     font-size: .875rem;
     font-weight: 600;
     white-space: nowrap;
@@ -836,7 +836,7 @@
     height: 26px;
     padding: 0 5px;
     background-color: var(--card-bg);
-    border: 2px solid #6d6a5a;
+    border: 2px solid var(--sf-olive-600);
     border-radius: 13px;
     font-size: .8125rem;
     font-weight: 600;
@@ -860,24 +860,24 @@
         width: 18px;
         height: 18px;
         margin: 0;
-        background-color: #25241e;
-        border: 1px solid #6d6a5a;
+        background-color: var(--sf-olive-900);
+        border: 1px solid var(--sf-olive-600);
         border-radius: 4px;
         cursor: pointer;
         transition: background-color 150ms, border-color 150ms;
 
         &:hover:not(:disabled) {
-            border-color: #a29d82;
+            border-color: var(--sf-olive-400);
         }
 
         &:focus-visible {
-            outline: 2px solid #a29d82;
+            outline: 2px solid var(--sf-olive-400);
             outline-offset: 2px;
         }
 
         &:checked {
-            background-color: #b5ae86;
-            border-color: #b5ae86;
+            background-color: var(--sf-olive-300);
+            border-color: var(--sf-olive-300);
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='%2325241e' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
             background-size: 14px;
             background-position: center;
@@ -1017,19 +1017,19 @@
     width: calc(1lh + .4rem + 2px);
     height: calc(1lh + .4rem + 2px);
     margin: -1px -4px -1px -1px;
-    background-color: #b5ae86;
+    background-color: var(--sf-olive-300);
     border-radius: 50%;
 
     :is(.icon, svg) {
         width: 1rem;
         height: 1rem;
-        fill: #25241e;
+        fill: var(--sf-olive-900);
     }
 }
 
 /* "or" between a damage choice's options, inside the badge */
 .equipment-stat-or {
-    color: #a29d82;
+    color: var(--sf-olive-400);
     font-weight: 400;
 }
 
@@ -1044,7 +1044,7 @@
     gap: 12px;
     margin-top: 12px;
     padding-top: 12px;
-    border-top: 1px solid #6d6a5a;
+    border-top: 1px solid var(--sf-olive-600);
 
     .sf-stats {
         gap: 16px;
@@ -1059,7 +1059,7 @@
 
 .sf-chassis-label {
     margin: 0;
-    color: #d6d1b4;
+    color: var(--sf-olive-100);
     font-size: .75rem;
     font-weight: 600;
 }
@@ -1084,16 +1084,16 @@
     width: 26px;
     height: 26px;
     padding: 0;
-    background-color: #b5ae86;
-    border: 2px solid #6d6a5a;
+    background-color: var(--sf-olive-300);
+    border: 2px solid var(--sf-olive-600);
     border-radius: 50%;
-    color: #25241e;
+    color: var(--sf-olive-900);
     cursor: pointer;
     transition: background-color 200ms;
 
     &:is(:hover, :focus-visible) {
-        background-color: #d6d1b4;
-        color: #25241e;
+        background-color: var(--sf-olive-100);
+        color: var(--sf-olive-900);
     }
 
     svg {
@@ -1107,7 +1107,7 @@
     top: 54.45px;
 
     &[aria-expanded="true"] {
-        background-color: #d6d1b4;
+        background-color: var(--sf-olive-100);
     }
 
     .pen-icon {
@@ -1221,6 +1221,6 @@
 
 /* A damage formula's total, muted after it */
 .sf-damage-total {
-    color: #a29d82;
+    color: var(--sf-olive-400);
     font-weight: 400;
 }
