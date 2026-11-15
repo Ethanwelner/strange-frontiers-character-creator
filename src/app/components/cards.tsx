@@ -648,7 +648,7 @@ const KIND_PLANETS: [string, number, number][] = [
 // The other card backgrounds, kept as options (KindCard's `background`):
 // "compass", the first one, an eight-point compass over a faint starfield,
 // "planet", a dark planet's disc under a dense starfield, and "orbits", a
-// solar system's rings over the faint starfield. "sun", above, is the default.
+// solar system's rings over the faint starfield, the default. "sun" is above.
 
 // The compass: eight long diamonds meeting at the middle, each split down its
 // length into a light and a dark face. The four cardinal ones are as wide as
@@ -777,13 +777,13 @@ export function KindCard({
   kind: k,
   lore = false,
   select,
-  background = "sun",
+  background = "orbits",
   className = "",
 }: {
   kind: Kind;
   lore?: boolean;
-  // What's drawn behind the content: the sun and planets (the default), the
-  // compass, the planet or the orbits
+  // What's drawn behind the content: the orbits (the default), the sun and
+  // planets, the compass or the planet
   background?: KindBackground;
   select?: { selected: boolean; onSelect: () => void };
   className?: string;

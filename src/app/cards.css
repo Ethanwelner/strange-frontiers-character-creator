@@ -522,8 +522,8 @@
 /* ---- The other Kind card backgrounds, kept as options (KindCard's
    `background`; sf_card_kind()'s): "compass", an eight-point compass over a
    faint starfield, "planet", a dark planet's disc under a dense starfield,
-   and "orbits", a solar system's rings over the faint starfield. The sun
-   and planets above are the default ("sun") ---- */
+   and "orbits", a solar system's rings over the faint starfield, the
+   default. The sun and planets ("sun") are above ---- */
 
 /* The compass: two palette steps up from the field (Card Edge), Panel and
    Card, so no part of it is darker than its background */
