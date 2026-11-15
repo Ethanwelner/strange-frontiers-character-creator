@@ -414,13 +414,11 @@
     font-weight: 600;
 }
 
-/* ---- Kind cards (KindCard; the site's sf_card_kind): a thin gunmetal
-   border running in to a 2px line in the card's key color (silver, or
-   Dreft's green for Isekai), with a large cut-out at the top left holding
-   a star, around a
-   dark field with a starfield and a compass. The frame is four corner pieces
-   (one SVG, turned; only the top left has a star) joined by straight edges,
-   so the card grows with its text. ---- */
+/* ---- Kind cards (KindCard; the site's sf_card_kind): a thin solid gray
+   band around a dark field with a starfield and a compass. A small
+   quarter-circle is cut out of the field's top left corner, holding a star
+   in the card's key color (silver, or Dreft's green for Isekai), and the
+   band stops short of it. ---- */
 
 .sf-kind-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
 
@@ -436,12 +434,6 @@
     --key-soft: #e7e8e9;
     --key-line: #343638;
     --key-name: #e7e8e9;
-    /* The frame line's gradient, quieter than the text's key colors (the
-       corner star's SVG gradient matches it: KIND_KEY_STOPS) */
-    --line-hi: #949798;
-    --line-mid: #626466;
-    --kind-key: linear-gradient(90deg, var(--line-mid), var(--line-hi) 50%, var(--line-mid));
-    --kind-key-v: linear-gradient(180deg, var(--line-mid), var(--line-hi) 50%, var(--line-mid));
     --kind-text: #e7e8e9;
     --kind-muted: #949798;
     --kind-shadow: drop-shadow(0 0 1px rgb(0 0 0 / 80%)) drop-shadow(0 14px 18px rgb(0 0 0 / 40%));
@@ -547,29 +539,6 @@
     filter: drop-shadow(0 1px 1px rgb(0 0 0 / 60%));
 }
 .sf-kind-corner--tl { top: 0; left: 0; }
-.sf-kind-corner--tr { top: 0; right: 0; transform: scaleX(-1); }
-.sf-kind-corner--bl { bottom: 0; left: 0; transform: scaleY(-1); }
-.sf-kind-corner--br { bottom: 0; right: 0; transform: scale(-1); }
-
-/* The straight edges between the corners: the 2px key-colored line 6px in from
-   the card's edge, matching the corner pieces */
-.sf-kind-edge { position: absolute; pointer-events: none; }
-.sf-kind-edge--top, .sf-kind-edge--bottom {
-    left: 100px;
-    right: 100px;
-    height: 2px;
-    background: var(--kind-key);
-}
-.sf-kind-edge--top { top: 5px; }
-.sf-kind-edge--bottom { bottom: 5px; }
-.sf-kind-edge--left, .sf-kind-edge--right {
-    top: 100px;
-    bottom: 100px;
-    width: 2px;
-    background: var(--kind-key-v);
-}
-.sf-kind-edge--left { left: 5px; }
-.sf-kind-edge--right { right: 5px; }
 
 .sf-kind-content {
     position: relative;
@@ -663,10 +632,6 @@
 /* Isekai's cards key on the palette's greens: Dreft (#1c372b) and Green
    (#47b767) */
 .sf-kind-card--dreft {
-    /* A solid Green line: the palette has nothing between Dreft and Green,
-       so a gradient between them shifts too hard */
-    --line-hi: #47b767;
-    --line-mid: #47b767;
     --key-label: #47b767;
     --key-line: #1c372b;
     --key-name: #47b767;
