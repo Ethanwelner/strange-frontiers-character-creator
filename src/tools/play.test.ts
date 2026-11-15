@@ -4,7 +4,7 @@ import { loadContent } from "../engine/content.js";
 import { validateBuild } from "../engine/validate.js";
 import { fromBuild } from "../app/draft.js";
 import { applyTool, ask, sheetText, trackerLine } from "./chat.js";
-import { addCondition, addItem, checkPlay, currentOf, hpConditions, maxOf, playBuild, playConditions, pointsToPlace, removeItem, shownResources, startPlay, withResource, withStartingCash } from "./play.js";
+import { addCondition, addItem, checkPlay, currentOf, hpConditions, maxOf, playBuild, playConditions, pointsToPlace, removeItem, shownResources, startPlay, withGmChange, withResource, withStartingCash } from "./play.js";
 import type { CreateMessage } from "../ai/anthropic.js";
 
 const { content } = loadContent();
@@ -259,5 +259,43 @@ describe("the assistant's tools", () => {
     const messages = sent[0]!.messages;
     expect(messages[1]!.content).toBe("Done.\n(Changed then: HP 18 → 13)");
     expect(messages[messages.length - 1]!.content).toMatch(/^How am I\?\n\n\(Tracker now: HP 3\/\d+,/);
+  });
+});
+
+describe("the Game Master's changes", () => {
+  const holds = (p: ReturnType<typeof fresh>, id: string) => checkPlay(p.draft, content, p.items).summary!.traits.find((h) => h.trait === id);
+
+  it("gives a Trait for no pick, and raises one already held", () => {
+    const before = checkPlay(fresh().draft, content).summary!.picks;
+    const given = withGmChange(fresh(), content, { op: "add", trait: "archmage", rank: 1 });
+    expect(given.draft.gmTraits).toEqual([{ trait: "archmage", rank: 1 }]);
+    expect(holds(given, "archmage")?.sources).toEqual(["gm"]);
+    expect(checkPlay(given.draft, content).summary!.picks).toEqual(before);
+    // Wield: War Axe is at rank 2 from picks; the Game Master raises it to 3
+    expect(holds(withGmChange(fresh(), content, { op: "add", trait: "wielder-war-axe", rank: 3 }), "wielder-war-axe")?.rank).toBe(3);
+  });
+
+  it("takes away a picked Trait by giving its picks back", () => {
+    const taken = withGmChange(fresh(), content, { op: "remove", trait: "wielder-war-axe", rank: 1 });
+    expect(taken.draft.traits.some((t) => t.trait === "wielder-war-axe")).toBe(false);
+    expect(taken.draft.gmRemoved).toBeUndefined();
+    expect(holds(taken, "wielder-war-axe")).toBeUndefined();
+  });
+
+  it("marks a Trait a package gives as removed, and gives it back when added again", () => {
+    // Teamster comes with the Caravaneer
+    const taken = withGmChange(fresh(), content, { op: "remove", trait: "teamster", rank: 1 });
+    expect(taken.draft.gmRemoved).toEqual(["teamster"]);
+    expect(holds(taken, "teamster")).toBeUndefined();
+    const back = withGmChange(taken, content, { op: "add", trait: "teamster", rank: 1 });
+    expect(back.draft.gmRemoved).toBeUndefined();
+    expect(holds(back, "teamster")).toBeDefined();
+  });
+
+  it("keeps the changes through a file", () => {
+    const changed = withGmChange(withGmChange(fresh(), content, { op: "add", trait: "brawler", rank: 1 }), content, { op: "remove", trait: "teamster", rank: 1 });
+    const again = startPlay(playBuild(changed));
+    expect(again.draft.gmTraits).toEqual([{ trait: "brawler", rank: 1 }]);
+    expect(again.draft.gmRemoved).toEqual(["teamster"]);
   });
 });

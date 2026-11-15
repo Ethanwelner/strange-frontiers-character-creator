@@ -126,6 +126,36 @@ export function removeCondition(play: Play, trait: string): Play {
   return { ...play, conditions: withoutCondition(play.conditions, trait) };
 }
 
+// A Game Master's change from the table (src/table/table.ts), applied to the
+// character. Adding gives the Trait at the change's rank, for no pick, and
+// undoes an earlier removal of it. Taking a Trait away drops the Game
+// Master's own grant of it, any picks spent on it and the answers to its
+// choices (the picks come back), and if something else still gives it, like
+// a package or the Kind, marks it removed.
+export function withGmChange(play: Play, content: Content, change: { op: "add" | "remove"; trait: string; rank: number }): Play {
+  const { trait } = change;
+  const d = play.draft;
+  const others = (d.gmTraits ?? []).filter((g) => g.trait !== trait);
+  const removed = (d.gmRemoved ?? []).filter((t) => t !== trait);
+  const tidy = (draft: Draft): Draft => {
+    const { gmTraits, gmRemoved, ...rest } = draft;
+    return { ...rest, ...(gmTraits?.length ? { gmTraits } : {}), ...(gmRemoved?.length ? { gmRemoved } : {}) };
+  };
+  if (change.op === "add") {
+    return { ...play, draft: tidy({ ...d, gmTraits: [...others, { trait, rank: change.rank }], gmRemoved: removed }) };
+  }
+  let draft = tidy({
+    ...d,
+    traits: d.traits.filter((p) => p.trait !== trait),
+    choices: d.choices.filter((c) => c.trait !== trait),
+    gmTraits: others,
+    gmRemoved: removed,
+  });
+  const stillHeld = checkPlay(draft, content, play.items).summary?.traits.some((h) => h.trait === trait);
+  if (stillHeld) draft = tidy({ ...draft, gmRemoved: [...removed, trait] });
+  return { ...play, draft };
+}
+
 // The Kit Points a new character had left become starting cash, in its
 // Origin's currency, the first time it goes into play, and only then
 // (kitCashed). Checked with the starting-kit rules, as at creation.

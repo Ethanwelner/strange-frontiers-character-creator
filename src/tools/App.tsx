@@ -5,7 +5,7 @@ import { content, contentErrors } from "../app/content.js";
 import { slug, toBuild, type Draft } from "../app/draft.js";
 import { Icon, Notice } from "../app/components/ui.js";
 import { describe } from "../app/check.js";
-import { checkPlay, creatorDraft, load, playBuild, pointsToPlace, save, startPlay, withStartingCash, type Play } from "./play.js";
+import { checkPlay, creatorDraft, load, playBuild, pointsToPlace, save, startPlay, withGmChange, withStartingCash, type Play } from "./play.js";
 import { Chat } from "./components/Chat.js";
 import { Tracker } from "./components/Tracker.js";
 import { Button } from "../app/components/Button.js";
@@ -47,7 +47,19 @@ export function ToolsApp() {
 
   // A Game Master's table: the Join a table popup, open or not, and the code
   // typed into it
-  const table = useSeat(play, (text) => setNotice({ text }));
+  // The Game Master's changes to the character come in with the check-ins
+  const table = useSeat(
+    play,
+    (text) => setNotice({ text }),
+    (changes) => {
+      setPlay((p) => (p ? changes.reduce((next, c) => withGmChange(next, content, c), p) : p));
+      const said = changes.map((c) => {
+        const name = content.traits.find((t) => t.id === c.trait)?.name ?? c.trait;
+        return c.op === "add" ? `gave you ${name}${c.rank > 1 ? ` (${c.rank})` : ""}` : `took ${name} away`;
+      });
+      setNotice({ text: `The Game Master ${said.join(", and ")}.`, fades: true });
+    },
+  );
   const [tablePopup, setTablePopup] = useState(false);
   const closeTablePopup = useCallback(() => setTablePopup(false), []);
   const [joinCode, setJoinCode] = useState("");

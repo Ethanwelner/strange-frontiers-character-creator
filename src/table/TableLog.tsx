@@ -57,8 +57,8 @@ export function TableLog({
             </li>
           )}
           {log.map((e) =>
-            e.kind === "join" || e.kind === "leave" ? (
-              <li key={e.id} className="table-log-note">
+            e.kind === "join" || e.kind === "leave" || e.kind === "change" ? (
+              <li key={e.id} className={`table-log-note${e.kind === "change" ? " is-change" : ""}`}>
                 <span>{e.text}</span> <time>{time(e.at)}</time>
               </li>
             ) : (

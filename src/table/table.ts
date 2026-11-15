@@ -29,7 +29,7 @@ export interface TableInfo {
 export interface LogEntry {
   id: number;
   at: number;
-  kind: "chat" | "roll" | "join" | "leave";
+  kind: "chat" | "roll" | "join" | "leave" | "change";
   author: string;
   seat: string | null;
   text: string;
@@ -45,6 +45,16 @@ export function withEntries(log: LogEntry[], added: LogEntry[]): LogEntry[] {
   return next.length > LOG_KEEP ? next.slice(-LOG_KEEP) : next;
 }
 
+// The Game Master adding a Trait to a player's character, at a rank, or
+// taking one away. It waits on the table until the player's Player Tools
+// applies it.
+export interface GmChange {
+  id: number;
+  op: "add" | "remove";
+  trait: string;
+  rank: number;
+}
+
 export interface Seat {
   id: string;
   name: string;
@@ -52,6 +62,8 @@ export interface Seat {
   joined: number;
   seen: number;
   sheet?: SheetCopy;
+  // The Game Master's changes still waiting for this player
+  pending: GmChange[];
 }
 
 // This browser's place at a table: as its Game Master, or a player's seat.
@@ -66,6 +78,9 @@ export interface SeatSession {
   name: string;
   seatId: string;
   playerKey: string;
+  // The last Game Master change Player Tools applied, which it tells the
+  // table on its next check-in
+  applied?: number;
 }
 
 export class TableError extends Error {
@@ -106,13 +121,19 @@ export const joinTable = (code: string, name: string, sheet: SheetCopy) =>
 // Checking in, with a new copy of the sheet when the character changed, and
 // getting the log's entries after `since`.
 export const syncSeat = (s: SeatSession, since: number, name?: string, sheet?: SheetCopy) =>
-  call<{ table: TableInfo; version: number; log: LogEntry[] }>("sync", {
+  call<{ table: TableInfo; version: number; log: LogEntry[]; changes: GmChange[] }>("sync", {
     code: s.code,
     seatId: s.seatId,
     playerKey: s.playerKey,
     since,
+    ...(s.applied ? { ack: s.applied } : {}),
     ...(sheet ? { name, sheet } : {}),
   });
+
+// The Game Master adds a Trait to a player's character at `rank`, or takes
+// one away. `name` is the Trait's name, for the log.
+export const gmChange = (s: GmSession, seatId: string, op: GmChange["op"], trait: string, rank: number, name: string) =>
+  call<{ change: GmChange; entry: LogEntry }>("change", { code: s.code, gmKey: s.gmKey, seatId, op, trait, rank, name });
 
 // Who's posting to the log: the Game Master or a player's seat
 type Poster = GmSession | SeatSession;
