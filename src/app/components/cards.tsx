@@ -1,4 +1,4 @@
-import { Fragment, useId, useState, type HTMLAttributes, type KeyboardEvent, type ReactNode } from "react";
+import { Fragment, useId, useState, type CSSProperties, type HTMLAttributes, type KeyboardEvent, type ReactNode } from "react";
 import type { Item as StockItem, Kind, Trait } from "../../schema/index.js";
 import { parseDamage } from "../../engine/damage.js";
 import { BASE_HP } from "../../engine/validate.js";
@@ -612,8 +612,8 @@ export function BackgroundCard({
 // card's key color (silver for The Settled Systems, Dreft's green for
 // Isekai), around a dark field with a large quarter-circle cut out of its
 // top left corner and a four-pointed star in the cut-out; the gunmetal stops
-// short of the cut-out. The field holds a dense starfield over the curve of
-// a dark planet in the lower part of the card, its rim a faded silver. The site draws
+// short of the cut-out. The field holds a starfield, and a faded sun at the
+// bottom whose rays light a column of planets from below. The site draws
 // the same markup from sf_card_kind() in php/rpg/components/cards.php.
 
 // The key color's gradient for the frame's line and star, in palette
@@ -628,6 +628,19 @@ const kindStar = (cx: number, cy: number, r: number) => {
   const s = r * 0.22;
   return `M${cx} ${cy - r}L${cx + s} ${cy - s}L${cx + r} ${cy}L${cx + s} ${cy + s}L${cx} ${cy + r}L${cx - s} ${cy + s}L${cx - r} ${cy}L${cx - s} ${cy - s}Z`;
 };
+
+// The sky behind the stars: a faded sun at the bottom with rays fanning out
+// from it, and a column of planets above it, each the field's own color, so
+// it shows only by blocking the rays and by the crescent the sun lights along
+// its bottom edge. Each planet is [center, % of the field's height; width, %
+// of its width; the crescent's thickness at the bottom, px]. The site's copy
+// is in sf_card_kind_sky().
+const KIND_PLANETS = [
+  [-6, 112, 4],
+  [30, 16, 2],
+  [50, 30, 3],
+  [70, 11, 2],
+];
 
 // The starfield: one fixed sky (top %, left %, opacity, delay in seconds),
 // shifted by the Kind's id so cards side by side differ. The site's copy of
@@ -723,7 +736,13 @@ export function KindCard({
         </svg>
         <div className="sf-kind-field" aria-hidden="true">
           <KindStars seed={k.id} />
-          <span className="sf-kind-planet" />
+          <div className="sf-kind-sky">
+            <span className="sf-kind-rays" />
+            <span className="sf-kind-sun" />
+            {KIND_PLANETS.map(([top, size, lit], i) => (
+              <span key={i} className="sf-kind-planet" style={{ top: `${top}%`, width: `${size}%`, "--lit": `${lit}px` } as CSSProperties} />
+            ))}
+          </div>
         </div>
         {(["tl", "tr", "bl", "br"] as const).map((w) => (
           <KindCorner key={w} where={w} gradient={gradient} />

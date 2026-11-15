@@ -418,7 +418,7 @@
    border running in to a 2px line in the card's key color (silver, or
    Dreft's green for Isekai), with a large cut-out at the top left holding
    a star, around a
-   dark field with a dense starfield over a planet's curve. The frame is four corner pieces
+   dark field with a starfield, a faded sun and planets. The frame is four corner pieces
    (one SVG, turned; only the top left has a star) joined by straight edges,
    so the card grows with its text. ---- */
 
@@ -483,26 +483,38 @@
     overflow: hidden;
 }
 
-/* The planet: a dark disc a little narrower than the card, centered in the
-   lower part of the field behind the content, so its curve and both sides
-   show before it runs off the bottom. Its edge is a faded silver line with a
-   faint glow inside along the rim, so it reads as a sphere. It covers the
-   stars behind it */
-.sf-kind-planet {
-    --rim: color-mix(in srgb, var(--sf-gray-200) 40%, transparent);
+/* The sky: a faded sun half below the bottom of the field, thin rays
+   fanning out from its middle and fading with distance, and a column of
+   planets above it. The planets are the field's own color, so they show only
+   by blocking the rays and by the crescent the sun lights along their bottom
+   edge, thin at the sides and --lit thick at the bottom */
+.sf-kind-sky { position: absolute; inset: 0; pointer-events: none; }
+.sf-kind-rays {
     position: absolute;
-    top: 58%;
+    inset: 0;
+    background: repeating-conic-gradient(from 0deg at 50% 100%, rgb(255 255 255 / 10%) 0 .3deg, transparent .3deg 4deg);
+    -webkit-mask: radial-gradient(circle at 50% 100%, #000 15%, transparent 85%);
+    mask: radial-gradient(circle at 50% 100%, #000 15%, transparent 85%);
+}
+.sf-kind-sun {
+    position: absolute;
+    top: 100%;
     left: 50%;
-    width: 86%;
+    width: 56%;
     aspect-ratio: 1;
-    transform: translateX(-50%);
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--sf-gray-200) 22%, var(--sf-gray-900));
+    box-shadow: 0 0 40px 6px rgb(255 255 255 / 8%);
+}
+.sf-kind-planet {
+    position: absolute;
+    left: 50%;
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
     border-radius: 50%;
     background: var(--sf-gray-900);
-    border: 1.5px solid var(--rim);
-    box-shadow:
-        inset 0 0 18px -6px color-mix(in srgb, var(--sf-gray-200) 30%, transparent),
-        0 0 10px color-mix(in srgb, var(--sf-gray-200) 12%, transparent);
-    pointer-events: none;
+    box-shadow: inset 0 calc(-1 * var(--lit, 2px)) 0 0 color-mix(in srgb, var(--sf-gray-200) 45%, transparent);
 }
 
 /* The starfield, after the site's night sky (css/rpg-night.css): dots that
