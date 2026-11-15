@@ -438,8 +438,9 @@
     --key-name: #e7e8e9;
     /* The frame line's gradient, quieter than the text's key colors (the
        corner star's SVG gradient matches it: KIND_KEY_STOPS) */
-    --line-hi: #949798;
-    --line-mid: #626466;
+    /* The frame line: Gray (#505254) to Condition Edge (#626466) and back */
+    --line-hi: #626466;
+    --line-mid: #505254;
     --kind-key: linear-gradient(90deg, var(--line-mid), var(--line-hi) 50%, var(--line-mid));
     --kind-key-v: linear-gradient(180deg, var(--line-mid), var(--line-hi) 50%, var(--line-mid));
     --kind-text: #e7e8e9;
