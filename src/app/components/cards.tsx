@@ -632,14 +632,16 @@ const kindStar = (cx: number, cy: number, r: number) => {
 // The sky behind the stars: a faded sun at the bottom with rays fanning out
 // from it, and a column of planets above it, each the field's own color, so
 // it shows only by blocking the rays and by the crescent the sun lights along
-// its bottom edge. Each planet is [center, % of the field's height; width, %
-// of its width; the crescent's thickness at the bottom, px]. The site's copy
-// is in sf_card_kind_sky().
-const KIND_PLANETS = [
-  [-6, 112, 4],
-  [30, 16, 2],
-  [50, 30, 3],
-  [70, 11, 2],
+// its bottom edge. Everything is measured in the field's width (cqw), so the
+// spacing holds on cards of any height: the big planet hangs from the top,
+// and the other three stack up from the sun with a gap between each. Each
+// planet is [its center, as a CSS top; its width, cqw; the crescent's
+// thickness at the bottom, px]. The site's copy is in sf_card_kind_sky().
+const KIND_PLANETS: [string, number, number][] = [
+  ["-44cqw", 112, 4],
+  ["calc(100% - 78.5cqw)", 13, 2],
+  ["calc(100% - 54cqw)", 24, 3],
+  ["calc(100% - 31.5cqw)", 9, 2],
 ];
 
 // The starfield: one fixed sky (top %, left %, opacity, delay in seconds),
@@ -740,7 +742,7 @@ export function KindCard({
             <span className="sf-kind-rays" />
             <span className="sf-kind-sun" />
             {KIND_PLANETS.map(([top, size, lit], i) => (
-              <span key={i} className="sf-kind-planet" style={{ top: `${top}%`, width: `${size}%`, "--lit": `${lit}px` } as CSSProperties} />
+              <span key={i} className="sf-kind-planet" style={{ top, width: `${size}cqw`, "--lit": `${lit}px` } as CSSProperties} />
             ))}
           </div>
         </div>

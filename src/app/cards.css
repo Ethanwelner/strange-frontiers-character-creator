@@ -481,13 +481,16 @@
     -webkit-mask: radial-gradient(circle at 0 0, transparent 24px, #000 24.5px);
     mask: radial-gradient(circle at 0 0, transparent 24px, #000 24.5px);
     overflow: hidden;
+    /* So the sky can size itself by the field's width (cqw) */
+    container-type: inline-size;
 }
 
 /* The sky: a faded sun half below the bottom of the field, thin rays
    fanning out from its middle and fading with distance, and a column of
    planets above it. The planets are the field's own color, so they show only
    by blocking the rays and by the crescent the sun lights along their bottom
-   edge, thin at the sides and --lit thick at the bottom */
+   edge, thin at the sides and --lit thick at the bottom. All of it is
+   sized in the field's width (cqw), so nothing overlaps on a short card */
 .sf-kind-sky { position: absolute; inset: 0; pointer-events: none; }
 .sf-kind-rays {
     position: absolute;
@@ -500,7 +503,7 @@
     position: absolute;
     top: 100%;
     left: 50%;
-    width: 56%;
+    width: 44cqw;
     aspect-ratio: 1;
     transform: translate(-50%, -50%);
     border-radius: 50%;
