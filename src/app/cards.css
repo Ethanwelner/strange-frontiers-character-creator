@@ -221,8 +221,8 @@
        and a lighter bracket at each corner, laid over the border */
     &.sf-trait-card--condition {
         --card-edge: var(--sf-gray-400);
-        /* The bracket crosses the light bar, so it's lighter */
-        --bracket: var(--sf-gray-100);
+        /* The bracket, in the card body's own dark gray, on the light bar */
+        --bracket: var(--card-bg);
         --bracket-size: 22px;
         --bracket-width: 4px;
 
@@ -236,20 +236,20 @@
             color: var(--sf-gray-800);
         }
 
-        /* The bracket, at the top left corner only: a stroke that follows
-           the card's rounded corner for --bracket-size each way, centered on
-           the 1px border's line, half outside it and half in */
+        /* The bracket, at the top right corner only: a stroke that follows
+           the card's rounded corner for --bracket-size each way, set just
+           inside the card's 1px edge */
         > .sf-card-bar::before {
             content: "";
             position: absolute;
-            top: calc(.5px - var(--bracket-width) / 2);
-            left: calc(.5px - var(--bracket-width) / 2);
+            top: 1px;
+            right: 1px;
             width: var(--bracket-size);
             height: var(--bracket-size);
             border: var(--bracket-width) solid var(--bracket);
-            border-right: 0;
+            border-left: 0;
             border-bottom: 0;
-            border-radius: calc(7.5px + var(--bracket-width) / 2) 0 0 0;
+            border-radius: 0 7px 0 0;
             pointer-events: none;
         }
     }
