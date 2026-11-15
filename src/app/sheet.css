@@ -21,11 +21,11 @@
    its own colors, so it looks the same on any page that holds it. */
 
 .sf-sheet {
-    --sheet-frame: var(--panel-box, #343638);
-    --sheet-box: var(--panel, #292b2c);
-    --sheet-edge: var(--card-border, #5c5e60);
-    --sheet-text: var(--panel-text, #e7e8e9);
-    --sheet-soft: var(--panel-soft, #b2b3b4);
+    --sheet-frame: var(--panel-box, var(--sf-gray-600));
+    --sheet-box: var(--panel, var(--sf-gray-700));
+    --sheet-edge: var(--card-border, var(--sf-gray-400));
+    --sheet-text: var(--panel-text, var(--sf-gray-100));
+    --sheet-soft: var(--panel-soft, var(--sf-gray-200));
     --sheet-rule: rgb(255 255 255 / 18%);
     --sheet-gap: 20px;
     /* The darker boxes' padding */
@@ -81,8 +81,8 @@
         inset: 0;
         z-index: -1;
         border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-        background-color: var(--portfolio-black, #1e1f20);
-        box-shadow: 0 0 5px 0 var(--frontiers-lore-on-black, #a67bf0);
+        background-color: var(--sf-gray-800);
+        box-shadow: 0 0 5px 0 var(--sf-purple-400);
         animation:
             sf-sheet-blob-morph 8s ease-in-out infinite,
             sf-sheet-blob-spin 20s linear infinite,
@@ -231,10 +231,10 @@
    bright 16px and back */
 @keyframes sf-sheet-blob-glow {
     from {
-        box-shadow: 0 0 5px 0 rgb(166 123 240 / 45%);
+        box-shadow: 0 0 5px 0 color-mix(in srgb, var(--sf-purple-400) 45%, transparent);
     }
     to {
-        box-shadow: 0 0 16px 0 rgb(166 123 240 / 100%);
+        box-shadow: 0 0 16px 0 color-mix(in srgb, var(--sf-purple-400) 100%, transparent);
     }
 }
 
@@ -849,11 +849,11 @@
 /* Printed, the sheet goes light, with dark text, on white paper */
 @media print {
     .sf-sheet {
-        --sheet-frame: var(--portfolio-near-white, #f6f6f6);
-        --sheet-box: var(--portfolio-white, #ffffff);
-        --sheet-edge: var(--portfolio-light-gray, #d9d9d9);
-        --sheet-text: var(--portfolio-black, #1e1f20);
-        --sheet-soft: var(--portfolio-gray, #626466);
+        --sheet-frame: var(--sf-gray-50);
+        --sheet-box: var(--sf-gray-0);
+        --sheet-edge: var(--sf-gray-100);
+        --sheet-text: var(--sf-gray-800);
+        --sheet-soft: var(--sf-gray-500);
         --sheet-rule: rgb(0 0 0 / 15%);
         box-shadow: none;
     }
