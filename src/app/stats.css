@@ -179,7 +179,7 @@
 /* The rest tall bars, twice as tall as they're wide */
 .sf-stat-slot--square {
     aspect-ratio: 1 / 2;
-    border-radius: 3px;
+    border-radius: 2px;
 }
 
 /* Magic's points: the same slots, turned into diamonds that fit the cell */
