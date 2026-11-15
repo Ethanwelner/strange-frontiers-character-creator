@@ -577,6 +577,17 @@
 .sf-kind-orbits { --orbit: color-mix(in srgb, var(--sf-gray-200) 18%, var(--sf-gray-900)); }
 .sf-kind-orbit { fill: none; stroke: var(--orbit); stroke-width: 1px; vector-effect: non-scaling-stroke; }
 .sf-kind-orbit-sun, .sf-kind-orbit-planet { fill: var(--orbit); }
+/* Each planet circles the sun, counterclockwise, in its own year (set on it
+   as animation-duration) */
+.sf-kind-orbit-turn {
+    transform-box: view-box;
+    transform-origin: 100px 100px;
+    animation: sf-kind-orbit-turn 60s linear infinite;
+}
+@keyframes sf-kind-orbit-turn { to { transform: rotate(-360deg); } }
+@media (prefers-reduced-motion: reduce) {
+    .sf-kind-orbit-turn { animation: none; }
+}
 
 /* The starfields, after the site's night sky (css/rpg-night.css): dots that
    pulse slowly and a few four-pointed twinkles that flare now and then.
