@@ -613,7 +613,7 @@ export function BackgroundCard({
 // Isekai), around a dark field with a large quarter-circle cut out of its
 // top left corner and a four-pointed star in the cut-out; the gunmetal stops
 // short of the cut-out. The field holds a dense starfield over the curve of
-// a dark planet low on the card, its rim lit in the key color. The site draws
+// a dark planet in the lower part of the card, its rim a faded silver. The site draws
 // the same markup from sf_card_kind() in php/rpg/components/cards.php.
 
 // The key color's gradient for the frame's line and star, in palette
