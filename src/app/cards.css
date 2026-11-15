@@ -663,8 +663,10 @@
 /* Isekai's cards key on the palette's greens: Dreft (#1c372b) and Green
    (#47b767) */
 .sf-kind-card--dreft {
+    /* A solid Green line: the palette has nothing between Dreft and Green,
+       so a gradient between them shifts too hard */
     --line-hi: #47b767;
-    --line-mid: #1c372b;
+    --line-mid: #47b767;
     --key-label: #47b767;
     --key-line: #1c372b;
     --key-name: linear-gradient(180deg, #e7e8e9 10%, #47b767 90%);
