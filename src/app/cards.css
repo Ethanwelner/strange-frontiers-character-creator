@@ -496,7 +496,7 @@
 .sf-kind-rays {
     position: absolute;
     inset: 0;
-    background: repeating-conic-gradient(from 0deg at 50% 100%, rgb(255 255 255 / 6%) 0 .6deg, transparent .6deg 4deg);
+    background: repeating-conic-gradient(from 0deg at 50% 100%, rgb(255 255 255 / 4.5%) 0 .6deg, transparent .6deg 4deg);
 }
 .sf-kind-sun {
     position: absolute;
@@ -506,8 +506,8 @@
     aspect-ratio: 1;
     transform: translate(-50%, -50%);
     border-radius: 50%;
-    background: color-mix(in srgb, var(--sf-gray-200) 14%, var(--sf-gray-900));
-    box-shadow: 0 0 40px 6px rgb(255 255 255 / 5%);
+    background: color-mix(in srgb, var(--sf-gray-200) 10%, var(--sf-gray-900));
+    box-shadow: 0 0 40px 6px rgb(255 255 255 / 4%);
 }
 .sf-kind-planet {
     position: absolute;
@@ -516,7 +516,7 @@
     transform: translate(-50%, -50%);
     border-radius: 50%;
     background: var(--sf-gray-900);
-    box-shadow: inset 0 calc(-1 * var(--lit, 2px)) 0 0 color-mix(in srgb, var(--sf-gray-200) 30%, transparent);
+    box-shadow: inset 0 calc(-1 * var(--lit, 2px)) 0 0 color-mix(in srgb, var(--sf-gray-200) 22%, transparent);
 }
 
 /* ---- The other Kind card backgrounds, kept as options (KindCard's
@@ -536,9 +536,9 @@
     transform: translate(-50%, -50%);
     pointer-events: none;
 }
-.sf-kind-rose-light { fill: var(--sf-gray-700); }
-.sf-kind-rose-dark { fill: var(--sf-gray-800); }
-.sf-kind-rose-ring { fill: none; stroke: var(--sf-gray-800); }
+.sf-kind-rose-light { fill: color-mix(in srgb, var(--sf-gray-700) 75%, var(--sf-gray-900)); }
+.sf-kind-rose-dark { fill: color-mix(in srgb, var(--sf-gray-800) 75%, var(--sf-gray-900)); }
+.sf-kind-rose-ring { fill: none; stroke: color-mix(in srgb, var(--sf-gray-800) 75%, var(--sf-gray-900)); }
 
 /* The planet: a dark disc a little narrower than the card, centered in the
    lower part of the field behind the content, so its curve and both sides
@@ -554,10 +554,10 @@
     transform: translateX(-50%);
     border-radius: 50%;
     background: var(--sf-gray-900);
-    border: 1.5px solid color-mix(in srgb, var(--sf-gray-200) 40%, transparent);
+    border: 1.5px solid color-mix(in srgb, var(--sf-gray-200) 30%, transparent);
     box-shadow:
-        inset 0 0 18px -6px color-mix(in srgb, var(--sf-gray-200) 30%, transparent),
-        0 0 10px color-mix(in srgb, var(--sf-gray-200) 12%, transparent);
+        inset 0 0 18px -6px color-mix(in srgb, var(--sf-gray-200) 22%, transparent),
+        0 0 10px color-mix(in srgb, var(--sf-gray-200) 9%, transparent);
     pointer-events: none;
 }
 
@@ -574,7 +574,7 @@
     transform: translate(-50%, -50%);
     pointer-events: none;
 }
-.sf-kind-orbits { --orbit: color-mix(in srgb, var(--sf-gray-200) 25%, var(--sf-gray-900)); }
+.sf-kind-orbits { --orbit: color-mix(in srgb, var(--sf-gray-200) 18%, var(--sf-gray-900)); }
 .sf-kind-orbit { fill: none; stroke: var(--orbit); stroke-width: 1px; vector-effect: non-scaling-stroke; }
 .sf-kind-orbit-sun, .sf-kind-orbit-planet { fill: var(--orbit); }
 
