@@ -96,6 +96,17 @@ html.sf-popup-open {
     max-width: 1100px;
 }
 
+/* A character sheet (the Game Master's view of a player's): up to 1280px,
+   with 48px beside it so the panel and the X on its corner stay clear of
+   the screen's sides. Phones get 24px (below). */
+.sf-popup--sheet {
+    padding-inline: 48px;
+
+    .sf-popup-panel {
+        max-width: 1280px;
+    }
+}
+
 .sf-popup-scroll {
     flex: 0 1 auto;
     min-height: 0;
@@ -247,6 +258,11 @@ html.sf-popup-open {
     /* Small enough that its outer half fits the 16px beside the panel */
     .sf-popup:not(.sf-popup--card) .sf-btn.sf-popup-close {
         --sf-btn-size: 32px;
+    }
+
+    /* A sheet keeps 24px, so its X clears the screen's side too */
+    .sf-popup--sheet {
+        padding-inline: 24px;
     }
 }
 
