@@ -223,7 +223,7 @@
         --card-edge: var(--sf-gray-400);
         --bracket: var(--sf-gray-200);
         /* The top two cross the light bar, so they're lighter */
-        --bracket-top: var(--sf-gray-50);
+        --bracket-top: var(--sf-gray-100);
         --bracket-size: 22px;
         --bracket-width: 4px;
         --c: linear-gradient(#000, #000) no-repeat;
