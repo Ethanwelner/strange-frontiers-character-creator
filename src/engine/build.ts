@@ -30,6 +30,15 @@ export const TraitPick = z.object({
 });
 export type TraitPick = z.infer<typeof TraitPick>;
 
+// A Trait the Game Master gave the character in play (Game Master tools), at
+// a rank. It costs no pick and isn't held to the Trait's stat or prerequisite
+// requirements: that's the Game Master's call.
+export const GmTrait = z.object({
+  trait: Id,
+  rank: z.number().int().min(1).default(1),
+});
+export type GmTrait = z.infer<typeof GmTrait>;
+
 // The answer to one of a package's or a held Trait's `choices`, matched by
 // whichever asked (`package` or `trait`) and the pool. `traits` holds Trait
 // ids, or for a free-text pool like `contact`, the names the player wrote.
@@ -96,6 +105,10 @@ export const Build = z.object({
   // One entry per level, starting with level 1.
   levels: z.array(LevelAllocation),
   traits: z.array(TraitPick).default([]),
+  // The Game Master's changes in play: Traits given, and Traits taken away
+  // whatever gave them (a package, a Kind, a pick), with anything they granted.
+  gmTraits: z.array(GmTrait).default([]),
+  gmRemoved: z.array(Id).default([]),
   choices: z.array(ChoiceAnswer).default([]),
   items: z.array(BuildItem).default([]),
   conditions: z.array(BuildCondition).default([]),

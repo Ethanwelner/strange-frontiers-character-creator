@@ -3,7 +3,7 @@
 // Stats are kept as a pool, the way a player spends them: core points per
 // group, each unlocking 3 focus points for that group's stats. The Build
 // the engine checks splits the pool back into one allocation per level.
-import type { ChoiceAnswer, LevelAllocation, PickKind, StatGroup, TraitPick } from "../engine/build.js";
+import type { ChoiceAnswer, GmTrait, LevelAllocation, PickKind, StatGroup, TraitPick } from "../engine/build.js";
 import type { Campaign } from "../engine/build.js";
 import type { DescribeResult, OpenChoice, Reason } from "../ai/types.js";
 import { STAT_GROUPS, type StatId } from "../schema/index.js";
@@ -44,6 +44,10 @@ export interface Draft {
   // Focus points the player placed from levels, per stat, on top of the Kind's bonus.
   points: Partial<Record<StatId, number>>;
   traits: TraitPick[];
+  // The Game Master's changes in play (Game Master tools): Traits given, and
+  // Traits taken away. Left out when there are none.
+  gmTraits?: GmTrait[];
+  gmRemoved?: string[];
   choices: ChoiceAnswer[];
   // What the character carries, from the sheet's Items column.
   items?: Item[];
@@ -225,6 +229,8 @@ export function fromBuild(input: unknown): Draft {
     level,
     ...(b.core && typeof b.core === "object" ? savedPool(b) : levelsToPool(levels)),
     traits: array<TraitPick>(b.traits).map((t) => ({ ...t, rank: t.rank ?? 1 })),
+    ...(array<GmTrait>(b.gmTraits).length ? { gmTraits: array<GmTrait>(b.gmTraits).map((t) => ({ trait: t.trait, rank: t.rank ?? 1 })) } : {}),
+    ...(array<string>(b.gmRemoved).length ? { gmRemoved: array<string>(b.gmRemoved).filter((t) => typeof t === "string") } : {}),
     choices: array<ChoiceAnswer>(b.choices),
     ...readMoney(b),
     ...(Array.isArray(b.conditions) && b.conditions.length ? { conditions: readConditions(b.conditions) } : {}),

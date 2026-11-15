@@ -995,3 +995,35 @@ describe("rule 16: Wealth buys the starting kit", () => {
     expect(at(10).errors.find((e) => e.code === "kit-ceiling")?.message).toMatch(/Wealth 0 \(\+2 from level 10\) can start with items up to 3/);
   });
 });
+
+describe("rule 17: the Game Master's changes in play", () => {
+  const holds = (r: ReturnType<typeof check>, id: string) => r.summary!.traits.find((h) => h.trait === id);
+
+  it("holds a Trait the Game Master gave for no pick, whatever its requirements", () => {
+    const plain = check(human);
+    // Archmage needs Master Mage and far more stats than a level 1 guard has; Significant Inheritance is Conveyed
+    const r = check({ ...human, gmTraits: [{ trait: "archmage" }, { trait: "significant-inheritance" }] });
+    expect(r.errors).toEqual(plain.errors);
+    expect(holds(r, "archmage")).toMatchObject({ rank: 1, sources: ["gm"] });
+    expect(holds(r, "significant-inheritance")?.sources).toEqual(["gm"]);
+    expect(r.summary!.picks).toEqual(plain.summary!.picks);
+  });
+
+  it("raises a held ranked Trait to the rank the Game Master gave", () => {
+    expect(holds(check({ ...human, gmTraits: [{ trait: "dreft", rank: 3 }] }), "dreft")).toMatchObject({ rank: 3 });
+  });
+
+  it("takes away a Trait whatever gave it, and anything only it granted", () => {
+    // Vigilance comes with the Royal Guard
+    const r = check({ ...human, gmRemoved: ["vigilance"] });
+    expect(holds(r, "vigilance")).toBeUndefined();
+    // The Isek's Magical Heritage grants Magic Access, which goes with it
+    const isek = check({ ...human, kind: "isek", gmRemoved: ["magical-heritage"] });
+    expect(holds(isek, "magical-heritage")).toBeUndefined();
+    expect(holds(isek, "magic-access")).toBeUndefined();
+  });
+
+  it("refuses a Trait that doesn't exist", () => {
+    expect(codes(check({ ...human, gmTraits: [{ trait: "lightsaber-mastery" }] }))).toContain("unknown-trait");
+  });
+});

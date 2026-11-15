@@ -15,7 +15,7 @@ import { askerName, DescriptionBox, Effect, Icon, NameField, Portrait, StepHeade
 import { FullResources, SHEET_RULES, SheetLayout, SheetTitle, type SheetContext } from "./sheet-layout.js";
 import { Resistances } from "./Resistances.js";
 import { CardChip, KIND_ICON, TraitCard, traitCardKind } from "./cards.js";
-import { Button, sfButton } from "./Button.js";
+import { Button, RemoveX, sfButton } from "./Button.js";
 import { toolsPage } from "../pages.js";
 
 const SOURCE = /^(kind|origin|profession|past) ([a-z0-9-]+)( choice)?$/;
@@ -27,6 +27,7 @@ const CHASSIS = /^chassis ([a-z0-9-]+)$/;
 // "trait seafaring choice" →
 // "Seafaring (choice)"; pick sources read as they are.
 function source(s: string) {
+  if (s === "gm") return "the Game Master";
   const t = TRAIT_CHOICE.exec(s);
   if (t) return `${traitName(t[1]!)} (choice)`;
   // Conveyed by another Trait, like Magic Access by Magical Heritage
@@ -54,7 +55,9 @@ function sourceBadges(held: Held): string[] {
     const m = SOURCE.exec(s);
     if (m && m[1] !== "kind" && m[3]) slots.add(m[1]!);
   }
-  return ["origin", "profession", "past"].filter((slot) => slots.has(slot)).map(title);
+  const badges = ["origin", "profession", "past"].filter((slot) => slots.has(slot)).map(title);
+  // Given in play by the Game Master
+  return held.sources.includes("gm") ? [...badges, "GM"] : badges;
 }
 
 // A held Trait's card, with the badges for where it came from (a package's
@@ -68,12 +71,15 @@ function HeldTraitCard({
   open = true,
   onToggle,
   keepEffect = false,
+  onRemove,
 }: {
   held: Held;
   places: string[];
   draft?: Draft;
   open?: boolean;
   onToggle?: () => void;
+  // The Game Master taking it away (Game Master tools): an ✕ in its bar
+  onRemove?: () => void;
   // An Ability's effect stays in view while closed; only its badge, where it
   // came from and the Action it grants fold away.
   keepEffect?: boolean;
@@ -91,6 +97,7 @@ function HeldTraitCard({
       chips={badges.length > 0 ? badges.map((b) => <CardChip key={b}>{b}</CardChip>) : undefined}
       fold={onToggle ? { open, onToggle, label: name } : undefined}
       keep={keepEffect ? effect : undefined}
+      actions={onRemove && <RemoveX label={`Take ${name} away`} onClick={onRemove} />}
     >
       {/* The category, then where the Trait came from, on one line */}
       <div className="sf-card-tags">
@@ -110,10 +117,10 @@ function HeldTraitCard({
 }
 
 // A Knowledge's or Language's card, opened from the sheet's lists in the site's lore popup.
-function TraitModal({ held, places, draft, onClose }: { held: Held; places: string[]; draft: Draft; onClose: () => void }) {
+function TraitModal({ held, places, draft, onClose, onRemove }: { held: Held; places: string[]; draft: Draft; onClose: () => void; onRemove?: () => void }) {
   return (
     <Popup label={traitName(held.trait)} onClose={onClose} card>
-      <HeldTraitCard held={held} places={places} draft={draft} />
+      <HeldTraitCard held={held} places={places} draft={draft} onRemove={onRemove} />
     </Popup>
   );
 }
@@ -145,6 +152,7 @@ export function Sheet({
   resources,
   stats,
   traitsAction,
+  onRemoveTrait,
 }: {
   context: Exclude<SheetContext, "sample">;
   draft: Draft;
@@ -172,8 +180,10 @@ export function Sheet({
   // play: the live resources, and the stats (the plain block, or the Stats step while placing points)
   resources?: ReactNode;
   stats?: ReactNode;
-  // play: Add traits, beside the picks left
+  // play: Add traits, beside the picks left; view: the Game Master's Give a Trait
   traitsAction?: ReactNode;
+  // view: the Game Master taking a held Trait away, from an ✕ on its card
+  onRemoveTrait?: (trait: string) => void;
 }) {
   const rules = SHEET_RULES[context];
   const packages = [draft.origin, draft.profession, draft.past].map((id) => (id ? packageById.get(id) : undefined));
@@ -247,6 +257,7 @@ export function Sheet({
             places={places(h.trait)}
             {...(accordion ? { open: openCards.has(h.trait), onToggle: () => toggleCard(h.trait) } : {})}
             keepEffect={keepEffect}
+            onRemove={onRemoveTrait && (() => onRemoveTrait(h.trait))}
           />
         </li>
       ))}
@@ -413,7 +424,21 @@ export function Sheet({
           )
         }
       />
-      {opened && <TraitModal held={opened} places={places(opened.trait)} draft={draft} onClose={closeModal} />}
+      {opened && (
+        <TraitModal
+          held={opened}
+          places={places(opened.trait)}
+          draft={draft}
+          onClose={closeModal}
+          onRemove={
+            onRemoveTrait &&
+            (() => {
+              onRemoveTrait(opened.trait);
+              closeModal();
+            })
+          }
+        />
+      )}
       {showingIssues && errorList.length > 0 && (
         <Popup label="Rules problems" title="Rules problems" onClose={closeIssues}>
           <ul className="issue-list">

@@ -13,8 +13,10 @@ import type { BuildResult } from "../engine/validate.js";
 import { checkPlay, currentOf, maxOf, shownResources, type Play } from "../tools/play.js";
 import { Roller } from "../tools/components/Roller.js";
 import { TableLog } from "../table/TableLog.js";
+import { GiveTrait } from "./GiveTrait.js";
 import {
   createTable,
+  gmChange,
   gmPoll,
   rollToTable,
   say,
@@ -26,6 +28,7 @@ import {
   saveGm,
   showCode,
   TableError,
+  type GmChange,
   type GmSession,
   type LogEntry,
   type Seat,
@@ -187,6 +190,26 @@ export function GmApp() {
   const closeSheet = useCallback(() => setOpen(undefined), []);
   const opened = players.find((p) => p.seat.id === open);
 
+  // ---- Giving and taking away Traits ----
+  // They wait on the table for the player's Player Tools, which applies them
+  // and sends the sheet back; meanwhile they show as waiting.
+  const [giving, setGiving] = useState(false);
+  const closeGiving = useCallback(() => setGiving(false), []);
+  const traitName = (id: string) => content.traits.find((t) => t.id === id)?.name ?? id;
+  const change = async (seat: Seat, op: GmChange["op"], trait: string, rank: number) => {
+    if (!session) return;
+    try {
+      const r = await gmChange(session, seat.id, op, trait, rank, traitName(trait));
+      addEntries([r.entry]);
+      const seatsNow = sheets.current;
+      const had = seatsNow[seat.id];
+      if (had) seatsNow[seat.id] = { ...had, seat: { ...had.seat, pending: [...had.seat.pending, r.change] } };
+      setPlayers((ps) => ps.map((p) => (p.seat.id === seat.id ? { ...p, seat: { ...p.seat, pending: [...p.seat.pending, r.change] } } : p)));
+    } catch (err) {
+      setNotice({ text: err instanceof Error ? err.message : String(err), bad: true });
+    }
+  };
+
   return (
     <div className="sf-creator sf-tools sf-gm">
       <header className="builder-hero">
@@ -317,6 +340,7 @@ export function GmApp() {
               {opened?.play && opened.result && (
                 // The sheet in its own popup size (up to 1368px), scrolling as one
                 <Popup label={opened.seat.name} onClose={closeSheet} size="sheet" className="gm-sheet-popup">
+                  {opened.seat.pending.length > 0 && <Waiting name={opened.seat.name} pending={opened.seat.pending} traitName={traitName} />}
                   <Sheet
                     context="view"
                     draft={opened.play.draft}
@@ -325,8 +349,25 @@ export function GmApp() {
                     conditions={opened.play.conditions}
                     hp={currentOf(opened.play, opened.result, "hp")}
                     resources={<Meters play={opened.play} result={opened.result} />}
+                    traitsAction={
+                      <Button size="small" tone="primary" className="sf-sheet-add" onClick={() => setGiving(true)}>
+                        Give<span className="sf-sheet-add-noun"> a Trait</span>
+                      </Button>
+                    }
+                    onRemoveTrait={(trait) => void change(opened.seat, "remove", trait, 1)}
                   />
                 </Popup>
+              )}
+              {opened?.result?.summary && giving && (
+                <GiveTrait
+                  name={opened.seat.name}
+                  held={new Map(opened.result.summary.traits.map((h) => [h.trait, h.rank]))}
+                  onGive={(trait, rank) => {
+                    void change(opened.seat, "add", trait, rank);
+                    setGiving(false);
+                  }}
+                  onClose={closeGiving}
+                />
               )}
             </main>
           </div>
@@ -353,6 +394,21 @@ export function GmApp() {
         </div>
       </div>
     </div>
+  );
+}
+
+// The Game Master's changes still waiting for the player's Player Tools
+function Waiting({ name, pending, traitName }: { name: string; pending: GmChange[]; traitName: (id: string) => string }) {
+  return (
+    <p className="gm-waiting">
+      Waiting for {name}’s Player Tools:{" "}
+      {pending.map((c, i) => (
+        <span key={c.id}>
+          {i > 0 && ", "}
+          {c.op === "add" ? `give ${traitName(c.trait)}${c.rank > 1 ? ` (${c.rank})` : ""}` : `take away ${traitName(c.trait)}`}
+        </span>
+      ))}
+    </p>
   );
 }
 
@@ -411,6 +467,11 @@ function PlayerCard({ player, now, onOpen }: { player: Player; now: number; onOp
       {play && result ? (
         <>
           <Meters play={play} result={result} stacked />
+          {seat.pending.length > 0 && (
+            <p className="gm-player-waiting">
+              {seat.pending.length} {seat.pending.length === 1 ? "change" : "changes"} waiting for their Player Tools
+            </p>
+          )}
           {conditions.length > 0 && (
             <ul className="gm-player-conditions">
               {conditions.map((c) => (

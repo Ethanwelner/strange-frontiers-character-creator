@@ -3,6 +3,11 @@
 // changes, and checking in every few seconds while the page is open, which
 // brings the table's log (its chat and rolls) up to date. The seat is kept
 // in this browser, so a refresh reconnects on its own.
+//
+// A check-in also brings the Game Master's changes to the character (a Trait
+// given or taken away), which `onChanges` applies; the next check-in tells
+// the table they're done. The last one applied is kept with the seat, so a
+// reload doesn't apply it twice.
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   joinTable,
@@ -15,6 +20,7 @@ import {
   syncSeat,
   TableError,
   withEntries,
+  type GmChange,
   type LogEntry,
   type SeatSession,
 } from "../table/table.js";
@@ -39,8 +45,15 @@ export interface SeatState {
 }
 
 // `onGone` hears when the table closed or the Game Master removed this seat.
-export function useSeat(play: Play | undefined, onGone: (message: string) => void): SeatState {
+export function useSeat(play: Play | undefined, onGone: (message: string) => void, onChanges: (changes: GmChange[]) => void): SeatState {
   const [seat, setSeat] = useState<SeatSession | undefined>(loadSeat);
+  // The last Game Master change applied, told to the table with each check-in
+  const applied = useRef(seat?.applied ?? 0);
+  const seatNow = useRef(seat);
+  seatNow.current = seat;
+  const changes = useRef(onChanges);
+  changes.current = onChanges;
+  const withAck = (s: SeatSession): SeatSession => ({ ...s, ...(applied.current ? { applied: applied.current } : {}) });
   const [trouble, setTrouble] = useState<string>();
   const [log, setLog] = useState<LogEntry[]>([]);
   const [readUpTo, setReadUpTo] = useState(0);
@@ -67,6 +80,7 @@ export function useSeat(play: Play | undefined, onGone: (message: string) => voi
     setLog([]);
     setReadUpTo(0);
     since.current = 0;
+    applied.current = 0;
     sent.current = undefined;
     if (message) gone.current(message);
   }, []);
@@ -81,9 +95,16 @@ export function useSeat(play: Play | undefined, onGone: (message: string) => voi
     [drop, seat?.name],
   );
   const synced = useCallback(
-    (r: { log: LogEntry[] }) => {
+    (r: { log: LogEntry[]; changes: GmChange[] }) => {
       setTrouble(undefined);
       addEntries(r.log);
+      // The Game Master's changes this page hasn't applied yet
+      const fresh = r.changes.filter((c) => c.id > applied.current);
+      if (fresh.length && seatNow.current) {
+        changes.current(fresh);
+        applied.current = Math.max(...fresh.map((c) => c.id));
+        saveSeat({ ...seatNow.current, applied: applied.current });
+      }
     },
     [addEntries],
   );
@@ -93,7 +114,7 @@ export function useSeat(play: Play | undefined, onGone: (message: string) => voi
   useEffect(() => {
     if (!seat || !play || !copy || copy === sent.current) return;
     const timer = setTimeout(() => {
-      syncSeat(seat, since.current, play.draft.name, JSON.parse(copy))
+      syncSeat(withAck(seat), since.current, play.draft.name, JSON.parse(copy))
         .then((r) => {
           sent.current = copy;
           synced(r);
@@ -112,7 +133,7 @@ export function useSeat(play: Play | undefined, onGone: (message: string) => voi
     const check = async () => {
       if (document.visibilityState === "visible") {
         try {
-          const r = await syncSeat(seat, since.current);
+          const r = await syncSeat(withAck(seat), since.current);
           if (!stopped) synced(r);
         } catch (err) {
           if (!stopped) failed(err);
@@ -143,6 +164,7 @@ export function useSeat(play: Play | undefined, onGone: (message: string) => voi
     saveSeat(s);
     sent.current = JSON.stringify(c);
     since.current = 0;
+    applied.current = 0;
     setLog([]);
     setTrouble(undefined);
     setSeat(s);

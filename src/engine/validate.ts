@@ -515,6 +515,24 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     }
   }
 
+  // Rule 17: the Game Master's changes in play. A Trait the Game Master gave
+  // is held at its rank, for no pick and whatever its requirements; a Trait
+  // the Game Master took away goes, whatever gave it, and so does anything
+  // only it granted.
+  build.gmTraits.forEach((g, i) => {
+    if (!traits.has(g.trait)) error("unknown-trait", `Trait "${g.trait}" doesn't exist`, `gmTraits[${i}]`);
+    else hold(g.trait, g.rank, "gm");
+  });
+  const drop = (id: string) => {
+    if (!held.delete(id)) return;
+    for (const h of [...held.values()]) {
+      const rest = h.sources.filter((s) => s !== `trait ${id}`);
+      if (rest.length === 0) drop(h.trait);
+      else h.sources = rest;
+    }
+  };
+  for (const id of build.gmRemoved) drop(id);
+
   // Rule 6: the choices of the Traits the build holds, by rank.
   for (const h of [...held.values()]) {
     const t = traits.get(h.trait);
