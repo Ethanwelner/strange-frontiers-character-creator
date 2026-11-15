@@ -89,15 +89,25 @@ export function useSeat(play: Play | undefined, onGone: (message: string) => voi
   // and tried again with the next change or check-in.
   const failed = useCallback(
     (err: unknown) => {
-      if (err instanceof TableError && (err.code === "no-seat" || err.code === "no-table")) drop(`You've left ${seat?.name ?? "the table"}: ${err.message}`);
+      if (err instanceof TableError && (err.code === "no-seat" || err.code === "no-table")) drop(
+          err.code === "no-table"
+            ? `${seat?.name ?? "The table"} has closed. ${play?.draft.name || "Your character"} is still here in Player Tools.`
+            : `You're no longer at ${seat?.name ?? "the table"}. ${play?.draft.name || "Your character"} is still here in Player Tools.`,
+        );
       else setTrouble(err instanceof Error ? err.message : String(err));
     },
-    [drop, seat?.name],
+    [drop, seat?.name, play?.draft.name],
   );
   const synced = useCallback(
-    (r: { log: LogEntry[]; changes: GmChange[] }) => {
+    (r: { table: { name: string }; log: LogEntry[]; changes: GmChange[] }) => {
       setTrouble(undefined);
       addEntries(r.log);
+      // The Game Master renamed the table
+      if (seatNow.current && r.table.name !== seatNow.current.name) {
+        const renamed = { ...seatNow.current, name: r.table.name, ...(applied.current ? { applied: applied.current } : {}) };
+        saveSeat(renamed);
+        setSeat(renamed);
+      }
       // The Game Master's changes this page hasn't applied yet
       const fresh = r.changes.filter((c) => c.id > applied.current);
       if (fresh.length && seatNow.current) {
