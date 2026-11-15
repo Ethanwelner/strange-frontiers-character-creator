@@ -17,8 +17,9 @@ import { Button } from "./Button.js";
 //          creator and Player Tools) or "light" (the site's white panel, a
 //          dark X, on its light pages)
 //   size   "narrow" (480px: a question, a portrait, a small form), the
-//          default (720px: lore, a list) or "wide" (1100px: a picker of
-//          cards)
+//          default (720px: lore, a list), "wide" (1100px: a picker of
+//          cards) or "sheet" (1368px, kept clear of the screen's sides: a
+//          character sheet)
 //   card   a card on its own, like a Knowledge or a Kind: the card is the
 //          popup's edge, with no panel around it, and a smaller light X
 //   title  a title over the content, clear of the X
@@ -29,7 +30,7 @@ import { Button } from "./Button.js";
 // `className` is for what's inside: a popup's own content styles hang off it.
 
 export type PopupTone = "light" | "dark";
-export type PopupSize = "narrow" | "default" | "wide";
+export type PopupSize = "narrow" | "default" | "wide" | "sheet";
 
 export function popupClass(
   { tone = "dark", size = "default", card = false, scroll = "panel" }: { tone?: PopupTone; size?: PopupSize; card?: boolean; scroll?: "panel" | "inner" },

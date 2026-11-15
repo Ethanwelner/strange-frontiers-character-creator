@@ -1,5 +1,5 @@
-// Builds the creator and Game Tools into the Strange Frontiers site's
-// creator/ folder, where creator.php and game-tools.php serve them. Only the script, the stylesheet and Vite's manifest
+// Builds the creator, Player Tools and the Game Master tools into the Strange Frontiers site's
+// creator/ folder, where creator.php, game-tools.php and game-master.php serve them. Only the script, the stylesheet and Vite's manifest
 // go there: the pages read the hashed names from .vite/manifest.json, so
 // there's no standalone index.html for anyone to open by mistake. Commit the
 // result in the site's repo; the site's deploy publishes it.
@@ -20,7 +20,7 @@ await build({
     outDir,
     emptyOutDir: true,
     manifest: true,
-    rolldownOptions: { input: ["src/app/main.tsx", "src/tools/main.tsx"] },
+    rolldownOptions: { input: ["src/app/main.tsx", "src/tools/main.tsx", "src/gm/main.tsx"] },
   },
 });
-console.log(`Built the creator and Game Tools into ${outDir}. Commit it in the site's repo to publish it.`);
+console.log(`Built the creator, Player Tools and the Game Master tools into ${outDir}. Commit it in the site's repo to publish it.`);

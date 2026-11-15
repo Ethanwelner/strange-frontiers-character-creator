@@ -428,6 +428,32 @@
     margin-top: 24px;
   }
 
+  /* Join a table: the code, big and spaced like it's written, beside Join */
+  .tools-table-join {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    margin-top: 16px;
+  }
+
+  .tools-table-code {
+    width: 9ch;
+    font-family: var(--title);
+    font-size: 1.5rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .tools-table-error {
+    margin: 12px 0 0;
+    color: var(--portfolio-red);
+  }
+
+  .tools-table-trouble {
+    opacity: 0.7;
+  }
+
   /* The chat box, filling the column under the d20 */
   .tools-chat {
     flex: 1 1 0;

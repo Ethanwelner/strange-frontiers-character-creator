@@ -274,9 +274,22 @@ const RESOURCE_TITLES = { hp: "Hit Points", mp: "Mana Points" } as const;
  * value     Now. Full (max) without it.
  * onChange  Keeps the value elsewhere; without it the readout keeps its own.
  */
-export function ItemResource({ kind, max, value, onChange }: { kind: "hp" | "mp"; max: number; value?: number; onChange?: (value: number) => void }) {
+// `fixed`: the value alone, without − and + (a Game Master's view)
+export function ItemResource({
+  kind,
+  max,
+  value,
+  onChange,
+  fixed,
+}: {
+  kind: "hp" | "mp";
+  max: number;
+  value?: number;
+  onChange?: (value: number) => void;
+  fixed?: boolean;
+}) {
   const [own, setOwn] = useState(value ?? max);
-  const cur = onChange ? (value ?? max) : own;
+  const cur = onChange || fixed ? (value ?? max) : own;
   const set = onChange ?? setOwn;
   const name = kind.toUpperCase();
   return (
@@ -284,18 +297,22 @@ export function ItemResource({ kind, max, value, onChange }: { kind: "hp" | "mp"
       <strong className={`resource-name resource-${kind}`} title={RESOURCE_TITLES[kind]}>
         {name}
       </strong>
-      <Button round="xs" onClick={() => set(Math.max(0, cur - 1))} disabled={cur <= 0} aria-label={`1 less ${name}`}>
-        <Sign is="minus" />
-      </Button>
+      {!fixed && (
+        <Button round="xs" onClick={() => set(Math.max(0, cur - 1))} disabled={cur <= 0} aria-label={`1 less ${name}`}>
+          <Sign is="minus" />
+        </Button>
+      )}
       <span className="num" aria-live="polite">
         <span className={`equipment-resource-now${cur > max ? ` resource-${kind}` : ""}`} title={cur > max ? `Above the max of ${max}` : undefined}>
           {cur}
         </span>
         <span className="muted"> / {max}</span>
       </span>
-      <Button round="xs" onClick={() => set(cur + 1)} aria-label={`1 more ${name}`}>
-        <Sign is="plus" />
-      </Button>
+      {!fixed && (
+        <Button round="xs" onClick={() => set(cur + 1)} aria-label={`1 more ${name}`}>
+          <Sign is="plus" />
+        </Button>
+      )}
     </span>
   );
 }
@@ -475,6 +492,7 @@ export function ChassisCard({
   hp,
   hpBonus = 0,
   onHpChange,
+  hpFixed,
   attacks,
   traits,
   className = "",
@@ -484,6 +502,8 @@ export function ChassisCard({
   hp?: number;
   hpBonus?: number;
   onHpChange?: (hp: number) => void;
+  // The HP alone, without − and + (a Game Master's view)
+  hpFixed?: boolean;
   attacks?: ReactNode;
   traits?: ReactNode;
 }) {
@@ -493,7 +513,7 @@ export function ChassisCard({
       {...item}
       className={`sf-chassis-card${className ? ` ${className}` : ""}`}
       resistsInChips
-      badges={<ItemResource kind="hp" max={maxHp} value={hp} onChange={onHpChange} />}
+      badges={<ItemResource kind="hp" max={maxHp} value={hp} onChange={onHpChange} fixed={hpFixed} />}
       body={
         <div className="sf-chassis">
           <StatBlock groups={[{ group: "physical", ...physical }]} />

@@ -10,6 +10,8 @@ import { Chat } from "./components/Chat.js";
 import { Tracker } from "./components/Tracker.js";
 import { Button } from "../app/components/Button.js";
 import { creatorPage } from "../app/pages.js";
+import { showCode } from "../table/table.js";
+import { useSeat } from "./seat.js";
 
 // The character the Character Creator's Load Into Player Tools button sent
 // (tools page?from=creator), read from the creator's saved data.
@@ -42,6 +44,29 @@ export function ToolsApp() {
   const fileInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => save(play), [play]);
+
+  // A Game Master's table: the Join a table popup, open or not, and the code
+  // typed into it
+  const table = useSeat(play, (text) => setNotice({ text }));
+  const [tablePopup, setTablePopup] = useState(false);
+  const closeTablePopup = useCallback(() => setTablePopup(false), []);
+  const [joinCode, setJoinCode] = useState("");
+  const [tableError, setTableError] = useState<string>();
+  const [tableBusy, setTableBusy] = useState(false);
+  const tableAction = (run: () => Promise<void>, done: string) => async () => {
+    setTableBusy(true);
+    setTableError(undefined);
+    try {
+      await run();
+      setTablePopup(false);
+      setJoinCode("");
+      setNotice({ text: done, fades: true });
+    } catch (err) {
+      setTableError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setTableBusy(false);
+    }
+  };
 
   const result = useMemo(() => (play ? checkPlay(play.draft, content, play.items) : undefined), [play?.draft, play?.items]);
   const fromCreator = useMemo(() => (play ? undefined : creatorDraft()), [play]);
@@ -167,6 +192,20 @@ export function ToolsApp() {
                         <Icon name="switch" />
                         Switch character
                       </Button>
+                      {/* A Game Master's table: Join a table, or the table this character is at */}
+                      <Button
+                        size="pill"
+                        className={table.seat ? "tools-table-badge is-seated" : "tools-table-badge"}
+                        title={table.trouble ? `The table didn't answer: ${table.trouble}` : undefined}
+                        onClick={() => {
+                          setTableError(undefined);
+                          setTablePopup(true);
+                        }}
+                      >
+                        <Icon name="users" />
+                        {table.seat ? `At ${table.seat.name}` : "Join a table"}
+                        {table.trouble && <span className="tools-table-trouble"> · offline</span>}
+                      </Button>
                       {!result.ok && (
                         <ul className="issues step-issues tools-issues">
                           <li>
@@ -182,11 +221,16 @@ export function ToolsApp() {
               )}
               {play && confirmingSwitch && (
                 <Popup label="Switch character" title="Switch character" onClose={closeSwitch} size="narrow" className="tools-switch-popup">
-                  <p>Put {play.draft.name || "this character"} away? Their tracker, items and chat are cleared.</p>
+                  <p>
+                    Put {play.draft.name || "this character"} away? Their tracker, items and chat are cleared
+                    {table.seat ? `, and they leave ${table.seat.name}` : ""}.
+                  </p>
                   <div className="tools-switch-actions">
                     <Button
                       tone="dark"
                       onClick={() => {
+                        // A character put away leaves its table
+                        if (table.seat) table.leave().catch(() => {});
                         setPlay(undefined);
                         setLevelDraft(undefined);
                         setConfirmingSwitch(false);
@@ -219,6 +263,61 @@ export function ToolsApp() {
                     </Button>
                     <Button onClick={closeIncoming}>Keep {play.draft.name || "this character"}</Button>
                   </div>
+                </Popup>
+              )}
+              {play && tablePopup && (
+                <Popup
+                  label={table.seat ? "Your table" : "Join a table"}
+                  title={table.seat ? table.seat.name : "Join a table"}
+                  onClose={closeTablePopup}
+                  size="narrow"
+                  className="tools-table-popup"
+                >
+                  {table.seat ? (
+                    <>
+                      <p>
+                        {play.draft.name || "This character"} is at {table.seat.name} (code {showCode(table.seat.code)}). Your Game Master sees this
+                        sheet, kept up to date as it changes.
+                      </p>
+                      {table.trouble && <p className="tools-table-error">The table isn't answering right now: {table.trouble}</p>}
+                      {tableError && <p className="tools-table-error">{tableError}</p>}
+                      <div className="tools-switch-actions">
+                        <Button tone="dark" waiting={tableBusy} disabled={tableBusy} onClick={tableAction(table.leave, `Left ${table.seat.name}.`)}>
+                          Leave the table
+                        </Button>
+                        <Button onClick={closeTablePopup}>Stay</Button>
+                      </div>
+                    </>
+                  ) : (
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        if (joinCode.trim()) void tableAction(() => table.join(joinCode), "Joined the table.")();
+                      }}
+                    >
+                      <p>
+                        Your Game Master gives you a join code. Joining shares {play.draft.name || "this character"}’s sheet with them; it stays yours, and
+                        Player Tools keeps their copy up to date.
+                      </p>
+                      <div className="tools-table-join">
+                        <input
+                          type="text"
+                          className="tools-table-code"
+                          aria-label="Join code"
+                          placeholder="ABC-123"
+                          autoFocus
+                          autoComplete="off"
+                          maxLength={9}
+                          value={joinCode}
+                          onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
+                        />
+                        <Button type="submit" tone="primary" waiting={tableBusy} disabled={tableBusy || !joinCode.trim()}>
+                          Join
+                        </Button>
+                      </div>
+                      {tableError && <p className="tools-table-error">{tableError}</p>}
+                    </form>
+                  )}
                 </Popup>
               )}
               {play && result && showingIssues && !result.ok && (

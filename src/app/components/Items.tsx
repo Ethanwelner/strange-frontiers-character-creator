@@ -286,13 +286,13 @@ function WealthBadge({ wealth, kit }: { wealth: number; kit?: Kit }) {
 // An item's card, or for a chassis its ChassisCard: the same top line and
 // options, holding its Physical stats, Attacks and Traits. `hp` is a
 // chassis's HP, kept on the character's item; a picker's card keeps its own.
-function ItemOrChassisCard({ hp, ...props }: Parameters<typeof ItemCard>[0] & { hp?: { value?: number; onChange: (hp: number | undefined) => void } }) {
+function ItemOrChassisCard({ hp, ...props }: Parameters<typeof ItemCard>[0] & { hp?: { value?: number; onChange?: (hp: number | undefined) => void; fixed?: boolean } }) {
   if (!props.stock?.chassis) return <ItemCard {...props} />;
   const { body: _body, badges: _badges, resistsInChips: _r, ...item } = props;
   const { maxHp, ...parts } = chassisParts(props.stock);
   // At full, the item stores no HP, so a chassis that gains HP stays full
-  const onHpChange = hp ? (v: number) => hp.onChange(v === maxHp ? undefined : v) : undefined;
-  return <ChassisCard {...item} {...parts} hp={hp?.value} onHpChange={onHpChange} />;
+  const onHpChange = hp?.onChange ? (v: number) => hp.onChange?.(v === maxHp ? undefined : v) : undefined;
+  return <ChassisCard {...item} {...parts} hp={hp?.value} onHpChange={onHpChange} hpFixed={hp?.fixed} />;
 }
 
 // The character's inventory. An AI Core inhabits the one chassis it has
@@ -308,7 +308,7 @@ function ItemOrChassisCard({ hp, ...props }: Parameters<typeof ItemCard>[0] & { 
 // `currency` first (the Origin's), changed with `onCash`.
 export function Items({
   items,
-  onChange,
+  onChange: change,
   kit,
   cash,
   currency = "ERC",
@@ -321,7 +321,8 @@ export function Items({
   // A Kind with a core (the AI Core): a chassis added while it's in none is
   // equipped, so it inhabits it
   inhabits?: boolean;
-  onChange: (items: Item[]) => void;
+  // Without it (a Game Master's view), the list can't be changed
+  onChange?: (items: Item[]) => void;
   // The equipped items' weight (load) against the carry weight (limit), in
   // kg, and the encumbrance Condition that sets
   carry?: { load: number; limit: number; state: string };
@@ -331,6 +332,8 @@ export function Items({
   onCash?: (cash: Record<string, number>) => void;
   wealth?: number;
 }) {
+  const onChange = change ?? (() => {});
+  const editable = Boolean(change);
   // Add item's popup: the game's items to pick from, or a custom item the
   // player names and sorts
   const [name, setName] = useState("");
@@ -405,9 +408,11 @@ export function Items({
         as="h4"
         icon="backpack"
         aside={
-          <Button size="small" tone="item" className="sf-sheet-add" aria-label="Add item" onClick={() => setAdding(true)}>
-            Add<span className="sf-sheet-add-noun"> item</span>
-          </Button>
+          editable && (
+            <Button size="small" tone="item" className="sf-sheet-add" aria-label="Add item" onClick={() => setAdding(true)}>
+              Add<span className="sf-sheet-add-noun"> item</span>
+            </Button>
+          )
         }
       >
         Items
@@ -470,11 +475,12 @@ export function Items({
                 stock={stock}
                 category={item.category}
                 count={isCounted(item) ? item.qty : undefined}
-                hp={isChassis(item) ? { value: item.hp, onChange: (hp) => update(item, { hp }) } : undefined}
+                hp={isChassis(item) ? { value: item.hp, onChange: editable ? (hp) => update(item, { hp }) : undefined, fixed: !editable } : undefined}
                 chips={kit ? (item.item === kit.freeChassis ? ["Free chassis"] : kitChip(stock)) : undefined}
-                equip={{ checked: item.equipped, onChange: (equipped) => equip(item, equipped) }}
+                equip={{ checked: item.equipped, onChange: editable ? (equipped) => equip(item, equipped) : undefined }}
                 fold={{ open: expanded.has(item.id), onToggle: () => toggleExpanded(item) }}
-                edit={{
+                edit={
+                  editable ? {
                   editing: editing.has(item.id),
                   onToggle: () => toggleEditing(item),
                   onRemove: () => remove(item),
@@ -494,8 +500,8 @@ export function Items({
                       <input type="text" className="sf-item-name-field" aria-label="Item name" value={item.name} onChange={(e) => update(item, { name: e.target.value })} />
                     </>
                   ),
-                }}
-                note={{
+                } : undefined}
+                note={editable ? {
                   shown: showsNotes(item),
                   onToggle: () => {
                     if (!showsNotes(item)) setFocusNote(item.id);
@@ -513,7 +519,7 @@ export function Items({
                       onChange={(e) => update(item, { notes: e.target.value || undefined })}
                     />
                   ),
-                }}
+                } : undefined}
               />
             );
           })}
