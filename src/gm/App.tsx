@@ -298,8 +298,8 @@ export function GmApp() {
               )}
 
               {opened?.play && opened.result && (
-                // The sheet at a popup's 720px takes its narrow layout, and scrolls as one
-                <Popup label={opened.seat.name} onClose={closeSheet} className="gm-sheet-popup">
+                // The sheet in the wide popup (1100px), scrolling as one
+                <Popup label={opened.seat.name} onClose={closeSheet} size="wide" className="gm-sheet-popup">
                   <Sheet
                     context="view"
                     draft={opened.play.draft}
