@@ -211,11 +211,11 @@
     }
 
     /* Conditions in grays: a mid gray edge, a light gray bar, dark text,
-       and a lighter bracket at each corner, just outside the card */
+       and a lighter bracket at each corner, laid over the border */
     &.sf-trait-card--condition {
         --card-edge: var(--sf-gray-400);
         --bracket: var(--sf-gray-200);
-        --bracket-size: 14px;
+        --bracket-size: 22px;
         --bracket-width: 2px;
 
         > .sf-card-bar {
@@ -223,21 +223,26 @@
             color: var(--sf-gray-800);
         }
 
+        /* The brackets: a stroke laid over the border that follows its
+           rounded corners, cut down to --bracket-size at each corner */
         &::before {
             content: "";
             position: absolute;
-            inset: -6px;
+            inset: -1px;
+            border: var(--bracket-width) solid var(--bracket);
+            border-radius: 12px;
             pointer-events: none;
-            --h: linear-gradient(var(--bracket), var(--bracket)) no-repeat;
-            background:
-                var(--h) top left / var(--bracket-size) var(--bracket-width),
-                var(--h) top left / var(--bracket-width) var(--bracket-size),
-                var(--h) top right / var(--bracket-size) var(--bracket-width),
-                var(--h) top right / var(--bracket-width) var(--bracket-size),
-                var(--h) bottom left / var(--bracket-size) var(--bracket-width),
-                var(--h) bottom left / var(--bracket-width) var(--bracket-size),
-                var(--h) bottom right / var(--bracket-size) var(--bracket-width),
-                var(--h) bottom right / var(--bracket-width) var(--bracket-size);
+            --c: linear-gradient(#000, #000) no-repeat;
+            -webkit-mask:
+                var(--c) top left / var(--bracket-size) var(--bracket-size),
+                var(--c) top right / var(--bracket-size) var(--bracket-size),
+                var(--c) bottom left / var(--bracket-size) var(--bracket-size),
+                var(--c) bottom right / var(--bracket-size) var(--bracket-size);
+            mask:
+                var(--c) top left / var(--bracket-size) var(--bracket-size),
+                var(--c) top right / var(--bracket-size) var(--bracket-size),
+                var(--c) bottom left / var(--bracket-size) var(--bracket-size),
+                var(--c) bottom right / var(--bracket-size) var(--bracket-size);
         }
     }
 }
