@@ -418,7 +418,7 @@
    border running in to a 2px line in the card's key color (silver, or
    Dreft's green for Isekai), with a large cut-out at the top left holding
    a star, around a
-   dark field with a starfield and a compass. The frame is four corner pieces
+   dark field with a dense starfield over a planet's curve. The frame is four corner pieces
    (one SVG, turned; only the top left has a star) joined by straight edges,
    so the card grows with its text. ---- */
 
@@ -483,34 +483,37 @@
     overflow: hidden;
 }
 
-/* The compass: two palette steps up from the field (Card Edge), Panel and
-   Card, so no part of it is darker than its background. The same on
-   Isekai cards: Dreft read too bright */
-.sf-kind-emblem {
+/* The planet: a dark disc much wider than the card, rising into the
+   bottom of the field, its rim a thin line of the key color with a soft
+   glow. The top of its curve sits just above the footer, between it and
+   the last line of text, and the rim meets the card's sides just above the
+   bottom. It covers the stars behind it */
+.sf-kind-planet {
     position: absolute;
-    top: 50%;
+    top: calc(100% - 52px);
     left: 50%;
-    width: 94%;
-    height: 94%;
-    transform: translate(-50%, -50%);
+    width: 250%;
+    aspect-ratio: 1;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: var(--sf-gray-900);
+    border: 1.5px solid var(--kind-planet-rim, var(--sf-gray-200));
+    box-shadow: 0 0 10px color-mix(in srgb, var(--kind-planet-rim, var(--sf-gray-200)) 35%, transparent);
     pointer-events: none;
 }
-.sf-kind-rose-light { fill: var(--sf-gray-700); }
-.sf-kind-rose-dark { fill: var(--sf-gray-800); }
-.sf-kind-rose-ring { fill: none; stroke: var(--sf-gray-800); }
 
 /* The starfield, after the site's night sky (css/rpg-night.css): dots that
    pulse slowly and a few four-pointed twinkles that flare now and then */
 .sf-kind-stars { position: absolute; inset: 0; pointer-events: none; }
 .sf-kind-dot {
     position: absolute;
-    width: 1px;
-    height: 1px;
+    width: 1.5px;
+    height: 1.5px;
     border-radius: 50%;
     background: var(--sf-gray-0);
     animation: sf-kind-pulse 6s ease-in-out infinite;
 }
-.sf-kind-dot.is-big { width: 2px; height: 2px; }
+.sf-kind-dot.is-big { width: 2.5px; height: 2.5px; }
 .sf-kind-twinkle {
     position: absolute;
     width: 7px;
@@ -663,6 +666,7 @@
    (#47b767) */
 .sf-kind-card--dreft {
     --kind-line: var(--sf-green-700);
+    --kind-planet-rim: var(--sf-green-500);
     --key-label: var(--sf-green-500);
     --key-line: var(--sf-green-900);
 }
