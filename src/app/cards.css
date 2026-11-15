@@ -483,22 +483,25 @@
     overflow: hidden;
 }
 
-/* The planet: a dark disc much wider than the card, rising into the lower
-   part of the field behind the content, its rim a faded silver line with
-   a faint glow on every card, so it stays in the background. It covers the
+/* The planet: a dark disc a little narrower than the card, centered in the
+   lower part of the field behind the content, so its curve and both sides
+   show before it runs off the bottom. Its edge is a faded silver line with a
+   faint glow inside along the rim, so it reads as a sphere. It covers the
    stars behind it */
 .sf-kind-planet {
     --rim: color-mix(in srgb, var(--sf-gray-200) 40%, transparent);
     position: absolute;
     top: 58%;
     left: 50%;
-    width: 250%;
+    width: 86%;
     aspect-ratio: 1;
     transform: translateX(-50%);
     border-radius: 50%;
     background: var(--sf-gray-900);
     border: 1.5px solid var(--rim);
-    box-shadow: 0 0 10px color-mix(in srgb, var(--sf-gray-200) 15%, transparent);
+    box-shadow:
+        inset 0 0 18px -6px color-mix(in srgb, var(--sf-gray-200) 30%, transparent),
+        0 0 10px color-mix(in srgb, var(--sf-gray-200) 12%, transparent);
     pointer-events: none;
 }
 
