@@ -23,6 +23,28 @@ export interface TableInfo {
   name: string;
 }
 
+// One line of the table's log: a chat message, a d20 roll, or the table's
+// own note that someone joined or left. `seat` is the poster's seat id, "gm"
+// for the Game Master, or null for the table's notes.
+export interface LogEntry {
+  id: number;
+  at: number;
+  kind: "chat" | "roll" | "join" | "leave";
+  author: string;
+  seat: string | null;
+  text: string;
+  value?: number;
+}
+
+// Keeps a page's copy of the log to the table's last 500, adding new entries.
+export const LOG_KEEP = 500;
+export function withEntries(log: LogEntry[], added: LogEntry[]): LogEntry[] {
+  if (!added.length) return log;
+  const seen = new Set(log.map((e) => e.id));
+  const next = [...log, ...added.filter((e) => !seen.has(e.id))].sort((a, b) => a.id - b.id);
+  return next.length > LOG_KEEP ? next.slice(-LOG_KEEP) : next;
+}
+
 export interface Seat {
   id: string;
   name: string;
@@ -75,15 +97,29 @@ export const createTable = (name: string) => call<{ code: string; name: string; 
 
 // The table and its seats. `known` is each seat's sheet version this browser
 // already has, so only sheets that changed come back.
-export const gmPoll = (s: GmSession, known: Record<string, number>) =>
-  call<{ table: TableInfo; now: number; seats: Seat[] }>("gm", { code: s.code, gmKey: s.gmKey, known });
+export const gmPoll = (s: GmSession, known: Record<string, number>, since: number) =>
+  call<{ table: TableInfo; now: number; seats: Seat[]; log: LogEntry[] }>("gm", { code: s.code, gmKey: s.gmKey, known, since });
 
 export const joinTable = (code: string, name: string, sheet: SheetCopy) =>
   call<{ seatId: string; playerKey: string; table: TableInfo }>("join", { code, name, sheet });
 
-// Checking in, with a new copy of the sheet when the character changed.
-export const syncSeat = (s: SeatSession, name?: string, sheet?: SheetCopy) =>
-  call<{ table: TableInfo; version: number }>("sync", { code: s.code, seatId: s.seatId, playerKey: s.playerKey, ...(sheet ? { name, sheet } : {}) });
+// Checking in, with a new copy of the sheet when the character changed, and
+// getting the log's entries after `since`.
+export const syncSeat = (s: SeatSession, since: number, name?: string, sheet?: SheetCopy) =>
+  call<{ table: TableInfo; version: number; log: LogEntry[] }>("sync", {
+    code: s.code,
+    seatId: s.seatId,
+    playerKey: s.playerKey,
+    since,
+    ...(sheet ? { name, sheet } : {}),
+  });
+
+// Who's posting to the log: the Game Master or a player's seat
+type Poster = GmSession | SeatSession;
+const posterOf = (p: Poster) => ("gmKey" in p ? { code: p.code, gmKey: p.gmKey } : { code: p.code, seatId: p.seatId, playerKey: p.playerKey });
+
+export const say = (p: Poster, text: string) => call<{ entry: LogEntry }>("say", { ...posterOf(p), text });
+export const rollToTable = (p: Poster, value: number) => call<{ entry: LogEntry }>("roll", { ...posterOf(p), value });
 
 export const leaveTable = (s: SeatSession) => call<{ ok: true }>("leave", { code: s.code, seatId: s.seatId, playerKey: s.playerKey });
 

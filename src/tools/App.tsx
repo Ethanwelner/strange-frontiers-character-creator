@@ -341,6 +341,7 @@ export function ToolsApp() {
                 model={__SF_AI__.model}
                 onChange={setPlay}
                 check={(p) => checkPlay(p.draft, content, p.items)}
+                table={table}
               />
             </aside>
           )}

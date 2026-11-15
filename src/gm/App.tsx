@@ -11,9 +11,14 @@ import { Icon, Notice } from "../app/components/ui.js";
 import { Button } from "../app/components/Button.js";
 import type { BuildResult } from "../engine/validate.js";
 import { checkPlay, currentOf, maxOf, shownResources, type Play } from "../tools/play.js";
+import { Roller } from "../tools/components/Roller.js";
+import { TableLog } from "../table/TableLog.js";
 import {
   createTable,
   gmPoll,
+  rollToTable,
+  say,
+  withEntries,
   loadGm,
   playOfCopy,
   readRecovery,
@@ -22,6 +27,7 @@ import {
   showCode,
   TableError,
   type GmSession,
+  type LogEntry,
   type Seat,
 } from "../table/table.js";
 
@@ -88,6 +94,14 @@ export function GmApp() {
   const [lost, setLost] = useState<string>();
   const [offline, setOffline] = useState(false);
   const known = useRef<Record<string, number>>({});
+  // The table's log: chat, rolls, joins and leaves, newest last
+  const [log, setLog] = useState<LogEntry[]>([]);
+  const since = useRef(0);
+  const addEntries = useCallback((added: LogEntry[]) => {
+    if (!added.length) return;
+    since.current = Math.max(since.current, ...added.map((e) => e.id));
+    setLog((l) => withEntries(l, added));
+  }, []);
   const sheets = useRef<Record<string, Player>>({});
 
   useEffect(() => {
@@ -97,7 +111,7 @@ export function GmApp() {
     const poll = async () => {
       if (document.visibilityState === "visible") {
         try {
-          const got = await gmPoll(session, known.current);
+          const got = await gmPoll(session, known.current, since.current);
           if (stopped) return;
           setOffline(false);
           setNow(got.now);
@@ -118,6 +132,7 @@ export function GmApp() {
           for (const id of Object.keys(known.current)) if (!next[id]) delete known.current[id];
           sheets.current = next;
           setPlayers(got.seats.map((s) => next[s.id]!));
+          addEntries(got.log);
         } catch (err) {
           if (stopped) return;
           if (err instanceof TableError && (err.code === "no-table" || err.code === "not-gm")) {
@@ -163,6 +178,8 @@ export function GmApp() {
     setLost(undefined);
     known.current = {};
     sheets.current = {};
+    since.current = 0;
+    setLog([]);
     setForgetting(false);
   };
 
@@ -186,7 +203,7 @@ export function GmApp() {
       </header>
 
       <div className="section unlimited white-bg builder-panel">
-        <div className="container builder-body tools-body no-side">
+        <div className={`container builder-body tools-body${session ? "" : " no-side"}`}>
           <div className="tools-column">
             <main>
               {contentErrors.length > 0 && <div className="notice bad">Content failed to load: {contentErrors.join("; ")}</div>}
@@ -313,6 +330,26 @@ export function GmApp() {
               )}
             </main>
           </div>
+          {/* The table's log beside the players: the Game Master's d20, then the chat and
+              everyone's rolls */}
+          {session && (
+            <aside className="tools-chat-side">
+              <Roller
+                onRolled={(value) =>
+                  void rollToTable(session, value).then(
+                    (r) => addEntries([r.entry]),
+                    (err: unknown) => setNotice({ text: `The roll didn't reach the table: ${err instanceof Error ? err.message : String(err)}`, bad: true }),
+                  )
+                }
+              />
+              <TableLog
+                log={log}
+                me="gm"
+                onSay={async (text) => addEntries([(await say(session, text)).entry])}
+                empty="The table's chat and the players' rolls show here, with when they happened."
+              />
+            </aside>
+          )}
         </div>
       </div>
     </div>

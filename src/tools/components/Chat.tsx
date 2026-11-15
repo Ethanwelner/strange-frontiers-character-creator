@@ -8,6 +8,8 @@ import { ask } from "../chat.js";
 import type { Play } from "../play.js";
 import { Roller } from "./Roller.js";
 import { Button } from "../../app/components/Button.js";
+import { TableLog } from "../../table/TableLog.js";
+import type { SeatState } from "../seat.js";
 
 const EXAMPLES = ["I took 6 slashing damage", "What is my condition?", "I picked up 3 ration packs"];
 
@@ -15,6 +17,10 @@ const EXAMPLES = ["I took 6 slashing damage", "What is my condition?", "I picked
 // the character and the rules, changes the tracker when the player says what
 // happened, and rolls the die when asked. The player's own rolls go into the
 // conversation.
+//
+// At a Game Master's table (`table`), the box has two tabs under the die:
+// the table's log (its chat and everyone's rolls) and the assistant. Every
+// d20 roll, the player's or the assistant's, also goes to the table.
 export function Chat({
   play,
   result,
@@ -23,6 +29,7 @@ export function Chat({
   model,
   check,
   onChange,
+  table,
 }: {
   play: Play;
   result: BuildResult;
@@ -31,7 +38,15 @@ export function Chat({
   model: string;
   check: (p: Play) => BuildResult;
   onChange: (p: Play) => void;
+  table?: SeatState;
 }) {
+  const seated = Boolean(table?.seat);
+  const [tab, setTab] = useState<"table" | "assistant">("table");
+  const showing = seated ? tab : "assistant";
+  // The table's tab open marks its new entries read
+  useEffect(() => {
+    if (showing === "table" && table?.unread) table.seen();
+  }, [showing, table?.unread]);
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string>();
@@ -73,7 +88,10 @@ export function Chat({
         content,
         create,
         model,
-        onRoll: (rolls) => setShown({ value: rolls.at(-1)!, key: Date.now() }),
+        onRoll: (rolls) => {
+          setShown({ value: rolls.at(-1)!, key: Date.now() });
+          for (const r of rolls) table?.roll(r);
+        },
       });
       onChange({ ...reply.play, chat: [...asked.chat, { role: "assistant", text: reply.text, ...(reply.changes.length ? { changes: reply.changes } : {}) }] });
     } catch (err) {
@@ -90,12 +108,15 @@ export function Chat({
       <Roller
         show={shown}
         disabled={busy}
-        onRolled={(value) => onChange({ ...latest.current, chat: [...latest.current.chat, { role: "user", text: `Rolled a d20: ${value}` }] })}
+        onRolled={(value) => {
+          onChange({ ...latest.current, chat: [...latest.current.chat, { role: "user", text: `Rolled a d20: ${value}` }] });
+          table?.roll(value);
+        }}
       >
         {/* Clear, as a round restore button like the resources', in the chat box's top
             right corner beside the die. It's on the die's layer so it stays over the
             conversation as it slides under the die (styles.css). */}
-        {play.chat.length > 0 && (
+        {showing === "assistant" && play.chat.length > 0 && (
           <Button
             round="md"
             className="tools-chat-clear"
@@ -108,7 +129,27 @@ export function Chat({
           </Button>
         )}
       </Roller>
-      <section className="tools-chat" aria-label="Assistant">
+      {/* At a table: its log and the assistant, as tabs */}
+      {seated && table && (
+        <div className="tools-side-tabs" role="tablist" aria-label="Chat">
+          <Button kind="bare" role="tab" aria-selected={showing === "table"} className={`tools-side-tab${showing === "table" ? " is-active" : ""}`} onClick={() => setTab("table")}>
+            Table
+            {table.unread > 0 && showing !== "table" && <span className="tools-side-unread">{table.unread}</span>}
+          </Button>
+          <Button kind="bare" role="tab" aria-selected={showing === "assistant"} className={`tools-side-tab${showing === "assistant" ? " is-active" : ""}`} onClick={() => setTab("assistant")}>
+            Assistant
+          </Button>
+        </div>
+      )}
+      {showing === "table" && table?.seat && (
+        <TableLog
+          log={table.log}
+          me={table.seat.seatId}
+          onSay={table.say}
+          empty={`${table.seat.name}'s chat and everyone's rolls show here. Your d20 rolls go to the table too.`}
+        />
+      )}
+      <section className="tools-chat" aria-label="Assistant" hidden={showing !== "assistant"}>
         {/* The conversation and the message box under it, in one box */}
         <div className="tools-chat-box">
           <ol className="tools-chat-log" ref={log} aria-live="polite">

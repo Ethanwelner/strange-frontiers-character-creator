@@ -567,6 +567,105 @@
     }
   }
 
+  /* A hidden tab's chat box (display: flex would show it anyway) */
+  .tools-chat[hidden] {
+    display: none;
+  }
+
+  /* At a Game Master's table: Table and Assistant as tabs between the d20
+     and the chat box, inside the same box */
+  .tools-side-tabs {
+    position: relative;
+    z-index: 1;
+    flex: none;
+    display: flex;
+    gap: 4px;
+    padding: 8px 16px 8px;
+    background-color: #1f2122;
+    border-inline: 1px solid var(--card-border);
+  }
+
+  button.tools-side-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--panel-soft);
+
+    &.is-active {
+      background: rgb(255 255 255 / 10%);
+      color: var(--panel-text);
+    }
+
+    &:hover:not(.is-active) {
+      color: var(--panel-text);
+    }
+  }
+
+  /* New table messages while the assistant's tab is open */
+  .tools-side-unread {
+    min-width: 18px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: var(--frontiers-green);
+    color: var(--portfolio-black);
+    font-size: 0.6875rem;
+    line-height: 18px;
+    text-align: center;
+  }
+
+  /* ---- The table's log (src/table/TableLog.tsx), in the chat box's
+     style: who and when over each message ---- */
+  .table-log-who {
+    margin: 0 0 2px;
+    font-size: 0.75rem;
+    opacity: 0.8;
+
+    time {
+      margin-left: 4px;
+      opacity: 0.75;
+    }
+  }
+
+  /* The Game Master's messages, with a purple edge */
+  .table-log-entry.is-assistant.is-gm {
+    box-shadow: inset 3px 0 0 var(--frontiers-lore-on-black, #a67bf0);
+  }
+
+  /* A roll's number, big */
+  .table-log-roll strong {
+    font-family: var(--title);
+    font-size: 1.5rem;
+    line-height: 1;
+    letter-spacing: 0.04em;
+  }
+
+  .table-log-entry.is-roll.is-assistant .table-log-roll strong {
+    color: var(--frontiers-green);
+  }
+
+  /* Who joined and left, small and centered between the messages */
+  .table-log-note {
+    align-self: center;
+    font-size: 0.75rem;
+    color: var(--panel-soft);
+    text-align: center;
+
+    time {
+      margin-left: 4px;
+      opacity: 0.75;
+    }
+  }
+
+  .table-log-error {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--portfolio-red);
+  }
+
   /* A player's message with the character's portrait as its avatar, on the
      right, level with the message's last line */
   .tools-chat-row {
