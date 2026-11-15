@@ -519,6 +519,88 @@
     box-shadow: inset 0 calc(-1 * var(--lit, 2px)) 0 0 color-mix(in srgb, var(--sf-gray-200) 30%, transparent);
 }
 
+/* ---- The other Kind card backgrounds, kept as options (KindCard's
+   `background`; sf_card_kind()'s): "compass", an eight-point compass over a
+   faint starfield, and "planet", a dark planet's disc under a dense
+   starfield. The sun and planets above are the default ("sun") ---- */
+
+/* The compass: two palette steps up from the field (Card Edge), Panel and
+   Card, so no part of it is darker than its background */
+.sf-kind-emblem {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 94%;
+    height: 94%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+.sf-kind-rose-light { fill: var(--sf-gray-700); }
+.sf-kind-rose-dark { fill: var(--sf-gray-800); }
+.sf-kind-rose-ring { fill: none; stroke: var(--sf-gray-800); }
+
+/* The planet: a dark disc a little narrower than the card, centered in the
+   lower part of the field behind the content, so its curve and both sides
+   show before it runs off the bottom. Its edge is a faded silver line with a
+   faint glow inside along the rim, so it reads as a sphere. It covers the
+   stars behind it */
+.sf-kind-globe {
+    position: absolute;
+    top: 58%;
+    left: 50%;
+    width: 86%;
+    aspect-ratio: 1;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: var(--sf-gray-900);
+    border: 1.5px solid color-mix(in srgb, var(--sf-gray-200) 40%, transparent);
+    box-shadow:
+        inset 0 0 18px -6px color-mix(in srgb, var(--sf-gray-200) 30%, transparent),
+        0 0 10px color-mix(in srgb, var(--sf-gray-200) 12%, transparent);
+    pointer-events: none;
+}
+
+/* The starfields, after the site's night sky (css/rpg-night.css): dots that
+   pulse slowly and a few four-pointed twinkles that flare now and then.
+   The planet's dense one has larger dots */
+.sf-kind-stars { position: absolute; inset: 0; pointer-events: none; }
+.sf-kind-dot {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    border-radius: 50%;
+    background: var(--sf-gray-0);
+    animation: sf-kind-pulse 6s ease-in-out infinite;
+}
+.sf-kind-dot.is-big { width: 2px; height: 2px; }
+.sf-kind-card--bg-planet .sf-kind-dot { width: 1.5px; height: 1.5px; }
+.sf-kind-card--bg-planet .sf-kind-dot.is-big { width: 2.5px; height: 2.5px; }
+.sf-kind-twinkle {
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    margin: -3.5px 0 0 -3.5px;
+    transform: scale(.35);
+    animation: sf-kind-flare 12s ease-out infinite;
+}
+.sf-kind-twinkle::before, .sf-kind-twinkle::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(#fff4, #fffc, #fff4);
+}
+.sf-kind-twinkle::before { top: -100%; left: 45%; width: 10%; height: 300%; }
+.sf-kind-twinkle::after { top: 45%; left: -100%; width: 300%; height: 10%; }
+@keyframes sf-kind-pulse { 50% { opacity: .15; } }
+@keyframes sf-kind-flare {
+    0%, 100% { transform: scale(.35) rotate(0deg); opacity: .5; }
+    6% { transform: scale(1) rotate(45deg); opacity: 1; }
+    12% { transform: scale(.35) rotate(90deg); opacity: .5; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .sf-kind-dot, .sf-kind-twinkle { animation: none; }
+}
+
 .sf-kind-corner {
     position: absolute;
     width: 100px;
