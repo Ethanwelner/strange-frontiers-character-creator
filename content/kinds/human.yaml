@@ -10,6 +10,12 @@ features:
     description: Humans get a +1 bonus to every focus stat.
   - name: Unexceptional
     description: Humans can't exceed 15 in any focus stat unless otherwise modified.
+# Humans can be augmented: Cyberization and Gene Hacking let them take
+# Traits with those keywords (cybernetics and body modification, not yet
+# written).
+grants:
+  - trait: cyberization
+  - trait: gene-hacking
 stats:
   endurance: { bonus: 1, max: 15 }
   power: { bonus: 1, max: 15 }
