@@ -218,7 +218,7 @@
         /* The top two cross the light bar, so they're lighter */
         --bracket-top: var(--sf-gray-50);
         --bracket-size: 22px;
-        --bracket-width: 2px;
+        --bracket-width: 3px;
         --c: linear-gradient(#000, #000) no-repeat;
 
         /* The bar reaches out over the border at the top and sides, so its
