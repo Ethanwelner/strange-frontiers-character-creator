@@ -2657,20 +2657,23 @@
     }
   }
 
-  /* Player Tools' chat (the conversation and the message box) and the
-     sheet's scrolling lists, and Add a Condition's, have just a slim rounded handle for a
-     scrollbar: no track and no arrows. Chrome and Safari take the -webkit-
-     parts; Firefox, which has no such parts, a thin bar in the same colors.
-     The site sets scrollbar-color on the page, which makes Chrome skip
-     -webkit- parts, so it's reset here. */
-  :is(.tools-chat-log, .tools-chat-form textarea, .condition-search-list, .sf-popup--inner .picker-scroll, .traits-picked > .picks) {
+  /* Every scrolling box in the creator, Player Tools and the Game Master
+     tools (the side panel, popups, chat, lists) has just a slim rounded
+     handle for a scrollbar: no track and no arrows. Only the page keeps the
+     site's own scrollbar. Chrome and Safari take the -webkit- parts;
+     Firefox, which has no such parts, a thin bar in the same colors. The
+     site sets scrollbar-color on the page, which makes Chrome skip -webkit-
+     parts, so it's reset here. */
+  &, & * {
     scrollbar-color: auto;
     scrollbar-width: auto;
 
     /* A 16px lane with the 6px handle at its right edge: 10px clear of the
-       content, and 5px in from the ends */
+       content, and 5px in from the ends; a horizontal bar gets the same
+       along its bottom edge */
     &::-webkit-scrollbar {
       width: 16px;
+      height: 16px;
     }
 
     &::-webkit-scrollbar-track,
@@ -2693,6 +2696,11 @@
 
     &::-webkit-scrollbar-thumb:hover {
       background: rgb(255 255 255 / 40%) padding-box;
+    }
+
+    &::-webkit-scrollbar-thumb:horizontal {
+      border-width: 10px 5px 0;
+      border-radius: 8px / 13px 13px 3px 3px;
     }
 
     @supports not selector(::-webkit-scrollbar) {
