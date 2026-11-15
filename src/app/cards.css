@@ -483,13 +483,14 @@
     position: absolute;
     inset: 6px;
     border-radius: 0 6px 6px;
-    background: radial-gradient(ellipse at 50% 42%, #1f2122 0%, #1f2122 40%, #161819 100%);
+    background: #161819;
     -webkit-mask: radial-gradient(circle at 0 0, transparent 24px, #000 24.5px);
     mask: radial-gradient(circle at 0 0, transparent 24px, #000 24.5px);
     overflow: hidden;
 }
 
-/* The compass: solid tones a step up from the field */
+/* The compass: two palette steps up from the field (Card Edge), Panel and
+   Card, so no part of it is darker than its background */
 .sf-kind-emblem {
     position: absolute;
     top: 50%;
@@ -500,8 +501,8 @@
     pointer-events: none;
 }
 .sf-kind-rose-light { fill: #292b2c; }
-.sf-kind-rose-dark { fill: #161819; }
-.sf-kind-rose-ring { fill: none; stroke: #292b2c; }
+.sf-kind-rose-dark { fill: #1f2122; }
+.sf-kind-rose-ring { fill: none; stroke: #1f2122; }
 
 /* The starfield, after the site's night sky (css/rpg-night.css): dots that
    pulse slowly and a few four-pointed twinkles that flare now and then */
@@ -674,7 +675,7 @@
     --key-name: linear-gradient(180deg, #e7e8e9 10%, #47b767 90%);
 }
 .sf-kind-card--dreft .sf-kind-rose-light { fill: #1c372b; }
-.sf-kind-card--dreft .sf-kind-rose-ring { stroke: #1c372b; }
+.sf-kind-card--dreft .sf-kind-rose-ring { stroke: #1f2122; }
 @media (max-width: 480px) {
     .sf-kind-content { padding: 26px 18px 18px; }
     .sf-kind-foot { gap: 6px; font-size: .875rem; letter-spacing: .06em; }
