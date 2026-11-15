@@ -1,0 +1,12 @@
+id: cyberization
+name: "Cyberization"
+status: placeholder
+plane: earth
+summary: "A body that can take cybernetic implants."
+tags: [cyberization, cybernetics, body]
+category: other
+conveyed: true
+# Not a stat: a keyword pass. The cybernetics Traits (not yet written)
+# carry the Cyberization keyword, and only a character with this Trait can
+# take them.
+effect: "This character can take Traits with the Cyberization keyword: cybernetic implants."

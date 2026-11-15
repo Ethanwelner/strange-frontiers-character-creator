@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Popup } from "./popup.js";
 import { MAX_LEVEL } from "../../ai/level.js";
-import { STAT_GROUPS, type StatBlock, type StatId } from "../../schema/index.js";
+import { STAT_GROUPS, type StatBlock } from "../../schema/index.js";
 import { kindById, packageById, traitById } from "../content.js";
 import { GENDERS, MAX_AGE, MAX_SIZE_LENGTH, type Draft, type Looks } from "../draft.js";
 import { toPortrait } from "../portrait.js";
@@ -195,28 +195,6 @@ export function TraitAction({ action, rank }: { action?: string; rank?: number }
 
 export function Chip(props: { children: ReactNode; tone?: "accent" | "muted" | "bad" }) {
   return <span className={`chip${props.tone ? ` chip-${props.tone}` : ""}`}>{props.children}</span>;
-}
-
-// The Kind's bonus and max for every stat, grouped Physical / Social / Mental.
-export function StatRanges({ stats }: { stats: StatBlock }) {
-  return (
-    <div className="stat-ranges">
-      {FOCUS_GROUPS.map((g) => (
-        <div key={g}>
-          <div className="stat-ranges-group">{title(g)}</div>
-          {STAT_GROUPS[g].map((s: StatId) => (
-            <div key={s} className="stat-range">
-              <span>{title(s)}</span>
-              <span className="num">
-                +{stats[s]?.bonus}
-                <span className="muted">/{stats[s]?.max}</span>
-              </span>
-            </div>
-          ))}
-        </div>
-      ))}
-    </div>
-  );
 }
 
 // The character's picture in a square frame. With onChange, an empty frame
