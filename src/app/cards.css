@@ -418,7 +418,7 @@
    border running in to a 2px line in the card's key color (silver, or
    Dreft's green for Isekai), with a large cut-out at the top left holding
    a star, around a
-   dark field with a starfield, a faded sun and planets. The frame is four corner pieces
+   dark field with a faded sun and planets. The frame is four corner pieces
    (one SVG, turned; only the top left has a star) joined by straight edges,
    so the card grows with its text. ---- */
 
@@ -485,19 +485,18 @@
     container-type: inline-size;
 }
 
-/* The sky: a faded sun half below the bottom of the field, thin rays
-   fanning out from its middle and fading with distance, and a column of
+/* The sky: a faded sun half below the bottom of the field, rays fanning
+   out from its middle to the top of the card, and a column of
    planets above it. The planets are the field's own color, so they show only
    by blocking the rays and by the crescent the sun lights along their bottom
    edge, thin at the sides and --lit thick at the bottom. All of it is
-   sized in the field's width (cqw), so nothing overlaps on a short card */
+   sized in the field's width (cqw) and stacked up from the sun, so the gaps
+   between them stay the same on cards of any height */
 .sf-kind-sky { position: absolute; inset: 0; pointer-events: none; }
 .sf-kind-rays {
     position: absolute;
     inset: 0;
-    background: repeating-conic-gradient(from 0deg at 50% 100%, rgb(255 255 255 / 10%) 0 .3deg, transparent .3deg 4deg);
-    -webkit-mask: radial-gradient(circle at 50% 100%, #000 15%, transparent 85%);
-    mask: radial-gradient(circle at 50% 100%, #000 15%, transparent 85%);
+    background: repeating-conic-gradient(from 0deg at 50% 100%, rgb(255 255 255 / 10%) 0 .6deg, transparent .6deg 4deg);
 }
 .sf-kind-sun {
     position: absolute;
@@ -518,44 +517,6 @@
     border-radius: 50%;
     background: var(--sf-gray-900);
     box-shadow: inset 0 calc(-1 * var(--lit, 2px)) 0 0 color-mix(in srgb, var(--sf-gray-200) 45%, transparent);
-}
-
-/* The starfield, after the site's night sky (css/rpg-night.css): dots that
-   pulse slowly and a few four-pointed twinkles that flare now and then */
-.sf-kind-stars { position: absolute; inset: 0; pointer-events: none; }
-.sf-kind-dot {
-    position: absolute;
-    width: 1.5px;
-    height: 1.5px;
-    border-radius: 50%;
-    background: var(--sf-gray-0);
-    animation: sf-kind-pulse 6s ease-in-out infinite;
-}
-.sf-kind-dot.is-big { width: 2.5px; height: 2.5px; }
-.sf-kind-twinkle {
-    position: absolute;
-    width: 7px;
-    height: 7px;
-    margin: -3.5px 0 0 -3.5px;
-    transform: scale(.35);
-    animation: sf-kind-flare 12s ease-out infinite;
-}
-.sf-kind-twinkle::before, .sf-kind-twinkle::after {
-    content: "";
-    position: absolute;
-    border-radius: 50%;
-    background: linear-gradient(#fff4, #fffc, #fff4);
-}
-.sf-kind-twinkle::before { top: -100%; left: 45%; width: 10%; height: 300%; }
-.sf-kind-twinkle::after { top: 45%; left: -100%; width: 300%; height: 10%; }
-@keyframes sf-kind-pulse { 50% { opacity: .15; } }
-@keyframes sf-kind-flare {
-    0%, 100% { transform: scale(.35) rotate(0deg); opacity: .5; }
-    6% { transform: scale(1) rotate(45deg); opacity: 1; }
-    12% { transform: scale(.35) rotate(90deg); opacity: .5; }
-}
-@media (prefers-reduced-motion: reduce) {
-    .sf-kind-dot, .sf-kind-twinkle { animation: none; }
 }
 
 .sf-kind-corner {

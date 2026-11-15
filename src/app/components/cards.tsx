@@ -612,8 +612,8 @@ export function BackgroundCard({
 // card's key color (silver for The Settled Systems, Dreft's green for
 // Isekai), around a dark field with a large quarter-circle cut out of its
 // top left corner and a four-pointed star in the cut-out; the gunmetal stops
-// short of the cut-out. The field holds a starfield, and a faded sun at the
-// bottom whose rays light a column of planets from below. The site draws
+// short of the cut-out. The field holds a faded sun at the bottom whose rays
+// light a column of planets from below. The site draws
 // the same markup from sf_card_kind() in php/rpg/components/cards.php.
 
 // The key color's gradient for the frame's line and star, in palette
@@ -629,45 +629,21 @@ const kindStar = (cx: number, cy: number, r: number) => {
   return `M${cx} ${cy - r}L${cx + s} ${cy - s}L${cx + r} ${cy}L${cx + s} ${cy + s}L${cx} ${cy + r}L${cx - s} ${cy + s}L${cx - r} ${cy}L${cx - s} ${cy - s}Z`;
 };
 
-// The sky behind the stars: a faded sun at the bottom with rays fanning out
+// The sky: a faded sun at the bottom with rays fanning out
 // from it, and a column of planets above it, each the field's own color, so
 // it shows only by blocking the rays and by the crescent the sun lights along
 // its bottom edge. Everything is measured in the field's width (cqw), so the
-// spacing holds on cards of any height: the big planet hangs from the top,
-// and the other three stack up from the sun with a gap between each. Each
+// spacing never changes with the card's height: all four stack up from the
+// sun with a set gap between each, and a taller card shows more of the big
+// one at the top. Each
 // planet is [its center, as a CSS top; its width, cqw; the crescent's
 // thickness at the bottom, px]. The site's copy is in sf_card_kind_sky().
 const KIND_PLANETS: [string, number, number][] = [
-  ["-44cqw", 112, 4],
+  ["calc(100% - 147cqw)", 112, 4],
   ["calc(100% - 78.5cqw)", 13, 2],
   ["calc(100% - 54cqw)", 24, 3],
   ["calc(100% - 31.5cqw)", 9, 2],
 ];
-
-// The starfield: one fixed sky (top %, left %, opacity, delay in seconds),
-// shifted by the Kind's id so cards side by side differ. The site's copy of
-// these lists is in sf_card_kind_stars().
-const KIND_DOTS = [[16.6,36.4,0.43,4.8],[18.4,96.8,0.28,2.1],[53.8,78.7,0.34,4.7],[48.6,55.1,0.88,4.1],[58.4,25.4,0.31,4.3],[37.2,78.9,0.39,5.3],[67.7,67.4,0.59,4.5],[67.1,47.5,0.42,0.5],[10.5,99.5,0.34,4.0],[99.7,72.0,0.48,4.7],[64.5,41.3,0.25,3.9],[10.2,5.8,0.48,7.0],[40.9,19.7,0.4,3.2],[50.8,56.3,0.42,0.5],[75.0,34.5,0.35,0.0],[39.5,97.1,0.4,6.7],[2.3,59.6,0.37,0.0],[47.8,2.2,0.84,6.2],[3.9,20.8,0.39,4.0],[3.5,11.2,0.53,4.0],[94.2,19.6,0.77,4.4],[1.1,52.8,0.66,6.6],[49.7,37.5,0.29,5.7],[55.7,81.4,0.25,0.3],[35.2,77.5,0.62,4.3],[68.1,5.2,0.29,6.1],[28.5,33.6,0.25,3.1],[52.6,90.4,0.26,4.5],[50.0,91.9,0.34,2.4],[85.9,90.0,0.35,1.6],[49.4,3.5,0.45,3.4],[36.6,97.9,0.36,6.8],[43.9,17.5,0.88,4.6],[14.1,70.7,0.32,1.3],[67.3,32.2,0.45,5.3],[90.4,5.5,0.44,2.0],[46.7,37.0,0.69,2.9],[33.0,56.7,0.27,0.6],[16.5,32.9,0.65,4.5],[62.2,62.3,0.74,2.3],[58.2,46.2,0.32,3.5],[82.4,95.1,0.25,1.2],[5.9,41.7,0.28,1.7],[43.5,15.3,0.3,1.8],[9.9,84.7,0.38,5.5],[90.0,63.0,0.4,4.3],[71.9,39.9,0.47,5.4],[47.0,39.4,0.23,4.9],[31.8,27.2,0.74,2.9],[87.8,43.6,0.45,1.2],[49.0,92.0,0.26,6.0],[10.7,17.9,0.84,2.4],[55.5,11.1,0.33,3.4],[92.3,8.9,0.22,5.5],[72.6,61.9,0.38,1.3],[85.5,55.7,0.38,5.6],[95.8,0.3,0.26,2.6],[10.3,2.7,0.28,0.5],[63.0,20.1,0.36,2.3],[91.9,17.5,0.38,2.1],[24.0,66.4,0.38,3.7],[51.8,42.2,0.9,3.1],[86.0,50.8,0.47,2.8],[96.4,41.1,0.41,0.7],[15.5,23.4,0.23,3.7],[30.3,64.3,0.53,1.2],[63.6,37.1,0.81,5.3],[4.7,23.4,0.23,0.8],[21.5,92.5,0.2,1.2],[39.3,98.5,0.82,6.4],[63.2,96.8,0.34,5.0],[80.4,19.2,0.8,2.2],[79.3,37.4,0.41,1.9],[1.7,24.7,0.49,6.6],[20.0,50.3,0.21,1.8],[65.6,98.6,0.24,0.4],[37.1,53.1,0.35,6.5],[21.5,21.8,0.45,4.0],[43.9,28.7,0.35,0.1],[90.7,67.6,0.23,6.6],[59.8,96.3,0.32,3.0],[37.7,67.1,0.36,1.1],[54.6,90.1,0.4,6.2],[18.3,69.7,0.71,4.0],[74.4,43.9,0.4,2.9],[64.8,73.2,0.8,1.7],[0.6,62.8,0.23,1.4],[40.1,39.3,0.41,3.8],[70.7,28.8,0.77,0.2],[57.8,90.4,0.32,0.7],[47.8,84.6,0.48,0.8],[34.6,16.5,0.88,6.9],[93.3,31.0,0.26,5.6],[24.7,58.0,0.68,6.9],[16.9,93.2,0.32,0.9],[20.9,60.3,0.23,1.7],[43.0,55.0,0.26,1.2],[46.8,33.4,0.85,5.0],[2.2,6.9,0.25,5.2],[14.8,18.4,0.25,4.6],[94.2,46.5,0.28,3.6],[24.8,52.9,0.28,5.4],[20.2,80.8,0.58,7.0],[95.4,73.8,0.38,5.3],[67.2,92.6,0.9,3.0],[26.9,44.5,0.41,2.5],[78.6,94.7,0.25,1.8],[42.3,19.9,0.22,0.3],[52.6,17.1,0.37,6.3],[24.8,93.6,0.22,6.9],[8.7,95.9,0.56,5.4],[29.3,98.8,0.74,1.5],[85.9,13.0,0.79,2.5],[12.7,39.9,0.27,1.7],[64.4,18.2,0.26,1.2],[41.7,13.9,0.42,1.3],[10.3,47.5,0.42,1.0],[82.2,28.4,0.73,4.7],[80.0,61.0,0.31,1.0],[36.7,16.0,0.32,0.1],[78.7,37.8,0.32,4.6],[36.5,12.2,0.21,5.4],[27.2,45.0,0.41,2.7],[70.5,95.1,0.32,4.8],[66.7,67.5,0.42,6.8],[86.4,41.8,0.33,3.6],[48.7,69.8,0.7,1.5],[25.4,43.8,0.29,3.7],[40.9,51.8,0.3,6.4],[99.9,79.5,0.42,1.3],[16.6,83.0,0.28,1.3],[78.2,91.7,0.75,4.7],[91.5,59.2,0.21,2.0],[32.3,85.6,0.23,5.7],[48.5,19.5,0.25,1.2],[30.5,99.8,0.3,5.8],[18.3,16.6,0.45,4.0],[12.2,1.5,0.27,3.8],[71.8,67.8,0.22,5.0],[53.2,94.3,0.44,4.3],[22.6,34.8,0.67,4.0],[89.9,12.7,0.38,6.1],[45.4,14.6,0.42,1.2],[32.5,1.0,0.22,1.0],[27.1,39.2,0.41,1.5],[44.7,83.8,0.22,5.7],[57.2,66.1,0.87,6.1],[98.4,5.9,0.28,6.9],[82.2,23.5,0.22,6.5],[54.8,97.7,0.27,5.4],[1.4,56.0,0.81,1.4],[11.2,19.5,0.41,4.5],[10.2,18.0,0.42,3.9],[21.5,2.8,0.26,4.5],[85.3,26.8,0.3,4.7],[0.3,88.4,0.62,3.4],[14.4,44.3,0.32,1.5],[77.9,38.8,0.6,5.9],[20.4,57.8,0.3,4.2],[12.5,40.5,0.31,0.7]];
-const KIND_TWINKLES = [[88.3,45.6,11.2],[91.0,88.2,4.4],[26.5,27.1,2.4],[25.2,60.4,10.8]];
-
-function KindStars({ seed }: { seed: string }) {
-  let sum = 0;
-  for (const ch of seed) sum += ch.charCodeAt(0);
-  const dy = (sum * 13) % 100;
-  const dx = (sum * 29) % 100;
-  const wrap = (v: number, d: number) => ((v + d) % 100).toFixed(1);
-  const inner = (v: number, d: number) => (((v - 8 + d) % 84) + 8).toFixed(1);
-  return (
-    <div className="sf-kind-stars">
-      {KIND_DOTS.map(([t, l, o, delay], i) => (
-        <span key={i} className={`sf-kind-dot${i % 7 === 0 ? " is-big" : ""}`} style={{ top: `${wrap(t, dy)}%`, left: `${wrap(l, dx)}%`, opacity: o, animationDelay: `${delay}s` }} />
-      ))}
-      {KIND_TWINKLES.map(([t, l, delay], i) => (
-        <span key={i} className="sf-kind-twinkle" style={{ top: `${inner(t, dy)}%`, left: `${inner(l, dx)}%`, animationDelay: `${delay}s` }} />
-      ))}
-    </div>
-  );
-}
 
 // One corner of the frame, drawn top left; CSS turns it for the others. The
 // line runs 6px in from the card's edge, along the field's edge. At the top
@@ -737,7 +713,6 @@ export function KindCard({
           </defs>
         </svg>
         <div className="sf-kind-field" aria-hidden="true">
-          <KindStars seed={k.id} />
           <div className="sf-kind-sky">
             <span className="sf-kind-rays" />
             <span className="sf-kind-sun" />
