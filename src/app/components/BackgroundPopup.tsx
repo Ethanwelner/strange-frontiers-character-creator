@@ -1,8 +1,7 @@
 import { PackageGrants } from "./BackgroundStep.js";
 import { Popup } from "./popup.js";
 import { title } from "./ui.js";
-import { BackgroundCard } from "./cards.js";
-import { KindBody } from "./KindCards.js";
+import { BackgroundCard, KindCard } from "./cards.js";
 import { kindById, packageById } from "../content.js";
 
 // A Kind's or a background package's card, drawn like its card in the
@@ -17,17 +16,15 @@ export function BackgroundPopup({ id, onClose }: { id: string; onClose: () => vo
   if (!entry) return null;
   return (
     <Popup label={entry.name} onClose={onClose} card>
-      <BackgroundCard name={entry.name} slot={kind ? "Kind" : title(pkg!.type)} plane={entry.plane} className="tools-background-card">
-        {kind ? (
-          <KindBody kind={kind} lore />
-        ) : (
-          <>
-            <p>{entry.summary}</p>
-            {entry.lore && <p className="sf-card-lore">{entry.lore}</p>}
-            <PackageGrants pkg={pkg!} />
-          </>
-        )}
-      </BackgroundCard>
+      {kind ? (
+        <KindCard kind={kind} lore className="tools-background-card" />
+      ) : (
+        <BackgroundCard name={entry.name} slot={title(pkg!.type)} plane={entry.plane} className="tools-background-card">
+          <p>{entry.summary}</p>
+          {entry.lore && <p className="sf-card-lore">{entry.lore}</p>}
+          <PackageGrants pkg={pkg!} />
+        </BackgroundCard>
+      )}
     </Popup>
   );
 }

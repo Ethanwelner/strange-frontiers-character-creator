@@ -1,5 +1,5 @@
-import { Fragment, useState, type HTMLAttributes, type KeyboardEvent, type ReactNode } from "react";
-import type { Item as StockItem, Trait } from "../../schema/index.js";
+import { Fragment, useId, useState, type HTMLAttributes, type KeyboardEvent, type ReactNode } from "react";
+import type { Item as StockItem, Kind, Trait } from "../../schema/index.js";
 import { parseDamage } from "../../engine/damage.js";
 import { BASE_HP } from "../../engine/validate.js";
 import { itemBadges, itemUses } from "../items.js";
@@ -7,7 +7,7 @@ import { parseResistances } from "../resistances.js";
 import { damageIcon } from "./Resistances.js";
 import { StatBlock, type BlockGroup } from "./stats.js";
 import { Button } from "./Button.js";
-import { Icon, SettingIcon, Sign, title } from "./ui.js";
+import { Icon, SettingIcon, Sign, title, traitName } from "./ui.js";
 
 // The card components: one per kind of card, so a new card can't drift from
 // the others.
@@ -17,11 +17,12 @@ import { Icon, SettingIcon, Sign, title } from "./ui.js";
 //   ItemCard        Weapons, wearables, equipment and natural weapons
 //   ChassisCard     An AI Core's chassis: an Item card holding Physical
 //                   stats and Traits
-//   BackgroundCard  Kinds, Origins, Professions and Pasts
+//   KindCard        Kinds, in a framed card of their own
+//   BackgroundCard  Origins, Professions and Pasts
 //
 // These, the Character Creator's and Player Tools', are the reference for
 // every Strange Frontiers card. The site draws the same markup from
-// php/rpg/components/cards.php (sf_card_trait, sf_card_item,
+// php/rpg/components/cards.php (sf_card_trait, sf_card_item, sf_card_kind,
 // sf_card_background), styled by the same stylesheet: src/app/cards.css
 // here, css/sf-cards.css (a copy) there.
 //
@@ -603,5 +604,212 @@ export function BackgroundCard({
       </div>
       <div className="sf-card-body">{children}</div>
     </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// The Kind card: a thin gunmetal border running in to a 2px line in the
+// card's key color (silver for The Settled Systems, Dreft's green for
+// Isekai), with a four-pointed star in the top left corner, around a dark
+// field with a faint starfield and an eight-point compass. The site draws the
+// same markup from sf_card_kind() in php/rpg/components/cards.php.
+
+// The key color's gradient for the frame's line and star
+const KIND_KEY_STOPS = {
+  silver: ["#ffffff", "#c3c8cf", "#7b8189", "#e3e6ea", "#9aa0a8"],
+  green: ["#d4f2e0", "#6fb38d", "#2c5a44", "#a6dcbc", "#4f8f6d"],
+};
+
+// A four-pointed star
+const kindStar = (cx: number, cy: number, r: number) => {
+  const s = r * 0.22;
+  return `M${cx} ${cy - r}L${cx + s} ${cy - s}L${cx + r} ${cy}L${cx + s} ${cy + s}L${cx} ${cy + r}L${cx - s} ${cy + s}L${cx - r} ${cy}L${cx - s} ${cy - s}Z`;
+};
+
+// The compass: eight long diamonds meeting at the middle, each split down its
+// length into a light and a dark face. The four cardinal ones are as wide as
+// they are far from the middle at their widest, so they close over the
+// middle, and the four smaller intercardinal ones come out from under them.
+// The rose is turned 15° off north.
+const KIND_ROSE = (() => {
+  const c = 150;
+  const p = (x: number, y: number) => `${x.toFixed(1)} ${y.toFixed(1)}`;
+  const faces: { light: string; dark: string }[] = [];
+  for (const [offset, len, at, width] of [
+    [45, 96, 46, 13],
+    [0, 132, 24, 24],
+  ]) {
+    for (let i = 0; i < 4; i++) {
+      const a = ((offset + i * 90 - 90) * Math.PI) / 180;
+      const ux = Math.cos(a);
+      const uy = Math.sin(a);
+      const tip = p(c + ux * len, c + uy * len);
+      faces.push({
+        light: `M${c} ${c}L${p(c + ux * at + uy * width, c + uy * at - ux * width)}L${tip}Z`,
+        dark: `M${c} ${c}L${p(c + ux * at - uy * width, c + uy * at + ux * width)}L${tip}Z`,
+      });
+    }
+  }
+  return faces;
+})();
+
+// The starfield: one fixed sky (top %, left %, opacity, delay in seconds),
+// shifted by the Kind's id so cards side by side differ. The site's copy of
+// these lists is in sf_card_kind_stars().
+const KIND_DOTS = [[32.4,15.1,0.54,0.5],[53.6,36.6,0.28,3.6],[3.7,43.4,0.28,0.6],[42.5,82.7,0.31,1.6],[62.7,94.8,0.51,2.8],[97.6,4.7,0.64,2.0],[14.4,11.8,0.39,5.7],[18.1,58.2,0.54,2.6],[54.8,6.3,0.28,1.4],[68.0,42.8,0.39,4.1],[45.3,30.0,0.61,4.9],[24.4,57.4,0.49,6.1],[72.9,28.8,0.69,0.8],[41.8,75.7,0.32,3.4],[3.9,66.8,0.59,4.0],[87.5,31.4,0.56,4.2],[58.0,45.6,0.63,6.6],[47.4,66.4,0.28,4.9],[64.7,99.3,0.62,2.0],[38.6,66.9,0.26,3.2],[16.8,11.7,0.28,5.4],[12.9,24.8,0.43,6.1],[8.1,44.9,0.5,6.2],[81.9,86.4,0.38,2.9],[35.9,88.4,0.68,1.1],[17.6,23.2,0.36,3.4],[58.9,26.3,0.25,2.9],[36.9,56.6,0.68,4.8],[51.5,61.8,0.55,0.4],[90.0,78.0,0.64,5.6],[39.2,39.9,0.3,4.4],[6.2,6.7,0.34,1.1],[34.0,5.3,0.25,1.1],[10.1,36.4,0.26,6.1],[61.4,14.9,0.36,2.4],[36.4,12.3,0.63,7.0],[46.6,48.4,0.29,0.7],[34.3,26.5,0.62,1.1],[2.3,95.1,0.49,1.0],[54.3,2.7,0.49,6.8],[86.3,69.6,0.37,2.6],[16.7,77.2,0.49,5.5],[33.0,22.3,0.62,6.9],[85.3,80.6,0.62,5.2],[22.7,51.8,0.41,0.2],[2.8,27.9,0.37,4.8]];
+const KIND_TWINKLES = [[88.3,45.6,11.2],[91.0,88.2,4.4],[26.5,27.1,2.4],[25.2,60.4,10.8]];
+
+function KindStars({ seed }: { seed: string }) {
+  let sum = 0;
+  for (const ch of seed) sum += ch.charCodeAt(0);
+  const dy = (sum * 13) % 100;
+  const dx = (sum * 29) % 100;
+  const wrap = (v: number, d: number) => ((v + d) % 100).toFixed(1);
+  const inner = (v: number, d: number) => (((v - 8 + d) % 84) + 8).toFixed(1);
+  return (
+    <div className="sf-kind-stars">
+      {KIND_DOTS.map(([t, l, o, delay], i) => (
+        <span key={i} className={`sf-kind-dot${i % 5 === 0 ? " is-big" : ""}`} style={{ top: `${wrap(t, dy)}%`, left: `${wrap(l, dx)}%`, opacity: o, animationDelay: `${delay}s` }} />
+      ))}
+      {KIND_TWINKLES.map(([t, l, delay], i) => (
+        <span key={i} className="sf-kind-twinkle" style={{ top: `${inner(t, dy)}%`, left: `${inner(l, dx)}%`, animationDelay: `${delay}s` }} />
+      ))}
+    </div>
+  );
+}
+
+// One corner of the frame, drawn top left; CSS turns it for the others. The
+// line runs 10px in from the card's edge. At the top left it steps in around
+// the star on an 18px arc; the other three corners are simply rounded.
+function KindCorner({ where, gradient }: { where: "tl" | "tr" | "bl" | "br"; gradient: string }) {
+  const star = where === "tl";
+  return (
+    <svg className={`sf-kind-corner sf-kind-corner--${where}`} viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+      <path fill="none" stroke={`url(#${gradient})`} strokeWidth="2" d={star ? "M100 10H28A18 18 0 0 1 10 28V100" : "M100 10H16A6 6 0 0 0 10 16V100"} />
+      {star && <path fill={`url(#${gradient})`} d={kindStar(13.5, 13.5, 8)} />}
+    </svg>
+  );
+}
+
+const KIND_STAT_GROUPS = [
+  ["Physical", ["endurance", "power", "grace"]],
+  ["Social", ["empathy", "persuasion", "demeanor"]],
+  ["Mental", ["logic", "intuition", "memory"]],
+] as const;
+
+/**
+ * A Kind's card: its name and summary, each focus stat's bonus and maximum,
+ * the Traits every character of the Kind holds, its features, then "Kind ✦"
+ * and its setting at the foot.
+ *
+ * lore    Its lore line under the summary, as in the popup.
+ * select  A card to pick in a radio group, clickable and keyboard-operable,
+ *         ringed in green while picked (.selected).
+ */
+export function KindCard({
+  kind: k,
+  lore = false,
+  select,
+  className = "",
+}: {
+  kind: Kind;
+  lore?: boolean;
+  select?: { selected: boolean; onSelect: () => void };
+  className?: string;
+}) {
+  const isekai = k.plane === "isekai";
+  const key = isekai ? "green" : "silver";
+  const gradient = `sf-kind-${key}-${useId().replace(/[^a-z0-9]/gi, "")}`;
+  const classes = `sf-kind-card${isekai ? " sf-kind-card--dreft" : ""}${select ? ` is-selectable${select.selected ? " selected" : ""}` : ""}${className ? ` ${className}` : ""}`;
+  const onKey = (e: KeyboardEvent) => {
+    if (select && (e.key === "Enter" || e.key === " ")) {
+      e.preventDefault();
+      select.onSelect();
+    }
+  };
+  return (
+    <article
+      className={classes}
+      {...(select ? { role: "radio", "aria-checked": select.selected, "aria-label": k.name, tabIndex: 0, onClick: select.onSelect, onKeyDown: onKey } : {})}
+    >
+      <div className="sf-kind-panel">
+        <svg className="sf-kind-defs" aria-hidden="true" focusable="false">
+          <defs>
+            <linearGradient id={gradient} gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="100" y2="100">
+              {KIND_KEY_STOPS[key].map((c, i) => (
+                <stop key={i} offset={[0, 0.35, 0.6, 0.85, 1][i]} stopColor={c} />
+              ))}
+            </linearGradient>
+          </defs>
+        </svg>
+        <div className="sf-kind-field" aria-hidden="true">
+          <KindStars seed={k.id} />
+          <svg className="sf-kind-emblem" viewBox="0 0 300 300" aria-hidden="true" focusable="false">
+            <circle className="sf-kind-rose-ring" cx="150" cy="150" r="142" strokeWidth="4" />
+            <g transform="rotate(15 150 150)">
+              {KIND_ROSE.map((f, i) => (
+                <Fragment key={i}>
+                  <path className="sf-kind-rose-light" d={f.light} />
+                  <path className="sf-kind-rose-dark" d={f.dark} />
+                </Fragment>
+              ))}
+            </g>
+          </svg>
+        </div>
+        {(["tl", "tr", "bl", "br"] as const).map((w) => (
+          <KindCorner key={w} where={w} gradient={gradient} />
+        ))}
+        <span className="sf-kind-edge sf-kind-edge--top" />
+        <span className="sf-kind-edge sf-kind-edge--right" />
+        <span className="sf-kind-edge sf-kind-edge--bottom" />
+        <span className="sf-kind-edge sf-kind-edge--left" />
+        <div className="sf-kind-content">
+          <h3 className="sf-kind-name">{k.name}</h3>
+          <p className="sf-kind-summary">{k.summary}</p>
+          {lore && k.lore && <p className="sf-kind-lore">{k.lore}</p>}
+          {k.stats && (
+            <div className="sf-kind-stats">
+              {KIND_STAT_GROUPS.map(([group, stats]) => (
+                <div key={group}>
+                  <div className="sf-kind-label">{group}</div>
+                  {stats.map((s) => (
+                    <div key={s} className="sf-kind-stat">
+                      <abbr title={title(s)}>{title(s.slice(0, 3))}</abbr>
+                      <span className="sf-kind-num">
+                        +{k.stats[s]?.bonus ?? 0}
+                        <span>/{k.stats[s]?.max ?? 0}</span>
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          )}
+          {k.grants.length > 0 && (
+            <div className="sf-kind-grants">
+              <span className="sf-kind-label">Grants</span>
+              {k.grants.map((g) => (
+                <span key={g.trait} className="sf-kind-chip">
+                  {traitName(g.trait)}
+                </span>
+              ))}
+            </div>
+          )}
+          {k.features.length > 0 && (
+            <ul className="sf-kind-features">
+              {k.features.map((f) => (
+                <li key={f.name}>
+                  <strong>{f.name}.</strong> {f.description}
+                </li>
+              ))}
+            </ul>
+          )}
+          <p className="sf-kind-foot">
+            Kind<span aria-hidden="true">✦</span>
+            {isekai ? "Isekai" : "The Settled Systems"}
+          </p>
+        </div>
+      </div>
+    </article>
   );
 }
