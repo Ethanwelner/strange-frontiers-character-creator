@@ -453,18 +453,15 @@
     color: var(--kind-text);
 }
 
-/* The gunmetal plate: a thin band around the field that stops 40px short
+/* The plate: a thin band around the field that stops 40px short
    of the top left corner on both edges, leaving the field's cut-out and
    the star in it clear */
 .sf-kind-plate {
     position: absolute;
     inset: 0;
     border-radius: 0 12px 12px;
-    background:
-        repeating-linear-gradient(90deg, rgb(255 255 255 / 3%) 0 1px, transparent 1px 3px),
-        linear-gradient(145deg, rgb(255 255 255 / 22%), transparent 30%, transparent 70%, rgb(255 255 255 / 12%)),
-        linear-gradient(160deg, #626466, #343638 45%, #292b2c 60%, #505254);
-    box-shadow: inset 0 1px 0 rgb(255 255 255 / 25%);
+    /* Solid Gray, so a page of cards stays calm */
+    background: #505254;
     -webkit-mask: linear-gradient(to right, transparent 40px, #000 40px), linear-gradient(to bottom, transparent 40px, #000 40px);
     mask: linear-gradient(to right, transparent 40px, #000 40px), linear-gradient(to bottom, transparent 40px, #000 40px);
 }
