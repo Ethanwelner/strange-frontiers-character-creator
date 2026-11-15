@@ -463,8 +463,8 @@
     position: absolute;
     inset: 0;
     /* Curved about the same center as the frame line and the field inside
-       it (15px, 6px in), so the band runs an even width around the corners */
-    border-radius: 0 21px 21px;
+       it (17px, 6px in), so the band runs an even width around the corners */
+    border-radius: 0 23px 23px;
     /* Solid Gray, so a page of cards stays calm */
     background: var(--sf-gray-500);
     -webkit-mask: linear-gradient(to right, transparent 40px, #000 40px), linear-gradient(to bottom, transparent 40px, #000 40px);
@@ -484,7 +484,7 @@
 .sf-kind-field {
     position: absolute;
     inset: 6px;
-    border-radius: 0 15px 15px;
+    border-radius: 0 17px 17px;
     background: var(--kind-field);
     -webkit-mask: radial-gradient(circle at 0 0, transparent 24px, #000 24.5px);
     mask: radial-gradient(circle at 0 0, transparent 24px, #000 24.5px);

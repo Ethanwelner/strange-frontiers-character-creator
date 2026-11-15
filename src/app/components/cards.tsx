@@ -758,7 +758,7 @@ function KindCorner({ where, gradient }: { where: "tl" | "tr" | "bl" | "br"; gra
   const star = where === "tl";
   return (
     <svg className={`sf-kind-corner sf-kind-corner--${where}`} viewBox="0 0 100 100" aria-hidden="true" focusable="false">
-      <path fill="none" stroke="currentColor" strokeWidth="2" d={star ? "M100 6H30A24 24 0 0 1 6 30V100" : "M100 6H21A15 15 0 0 0 6 21V100"} />
+      <path fill="none" stroke="currentColor" strokeWidth="2" d={star ? "M100 6H30A24 24 0 0 1 6 30V100" : "M100 6H23A17 17 0 0 0 6 23V100"} />
       {star && <path fill={`url(#${gradient})`} d={kindStar(13, 13, 7.5)} />}
     </svg>
   );
