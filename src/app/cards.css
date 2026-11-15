@@ -418,7 +418,7 @@
    border running in to a 2px line in the card's key color (silver, or
    Dreft's green for Isekai), with a large cut-out at the top left holding
    a star, around a
-   dark field with a starfield and a compass. The frame is four corner pieces
+   dark field with a faded sun and planets. The frame is four corner pieces
    (one SVG, turned; only the top left has a star) joined by straight edges,
    so the card grows with its text. ---- */
 
@@ -481,11 +481,52 @@
     -webkit-mask: radial-gradient(circle at 0 0, transparent 24px, #000 24.5px);
     mask: radial-gradient(circle at 0 0, transparent 24px, #000 24.5px);
     overflow: hidden;
+    /* So the sky can size itself by the field's width (cqw) */
+    container-type: inline-size;
 }
 
+/* The sky: a faded sun half below the bottom of the field, rays fanning
+   out from its middle to the top of the card, and a column of
+   planets above it. The planets are the field's own color, so they show only
+   by blocking the rays and by the crescent the sun lights along their bottom
+   edge, thin at the sides and --lit thick at the bottom. All of it is
+   sized in the field's width (cqw) and stacked up from the sun, so the gaps
+   between them stay the same on cards of any height */
+.sf-kind-sky { position: absolute; inset: 0; pointer-events: none; }
+.sf-kind-rays {
+    position: absolute;
+    inset: 0;
+    background: repeating-conic-gradient(from 0deg at 50% 100%, rgb(255 255 255 / 4.5%) 0 .6deg, transparent .6deg 4deg);
+}
+.sf-kind-sun {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: 44cqw;
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--sf-gray-200) 10%, var(--sf-gray-900));
+    box-shadow: 0 0 40px 6px rgb(255 255 255 / 4%);
+}
+.sf-kind-planet {
+    position: absolute;
+    left: 50%;
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: var(--sf-gray-900);
+    box-shadow: inset 0 calc(-1 * var(--lit, 2px)) 0 0 color-mix(in srgb, var(--sf-gray-200) 22%, transparent);
+}
+
+/* ---- The other Kind card backgrounds, kept as options (KindCard's
+   `background`; sf_card_kind()'s): "compass", an eight-point compass over a
+   faint starfield, "planet", a dark planet's disc under a dense starfield,
+   and "orbits", a solar system's rings over the faint starfield, the
+   default. The sun and planets ("sun") are above ---- */
+
 /* The compass: two palette steps up from the field (Card Edge), Panel and
-   Card, so no part of it is darker than its background. The same on
-   Isekai cards: Dreft read too bright */
+   Card, so no part of it is darker than its background */
 .sf-kind-emblem {
     position: absolute;
     top: 50%;
@@ -495,12 +536,62 @@
     transform: translate(-50%, -50%);
     pointer-events: none;
 }
-.sf-kind-rose-light { fill: var(--sf-gray-700); }
-.sf-kind-rose-dark { fill: var(--sf-gray-800); }
-.sf-kind-rose-ring { fill: none; stroke: var(--sf-gray-800); }
+.sf-kind-rose-light { fill: color-mix(in srgb, var(--sf-gray-700) 75%, var(--sf-gray-900)); }
+.sf-kind-rose-dark { fill: color-mix(in srgb, var(--sf-gray-800) 75%, var(--sf-gray-900)); }
+.sf-kind-rose-ring { fill: none; stroke: color-mix(in srgb, var(--sf-gray-800) 75%, var(--sf-gray-900)); }
 
-/* The starfield, after the site's night sky (css/rpg-night.css): dots that
-   pulse slowly and a few four-pointed twinkles that flare now and then */
+/* The planet: a dark disc a little narrower than the card, centered in the
+   lower part of the field behind the content, so its curve and both sides
+   show before it runs off the bottom. Its edge is a faded silver line with a
+   faint glow inside along the rim, so it reads as a sphere. It covers the
+   stars behind it */
+.sf-kind-globe {
+    position: absolute;
+    top: 58%;
+    left: 50%;
+    width: 86%;
+    aspect-ratio: 1;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: var(--sf-gray-900);
+    border: 1.5px solid color-mix(in srgb, var(--sf-gray-200) 30%, transparent);
+    box-shadow:
+        inset 0 0 18px -6px color-mix(in srgb, var(--sf-gray-200) 22%, transparent),
+        0 0 10px color-mix(in srgb, var(--sf-gray-200) 9%, transparent);
+    pointer-events: none;
+}
+
+/* The orbits: the solar system's rings, sun and planets in one solid faded
+   silver (mixed into the field's color, so the rings don't show through the
+   planets), in an SVG twice the field's width centered on it, its lines 1px
+   whatever its size */
+.sf-kind-orbits {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200cqw;
+    height: 200cqw;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+.sf-kind-orbits { --orbit: color-mix(in srgb, var(--sf-gray-200) 18%, var(--sf-gray-900)); }
+.sf-kind-orbit { fill: none; stroke: var(--orbit); stroke-width: 1px; vector-effect: non-scaling-stroke; }
+.sf-kind-orbit-sun, .sf-kind-orbit-planet { fill: var(--orbit); }
+/* Each planet circles the sun, counterclockwise, in its own year (set on it
+   as animation-duration) */
+.sf-kind-orbit-turn {
+    transform-box: view-box;
+    transform-origin: 100px 100px;
+    animation: sf-kind-orbit-turn 60s linear infinite;
+}
+@keyframes sf-kind-orbit-turn { to { transform: rotate(-360deg); } }
+@media (prefers-reduced-motion: reduce) {
+    .sf-kind-orbit-turn { animation: none; }
+}
+
+/* The starfields, after the site's night sky (css/rpg-night.css): dots that
+   pulse slowly and a few four-pointed twinkles that flare now and then.
+   The planet's dense one has larger dots */
 .sf-kind-stars { position: absolute; inset: 0; pointer-events: none; }
 .sf-kind-dot {
     position: absolute;
@@ -511,6 +602,8 @@
     animation: sf-kind-pulse 6s ease-in-out infinite;
 }
 .sf-kind-dot.is-big { width: 2px; height: 2px; }
+.sf-kind-card--bg-planet .sf-kind-dot { width: 1.5px; height: 1.5px; }
+.sf-kind-card--bg-planet .sf-kind-dot.is-big { width: 2.5px; height: 2.5px; }
 .sf-kind-twinkle {
     position: absolute;
     width: 7px;
@@ -594,8 +687,9 @@
 }
 
 .sf-kind-summary {
-    margin: 0 0 16px;
+    margin: 0;
     font-style: italic;
+    backdrop-filter: blur(.5px);
     text-align: center;
     color: var(--kind-text);
 }
@@ -614,15 +708,15 @@
 .sf-kind-stats {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-bottom: 16px;
-    padding: 12px 0;
-    border-block: 1px solid var(--key-line);
+    gap: 12px 48px;
+    margin: 24px -15px;
+    padding: 8px 16px;
+    backdrop-filter: blur(.5px);
     font-size: 1rem;
 }
 /* On a narrow card, the groups stack */
 @container (max-width: 280px) {
-    .sf-kind-stats { gap: 8px; font-size: .875rem; }
+    .sf-kind-stats { gap: 8px 16px; font-size: .875rem; }
 }
 @container (max-width: 230px) {
     .sf-kind-stats { grid-template-columns: 1fr; max-width: 180px; margin-inline: auto; }
@@ -639,7 +733,7 @@
 /* Its Grants are the cards' usual accent chips */
 .sf-kind-grants .sf-chip { margin: 0; }
 .sf-kind-grants .sf-kind-label { margin: 0 4px 0 0; }
-.sf-kind-features { margin: 0 0 18px; padding: 0; list-style: none; }
+.sf-kind-features { margin: 0 0 18px; padding: 0; list-style: none; backdrop-filter: blur(.5px); }
 .sf-kind-features li { margin-bottom: 8px; }
 .sf-kind-features strong { color: var(--key-soft); }
 
