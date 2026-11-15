@@ -220,6 +220,8 @@
        and a lighter bracket at each corner, laid over the border */
     &.sf-trait-card--condition {
         --card-edge: var(--sf-gray-400);
+        /* Square corners, so the brackets read as corners */
+        border-radius: 0;
         --bracket: var(--sf-gray-200);
         /* The top two cross the light bar, so they're lighter */
         --bracket-top: var(--sf-gray-50);
@@ -232,12 +234,12 @@
         > .sf-card-bar {
             position: relative;
             margin: -1px calc(-1rem - 1px) 0;
-            border-radius: 8px 8px 0 0;
+            border-radius: 0;
             background-color: var(--sf-gray-200);
             color: var(--sf-gray-800);
         }
 
-        /* The brackets: a stroke that follows the card's rounded corners,
+        /* The brackets: a stroke along the card's square corners,
            cut down to --bracket-size at each corner and centered on the 1px
            border's line, half outside it and half in. The card draws the bottom two, the bar (which
            reaches out over the border) the top two */
@@ -250,7 +252,7 @@
         }
         &::before {
             inset: calc(-.5px - var(--bracket-width) / 2);
-            border-radius: calc(7.5px + var(--bracket-width) / 2);
+            border-radius: 0;
             -webkit-mask:
                 var(--c) bottom left / var(--bracket-size) var(--bracket-size),
                 var(--c) bottom right / var(--bracket-size) var(--bracket-size);
@@ -265,7 +267,7 @@
             height: var(--bracket-size);
             border-color: var(--bracket-top);
             border-bottom: 0;
-            border-radius: calc(7.5px + var(--bracket-width) / 2) calc(7.5px + var(--bracket-width) / 2) 0 0;
+            border-radius: 0;
             -webkit-mask:
                 var(--c) top left / var(--bracket-size) var(--bracket-size),
                 var(--c) top right / var(--bracket-size) var(--bracket-size);
@@ -383,9 +385,9 @@
         border-radius: 7px;
     }
 
-    /* A condition's bar covers the border, so it takes the card's own radius */
+    /* A condition's bar covers the border and its corners are square */
     &.sf-trait-card--condition > .sf-card-bar {
-        border-radius: 8px;
+        border-radius: 0;
     }
 
     > .sf-card-body {
