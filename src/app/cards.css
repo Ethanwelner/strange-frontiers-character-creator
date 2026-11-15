@@ -435,8 +435,13 @@
     --key-soft: #e6e9ed;
     --key-line: rgb(180 186 194 / 35%);
     --key-name: linear-gradient(180deg, #ffffff 10%, #c9ced5 50%, #7b8189 90%);
-    --kind-key: linear-gradient(90deg, var(--key-mid), var(--key-light) 25%, var(--key-hi) 50%, var(--key-light) 75%, var(--key-mid));
-    --kind-key-v: linear-gradient(180deg, var(--key-mid), var(--key-light) 25%, var(--key-hi) 50%, var(--key-light) 75%, var(--key-mid));
+    /* The frame line's gradient, quieter than the text's key colors (the
+       corner star's SVG gradient matches it: KIND_KEY_STOPS) */
+    --line-hi: #b9bec5;
+    --line-light: #8d939b;
+    --line-mid: #5d636b;
+    --kind-key: linear-gradient(90deg, var(--line-mid), var(--line-light) 25%, var(--line-hi) 50%, var(--line-light) 75%, var(--line-mid));
+    --kind-key-v: linear-gradient(180deg, var(--line-mid), var(--line-light) 25%, var(--line-hi) 50%, var(--line-light) 75%, var(--line-mid));
     --kind-text: #d9dcdf;
     --kind-muted: #9a9fa6;
     --kind-shadow: drop-shadow(0 0 1px rgb(0 0 0 / 80%)) drop-shadow(0 14px 18px rgb(0 0 0 / 40%));
@@ -447,7 +452,7 @@
     color: var(--kind-text);
 }
 
-/* The gunmetal plate: a thin band around the field that stops 56px short
+/* The gunmetal plate: a thin band around the field that stops 40px short
    of the top left corner on both edges, leaving the field's cut-out and
    the star in it clear */
 .sf-kind-plate {
@@ -459,8 +464,8 @@
         linear-gradient(145deg, rgb(255 255 255 / 22%), transparent 30%, transparent 70%, rgb(255 255 255 / 12%)),
         linear-gradient(160deg, #6a6d72, #3b3d41 45%, #2c2e31 60%, #55585d);
     box-shadow: inset 0 1px 0 rgb(255 255 255 / 25%);
-    -webkit-mask: linear-gradient(to right, transparent 56px, #000 56px), linear-gradient(to bottom, transparent 56px, #000 56px);
-    mask: linear-gradient(to right, transparent 56px, #000 56px), linear-gradient(to bottom, transparent 56px, #000 56px);
+    -webkit-mask: linear-gradient(to right, transparent 40px, #000 40px), linear-gradient(to bottom, transparent 40px, #000 40px);
+    mask: linear-gradient(to right, transparent 40px, #000 40px), linear-gradient(to bottom, transparent 40px, #000 40px);
 }
 
 .sf-kind-panel {
@@ -471,7 +476,7 @@
 }
 
 /* The dark field inside the key-colored line, 6px in from the card's edge.
-   A 36px quarter-circle is cut out of its top left corner (about the
+   A 24px quarter-circle is cut out of its top left corner (about the
    corner itself), and its other corners round off with the line's */
 .sf-kind-field {
     position: absolute;
@@ -479,8 +484,8 @@
     border-radius: 0 6px 6px;
     background: radial-gradient(ellipse at 50% 42%, #2a2b2e 0%, #18191b 55%, #0d0e0f 100%);
     box-shadow: inset 0 0 18px rgb(0 0 0 / 70%);
-    -webkit-mask: radial-gradient(circle at 0 0, transparent 36px, #000 36.5px);
-    mask: radial-gradient(circle at 0 0, transparent 36px, #000 36.5px);
+    -webkit-mask: radial-gradient(circle at 0 0, transparent 24px, #000 24.5px);
+    mask: radial-gradient(circle at 0 0, transparent 24px, #000 24.5px);
     overflow: hidden;
 }
 
@@ -634,17 +639,10 @@
 .sf-kind-num { font-variant-numeric: tabular-nums; color: var(--key-soft); }
 .sf-kind-num span { color: var(--kind-muted); }
 
-.sf-kind-grants { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 14px; }
+.sf-kind-grants { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; margin-bottom: 14px; }
+/* Its Grants are the cards' usual accent chips */
+.sf-kind-grants .sf-chip { margin: 0; }
 .sf-kind-grants .sf-kind-label { margin: 0 4px 0 0; }
-.sf-kind-chip {
-    padding: 1px 10px;
-    border: 1px solid var(--key-mid);
-    border-radius: 999px;
-    background: linear-gradient(180deg, color-mix(in srgb, var(--key-light) 18%, transparent), color-mix(in srgb, var(--key-mid) 12%, transparent));
-    font-size: .75rem;
-    color: var(--key-soft);
-}
-
 .sf-kind-features { margin: 0 0 18px; padding: 0; list-style: none; }
 .sf-kind-features li { margin-bottom: 8px; }
 .sf-kind-features strong { color: var(--key-soft); }
@@ -671,6 +669,9 @@
     --key-hi: #d4f2e0;
     --key-light: #8fcfaa;
     --key-mid: #4f8f6d;
+    --line-hi: #8fbfa3;
+    --line-light: #57906f;
+    --line-mid: #2f5745;
     --key-label: #7fbf98;
     --key-soft: #c9ead6;
     --key-line: rgb(127 191 152 / 35%);

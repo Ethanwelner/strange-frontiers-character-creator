@@ -618,8 +618,8 @@ export function BackgroundCard({
 
 // The key color's gradient for the frame's line and star
 const KIND_KEY_STOPS = {
-  silver: ["#ffffff", "#c3c8cf", "#7b8189", "#e3e6ea", "#9aa0a8"],
-  green: ["#d4f2e0", "#6fb38d", "#2c5a44", "#a6dcbc", "#4f8f6d"],
+  silver: ["#b9bec5", "#8d939b", "#5d636b", "#a3a8af", "#757b83"],
+  green: ["#8fbfa3", "#57906f", "#2a5040", "#77a88b", "#41735a"],
 };
 
 // A four-pointed star
@@ -682,15 +682,15 @@ function KindStars({ seed }: { seed: string }) {
 
 // One corner of the frame, drawn top left; CSS turns it for the others. The
 // line runs 6px in from the card's edge, along the field's edge. At the top
-// left it follows a 36px quarter-circle cut out of the field, with the star
+// left it follows a 24px quarter-circle cut out of the field, with the star
 // in the cut-out (the gunmetal stops short of it); the other three corners
 // are simply rounded.
 function KindCorner({ where, gradient }: { where: "tl" | "tr" | "bl" | "br"; gradient: string }) {
   const star = where === "tl";
   return (
     <svg className={`sf-kind-corner sf-kind-corner--${where}`} viewBox="0 0 100 100" aria-hidden="true" focusable="false">
-      <path fill="none" stroke={`url(#${gradient})`} strokeWidth="2" d={star ? "M100 6H42A36 36 0 0 1 6 42V100" : "M100 6H12A6 6 0 0 0 6 12V100"} />
-      {star && <path fill={`url(#${gradient})`} d={kindStar(17, 17, 11)} />}
+      <path fill="none" stroke={`url(#${gradient})`} strokeWidth="2" d={star ? "M100 6H30A24 24 0 0 1 6 30V100" : "M100 6H12A6 6 0 0 0 6 12V100"} />
+      {star && <path fill={`url(#${gradient})`} d={kindStar(13, 13, 7.5)} />}
     </svg>
   );
 }
@@ -794,9 +794,9 @@ export function KindCard({
             <div className="sf-kind-grants">
               <span className="sf-kind-label">Grants</span>
               {k.grants.map((g) => (
-                <span key={g.trait} className="sf-kind-chip">
+                <CardChip key={g.trait} tone="accent">
                   {traitName(g.trait)}
-                </span>
+                </CardChip>
               ))}
             </div>
           )}
