@@ -440,8 +440,8 @@
        corner star's SVG gradient matches it: KIND_KEY_STOPS) */
     /* The frame line: solid Medium Gray (#949798) */
     --kind-line: var(--sf-gray-300);
-    /* The field behind the content: Card Edge, or Deep Dreft on Isekai
-       cards (below). Everything drawn on it is mixed into this color */
+    /* The field behind the content (Card Edge). Everything drawn on it is
+       mixed into this color */
     --kind-field: var(--sf-gray-900);
     --kind-text: var(--sf-gray-100);
     --kind-muted: var(--sf-gray-300);
@@ -581,6 +581,8 @@
     pointer-events: none;
 }
 .sf-kind-orbits { --orbit: color-mix(in srgb, var(--sf-gray-200) 18%, var(--kind-field)); }
+/* On Isekai cards the solar system is Deep Dreft */
+.sf-kind-card--dreft .sf-kind-orbits { --orbit: var(--sf-green-950); }
 .sf-kind-orbit { fill: none; stroke: var(--orbit); stroke-width: 1px; vector-effect: non-scaling-stroke; }
 .sf-kind-orbit-sun, .sf-kind-orbit-planet { fill: var(--orbit); }
 /* Each planet circles the sun, counterclockwise, in its own year (set on it
@@ -761,7 +763,6 @@
 /* Isekai's cards key on the palette's greens: Dreft (#1c372b) and Green
    (#47b767) */
 .sf-kind-card--dreft {
-    --kind-field: var(--sf-green-950);
     --kind-line: var(--sf-green-700);
     --key-label: var(--sf-green-500);
     --key-line: var(--sf-green-900);
