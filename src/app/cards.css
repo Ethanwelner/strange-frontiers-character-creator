@@ -210,13 +210,34 @@
         min-width: 0;
     }
 
-    /* Conditions in grays: a mid gray edge, a light gray bar, dark text */
+    /* Conditions in grays: a mid gray edge, a light gray bar, dark text,
+       and a lighter bracket at each corner, just outside the card */
     &.sf-trait-card--condition {
         --card-edge: var(--sf-gray-400);
+        --bracket: var(--sf-gray-200);
+        --bracket-size: 14px;
+        --bracket-width: 2px;
 
         > .sf-card-bar {
             background-color: var(--sf-gray-200);
             color: var(--sf-gray-800);
+        }
+
+        &::before {
+            content: "";
+            position: absolute;
+            inset: -6px;
+            pointer-events: none;
+            --h: linear-gradient(var(--bracket), var(--bracket)) no-repeat;
+            background:
+                var(--h) top left / var(--bracket-size) var(--bracket-width),
+                var(--h) top left / var(--bracket-width) var(--bracket-size),
+                var(--h) top right / var(--bracket-size) var(--bracket-width),
+                var(--h) top right / var(--bracket-width) var(--bracket-size),
+                var(--h) bottom left / var(--bracket-size) var(--bracket-width),
+                var(--h) bottom left / var(--bracket-width) var(--bracket-size),
+                var(--h) bottom right / var(--bracket-size) var(--bracket-width),
+                var(--h) bottom right / var(--bracket-width) var(--bracket-size);
         }
     }
 }
