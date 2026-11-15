@@ -232,8 +232,8 @@
         }
 
         /* The brackets: a stroke that follows the card's rounded corners,
-           cut down to --bracket-size at each corner and set half outside the
-           card's edge, half in. The card draws the bottom two, the bar (which
+           cut down to --bracket-size at each corner and centered on the 1px
+           border's line, half outside it and half in. The card draws the bottom two, the bar (which
            reaches out over the border) the top two */
         &::before,
         > .sf-card-bar::before {
@@ -243,8 +243,8 @@
             pointer-events: none;
         }
         &::before {
-            inset: calc(-1px - var(--bracket-width) / 2);
-            border-radius: calc(12px + var(--bracket-width) / 2);
+            inset: calc(-.5px - var(--bracket-width) / 2);
+            border-radius: calc(11.5px + var(--bracket-width) / 2);
             -webkit-mask:
                 var(--c) bottom left / var(--bracket-size) var(--bracket-size),
                 var(--c) bottom right / var(--bracket-size) var(--bracket-size);
@@ -253,13 +253,13 @@
                 var(--c) bottom right / var(--bracket-size) var(--bracket-size);
         }
         > .sf-card-bar::before {
-            top: calc(var(--bracket-width) / -2);
-            left: calc(var(--bracket-width) / -2);
-            right: calc(var(--bracket-width) / -2);
+            top: calc(.5px - var(--bracket-width) / 2);
+            left: calc(.5px - var(--bracket-width) / 2);
+            right: calc(.5px - var(--bracket-width) / 2);
             height: var(--bracket-size);
             border-color: var(--bracket-top);
             border-bottom: 0;
-            border-radius: calc(12px + var(--bracket-width) / 2) calc(12px + var(--bracket-width) / 2) 0 0;
+            border-radius: calc(11.5px + var(--bracket-width) / 2) calc(11.5px + var(--bracket-width) / 2) 0 0;
             -webkit-mask:
                 var(--c) top left / var(--bracket-size) var(--bracket-size),
                 var(--c) top right / var(--bracket-size) var(--bracket-size);
