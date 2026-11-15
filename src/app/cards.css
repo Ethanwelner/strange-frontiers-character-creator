@@ -696,10 +696,10 @@
 .sf-kind-stats {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 12px 36px;
-    margin-bottom: 16px;
-    padding: 12px 0;
-    border-block: 1px solid var(--key-line);
+    gap: 12px 48px;
+    margin: 24px -15px;
+    padding: 8px 16px;
+    backdrop-filter: blur(.5px);
     font-size: 1rem;
 }
 /* On a narrow card, the groups stack */
