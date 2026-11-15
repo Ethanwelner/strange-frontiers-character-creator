@@ -614,7 +614,7 @@
 .sf-kind-stats {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 12px 24px;
+    gap: 12px 32px;
     margin-bottom: 16px;
     padding: 12px 0;
     border-block: 1px solid var(--key-line);
