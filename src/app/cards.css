@@ -440,6 +440,9 @@
        corner star's SVG gradient matches it: KIND_KEY_STOPS) */
     /* The frame line: solid Medium Gray (#949798) */
     --kind-line: var(--sf-gray-300);
+    /* The field behind the content: Card Edge, or Deep Dreft on Isekai
+       cards (below). Everything drawn on it is mixed into this color */
+    --kind-field: var(--sf-gray-900);
     --kind-text: var(--sf-gray-100);
     --kind-muted: var(--sf-gray-300);
     /* The other cards' diffuse floating shadow (box-shadow: 0 4px 10px
@@ -480,7 +483,7 @@
     position: absolute;
     inset: 6px;
     border-radius: 0 6px 6px;
-    background: var(--sf-gray-900);
+    background: var(--kind-field);
     -webkit-mask: radial-gradient(circle at 0 0, transparent 24px, #000 24.5px);
     mask: radial-gradient(circle at 0 0, transparent 24px, #000 24.5px);
     overflow: hidden;
@@ -509,7 +512,7 @@
     aspect-ratio: 1;
     transform: translate(-50%, -50%);
     border-radius: 50%;
-    background: color-mix(in srgb, var(--sf-gray-200) 10%, var(--sf-gray-900));
+    background: color-mix(in srgb, var(--sf-gray-200) 10%, var(--kind-field));
     box-shadow: 0 0 40px 6px rgb(255 255 255 / 4%);
 }
 .sf-kind-planet {
@@ -518,7 +521,7 @@
     aspect-ratio: 1;
     transform: translate(-50%, -50%);
     border-radius: 50%;
-    background: var(--sf-gray-900);
+    background: var(--kind-field);
     box-shadow: inset 0 calc(-1 * var(--lit, 2px)) 0 0 color-mix(in srgb, var(--sf-gray-200) 22%, transparent);
 }
 
@@ -539,9 +542,9 @@
     transform: translate(-50%, -50%);
     pointer-events: none;
 }
-.sf-kind-rose-light { fill: color-mix(in srgb, var(--sf-gray-700) 75%, var(--sf-gray-900)); }
-.sf-kind-rose-dark { fill: color-mix(in srgb, var(--sf-gray-800) 75%, var(--sf-gray-900)); }
-.sf-kind-rose-ring { fill: none; stroke: color-mix(in srgb, var(--sf-gray-800) 75%, var(--sf-gray-900)); }
+.sf-kind-rose-light { fill: color-mix(in srgb, var(--sf-gray-700) 75%, var(--kind-field)); }
+.sf-kind-rose-dark { fill: color-mix(in srgb, var(--sf-gray-800) 75%, var(--kind-field)); }
+.sf-kind-rose-ring { fill: none; stroke: color-mix(in srgb, var(--sf-gray-800) 75%, var(--kind-field)); }
 
 /* The planet: a dark disc a little narrower than the card, centered in the
    lower part of the field behind the content, so its curve and both sides
@@ -556,7 +559,7 @@
     aspect-ratio: 1;
     transform: translateX(-50%);
     border-radius: 50%;
-    background: var(--sf-gray-900);
+    background: var(--kind-field);
     border: 1.5px solid color-mix(in srgb, var(--sf-gray-200) 30%, transparent);
     box-shadow:
         inset 0 0 18px -6px color-mix(in srgb, var(--sf-gray-200) 22%, transparent),
@@ -577,7 +580,7 @@
     transform: translate(-50%, -50%);
     pointer-events: none;
 }
-.sf-kind-orbits { --orbit: color-mix(in srgb, var(--sf-gray-200) 18%, var(--sf-gray-900)); }
+.sf-kind-orbits { --orbit: color-mix(in srgb, var(--sf-gray-200) 18%, var(--kind-field)); }
 .sf-kind-orbit { fill: none; stroke: var(--orbit); stroke-width: 1px; vector-effect: non-scaling-stroke; }
 .sf-kind-orbit-sun, .sf-kind-orbit-planet { fill: var(--orbit); }
 /* Each planet circles the sun, counterclockwise, in its own year (set on it
@@ -758,6 +761,7 @@
 /* Isekai's cards key on the palette's greens: Dreft (#1c372b) and Green
    (#47b767) */
 .sf-kind-card--dreft {
+    --kind-field: var(--sf-green-950);
     --kind-line: var(--sf-green-700);
     --key-label: var(--sf-green-500);
     --key-line: var(--sf-green-900);
