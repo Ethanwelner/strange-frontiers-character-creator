@@ -486,7 +486,8 @@
 }
 
 /* The compass: two palette steps up from the field (Card Edge), Panel and
-   Card, so no part of it is darker than its background */
+   Card, so no part of it is darker than its background. The same on
+   Isekai cards: Dreft read too bright */
 .sf-kind-emblem {
     position: absolute;
     top: 50%;
@@ -667,8 +668,6 @@
     --key-line: #1c372b;
     --key-name: #47b767;
 }
-.sf-kind-card--dreft .sf-kind-rose-light { fill: #1c372b; }
-.sf-kind-card--dreft .sf-kind-rose-ring { stroke: #1f2122; }
 @media (max-width: 480px) {
     .sf-kind-content { padding: 26px 18px 18px; }
     .sf-kind-foot { gap: 6px; font-size: .875rem; letter-spacing: .06em; }
