@@ -627,9 +627,15 @@
 @container (max-width: 230px) {
     .sf-kind-stats { grid-template-columns: 1fr; max-width: 180px; margin-inline: auto; }
 }
-.sf-kind-stats .sf-kind-label--physical { color: var(--sf-red-500); }
-.sf-kind-stats .sf-kind-label--social { color: var(--sf-purple-500); }
-.sf-kind-stats .sf-kind-label--mental { color: var(--sf-yellow-400); }
+/* Each stat group's label, stat names and numbers in its stat color (Physical
+   red, Social purple, Mental yellow); the max a dimmer shade of it */
+.sf-kind-group--physical { --kind-stat-color: var(--sf-red-500); }
+.sf-kind-group--social { --kind-stat-color: var(--sf-purple-500); }
+.sf-kind-group--mental { --kind-stat-color: var(--sf-yellow-400); }
+.sf-kind-stats .sf-kind-group { color: var(--kind-stat-color, inherit); }
+.sf-kind-stats .sf-kind-group .sf-kind-label,
+.sf-kind-stats .sf-kind-group .sf-kind-num { color: var(--kind-stat-color, inherit); }
+.sf-kind-stats .sf-kind-group .sf-kind-num span { color: color-mix(in srgb, var(--kind-stat-color, currentColor) 60%, transparent); }
 .sf-kind-stat { display: flex; justify-content: space-between; gap: 4px; }
 .sf-kind-stat abbr { font-family: 'bebas_neueregular', sans-serif; letter-spacing: .06em; text-decoration: none; cursor: help; }
 .sf-kind-num { font-variant-numeric: tabular-nums; color: var(--key-soft); }

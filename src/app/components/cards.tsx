@@ -776,8 +776,8 @@ export function KindCard({
           {k.stats && (
             <div className="sf-kind-stats">
               {KIND_STAT_GROUPS.map(([group, stats]) => (
-                <div key={group}>
-                  <div className={`sf-kind-label sf-kind-label--${group.toLowerCase()}`}>{group}</div>
+                <div key={group} className={`sf-kind-group sf-kind-group--${group.toLowerCase()}`}>
+                  <div className="sf-kind-label">{group}</div>
                   {stats.map((s) => (
                     <div key={s} className="sf-kind-stat">
                       <abbr title={title(s)}>{title(s.slice(0, 3))}</abbr>
