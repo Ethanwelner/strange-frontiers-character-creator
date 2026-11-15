@@ -146,8 +146,11 @@
     }
   }
 
-  .gm-player-open {
-    align-self: flex-start;
+  /* Open sheet and Remove, at the card's bottom */
+  .gm-player-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
     margin-top: auto;
   }
 

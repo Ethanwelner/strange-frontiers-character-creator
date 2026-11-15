@@ -16,7 +16,10 @@ import { TableLog } from "../table/TableLog.js";
 import { GiveTrait } from "./GiveTrait.js";
 import {
   createTable,
+  closeTable,
   gmChange,
+  kickSeat,
+  renameTable,
   gmPoll,
   rollToTable,
   say,
@@ -172,6 +175,28 @@ export function GmApp() {
       setNotice({ text: `Couldn't copy the ${what}. Select it and copy it yourself.`, bad: true });
     }
   };
+  // Renaming the table, removing a player and closing the table each ask
+  // first in a popup
+  const [renaming, setRenaming] = useState<string>();
+  const [kicking, setKicking] = useState<Seat>();
+  const [closing, setClosing] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const closeAsk = useCallback(() => {
+    setRenaming(undefined);
+    setKicking(undefined);
+    setClosing(false);
+  }, []);
+  const run = async (work: () => Promise<void>) => {
+    setBusy(true);
+    try {
+      await work();
+      closeAsk();
+    } catch (err) {
+      setNotice({ text: err instanceof Error ? err.message : String(err), bad: true });
+    } finally {
+      setBusy(false);
+    }
+  };
   const [forgetting, setForgetting] = useState(false);
   const closeForget = useCallback(() => setForgetting(false), []);
   const forget = () => {
@@ -289,8 +314,14 @@ export function GmApp() {
                     <Button size="pill" onClick={() => void copy(recoveryLink(session), "recovery link")} title="Opens this table as its Game Master in any browser. Keep it private.">
                       Copy recovery link
                     </Button>
+                    <Button size="pill" onClick={() => setRenaming(session.name)}>
+                      Rename
+                    </Button>
                     <Button size="pill" onClick={() => setForgetting(true)}>
                       Forget this table
+                    </Button>
+                    <Button size="pill" className="gm-close-table" onClick={() => setClosing(true)}>
+                      Close table
                     </Button>
                   </div>
                   <p className="hint gm-recovery-hint">
@@ -314,12 +345,92 @@ export function GmApp() {
                     <ul className="gm-players">
                       {players.map((p) => (
                         <li key={p.seat.id}>
-                          <PlayerCard player={p} now={now} onOpen={() => setOpen(p.seat.id)} />
+                          <PlayerCard player={p} now={now} onOpen={() => setOpen(p.seat.id)} onRemove={() => setKicking(p.seat)} />
                         </li>
                       ))}
                     </ul>
                   )}
                 </section>
+              )}
+
+              {session && renaming !== undefined && (
+                <Popup label="Rename the table" title="Rename the table" onClose={closeAsk} size="narrow" className="tools-switch-popup">
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      if (!renaming.trim()) return;
+                      void run(async () => {
+                        const r = await renameTable(session, renaming);
+                        addEntries([r.entry]);
+                        const s = { ...session, name: r.table.name };
+                        saveGm(s);
+                        setSession(s);
+                      });
+                    }}
+                  >
+                    <input type="text" className="gm-make-name" aria-label="Table name" maxLength={60} autoFocus value={renaming} onChange={(e) => setRenaming(e.target.value)} />
+                    <div className="tools-switch-actions">
+                      <Button type="submit" tone="primary" waiting={busy} disabled={busy || !renaming.trim()}>
+                        Rename
+                      </Button>
+                      <Button onClick={closeAsk}>Cancel</Button>
+                    </div>
+                  </form>
+                </Popup>
+              )}
+
+              {session && kicking && (
+                <Popup label={`Remove ${kicking.name}`} title={`Remove ${kicking.name}`} onClose={closeAsk} size="narrow" className="tools-switch-popup">
+                  <p>
+                    Remove {kicking.name} from {session.name || "the table"}? Their character stays theirs, in their Player Tools, and they can join again with
+                    the code.
+                  </p>
+                  <div className="tools-switch-actions">
+                    <Button
+                      tone="dark"
+                      waiting={busy}
+                      disabled={busy}
+                      onClick={() =>
+                        void run(async () => {
+                          const r = await kickSeat(session, kicking.id);
+                          addEntries([r.entry]);
+                          setOpen((o) => (o === kicking.id ? undefined : o));
+                          setPlayers((ps) => ps.filter((p) => p.seat.id !== kicking.id));
+                        })
+                      }
+                    >
+                      Remove {kicking.name}
+                    </Button>
+                    <Button onClick={closeAsk}>Cancel</Button>
+                  </div>
+                </Popup>
+              )}
+
+              {session && closing && (
+                <Popup label="Close the table" title="Close the table" onClose={closeAsk} size="narrow" className="tools-switch-popup">
+                  <p>
+                    Close {session.name || "this table"} for everyone? Its players leave it, and its chat and log are deleted. Their characters stay in their
+                    Player Tools. This can't be undone.
+                  </p>
+                  <div className="tools-switch-actions">
+                    <Button
+                      tone="dark"
+                      waiting={busy}
+                      disabled={busy}
+                      onClick={() =>
+                        void run(async () => {
+                          const name = session.name;
+                          await closeTable(session);
+                          forget();
+                          setNotice({ text: `Closed ${name || "the table"}.`, fades: true });
+                        })
+                      }
+                    >
+                      Close the table
+                    </Button>
+                    <Button onClick={closeAsk}>Cancel</Button>
+                  </div>
+                </Popup>
               )}
 
               {session && forgetting && (
@@ -445,7 +556,7 @@ function Meters({ play, result, stacked }: { play: Play; result: BuildResult; st
 
 // A player at the table: who they are, their resources and Conditions, and
 // whether they're here. Opens their sheet.
-function PlayerCard({ player, now, onOpen }: { player: Player; now: number; onOpen: () => void }) {
+function PlayerCard({ player, now, onOpen, onRemove }: { player: Player; now: number; onOpen: () => void; onRemove: () => void }) {
   const { seat, play, result } = player;
   const here = now - seat.seen < HERE_SECONDS;
   const line = useMemo(() => {
@@ -482,13 +593,25 @@ function PlayerCard({ player, now, onOpen }: { player: Player; now: number; onOp
               ))}
             </ul>
           )}
-          <Button size="small" tone="primary" className="gm-player-open" onClick={onOpen}>
-            <Icon name="play" />
-            Open sheet
-          </Button>
+          <div className="gm-player-actions">
+            <Button size="small" tone="primary" onClick={onOpen}>
+              <Icon name="play" />
+              Open sheet
+            </Button>
+            <Button size="small" onClick={onRemove}>
+              Remove
+            </Button>
+          </div>
         </>
       ) : (
-        <p className="sf-sheet-empty">Waiting for their sheet.</p>
+        <>
+          <p className="sf-sheet-empty">Waiting for their sheet.</p>
+          <div className="gm-player-actions">
+            <Button size="small" onClick={onRemove}>
+              Remove
+            </Button>
+          </div>
+        </>
       )}
     </article>
   );

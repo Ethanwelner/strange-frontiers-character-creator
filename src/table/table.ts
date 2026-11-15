@@ -130,6 +130,12 @@ export const syncSeat = (s: SeatSession, since: number, name?: string, sheet?: S
     ...(sheet ? { name, sheet } : {}),
   });
 
+// The Game Master removes a player from the table (their character stays in
+// their Player Tools), renames the table, or closes it for everyone.
+export const kickSeat = (s: GmSession, seatId: string) => call<{ entry: LogEntry }>("kick", { code: s.code, gmKey: s.gmKey, seatId });
+export const renameTable = (s: GmSession, name: string) => call<{ table: TableInfo; entry: LogEntry }>("rename", { code: s.code, gmKey: s.gmKey, name });
+export const closeTable = (s: GmSession) => call<{ ok: true }>("close", { code: s.code, gmKey: s.gmKey });
+
 // The Game Master adds a Trait to a player's character at `rank`, or takes
 // one away. `name` is the Trait's name, for the log.
 export const gmChange = (s: GmSession, seatId: string, op: GmChange["op"], trait: string, rank: number, name: string) =>
