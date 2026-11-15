@@ -435,7 +435,7 @@
     --key-label: #b2b3b4;
     --key-soft: #e7e8e9;
     --key-line: #343638;
-    --key-name: linear-gradient(180deg, #ffffff 10%, #e7e8e9 50%, #949798 90%);
+    --key-name: #e7e8e9;
     /* The frame line's gradient, quieter than the text's key colors (the
        corner star's SVG gradient matches it: KIND_KEY_STOPS) */
     --line-hi: #949798;
@@ -590,11 +590,7 @@
     line-height: 1;
     text-align: center;
     text-transform: uppercase;
-    background: var(--key-name);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    filter: drop-shadow(0 1px 0 rgb(0 0 0 / 80%));
+    color: var(--key-name);
 }
 
 .sf-kind-summary {
@@ -669,7 +665,7 @@
     --line-mid: #47b767;
     --key-label: #47b767;
     --key-line: #1c372b;
-    --key-name: linear-gradient(180deg, #e7e8e9 10%, #47b767 90%);
+    --key-name: #47b767;
 }
 .sf-kind-card--dreft .sf-kind-rose-light { fill: #1c372b; }
 .sf-kind-card--dreft .sf-kind-rose-ring { stroke: #1f2122; }
