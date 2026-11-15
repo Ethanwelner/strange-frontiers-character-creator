@@ -445,7 +445,8 @@
     --kind-shadow: drop-shadow(0 0 1px rgb(0 0 0 / 50%)) drop-shadow(0 6px 12px rgb(0 0 0 / 25%));
     display: flex;
     flex-direction: column;
-    /* Drop shadows, so they follow the cut-out corner */
+    /* Drop shadows on the whole card, so they follow the cut-out corner and
+       fall only outside it; nothing inside casts its own */
     filter: var(--kind-shadow);
     color: var(--kind-text);
 }
@@ -636,7 +637,6 @@
     height: 100px;
     pointer-events: none;
     color: var(--kind-line);
-    filter: drop-shadow(0 1px 1px rgb(0 0 0 / 60%));
 }
 .sf-kind-corner--tl { top: 0; left: 0; }
 .sf-kind-corner--tr { top: 0; right: 0; transform: scaleX(-1); }
