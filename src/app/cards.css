@@ -438,10 +438,8 @@
     --key-name: #e7e8e9;
     /* The frame line's gradient, quieter than the text's key colors (the
        corner star's SVG gradient matches it: KIND_KEY_STOPS) */
-    --line-hi: #949798;
-    --line-mid: #626466;
-    --kind-key: linear-gradient(90deg, var(--line-mid), var(--line-hi) 50%, var(--line-mid));
-    --kind-key-v: linear-gradient(180deg, var(--line-mid), var(--line-hi) 50%, var(--line-mid));
+    /* The frame line: solid Medium Gray (#949798) */
+    --kind-line: #949798;
     --kind-text: #e7e8e9;
     --kind-muted: #949798;
     --kind-shadow: drop-shadow(0 0 1px rgb(0 0 0 / 80%)) drop-shadow(0 14px 18px rgb(0 0 0 / 40%));
@@ -544,6 +542,7 @@
     width: 100px;
     height: 100px;
     pointer-events: none;
+    color: var(--kind-line);
     filter: drop-shadow(0 1px 1px rgb(0 0 0 / 60%));
 }
 .sf-kind-corner--tl { top: 0; left: 0; }
@@ -558,7 +557,7 @@
     left: 100px;
     right: 100px;
     height: 2px;
-    background: var(--kind-key);
+    background: var(--kind-line);
 }
 .sf-kind-edge--top { top: 5px; }
 .sf-kind-edge--bottom { bottom: 5px; }
@@ -566,7 +565,7 @@
     top: 100px;
     bottom: 100px;
     width: 2px;
-    background: var(--kind-key-v);
+    background: var(--kind-line);
 }
 .sf-kind-edge--left { left: 5px; }
 .sf-kind-edge--right { right: 5px; }
@@ -663,13 +662,14 @@
 /* Isekai's cards key on the palette's greens: Dreft (#1c372b) and Green
    (#47b767) */
 .sf-kind-card--dreft {
-    /* A solid Green line: the palette has nothing between Dreft and Green,
-       so a gradient between them shifts too hard */
-    --line-hi: #47b767;
-    --line-mid: #47b767;
+    --kind-line: var(--frontiers-dreft-mid, #327749);
     --key-label: #47b767;
     --key-line: #1c372b;
-    --key-name: #47b767;
+}
+/* Isekai's band is Dreft, under the lighter Dreft Mid line, as Settled
+   Systems' Gray sits under Medium Gray */
+.sf-kind-card--dreft .sf-kind-plate {
+    background: var(--frontiers-dreft, #1c372b);
 }
 @media (max-width: 480px) {
     .sf-kind-content { padding: 26px 18px 18px; }
