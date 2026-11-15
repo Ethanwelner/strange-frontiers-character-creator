@@ -496,7 +496,7 @@
 .sf-kind-rays {
     position: absolute;
     inset: 0;
-    background: repeating-conic-gradient(from 0deg at 50% 100%, rgb(255 255 255 / 10%) 0 .6deg, transparent .6deg 4deg);
+    background: repeating-conic-gradient(from 0deg at 50% 100%, rgb(255 255 255 / 6%) 0 .6deg, transparent .6deg 4deg);
 }
 .sf-kind-sun {
     position: absolute;
@@ -506,8 +506,8 @@
     aspect-ratio: 1;
     transform: translate(-50%, -50%);
     border-radius: 50%;
-    background: color-mix(in srgb, var(--sf-gray-200) 22%, var(--sf-gray-900));
-    box-shadow: 0 0 40px 6px rgb(255 255 255 / 8%);
+    background: color-mix(in srgb, var(--sf-gray-200) 14%, var(--sf-gray-900));
+    box-shadow: 0 0 40px 6px rgb(255 255 255 / 5%);
 }
 .sf-kind-planet {
     position: absolute;
@@ -516,7 +516,7 @@
     transform: translate(-50%, -50%);
     border-radius: 50%;
     background: var(--sf-gray-900);
-    box-shadow: inset 0 calc(-1 * var(--lit, 2px)) 0 0 color-mix(in srgb, var(--sf-gray-200) 45%, transparent);
+    box-shadow: inset 0 calc(-1 * var(--lit, 2px)) 0 0 color-mix(in srgb, var(--sf-gray-200) 30%, transparent);
 }
 
 .sf-kind-corner {

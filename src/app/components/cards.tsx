@@ -639,10 +639,10 @@ const kindStar = (cx: number, cy: number, r: number) => {
 // planet is [its center, as a CSS top; its width, cqw; the crescent's
 // thickness at the bottom, px]. The site's copy is in sf_card_kind_sky().
 const KIND_PLANETS: [string, number, number][] = [
-  ["calc(100% - 147cqw)", 112, 4],
-  ["calc(100% - 78.5cqw)", 13, 2],
-  ["calc(100% - 54cqw)", 24, 3],
-  ["calc(100% - 31.5cqw)", 9, 2],
+  ["calc(100% - 163cqw)", 112, 4],
+  ["calc(100% - 90.5cqw)", 13, 2],
+  ["calc(100% - 62cqw)", 24, 3],
+  ["calc(100% - 35.5cqw)", 9, 2],
 ];
 
 // One corner of the frame, drawn top left; CSS turns it for the others. The
