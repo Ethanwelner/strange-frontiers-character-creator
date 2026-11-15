@@ -616,10 +616,11 @@ export function BackgroundCard({
 // eight-point compass. The site draws the
 // same markup from sf_card_kind() in php/rpg/components/cards.php.
 
-// The key color's gradient for the frame's line and star
+// The key color's gradient for the frame's line and star, in palette
+// colors: Soft Text, Medium Gray and Condition Edge; Green and Dreft
 const KIND_KEY_STOPS = {
-  silver: ["#b9bec5", "#8d939b", "#5d636b", "#a3a8af", "#757b83"],
-  green: ["#8fbfa3", "#57906f", "#2a5040", "#77a88b", "#41735a"],
+  silver: ["#b2b3b4", "#949798", "#626466", "#b2b3b4", "#949798"],
+  green: ["#47b767", "#47b767", "#1c372b", "#47b767", "#1c372b"],
 };
 
 // A four-pointed star
