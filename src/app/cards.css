@@ -628,6 +628,9 @@
 @container (max-width: 230px) {
     .sf-kind-stats { grid-template-columns: 1fr; max-width: 180px; margin-inline: auto; }
 }
+.sf-kind-stats .sf-kind-label--physical { color: var(--frontiers-hp, #e2574c); }
+.sf-kind-stats .sf-kind-label--social { color: var(--frontiers-vp, #9b7bff); }
+.sf-kind-stats .sf-kind-label--mental { color: var(--frontiers-sp, #f2c94c); }
 .sf-kind-stat { display: flex; justify-content: space-between; gap: 4px; }
 .sf-kind-stat abbr { font-family: 'bebas_neueregular', sans-serif; letter-spacing: .06em; text-decoration: none; cursor: help; }
 .sf-kind-num { font-variant-numeric: tabular-nums; color: var(--key-soft); }
