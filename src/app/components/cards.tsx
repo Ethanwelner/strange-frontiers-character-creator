@@ -617,10 +617,10 @@ export function BackgroundCard({
 // same markup from sf_card_kind() in php/rpg/components/cards.php.
 
 // The key color's gradient for the frame's line and star, in palette
-// colors: Soft Text, Medium Gray and Condition Edge; Green and Dreft
+// colors: Medium Gray to Condition Edge; Green to Dreft
 const KIND_KEY_STOPS = {
-  silver: ["#b2b3b4", "#949798", "#626466", "#b2b3b4", "#949798"],
-  green: ["#47b767", "#47b767", "#1c372b", "#47b767", "#1c372b"],
+  silver: ["#949798", "#949798", "#626466", "#626466", "#626466"],
+  green: ["#47b767", "#47b767", "#1c372b", "#1c372b", "#1c372b"],
 };
 
 // A four-pointed star
