@@ -676,8 +676,9 @@
 }
 
 .sf-kind-summary {
-    margin: 0 0 16px;
+    margin: 0;
     font-style: italic;
+    backdrop-filter: blur(.5px);
     text-align: center;
     color: var(--kind-text);
 }
@@ -721,7 +722,7 @@
 /* Its Grants are the cards' usual accent chips */
 .sf-kind-grants .sf-chip { margin: 0; }
 .sf-kind-grants .sf-kind-label { margin: 0 4px 0 0; }
-.sf-kind-features { margin: 0 0 18px; padding: 0; list-style: none; }
+.sf-kind-features { margin: 0 0 18px; padding: 0; list-style: none; backdrop-filter: blur(.5px); }
 .sf-kind-features li { margin-bottom: 8px; }
 .sf-kind-features strong { color: var(--key-soft); }
 
