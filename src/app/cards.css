@@ -442,7 +442,9 @@
     --kind-line: var(--sf-gray-300);
     --kind-text: var(--sf-gray-100);
     --kind-muted: var(--sf-gray-300);
-    --kind-shadow: drop-shadow(0 0 1px rgb(0 0 0 / 50%)) drop-shadow(0 6px 12px rgb(0 0 0 / 25%));
+    /* The other cards' diffuse floating shadow (box-shadow: 0 4px 10px
+       #00000030), as a drop-shadow so it follows the cut-out corner */
+    --kind-shadow: drop-shadow(0 4px 10px #00000030);
     display: flex;
     flex-direction: column;
     /* Drop shadows on the whole card, so they follow the cut-out corner and
