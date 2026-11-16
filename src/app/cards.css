@@ -54,6 +54,17 @@
 
 /* ---- Trait and Background cards: a 1px edge the color of the bar ---- */
 
+/* The grain behind Trait and Kind cards' content: pixel-fine SVG noise,
+   only its peaks showing, in faint white, drawn at half size and doubled
+   (a 200px tile) so each grain is an even 2px; and the light from the top
+   it lies over */
+:root {
+    --sf-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.91' numOctaves='1' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .7 -.448'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    /* The same grain stronger, for the sheet's boxes */
+    --sf-grain-strong: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.91' numOctaves='1' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.1 -.7'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    --sf-grain-light: linear-gradient(color-mix(in srgb, var(--sf-gray-0) 9%, transparent), transparent 85%);
+}
+
 .sf-card {
     --card-edge: var(--sf-gray-900);
     position: relative;
@@ -181,6 +192,13 @@
     font-size: 14px;
     /* Tighter corners than other cards; the bar fits inside the 1px border */
     border-radius: 8px;
+    /* The body in the default bar's dark gray, lit from the top and
+       grained (the bar covers both) */
+    background-color: var(--sf-gray-900);
+    background-image:
+        var(--sf-grain),
+        var(--sf-grain-light);
+    background-size: 200px 200px, auto;
 
     > .sf-card-bar {
         border-radius: 7px 7px 0 0;
@@ -358,7 +376,9 @@
     gap: 0;
     padding-bottom: 0;
 
+    /* The bar fills the card, as tall as the others in its row */
     > .sf-card-bar {
+        flex: 1;
         border-radius: 7px;
     }
 
@@ -524,7 +544,10 @@
     position: absolute;
     inset: 6px;
     border-radius: 0 17px 17px;
-    background: var(--kind-field);
+    /* Lit from the top and grained like a Trait card's body, behind the art */
+    background-color: var(--kind-field);
+    background-image: var(--sf-grain), var(--sf-grain-light);
+    background-size: 200px 200px, auto;
     -webkit-mask: radial-gradient(circle at 0 0, transparent 24px, #000 24.5px);
     mask: radial-gradient(circle at 0 0, transparent 24px, #000 24.5px);
     overflow: hidden;

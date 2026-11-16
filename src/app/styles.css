@@ -1450,9 +1450,11 @@
     margin-bottom: 1rem;
   }
 
-  /* A filled frame darkens on hover and shows the pen in the middle */
+  /* A filled frame has no border; it darkens on hover and shows the pen in
+     the middle */
   .portrait-filled {
     position: relative;
+    border: 0;
   }
 
   .portrait-edit {
