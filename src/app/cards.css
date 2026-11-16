@@ -396,8 +396,8 @@
 
 /* ---- Background cards (an Origin, Profession or Past): the Kind card's
    frame (below), with what the background gives as labeled rows of chips
-   under its summary, each label in the Kind card's small capitals with
-   its chips beside it, then its features */
+   under its summary, each label in the Kind card's small capitals over
+   its chips, then its features */
 .sf-background-rows {
     display: grid;
     gap: 16px;
@@ -423,7 +423,9 @@
 }
 
 .sf-background-label {
-    margin-right: 4px;
+    /* On its own line, over its chips */
+    flex-basis: 100%;
+    margin-bottom: -2px;
     font-family: 'bebas_neueregular', sans-serif;
     font-size: .9375rem;
     font-weight: 400;
