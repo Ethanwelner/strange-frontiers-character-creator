@@ -217,6 +217,18 @@
         min-width: 0;
     }
 
+    /* Skills over a dot tone: a grid of small squares a shade lighter than
+       the card, on the bar and the body alike */
+    &.sf-trait-card--skill {
+        --dot-tone: color-mix(in srgb, var(--sf-gray-0) 6%, transparent);
+
+        &, > .sf-card-bar {
+            background-image: conic-gradient(at 2px 2px, transparent 75%, var(--dot-tone) 0);
+            background-size: 6px 6px;
+            background-position: 2px 2px;
+        }
+    }
+
     /* Conditions in grays: a mid gray edge, a light gray bar, dark text,
        and a lighter bracket at each corner, laid over the border */
     &.sf-trait-card--condition {
