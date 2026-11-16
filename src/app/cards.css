@@ -621,10 +621,10 @@
     transform: translate(-50%, -50%);
     pointer-events: none;
 }
-.sf-kind-orbits { --orbit: color-mix(in srgb, var(--sf-gray-200) 18%, var(--kind-field)); }
-/* On Isekai cards the solar system is Dreft Shade, a dark green as bright
-   as the gray */
-.sf-kind-card--dreft .sf-kind-orbits { --orbit: var(--sf-green-850); }
+.sf-kind-orbits { --orbit: color-mix(in srgb, var(--sf-gray-200) 10%, var(--kind-field)); }
+/* On Isekai cards the solar system is Dreft Shade, mixed into the field
+   as far as the gray is */
+.sf-kind-card--dreft .sf-kind-orbits { --orbit: color-mix(in srgb, var(--sf-green-850) 55%, var(--kind-field)); }
 .sf-kind-orbit { fill: none; stroke: var(--orbit); stroke-width: 1px; vector-effect: non-scaling-stroke; }
 .sf-kind-orbit-sun, .sf-kind-orbit-planet { fill: var(--orbit); }
 /* Each planet circles the sun, counterclockwise, in its own year (set on it
@@ -642,7 +642,7 @@
 /* The starfields, after the site's night sky (css/rpg-night.css): dots that
    pulse slowly and a few four-pointed twinkles that flare now and then.
    The planet's dense one has larger dots */
-.sf-kind-stars { position: absolute; inset: 0; pointer-events: none; }
+.sf-kind-stars { position: absolute; inset: 0; pointer-events: none; opacity: .55; }
 .sf-kind-dot {
     position: absolute;
     width: 1px;
