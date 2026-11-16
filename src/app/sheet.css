@@ -250,16 +250,28 @@
     border-radius: 12px;
 
     /* Diagonal hazard stripes, the box gray and a stripe a little darker,
-       24px in from the box's edges and fading out from the bottom up */
-    &::before {
+       24px in from the box's edges and fading out from the bottom up into
+       the cards' grain (cards.css), which fades in toward the top */
+    &::before,
+    &::after {
         content: "";
         position: absolute;
         inset: 24px;
         z-index: -1;
+        pointer-events: none;
+    }
+
+    &::before {
         background-image: repeating-linear-gradient(135deg, color-mix(in srgb, var(--sheet-box) 50%, var(--sf-gray-800)) 0 8px, transparent 8px 16px);
         -webkit-mask-image: linear-gradient(to top, #000, transparent);
         mask-image: linear-gradient(to top, #000, transparent);
-        pointer-events: none;
+    }
+
+    &::after {
+        background-image: var(--sf-grain);
+        background-size: 200px 200px;
+        -webkit-mask-image: linear-gradient(to bottom, #000, transparent);
+        mask-image: linear-gradient(to bottom, #000, transparent);
     }
 }
 
