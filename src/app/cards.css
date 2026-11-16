@@ -394,83 +394,47 @@
 
 /* ---- Background cards: Kinds, Origins, Professions and Pasts ---- */
 
-.sf-background-card {
-    display: grid;
-    align-content: start;
-    gap: 16px;
-    padding: 16px;
-
-    /* The grid's gap does the spacing between a card's rows */
-    > *,
-    > .sf-card-body > * {
-        margin-top: 0;
-        margin-bottom: 0;
-    }
-
-    > .sf-card-bar {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: space-between;
-        gap: .5rem;
-        margin: -16px -16px 0;
-        padding: 10px 16px;
-
-        > .sf-card-name {
-            margin: 0;
-            font-size: 1.05rem;
-            font-weight: 600;
-            line-height: 1.2;
-        }
-
-        .sf-chip--muted {
-            background: rgb(255 255 255 / 15%);
-            color: var(--sf-gray-0);
-        }
-    }
-
-    > .sf-card-body {
-        display: grid;
-        align-content: start;
-        gap: 16px;
-    }
-
-    /* A card to pick */
-    &.is-selectable {
-        cursor: pointer;
-
-        &:hover:not(.selected) {
-            border-color: var(--sf-gray-300);
-        }
-    }
-}
-
-/* A Kind's or package's lore line, under its summary */
-.sf-card-lore {
-    color: var(--card-soft);
-}
-
-/* What it gives, as labeled rows of chips */
+/* ---- Background cards (an Origin, Profession or Past): the Kind card's
+   frame (below), with what the background gives as labeled rows of chips
+   under its summary, each label in the Kind card's small capitals with
+   its chips beside it, then its features */
 .sf-background-rows {
     display: grid;
-    gap: 16px;
+    gap: 10px;
+    margin: 20px 0 6px;
+    backdrop-filter: blur(.5px);
 
     > div {
         display: flex;
         flex-wrap: wrap;
-        gap: 4px;
+        align-items: center;
+        gap: 4px 6px;
     }
 
     > p,
     .sf-chip {
         margin: 0;
     }
+
+    /* Its features, a little apart from the chips */
+    > p:first-of-type {
+        margin-top: 8px;
+    }
 }
 
 .sf-background-label {
-    flex-basis: 100%;
-    font-size: .75rem;
-    font-weight: 600;
+    margin-right: 4px;
+    font-family: 'bebas_neueregular', sans-serif;
+    font-size: .9375rem;
+    font-weight: 400;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--key-label, var(--card-soft));
+}
+
+/* A Kind's or package's lore line, under its summary */
+.sf-card-lore {
+    color: var(--card-soft);
 }
 
 /* ---- Kind cards (KindCard; the site's sf_card_kind): a thin gunmetal
