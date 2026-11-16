@@ -244,10 +244,23 @@
     box-sizing: border-box;
     min-width: 0;
     padding: var(--sheet-box-pad);
-    /* Diagonal hazard stripes: the box gray, and a stripe a little darker */
+    position: relative;
+    isolation: isolate;
     background-color: var(--sheet-box);
-    background-image: repeating-linear-gradient(135deg, color-mix(in srgb, var(--sheet-box) 50%, var(--sf-gray-800)) 0 8px, transparent 8px 16px);
     border-radius: 12px;
+
+    /* Diagonal hazard stripes, the box gray and a stripe a little darker,
+       24px in from the box's edges and fading out from the bottom up */
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 24px;
+        z-index: -1;
+        background-image: repeating-linear-gradient(135deg, color-mix(in srgb, var(--sheet-box) 50%, var(--sf-gray-800)) 0 8px, transparent 8px 16px);
+        -webkit-mask-image: linear-gradient(to top, #000, transparent);
+        mask-image: linear-gradient(to top, #000, transparent);
+        pointer-events: none;
+    }
 }
 
 /* Below 1400px each box's padding tightens to 1rem */
