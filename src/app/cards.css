@@ -777,9 +777,11 @@
     color: var(--key-label);
 }
 
+/* The three groups as wide as their stats, centered in the row */
 .sf-kind-stats {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, auto);
+    justify-content: center;
     gap: 12px 48px;
     margin: 24px -15px;
     padding: 8px 16px;
