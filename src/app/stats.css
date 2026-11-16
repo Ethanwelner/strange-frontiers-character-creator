@@ -21,7 +21,7 @@
     --stat-text: var(--sf-gray-100);
     --stat-soft: var(--sf-gray-200);
     --stat-rule: rgb(255 255 255 / 18%);
-    --stat-open: var(--sf-gray-350);
+    --stat-open: var(--sf-gray-400);
     display: flex;
     flex-direction: column;
     gap: 32px;
