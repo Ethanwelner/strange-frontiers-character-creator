@@ -24,6 +24,9 @@
     --sheet-frame: var(--panel-box, var(--sf-gray-600));
     --sheet-box: var(--panel, var(--sf-gray-700));
     --sheet-edge: var(--card-border, var(--sf-gray-400));
+    /* The frame's band and line (see the frame, below) */
+    --sheet-plate: var(--sf-gray-500);
+    --sheet-line: var(--sf-gray-300);
     --sheet-text: var(--panel-text, var(--sf-gray-100));
     --sheet-soft: var(--panel-soft, var(--sf-gray-200));
     --sheet-rule: rgb(255 255 255 / 18%);
@@ -36,11 +39,44 @@
     flex-direction: column;
     gap: var(--sheet-gap);
     padding: 1rem;
-    background-color: var(--sheet-frame);
-    border: 1px solid var(--sheet-edge);
-    border-radius: 12px;
+    /* ---- The frame, like a Kind card's: a 6px band in Gray that stops 40px
+       short of the top right corner on both edges (the sheet's own
+       background), then a 2px line in Medium Gray just inside it, with a
+       24px quarter-circle cut out of the top right corner, the line
+       following it, and the star in it (::before). The transparent border
+       keeps the old 1px of room. ---- */
+    border: 1px solid transparent;
+    border-radius: 23px 0 23px 23px;
+    background:
+        linear-gradient(var(--sheet-plate), var(--sheet-plate)) left top / calc(100% - 40px) 40px no-repeat border-box,
+        linear-gradient(var(--sheet-plate), var(--sheet-plate)) left bottom / 100% calc(100% - 40px) no-repeat border-box;
     box-shadow: 0 4px 10px #00000030;
     color: var(--sheet-text);
+
+    /* The line and the fill inside it, 6px in from the sheet's edge. Both are
+       cut out about that corner: the fill out to 25px, the line out to 23px,
+       so 2px of line runs around the cut-out and on along the edges. It's
+       drawn first, and everything in the sheet is positioned (below), so it
+       stays under the content without making the sheet a stacking context,
+       which would trap the sheet's popups under the page around it. */
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 4px;
+        border: 2px solid transparent;
+        border-radius: 18px 0 18px 18px;
+        background:
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 15 15'%3E%3Cpath fill='%23949798' d='M7.5 0L9.15 5.85L15 7.5L9.15 9.15L7.5 15L5.85 9.15L0 7.5L5.85 5.85Z'/%3E%3C/svg%3E") right .5px top .5px / 15px 15px no-repeat border-box,
+            radial-gradient(circle at calc(100% - 1px) 1px, transparent 25px, var(--sheet-frame) 25.5px) padding-box,
+            radial-gradient(circle at calc(100% - 1px) 1px, transparent 23px, var(--sheet-line) 23.5px) border-box;
+        background-origin: border-box;
+        pointer-events: none;
+    }
+}
+
+/* Positioned, so the sheet's boxes paint over its frame (::before) */
+:where(.sf-sheet > *) {
+    position: relative;
 }
 
 /* At 1768px and below, the sheet's boxes tighten to 16px apart, across and
@@ -864,6 +900,8 @@
 @media print {
     .sf-sheet {
         --sheet-frame: var(--sf-gray-50);
+        --sheet-plate: var(--sf-gray-100);
+        --sheet-line: var(--sf-gray-300);
         --sheet-box: var(--sf-gray-0);
         --sheet-edge: var(--sf-gray-100);
         --sheet-text: var(--sf-gray-800);
