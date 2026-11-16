@@ -175,7 +175,8 @@
 .sf-trait-card {
     display: flex;
     flex-direction: column;
-    gap: .5rem;
+    /* As much room under the bar as at the card's bottom */
+    gap: 1rem;
     padding: 0 1rem 1rem;
     font-size: 14px;
     /* Tighter corners than other cards; the bar fits inside the 1px border */
@@ -220,12 +221,10 @@
        and a lighter bracket at each corner, laid over the border */
     &.sf-trait-card--condition {
         --card-edge: var(--sf-gray-400);
-        --bracket: var(--sf-gray-200);
-        /* The top two cross the light bar, so they're lighter */
-        --bracket-top: var(--sf-gray-50);
+        /* The bracket, a step darker than the light bar it sits on */
+        --bracket: var(--sf-gray-300);
         --bracket-size: 22px;
-        --bracket-width: 3px;
-        --c: linear-gradient(#000, #000) no-repeat;
+        --bracket-width: 4px;
 
         /* The bar reaches out over the border at the top and sides, so its
            light gray is the card's edge around the header */
@@ -237,41 +236,21 @@
             color: var(--sf-gray-800);
         }
 
-        /* The brackets: a stroke that follows the card's rounded corners,
-           cut down to --bracket-size at each corner and centered on the 1px
-           border's line, half outside it and half in. The card draws the bottom two, the bar (which
-           reaches out over the border) the top two */
-        &::before,
+        /* The bracket, at the top right corner only: a stroke that follows
+           the card's rounded corner for --bracket-size each way, set 4px in
+           from the card's edge, with the corner's own 8px curve */
         > .sf-card-bar::before {
             content: "";
             position: absolute;
-            border: var(--bracket-width) solid var(--bracket);
-            pointer-events: none;
-        }
-        &::before {
-            inset: calc(-.5px - var(--bracket-width) / 2);
-            border-radius: calc(7.5px + var(--bracket-width) / 2);
-            -webkit-mask:
-                var(--c) bottom left / var(--bracket-size) var(--bracket-size),
-                var(--c) bottom right / var(--bracket-size) var(--bracket-size);
-            mask:
-                var(--c) bottom left / var(--bracket-size) var(--bracket-size),
-                var(--c) bottom right / var(--bracket-size) var(--bracket-size);
-        }
-        > .sf-card-bar::before {
-            top: calc(.5px - var(--bracket-width) / 2);
-            left: calc(.5px - var(--bracket-width) / 2);
-            right: calc(.5px - var(--bracket-width) / 2);
+            top: 4px;
+            right: 4px;
+            width: var(--bracket-size);
             height: var(--bracket-size);
-            border-color: var(--bracket-top);
+            border: var(--bracket-width) solid var(--bracket);
+            border-left: 0;
             border-bottom: 0;
-            border-radius: calc(7.5px + var(--bracket-width) / 2) calc(7.5px + var(--bracket-width) / 2) 0 0;
-            -webkit-mask:
-                var(--c) top left / var(--bracket-size) var(--bracket-size),
-                var(--c) top right / var(--bracket-size) var(--bracket-size);
-            mask:
-                var(--c) top left / var(--bracket-size) var(--bracket-size),
-                var(--c) top right / var(--bracket-size) var(--bracket-size);
+            border-radius: 0 8px 0 0;
+            pointer-events: none;
         }
     }
 }

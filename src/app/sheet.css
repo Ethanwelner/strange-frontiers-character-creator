@@ -773,8 +773,9 @@
     max-height: 60vh;
     overflow-y: auto;
 
-    /* Room for condition cards' corner brackets, which sit half outside
-       each card, so they don't make the list scroll; the margin takes it
+    /* Room for condition cards' headers, which reach out over the card's
+       1px border and, where the screen rounds that border thinner, a hair
+       past it; without it the list scrolls sideways. The margin takes it
        back so nothing moves */
     &:has(.sf-trait-card--condition) {
         padding: 2px;
