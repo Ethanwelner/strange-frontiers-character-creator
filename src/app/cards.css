@@ -237,19 +237,19 @@
         }
 
         /* The bracket, at the top right corner only: a stroke that follows
-           the card's rounded corner for --bracket-size each way, set just
-           inside the card's 1px edge */
+           the card's rounded corner for --bracket-size each way, set 4px in
+           from the card's edge */
         > .sf-card-bar::before {
             content: "";
             position: absolute;
-            top: 1px;
-            right: 1px;
+            top: 4px;
+            right: 4px;
             width: var(--bracket-size);
             height: var(--bracket-size);
             border: var(--bracket-width) solid var(--bracket);
             border-left: 0;
             border-bottom: 0;
-            border-radius: 0 7px 0 0;
+            border-radius: 0 4px 0 0;
             pointer-events: none;
         }
     }
