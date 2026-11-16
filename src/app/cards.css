@@ -217,13 +217,15 @@
         min-width: 0;
     }
 
-    /* Skills: the body over a faint grain (SVG noise, white at a low opacity)
-       and a gradient a shade lighter at the top (the bar covers both), and a
-       muted gray hazard stripe down the bar's left edge */
+    /* Skills: the body in the bar's dark gray, lit from the top in a gradient
+       and flecked with a sparse grain (SVG noise, only its peaks showing, in
+       faint white; the bar covers both), and a muted gray hazard stripe down
+       the bar's left edge */
     &.sf-trait-card--skill {
+        background-color: var(--card-edge);
         background-image:
-            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .22 -.05'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
-            linear-gradient(color-mix(in srgb, var(--sf-gray-0) 5%, transparent), transparent);
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.55' numOctaves='1' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 -.86'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+            linear-gradient(color-mix(in srgb, var(--sf-gray-0) 9%, transparent), transparent 85%);
         background-size: 160px 160px, auto;
 
         > .sf-card-bar {
