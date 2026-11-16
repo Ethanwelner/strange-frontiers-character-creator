@@ -36,9 +36,10 @@
     flex-direction: column;
     gap: var(--sheet-gap);
     padding: 1rem;
-    /* Lit from the top and grained like the cards (cards.css) */
+    /* Lit from the top and grained like the cards (cards.css), the grain
+       stronger */
     background-color: var(--sheet-frame);
-    background-image: var(--sf-grain), var(--sf-grain-light);
+    background-image: var(--sf-grain-strong), var(--sf-grain-light);
     background-size: 200px 200px, auto;
     border: 1px solid var(--sheet-edge);
     border-radius: 12px;
