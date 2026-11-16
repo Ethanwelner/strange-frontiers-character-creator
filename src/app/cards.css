@@ -809,12 +809,13 @@
 .sf-kind-features li { margin-bottom: 8px; }
 .sf-kind-features strong { color: var(--key-soft); }
 
-.sf-kind-foot {
+/* "Kind ✦ The Settled Systems" (or Isekai) under the name */
+.sf-kind-setting {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
-    margin: auto 0 0;
+    margin: -4px 0 8px;
     font-family: 'bebas_neueregular', sans-serif;
     font-size: 1rem;
     font-weight: 400;
@@ -823,7 +824,7 @@
     white-space: nowrap;
     color: var(--key-label);
 }
-.sf-kind-foot span { font-size: .625rem; }
+.sf-kind-setting span { font-size: .625rem; }
 
 /* Isekai's cards key on the palette's greens: Dreft (#1c372b) and Green
    (#47b767) */
@@ -839,7 +840,7 @@
 }
 @media (max-width: 480px) {
     .sf-kind-content { padding: 26px 18px 18px; }
-    .sf-kind-foot { gap: 6px; font-size: .875rem; letter-spacing: .06em; }
+    .sf-kind-setting { gap: 6px; font-size: .875rem; letter-spacing: .06em; }
 }
 
 /* A Kind to pick (the creator's Character step): a green ring and a check

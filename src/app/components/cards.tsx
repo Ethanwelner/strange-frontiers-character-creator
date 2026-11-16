@@ -868,6 +868,10 @@ export function KindCard({
         <span className="sf-kind-edge sf-kind-edge--left" />
         <div className="sf-kind-content">
           <h3 className="sf-kind-name">{k.name}</h3>
+          <p className="sf-kind-setting">
+            Kind<span aria-hidden="true">✦</span>
+            {isekai ? "Isekai" : "The Settled Systems"}
+          </p>
           <p className="sf-kind-summary">{k.summary}</p>
           {lore && k.lore && <p className="sf-kind-lore">{k.lore}</p>}
           {k.stats && (
@@ -907,10 +911,6 @@ export function KindCard({
               ))}
             </ul>
           )}
-          <p className="sf-kind-foot">
-            Kind<span aria-hidden="true">✦</span>
-            {isekai ? "Isekai" : "The Settled Systems"}
-          </p>
         </div>
       </div>
     </article>
