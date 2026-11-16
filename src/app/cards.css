@@ -402,7 +402,6 @@
     display: grid;
     gap: 16px;
     margin: 20px 0 6px;
-    backdrop-filter: blur(.5px);
 
     > div {
         display: flex;
@@ -519,6 +518,10 @@
     overflow: hidden;
     /* So the sky can size itself by the field's width (cqw) */
     container-type: inline-size;
+    /* The browser skips drawing and animating the art while the card is
+       off screen, so a long list of cards (the creator's Origins) only
+       runs the ones in view */
+    content-visibility: auto;
 }
 
 /* The sky: a faded sun half below the bottom of the field, rays fanning
@@ -632,13 +635,21 @@
    pulse slowly and a few four-pointed twinkles that flare now and then.
    The planet's dense one has larger dots */
 .sf-kind-stars { position: absolute; inset: 0; pointer-events: none; opacity: .55; }
+/* The dots in three layers, each pulsing as one a third of a beat apart
+   (one animation per layer, not per dot) */
+.sf-kind-dots {
+    position: absolute;
+    inset: 0;
+    animation: sf-kind-pulse 6s ease-in-out infinite;
+}
+.sf-kind-dots:nth-child(2) { animation-delay: -2s; }
+.sf-kind-dots:nth-child(3) { animation-delay: -4s; }
 .sf-kind-dot {
     position: absolute;
     width: 1px;
     height: 1px;
     border-radius: 50%;
     background: var(--sf-gray-0);
-    animation: sf-kind-pulse 6s ease-in-out infinite;
 }
 .sf-kind-dot.is-big { width: 2px; height: 2px; }
 .sf-kind-card--bg-planet .sf-kind-dot { width: 1.5px; height: 1.5px; }
@@ -666,7 +677,7 @@
     12% { transform: scale(.35) rotate(90deg); opacity: .5; }
 }
 @media (prefers-reduced-motion: reduce) {
-    .sf-kind-dot, .sf-kind-twinkle { animation: none; }
+    .sf-kind-dots, .sf-kind-twinkle { animation: none; }
 }
 
 .sf-kind-corner {
@@ -727,7 +738,6 @@
 .sf-kind-summary {
     margin: 0;
     font-style: italic;
-    backdrop-filter: blur(.5px);
     text-align: center;
     color: var(--kind-text);
 }
@@ -753,7 +763,6 @@
     gap: 12px 16px;
     margin: 24px -15px;
     padding: 8px 16px;
-    backdrop-filter: blur(.5px);
     font-size: 1rem;
 }
 /* On a narrow card, the groups stack */
@@ -779,7 +788,7 @@
 .sf-kind-grants .sf-chip { margin: 0; }
 /* Its label on its own line, over the chips, as on Background cards */
 .sf-kind-grants .sf-kind-label { flex-basis: 100%; margin: 0 0 -2px; }
-.sf-kind-features { margin: 0 0 18px; padding: 0; list-style: none; backdrop-filter: blur(.5px); }
+.sf-kind-features { margin: 0 0 18px; padding: 0; list-style: none; }
 .sf-kind-features li { margin-bottom: 8px; }
 .sf-kind-features strong { color: var(--key-soft); }
 

@@ -692,12 +692,19 @@ function KindStars({ seed, dense = false }: { seed: string; dense?: boolean }) {
   const dx = (sum * 29) % 100;
   const wrap = (v: number, d: number) => ((v + d) % 100).toFixed(1);
   const inner = (v: number, d: number) => (((v - 8 + d) % 84) + 8).toFixed(1);
-  // Every fifth faint star is a big one, every seventh dense one
+  // Every fifth faint star is a big one, every seventh dense one. The dots
+  // go in three layers that each pulse as one, a third of a beat apart, so a
+  // card runs three animations rather than one per dot.
   const big = dense ? 7 : 5;
+  const dots = dense ? KIND_DOTS_DENSE : KIND_DOTS_FAINT;
   return (
     <div className="sf-kind-stars">
-      {(dense ? KIND_DOTS_DENSE : KIND_DOTS_FAINT).map(([t, l, o, delay], i) => (
-        <span key={i} className={`sf-kind-dot${i % big === 0 ? " is-big" : ""}`} style={{ top: `${wrap(t, dy)}%`, left: `${wrap(l, dx)}%`, opacity: o, animationDelay: `${delay}s` }} />
+      {[0, 1, 2].map((layer) => (
+        <div key={layer} className="sf-kind-dots">
+          {dots.map(([t, l, o], i) =>
+            i % 3 === layer ? <span key={i} className={`sf-kind-dot${i % big === 0 ? " is-big" : ""}`} style={{ top: `${wrap(t, dy)}%`, left: `${wrap(l, dx)}%`, opacity: o }} /> : null,
+          )}
+        </div>
       ))}
       {KIND_TWINKLES.map(([t, l, delay], i) => (
         <span key={i} className="sf-kind-twinkle" style={{ top: `${inner(t, dy)}%`, left: `${inner(l, dx)}%`, animationDelay: `${delay}s` }} />
