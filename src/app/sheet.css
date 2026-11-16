@@ -249,18 +249,25 @@
     background-color: var(--sheet-box);
     border-radius: 12px;
 
-    /* A stronger grain than the cards' (cards.css), 24px in from the box's
-       edges, full through the top half and fading out toward the bottom */
+    /* A stronger grain than the cards' (cards.css), fading in over 48px
+       from the box's sides and top, full through the top half and fading
+       out toward the bottom (the two masks intersect) */
     &::after {
         content: "";
         position: absolute;
-        inset: 24px;
+        inset: 0;
         z-index: -1;
+        border-radius: inherit;
         pointer-events: none;
         background-image: var(--sf-grain-strong);
         background-size: 200px 200px;
-        -webkit-mask-image: linear-gradient(to bottom, #000 45%, transparent);
-        mask-image: linear-gradient(to bottom, #000 45%, transparent);
+        --grain-mask:
+            linear-gradient(to right, transparent, #000 48px, #000 calc(100% - 48px), transparent),
+            linear-gradient(to bottom, transparent, #000 48px, #000 45%, transparent);
+        -webkit-mask-image: var(--grain-mask);
+        -webkit-mask-composite: source-in;
+        mask-image: var(--grain-mask);
+        mask-composite: intersect;
     }
 }
 
