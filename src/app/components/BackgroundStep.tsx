@@ -115,8 +115,7 @@ function SlotCards({ slot, picked, onChoose }: { slot: Slot; picked?: string; on
       ) : (
         <div className="cards" role="radiogroup" aria-label={title(slot)}>
           {shown.map((p) => (
-            <BackgroundCard key={p.id} name={p.name} slot={title(p.type)} plane={p.plane} select={{ selected: picked === p.id, onSelect: () => onChoose(p.id) }}>
-              <p>{p.summary}</p>
+            <BackgroundCard key={p.id} id={p.id} name={p.name} slot={title(p.type)} plane={p.plane} summary={p.summary} select={{ selected: picked === p.id, onSelect: () => onChoose(p.id) }}>
               <PackageGrants pkg={p} />
             </BackgroundCard>
           ))}

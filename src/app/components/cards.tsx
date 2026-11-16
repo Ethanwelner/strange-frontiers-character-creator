@@ -558,52 +558,52 @@ export function BackgroundRows({ rows, children }: { rows: { label: string; chip
   );
 }
 
+// Each background slot's art behind the content: an Origin the dark planet
+// under a dense starfield, a Profession the compass, a Past the column of
+// planets lit by a faded sun
+const SLOT_BACKGROUNDS: Record<string, KindBackground> = { origin: "planet", profession: "compass", past: "sun" };
+
 /**
- * A Background card: the name with its slot and plane as chips, then the
- * body (`children`: the summary, what it gives and its features).
+ * A Background card (an Origin, Profession or Past), drawn on the Kind
+ * card's frame: its slot and setting over the name ("Origin ✦ The Settled
+ * Systems"), its summary, then the body (`children`: its lore, what it gives
+ * and its features).
  *
  * select  A card to pick in a radio group, clickable and keyboard-operable,
  *         ringed in green while picked (.selected).
  */
 export function BackgroundCard({
+  id,
   name,
   slot,
   plane,
+  summary,
   select,
   className = "",
   children,
 }: {
+  id: string;
   name: string;
   slot: string;
   plane: string;
+  summary: string;
   select?: { selected: boolean; onSelect: () => void };
   className?: string;
-  children: ReactNode;
+  children?: ReactNode;
 }) {
-  const classes = `sf-card sf-background-card${cardRegionClass(plane)}${select ? ` is-selectable${select.selected ? " selected" : ""}` : ""}${className ? ` ${className}` : ""}`;
-  const onKey = (e: KeyboardEvent) => {
-    if (select && (e.key === "Enter" || e.key === " ")) {
-      e.preventDefault();
-      select.onSelect();
-    }
-  };
   return (
-    <div
-      className={classes}
-      {...(select ? { role: "radio", "aria-checked": select.selected, "aria-label": name, tabIndex: 0, onClick: select.onSelect, onKeyDown: onKey } : {})}
+    <KindFrame
+      seed={id}
+      name={name}
+      label={slot}
+      plane={plane}
+      background={SLOT_BACKGROUNDS[slot.toLowerCase()] ?? "orbits"}
+      select={select}
+      className={`sf-background-card${className ? ` ${className}` : ""}`}
     >
-      <div className="sf-card-bar">
-        <h3 className="sf-card-name">
-          <SettingIcon plane={plane} />
-          {name}
-        </h3>
-        <span className="sf-card-chips">
-          <CardChip>{slot}</CardChip>
-          <CardChip tone="muted">{plane}</CardChip>
-        </span>
-      </div>
-      <div className="sf-card-body">{children}</div>
-    </div>
+      <p className="sf-kind-summary">{summary}</p>
+      {children}
+    </KindFrame>
   );
 }
 
@@ -692,12 +692,19 @@ function KindStars({ seed, dense = false }: { seed: string; dense?: boolean }) {
   const dx = (sum * 29) % 100;
   const wrap = (v: number, d: number) => ((v + d) % 100).toFixed(1);
   const inner = (v: number, d: number) => (((v - 8 + d) % 84) + 8).toFixed(1);
-  // Every fifth faint star is a big one, every seventh dense one
+  // Every fifth faint star is a big one, every seventh dense one. The dots
+  // go in three layers that each pulse as one, a third of a beat apart, so a
+  // card runs three animations rather than one per dot.
   const big = dense ? 7 : 5;
+  const dots = dense ? KIND_DOTS_DENSE : KIND_DOTS_FAINT;
   return (
     <div className="sf-kind-stars">
-      {(dense ? KIND_DOTS_DENSE : KIND_DOTS_FAINT).map(([t, l, o, delay], i) => (
-        <span key={i} className={`sf-kind-dot${i % big === 0 ? " is-big" : ""}`} style={{ top: `${wrap(t, dy)}%`, left: `${wrap(l, dx)}%`, opacity: o, animationDelay: `${delay}s` }} />
+      {[0, 1, 2].map((layer) => (
+        <div key={layer} className="sf-kind-dots">
+          {dots.map(([t, l, o], i) =>
+            i % 3 === layer ? <span key={i} className={`sf-kind-dot${i % big === 0 ? " is-big" : ""}`} style={{ top: `${wrap(t, dy)}%`, left: `${wrap(l, dx)}%`, opacity: o }} /> : null,
+          )}
+        </div>
       ))}
       {KIND_TWINKLES.map(([t, l, delay], i) => (
         <span key={i} className="sf-kind-twinkle" style={{ top: `${inner(t, dy)}%`, left: `${inner(l, dx)}%`, animationDelay: `${delay}s` }} />
@@ -770,31 +777,41 @@ const KIND_STAT_GROUPS = [
   ["Mental", ["logic", "intuition", "memory"]],
 ] as const;
 
+// The setting under a card's label: "The Settled Systems", "Isekai" or, for
+// a background that fits either, "Any Setting"
+const SETTING_NAMES: Record<string, string> = { earth: "The Settled Systems", isekai: "Isekai", any: "Any Setting" };
+
 /**
- * A Kind's card: its name and summary, each focus stat's bonus and maximum,
- * the Traits every character of the Kind holds, its features, then "Kind ✦"
- * and its setting at the foot.
+ * The Kind card's frame, which Background cards share: a thin gunmetal
+ * border running in to a 2px line in the key color (silver, or Dreft's green
+ * for Isekai) around a dark field with the background art, then the content:
+ * its label and setting over the name ("Kind ✦ The Settled Systems"), and
+ * `children`.
  *
- * lore    Its lore line under the summary, as in the popup.
+ * seed    Shifts the starfield, so cards side by side differ.
  * select  A card to pick in a radio group, clickable and keyboard-operable,
  *         ringed in green while picked (.selected).
  */
-export function KindCard({
-  kind: k,
-  lore = false,
-  select,
+export function KindFrame({
+  seed,
+  name,
+  label,
+  plane,
   background = "orbits",
+  select,
   className = "",
+  children,
 }: {
-  kind: Kind;
-  lore?: boolean;
-  // What's drawn behind the content: the orbits (the default), the sun and
-  // planets, the compass or the planet
+  seed: string;
+  name: string;
+  label: string;
+  plane: string;
   background?: KindBackground;
   select?: { selected: boolean; onSelect: () => void };
   className?: string;
+  children?: ReactNode;
 }) {
-  const isekai = k.plane === "isekai";
+  const isekai = plane === "isekai";
   const key = isekai ? "green" : "silver";
   const gradient = `sf-kind-${key}-${useId().replace(/[^a-z0-9]/gi, "")}`;
   const classes = `sf-kind-card sf-kind-card--bg-${background}${isekai ? " sf-kind-card--dreft" : ""}${select ? ` is-selectable${select.selected ? " selected" : ""}` : ""}${className ? ` ${className}` : ""}`;
@@ -807,7 +824,7 @@ export function KindCard({
   return (
     <article
       className={classes}
-      {...(select ? { role: "radio", "aria-checked": select.selected, "aria-label": k.name, tabIndex: 0, onClick: select.onSelect, onKeyDown: onKey } : {})}
+      {...(select ? { role: "radio", "aria-checked": select.selected, "aria-label": name, tabIndex: 0, onClick: select.onSelect, onKeyDown: onKey } : {})}
     >
       <div className="sf-kind-panel">
         <span className="sf-kind-plate" aria-hidden="true" />
@@ -832,7 +849,7 @@ export function KindCard({
           )}
           {background === "compass" && (
             <>
-              <KindStars seed={k.id} />
+              <KindStars seed={seed} />
               <svg className="sf-kind-emblem" viewBox="0 0 300 300" aria-hidden="true" focusable="false">
                 <circle className="sf-kind-rose-ring" cx="150" cy="150" r="142" strokeWidth="4" />
                 <g transform="rotate(15 150 150)">
@@ -848,13 +865,13 @@ export function KindCard({
           )}
           {background === "planet" && (
             <>
-              <KindStars seed={k.id} dense />
+              <KindStars seed={seed} dense />
               <span className="sf-kind-globe" />
             </>
           )}
           {background === "orbits" && (
             <>
-              <KindStars seed={k.id} />
+              <KindStars seed={seed} />
               <KindOrbits />
             </>
           )}
@@ -867,52 +884,84 @@ export function KindCard({
         <span className="sf-kind-edge sf-kind-edge--bottom" />
         <span className="sf-kind-edge sf-kind-edge--left" />
         <div className="sf-kind-content">
-          <h3 className="sf-kind-name">{k.name}</h3>
-          <p className="sf-kind-summary">{k.summary}</p>
-          {lore && k.lore && <p className="sf-kind-lore">{k.lore}</p>}
-          {k.stats && (
-            <div className="sf-kind-stats">
-              {KIND_STAT_GROUPS.map(([group, stats]) => (
-                <div key={group}>
-                  <div className={`sf-kind-label sf-kind-label--${group.toLowerCase()}`}>{group}</div>
-                  {stats.map((s) => (
-                    <div key={s} className="sf-kind-stat">
-                      <abbr title={title(s)}>{title(s.slice(0, 3))}</abbr>
-                      <span className="sf-kind-num">
-                        +{k.stats[s]?.bonus ?? 0}
-                        <span>/{k.stats[s]?.max ?? 0}</span>
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </div>
-          )}
-          {k.grants.length > 0 && (
-            <div className="sf-kind-grants">
-              <span className="sf-kind-label">Grants</span>
-              {k.grants.map((g) => (
-                <CardChip key={g.trait} tone="accent">
-                  {traitName(g.trait)}
-                </CardChip>
-              ))}
-            </div>
-          )}
-          {k.features.length > 0 && (
-            <ul className="sf-kind-features">
-              {k.features.map((f) => (
-                <li key={f.name}>
-                  <strong>{f.name}.</strong> {f.description}
-                </li>
-              ))}
-            </ul>
-          )}
-          <p className="sf-kind-foot">
-            Kind<span aria-hidden="true">✦</span>
-            {isekai ? "Isekai" : "The Settled Systems"}
+          <p className="sf-kind-setting">
+            {label}
+            <span aria-hidden="true">✦</span>
+            {SETTING_NAMES[plane] ?? title(plane)}
           </p>
+          <h3 className="sf-kind-name">{name}</h3>
+          {children}
         </div>
       </div>
     </article>
+  );
+}
+
+/**
+ * A Kind's card, on the frame above: "Kind ✦" and its setting over its
+ * name, its summary, each focus stat's bonus and maximum, the Traits every
+ * character of the Kind holds, and its features.
+ *
+ * lore    Its lore line under the summary, as in the popup.
+ * select  A card to pick in a radio group, clickable and keyboard-operable,
+ *         ringed in green while picked (.selected).
+ */
+export function KindCard({
+  kind: k,
+  lore = false,
+  select,
+  background = "orbits",
+  className = "",
+}: {
+  kind: Kind;
+  lore?: boolean;
+  // What's drawn behind the content: the orbits (the default), the sun and
+  // planets, the compass or the planet
+  background?: KindBackground;
+  select?: { selected: boolean; onSelect: () => void };
+  className?: string;
+}) {
+  return (
+    <KindFrame seed={k.id} name={k.name} label="Kind" plane={k.plane} background={background} select={select} className={className}>
+      <p className="sf-kind-summary">{k.summary}</p>
+      {lore && k.lore && <p className="sf-kind-lore">{k.lore}</p>}
+      {k.stats && (
+        <div className="sf-kind-stats">
+          {KIND_STAT_GROUPS.map(([group, stats]) => (
+            <div key={group}>
+              <div className={`sf-kind-label sf-kind-label--${group.toLowerCase()}`}>{group}</div>
+              {stats.map((s) => (
+                <div key={s} className="sf-kind-stat">
+                  <abbr title={title(s)}>{title(s.slice(0, 3))}</abbr>
+                  <span className="sf-kind-num">
+                    +{k.stats[s]?.bonus ?? 0}
+                    <span>/{k.stats[s]?.max ?? 0}</span>
+                  </span>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
+      {k.grants.length > 0 && (
+        <div className="sf-kind-grants">
+          <span className="sf-kind-label">Grants</span>
+          {k.grants.map((g) => (
+            <CardChip key={g.trait} tone="accent">
+              {traitName(g.trait)}
+            </CardChip>
+          ))}
+        </div>
+      )}
+      {k.features.length > 0 && (
+        <ul className="sf-kind-features">
+          {k.features.map((f) => (
+            <li key={f.name}>
+              <strong>{f.name}.</strong> {f.description}
+            </li>
+          ))}
+        </ul>
+      )}
+    </KindFrame>
   );
 }

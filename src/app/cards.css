@@ -394,83 +394,48 @@
 
 /* ---- Background cards: Kinds, Origins, Professions and Pasts ---- */
 
-.sf-background-card {
-    display: grid;
-    align-content: start;
-    gap: 16px;
-    padding: 16px;
-
-    /* The grid's gap does the spacing between a card's rows */
-    > *,
-    > .sf-card-body > * {
-        margin-top: 0;
-        margin-bottom: 0;
-    }
-
-    > .sf-card-bar {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: space-between;
-        gap: .5rem;
-        margin: -16px -16px 0;
-        padding: 10px 16px;
-
-        > .sf-card-name {
-            margin: 0;
-            font-size: 1.05rem;
-            font-weight: 600;
-            line-height: 1.2;
-        }
-
-        .sf-chip--muted {
-            background: rgb(255 255 255 / 15%);
-            color: var(--sf-gray-0);
-        }
-    }
-
-    > .sf-card-body {
-        display: grid;
-        align-content: start;
-        gap: 16px;
-    }
-
-    /* A card to pick */
-    &.is-selectable {
-        cursor: pointer;
-
-        &:hover:not(.selected) {
-            border-color: var(--sf-gray-300);
-        }
-    }
-}
-
-/* A Kind's or package's lore line, under its summary */
-.sf-card-lore {
-    color: var(--card-soft);
-}
-
-/* What it gives, as labeled rows of chips */
+/* ---- Background cards (an Origin, Profession or Past): the Kind card's
+   frame (below), with what the background gives as labeled rows of chips
+   under its summary, each label in the Kind card's small capitals over
+   its chips, then its features */
 .sf-background-rows {
     display: grid;
     gap: 16px;
+    margin: 20px 0 6px;
 
     > div {
         display: flex;
         flex-wrap: wrap;
-        gap: 4px;
+        align-items: center;
+        gap: 8px 6px;
     }
 
     > p,
     .sf-chip {
         margin: 0;
     }
+
+    /* Its features, a little apart from the chips */
+    > p:first-of-type {
+        margin-top: 8px;
+    }
 }
 
 .sf-background-label {
+    /* On its own line, over its chips */
     flex-basis: 100%;
-    font-size: .75rem;
-    font-weight: 600;
+    margin-bottom: -2px;
+    font-family: 'bebas_neueregular', sans-serif;
+    font-size: .9375rem;
+    font-weight: 400;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--key-label, var(--card-soft));
+}
+
+/* A Kind's or package's lore line, under its summary */
+.sf-card-lore {
+    color: var(--card-soft);
 }
 
 /* ---- Kind cards (KindCard; the site's sf_card_kind): a thin gunmetal
@@ -553,6 +518,10 @@
     overflow: hidden;
     /* So the sky can size itself by the field's width (cqw) */
     container-type: inline-size;
+    /* The browser skips drawing and animating the art while the card is
+       off screen, so a long list of cards (the creator's Origins) only
+       runs the ones in view */
+    content-visibility: auto;
 }
 
 /* The sky: a faded sun half below the bottom of the field, rays fanning
@@ -666,13 +635,21 @@
    pulse slowly and a few four-pointed twinkles that flare now and then.
    The planet's dense one has larger dots */
 .sf-kind-stars { position: absolute; inset: 0; pointer-events: none; opacity: .55; }
+/* The dots in three layers, each pulsing as one a third of a beat apart
+   (one animation per layer, not per dot) */
+.sf-kind-dots {
+    position: absolute;
+    inset: 0;
+    animation: sf-kind-pulse 6s ease-in-out infinite;
+}
+.sf-kind-dots:nth-child(2) { animation-delay: -2s; }
+.sf-kind-dots:nth-child(3) { animation-delay: -4s; }
 .sf-kind-dot {
     position: absolute;
     width: 1px;
     height: 1px;
     border-radius: 50%;
     background: var(--sf-gray-0);
-    animation: sf-kind-pulse 6s ease-in-out infinite;
 }
 .sf-kind-dot.is-big { width: 2px; height: 2px; }
 .sf-kind-card--bg-planet .sf-kind-dot { width: 1.5px; height: 1.5px; }
@@ -700,7 +677,7 @@
     12% { transform: scale(.35) rotate(90deg); opacity: .5; }
 }
 @media (prefers-reduced-motion: reduce) {
-    .sf-kind-dot, .sf-kind-twinkle { animation: none; }
+    .sf-kind-dots, .sf-kind-twinkle { animation: none; }
 }
 
 .sf-kind-corner {
@@ -761,7 +738,6 @@
 .sf-kind-summary {
     margin: 0;
     font-style: italic;
-    backdrop-filter: blur(.5px);
     text-align: center;
     color: var(--kind-text);
 }
@@ -777,13 +753,16 @@
     color: var(--key-label);
 }
 
+/* The three groups as wide as their stats, the row's spare room shared
+   evenly before, between and after them (at least 16px between), so they
+   stay centered and inside the padding at any card width */
 .sf-kind-stats {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px 48px;
+    grid-template-columns: repeat(3, auto);
+    justify-content: space-evenly;
+    gap: 12px 16px;
     margin: 24px -15px;
     padding: 8px 16px;
-    backdrop-filter: blur(.5px);
     font-size: 1rem;
 }
 /* On a narrow card, the groups stack */
@@ -796,25 +775,30 @@
 .sf-kind-stats .sf-kind-label--physical { color: var(--sf-red-500); }
 .sf-kind-stats .sf-kind-label--social { color: var(--sf-purple-500); }
 .sf-kind-stats .sf-kind-label--mental { color: var(--sf-yellow-400); }
-.sf-kind-stat { display: flex; justify-content: space-between; gap: 4px; }
+/* Each stat's label and number 24px apart, the labels as wide as the
+   widest (MEM), so the numbers line up */
+.sf-kind-stat { display: flex; gap: 24px; }
+.sf-kind-stat abbr { min-width: 1.75em; }
 .sf-kind-stat abbr { font-family: 'bebas_neueregular', sans-serif; letter-spacing: .06em; text-decoration: none; cursor: help; }
 .sf-kind-num { font-variant-numeric: tabular-nums; color: var(--key-soft); }
 .sf-kind-num span { color: var(--kind-muted); }
 
-.sf-kind-grants { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; margin-bottom: 14px; }
+.sf-kind-grants { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 6px; margin-bottom: 14px; }
 /* Its Grants are the cards' usual accent chips */
 .sf-kind-grants .sf-chip { margin: 0; }
-.sf-kind-grants .sf-kind-label { margin: 0 4px 0 0; }
-.sf-kind-features { margin: 0 0 18px; padding: 0; list-style: none; backdrop-filter: blur(.5px); }
+/* Its label on its own line, over the chips, as on Background cards */
+.sf-kind-grants .sf-kind-label { flex-basis: 100%; margin: 0 0 -2px; }
+.sf-kind-features { margin: 0 0 18px; padding: 0; list-style: none; }
 .sf-kind-features li { margin-bottom: 8px; }
 .sf-kind-features strong { color: var(--key-soft); }
 
-.sf-kind-foot {
+/* "Kind ✦ The Settled Systems" (or Isekai) over the name */
+.sf-kind-setting {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
-    margin: auto 0 0;
+    margin: 0 0 10px;
     font-family: 'bebas_neueregular', sans-serif;
     font-size: 1rem;
     font-weight: 400;
@@ -823,7 +807,7 @@
     white-space: nowrap;
     color: var(--key-label);
 }
-.sf-kind-foot span { font-size: .625rem; }
+.sf-kind-setting span { font-size: .625rem; }
 
 /* Isekai's cards key on the palette's greens: Dreft (#1c372b) and Green
    (#47b767) */
@@ -839,7 +823,7 @@
 }
 @media (max-width: 480px) {
     .sf-kind-content { padding: 26px 18px 18px; }
-    .sf-kind-foot { gap: 6px; font-size: .875rem; letter-spacing: .06em; }
+    .sf-kind-setting { gap: 6px; font-size: .875rem; letter-spacing: .06em; }
 }
 
 /* A Kind to pick (the creator's Character step): a green ring and a check

@@ -19,9 +19,8 @@ export function BackgroundPopup({ id, onClose }: { id: string; onClose: () => vo
       {kind ? (
         <KindCard kind={kind} lore className="tools-background-card" />
       ) : (
-        <BackgroundCard name={entry.name} slot={title(pkg!.type)} plane={entry.plane} className="tools-background-card">
-          <p>{entry.summary}</p>
-          {entry.lore && <p className="sf-card-lore">{entry.lore}</p>}
+        <BackgroundCard id={entry.id} name={entry.name} slot={title(pkg!.type)} plane={entry.plane} summary={entry.summary} className="tools-background-card">
+          {entry.lore && <p className="sf-kind-lore">{entry.lore}</p>}
           <PackageGrants pkg={pkg!} />
         </BackgroundCard>
       )}
