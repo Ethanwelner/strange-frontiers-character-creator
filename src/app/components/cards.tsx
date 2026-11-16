@@ -558,6 +558,11 @@ export function BackgroundRows({ rows, children }: { rows: { label: string; chip
   );
 }
 
+// Each background slot's art behind the content: an Origin the dark planet
+// under a dense starfield, a Profession the compass, a Past the column of
+// planets lit by a faded sun
+const SLOT_BACKGROUNDS: Record<string, KindBackground> = { origin: "planet", profession: "compass", past: "sun" };
+
 /**
  * A Background card (an Origin, Profession or Past), drawn on the Kind
  * card's frame: its slot and setting over the name ("Origin ✦ The Settled
@@ -592,6 +597,7 @@ export function BackgroundCard({
       name={name}
       label={slot}
       plane={plane}
+      background={SLOT_BACKGROUNDS[slot.toLowerCase()] ?? "orbits"}
       select={select}
       className={`sf-background-card${className ? ` ${className}` : ""}`}
     >
