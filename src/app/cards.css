@@ -774,10 +774,11 @@
 .sf-kind-num { font-variant-numeric: tabular-nums; color: var(--key-soft); }
 .sf-kind-num span { color: var(--kind-muted); }
 
-.sf-kind-grants { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; margin-bottom: 14px; }
+.sf-kind-grants { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 6px; margin-bottom: 14px; }
 /* Its Grants are the cards' usual accent chips */
 .sf-kind-grants .sf-chip { margin: 0; }
-.sf-kind-grants .sf-kind-label { margin: 0 4px 0 0; }
+/* Its label on its own line, over the chips, as on Background cards */
+.sf-kind-grants .sf-kind-label { flex-basis: 100%; margin: 0 0 -2px; }
 .sf-kind-features { margin: 0 0 18px; padding: 0; list-style: none; backdrop-filter: blur(.5px); }
 .sf-kind-features li { margin-bottom: 8px; }
 .sf-kind-features strong { color: var(--key-soft); }
