@@ -249,25 +249,14 @@
     background-color: var(--sheet-box);
     border-radius: 12px;
 
-    /* Diagonal hazard stripes, the box gray and a stripe a little darker,
-       24px in from the box's edges and fading out from the bottom up into
-       a stronger grain than the cards' (cards.css), which holds the top half */
-    &::before,
+    /* A stronger grain than the cards' (cards.css), 24px in from the box's
+       edges, full through the top half and fading out toward the bottom */
     &::after {
         content: "";
         position: absolute;
         inset: 24px;
         z-index: -1;
         pointer-events: none;
-    }
-
-    &::before {
-        background-image: repeating-linear-gradient(135deg, color-mix(in srgb, var(--sheet-box) 50%, var(--sf-gray-800)) 0 8px, transparent 8px 16px);
-        -webkit-mask-image: linear-gradient(to top, rgb(0 0 0 / 70%), transparent 55%);
-        mask-image: linear-gradient(to top, rgb(0 0 0 / 70%), transparent 55%);
-    }
-
-    &::after {
         background-image: var(--sf-grain-strong);
         background-size: 200px 200px;
         -webkit-mask-image: linear-gradient(to bottom, #000 45%, transparent);
