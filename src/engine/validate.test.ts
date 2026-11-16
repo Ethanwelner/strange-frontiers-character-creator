@@ -1027,3 +1027,36 @@ describe("rule 17: the Game Master's changes in play", () => {
     expect(codes(check({ ...human, gmTraits: [{ trait: "lightsaber-mastery" }] }))).toContain("unknown-trait");
   });
 });
+
+describe("rule 18: Traits' stat bonuses", () => {
+  // A level 5 Human with Power at its max of 15: 1 from the Kind, 14 placed
+  const maxed: BuildInput = {
+    kind: "human",
+    origin: "american-empire-earth",
+    profession: "truck-pilot",
+    past: "station-rat",
+    level: 5,
+    levels: [3, 3, 3, 3, 2].map((power) => ({ group: "physical" as const, points: { power, ...(power === 2 ? { grace: 1 } : {}) } })),
+  };
+
+  it("adds to the stat and its max, but gives no picks", () => {
+    const plain = check(human);
+    const r = check({ ...human, gmTraits: [{ trait: "fast-twitch-muscle" }] });
+    expect(r.summary!.stats.power).toBe(plain.summary!.stats.power + 1);
+    expect(r.summary!.statBonus).toEqual({ power: 1 });
+    expect(r.summary!.picks).toEqual(plain.summary!.picks);
+    expect(r.summary!.resources.hp).toBe(plain.summary!.resources.hp + 1);
+  });
+
+  it("takes a Human past 15", () => {
+    const base = check(maxed, content, { startingLevel: 5 });
+    expect(base.summary!.stats.power).toBe(15);
+    expect(base.errors.map((e) => e.code)).not.toContain("stat-max");
+    const r = check({ ...maxed, gmTraits: [{ trait: "fast-twitch-muscle" }] }, content, { startingLevel: 5 });
+    expect(r.summary!.stats.power).toBe(16);
+    expect(r.errors.map((e) => e.code)).not.toContain("stat-max");
+    // Placing a 15th point is still past the max: the bonus adds on top
+    const over = { ...maxed, levels: [...maxed.levels!.slice(0, 4), { group: "physical" as const, points: { power: 3 } }] };
+    expect(check({ ...over, gmTraits: [{ trait: "fast-twitch-muscle" }] }, content, { startingLevel: 5 }).errors.map((e) => e.code)).toContain("stat-max");
+  });
+});

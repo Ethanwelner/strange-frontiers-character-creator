@@ -1,0 +1,11 @@
+id: heightened-instinct
+name: "Heightened Instinct"
+status: draft
+plane: earth
+summary: "Gut feelings edited to be right more often."
+tags: [gene-hacking, intuition, mental, stat-edit, body]
+category: skill
+minStats: { intuition: 4, empathy: 2 }
+prerequisites: [gene-hacking]
+statBonus: { intuition: 1 }
+effect: "+1 to this character’s Intuition, and to its Intuition max."

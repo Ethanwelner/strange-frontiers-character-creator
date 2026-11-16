@@ -1,0 +1,11 @@
+id: nootropic-edit
+name: "Nootropic Edit"
+status: draft
+plane: earth
+summary: "A brain tuned to learn faster and think longer."
+tags: [gene-hacking, mental, learning, body]
+category: skill
+ranked: true
+minStats: { logic: 3, memory: 3, intuition: 2 }
+prerequisites: [gene-hacking]
+effect: "Rank *3 added to Skill Check rolls involving learning, research or working through a complex problem."

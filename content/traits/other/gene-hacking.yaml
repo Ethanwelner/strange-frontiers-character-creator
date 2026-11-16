@@ -6,7 +6,7 @@ summary: "A genome open to editing."
 tags: [gene-hacking, body-modification, body]
 category: other
 conveyed: true
-# Not a stat: a keyword pass. The body modification Traits (not yet
-# written) carry the Gene Hacking keyword, and only a character with this
-# Trait can take them.
+# Not a stat: a keyword pass. The body modification Traits carry the Gene
+# Hacking keyword (the gene-hacking tag) and list this Trait as a
+# prerequisite, so only a character with it can take them.
 effect: "This character can take Traits with the Gene Hacking keyword: genetic body modifications."

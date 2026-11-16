@@ -1,0 +1,10 @@
+id: dense-bones
+name: "Dense Bones"
+status: draft
+plane: earth
+summary: "A skeleton edited to take a beating."
+tags: [gene-hacking, toughness, defense, body]
+category: ability
+minStats: { power: 4, endurance: 4 }
+prerequisites: [gene-hacking]
+effect: "+2 to this character’s Blunt Resistance. This character can request Advantage on rolls to avoid the Broken Limb Condition."

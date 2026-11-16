@@ -238,7 +238,7 @@ export function App() {
               )}
               {step === "background" && <BackgroundStep draft={draft} onChange={setDraft} />}
               {step === "stats" && (
-                <StatsStep draft={draft} onChange={setDraft} />
+                <StatsStep draft={draft} onChange={setDraft} traitBonus={result.summary?.statBonus} />
               )}
               {step === "choices" && <ChoicesStep draft={draft} result={result} onChange={setDraft} />}
               {step === "traits" && <TraitsStep draft={draft} campaign={campaign} result={result} onChange={setDraft} />}

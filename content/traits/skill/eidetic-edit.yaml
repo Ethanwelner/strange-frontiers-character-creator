@@ -1,0 +1,11 @@
+id: eidetic-edit
+name: "Eidetic Edit"
+status: draft
+plane: earth
+summary: "A memory edited to keep what it takes in."
+tags: [gene-hacking, memory, mental, stat-edit, body]
+category: skill
+minStats: { memory: 4, intuition: 2 }
+prerequisites: [gene-hacking]
+statBonus: { memory: 1 }
+effect: "+1 to this character’s Memory, and to its Memory max."

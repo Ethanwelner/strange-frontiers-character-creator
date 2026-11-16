@@ -1,0 +1,11 @@
+id: neural-density
+name: "Neural Density"
+status: draft
+plane: earth
+summary: "More neurons, packed tighter."
+tags: [gene-hacking, logic, mental, stat-edit, body]
+category: skill
+minStats: { logic: 4, memory: 2 }
+prerequisites: [gene-hacking]
+statBonus: { logic: 1 }
+effect: "+1 to this character’s Logic, and to its Logic max."

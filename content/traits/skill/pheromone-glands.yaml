@@ -1,0 +1,11 @@
+id: pheromone-glands
+name: "Pheromone Glands"
+status: draft
+plane: earth
+summary: "A scent that puts people at ease, or draws them in."
+tags: [gene-hacking, social, scent, body]
+category: skill
+ranked: true
+minStats: { empathy: 4, persuasion: 2 }
+prerequisites: [gene-hacking]
+effect: "Rank *5 added to Skill Check rolls involving calming, charming or attracting someone within 2 m who can smell this character."

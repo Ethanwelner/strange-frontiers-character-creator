@@ -1,0 +1,11 @@
+id: enhanced-metabolism
+name: "Enhanced Metabolism"
+status: draft
+plane: earth
+summary: "Runs leaner and longer than a baseline body."
+tags: [gene-hacking, endurance, survival, body]
+category: skill
+ranked: true
+minStats: { endurance: 4, power: 2 }
+prerequisites: [gene-hacking]
+effect: "This character is capable of going 3 days without food, and getting by on 4 hours of sleep, without a Skill Check. Rank *3 added to Skill Check rolls involving resisting poison, disease or fatigue."

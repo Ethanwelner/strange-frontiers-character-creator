@@ -1,0 +1,10 @@
+id: night-eyes
+name: "Night Eyes"
+status: draft
+plane: earth
+summary: "Eyes that drink in what little light there is."
+tags: [gene-hacking, senses, sight, darkness, body]
+category: ability
+minStats: { intuition: 4, grace: 2 }
+prerequisites: [gene-hacking]
+effect: "This character sees in near-darkness as if it were dim light, and darkness alone doesn’t give it the Blinded Condition."

@@ -1,0 +1,11 @@
+id: toxin-glands
+name: "Toxin Glands"
+status: draft
+plane: earth
+summary: "A venom of its own, delivered by bite or scratch."
+tags: [gene-hacking, combat, poison, natural-weapon, body]
+category: ability
+minStats: { grace: 3, endurance: 3, logic: 2 }
+prerequisites: [gene-hacking]
+action: "Venom: This character makes an unarmed Attack with a bite or scratch. On a Solid Hit or better, the target gains the Slowed Condition for 2 Rounds."
+effect: "This character gains the Venom Action."

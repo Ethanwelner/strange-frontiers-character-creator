@@ -1,0 +1,10 @@
+id: radiation-hardening
+name: "Radiation Hardening"
+status: draft
+plane: earth
+summary: "Cells that repair radiation damage as it happens."
+tags: [gene-hacking, radiation, defense, endurance, body]
+category: ability
+minStats: { endurance: 4, logic: 3 }
+prerequisites: [gene-hacking]
+effect: "+3 to this character’s Radiation Resistance. This character can request Advantage on rolls to avoid the Irradiated Condition."

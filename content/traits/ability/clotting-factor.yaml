@@ -1,0 +1,10 @@
+id: clotting-factor
+name: "Clotting Factor"
+status: draft
+plane: earth
+summary: "Blood that seals a wound almost as it opens."
+tags: [gene-hacking, healing, bleeding, endurance, body]
+category: ability
+minStats: { endurance: 4, empathy: 2 }
+prerequisites: [gene-hacking]
+effect: "This character can’t gain the Severe Bleeding Condition, and its bleeding wounds close on their own within a minute."

@@ -1,0 +1,10 @@
+id: gills
+name: "Gills"
+status: draft
+plane: earth
+summary: "Breathes water as well as air."
+tags: [gene-hacking, breathing, water, swimming, body]
+category: ability
+minStats: { endurance: 3, grace: 3 }
+prerequisites: [gene-hacking, oxygen-rich-blood]
+effect: "This character can breathe water as easily as air, as with the Water Breathing Condition, at all times."

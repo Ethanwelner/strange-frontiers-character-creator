@@ -1,0 +1,10 @@
+id: engineered-immunity
+name: "Engineered Immunity"
+status: draft
+plane: earth
+summary: "An immune system edited against the common killers."
+tags: [gene-hacking, disease, poison, endurance, body]
+category: ability
+minStats: { endurance: 5, logic: 2 }
+prerequisites: [gene-hacking]
+effect: "This character can’t catch ordinary diseases, and can request Advantage on rolls to resist poisons and toxins."

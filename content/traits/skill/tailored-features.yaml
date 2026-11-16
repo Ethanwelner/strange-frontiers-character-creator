@@ -1,0 +1,11 @@
+id: tailored-features
+name: "Tailored Features"
+status: draft
+plane: earth
+summary: "Good looks, written into the genome."
+tags: [gene-hacking, appearance, social, body]
+category: skill
+ranked: true
+minStats: { empathy: 2, persuasion: 3, demeanor: 2 }
+prerequisites: [gene-hacking]
+effect: "This character is capable of looking striking at a glance, with engineered symmetry, skin and hair, without a Skill Check. Rank *3 added to Skill Check rolls involving first impressions, seduction, modelling or being remembered."

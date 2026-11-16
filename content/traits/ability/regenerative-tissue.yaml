@@ -1,0 +1,11 @@
+id: regenerative-tissue
+name: "Regenerative Tissue"
+status: draft
+plane: earth
+summary: "Heals faster than any baseline body."
+tags: [gene-hacking, healing, endurance, body]
+category: ability
+minStats: { endurance: 6, power: 2 }
+prerequisites: [gene-hacking]
+resources: { hp: 5 }
+effect: "This character has +5 HP, and recovers 1 HP an hour without care."

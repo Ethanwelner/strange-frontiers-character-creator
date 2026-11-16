@@ -1,0 +1,10 @@
+id: tetrachromacy
+name: "Tetrachromacy"
+status: draft
+plane: earth
+summary: "A fourth kind of color cone, seeing colors others can’t."
+tags: [gene-hacking, senses, sight, perception, body]
+category: ability
+minStats: { intuition: 6, memory: 3 }
+prerequisites: [gene-hacking]
+effect: "This character can request Advantage on rolls where color gives something away: a disguise, a forged document or paint job, camouflage, or the flush and pallor that betray nerves or illness."

@@ -1,0 +1,11 @@
+id: fast-twitch-muscle
+name: "Fast-Twitch Muscle"
+status: draft
+plane: earth
+summary: "Muscle fibers edited for raw strength."
+tags: [gene-hacking, power, stat-edit, body]
+category: skill
+minStats: { power: 4, grace: 2 }
+prerequisites: [gene-hacking]
+statBonus: { power: 1 }
+effect: "+1 to this character’s Power, and to its Power max."
