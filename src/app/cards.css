@@ -777,12 +777,14 @@
     color: var(--key-label);
 }
 
-/* The three groups as wide as their stats, centered in the row */
+/* The three groups as wide as their stats, the row's spare room shared
+   evenly before, between and after them (at least 16px between), so they
+   stay centered and inside the padding at any card width */
 .sf-kind-stats {
     display: grid;
     grid-template-columns: repeat(3, auto);
-    justify-content: center;
-    gap: 12px 48px;
+    justify-content: space-evenly;
+    gap: 12px 16px;
     margin: 24px -15px;
     padding: 8px 16px;
     backdrop-filter: blur(.5px);
