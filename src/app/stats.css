@@ -185,13 +185,13 @@
 }
 
 .sf-stat-slot.is-empty {
-    border: .1rem solid var(--stat-open);
+    border: 1px solid var(--stat-open);
 }
 
 /* Slots past a stat's maximum: filled and outlined in the open slots'
    gray, faded */
 .sf-stat-slot.is-unavailable {
-    border: .1rem solid var(--stat-open);
+    border: 1px solid var(--stat-open);
     background-color: var(--stat-open);
     opacity: .25;
 }
