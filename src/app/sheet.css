@@ -39,7 +39,7 @@
     /* Faint hazard stripes, lit from the top like the cards (cards.css) */
     background-color: var(--sheet-frame);
     background-image:
-        repeating-linear-gradient(135deg, rgb(255 255 255 / 3%) 0 8px, transparent 8px 16px),
+        repeating-linear-gradient(135deg, rgb(255 255 255 / 2%) 0 8px, transparent 8px 16px),
         var(--sf-grain-light);
     border: 1px solid var(--sheet-edge);
     border-radius: 12px;
@@ -250,7 +250,7 @@
     padding: var(--sheet-box-pad);
     /* A little see-through and blurring what's behind, so the frame's
        stripes just barely show through */
-    background-color: color-mix(in srgb, var(--sheet-box) 75%, transparent);
+    background-color: color-mix(in srgb, var(--sheet-box) 55%, transparent);
     -webkit-backdrop-filter: blur(1px);
     backdrop-filter: blur(1px);
     border-radius: 12px;
