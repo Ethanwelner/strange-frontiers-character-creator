@@ -1,0 +1,11 @@
+id: oxygen-rich-blood
+name: "Oxygen-Rich Blood"
+status: draft
+plane: earth
+summary: "Blood that carries far more air than it should."
+tags: [gene-hacking, endurance, breathing, body]
+category: skill
+ranked: true
+minStats: { endurance: 3, grace: 2 }
+prerequisites: [gene-hacking]
+effect: "This character is capable of holding its breath for 10 minutes without a Skill Check. Rank *5 added to Skill Check rolls involving working underwater, at altitude or in thin air."

@@ -1,0 +1,11 @@
+id: iron-nerves
+name: "Iron Nerves"
+status: draft
+plane: earth
+summary: "Edited to hold a room, and hold steady in it."
+tags: [gene-hacking, demeanor, will, stat-edit, body]
+category: skill
+minStats: { demeanor: 4, logic: 2 }
+prerequisites: [gene-hacking]
+statBonus: { demeanor: 1 }
+effect: "+1 to this character’s Demeanor, and to its Demeanor max."

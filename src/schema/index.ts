@@ -274,6 +274,10 @@ export const Trait = BaseEntry.extend({
   choices: z.array(TraitChoice).default([]),
   // Added to the character's HP, VP, SP or MP for each rank held.
   resources: Resources.default({}),
+  // Added to focus stats while it's held, like a Gene Hacking edit's +1
+  // Power. It raises the stat's max by as much, so a Human can pass 15, but
+  // it gives no Trait picks and nothing goes past 20.
+  statBonus: z.partialRecord(StatId, z.number().int().min(1)).default({}),
   // Added to the character's Wealth, once per rank, like a Family Fortune.
   wealth: z.number().int().default(0),
   // Core stats beyond Physical, Social and Mental that holding this Trait

@@ -1,0 +1,11 @@
+id: steady-chemistry
+name: "Steady Chemistry"
+status: draft
+plane: earth
+summary: "Stress hormones edited down to a murmur."
+tags: [gene-hacking, composure, will, body]
+category: skill
+ranked: true
+minStats: { demeanor: 4, endurance: 2 }
+prerequisites: [gene-hacking]
+effect: "This character is capable of keeping steady hands and an even pulse without a Skill Check. Rank *3 added to Skill Check rolls involving keeping composure under pressure, or resisting fear and intimidation."

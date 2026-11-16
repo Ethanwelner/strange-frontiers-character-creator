@@ -1,0 +1,11 @@
+id: keen-senses
+name: "Keen Senses"
+status: draft
+plane: earth
+summary: "Hearing and smell sharpened past human."
+tags: [gene-hacking, perception, senses, body]
+category: skill
+ranked: true
+minStats: { intuition: 4, memory: 2 }
+prerequisites: [gene-hacking]
+effect: "This character is capable of following a familiar scent and hearing a whisper across a room without a Skill Check. Rank *3 added to Skill Check rolls involving noticing sounds and smells, or tracking."

@@ -1,0 +1,11 @@
+id: refined-coordination
+name: "Refined Coordination"
+status: draft
+plane: earth
+summary: "Nerves and balance edited for precision."
+tags: [gene-hacking, grace, stat-edit, body]
+category: skill
+minStats: { grace: 4, intuition: 2 }
+prerequisites: [gene-hacking]
+statBonus: { grace: 1 }
+effect: "+1 to this character’s Grace, and to its Grace max."

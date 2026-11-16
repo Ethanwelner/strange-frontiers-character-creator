@@ -1,0 +1,11 @@
+id: hardy-constitution
+name: "Hardy Constitution"
+status: draft
+plane: earth
+summary: "A body edited to take more and keep going."
+tags: [gene-hacking, endurance, stat-edit, body]
+category: skill
+minStats: { endurance: 4, grace: 2 }
+prerequisites: [gene-hacking]
+statBonus: { endurance: 1 }
+effect: "+1 to this character’s Endurance, and to its Endurance max."

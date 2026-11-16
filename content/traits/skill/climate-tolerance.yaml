@@ -1,0 +1,11 @@
+id: climate-tolerance
+name: "Climate Tolerance"
+status: draft
+plane: earth
+summary: "Comfortable in weather that would kill a baseline Human."
+tags: [gene-hacking, survival, endurance, body]
+category: skill
+ranked: true
+minStats: { endurance: 5, demeanor: 2 }
+prerequisites: [gene-hacking]
+effect: "This character is capable of staying comfortable from -20 °C to 50 °C without protective gear without a Skill Check. Rank *5 added to Skill Check rolls involving resisting heat or cold exposure."

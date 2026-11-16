@@ -13,6 +13,9 @@ interface Props {
   // The character as it stood before a level up (Game Tools): its core and
   // focus points are fixed, so − only takes back what the new level added.
   floor?: Draft;
+  // What held Traits add to each stat and its max (a Gene Hacking edit),
+  // from the check: drawn with the stats, but no point is placed with it
+  traitBonus?: Partial<Record<StatId, number>>;
 }
 
 // Stats as a pool, drawn like the character sheet. Each core point (one
@@ -33,7 +36,7 @@ interface Props {
 //
 // Magic, for characters who can level it, has no focus stats: each core
 // point in it adds MP instead.
-export function StatsStep({ draft, onChange, floor }: Props) {
+export function StatsStep({ draft, onChange, floor, traitBonus = {} }: Props) {
   const base = baseStats(draft);
   // Free bonus points: the Origin's and other packages', each in its group,
   // and the Kind's, in any stat.
@@ -238,7 +241,10 @@ export function StatsStep({ draft, onChange, floor }: Props) {
               group: g,
               core: draft.core[g] + extraOf(g),
               bonus: extraOf(g),
-              stats: STAT_GROUPS[g].map((s: StatId) => ({ id: s, value: valueOf(s), bonus: bonusOf(s), max: base[s]?.max ?? 0 })),
+              stats: STAT_GROUPS[g].map((s: StatId) => {
+                const t = traitBonus[s] ?? 0;
+                return { id: s, value: valueOf(s) + t, bonus: bonusOf(s) + t, max: (base[s]?.max ?? 0) + t };
+              }),
             }))}
             edit={{ core: coreControl, stat: statControl }}
           />

@@ -11,8 +11,9 @@ features:
   - name: Unexceptional
     description: Humans can't exceed 15 in any focus stat unless otherwise modified.
 # Humans can be augmented: Cyberization and Gene Hacking let them take
-# Traits with those keywords (cybernetics and body modification, not yet
-# written).
+# what carries those keywords. The Gene Hacking Traits need gene-hacking
+# (tagged gene-hacking); cybernetics, not yet written, are planned as
+# implanted items.
 grants:
   - trait: cyberization
   - trait: gene-hacking

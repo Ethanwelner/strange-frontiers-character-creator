@@ -1,0 +1,11 @@
+id: golden-voice
+name: "Golden Voice"
+status: draft
+plane: earth
+summary: "A voice people want to keep listening to."
+tags: [gene-hacking, voice, social, performance, body]
+category: skill
+ranked: true
+minStats: { persuasion: 4, grace: 2 }
+prerequisites: [gene-hacking]
+effect: "Rank *3 added to Skill Check rolls involving singing, oratory or holding a room’s attention."

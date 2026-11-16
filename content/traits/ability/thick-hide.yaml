@@ -1,0 +1,10 @@
+id: thick-hide
+name: "Thick Hide"
+status: draft
+plane: earth
+summary: "Skin laced with keratin, tough to cut."
+tags: [gene-hacking, toughness, defense, body]
+category: ability
+minStats: { endurance: 3, power: 3 }
+prerequisites: [gene-hacking]
+effect: "+1 to this character’s Slashing and Piercing Resistance."

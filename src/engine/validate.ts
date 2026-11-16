@@ -70,7 +70,10 @@ export interface ChoiceQuestion {
 export const DEFAULT_MOVEMENT = "10 m";
 
 export interface BuildSummary {
+  // Each focus stat, Traits' bonuses included
   stats: Record<StatId, number>;
+  // What held Traits add to each focus stat, and to its max (statBonus)
+  statBonus: Partial<Record<StatId, number>>;
   coreStats: Record<StatGroup, number>;
   // The part of each core stat that packages add without a level, like the
   // Licensed Mage's 1 Magic. Included in coreStats.
@@ -453,6 +456,9 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     }
   }
 
+  // Ranked Traits bought past rank 1, whose stats are checked after rule 18
+  const rankChecks: { t: Trait; top: number }[] = [];
+
   // Group picks by Trait, keeping their positions for error paths.
   const byTrait = new Map<string, { rank: number; index: number }[]>();
   build.traits.forEach((p, index) => {
@@ -505,14 +511,9 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
       next = b.rank + 1;
       hold(id, b.rank, `${build.traits[b.index]!.pick} pick`);
     }
+    // Checked once the held Traits' stat bonuses are in (rule 18)
     const top = Math.max(...bought.map((b) => b.rank));
-    if (top > 1) {
-      const short = t.rankStats.filter((s) => stats[s] < 3 * top);
-      if (short.length) {
-        const have = short.map((s) => `${s} ${stats[s]}`).join(", ");
-        error("rank-stats", `${label(t)} rank ${top} needs ${t.rankStats.join(", ")} of at least ${3 * top} (has ${have})`, "traits");
-      }
-    }
+    if (top > 1) rankChecks.push({ t, top });
   }
 
   // Rule 17: the Game Master's changes in play. A Trait the Game Master gave
@@ -532,6 +533,26 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     }
   };
   for (const id of build.gmRemoved) drop(id);
+
+  // Rule 18: held Traits' stat bonuses, like a Gene Hacking edit's +1 Power,
+  // add to focus stats and raise their maxes by as much. They come after the
+  // picks are counted (rule 5), so they give none, and nothing passes 20.
+  const statBonus: Partial<Record<StatId, number>> = {};
+  for (const h of held.values()) {
+    for (const [s, n = 0] of Object.entries(traits.get(h.trait)?.statBonus ?? {}) as [StatId, number | undefined][]) {
+      statBonus[s] = (statBonus[s] ?? 0) + n;
+    }
+  }
+  for (const [s, n = 0] of Object.entries(statBonus) as [StatId, number | undefined][]) stats[s] = Math.min(STAT_CAP, stats[s] + n);
+
+  // Rule 10: a ranked Trait past rank 1 needs its rank stats at 3 × the rank.
+  for (const { t, top } of rankChecks) {
+    const short = t.rankStats.filter((s) => stats[s] < 3 * top);
+    if (short.length) {
+      const have = short.map((s) => `${s} ${stats[s]}`).join(", ");
+      error("rank-stats", `${label(t)} rank ${top} needs ${t.rankStats.join(", ")} of at least ${3 * top} (has ${have})`, "traits");
+    }
+  }
 
   // Rule 6: the choices of the Traits the build holds, by rank.
   for (const h of [...held.values()]) {
@@ -684,6 +705,7 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
     warnings,
     summary: {
       stats,
+      statBonus,
       coreStats,
       coreBonus,
       coreAccess: [...coreAccess],

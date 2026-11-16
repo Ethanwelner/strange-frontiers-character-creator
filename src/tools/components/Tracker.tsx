@@ -106,7 +106,7 @@ export function Tracker({
     <StatBlock groups={sheetStatGroups(play.draft, result)} />
   ) : (
     <div className="tools-stats">
-      <StatsStep draft={editing} onChange={onLevelDraft} floor={play.draft} />
+      <StatsStep draft={editing} onChange={onLevelDraft} floor={play.draft} traitBonus={result.summary?.statBonus} />
       {adding && (
         <div className="tools-level-actions">
           {/* Cancelling a level up is the + on the level blob's corner, which turns into Cancel.

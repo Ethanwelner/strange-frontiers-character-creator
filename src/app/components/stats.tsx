@@ -134,8 +134,11 @@ export function sheetStatGroups(draft: Draft, result: BuildResult): BlockGroup[]
       // Points can't go into them, so past the chassis's numbers the slots
       // are unavailable, as an AI Core's own Physical slots are
       if (summary?.chassis && g === "physical") return { id: s, value: summary.stats[s], bonus: 0, max: summary.stats[s] };
-      const bonus = (base?.[s]?.bonus ?? 0) + (draft.startPoints?.[s] ?? 0);
-      return { id: s, value: summary?.stats[s] ?? bonus, bonus, max: base?.[s]?.max ?? 0 };
+      // A held Trait's stat bonus (a Gene Hacking edit) counts like the Kind's,
+      // and raises the max by as much
+      const traitBonus = summary?.statBonus[s] ?? 0;
+      const bonus = (base?.[s]?.bonus ?? 0) + (draft.startPoints?.[s] ?? 0) + traitBonus;
+      return { id: s, value: summary?.stats[s] ?? bonus, bonus, max: (base?.[s]?.max ?? 0) + traitBonus };
     }),
   }));
 }

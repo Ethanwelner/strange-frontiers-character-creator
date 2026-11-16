@@ -56,3 +56,11 @@ describe("resistances", () => {
     expect(total(rs, "Cold")).toBe(0);
   });
 });
+
+describe("Gene Hacking's resistances", () => {
+  it("reads Thick Hide, Dense Bones and Radiation Hardening from their effects", () => {
+    const held = ["thick-hide", "dense-bones", "radiation-hardening"].map((trait) => ({ trait, rank: 1 }));
+    const rs = resistancesOf(content, [], held).map((r) => `${r.amount} ${r.type}`);
+    expect(rs.sort()).toEqual(["1 Piercing", "1 Slashing", "2 Blunt", "3 Radiation"]);
+  });
+});

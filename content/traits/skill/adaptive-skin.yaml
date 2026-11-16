@@ -1,0 +1,11 @@
+id: adaptive-skin
+name: "Adaptive Skin"
+status: draft
+plane: earth
+summary: "Skin that shifts its tone and pattern at will."
+tags: [gene-hacking, stealth, appearance, body]
+category: skill
+ranked: true
+minStats: { grace: 3, intuition: 2 }
+prerequisites: [gene-hacking]
+effect: "This character is capable of shifting its skin's tone and pattern at will without a Skill Check. Rank *5 added to Skill Check rolls involving hiding, blending into a crowd or going unnoticed."

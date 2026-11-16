@@ -1,0 +1,11 @@
+id: magnetic-charm
+name: "Magnetic Charm"
+status: draft
+plane: earth
+summary: "Edited to be hard to say no to."
+tags: [gene-hacking, persuasion, social, stat-edit, body]
+category: skill
+minStats: { persuasion: 4, empathy: 2 }
+prerequisites: [gene-hacking]
+statBonus: { persuasion: 1 }
+effect: "+1 to this character’s Persuasion, and to its Persuasion max."
