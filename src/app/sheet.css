@@ -251,8 +251,8 @@
     /* A little see-through and blurring what's behind, so the frame's
        stripes just barely show through */
     background-color: color-mix(in srgb, var(--sheet-box) 75%, transparent);
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(1px);
+    backdrop-filter: blur(1px);
     border-radius: 12px;
 }
 
