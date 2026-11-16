@@ -796,7 +796,10 @@
 .sf-kind-stats .sf-kind-label--physical { color: var(--sf-red-500); }
 .sf-kind-stats .sf-kind-label--social { color: var(--sf-purple-500); }
 .sf-kind-stats .sf-kind-label--mental { color: var(--sf-yellow-400); }
-.sf-kind-stat { display: flex; justify-content: space-between; gap: 4px; }
+/* Each stat's label and number 24px apart, the labels as wide as the
+   widest (MEM), so the numbers line up */
+.sf-kind-stat { display: flex; gap: 24px; }
+.sf-kind-stat abbr { min-width: 1.75em; }
 .sf-kind-stat abbr { font-family: 'bebas_neueregular', sans-serif; letter-spacing: .06em; text-decoration: none; cursor: help; }
 .sf-kind-num { font-variant-numeric: tabular-nums; color: var(--key-soft); }
 .sf-kind-num span { color: var(--kind-muted); }
@@ -809,13 +812,13 @@
 .sf-kind-features li { margin-bottom: 8px; }
 .sf-kind-features strong { color: var(--key-soft); }
 
-/* "Kind ✦ The Settled Systems" (or Isekai) under the name */
+/* "Kind ✦ The Settled Systems" (or Isekai) over the name */
 .sf-kind-setting {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
-    margin: -4px 0 8px;
+    margin: 0 0 4px;
     font-family: 'bebas_neueregular', sans-serif;
     font-size: 1rem;
     font-weight: 400;
