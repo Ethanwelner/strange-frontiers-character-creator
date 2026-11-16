@@ -36,11 +36,11 @@
     flex-direction: column;
     gap: var(--sheet-gap);
     padding: 1rem;
-    /* Lit from the top and grained like the cards (cards.css), the grain
-       stronger */
+    /* Faint hazard stripes, lit from the top like the cards (cards.css) */
     background-color: var(--sheet-frame);
-    background-image: var(--sf-grain-strong), var(--sf-grain-light);
-    background-size: 200px 200px, auto;
+    background-image:
+        repeating-linear-gradient(135deg, rgb(255 255 255 / 3%) 0 8px, transparent 8px 16px),
+        var(--sf-grain-light);
     border: 1px solid var(--sheet-edge);
     border-radius: 12px;
     box-shadow: 0 4px 10px #00000030;
