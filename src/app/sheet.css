@@ -246,7 +246,7 @@
     padding: var(--sheet-box-pad);
     /* A step darker than the box gray, lit from the top like the cards
        (cards.css) and grained more strongly */
-    background-color: color-mix(in srgb, var(--sheet-box) 55%, var(--sf-gray-900));
+    background-color: color-mix(in srgb, var(--sheet-box) 25%, var(--sf-gray-900));
     background-image: var(--sf-grain-strong), var(--sf-grain-light);
     background-size: 200px 200px, auto;
     border-radius: 12px;
