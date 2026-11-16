@@ -621,10 +621,10 @@
     transform: translate(-50%, -50%);
     pointer-events: none;
 }
-.sf-kind-orbits { --orbit: color-mix(in srgb, var(--sf-gray-200) 10%, var(--kind-field)); }
+.sf-kind-orbits { --orbit: color-mix(in srgb, var(--sf-gray-200) 13%, var(--kind-field)); }
 /* On Isekai cards the solar system is Dreft Shade, mixed into the field
    as far as the gray is */
-.sf-kind-card--dreft .sf-kind-orbits { --orbit: color-mix(in srgb, var(--sf-green-850) 55%, var(--kind-field)); }
+.sf-kind-card--dreft .sf-kind-orbits { --orbit: color-mix(in srgb, var(--sf-green-850) 72%, var(--kind-field)); }
 .sf-kind-orbit { fill: none; stroke: var(--orbit); stroke-width: 1px; vector-effect: non-scaling-stroke; }
 .sf-kind-orbit-sun, .sf-kind-orbit-planet { fill: var(--orbit); }
 /* Each planet circles the sun, counterclockwise, in its own year (set on it
