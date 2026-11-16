@@ -358,7 +358,9 @@
     gap: 0;
     padding-bottom: 0;
 
+    /* The bar fills the card, as tall as the others in its row */
     > .sf-card-bar {
+        flex: 1;
         border-radius: 7px;
     }
 

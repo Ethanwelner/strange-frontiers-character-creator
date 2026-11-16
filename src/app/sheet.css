@@ -713,11 +713,6 @@
             flex: 1;
         }
     }
-
-    /* A closed Skill card keeps its own height in a row with an open one */
-    > li:has(> .sf-card.is-closed:not(.has-keep)) {
-        align-self: start;
-    }
 }
 
 /* Conditions' and Items' cards, one under another */
