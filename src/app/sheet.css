@@ -285,13 +285,41 @@
        gradients laid over the grain, so nothing needs its own layer (a
        positioned layer would put the box above popups opened from earlier
        boxes) */
+    border-radius: 12px;
+}
+
+.sf-sheet-box:not(.sf-sheet-head),
+.sf-sheet-head::before {
     background-color: var(--sheet-box);
     background-image:
         linear-gradient(to right, var(--sheet-box), transparent 48px, transparent calc(100% - 48px), var(--sheet-box)),
         linear-gradient(to bottom, var(--sheet-box), transparent 48px, transparent 45%, var(--sheet-box)),
         var(--sf-grain-strong);
     background-size: auto, auto, 200px 200px;
-    border-radius: 12px;
+}
+
+/* The head, in the sheet's top right corner, has its own cut-out there, a
+   24px quarter-circle about its corner, to clear the frame's. Its
+   background is drawn on ::before so the cut-out can be masked out of it
+   alone (a mask on the box itself would make it a stacking context and
+   trap the popups opened from it); its content is positioned so it paints
+   over that. */
+.sf-sheet-head {
+    border-top-right-radius: 0;
+
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        -webkit-mask: radial-gradient(circle at 100% 0, transparent 24px, #000 24.5px);
+        mask: radial-gradient(circle at 100% 0, transparent 24px, #000 24.5px);
+        pointer-events: none;
+    }
+}
+
+:where(.sf-sheet-head > *) {
+    position: relative;
 }
 
 /* Below 1400px each box's padding tightens to 1rem */
