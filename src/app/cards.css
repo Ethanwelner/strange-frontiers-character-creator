@@ -217,15 +217,18 @@
         min-width: 0;
     }
 
-    /* Skills over a dot tone: a grid of small squares a shade lighter than
-       the card, on the bar and the body alike */
+    /* Skills: the body over a dot tone, a grid of small squares a shade
+       lighter than the card (the bar covers it), and a white hazard stripe
+       down the bar's left edge */
     &.sf-trait-card--skill {
-        --dot-tone: color-mix(in srgb, var(--sf-gray-0) 6%, transparent);
+        background-image: conic-gradient(at 2px 2px, transparent 75%, color-mix(in srgb, var(--sf-gray-0) 6%, transparent) 0);
+        background-size: 6px 6px;
+        background-position: 2px 2px;
 
-        &, > .sf-card-bar {
-            background-image: conic-gradient(at 2px 2px, transparent 75%, var(--dot-tone) 0);
-            background-size: 6px 6px;
-            background-position: 2px 2px;
+        > .sf-card-bar {
+            background-image: repeating-linear-gradient(135deg, var(--sf-gray-0) 0 4px, transparent 4px 8px);
+            background-size: 6px 100%;
+            background-repeat: no-repeat;
         }
     }
 
