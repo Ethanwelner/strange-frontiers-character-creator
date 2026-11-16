@@ -244,12 +244,10 @@
     box-sizing: border-box;
     min-width: 0;
     padding: var(--sheet-box-pad);
-    /* A step darker than the box gray, grained more strongly than the cards
-       (cards.css), in a subtle vignette: a touch lighter in the middle,
-       darker toward the edges */
-    background-color: color-mix(in srgb, var(--sheet-box) 25%, var(--sf-gray-900));
-    background-image: var(--sf-grain-strong), radial-gradient(farthest-corner, rgb(255 255 255 / 4%), transparent 55%, rgb(0 0 0 / 22%));
-    background-size: 200px 200px, auto;
+    /* Grained like the cards (cards.css), a little more faintly */
+    background-color: var(--sheet-box);
+    background-image: var(--sf-grain-strong);
+    background-size: 200px 200px;
     border-radius: 12px;
 }
 
