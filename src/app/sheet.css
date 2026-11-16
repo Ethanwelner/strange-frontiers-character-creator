@@ -250,7 +250,7 @@
     padding: var(--sheet-box-pad);
     /* A little see-through and blurring what's behind, so the frame's
        stripes just barely show through */
-    background-color: color-mix(in srgb, var(--sheet-box) 85%, transparent);
+    background-color: color-mix(in srgb, var(--sheet-box) 75%, transparent);
     -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
     border-radius: 12px;
