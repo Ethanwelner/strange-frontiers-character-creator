@@ -184,8 +184,9 @@
     background-color: var(--stat-color);
 }
 
+/* Open points: solid Gray 400, no outline */
 .sf-stat-slot.is-empty {
-    border: 1px solid var(--stat-open);
+    background-color: var(--sf-gray-400);
 }
 
 /* Slots past a stat's maximum: filled and outlined in the open slots'
