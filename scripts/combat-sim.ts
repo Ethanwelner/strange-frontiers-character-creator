@@ -35,13 +35,13 @@ const ASSUMPTIONS = [
   "Ammunition, reloading and spell ranges beyond 'in range' aren't tracked; 'Partial' reload weapons fire every Round.",
   "Movement is on a line. Within a Priority step Attacks resolve before Movement, so a fighter out of reach moves one Round and Attacks the next.",
   "Massive Claws (Area 3 m) is an Area of Effect: no roll, a Glancing Blow on everyone within 3 m, friend or foe.",
-  "Dark Haze: d20 + Intuition >= 10 per Rank to Attack or cast at the hazed creature, rolled each time.",
+  "Dark Haze: each attacker rolls d20 + Intuition >= 10 per Rank once per Incident, on their first Attack at the creature. After a failure they Attack the haze at -6 (Heavy Cover) for the rest of the fight.",
   "Fearsome: d20 + Demeanor >= 13 before every Attack (spells included) on the creature, rolled before Dark Haze. Frightened loses a Rank at the end of each Round; a Frightened character won't move toward a Fearsome one.",
   "Rage's -10 to Social and Mental rolls applies to the Fearsome and Dark Haze checks; Rage makes a character immune to Frightened. A Barbarian Rages when doubled damage beats the lost checks.",
-  "Advantage is the GM's call; the sim uses +5 (Expert Swordsman), the Roll Modifier the Skill Checks page uses as its example.",
-  "Ranked Traits: Rank r needs every required Stat at its requirement × r.",
+  "Advantage on Attack Rolls is +3 per source (Expert Swordsman with swords).",
+  "Ranked Traits: Rank r needs every required Stat at its requirement × r, and Ranks cap at 3.",
   "Sleep is an Attack (Magic) against 5 + Demeanor, so Fearsome and Dark Haze apply to it; a hit lands with the step's other hits.",
-  "Heal spends up to 1 MP per Rank, 4 HP per MP; Greater Heal is unchanged (3 MP, 8 per Rank + Magic).",
+  "Heal spends up to 1 MP per Rank, 4 HP per MP.",
   "Mark Quarry's Knowledge check always succeeds: the party prepared for the hunt.",
   "A Healing Potion heals like Heal at its Rank, without the caster's Magic: 4 HP per Rank. Drinking one is a Full RP Action. Each party member carries two Rank 1 potions.",
   "Asleep: Defense 0 and no Actions until damaged. Every Attack in the same Priority step lands before the damage wakes them.",
@@ -146,6 +146,7 @@ interface Combatant {
   ai: "fighter" | "knight" | "bruiser" | "caster" | "monster";
   monster?: boolean;
   darkHaze?: number; // Rank
+  hazeSeen?: Map<Combatant, boolean>; // each attacker's once-per-Incident roll
   fearsome?: boolean;
   notes: string[];
   // state
@@ -177,7 +178,7 @@ function rankFor(id: string, c: { stats: Record<Stat, number>; core: Record<stri
   if (!t.ranked) return 1;
   // Rank r needs every required Stat at its requirement × r
   let r = 1;
-  while (r < 10 && needs.every(([s, n]) => statValue(c, s) >= n * (r + 1))) r++;
+  while (r < 3 && needs.every(([s, n]) => statValue(c, s) >= n * (r + 1))) r++; // Ranks cap at 3
   return r;
 }
 
@@ -377,6 +378,7 @@ function murkLegs(darkHaze: boolean, fearsome = true): Combatant {
     ai: "monster",
     monster: true,
     darkHaze: darkHaze ? 2 : undefined,
+    hazeSeen: new Map(),
     fearsome,
     notes: [],
     pos: 0,
@@ -431,7 +433,7 @@ const MAGE: Build = {
   name: "Mage", kind: GOBLINOID, origin: "intuition", ai: "caster", potions: 2,
   cores: "AAPAAMAAPAAMAAPAAMAA",
   wants: [["grace", 4], ["endurance", 4], ["intuition", 6]],
-  traits: ["heal", "greater-heal", "ice-lance", "mind-spike", "mind-shatter", "sleep"],
+  traits: ["heal", "ice-lance", "mind-spike", "mind-shatter", "sleep"],
   weapons: ["dagger"], armor: ["leather-armor"],
 };
 
@@ -452,7 +454,7 @@ const SHAMAN: Build = {
   name: "Goblinoid Shaman", kind: GOBLINOID, origin: "intuition", ai: "caster",
   cores: "AAPAAMAASAAMAAPAAMAA",
   wants: [["grace", 4], ["endurance", 4], ["intuition", 6]],
-  traits: ["heal", "greater-heal", "ice-lance", "mind-spike", "sleep"],
+  traits: ["heal", "ice-lance", "mind-spike", "sleep"],
   weapons: ["dagger"], armor: ["hide-armor"],
 };
 
@@ -517,7 +519,7 @@ function attackBonus(a: Combatant, w: Weapon, t?: Combatant): number {
   let b = w.bonus - (a.flatFooted ? 1 : 0) - a.frightened - 2 * a.injuries.broken;
   if (t && a.marked === t) b += 3;
   if (t?.monster) b += a.ranks["monster-hunter"] ?? 0;
-  if (w.sword && a.ranks["expert-swordsman"]) b += 5;
+  if (w.sword && a.ranks["expert-swordsman"]) b += 3; // Advantage: +3 per source
   return b;
 }
 
@@ -541,17 +543,26 @@ function expected(a: Combatant, w: Weapon, t: Combatant, penalty: number): { dmg
     }
     return { dmg, option: w.options[0]! };
   }
+  const chance = (target: number) => Math.min(1, Math.max(0, (21 - target) / 20));
   for (const option of w.options) {
-    let sum = 0;
-    for (let r = 1; r <= 20; r++) {
-      const margin = r + attackBonus(a, w, t) - penalty - targetNumber(w, t);
-      if (margin >= 0) sum += damageOf(option, severity(margin).mod, t, a).total;
+    const avg = (pen: number) => {
+      let sum = 0;
+      for (let r = 1; r <= 20; r++) {
+        const margin = r + attackBonus(a, w, t) - pen - targetNumber(w, t);
+        if (margin >= 0) sum += damageOf(option, severity(margin).mod, t, a).total;
+      }
+      return sum / 20;
+    };
+    let dmg = avg(penalty);
+    // Dark Haze: one roll per Incident; after a failure, Attacks on the haze are at -6
+    if (t.darkHaze) {
+      const seen = t.hazeSeen?.get(a);
+      const p = seen === undefined ? chance(10 * t.darkHaze - a.stats.intuition + (a.rage ? 10 : 0)) : seen ? 1 : 0;
+      dmg = p * dmg + (1 - p) * avg(penalty + 6);
     }
-    // Checks the attacker has to pass first
-    let pass = 1;
-    if (t.fearsome) pass *= Math.min(1, Math.max(0, (21 - (13 - a.stats.demeanor + (a.rage ? 10 : 0))) / 20));
-    if (t.darkHaze) pass *= Math.min(1, Math.max(0, (21 - (10 * t.darkHaze - a.stats.intuition + (a.rage ? 10 : 0))) / 20));
-    if (sum * pass / 20 > best.dmg) best = { dmg: (sum * pass) / 20, option };
+    // Fearsome: a Demeanor check before every Attack
+    if (t.fearsome) dmg *= chance(13 - a.stats.demeanor + (a.rage ? 10 : 0));
+    if (dmg > best.dmg) best = { dmg, option };
   }
   return best;
 }
@@ -662,10 +673,16 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
           log?.(`${a.name} loses their nerve facing ${t.name}${a.rage ? " (Raging, so not Frightened)" : ": Frightened 3"}`);
           return;
         }
-        if (t.darkHaze && d20() + a.stats.intuition - (a.rage ? 10 : 0) < 10 * t.darkHaze) {
-          if (st) st.hazeBlocked++;
-          log?.(`${a.name} can't make out ${t.name} through the Dark Haze`);
-          return;
+        // Dark Haze: one roll per Incident; a failure leaves them attacking the haze at -6
+        let hazePen = 0;
+        if (t.darkHaze && t.hazeSeen) {
+          if (!t.hazeSeen.has(a)) {
+            const seen = d20() + a.stats.intuition - (a.rage ? 10 : 0) >= 10 * t.darkHaze;
+            t.hazeSeen.set(a, seen);
+            if (!seen && st) st.hazeBlocked++;
+            log?.(`${a.name} ${seen ? "makes out" : "can't make out"} ${t.name} through the Dark Haze`);
+          }
+          if (!t.hazeSeen.get(a)) hazePen = 6;
         }
         const targets = w.area ? all.filter((x) => x !== a && up(x) && Math.abs(x.pos - a.pos) <= w.area!) : [t];
         for (const tt of targets) {
@@ -675,7 +692,7 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
             margin = 0;
             sev = { name: "Glancing Blow (Area)", mod: -1 };
           } else {
-            let pen = extraPenalty;
+            let pen = extraPenalty + (tt === t ? hazePen : 0);
             if (w.ranged && Math.abs(tt.pos - a.pos) > w.range / 2) pen += 2;
             if (w.ranged && !w.spell && foes(a).some((f) => !f.asleep && meleeReach(f) >= Math.abs(f.pos - a.pos))) pen += 3;
             margin = d20() + attackBonus(a, w, tt) - pen - targetNumber(w, tt);
@@ -775,21 +792,15 @@ function decide(
   const targets = foes(c);
   if (!targets.length) return undefined;
 
-  // Casters heal first: anyone down or below a third, Greater Heal when it's worth the MP
+  // Casters heal first: anyone down or below a third
   if (c.ai === "caster") {
     const hurt = friends(c).filter((f) => f.hp > 0 && f.hp < f.hpMax / 3).sort((x, y) => x.hp / x.hpMax - y.hp / y.hpMax)[0];
     const heal = c.ranks["heal"];
-    const greater = c.ranks["greater-heal"];
-    if (hurt && (heal || greater)) {
-      const deficit = hurt.hpMax - hurt.hp;
+    if (hurt && heal) {
       // Heal: up to 1 MP per Rank, 4 HP for each MP spent
-      const healMp = Math.min(heal ?? 0, c.mp, Math.ceil(deficit / 4));
-      const opts = [
-        greater && c.mp >= 3 ? { spell: "Greater Heal", mp: 3, amount: 8 * greater + c.core.magic, range: 3 } : undefined,
-        heal && healMp >= 1 ? { spell: `Heal (${healMp} MP)`, mp: healMp, amount: 4 * healMp, range: 3 * heal } : undefined,
-      ].filter(Boolean) as NonNullable<Plan["heal"]>[];
-      const pick = opts.find((o) => o.amount <= deficit + 4) ?? opts.at(-1);
-      if (pick) {
+      const healMp = Math.min(heal, c.mp, Math.ceil((hurt.hpMax - hurt.hp) / 4));
+      if (healMp >= 1) {
+        const pick = { spell: `Heal (${healMp} MP)`, mp: healMp, amount: 4 * healMp, range: 3 * heal };
         if (Math.abs(hurt.pos - c.pos) <= pick.range) return { c, kind: "heal", t: hurt, heal: pick };
         return { c, kind: "toward", t: hurt };
       }
@@ -808,7 +819,7 @@ function decide(
   }
 
   // A drink when badly hurt and no healer is coming
-  const healer = friends(c).some((f) => f !== c && canAct(f) && (f.ranks["heal"] || f.ranks["greater-heal"]) && f.mp >= 1);
+  const healer = friends(c).some((f) => f !== c && canAct(f) && f.ranks["heal"] && f.mp >= 1);
   if (c.potions > 0 && c.hp < c.hpMax * 0.3 && !healer) return { c, kind: "potion" };
 
   // A Knight below half with a melee foe close by holds the line, if a heal
@@ -908,7 +919,7 @@ for (const sc of SCENARIOS.filter((s) => (logId ? s.id === logId : !only || s.id
       (st.roundsCapped ? ` | ${st.roundsCapped} hit the 30-Round cap` : ""),
   );
   const extras = [
-    st.hazeBlocked && `${per(st.hazeBlocked)} Actions lost to Dark Haze`,
+    st.hazeBlocked && `${per(st.hazeBlocked)} failed Dark Haze rolls`,
     st.fearBlocked && `${per(st.fearBlocked)} Attacks lost to Fearsome`,
     st.healed && `${per(st.healed)} HP healed (${per(st.revived)} revived)`,
     st.potions && `${per(st.potions)} potions`,
