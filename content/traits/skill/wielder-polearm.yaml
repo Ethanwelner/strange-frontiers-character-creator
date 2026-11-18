@@ -8,6 +8,6 @@ backgroundKeywords: [close-combat]
 category: skill
 list: wield
 ranked: true
-minStats: { power: 4, grace: 3, endurance: 3 }
-effect: "- Rank *5 added to skill check rolls involving a Polearm.\n- +3 to Attack Rolls made with a Polearm.\n- This character is capable of performing the basic tasks of maintaining a Polearm without a skill check."
+minStats: { power: 4, grace: 3, empathy: 3 }
+effect: "- Rank *5 added to skill check rolls involving a Polearm.\n- +3 to Attack Rolls made with a Polearm.\n- At Rank 2 or higher, this character adds the Polearm's Attack Stat to Attack Rolls made with it.\n- This character is capable of performing the basic tasks of maintaining a Polearm without a skill check."
 modifiers: "Attack Rolls +3 (Polearm)"
