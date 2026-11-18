@@ -1,0 +1,9 @@
+id: fearsome
+name: "Fearsome"
+status: draft
+plane: any
+summary: "So terrifying that attacking it takes nerve."
+tags: [fear, monster, mind]
+category: condition
+conveyed: true
+effect: "Any character wishing to Attack this character must first succeed on a Demeanor check of 13. If they fail, their Attack Action fails and they gain the Frightened Condition at Rank 3."

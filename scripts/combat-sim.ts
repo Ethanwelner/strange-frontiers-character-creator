@@ -33,6 +33,7 @@ const ASSUMPTIONS = [
   "Within a Priority step Attacks resolve before Movement, so a fighter can't close and Attack in the same step: they move one Round and Attack the next.",
   "Massive Claws (Area 3 m) is an Area of Effect: no roll, a Glancing Blow on everyone within 3 m, friend or foe.",
   "Dark Haze: a character must pass d20 + Intuition >= 10 per Rank each Round to Attack the hazed creature.",
+  "Fearsome: checked before every Attack on the creature, before Dark Haze. Frightened loses a Rank at the end of each Round, and a Frightened character won't move toward a Fearsome one.",
 ];
 
 // ---------- content ----------
@@ -101,9 +102,11 @@ interface Combatant {
   weapons: Weapon[];
   tactic: "attack" | "defend-when-hurt";
   darkHaze?: number; // Rank
+  fearsome?: boolean;
   // state
   pos: number;
   flatFooted: number; // Rounds left
+  frightened: number; // Rank
   defending: boolean;
   injuries: { organ: number; broken: number };
   notes: string[];
@@ -207,6 +210,7 @@ function build(b: Build, level: number, side: Combatant["side"], label?: string)
     tactic: b.tactic ?? "attack",
     pos: 0,
     flatFooted: 0,
+    frightened: 0,
     defending: false,
     injuries: { organ: 0, broken: 0 },
     notes,
@@ -216,7 +220,7 @@ function build(b: Build, level: number, side: Combatant["side"], label?: string)
 }
 
 // The Murk Legs stat block from php/rpg/lore/murk-legs.php
-function murkLegs(darkHaze: boolean): Combatant {
+function murkLegs(darkHaze: boolean, fearsome = true): Combatant {
   const stats = { endurance: 10, power: 15, grace: 11, empathy: 2, persuasion: 1, demeanor: 0, logic: 1, intuition: 4, memory: 1 };
   const hpMax = 10 + 10 + 15 + 11;
   return {
@@ -238,8 +242,10 @@ function murkLegs(darkHaze: boolean): Combatant {
     ],
     tactic: "attack",
     darkHaze: darkHaze ? 2 : undefined,
+    fearsome,
     pos: 0,
     flatFooted: 0,
+    frightened: 0,
     defending: false,
     injuries: { organ: 0, broken: 0 },
     notes: [],
@@ -298,12 +304,14 @@ const SCENARIOS: Scenario[] = [
   { id: "bandits-3", title: "Level 3 party vs 4 Level 3 Bandits, 20 m", distance: 20, make: () => ({ party: party(3), enemies: crowd(BANDIT, 3, 4) }) },
   { id: "raiders-3", title: "Level 3 party vs 2 Level 5 Orcoid Raiders (greatswords), 20 m", distance: 20, make: () => ({ party: party(3), enemies: crowd(RAIDER, 5, 2) }) },
   { id: "raiders-6", title: "Level 6 party vs 4 Level 6 Orcoid Raiders, 20 m", distance: 20, make: () => ({ party: party(6), enemies: crowd(RAIDER, 6, 4) }) },
-  { id: "murk-1", title: "Level 1 party vs Murk Legs, Dark Haze on, 20 m", distance: 20, make: () => ({ party: party(1), enemies: [murkLegs(true)] }) },
-  { id: "murk-3", title: "Level 3 party vs Murk Legs, Dark Haze on, 20 m", distance: 20, make: () => ({ party: party(3), enemies: [murkLegs(true)] }) },
-  { id: "murk-6", title: "Level 6 party vs Murk Legs, Dark Haze on, 20 m", distance: 20, make: () => ({ party: party(6), enemies: [murkLegs(true)] }) },
-  { id: "murk-6-nohaze", title: "Level 6 party vs Murk Legs, Dark Haze off, 20 m", distance: 20, make: () => ({ party: party(6), enemies: [murkLegs(false)] }) },
-  { id: "murk-10", title: "Level 10 party vs Murk Legs, Dark Haze on, 20 m", distance: 20, make: () => ({ party: party(10), enemies: [murkLegs(true)] }) },
-  { id: "murk-15", title: "Level 15 party vs Murk Legs, Dark Haze on, 20 m", distance: 20, make: () => ({ party: party(15), enemies: [murkLegs(true)] }) },
+  { id: "murk-1", title: "Level 1 party vs Murk Legs (Dark Haze, Fearsome), 20 m", distance: 20, make: () => ({ party: party(1), enemies: [murkLegs(true)] }) },
+  { id: "murk-3", title: "Level 3 party vs Murk Legs (Dark Haze, Fearsome), 20 m", distance: 20, make: () => ({ party: party(3), enemies: [murkLegs(true)] }) },
+  { id: "murk-6", title: "Level 6 party vs Murk Legs (Dark Haze, Fearsome), 20 m", distance: 20, make: () => ({ party: party(6), enemies: [murkLegs(true)] }) },
+  { id: "murk-6-fear", title: "Level 6 party vs Murk Legs (Fearsome only), 20 m", distance: 20, make: () => ({ party: party(6), enemies: [murkLegs(false)] }) },
+  { id: "murk-6-haze", title: "Level 6 party vs Murk Legs (Dark Haze only), 20 m", distance: 20, make: () => ({ party: party(6), enemies: [murkLegs(true, false)] }) },
+  { id: "murk-6-plain", title: "Level 6 party vs Murk Legs (neither), 20 m", distance: 20, make: () => ({ party: party(6), enemies: [murkLegs(false, false)] }) },
+  { id: "murk-10", title: "Level 10 party vs Murk Legs (Dark Haze, Fearsome), 20 m", distance: 20, make: () => ({ party: party(10), enemies: [murkLegs(true)] }) },
+  { id: "murk-15", title: "Level 15 party vs Murk Legs (Dark Haze, Fearsome), 20 m", distance: 20, make: () => ({ party: party(15), enemies: [murkLegs(true)] }) },
 ];
 
 // ---------- rules ----------
@@ -341,6 +349,7 @@ const attackBonus = (a: Combatant, w: Weapon) =>
   w.bonus +
   Math.max(0, ...w.attackStats.map((s) => (s === "physical" ? a.core.physical : a.stats[s as Stat] ?? 0))) -
   a.flatFooted -
+  a.frightened -
   2 * a.injuries.broken;
 
 const defenseOf = (t: Combatant) => (up(t) ? t.defense + (t.defending ? 3 + t.defendBonus : 0) : 0);
@@ -378,6 +387,7 @@ interface Stats {
   partyDead: number;
   attacks: Record<string, { n: number; hits: number; dmg: number; crits: number; blocked: number }>;
   hazeBlocked: number;
+  fearBlocked: number;
   injuries: number;
   roundsCapped: number;
 }
@@ -445,6 +455,13 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
         const { c: a, w, t } = p as Required<Plan>;
         if (!up(t)) continue;
         if (Math.abs(t.pos - a.pos) > w.range) { log?.(`${a.name} can't reach ${t.name}`); continue; }
+        // Fearsome: a Demeanor check of 13 to Attack, or the Attack fails and Frightened 3
+        if (t.fearsome && d20() + a.stats.demeanor < 13) {
+          a.frightened = Math.max(a.frightened, 3);
+          if (st) st.fearBlocked++;
+          log?.(`${a.name} loses their nerve facing ${t.name}: Frightened 3`);
+          continue;
+        }
         // Dark Haze: can't Attack what you can't make sense of
         if (t.darkHaze && d20() + a.stats.intuition < 10 * t.darkHaze) {
           if (st) st.hazeBlocked++;
@@ -491,10 +508,14 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
       for (const p of here.filter((p) => p.kind === "move" && up(p.c))) {
         const target = foes(p.c).sort((x, y) => Math.abs(x.pos - p.c.pos) - Math.abs(y.pos - p.c.pos))[0];
         if (!target) continue;
+        // Frightened: can't willingly Move closer to the source of its fear
+        if (p.c.frightened && target.fearsome) { log?.(`${p.c.name} is too Frightened to close in`); continue; }
         moveToward(p.c, target, 10);
         log?.(`${p.c.name} moves (now ${Math.abs(target.pos - p.c.pos)} m from ${target.name})`);
       }
     }
+    // Frightened loses a Rank at the end of each Round
+    for (const c of all) if (c.frightened) c.frightened--;
   }
   const won = !E.some(up) && P.some(up);
   if (st) {
@@ -547,10 +568,10 @@ if (logId) {
 
 console.log("Party: Soldier (rifle, ballistic vest), Knight (longsword, shield, chainmail), Bruiser (greatsword, plate), Smuggler (pistol, leather jacket). All Human.\n");
 for (const sc of logId ? SCENARIOS.filter((s) => s.id === logId) : SCENARIOS) {
-  const st: Stats = { wins: 0, rounds: 0, partyDown: 0, partyDead: 0, attacks: {}, hazeBlocked: 0, injuries: 0, roundsCapped: 0 };
+  const st: Stats = { wins: 0, rounds: 0, partyDown: 0, partyDead: 0, attacks: {}, hazeBlocked: 0, fearBlocked: 0, injuries: 0, roundsCapped: 0 };
   for (let i = 0; i < N; i++) fight(sc, undefined, st);
   console.log(`## ${sc.title}`);
-  console.log(`Party wins ${pct(st.wins / N)} | ${(st.rounds / N).toFixed(1)} Rounds | party members down ${(st.partyDown / N).toFixed(2)} of 4 (dead ${(st.partyDead / N).toFixed(2)})${st.roundsCapped ? ` | ${st.roundsCapped} hit the 30-Round cap` : ""}${st.hazeBlocked ? ` | ${(st.hazeBlocked / N).toFixed(1)} Attacks a fight lost to Dark Haze` : ""}${st.injuries ? ` | ${(st.injuries / N).toFixed(2)} injuries a fight` : ""}`);
+  console.log(`Party wins ${pct(st.wins / N)} | ${(st.rounds / N).toFixed(1)} Rounds | party members down ${(st.partyDown / N).toFixed(2)} of 4 (dead ${(st.partyDead / N).toFixed(2)})${st.roundsCapped ? ` | ${st.roundsCapped} hit the 30-Round cap` : ""}${st.hazeBlocked ? ` | ${(st.hazeBlocked / N).toFixed(1)} Attacks a fight lost to Dark Haze` : ""}${st.fearBlocked ? ` | ${(st.fearBlocked / N).toFixed(1)} lost to Fearsome` : ""}${st.injuries ? ` | ${(st.injuries / N).toFixed(2)} injuries a fight` : ""}`);
   for (const [k, r] of Object.entries(st.attacks).sort()) {
     console.log(`  ${k.padEnd(28)} hit ${pct(r.hits / r.n).padStart(4)} | ${(r.hits ? r.dmg / r.hits : 0).toFixed(1).padStart(4)} dmg a hit | crit ${pct(r.crits / r.n).padStart(3)} | hits doing 0: ${pct(r.hits ? r.blocked / r.hits : 0)}`);
   }

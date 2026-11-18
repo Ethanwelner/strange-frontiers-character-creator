@@ -9,4 +9,4 @@ types: [enchantment]
 ranked: true
 conveyed: true
 temporary: "Every ten minutes after a character is affected by Charmed, it loses one Rank of Charmed. It ends early if the caster or their allies harm this character."
-effect: "This character regards the caster as a trusted friend and won't Attack them. The caster can request Advantage on Social rolls against this character."
+effect: "Charmed only takes effect if this character fails a Demeanor check of 10 + 5 per Rank. While Charmed, this character regards the caster as a trusted friend and won't Attack them. The caster can request Advantage on Social rolls against this character."
