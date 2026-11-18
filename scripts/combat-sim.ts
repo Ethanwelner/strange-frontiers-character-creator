@@ -35,8 +35,8 @@ const ASSUMPTIONS = [
   "Ammunition, reloading and spell ranges beyond 'in range' aren't tracked; 'Partial' reload weapons fire every Round.",
   "Movement is on a line. Within a Priority step Attacks resolve before Movement, so a fighter out of reach moves one Round and Attacks the next.",
   "Massive Claws (Area 3 m) is an Area of Effect: no roll, a Glancing Blow on everyone within 3 m, friend or foe.",
-  "Dark Haze: each attacker rolls d20 + Intuition >= 10 per Rank once per Incident, on their first Attack at the creature. After a failure they Attack the haze at -6 (Heavy Cover) for the rest of the fight.",
-  "Fearsome: d20 + Demeanor >= 13 before every Attack (spells included) on the creature, rolled before Dark Haze. Frightened loses a Rank at the end of each Round; a Frightened character won't move toward a Fearsome one.",
+  "Dark Haze: d20 + Intuition >= 10 per Rank, rolled on a character's first Attack at the creature each Round until they pass; until then they Attack the haze at -6 (Heavy Cover).",
+  "Fearsome: d20 + Demeanor >= 13 on a character's first Attack (spells included) at the creature, once per Incident, rolled before Dark Haze. Frightened loses a Rank at the end of each Round; a Frightened character won't move toward a Fearsome one.",
   "Rage's -10 to Social and Mental rolls applies to the Fearsome and Dark Haze checks; Rage makes a character immune to Frightened. A Barbarian Rages when doubled damage beats the lost checks.",
   "Advantage on Attack Rolls is +3 per source (Expert Swordsman with swords).",
   "Ranked Traits: Rank r needs every required Stat at its requirement × r, and Ranks cap at 3.",
@@ -146,7 +146,8 @@ interface Combatant {
   ai: "fighter" | "knight" | "bruiser" | "caster" | "monster";
   monster?: boolean;
   darkHaze?: number; // Rank
-  hazeSeen?: Map<Combatant, boolean>; // each attacker's once-per-Incident roll
+  hazeSeen?: Map<Combatant, true | number>; // true once they've passed, else the Round they last failed
+  fearChecked?: Set<Combatant>; // who has made their Fearsome check this Incident
   fearsome?: boolean;
   notes: string[];
   // state
@@ -379,6 +380,7 @@ function murkLegs(darkHaze: boolean, fearsome = true): Combatant {
     monster: true,
     darkHaze: darkHaze ? 2 : undefined,
     hazeSeen: new Map(),
+    fearChecked: new Set(),
     fearsome,
     notes: [],
     pos: 0,
@@ -554,14 +556,13 @@ function expected(a: Combatant, w: Weapon, t: Combatant, penalty: number): { dmg
       return sum / 20;
     };
     let dmg = avg(penalty);
-    // Dark Haze: one roll per Incident; after a failure, Attacks on the haze are at -6
-    if (t.darkHaze) {
-      const seen = t.hazeSeen?.get(a);
-      const p = seen === undefined ? chance(10 * t.darkHaze - a.stats.intuition + (a.rage ? 10 : 0)) : seen ? 1 : 0;
+    // Dark Haze: until they pass, Attacks on the haze are at -6
+    if (t.darkHaze && t.hazeSeen?.get(a) !== true) {
+      const p = chance(10 * t.darkHaze - a.stats.intuition + (a.rage ? 10 : 0));
       dmg = p * dmg + (1 - p) * avg(penalty + 6);
     }
-    // Fearsome: a Demeanor check before every Attack
-    if (t.fearsome) dmg *= chance(13 - a.stats.demeanor + (a.rage ? 10 : 0));
+    // Fearsome: one Demeanor check per Incident
+    if (t.fearsome && !t.fearChecked?.has(a)) dmg *= chance(13 - a.stats.demeanor + (a.rage ? 10 : 0));
     if (dmg > best.dmg) best = { dmg, option };
   }
   return best;
@@ -667,22 +668,27 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
           a.mp -= w.spell.mp;
         }
         a.attackedThisRound = true;
-        if (t.fearsome && d20() + a.stats.demeanor - (a.rage ? 10 : 0) < 13) {
-          frighten(a, 3);
-          if (st) st.fearBlocked++;
-          log?.(`${a.name} loses their nerve facing ${t.name}${a.rage ? " (Raging, so not Frightened)" : ": Frightened 3"}`);
-          return;
+        // Fearsome: a Demeanor check the first time each character Attacks it this Incident
+        if (t.fearsome && t.fearChecked && !t.fearChecked.has(a)) {
+          t.fearChecked.add(a);
+          if (d20() + a.stats.demeanor - (a.rage ? 10 : 0) < 13) {
+            frighten(a, 3);
+            if (st) st.fearBlocked++;
+            log?.(`${a.name} loses their nerve facing ${t.name}${a.rage ? " (Raging, so not Frightened)" : ": Frightened 3"}`);
+            return;
+          }
         }
-        // Dark Haze: one roll per Incident; a failure leaves them attacking the haze at -6
+        // Dark Haze: until a character passes, they roll each Round and Attack the haze at -6
         let hazePen = 0;
         if (t.darkHaze && t.hazeSeen) {
-          if (!t.hazeSeen.has(a)) {
+          const s = t.hazeSeen.get(a);
+          if (s !== true && s !== round) {
             const seen = d20() + a.stats.intuition - (a.rage ? 10 : 0) >= 10 * t.darkHaze;
-            t.hazeSeen.set(a, seen);
+            t.hazeSeen.set(a, seen ? true : round);
             if (!seen && st) st.hazeBlocked++;
             log?.(`${a.name} ${seen ? "makes out" : "can't make out"} ${t.name} through the Dark Haze`);
           }
-          if (!t.hazeSeen.get(a)) hazePen = 6;
+          if (t.hazeSeen.get(a) !== true) hazePen = 6;
         }
         const targets = w.area ? all.filter((x) => x !== a && up(x) && Math.abs(x.pos - a.pos) <= w.area!) : [t];
         for (const tt of targets) {
