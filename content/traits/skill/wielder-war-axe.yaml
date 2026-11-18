@@ -9,5 +9,5 @@ category: skill
 list: wield
 ranked: true
 minStats: { power: 5, endurance: 4, demeanor: 3 }
-effect: "- Rank *5 added to skill check rolls involving a War Axe.\n- +3 to Attack Rolls made with a War Axe.\n- At Rank 2 or higher, this character adds the War Axe's Attack Stat to Attack Rolls made with it.\n- This character is capable of performing the basic tasks of maintaining a War Axe without a skill check."
-modifiers: "Attack Rolls +3 (War Axe)"
+effect: "- Rank *5 added to skill check rolls involving a War Axe.\n- +3 per Rank to Attack Rolls made with a War Axe.\n- This character is capable of performing the basic tasks of maintaining a War Axe without a skill check."
+modifiers: "Attack Rolls +3 per Rank (War Axe)"

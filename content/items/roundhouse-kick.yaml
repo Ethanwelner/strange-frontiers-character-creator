@@ -9,7 +9,6 @@ category: weapon
 damage: "2 Blunt + Power"
 attackType: "Melee"
 maxRange: "1 m"
-attackStat: "Power"
 onHit: "Devastating Hit or better: the target gains the Prone Condition"
 modifiers: "Attack Rolls -2"
 notes: "Natural weapon, granted by Martial Artist."

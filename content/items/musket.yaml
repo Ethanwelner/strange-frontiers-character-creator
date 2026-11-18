@@ -9,7 +9,6 @@ category: weapon
 damage: "7 Piercing"
 attackType: "Ranged"
 maxRange: "100 m"
-attackStat: "Grace"
 reload: "Full"
 value: 1500
 currency: "ERC"

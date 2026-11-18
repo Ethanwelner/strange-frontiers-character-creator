@@ -9,5 +9,4 @@ category: weapon
 damage: "2 Blunt + Power"
 attackType: "Melee"
 maxRange: "1 m"
-attackStat: "Power"
 notes: "Built into the Industrial Laborer Chassis."

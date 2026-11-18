@@ -9,7 +9,6 @@ category: weapon
 damage: "1 Blunt + Physical"
 attackType: "Ranged"
 maxRange: "10 m"
-attackStat: "Physical"
 areaOfEffect: "3 m"
 uses: "uses 1: every 3 Rounds, or once a minute outside of combat"
 notes: "Natural weapon, granted by Natural Breath Weapon."

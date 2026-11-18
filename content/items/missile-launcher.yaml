@@ -9,7 +9,6 @@ category: weapon
 damage: "5 Blunt, 5 Heat"
 attackType: "Ranged"
 maxRange: "1000 m"
-attackStat: "Grace"
 areaOfEffect: "5 m"
 reload: "Full"
 value: 25000

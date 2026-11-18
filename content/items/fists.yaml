@@ -9,5 +9,4 @@ category: weapon
 damage: "1 Blunt + Power"
 attackType: "Melee"
 maxRange: "1 m"
-attackStat: "Grace"
 notes: "Natural weapon: every character has it."
