@@ -26,6 +26,8 @@ const ASSUMPTIONS = [
   "No natural 20 or natural 1 rule; Severity comes only from the margin.",
   "Defend's +3 (and a shield's bonus) lasts the whole Round, whatever the Defender's Priority step.",
   "Fighting with no Wield Trait gets no penalty: the rules mention one but don't give a number.",
+  "A Wield's +3 stays +3 at every Rank (the Trait Ranks rule multiplies a Ranked Trait's bonuses by its Rank, but the Wield text gives a flat +3).",
+  "Characters take the highest Wield Rank they qualify for; the Attack Stat counts from Rank 2. Natural weapons like Fists have no Wield Skill, so they add no Stat.",
   "Ammunition and reloading aren't tracked; 'Partial' reload weapons fire every Round.",
   "Movement is on a line: fighters out of reach take Full Movement (10 m) toward the nearest foe; ranged ones in range stay put.",
   "Within a Priority step Attacks resolve before Movement, so a fighter can't close and Attack in the same step: they move one Round and Attack the next.",
@@ -77,6 +79,7 @@ interface Weapon {
   options: Damage[][];
   attackStats: string[]; // the Stats the Attack can add; the best one is used
   bonus: number; // Wield Trait and similar
+  wieldRank?: number;
   ranged: boolean;
   range: number; // meters
   area?: number; // Area of Effect radius
@@ -111,12 +114,22 @@ function weaponFrom(id: string, c: { stats: Record<Stat, number> }): Weapon {
   if (!it) throw new Error(`No item ${id}`);
   const options = parseDamage(it.damage)!;
   const wield = wieldTraits.find((t) => new RegExp(`\\(${it.name}\\)`, "i").test(t.modifiers ?? ""));
-  const meets = wield && Object.entries(wield.minStats ?? {}).every(([s, n]) => c.stats[s as Stat] >= (n as number));
+  // Rank 1 needs the Trait's minimums; Rank r above 1 needs every required
+  // Stat at 3 × r (Traits page, Trait Ranks). Characters take the highest
+  // Rank they qualify for.
+  const needs = Object.entries(wield?.minStats ?? {}) as [Stat, number][];
+  let rank = 0;
+  if (wield && needs.every(([s, n]) => c.stats[s] >= n)) {
+    rank = 1;
+    while (needs.every(([s, n]) => c.stats[s] >= Math.max(n, 3 * (rank + 1)))) rank++;
+  }
   return {
     name: it.name,
     options,
-    attackStats: String(it.attackStat ?? "").split("/").map((s) => s.trim().toLowerCase()).filter(Boolean),
-    bonus: meets ? 3 : 0,
+    // The Attack Stat only counts from Wield Rank 2
+    attackStats: rank >= 2 ? String(it.attackStat ?? "").split("/").map((s) => s.trim().toLowerCase()).filter(Boolean) : [],
+    wieldRank: rank,
+    bonus: rank >= 1 ? 3 : 0,
     ranged: it.attackType === "Ranged",
     range: parseFloat(it.maxRange ?? "1"),
     area: it.areaOfEffect ? parseFloat(it.areaOfEffect) : undefined,
@@ -235,35 +248,38 @@ function murkLegs(darkHaze: boolean): Combatant {
 
 // ---------- party and enemy builds ----------
 
+// Each build heads for its Wield's Rank 1 minimums, then Rank 2 (6 in every
+// required Stat), then its Attack Stat. The Mental or Social Levels in `cores`
+// are the ones its Wield needs.
 const SOLDIER: Build = {
-  name: "Soldier", kind: HUMAN, origin: "grace", cores: "PMPPPPPPPPPPPPP",
-  wants: [["grace", 3], ["power", 2], ["intuition", 3], ["grace", 8], ["endurance", 5], ["grace", 15], ["endurance", 15], ["power", 15]],
+  name: "Soldier", kind: HUMAN, origin: "grace", cores: "PMPPMPPPPPPPPPP",
+  wants: [["grace", 3], ["power", 2], ["intuition", 3], ["grace", 6], ["power", 6], ["intuition", 6], ["endurance", 5], ["grace", 15], ["endurance", 15], ["power", 15]],
   weapons: ["rifle"], armor: ["ballistic-vest", "combat-helmet"],
 };
 const KNIGHT: Build = {
-  name: "Knight", kind: HUMAN, origin: "power", cores: "PPPPPPPPPPPPPPP",
-  wants: [["grace", 4], ["power", 4], ["endurance", 4], ["grace", 15], ["endurance", 15]],
+  name: "Knight", kind: HUMAN, origin: "power", cores: "PPMPPMPPPPPPPPP",
+  wants: [["grace", 4], ["power", 4], ["memory", 4], ["grace", 6], ["power", 6], ["memory", 6], ["grace", 15], ["endurance", 15]],
   weapons: ["longsword"], armor: ["chainmail", "wooden-shield"], tactic: "defend-when-hurt",
 };
 const BRUISER: Build = {
-  name: "Bruiser", kind: HUMAN, origin: "power", cores: "PPPPPPPPPPPPPPP",
-  wants: [["power", 5], ["endurance", 4], ["grace", 3], ["power", 15], ["endurance", 15], ["grace", 15]],
+  name: "Bruiser", kind: HUMAN, origin: "power", cores: "PPSPPSPPPPPPPPP",
+  wants: [["power", 5], ["grace", 3], ["demeanor", 4], ["power", 6], ["grace", 6], ["demeanor", 6], ["power", 15], ["endurance", 15], ["grace", 15]],
   weapons: ["greatsword"], armor: ["plate-armor"],
 };
 const SMUGGLER: Build = {
   // Built like Edwin Humble: a face with a pistol
   name: "Smuggler", kind: HUMAN, origin: "grace", cores: "PSMSMPSMSPSMSMS",
-  wants: [["grace", 3], ["intuition", 2], ["grace", 15], ["persuasion", 10], ["intuition", 10]],
+  wants: [["grace", 3], ["intuition", 2], ["grace", 6], ["intuition", 6], ["grace", 15], ["persuasion", 10], ["intuition", 10]],
   weapons: ["pistol"], armor: ["leather-jacket"],
 };
 const BANDIT: Build = {
-  name: "Bandit", kind: HUMAN, origin: "grace", cores: "PPMPPPPP",
-  wants: [["grace", 3], ["power", 3], ["endurance", 2], ["grace", 15], ["power", 15]],
+  name: "Bandit", kind: HUMAN, origin: "grace", cores: "PPMPPMPP",
+  wants: [["grace", 3], ["power", 3], ["intuition", 2], ["grace", 6], ["power", 6], ["intuition", 6], ["grace", 15], ["power", 15]],
   weapons: ["spear"], armor: ["leather-armor"],
 };
 const RAIDER: Build = {
-  name: "Orcoid Raider", kind: ORCOID, origin: "power", cores: "PPPPPPPPPPPP",
-  wants: [["power", 5], ["endurance", 4], ["grace", 3], ["power", 18], ["endurance", 18]],
+  name: "Orcoid Raider", kind: ORCOID, origin: "power", cores: "PSPPSPPPPPPP",
+  wants: [["power", 5], ["grace", 3], ["demeanor", 4], ["power", 6], ["grace", 6], ["demeanor", 6], ["power", 18], ["endurance", 18]],
   weapons: ["greatsword"], armor: ["hide-armor"],
 };
 
@@ -527,8 +543,8 @@ for (const sc of logId ? SCENARIOS.filter((s) => s.id === logId) : SCENARIOS) {
 }
 
 // Characters at each Level, for reading the numbers above
-console.log("## The party by Level (HP / Defense / main Attack bonus)");
-for (const L of [1, 3, 6, 10, 15]) {
-  console.log(`  L${String(L).padEnd(3)}` + party(L).map((c) => `${c.name.split(" ")[0]} ${c.hpMax}/${c.defense}/+${attackBonus(c, c.weapons[0]!)}${c.priority < 0 ? " (-1 Pri)" : ""}`).join("  |  "));
+console.log("## The party by Level (HP / Defense / main Attack bonus / Wield Rank)");
+for (const L of [1, 2, 3, 4, 5, 6, 8, 10, 15]) {
+  console.log(`  L${String(L).padEnd(3)}` + party(L).map((c) => `${c.name.split(" ")[0]} ${c.hpMax}/${c.defense}/+${attackBonus(c, c.weapons[0]!)}/R${c.weapons[0]!.wieldRank}${c.priority < 0 ? " (-1 Pri)" : ""}`).join("  |  "));
 }
 console.log(`\nAssumptions:\n${ASSUMPTIONS.map((a) => "- " + a).join("\n")}`);
