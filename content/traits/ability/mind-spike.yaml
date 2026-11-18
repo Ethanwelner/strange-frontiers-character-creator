@@ -12,4 +12,4 @@ minStats: { magic: 3 }
 # On the Magic list: its own tab on the Traits step, open to every character.
 list: magic
 effect: "This character gains the Cast Mind Spike Action."
-action: "Cast Mind Spike: This character may spend 2 MP to Attack a target with a temporary weapon that has the following profile: (Ranged) (max range 30 m) (4 Psychic per Rank) (Attack Stat: Magic). The Attack is made against 6 + the target's highest Mental focus Stat (Logic, Intuition or Memory) as if it were their Defense. Characters damaged by Cast Mind Spike gain the Flat-Footed Condition."
+action: "Cast Mind Spike: This character may spend 2 MP to Attack a target with a temporary weapon that has the following profile: (Ranged) (max range 30 m) (4 Psychic per Rank) (Attack Stat: Magic). The Attack is made against 5 + the target's highest Mental focus Stat (Logic, Intuition or Memory) as if it were their Defense. Characters damaged by Cast Mind Spike gain the Flat-Footed Condition."
