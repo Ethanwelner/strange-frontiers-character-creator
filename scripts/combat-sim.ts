@@ -522,6 +522,21 @@ const N = Number(args[args.indexOf("--n") + 1]) || 2000;
 const logId = args.includes("--log") ? args[args.indexOf("--log") + 1] : undefined;
 const pct = (x: number) => `${Math.round(x * 100)}%`;
 
+// --stats Knight: one build's Stats at every Level, then stop
+const statsFor = args.includes("--stats") ? args[args.indexOf("--stats") + 1] : undefined;
+if (statsFor) {
+  const b = [SOLDIER, KNIGHT, BRUISER, SMUGGLER, BANDIT, RAIDER].find((x) => x.name.toLowerCase().startsWith(statsFor.toLowerCase()));
+  if (!b) throw new Error(`No build ${statsFor}`);
+  const short = { endurance: "End", power: "Pow", grace: "Gra", empathy: "Emp", persuasion: "Per", demeanor: "Dem", logic: "Log", intuition: "Int", memory: "Mem" };
+  console.log(["Lvl", "P/S/M", ...Object.values(short), "HP", "Def", "Rank", "Atk"].join(" | "));
+  for (let L = 1; L <= 20; L++) {
+    const c = build(b, L, "party");
+    const w = c.weapons[0]!;
+    console.log([L, `${c.core.physical}/${c.core.social}/${c.core.mental}`, ...Object.keys(short).map((s) => c.stats[s as Stat]), c.hpMax, c.defense, w.wieldRank, `+${attackBonus(c, w)}`].join(" | "));
+  }
+  process.exit(0);
+}
+
 if (logId) {
   const sc = SCENARIOS.find((s) => s.id === logId);
   if (!sc) throw new Error(`No scenario ${logId}. Try: ${SCENARIOS.map((s) => s.id).join(", ")}`);
