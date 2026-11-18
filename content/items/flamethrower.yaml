@@ -9,7 +9,6 @@ category: weapon
 damage: "7 Heat"
 attackType: "Ranged"
 maxRange: "15 m"
-attackStat: "Grace"
 reload: "Full"
 value: 3000
 currency: "ERC"

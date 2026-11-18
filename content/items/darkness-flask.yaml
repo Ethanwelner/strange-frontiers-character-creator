@@ -7,7 +7,6 @@ tags: [potion, magic, thrown, darkness, cover]
 type: equipment
 category: consumable
 attackType: "Ranged, Thrown"
-attackStat: "Grace"
 uses: "uses 1: when thrown"
 value: 20
 currency: "Luras"

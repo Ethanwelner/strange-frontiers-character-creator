@@ -9,7 +9,6 @@ category: weapon
 damage: "3 Slashing / 3 Piercing"
 attackType: "Melee"
 maxRange: "1 m"
-attackStat: "Grace"
 value: 60
 currency: "ERC"
 weight: 0.5

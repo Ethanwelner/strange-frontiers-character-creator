@@ -9,7 +9,6 @@ category: weapon
 damage: "1 Blunt + Power"
 attackType: "Melee"
 maxRange: "1 m"
-attackStat: "Grace"
 onHit: "Critical Hit: the target makes an Endurance check against the damage dealt *5, and its HP drops to 0 if it fails"
 modifiers: "Attack Rolls -5"
 notes: "Natural weapon, granted by Martial Arts Master."

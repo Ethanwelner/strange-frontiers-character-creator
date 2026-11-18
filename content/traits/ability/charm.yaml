@@ -12,4 +12,4 @@ minStats: { magic: 3 }
 # On the Magic list: its own tab on the Traits step, open to every character.
 list: magic
 effect: "This character gains the Cast Charm Action."
-action: "Cast Charm: This character may spend 2 MP to give the Charmed Condition to a character within 10 m. The Condition's Rank is equal to the caster's Charm Rank."
+action: "Cast Charm: This character may spend 2 MP to give the Charmed Condition to a character within 10 m. The Condition's Rank is equal to the caster's Charm Rank, and the target resists it with a Demeanor check of 10 + 5 per Rank."

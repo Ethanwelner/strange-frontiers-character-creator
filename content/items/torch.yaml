@@ -9,7 +9,6 @@ category: consumable
 damage: "Heat"
 attackType: "Melee"
 maxRange: "1 m"
-attackStat: "Power"
 uses: "uses 1: burns about an hour"
 value: 5
 currency: "ERC"

@@ -9,7 +9,6 @@ category: weapon
 damage: "3 Blunt"
 attackType: "Melee"
 maxRange: "1 m"
-attackStat: "Power"
 value: 20
 currency: "ERC"
 weight: 1.5

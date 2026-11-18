@@ -7,7 +7,6 @@ tags: [potion, magic, thrown, plants, enchantment]
 type: equipment
 category: consumable
 attackType: "Ranged, Thrown"
-attackStat: "Grace"
 areaOfEffect: "2 m per Rank"
 uses: "uses 1: when thrown"
 value: 40

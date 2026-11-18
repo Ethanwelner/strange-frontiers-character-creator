@@ -7,7 +7,6 @@ tags: [thrown, cover, military]
 type: equipment
 category: consumable
 attackType: "Ranged, Thrown"
-attackStat: "Grace"
 areaOfEffect: "5 m"
 uses: "uses 1: when thrown"
 value: 40

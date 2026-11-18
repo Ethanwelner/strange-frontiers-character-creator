@@ -1,0 +1,944 @@
+// Combat simulator: runs a party against monsters and NPCs under the Incidents
+// rules (portfolio_site php/rpg/rpg-incidents.php) many times and reports how
+// the fights go, so the combat system's numbers can be checked.
+//
+//   npm run sim                         every scenario, 2,000 fights each
+//   npm run sim -- --log murk-10        one scenario, plus a Round-by-Round log of one fight
+//   npm run sim -- --n 10000            more fights per scenario
+//   npm run sim -- --only murk          only scenarios whose id starts with "murk"
+//   npm run sim -- --even               front line spends every third Level on Social or Mental
+//   npm run sim -- --stats knight       one build's Stats, Traits and resources at every Level
+//
+// Weapons, armor, Wield Skills, Abilities and spells come from content/.
+// Characters are built the way the creator builds them: Kind bonuses, an
+// Origin point, then one core point per Level, each giving 3 focus points (or
+// one Magic point and 3 MP). Ranked Traits follow the Trait Ranks rule: Rank 2
+// and up need every required Stat at its requirement × the Rank. Murk Legs is the stat block
+// in the Parazoology section (php/rpg/lore/murk-legs.php), the baseline
+// creature template; the other enemies are NPCs built like characters.
+//
+// What the rules leave open, and what this script assumes, is listed under
+// ASSUMPTIONS below and printed with the results.
+import { readFileSync, readdirSync } from "node:fs";
+import { join } from "node:path";
+import { parse } from "yaml";
+import { parseDamage, type Damage } from "../src/engine/damage.js";
+
+const ASSUMPTIONS = [
+  "Attack Rolls add no Stat; Wield Skills give +3 per Rank. Spells add Magic, as their profiles say. Monster weapons use their stat block's formula.",
+  "Damage after Resistance can't go below 0; a Severity's damage change applies to each damage type in the Attack.",
+  "Incapacitated (below a quarter of max HP) takes a character out of the fight until healed; nobody finishes them off.",
+  "Coverage-limited Resistances, like a helmet's '(head)', are ignored: there are no hit locations yet.",
+  "No natural 20 or natural 1 rule; Severity comes only from the margin.",
+  "Defend's bonuses last the whole Round, whatever the Defender's Priority step.",
+  "Fighting with no Wield Skill gets no penalty: the rules mention one but don't give a number.",
+  "Ammunition, reloading and spell ranges beyond 'in range' aren't tracked; 'Partial' reload weapons fire every Round.",
+  "Movement is on a line. Within a Priority step Attacks resolve before Movement, so a fighter out of reach moves one Round and Attacks the next.",
+  "Massive Claws (Area 3 m) is an Area of Effect: no roll, a Glancing Blow on everyone within 3 m, friend or foe.",
+  "Dark Haze: each attacker rolls d20 + Intuition >= 10 per Rank once per Incident, on their first Attack at the creature. After a failure they Attack the haze at -6 (Heavy Cover) for the rest of the fight.",
+  "Fearsome: d20 + Demeanor >= 13 before every Attack (spells included) on the creature, rolled before Dark Haze. Frightened loses a Rank at the end of each Round; a Frightened character won't move toward a Fearsome one.",
+  "Rage's -10 to Social and Mental rolls applies to the Fearsome and Dark Haze checks; Rage makes a character immune to Frightened. A Barbarian Rages when doubled damage beats the lost checks.",
+  "Advantage on Attack Rolls is +3 per source (Expert Swordsman with swords).",
+  "Ranked Traits: Rank r needs every required Stat at its requirement × r, and Ranks cap at 3.",
+  "Sleep is an Attack (Magic) against 5 + Demeanor, so Fearsome and Dark Haze apply to it; a hit lands with the step's other hits.",
+  "Heal spends up to 1 MP per Rank, 4 HP per MP.",
+  "Mark Quarry's Knowledge check always succeeds: the party prepared for the hunt.",
+  "A Healing Potion heals like Heal at its Rank, without the caster's Magic: 4 HP per Rank. Drinking one is a Full RP Action. Each party member carries two Rank 1 potions.",
+  "Asleep: Defense 0 and no Actions until damaged. Every Attack in the same Priority step lands before the damage wakes them.",
+  "Not modeled: Bodyguard's Cover, Weak Point, Second Wind, Daze, Shield, Charm, Grenadier and other Traits that need positions or choices the line model can't make.",
+];
+
+// ---------- content ----------
+
+const CONTENT = join(import.meta.dirname, "..", "content");
+const readYaml = (path: string) => parse(readFileSync(path, "utf8"));
+const items: Record<string, any> = Object.fromEntries(
+  readdirSync(join(CONTENT, "items")).map((f) => {
+    const y = readYaml(join(CONTENT, "items", f));
+    return [y.id, y];
+  }),
+);
+const traits: Record<string, any> = {};
+for (const dir of readdirSync(join(CONTENT, "traits"))) {
+  for (const f of readdirSync(join(CONTENT, "traits", dir))) {
+    const y = readYaml(join(CONTENT, "traits", dir, f));
+    traits[y.id] = y;
+  }
+}
+const wieldFor = (itemName: string) =>
+  Object.values(traits).find((t) => t.list === "wield" && new RegExp(`\\(${itemName}\\)`, "i").test(t.modifiers ?? ""));
+
+type Stat =
+  | "endurance" | "power" | "grace"
+  | "empathy" | "persuasion" | "demeanor"
+  | "logic" | "intuition" | "memory";
+type Core = "physical" | "social" | "mental";
+type Want = [Stat | "magic", number];
+const FOCUS: Record<Core, Stat[]> = {
+  physical: ["endurance", "power", "grace"],
+  social: ["empathy", "persuasion", "demeanor"],
+  mental: ["logic", "intuition", "memory"],
+};
+const ALL_STATS = Object.values(FOCUS).flat();
+const coreOf = (s: Stat): Core => (Object.keys(FOCUS) as Core[]).find((c) => FOCUS[c].includes(s))!;
+
+function parseResistances(text?: string): { always: Record<string, number>; defending: Record<string, number> } {
+  const out = { always: {} as Record<string, number>, defending: {} as Record<string, number> };
+  if (!text) return out;
+  const defending = /when defending/i.test(text);
+  if (/\((head|arms|legs)\)/i.test(text)) return out; // coverage areas: see ASSUMPTIONS
+  for (const m of text.matchAll(/(-?\d+)\s+([A-Za-z]+)/g)) {
+    const bucket = defending ? out.defending : out.always;
+    bucket[m[2]!] = (bucket[m[2]!] ?? 0) + Number(m[1]);
+  }
+  return out;
+}
+
+// ---------- combatants ----------
+
+interface Spell {
+  id: string;
+  mp: number;
+  vsMental?: boolean; // Mind Spike and Mind Shatter: 5 + highest Mental focus Stat
+  vsDemeanor?: boolean; // Sleep: 5 + Demeanor
+  onDamage?: (t: Combatant, rank: number) => void;
+  onHit?: (t: Combatant, rank: number) => void; // a hit with no damage, like Sleep
+}
+
+// Rage makes a character immune to Frightened
+function frighten(t: Combatant, rank: number) {
+  if (!t.rage) t.frightened = Math.max(t.frightened, rank);
+}
+
+interface Weapon {
+  name: string;
+  options: Damage[][];
+  bonus: number; // Wield Skill (+3 per Rank), a spell's Magic, a monster's formula
+  wieldRank?: number;
+  sword?: boolean;
+  ranged: boolean;
+  range: number; // meters
+  area?: number; // Area of Effect radius
+  spell?: Spell & { rank: number };
+}
+
+interface Combatant {
+  name: string;
+  side: "party" | "enemy";
+  build?: string;
+  level?: number;
+  core: Record<Core | "magic", number>;
+  stats: Record<Stat, number>;
+  hpMax: number;
+  hp: number;
+  defense: number;
+  resist: Record<string, number>;
+  defendResist: Record<string, number>;
+  defendBonus: number; // a shield's Defense while Defending
+  basePriority: number; // encumbrance and Combat Instincts
+  weapons: Weapon[];
+  ranks: Record<string, number>; // Traits held, by id
+  mpMax: number;
+  mp: number;
+  vp: number;
+  sp: number;
+  potions: number;
+  ai: "fighter" | "knight" | "bruiser" | "caster" | "monster";
+  monster?: boolean;
+  darkHaze?: number; // Rank
+  hazeSeen?: Map<Combatant, boolean>; // each attacker's once-per-Incident roll
+  fearsome?: boolean;
+  notes: string[];
+  // state
+  pos: number;
+  flatFooted: boolean;
+  flatNext: boolean;
+  frightened: number; // Rank
+  asleep: boolean;
+  surprised: boolean;
+  rage: boolean;
+  attackedThisRound: boolean;
+  marked?: Combatant;
+  defending: boolean;
+  shieldwall: boolean;
+  riposte: boolean;
+  injuries: { organ: number; broken: number };
+}
+
+const statValue = (c: { stats: Record<Stat, number>; core: Record<string, number> }, s: string) =>
+  s === "magic" ? c.core.magic ?? 0 : c.stats[s as Stat] ?? 0;
+
+// The Rank a character can hold in a Trait: 0 if they don't meet it.
+function rankFor(id: string, c: { stats: Record<Stat, number>; core: Record<string, number> }, held: Record<string, number>): number {
+  const t = traits[id];
+  if (!t) throw new Error(`No Trait ${id}`);
+  if ((t.prerequisites ?? []).some((p: string) => !held[p])) return 0;
+  const needs = Object.entries(t.minStats ?? {}) as [string, number][];
+  if (!needs.every(([s, n]) => statValue(c, s) >= n)) return 0;
+  if (!t.ranked) return 1;
+  // Rank r needs every required Stat at its requirement × r
+  let r = 1;
+  while (r < 3 && needs.every(([s, n]) => statValue(c, s) >= n * (r + 1))) r++; // Ranks cap at 3
+  return r;
+}
+
+function weaponFrom(id: string, c: Combatant): Weapon {
+  const it = items[id];
+  if (!it) throw new Error(`No item ${id}`);
+  const wield = wieldFor(it.name);
+  const rank = wield ? rankFor(wield.id, c, c.ranks) : 0;
+  if (wield && rank) c.ranks[wield.id] = rank;
+  return {
+    name: it.name,
+    options: parseDamage(it.damage)!,
+    bonus: 3 * rank,
+    wieldRank: rank,
+    sword: (it.tags ?? []).includes("sword"),
+    ranged: String(it.attackType).startsWith("Ranged"),
+    range: parseFloat(it.maxRange ?? "1"),
+    area: it.areaOfEffect ? parseFloat(it.areaOfEffect) : undefined,
+  };
+}
+
+// Attack spells as temporary weapons, from their Cast profiles
+const ATTACK_SPELLS: Record<string, (r: number) => Omit<Weapon, "bonus" | "spell"> & { spell: Spell }> = {
+  "ice-lance": (r) => ({
+    name: "Ice Lance", options: [[{ type: "Piercing", amount: 3 * r }, { type: "Cold", amount: 2 * r }]], ranged: true, range: 40,
+    spell: { id: "ice-lance", mp: 2 },
+  }),
+  "mind-spike": (r) => ({
+    name: "Mind Spike", options: [[{ type: "Psychic", amount: 4 * r }]], ranged: true, range: 30,
+    spell: { id: "mind-spike", mp: 2, vsMental: true, onDamage: (t) => { t.flatNext = true; } },
+  }),
+  "mind-shatter": (r) => ({
+    name: "Mind Shatter", options: [[{ type: "Psychic", amount: 6 * r }]], ranged: true, range: 30,
+    spell: { id: "mind-shatter", mp: 4, vsMental: true, onDamage: (t, rank) => { t.flatNext = true; frighten(t, rank); } },
+  }),
+};
+const sleepSpell = (magic: number, rank: number): Weapon => ({
+  name: "Sleep", options: [[]], bonus: magic, ranged: true, range: 20,
+  spell: { id: "sleep", mp: 2, rank, vsDemeanor: true, onHit: (t) => { t.asleep = true; } },
+});
+
+interface Build {
+  name: string;
+  kind: { bonus: Partial<Record<Stat, number>>; max: Partial<Record<Stat, number>>; mp?: number };
+  origin: Stat;
+  cores?: string; // fixed: one letter per Level (P, S, M or A for Magic); otherwise follow `wants`
+  wants: Want[]; // Stats to reach, in order; core points go to the first one not yet met
+  traits: string[]; // Abilities and spells to take when they qualify
+  weapons: string[];
+  armor: string[];
+  potions?: number;
+  ai: Combatant["ai"];
+  frontLine?: boolean; // --even applies
+}
+
+const HUMAN = {
+  bonus: Object.fromEntries(ALL_STATS.map((s) => [s, 1])),
+  max: Object.fromEntries(ALL_STATS.map((s) => [s, 15])),
+};
+const ORCOID = {
+  bonus: { endurance: 2, power: 2, grace: 1, empathy: 1, persuasion: 1, demeanor: 1, logic: 0, intuition: 1, memory: 0 },
+  max: { endurance: 18, power: 18, grace: 13, empathy: 14, persuasion: 15, demeanor: 15, logic: 13, intuition: 15, memory: 14 },
+};
+const GOBLINOID = {
+  bonus: { endurance: 1, power: 0, grace: 1, empathy: 1, persuasion: 1, demeanor: 1, logic: 2, intuition: 1, memory: 1 },
+  max: { endurance: 13, power: 10, grace: 16, empathy: 15, persuasion: 15, demeanor: 14, logic: 18, intuition: 16, memory: 18 },
+  mp: 6,
+};
+
+const EVEN = process.argv.includes("--even");
+
+function build(b: Build, level: number, side: Combatant["side"], label?: string): Combatant {
+  const stats = Object.fromEntries(ALL_STATS.map((s) => [s, b.kind.bonus[s] ?? 0])) as Record<Stat, number>;
+  const max = (s: Stat) => b.kind.max[s] ?? 20;
+  stats[b.origin] += 1;
+  const core: Record<Core | "magic", number> = { physical: 0, social: 0, mental: 0, magic: 0 };
+  const unmet = ([s, n]: Want) => (s === "magic" ? core.magic < n : stats[s] < n && stats[s] < max(s));
+  for (let l = 0; l < level; l++) {
+    let c: Core | "magic";
+    if (b.cores) {
+      const letter = b.cores[Math.min(l, b.cores.length - 1)]!;
+      c = letter === "A" ? "magic" : letter === "S" ? "social" : letter === "M" ? "mental" : "physical";
+    } else {
+      const w = b.wants.find(unmet);
+      c = !w ? "physical" : w[0] === "magic" ? "magic" : coreOf(w[0]);
+    }
+    // --even: the front line spends every third Level on its weaker of Social and Mental
+    if (EVEN && b.frontLine && l % 3 === 2) c = core.social <= core.mental ? "social" : "mental";
+    core[c]++;
+    if (c === "magic") continue;
+    for (let p = 0; p < 3; p++) {
+      const want = b.wants.find((w) => w[0] !== "magic" && FOCUS[c as Core].includes(w[0]) && unmet(w));
+      const pick = (want?.[0] as Stat | undefined) ?? FOCUS[c].filter((s) => stats[s] < max(s)).sort((x, y) => stats[x] - stats[y])[0];
+      if (pick) stats[pick]++;
+    }
+  }
+  const self = { stats, core };
+  const ranks: Record<string, number> = {};
+  // Twice, so prerequisites taken later in the list still count
+  for (let pass = 0; pass < 2; pass++) for (const id of b.traits) { const r = rankFor(id, self, ranks); if (r) ranks[id] = r; }
+
+  const resist: Record<string, number> = {};
+  const defendResist: Record<string, number> = {};
+  let defendBonus = 0;
+  let weight = 0;
+  for (const id of [...b.armor, ...b.weapons]) {
+    const it = items[id];
+    if (!it) throw new Error(`No item ${id}`);
+    const isShield = (it.tags ?? []).includes("shield");
+    const isArmor = it.category === "armor" && !isShield;
+    let w = it.weight ?? 0;
+    if (isShield && ranks["shield-bearer"]) w = 0;
+    if (isArmor && ranks["armor-training"]) w = ranks["armor-training"] >= 2 ? 0 : w / 2;
+    weight += w;
+    const r = parseResistances(it.resistances);
+    for (const [t, n] of Object.entries(r.always)) resist[t] = (resist[t] ?? 0) + n;
+    for (const [t, n] of Object.entries(r.defending)) defendResist[t] = (defendResist[t] ?? 0) + n;
+    const m = String(it.modifiers ?? "").match(/Defense \+(\d+) \(when Defending\)/);
+    if (m) defendBonus += Number(m[1]);
+  }
+  if (ranks["thick-hide"]) { resist.Slashing = (resist.Slashing ?? 0) + 1; resist.Piercing = (resist.Piercing ?? 0) + 1; }
+  const carry = 20 + 10 * core.physical;
+  const encumbered = weight > carry / 2;
+  const notes: string[] = [];
+  if (encumbered) notes.push(`carries ${weight} of ${carry} kg: -1 Priority`);
+  const hpMax = 10 + stats.endurance + stats.power + stats.grace;
+  const mpMax = (b.kind.mp ?? 0) + 3 * core.magic;
+  const c: Combatant = {
+    name: label ?? b.name,
+    side,
+    build: b.name,
+    level,
+    core,
+    stats,
+    hpMax,
+    hp: hpMax,
+    defense: 10 + core.physical,
+    resist,
+    defendResist,
+    defendBonus,
+    basePriority: (encumbered ? -1 : 0) + (ranks["combat-instincts"] ?? 0),
+    weapons: [],
+    ranks,
+    mpMax,
+    mp: mpMax,
+    vp: stats.empathy + stats.persuasion + stats.demeanor,
+    sp: stats.logic + stats.intuition + stats.memory,
+    potions: b.potions ?? 0,
+    ai: b.ai,
+    notes,
+    pos: 0,
+    flatFooted: false,
+    flatNext: false,
+    frightened: 0,
+    asleep: false,
+    surprised: false,
+    rage: false,
+    attackedThisRound: false,
+    defending: false,
+    shieldwall: false,
+    riposte: false,
+    injuries: { organ: 0, broken: 0 },
+  };
+  c.weapons = [...b.weapons.filter((id) => items[id]?.damage), "fists"].map((id) => weaponFrom(id, c));
+  for (const [id, make] of Object.entries(ATTACK_SPELLS)) {
+    const r = ranks[id];
+    if (!r) continue;
+    const w = make(r);
+    c.weapons.unshift({ ...w, bonus: core.magic, spell: { ...w.spell, rank: r } });
+  }
+  return c;
+}
+
+// The Murk Legs stat block from php/rpg/lore/murk-legs.php
+function murkLegs(darkHaze: boolean, fearsome = true): Combatant {
+  const stats = { endurance: 10, power: 15, grace: 11, empathy: 2, persuasion: 1, demeanor: 0, logic: 1, intuition: 4, memory: 1 };
+  const hpMax = 10 + 10 + 15 + 11;
+  return {
+    name: "Murk Legs",
+    side: "enemy",
+    core: { physical: 12, social: 1, mental: 2, magic: 0 },
+    stats,
+    hpMax,
+    hp: hpMax,
+    defense: 10 + 12,
+    resist: { Blunt: 2, Slashing: 1 },
+    defendResist: {},
+    defendBonus: 0,
+    basePriority: 0,
+    weapons: [
+      // formula "Power - 5" and "Power": the Attack Roll bonus
+      { name: "Massive Claws", options: [[{ type: "Slashing", amount: 10 }]], bonus: 10, ranged: false, range: 3, area: 3 },
+      { name: "Horrid Bite", options: [[{ type: "Piercing", amount: 15 }]], bonus: 15, ranged: false, range: 3 },
+    ],
+    ranks: {},
+    mpMax: 0, mp: 0, vp: 0, sp: 0, potions: 0,
+    ai: "monster",
+    monster: true,
+    darkHaze: darkHaze ? 2 : undefined,
+    hazeSeen: new Map(),
+    fearsome,
+    notes: [],
+    pos: 0,
+    flatFooted: false,
+    flatNext: false,
+    frightened: 0,
+    asleep: false,
+    surprised: false,
+    rage: false,
+    attackedThisRound: false,
+    defending: false,
+    shieldwall: false,
+    riposte: false,
+    injuries: { organ: 0, broken: 0 },
+  };
+}
+
+// ---------- builds ----------
+
+// A Wield Skill's Rank steps: every required Stat at its requirement × Rank
+function wieldWants(itemId: string, upTo: number): Want[] {
+  const t = wieldFor(items[itemId].name);
+  const needs = Object.entries(t.minStats) as [Stat, number][];
+  const out: Want[] = [];
+  for (let r = 1; r <= upTo; r++) for (const [s, n] of needs) out.push([s, n * r]);
+  return out;
+}
+const traitWants = (...ids: string[]): Want[] => ids.flatMap((id) => Object.entries(traits[id].minStats ?? {}) as Want[]);
+const wieldSteps = (itemId: string, from: number, to: number) => wieldWants(itemId, to).slice(from === 1 ? 0 : wieldWants(itemId, from - 1).length);
+
+const SOLDIER: Build = {
+  // A monster hunter with a rifle
+  name: "Soldier", kind: HUMAN, origin: "intuition", ai: "fighter", frontLine: false, potions: 2,
+  wants: [...wieldSteps("rifle", 1, 1), ...traitWants("combat-instincts", "tracker", "hunter", "monster-hunter"), ...wieldSteps("rifle", 2, 3), ["endurance", 6], ...wieldSteps("rifle", 4, 5), ["endurance", 15]],
+  traits: ["combat-instincts", "tracker", "hunter", "monster-hunter", "armor-training"],
+  weapons: ["rifle"], armor: ["ballistic-vest", "combat-helmet"],
+};
+const KNIGHT: Build = {
+  name: "Knight", kind: HUMAN, origin: "power", ai: "knight", frontLine: true, potions: 2,
+  wants: [...wieldSteps("longsword", 1, 1), ...traitWants("shield-bearer", "armor-training", "swordsman", "shield-wall"), ...wieldSteps("longsword", 2, 2), ...traitWants("expert-swordsman"), ...wieldSteps("longsword", 3, 5), ["endurance", 15]],
+  traits: ["shield-bearer", "armor-training", "swordsman", "shield-wall", "expert-swordsman"],
+  weapons: ["longsword"], armor: ["chainmail", "wooden-shield"],
+};
+const BRUISER: Build = {
+  name: "Bruiser", kind: HUMAN, origin: "power", ai: "bruiser", frontLine: true, potions: 2,
+  wants: [...wieldSteps("greatsword", 1, 1), ...traitWants("barbarian", "armor-training"), ...wieldSteps("greatsword", 2, 2), ["endurance", 6], ...wieldSteps("greatsword", 3, 5), ["endurance", 15]],
+  traits: ["barbarian", "armor-training"],
+  weapons: ["greatsword"], armor: ["plate-armor"],
+};
+const MAGE: Build = {
+  // A Goblinoid Tatot healer and mentalist: two Levels of Magic for every one elsewhere
+  name: "Mage", kind: GOBLINOID, origin: "intuition", ai: "caster", potions: 2,
+  cores: "AAPAAMAAPAAMAAPAAMAA",
+  wants: [["grace", 4], ["endurance", 4], ["intuition", 6]],
+  traits: ["heal", "ice-lance", "mind-spike", "mind-shatter", "sleep"],
+  weapons: ["dagger"], armor: ["leather-armor"],
+};
+
+// Enemies built evenly: one Level in three goes to Social or Mental
+const BANDIT: Build = {
+  name: "Bandit", kind: HUMAN, origin: "grace", ai: "fighter", cores: "PPMPPSPPMPPSPPMPPSPP",
+  wants: [...wieldWants("spear", 5)],
+  traits: ["combat-instincts"],
+  weapons: ["spear"], armor: ["leather-armor"],
+};
+const RAIDER: Build = {
+  name: "Orcoid Raider", kind: ORCOID, origin: "power", ai: "bruiser", cores: "PPSPPMPPSPPMPPSPPMPP",
+  wants: [...wieldSteps("greatsword", 1, 1), ...traitWants("barbarian", "thick-hide"), ...wieldSteps("greatsword", 2, 5)],
+  traits: ["barbarian", "thick-hide", "armor-training"],
+  weapons: ["greatsword"], armor: ["hide-armor"],
+};
+const SHAMAN: Build = {
+  name: "Goblinoid Shaman", kind: GOBLINOID, origin: "intuition", ai: "caster",
+  cores: "AAPAAMAASAAMAAPAAMAA",
+  wants: [["grace", 4], ["endurance", 4], ["intuition", 6]],
+  traits: ["heal", "ice-lance", "mind-spike", "sleep"],
+  weapons: ["dagger"], armor: ["hide-armor"],
+};
+
+const BUILDS = [SOLDIER, KNIGHT, BRUISER, MAGE, BANDIT, RAIDER, SHAMAN];
+const party = (level: number) => [SOLDIER, KNIGHT, BRUISER, MAGE].map((b) => build(b, level, "party"));
+const crowd = (b: Build, level: number, n: number) =>
+  Array.from({ length: n }, (_, i) => build(b, level, "enemy", `${b.name} ${i + 1}`));
+
+interface Scenario {
+  id: string;
+  title: string;
+  distance: number; // meters between the sides at the start
+  ambush?: boolean; // the party strikes first: enemies are surprised (Defense 0, no Action) in Round 1, melee starts in reach
+  make: () => { party: Combatant[]; enemies: Combatant[] };
+}
+const SCENARIOS: Scenario[] = [
+  { id: "bandits-1", title: "Level 1 party vs 4 Level 1 Bandits", distance: 20, make: () => ({ party: party(1), enemies: crowd(BANDIT, 1, 4) }) },
+  { id: "bandits-3", title: "Level 3 party vs 4 Level 3 Bandits", distance: 20, make: () => ({ party: party(3), enemies: crowd(BANDIT, 3, 4) }) },
+  { id: "bandits-6", title: "Level 6 party vs 4 Level 6 Bandits", distance: 20, make: () => ({ party: party(6), enemies: crowd(BANDIT, 6, 4) }) },
+  { id: "raiders-6", title: "Level 6 party vs 3 Level 6 Orcoid Raiders and a Goblinoid Shaman", distance: 20, make: () => ({ party: party(6), enemies: [...crowd(RAIDER, 6, 3), build(SHAMAN, 6, "enemy", "Goblinoid Shaman")] }) },
+  { id: "raiders-10", title: "Level 10 party vs 3 Level 10 Orcoid Raiders and a Goblinoid Shaman", distance: 20, make: () => ({ party: party(10), enemies: [...crowd(RAIDER, 10, 3), build(SHAMAN, 10, "enemy", "Goblinoid Shaman")] }) },
+  ...[6, 8, 10, 12, 15].map((L): Scenario => ({ id: `murk-${L}`, title: `Level ${L} party vs Murk Legs, head on`, distance: 20, make: () => ({ party: party(L), enemies: [murkLegs(true)] }) })),
+  ...[6, 8, 10, 12].map((L): Scenario => ({ id: `murk-${L}-ambush`, title: `Level ${L} party ambushes Murk Legs`, distance: 25, ambush: true, make: () => ({ party: party(L), enemies: [murkLegs(true)] }) })),
+  { id: "murk-10-plain", title: "Level 10 party vs Murk Legs without Dark Haze or Fearsome, head on", distance: 20, make: () => ({ party: party(10), enemies: [murkLegs(false, false)] }) },
+];
+
+// ---------- rules ----------
+
+const d20 = () => 1 + Math.floor(Math.random() * 20);
+const up = (c: Combatant) => c.hp >= c.hpMax / 4 && c.hp > 0;
+const canAct = (c: Combatant) => up(c) && !c.asleep && !c.surprised;
+const status = (c: Combatant) => (c.hp <= 0 ? "Dead" : c.hp < c.hpMax / 4 ? "Incapacitated" : c.hp < c.hpMax / 2 ? "Severely Injured" : "");
+const highestMental = (t: Combatant) => Math.max(t.stats.logic, t.stats.intuition, t.stats.memory);
+
+function severity(margin: number): { name: string; mod: number } {
+  if (margin >= 16) return { name: "Critical Hit", mod: 3 };
+  if (margin >= 11) return { name: "Devastating Hit", mod: 1 };
+  if (margin >= 6) return { name: "Solid Hit", mod: 0 };
+  if (margin >= 0) return { name: "Glancing Blow", mod: -1 };
+  if (margin >= -5) return { name: "Deflected", mod: 0 };
+  if (margin >= -10) return { name: "Near Miss", mod: 0 };
+  if (margin >= -15) return { name: "Overextended", mod: 0 };
+  return { name: "Critical Failure", mod: 0 };
+}
+
+function damageOf(option: Damage[], sevMod: number, t: Combatant, a: Combatant): { total: number; types: string[] } {
+  let total = 0;
+  const types: string[] = [];
+  for (const d of option) {
+    const plus = d.plus ? (d.plus === "Physical" ? a.core.physical : a.stats[d.plus.toLowerCase() as Stat] ?? 0) : 0;
+    const resist = (t.resist[d.type] ?? 0) + (t.defending ? t.defendResist[d.type] ?? 0 : 0);
+    const dealt = Math.max(0, (d.amount ?? 0) + plus + sevMod - resist);
+    if (dealt > 0) types.push(d.type);
+    total += dealt;
+  }
+  if (a.rage) total *= 2;
+  if (total > 0) total += 2 * t.injuries.organ;
+  return { total, types };
+}
+
+function attackBonus(a: Combatant, w: Weapon, t?: Combatant): number {
+  let b = w.bonus - (a.flatFooted ? 1 : 0) - a.frightened - 2 * a.injuries.broken;
+  if (t && a.marked === t) b += 3;
+  if (t?.monster) b += a.ranks["monster-hunter"] ?? 0;
+  if (w.sword && a.ranks["expert-swordsman"]) b += 3; // Advantage: +3 per source
+  return b;
+}
+
+function targetNumber(w: Weapon, t: Combatant): number {
+  if (!up(t) || t.asleep || t.surprised) return 0;
+  if (w.spell?.vsMental) return 5 + highestMental(t);
+  if (w.spell?.vsDemeanor) return 5 + t.stats.demeanor;
+  return t.defense + (t.defending ? 3 + t.defendBonus + (t.shieldwall ? 4 : 0) : 0);
+}
+
+const priorityOf = (c: Combatant) => c.basePriority - (c.flatFooted ? 1 : 0) - c.injuries.organ - c.injuries.broken;
+
+// Expected damage of one Attack: picks weapons, damage options and targets
+function expected(a: Combatant, w: Weapon, t: Combatant, penalty: number): { dmg: number; option: Damage[] } {
+  let best = { dmg: -1, option: w.options[0]! };
+  if (w.area) {
+    let dmg = 0;
+    for (const x of current) {
+      if (x === a || !up(x) || Math.abs(x.pos - a.pos) > w.area) continue;
+      dmg += (x.side === a.side ? -1 : 1) * damageOf(w.options[0]!, -1, x, a).total;
+    }
+    return { dmg, option: w.options[0]! };
+  }
+  const chance = (target: number) => Math.min(1, Math.max(0, (21 - target) / 20));
+  for (const option of w.options) {
+    const avg = (pen: number) => {
+      let sum = 0;
+      for (let r = 1; r <= 20; r++) {
+        const margin = r + attackBonus(a, w, t) - pen - targetNumber(w, t);
+        if (margin >= 0) sum += damageOf(option, severity(margin).mod, t, a).total;
+      }
+      return sum / 20;
+    };
+    let dmg = avg(penalty);
+    // Dark Haze: one roll per Incident; after a failure, Attacks on the haze are at -6
+    if (t.darkHaze) {
+      const seen = t.hazeSeen?.get(a);
+      const p = seen === undefined ? chance(10 * t.darkHaze - a.stats.intuition + (a.rage ? 10 : 0)) : seen ? 1 : 0;
+      dmg = p * dmg + (1 - p) * avg(penalty + 6);
+    }
+    // Fearsome: a Demeanor check before every Attack
+    if (t.fearsome) dmg *= chance(13 - a.stats.demeanor + (a.rage ? 10 : 0));
+    if (dmg > best.dmg) best = { dmg, option };
+  }
+  return best;
+}
+let current: Combatant[] = [];
+
+interface Stats {
+  wins: number;
+  rounds: number;
+  partyDown: number;
+  partyDead: number;
+  attacks: Record<string, { n: number; hits: number; dmg: number; crits: number }>;
+  hazeBlocked: number;
+  fearBlocked: number;
+  injuries: number;
+  roundsCapped: number;
+  healed: number;
+  revived: number;
+  potions: number;
+  sleeps: number;
+  ripostes: number;
+  rages: number;
+}
+
+type Plan = {
+  c: Combatant;
+  kind: "attack" | "flurry" | "move" | "defend" | "heal" | "potion" | "sleep" | "toward";
+  w?: Weapon;
+  t?: Combatant;
+  option?: Damage[];
+  heal?: { spell: string; mp: number; amount: number; range: number };
+};
+
+function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
+  const { party: P, enemies: E } = sc.make();
+  for (const e of E) e.pos = sc.distance;
+  if (sc.ambush) {
+    for (const e of E) e.surprised = true;
+    for (const p of P) if (!p.weapons[0]!.ranged && p.ai !== "caster") p.pos = sc.distance - 2;
+  }
+  const all = [...P, ...E];
+  current = all;
+  const foes = (c: Combatant) => (c.side === "party" ? E : P).filter(up);
+  const friends = (c: Combatant) => (c.side === "party" ? P : E);
+  const meleeReach = (c: Combatant) => Math.max(0, ...c.weapons.filter((w) => !w.ranged).map((w) => w.range));
+  const describe = (c: Combatant) =>
+    `${c.name} (HP ${c.hpMax}, Def ${c.defense}, ${c.weapons.filter((w) => !w.spell)[0]!.name} +${c.weapons.filter((w) => !w.spell)[0]!.bonus}` +
+    `${c.mpMax ? `, MP ${c.mpMax}` : ""}${Object.keys(c.ranks).length ? `; ${Object.entries(c.ranks).map(([k, r]) => `${traits[k].name}${traits[k].ranked ? " " + r : ""}`).join(", ")}` : ""}${c.notes.length ? "; " + c.notes.join("; ") : ""})`;
+  log?.(`Party:\n  ${P.map(describe).join("\n  ")}`);
+  log?.(`Enemies:\n  ${E.map(describe).join("\n  ")}`);
+
+  let round = 0;
+  while (P.some(up) && E.some(up) && round < 30) {
+    round++;
+    log?.(`\n-- Round ${round}`);
+    for (const c of all) {
+      c.flatFooted = c.flatNext;
+      c.flatNext = false;
+      c.defending = c.shieldwall = c.riposte = false;
+      c.attackedThisRound = false;
+    }
+    const plans: Plan[] = [];
+    for (const c of all.filter(canAct)) {
+      const p = decide(c, foes, friends, meleeReach, st);
+      if (p) plans.push(p);
+    }
+    const steps = [...new Set(plans.map((p) => priorityOf(p.c)))].sort((a, b) => b - a);
+    for (const step of steps) {
+      const here = plans.filter((p) => priorityOf(p.c) === step && canAct(p.c));
+      // RP: potions, healing, Sleep
+      for (const p of here) {
+        const c = p.c;
+        if (p.kind === "potion") {
+          c.potions--;
+          c.hp = Math.min(c.hpMax, c.hp + 4);
+          if (st) st.potions++;
+          log?.(`${c.name} drinks a Healing Potion (${c.hp}/${c.hpMax})`);
+        } else if (p.kind === "heal" && p.t && p.heal && p.t.hp > 0 && c.mp >= p.heal.mp) {
+          if (Math.abs(p.t.pos - c.pos) > p.heal.range) continue;
+          const wasDown = !up(p.t);
+          c.mp -= p.heal.mp;
+          const before = p.t.hp;
+          p.t.hp = Math.min(p.t.hpMax, p.t.hp + p.heal.amount);
+          if (st) { st.healed += p.t.hp - before; if (wasDown && up(p.t)) st.revived++; }
+          log?.(`${c.name} casts ${p.heal.spell} on ${p.t.name}: ${before} → ${p.t.hp}/${p.t.hpMax}${wasDown && up(p.t) ? ", back on their feet" : ""}`);
+        }
+      }
+      // Defend
+      for (const p of here.filter((p) => p.kind === "defend")) {
+        p.c.defending = true;
+        if (p.c.ranks["shield-wall"] && p.c.hp < p.c.hpMax / 2) p.c.shieldwall = true;
+        else if (p.c.ranks["swordsman"]) p.c.riposte = true;
+        log?.(`${p.c.name} Defends${p.c.shieldwall ? " in a Shieldwall" : p.c.riposte ? " for a Riposte" : ""} (Def ${targetNumber(p.c.weapons.find((w) => !w.spell)!, p.c)})`);
+      }
+      // Attacks: all resolve against Defense as it stands, then damage lands
+      const hits: { t: Combatant; dmg: number; text: string; crit: boolean; types: string[]; a: Combatant; w: Weapon }[] = [];
+      const counters: { a: Combatant; t: Combatant }[] = [];
+      const attack = (a: Combatant, w: Weapon, t: Combatant, option: Damage[], extraPenalty = 0) => {
+        if (!up(t)) return;
+        if (Math.abs(t.pos - a.pos) > w.range) { log?.(`${a.name} can't reach ${t.name}`); return; }
+        if (w.spell) {
+          if (a.mp < w.spell.mp) return;
+          a.mp -= w.spell.mp;
+        }
+        a.attackedThisRound = true;
+        if (t.fearsome && d20() + a.stats.demeanor - (a.rage ? 10 : 0) < 13) {
+          frighten(a, 3);
+          if (st) st.fearBlocked++;
+          log?.(`${a.name} loses their nerve facing ${t.name}${a.rage ? " (Raging, so not Frightened)" : ": Frightened 3"}`);
+          return;
+        }
+        // Dark Haze: one roll per Incident; a failure leaves them attacking the haze at -6
+        let hazePen = 0;
+        if (t.darkHaze && t.hazeSeen) {
+          if (!t.hazeSeen.has(a)) {
+            const seen = d20() + a.stats.intuition - (a.rage ? 10 : 0) >= 10 * t.darkHaze;
+            t.hazeSeen.set(a, seen);
+            if (!seen && st) st.hazeBlocked++;
+            log?.(`${a.name} ${seen ? "makes out" : "can't make out"} ${t.name} through the Dark Haze`);
+          }
+          if (!t.hazeSeen.get(a)) hazePen = 6;
+        }
+        const targets = w.area ? all.filter((x) => x !== a && up(x) && Math.abs(x.pos - a.pos) <= w.area!) : [t];
+        for (const tt of targets) {
+          let margin: number;
+          let sev: { name: string; mod: number };
+          if (w.area) {
+            margin = 0;
+            sev = { name: "Glancing Blow (Area)", mod: -1 };
+          } else {
+            let pen = extraPenalty + (tt === t ? hazePen : 0);
+            if (w.ranged && Math.abs(tt.pos - a.pos) > w.range / 2) pen += 2;
+            if (w.ranged && !w.spell && foes(a).some((f) => !f.asleep && meleeReach(f) >= Math.abs(f.pos - a.pos))) pen += 3;
+            margin = d20() + attackBonus(a, w, tt) - pen - targetNumber(w, tt);
+            sev = severity(margin);
+          }
+          const rec = st && (st.attacks[`${a.side}:${w.name}`] ??= { n: 0, hits: 0, dmg: 0, crits: 0 });
+          if (rec) rec.n++;
+          if (margin < 0) {
+            if (margin <= -11) a.flatNext = true;
+            if (tt.riposte && !w.ranged && margin <= -4) counters.push({ a: tt, t: a });
+            log?.(`${a.name} → ${tt.name} with ${w.name}: ${sev.name}`);
+            continue;
+          }
+          if (w.spell?.onHit) {
+            if (rec) rec.hits++;
+            if (st && w.spell.id === "sleep") st.sleeps++;
+            hits.push({ t: tt, dmg: 0, text: `${a.name} → ${tt.name} with ${w.name}: hit`, crit: false, types: [], a, w });
+            continue;
+          }
+          const d = damageOf(option, sev.mod, tt, a);
+          if (rec) { rec.hits++; rec.dmg += d.total; if (sev.name === "Critical Hit") rec.crits++; }
+          hits.push({ t: tt, dmg: d.total, text: `${a.name} → ${tt.name} with ${w.name}: ${sev.name}, ${d.total} damage`, crit: sev.name === "Critical Hit", types: d.types, a, w });
+        }
+      };
+      for (const p of here) {
+        if ((p.kind === "attack" || p.kind === "sleep") && p.w && p.t) attack(p.c, p.w, p.t, p.option ?? p.w.options[0]!);
+        if (p.kind === "flurry" && p.w && p.t) {
+          attack(p.c, p.w, p.t, p.option ?? p.w.options[0]!, 3);
+          attack(p.c, p.w, p.t, p.option ?? p.w.options[0]!, 3);
+        }
+      }
+      const land = (list: typeof hits) => {
+        for (const h of list) {
+          h.t.hp -= h.dmg;
+          if (h.dmg > 0) h.t.asleep = false;
+          if (h.dmg > 0) h.w.spell?.onDamage?.(h.t, h.w.spell.rank);
+          h.w.spell?.onHit?.(h.t, h.w.spell.rank);
+          let extra = "";
+          if (h.crit && h.dmg >= h.t.hpMax / 4 && h.t.hp > 0 && d20() + h.t.stats.endurance < 10 + h.dmg) {
+            if (h.types.includes("Piercing")) { h.t.injuries.organ++; extra = " — Organ Damage"; }
+            else if (h.types.includes("Blunt")) { h.t.injuries.broken++; extra = " — Broken Limb"; }
+            else extra = " — injured";
+            if (st) st.injuries++;
+          }
+          log?.(`${h.text} (${h.t.name} ${Math.max(h.t.hp, 0)}/${h.t.hpMax}${status(h.t) ? ", " + status(h.t) : ""})${extra}`);
+        }
+      };
+      land(hits);
+      hits.length = 0;
+      // Ripostes come in the next Priority step
+      for (const k of counters) {
+        if (!canAct(k.a)) continue;
+        const w = k.a.weapons.find((x) => x.sword)!;
+        if (st) st.ripostes++;
+        log?.(`${k.a.name} Ripostes`);
+        attack(k.a, w, k.t, expected(k.a, w, k.t, 0).option);
+      }
+      land(hits);
+      // Movement
+      for (const p of here.filter((p) => (p.kind === "move" || p.kind === "toward") && canAct(p.c))) {
+        const target = p.kind === "toward" && p.t ? p.t : foes(p.c).sort((x, y) => Math.abs(x.pos - p.c.pos) - Math.abs(y.pos - p.c.pos))[0];
+        if (!target) continue;
+        if (p.kind === "move" && p.c.frightened && target.fearsome) { log?.(`${p.c.name} is too Frightened to close in`); continue; }
+        const reach = p.kind === "toward" ? 1 : Math.max(1, meleeReach(p.c));
+        const dist = target.pos - p.c.pos;
+        p.c.pos += Math.sign(dist) * Math.min(10, Math.max(0, Math.abs(dist) - reach));
+        log?.(`${p.c.name} moves (now ${Math.abs(target.pos - p.c.pos)} m from ${target.name})`);
+      }
+    }
+    // End of the Round
+    for (const c of all) {
+      if (c.frightened) c.frightened--;
+      if (c.rage && !c.attackedThisRound) { c.rage = false; log?.(`${c.name}'s Rage ends`); }
+      c.surprised = false;
+    }
+  }
+  const won = !E.some(up) && P.some(up);
+  if (st) {
+    if (round >= 30) st.roundsCapped++;
+    if (won) st.wins++;
+    st.rounds += round;
+    st.partyDown += P.filter((c) => !up(c)).length;
+    st.partyDead += P.filter((c) => c.hp <= 0).length;
+  }
+  log?.(`\n${won ? "Party wins" : E.some(up) && P.some(up) ? "Stalemate" : "Party loses"} after ${round} Rounds`);
+  return won;
+}
+
+// What a character does this Round
+function decide(
+  c: Combatant,
+  foes: (c: Combatant) => Combatant[],
+  friends: (c: Combatant) => Combatant[],
+  meleeReach: (c: Combatant) => number,
+  st?: Stats,
+): Plan | undefined {
+  const targets = foes(c);
+  if (!targets.length) return undefined;
+
+  // Casters heal first: anyone down or below a third
+  if (c.ai === "caster") {
+    const hurt = friends(c).filter((f) => f.hp > 0 && f.hp < f.hpMax / 3).sort((x, y) => x.hp / x.hpMax - y.hp / y.hpMax)[0];
+    const heal = c.ranks["heal"];
+    if (hurt && heal) {
+      // Heal: up to 1 MP per Rank, 4 HP for each MP spent
+      const healMp = Math.min(heal, c.mp, Math.ceil((hurt.hpMax - hurt.hp) / 4));
+      if (healMp >= 1) {
+        const pick = { spell: `Heal (${healMp} MP)`, mp: healMp, amount: 4 * healMp, range: 3 * heal };
+        if (Math.abs(hurt.pos - c.pos) <= pick.range) return { c, kind: "heal", t: hurt, heal: pick };
+        return { c, kind: "toward", t: hurt };
+      }
+    }
+    // Sleep the most dangerous awake foe someone on this side can then hit
+    if (c.ranks["sleep"] && c.mp >= 2 + (c.side === "party" ? 2 : 0)) {
+      const threat = (t: Combatant) => Math.max(...t.weapons.map((w) => w.bonus + (w.options[0]![0]!.amount ?? 0)));
+      const sleeper = targets
+        .filter((t) => !t.asleep && Math.abs(t.pos - c.pos) <= 20)
+        .filter((t) => friends(c).some((f) => f !== c && canAct(f) && f.weapons.some((w) => Math.abs(t.pos - f.pos) <= w.range)))
+        .sort((x, y) => threat(y) - threat(x))[0];
+      const spell = sleepSpell(c.core.magic, c.ranks["sleep"]);
+      const hitChance = sleeper ? (21 - (targetNumber(spell, sleeper) - attackBonus(c, spell, sleeper))) / 20 : 0;
+      if (sleeper && hitChance >= 0.5 && (sleeper.monster || threat(sleeper) >= 12)) return { c, kind: "sleep", t: sleeper, w: spell };
+    }
+  }
+
+  // A drink when badly hurt and no healer is coming
+  const healer = friends(c).some((f) => f !== c && canAct(f) && f.ranks["heal"] && f.mp >= 1);
+  if (c.potions > 0 && c.hp < c.hpMax * 0.3 && !healer) return { c, kind: "potion" };
+
+  // A Knight below half with a melee foe close by holds the line, if a heal
+  // is coming or Shieldwall or Riposte makes holding worth it
+  if (
+    c.ai === "knight" && c.hp < c.hpMax / 2 && (healer || c.ranks["shield-wall"] || c.ranks["swordsman"]) &&
+    targets.some((t) => !t.asleep && Math.abs(t.pos - c.pos) <= meleeReach(t) + 1)
+  ) return { c, kind: "defend" };
+
+  // Best Attack this Round
+  let best: Plan & { score: number } = { c, kind: "move", score: 0 };
+  for (const t of targets) {
+    const dist = Math.abs(t.pos - c.pos);
+    for (const w of c.weapons) {
+      if (w.spell && c.mp < w.spell.mp + (c.side === "party" && c.ranks["heal"] ? 1 : 0)) continue;
+      if (dist > w.range) continue;
+      let penalty = 0;
+      if (w.ranged && dist > w.range / 2) penalty += 2;
+      if (w.ranged && !w.spell && targets.some((f) => !f.asleep && meleeReach(f) >= Math.abs(f.pos - c.pos))) penalty += 3;
+      const ex = expected(c, w, t, penalty);
+      const score = ex.dmg * (1 + (1 - t.hp / t.hpMax)) * (w.spell ? 0.8 : 1); // spells cost MP
+      if (score > best.score) best = { c, kind: "attack", w, t, option: ex.option, score };
+      // Flurry: two Attacks at -3
+      if (w.sword && c.ranks["expert-swordsman"]) {
+        const fl = expected(c, w, t, penalty + 3).dmg * 2 * (1 + (1 - t.hp / t.hpMax));
+        if (fl > best.score) best = { c, kind: "flurry", w, t, option: ex.option, score: fl };
+      }
+    }
+  }
+  if (best.kind === "move" || !best.t) {
+    // Casters keep their distance; everyone else closes in
+    if (c.ai === "caster" && targets.some((t) => Math.abs(t.pos - c.pos) <= 40)) return undefined;
+    return best;
+  }
+  // Mark Quarry rides along as a Partial RP Action
+  if (c.ranks["hunter"] && best.t.monster && !c.marked && c.sp >= 1) {
+    c.sp--;
+    c.marked = best.t;
+  }
+  // Rage when doubled damage beats the -10 it puts on Fearsome and Dark Haze checks
+  if (c.ranks["barbarian"] && !c.rage && c.vp >= 1 && best.w && !best.w.ranged) {
+    const calm = expected(c, best.w, best.t, 0).dmg;
+    c.rage = true;
+    const raging = expected(c, best.w, best.t, 0).dmg;
+    c.rage = false;
+    if (raging > calm) {
+      c.vp--;
+      c.rage = true;
+      c.frightened = 0; // immune
+      if (st) st.rages++;
+    }
+  }
+  return best;
+}
+
+// ---------- run ----------
+
+const args = process.argv.slice(2);
+const N = Number(args[args.indexOf("--n") + 1]) || 2000;
+const logId = args.includes("--log") ? args[args.indexOf("--log") + 1] : undefined;
+const only = args.includes("--only") ? args[args.indexOf("--only") + 1] : undefined;
+const pct = (x: number) => `${Math.round(x * 100)}%`;
+
+// --stats knight: one build's Stats, Traits and resources at every Level, then stop
+const statsFor = args.includes("--stats") ? args[args.indexOf("--stats") + 1] : undefined;
+if (statsFor) {
+  const b = BUILDS.find((x) => x.name.toLowerCase().replace(/ /g, "-").includes(statsFor.toLowerCase()));
+  if (!b) throw new Error(`No build ${statsFor}. Try: ${BUILDS.map((x) => x.name).join(", ")}`);
+  const short: Record<Stat, string> = { endurance: "End", power: "Pow", grace: "Gra", empathy: "Emp", persuasion: "Per", demeanor: "Dem", logic: "Log", intuition: "Int", memory: "Mem" };
+  console.log(`# ${b.name}${EVEN && b.frontLine ? " (even)" : ""}\n`);
+  console.log(["Lvl", "P/S/M/A", ...Object.values(short), "HP", "Def", "Pri", "MP", "Attack", "Traits"].join(" | "));
+  for (let L = 1; L <= 20; L++) {
+    const c = build(b, L, "party");
+    const w = c.weapons.find((x) => !x.spell)!;
+    const tr = Object.entries(c.ranks).map(([k, r]) => `${traits[k].name}${traits[k].ranked ? " " + r : ""}`).join(", ");
+    console.log([L, `${c.core.physical}/${c.core.social}/${c.core.mental}/${c.core.magic}`, ...ALL_STATS.map((s) => c.stats[s]), c.hpMax, c.defense, c.basePriority, c.mpMax, `+${w.bonus}`, tr].join(" | "));
+  }
+  process.exit(0);
+}
+
+if (logId) {
+  const sc = SCENARIOS.find((s) => s.id === logId);
+  if (!sc) throw new Error(`No scenario ${logId}. Try: ${SCENARIOS.map((s) => s.id).join(", ")}`);
+  console.log(`# ${sc.title}\n`);
+  fight(sc, console.log);
+  console.log("");
+}
+
+console.log(`Party: Soldier (rifle, monster hunter), Knight (longsword, shield), Bruiser (greatsword, plate, Barbarian), Mage (Goblinoid healer and mentalist). Human but the Mage.${EVEN ? " Front line built evenly." : ""}\n`);
+for (const sc of SCENARIOS.filter((s) => (logId ? s.id === logId : !only || s.id.startsWith(only)))) {
+  const st: Stats = { wins: 0, rounds: 0, partyDown: 0, partyDead: 0, attacks: {}, hazeBlocked: 0, fearBlocked: 0, injuries: 0, roundsCapped: 0, healed: 0, revived: 0, potions: 0, sleeps: 0, ripostes: 0, rages: 0 };
+  for (let i = 0; i < N; i++) fight(sc, undefined, st);
+  const per = (x: number) => (x / N).toFixed(1);
+  console.log(`## ${sc.title}`);
+  console.log(
+    `Party wins ${pct(st.wins / N)} | ${per(st.rounds)} Rounds | party down ${(st.partyDown / N).toFixed(2)} of 4 (dead ${(st.partyDead / N).toFixed(2)})` +
+      (st.roundsCapped ? ` | ${st.roundsCapped} hit the 30-Round cap` : ""),
+  );
+  const extras = [
+    st.hazeBlocked && `${per(st.hazeBlocked)} failed Dark Haze rolls`,
+    st.fearBlocked && `${per(st.fearBlocked)} Attacks lost to Fearsome`,
+    st.healed && `${per(st.healed)} HP healed (${per(st.revived)} revived)`,
+    st.potions && `${per(st.potions)} potions`,
+    st.sleeps && `${per(st.sleeps)} Sleeps`,
+    st.ripostes && `${per(st.ripostes)} Ripostes`,
+    st.rages && `${per(st.rages)} Rages`,
+    st.injuries && `${per(st.injuries)} injuries`,
+  ].filter(Boolean);
+  if (extras.length) console.log(`  a fight: ${extras.join(" | ")}`);
+  for (const [k, r] of Object.entries(st.attacks).sort()) {
+    console.log(`  ${k.padEnd(30)} ${per(r.n).padStart(5)} a fight | hit ${pct(r.hits / r.n).padStart(4)} | ${(r.hits ? r.dmg / r.hits : 0).toFixed(1).padStart(4)} dmg a hit | crit ${pct(r.crits / r.n).padStart(3)}`);
+  }
+  console.log("");
+}
+
+if (!logId && !only) {
+  console.log("## The party by Level (HP / Defense / main Attack bonus / Priority)");
+  for (const L of [1, 3, 6, 8, 10, 12, 15, 20]) {
+    console.log(`  L${String(L).padEnd(3)}` + party(L).map((c) => `${c.name} ${c.hpMax}/${c.defense}/+${c.weapons.find((w) => !w.spell)!.bonus}/${c.basePriority}${c.mpMax ? ` MP ${c.mpMax}` : ""}`).join("  |  "));
+  }
+  console.log(`\nAssumptions:\n${ASSUMPTIONS.map((a) => "- " + a).join("\n")}`);
+}

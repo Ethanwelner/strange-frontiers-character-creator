@@ -7,7 +7,6 @@ tags: [potion, magic, thrown, enchantment, movement]
 type: equipment
 category: consumable
 attackType: "Ranged, Thrown"
-attackStat: "Grace"
 onHit: "The target gains the Slowed Condition at the flask's Rank"
 uses: "uses 1: when thrown"
 value: 40

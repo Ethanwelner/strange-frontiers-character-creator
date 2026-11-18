@@ -12,4 +12,4 @@ minStats: { magic: 2 }
 # On the Magic list: its own tab on the Traits step, open to every character.
 list: magic
 effect: "This character gains the Cast Heal Action."
-action: "Cast Heal: This character may spend 1 MP to heal a living character within 3 m per Rank, restoring 4 HP per Rank plus the caster's Magic."
+action: "Cast Heal: This character may spend up to 1 MP per Rank to heal a living character within 3 m per Rank, restoring 4 HP for each MP spent."
