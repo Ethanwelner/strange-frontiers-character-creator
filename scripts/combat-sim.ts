@@ -289,7 +289,23 @@ const RAIDER: Build = {
   weapons: ["greatsword"], armor: ["hide-armor"],
 };
 
-const party = (level: number) => [SOLDIER, KNIGHT, BRUISER, SMUGGLER].map((b) => build(b, level, "party"));
+// Evenly built front line (--even): about one Level in three goes to Social or
+// Mental, and once the Wield is at Rank 2, focus points spread to the lowest
+// Stat in the category instead of piling into the Attack Stat.
+const EVEN_KNIGHT: Build = {
+  name: "Even Knight", kind: HUMAN, origin: "power", cores: "PPMPPSPPMPPSPPMPPSPP",
+  wants: [["grace", 4], ["power", 4], ["memory", 4], ["grace", 6], ["power", 6], ["memory", 6]],
+  weapons: ["longsword"], armor: ["chainmail", "wooden-shield"], tactic: "defend-when-hurt",
+};
+const EVEN_BRUISER: Build = {
+  name: "Even Bruiser", kind: HUMAN, origin: "power", cores: "PPSPPMPPSPPMPPSPPMPP",
+  wants: [["power", 5], ["grace", 3], ["demeanor", 4], ["power", 6], ["grace", 6], ["demeanor", 6]],
+  weapons: ["greatsword"], armor: ["plate-armor"],
+};
+
+const EVEN = process.argv.includes("--even");
+const party = (level: number) =>
+  (EVEN ? [SOLDIER, EVEN_KNIGHT, EVEN_BRUISER, SMUGGLER] : [SOLDIER, KNIGHT, BRUISER, SMUGGLER]).map((b) => build(b, level, "party"));
 const crowd = (b: Build, level: number, n: number) =>
   Array.from({ length: n }, (_, i) => build(b, level, "enemy", `${b.name} ${i + 1}`));
 
@@ -546,7 +562,7 @@ const pct = (x: number) => `${Math.round(x * 100)}%`;
 // --stats Knight: one build's Stats at every Level, then stop
 const statsFor = args.includes("--stats") ? args[args.indexOf("--stats") + 1] : undefined;
 if (statsFor) {
-  const b = [SOLDIER, KNIGHT, BRUISER, SMUGGLER, BANDIT, RAIDER].find((x) => x.name.toLowerCase().startsWith(statsFor.toLowerCase()));
+  const b = [SOLDIER, KNIGHT, BRUISER, SMUGGLER, BANDIT, RAIDER, EVEN_KNIGHT, EVEN_BRUISER].find((x) => x.name.toLowerCase().replace(" ", "-").startsWith(statsFor.toLowerCase()));
   if (!b) throw new Error(`No build ${statsFor}`);
   const short = { endurance: "End", power: "Pow", grace: "Gra", empathy: "Emp", persuasion: "Per", demeanor: "Dem", logic: "Log", intuition: "Int", memory: "Mem" };
   console.log(["Lvl", "P/S/M", ...Object.values(short), "HP", "Def", "Rank", "Atk"].join(" | "));
@@ -566,7 +582,7 @@ if (logId) {
   console.log("");
 }
 
-console.log("Party: Soldier (rifle, ballistic vest), Knight (longsword, shield, chainmail), Bruiser (greatsword, plate), Smuggler (pistol, leather jacket). All Human.\n");
+console.log(`Party: Soldier (rifle, ballistic vest), ${EVEN ? "evenly built " : ""}Knight (longsword, shield, chainmail), ${EVEN ? "evenly built " : ""}Bruiser (greatsword, plate), Smuggler (pistol, leather jacket). All Human.\n`);
 for (const sc of logId ? SCENARIOS.filter((s) => s.id === logId) : SCENARIOS) {
   const st: Stats = { wins: 0, rounds: 0, partyDown: 0, partyDead: 0, attacks: {}, hazeBlocked: 0, fearBlocked: 0, injuries: 0, roundsCapped: 0 };
   for (let i = 0; i < N; i++) fight(sc, undefined, st);
