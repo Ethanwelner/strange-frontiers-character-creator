@@ -13,7 +13,7 @@
 // Characters are built the way the creator builds them: Kind bonuses, an
 // Origin point, then one core point per Level, each giving 3 focus points (or
 // one Magic point and 3 MP). Ranked Traits follow the Trait Ranks rule: Rank 2
-// and up need every required Stat at 3 × the Rank. Murk Legs is the stat block
+// and up need every required Stat at its requirement × the Rank. Murk Legs is the stat block
 // in the Parazoology section (php/rpg/lore/murk-legs.php), the baseline
 // creature template; the other enemies are NPCs built like characters.
 //
@@ -37,8 +37,11 @@ const ASSUMPTIONS = [
   "Massive Claws (Area 3 m) is an Area of Effect: no roll, a Glancing Blow on everyone within 3 m, friend or foe.",
   "Dark Haze: d20 + Intuition >= 10 per Rank to Attack or cast at the hazed creature, rolled each time.",
   "Fearsome: d20 + Demeanor >= 13 before every Attack (spells included) on the creature, rolled before Dark Haze. Frightened loses a Rank at the end of each Round; a Frightened character won't move toward a Fearsome one.",
-  "Rage's -10 to Social and Mental rolls applies to the Fearsome and Dark Haze checks, so a Barbarian won't Rage against a creature with either.",
-  "Advantage (Expert Swordsman) is +5, the Roll Modifier the Skill Checks page uses as its example.",
+  "Rage's -10 to Social and Mental rolls applies to the Fearsome and Dark Haze checks; Rage makes a character immune to Frightened. A Barbarian Rages when doubled damage beats the lost checks.",
+  "Advantage is the GM's call; the sim uses +5 (Expert Swordsman), the Roll Modifier the Skill Checks page uses as its example.",
+  "Ranked Traits: Rank r needs every required Stat at its requirement × r.",
+  "Sleep is an Attack (Magic) against 5 + Demeanor, so Fearsome and Dark Haze apply to it; a hit lands with the step's other hits.",
+  "Heal spends up to 1 MP per Rank, 4 HP per MP; Greater Heal is unchanged (3 MP, 8 per Rank + Magic).",
   "Mark Quarry's Knowledge check always succeeds: the party prepared for the hunt.",
   "A Healing Potion heals like Heal at its Rank, without the caster's Magic: 4 HP per Rank. Drinking one is a Full RP Action. Each party member carries two Rank 1 potions.",
   "Asleep: Defense 0 and no Actions until damaged. Every Attack in the same Priority step lands before the damage wakes them.",
@@ -97,7 +100,14 @@ interface Spell {
   id: string;
   mp: number;
   vsMental?: boolean; // Mind Spike and Mind Shatter: 5 + highest Mental focus Stat
+  vsDemeanor?: boolean; // Sleep: 5 + Demeanor
   onDamage?: (t: Combatant, rank: number) => void;
+  onHit?: (t: Combatant, rank: number) => void; // a hit with no damage, like Sleep
+}
+
+// Rage makes a character immune to Frightened
+function frighten(t: Combatant, rank: number) {
+  if (!t.rage) t.frightened = Math.max(t.frightened, rank);
 }
 
 interface Weapon {
@@ -165,8 +175,9 @@ function rankFor(id: string, c: { stats: Record<Stat, number>; core: Record<stri
   const needs = Object.entries(t.minStats ?? {}) as [string, number][];
   if (!needs.every(([s, n]) => statValue(c, s) >= n)) return 0;
   if (!t.ranked) return 1;
+  // Rank r needs every required Stat at its requirement × r
   let r = 1;
-  while (r < 10 && needs.every(([s, n]) => statValue(c, s) >= Math.max(n, 3 * (r + 1)))) r++;
+  while (r < 10 && needs.every(([s, n]) => statValue(c, s) >= n * (r + 1))) r++;
   return r;
 }
 
@@ -200,9 +211,13 @@ const ATTACK_SPELLS: Record<string, (r: number) => Omit<Weapon, "bonus" | "spell
   }),
   "mind-shatter": (r) => ({
     name: "Mind Shatter", options: [[{ type: "Psychic", amount: 6 * r }]], ranged: true, range: 30,
-    spell: { id: "mind-shatter", mp: 4, vsMental: true, onDamage: (t, rank) => { t.flatNext = true; t.frightened = Math.max(t.frightened, rank); } },
+    spell: { id: "mind-shatter", mp: 4, vsMental: true, onDamage: (t, rank) => { t.flatNext = true; frighten(t, rank); } },
   }),
 };
+const sleepSpell = (magic: number, rank: number): Weapon => ({
+  name: "Sleep", options: [[]], bonus: magic, ranged: true, range: 20,
+  spell: { id: "sleep", mp: 2, rank, vsDemeanor: true, onHit: (t) => { t.asleep = true; } },
+});
 
 interface Build {
   name: string;
@@ -381,12 +396,12 @@ function murkLegs(darkHaze: boolean, fearsome = true): Combatant {
 
 // ---------- builds ----------
 
-// A Wield Skill's Rank steps: Rank 1 minimums, then every required Stat at 3 × Rank
+// A Wield Skill's Rank steps: every required Stat at its requirement × Rank
 function wieldWants(itemId: string, upTo: number): Want[] {
   const t = wieldFor(items[itemId].name);
   const needs = Object.entries(t.minStats) as [Stat, number][];
-  const out: Want[] = needs.map(([s, n]) => [s, n]);
-  for (let r = 2; r <= upTo; r++) for (const [s, n] of needs) out.push([s, Math.max(n, 3 * r)]);
+  const out: Want[] = [];
+  for (let r = 1; r <= upTo; r++) for (const [s, n] of needs) out.push([s, n * r]);
   return out;
 }
 const traitWants = (...ids: string[]): Want[] => ids.flatMap((id) => Object.entries(traits[id].minStats ?? {}) as Want[]);
@@ -509,6 +524,7 @@ function attackBonus(a: Combatant, w: Weapon, t?: Combatant): number {
 function targetNumber(w: Weapon, t: Combatant): number {
   if (!up(t) || t.asleep || t.surprised) return 0;
   if (w.spell?.vsMental) return 5 + highestMental(t);
+  if (w.spell?.vsDemeanor) return 5 + t.stats.demeanor;
   return t.defense + (t.defending ? 3 + t.defendBonus + (t.shieldwall ? 4 : 0) : 0);
 }
 
@@ -620,12 +636,6 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
           p.t.hp = Math.min(p.t.hpMax, p.t.hp + p.heal.amount);
           if (st) { st.healed += p.t.hp - before; if (wasDown && up(p.t)) st.revived++; }
           log?.(`${c.name} casts ${p.heal.spell} on ${p.t.name}: ${before} → ${p.t.hp}/${p.t.hpMax}${wasDown && up(p.t) ? ", back on their feet" : ""}`);
-        } else if (p.kind === "sleep" && p.t && up(p.t) && c.mp >= 2) {
-          if (p.t.darkHaze && d20() + c.stats.intuition < 10 * p.t.darkHaze) { if (st) st.hazeBlocked++; log?.(`${c.name} can't make out ${p.t.name} to cast Sleep`); continue; }
-          c.mp -= 2;
-          p.t.asleep = true;
-          if (st) st.sleeps++;
-          log?.(`${c.name} casts Sleep on ${p.t.name}: Asleep`);
         }
       }
       // Defend
@@ -647,9 +657,9 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
         }
         a.attackedThisRound = true;
         if (t.fearsome && d20() + a.stats.demeanor - (a.rage ? 10 : 0) < 13) {
-          a.frightened = Math.max(a.frightened, 3);
+          frighten(a, 3);
           if (st) st.fearBlocked++;
-          log?.(`${a.name} loses their nerve facing ${t.name}: Frightened 3`);
+          log?.(`${a.name} loses their nerve facing ${t.name}${a.rage ? " (Raging, so not Frightened)" : ": Frightened 3"}`);
           return;
         }
         if (t.darkHaze && d20() + a.stats.intuition - (a.rage ? 10 : 0) < 10 * t.darkHaze) {
@@ -679,13 +689,19 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
             log?.(`${a.name} → ${tt.name} with ${w.name}: ${sev.name}`);
             continue;
           }
+          if (w.spell?.onHit) {
+            if (rec) rec.hits++;
+            if (st && w.spell.id === "sleep") st.sleeps++;
+            hits.push({ t: tt, dmg: 0, text: `${a.name} → ${tt.name} with ${w.name}: hit`, crit: false, types: [], a, w });
+            continue;
+          }
           const d = damageOf(option, sev.mod, tt, a);
           if (rec) { rec.hits++; rec.dmg += d.total; if (sev.name === "Critical Hit") rec.crits++; }
           hits.push({ t: tt, dmg: d.total, text: `${a.name} → ${tt.name} with ${w.name}: ${sev.name}, ${d.total} damage`, crit: sev.name === "Critical Hit", types: d.types, a, w });
         }
       };
       for (const p of here) {
-        if (p.kind === "attack" && p.w && p.t) attack(p.c, p.w, p.t, p.option ?? p.w.options[0]!);
+        if ((p.kind === "attack" || p.kind === "sleep") && p.w && p.t) attack(p.c, p.w, p.t, p.option ?? p.w.options[0]!);
         if (p.kind === "flurry" && p.w && p.t) {
           attack(p.c, p.w, p.t, p.option ?? p.w.options[0]!, 3);
           attack(p.c, p.w, p.t, p.option ?? p.w.options[0]!, 3);
@@ -696,6 +712,7 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
           h.t.hp -= h.dmg;
           if (h.dmg > 0) h.t.asleep = false;
           if (h.dmg > 0) h.w.spell?.onDamage?.(h.t, h.w.spell.rank);
+          h.w.spell?.onHit?.(h.t, h.w.spell.rank);
           let extra = "";
           if (h.crit && h.dmg >= h.t.hpMax / 4 && h.t.hp > 0 && d20() + h.t.stats.endurance < 10 + h.dmg) {
             if (h.types.includes("Piercing")) { h.t.injuries.organ++; extra = " — Organ Damage"; }
@@ -764,11 +781,13 @@ function decide(
     const heal = c.ranks["heal"];
     const greater = c.ranks["greater-heal"];
     if (hurt && (heal || greater)) {
+      const deficit = hurt.hpMax - hurt.hp;
+      // Heal: up to 1 MP per Rank, 4 HP for each MP spent
+      const healMp = Math.min(heal ?? 0, c.mp, Math.ceil(deficit / 4));
       const opts = [
         greater && c.mp >= 3 ? { spell: "Greater Heal", mp: 3, amount: 8 * greater + c.core.magic, range: 3 } : undefined,
-        heal && c.mp >= 1 ? { spell: "Heal", mp: 1, amount: 4 * heal + c.core.magic, range: 3 * heal } : undefined,
+        heal && healMp >= 1 ? { spell: `Heal (${healMp} MP)`, mp: healMp, amount: 4 * healMp, range: 3 * heal } : undefined,
       ].filter(Boolean) as NonNullable<Plan["heal"]>[];
-      const deficit = hurt.hpMax - hurt.hp;
       const pick = opts.find((o) => o.amount <= deficit + 4) ?? opts.at(-1);
       if (pick) {
         if (Math.abs(hurt.pos - c.pos) <= pick.range) return { c, kind: "heal", t: hurt, heal: pick };
@@ -782,7 +801,9 @@ function decide(
         .filter((t) => !t.asleep && Math.abs(t.pos - c.pos) <= 20)
         .filter((t) => friends(c).some((f) => f !== c && canAct(f) && f.weapons.some((w) => Math.abs(t.pos - f.pos) <= w.range)))
         .sort((x, y) => threat(y) - threat(x))[0];
-      if (sleeper && (sleeper.monster || threat(sleeper) >= 12)) return { c, kind: "sleep", t: sleeper };
+      const spell = sleepSpell(c.core.magic, c.ranks["sleep"]);
+      const hitChance = sleeper ? (21 - (targetNumber(spell, sleeper) - attackBonus(c, spell, sleeper))) / 20 : 0;
+      if (sleeper && hitChance >= 0.5 && (sleeper.monster || threat(sleeper) >= 12)) return { c, kind: "sleep", t: sleeper, w: spell };
     }
   }
 
@@ -827,11 +848,18 @@ function decide(
     c.sp--;
     c.marked = best.t;
   }
-  // Rage on the first swing, unless the target's Fearsome or hazed
-  if (c.ranks["barbarian"] && !c.rage && c.vp >= 1 && !best.t.fearsome && !best.t.darkHaze && !best.w?.ranged) {
-    c.vp--;
+  // Rage when doubled damage beats the -10 it puts on Fearsome and Dark Haze checks
+  if (c.ranks["barbarian"] && !c.rage && c.vp >= 1 && best.w && !best.w.ranged) {
+    const calm = expected(c, best.w, best.t, 0).dmg;
     c.rage = true;
-    if (st) st.rages++;
+    const raging = expected(c, best.w, best.t, 0).dmg;
+    c.rage = false;
+    if (raging > calm) {
+      c.vp--;
+      c.rage = true;
+      c.frightened = 0; // immune
+      if (st) st.rages++;
+    }
   }
   return best;
 }
