@@ -9,4 +9,4 @@ types: [illusion]
 ranked: true
 conveyed: true
 temporary: "Every ten minutes after a character is affected by Dark Haze, it loses one Rank of Dark Haze."
-effect: "Characters trying to perceive any visual information about this character must succeed on an Intuition check of 10 per Rank. A character who fails can't make sense of what they're looking at and sees only a dark, shimmering haze. They can still Attack the haze, but at -6, as if this character were in Heavy Cover. They can try the check again each Round, and once they succeed, the Dark Haze has no effect on them for the rest of the Incident."
+effect: "Characters trying to perceive any visual information about this character must succeed on an Intuition check of 10 per Rank. A character who fails can't make sense of what they're looking at and sees only a dark, shimmering haze. They can still Attack the haze, but at -6, as if this character were in Heavy Cover. During an Incident, they can try the check again each Round, and once they succeed, the Dark Haze has no effect on them for the rest of the Incident."
