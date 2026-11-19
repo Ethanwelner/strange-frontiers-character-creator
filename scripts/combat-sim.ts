@@ -7,6 +7,7 @@
 //   npm run sim -- --n 10000            more fights per scenario
 //   npm run sim -- --only murk          only scenarios whose id starts with "murk"
 //   npm run sim -- --even               front line spends every third Level on Social or Mental
+//   SF_DMG_ADD=2 npm run sim           every weapon deals +2 damage (SF_DMG_MULT=1.5 multiplies instead), for testing
 //   SF_PIERCE=0.5 npm run sim          armor and shields with half their Piercing Resistance, for testing
 //   SF_RAGE=3 npm run sim            Rage at +3 per Barbarian Rank instead of +2, for testing
 //   npm run sim -- --shooters           a party of four guns: Soldier, Marksman, Trooper and a Machine Gunner
@@ -223,9 +224,13 @@ function weaponFrom(id: string, c: Combatant): Weapon {
   if (wield && rank) c.ranks[wield.id] = rank;
   const tags: string[] = it.tags ?? [];
   const breach = String(it.modifiers ?? "").match(/^Breach (\d+)$/);
+  // SF_DMG_MULT and SF_DMG_ADD raise every weapon's damage for testing: each type is
+  // multiplied (rounded), and the first type in each option gets the flat bonus
+  const mult = Number(process.env.SF_DMG_MULT ?? 1), add = Number(process.env.SF_DMG_ADD ?? 0);
+  const options = parseDamage(it.damage)!.map((o) => o.map((d, i) => ({ ...d, amount: Math.round((d.amount ?? 0) * mult) + (i === 0 ? add : 0) })));
   return {
     name: it.name,
-    options: parseDamage(it.damage)!,
+    options,
     bonus: 3 * rank,
     wieldRank: rank,
     sword: tags.includes("sword"),
