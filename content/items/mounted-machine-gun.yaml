@@ -3,7 +3,7 @@ name: "Mounted Machine Gun"
 status: draft
 plane: earth
 summary: "A heavy automatic gun on a turret in the frame's body. It can't be taken off or disarmed."
-tags: [ranged, firearm, built-in, chassis]
+tags: [ranged, firearm, built-in, chassis, automatic]
 type: weapon
 category: weapon
 damage: "7 Piercing"

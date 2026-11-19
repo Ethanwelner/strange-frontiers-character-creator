@@ -7,4 +7,5 @@ tags: [injury, senses]
 category: condition
 types: [injury]
 conveyed: true
-effect: "This character suffers -20 to all Skill Checks that require sight, and the GM may request additional checks for basic actions such as walking or manipulating objects."
+effect: "This character suffers -20 to all Skill Checks that require sight, and the GM may request additional checks for basic actions such as walking or manipulating objects. In an Incident, it has -6 Defense and -6 to Attack Rolls."
+modifiers: "Defense -6, Attack Rolls -6"

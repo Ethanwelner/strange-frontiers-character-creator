@@ -7,5 +7,5 @@ tags: [combat]
 category: condition
 conveyed: true
 temporary: "Lasts through the following combat Round"
-effect: "This character has -1 Priority and -1 to Attack Rolls."
-modifiers: "Priority -1, Attack Rolls -1"
+effect: "This character has -1 Priority, -1 to Attack Rolls and -3 Defense."
+modifiers: "Priority -1, Attack Rolls -1, Defense -3"

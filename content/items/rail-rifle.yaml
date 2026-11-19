@@ -9,7 +9,7 @@ category: weapon
 damage: "11 Piercing"
 attackType: "Ranged"
 maxRange: "800 m"
-reload: "Full"
+reload: "Partial"
 modifiers: "Breach 4"
 value: 60000
 currency: "ERC"
