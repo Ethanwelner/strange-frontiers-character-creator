@@ -6,7 +6,7 @@ summary: "A staff bound with lodestone that steadies a caster's spells."
 tags: [melee, staff, magic, two-handed]
 type: weapon
 category: weapon
-damage: "9 Blunt"
+damage: "7 Blunt"
 attackType: "Melee"
 maxRange: "2 m"
 modifiers: "Attack spells cast while holding it deal +1 damage per Rank"

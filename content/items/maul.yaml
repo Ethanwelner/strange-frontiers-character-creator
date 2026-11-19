@@ -6,7 +6,7 @@ summary: "A heavy two-handed hammer that crushes armor and bone alike."
 tags: [melee, blunt, two-handed]
 type: weapon
 category: weapon
-damage: "11 Blunt"
+damage: "9 Blunt"
 attackType: "Melee"
 maxRange: "2 m"
 value: 400

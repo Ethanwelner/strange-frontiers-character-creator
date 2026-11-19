@@ -6,7 +6,7 @@ summary: "A light spear made for throwing."
 tags: [ranged, thrown]
 type: weapon
 category: weapon
-damage: "7 Piercing"
+damage: "5 Piercing"
 attackType: "Ranged, Thrown"
 uses: "uses 1: when thrown, until recovered"
 value: 50

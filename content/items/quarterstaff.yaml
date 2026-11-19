@@ -6,7 +6,7 @@ summary: "A long wooden staff, as useful on the road as in a fight."
 tags: [melee, blunt, two-handed]
 type: weapon
 category: weapon
-damage: "7 Blunt"
+damage: "5 Blunt"
 attackType: "Melee"
 maxRange: "2 m"
 value: 40

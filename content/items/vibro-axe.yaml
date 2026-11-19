@@ -6,7 +6,7 @@ summary: "An axe head that shivers thousands of times a second, chewing through 
 tags: [melee, axe, two-handed, exotic]
 type: weapon
 category: weapon
-damage: "15 Slashing"
+damage: "13 Slashing"
 attackType: "Melee"
 maxRange: "2 m"
 modifiers: "Breach 2"

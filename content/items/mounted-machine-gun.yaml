@@ -6,7 +6,7 @@ summary: "A heavy automatic gun on a turret in the frame's body. It can't be tak
 tags: [ranged, firearm, built-in, chassis, automatic]
 type: weapon
 category: weapon
-damage: "11 Piercing"
+damage: "9 Piercing"
 attackType: "Ranged"
 maxRange: "600 m"
 reload: "Full"

@@ -6,7 +6,7 @@ summary: "A one-handed sword, light enough to carry everywhere."
 tags: [melee, blade, sword]
 type: weapon
 category: weapon
-damage: "9 Slashing / 8 Piercing"
+damage: "7 Slashing / 6 Piercing"
 attackType: "Melee"
 maxRange: "1 m"
 value: 250

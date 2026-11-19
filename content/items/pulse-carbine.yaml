@@ -6,7 +6,7 @@ summary: "A burst laser that boils through light cover."
 tags: [ranged, laser, two-handed, exotic]
 type: weapon
 category: weapon
-damage: "14 Heat"
+damage: "12 Heat"
 attackType: "Ranged"
 maxRange: "200 m"
 reload: "Partial"

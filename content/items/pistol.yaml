@@ -6,7 +6,7 @@ summary: "A modern handgun."
 tags: [ranged, firearm, sidearm, concealable]
 type: weapon
 category: weapon
-damage: "11 Piercing"
+damage: "9 Piercing"
 attackType: "Ranged"
 maxRange: "50 m"
 reload: "Partial"

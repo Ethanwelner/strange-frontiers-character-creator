@@ -6,7 +6,7 @@ summary: "A compact automatic weapon that fires pistol rounds."
 tags: [ranged, firearm, military, automatic]
 type: weapon
 category: weapon
-damage: "10 Piercing"
+damage: "8 Piercing"
 attackType: "Ranged"
 maxRange: "100 m"
 reload: "Partial"

@@ -6,7 +6,7 @@ summary: "A modern rifle, the standard arm of soldiers across the systems."
 tags: [ranged, firearm, military, two-handed]
 type: weapon
 category: weapon
-damage: "11 Piercing"
+damage: "9 Piercing"
 attackType: "Ranged"
 maxRange: "400 m"
 reload: "Partial"

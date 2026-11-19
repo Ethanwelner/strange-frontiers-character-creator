@@ -6,7 +6,7 @@ summary: "A spear headed with a Murk Legs fang, traded through the hunting guild
 tags: [melee, polearm, reach, monster part]
 type: weapon
 category: weapon
-damage: "14 Piercing"
+damage: "12 Piercing"
 attackType: "Melee"
 maxRange: "3 m"
 modifiers: "Breach 2"

@@ -6,7 +6,7 @@ summary: "A longsword from a master smith, balanced and keen."
 tags: [melee, blade, sword, masterwork]
 type: weapon
 category: weapon
-damage: "13 Slashing / 11 Piercing"
+damage: "11 Slashing / 9 Piercing"
 attackType: "Melee"
 maxRange: "2 m"
 value: 900

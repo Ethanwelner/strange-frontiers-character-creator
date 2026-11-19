@@ -6,7 +6,7 @@ summary: "A flamethrower that sprays Fast Hydrogen, which ignites the moment it 
 tags: [ranged, heavy, fire, exotic, fast-hydrogen]
 type: weapon
 category: weapon
-damage: "16 Heat"
+damage: "14 Heat"
 attackType: "Ranged"
 maxRange: "15 m"
 areaOfEffect: "3 m"

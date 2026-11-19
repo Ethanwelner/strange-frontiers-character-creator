@@ -6,7 +6,7 @@ summary: "A short double-edged blade, easy to hide and quick in close quarters."
 tags: [melee, blade, concealable]
 type: weapon
 category: weapon
-damage: "7 Slashing / 7 Piercing"
+damage: "5 Slashing / 5 Piercing"
 attackType: "Melee"
 maxRange: "1 m"
 value: 60

@@ -6,7 +6,7 @@ summary: "A muzzle-loading smoothbore gun, loud, slow and devastating."
 tags: [ranged, firearm, two-handed]
 type: weapon
 category: weapon
-damage: "11 Piercing"
+damage: "9 Piercing"
 attackType: "Ranged"
 maxRange: "100 m"
 reload: "Full"

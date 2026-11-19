@@ -6,7 +6,7 @@ summary: "A long-range precision rifle with a powerful scope."
 tags: [ranged, firearm, military, two-handed]
 type: weapon
 category: weapon
-damage: "13 Piercing"
+damage: "11 Piercing"
 attackType: "Ranged"
 maxRange: "1000 m"
 reload: "Partial"

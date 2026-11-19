@@ -6,7 +6,7 @@ summary: "An axe blade, spike and hook on a long haft."
 tags: [melee, polearm, reach, two-handed]
 type: weapon
 category: weapon
-damage: "9 Slashing / 8 Piercing"
+damage: "7 Slashing / 6 Piercing"
 attackType: "Melee"
 maxRange: "3 m"
 value: 500
