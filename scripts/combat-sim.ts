@@ -51,7 +51,7 @@ const ASSUMPTIONS = [
   "Mark Quarry's Knowledge check always succeeds: the party prepared for the hunt.",
   "A Healing Potion heals like Heal at its Rank, without the caster's Magic: 4 HP per Rank. Drinking one is a Full RP Action. Each party member carries two Rank 1 potions.",
   "Asleep: Defense 0 and no Actions until damaged. Every Attack in the same Priority step lands before the damage wakes them.",
-  "Breach X ignores X of the target's Resistance to each damage type; ignoring Defense lowers the number the roll must meet. Spending Traits pay before the roll: enough Ignore Defense to reach about a 60% hit, enough Breach to clear the Resistance, then damage. Casters keep 3 MP for Heal; nobody spends HP below half.",
+  "Breach X ignores X of the target's Resistance to each damage type; to-hit spending adds to the roll. Spending Traits pay before the roll: enough to-hit bonus to reach about a 60% hit, enough Breach to clear the Resistance, then damage. Casters keep 3 MP for Heal; nobody spends HP below half.",
   "Full reload weapons (Rail Rifle, Hydrogen Lance) fire, then need a Full RP Action to reload; the AI uses another weapon unless it's less than half as good.",
   "Rage adds a flat +2 weapon damage per Barbarian Rank on a hit that gets through (SF_RAGE sets the amount for testing).",
   "Debuffs lower Defense: Flat-Footed -3, Frightened -1 per Rank. Flanking gives no bonus to hit; it only beats cover. The only stock to-hit bonuses are Aim (+3) and firing from an elevated position (+3, not modeled).",
@@ -815,7 +815,7 @@ const SPENDERS: [string, "vp" | "sp" | "mp" | "hp", "ignore" | "breach" | "extra
   ["empower-spell", "mp", "extra", 3, (w) => !!w.spell],
 ];
 
-// How much to spend on an Attack: enough Ignore Defense to reach about a
+// How much to spend on an Attack: enough to-hit bonus to reach about a
 // 60% hit, enough Breach to clear the target's Resistance, then damage.
 // Casters keep 3 MP for Heal; nobody spends HP below half.
 function spend(a: Combatant, w: Weapon, t: Combatant, option: Damage[], pen: number, st?: Stats) {
@@ -980,7 +980,7 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
             if (w.ranged && !w.spell && a.aimAt === tt) { pen -= 3; a.aimAt = undefined; }
             // Resource-spending Traits, decided before the roll
             spent = spend(a, w, tt, option, pen, st);
-            if (spent.ignore || spent.breach || spent.extra) log?.(`${a.name} spends for ${[spent.ignore && `Ignore ${spent.ignore} Defense`, spent.breach && `Breach ${spent.breach}`, spent.extra && `+${spent.extra} damage`].filter(Boolean).join(", ")}`);
+            if (spent.ignore || spent.breach || spent.extra) log?.(`${a.name} spends for ${[spent.ignore && `+${spent.ignore} to hit`, spent.breach && `Breach ${spent.breach}`, spent.extra && `+${spent.extra} damage`].filter(Boolean).join(", ")}`);
             margin = d20() + attackBonus(a, w, tt) - pen - Math.max(0, targetNumber(w, tt) - spent.ignore);
             sev = severity(margin);
           }
