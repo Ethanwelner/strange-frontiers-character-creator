@@ -9,7 +9,7 @@ category: weapon
 damage: "13 Slashing"
 attackType: "Melee"
 maxRange: "2 m"
-modifiers: "Breach 2"
+modifiers: "(Breach: 2)"
 value: 25000
 currency: "ERC"
 weight: 3

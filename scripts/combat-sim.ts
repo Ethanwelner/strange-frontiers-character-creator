@@ -226,7 +226,7 @@ function weaponFrom(id: string, c: Combatant): Weapon {
   const rank = wield ? rankFor(wield.id, c, c.ranks) : 0;
   if (wield && rank) c.ranks[wield.id] = rank;
   const tags: string[] = it.tags ?? [];
-  const breach = String(it.modifiers ?? "").match(/^Breach (\d+)$/);
+  const breach = String(it.modifiers ?? "").match(/^\(Breach: (\d+)\)$/);
   // SF_DMG_MULT and SF_DMG_ADD raise every weapon's damage for testing: each type is
   // multiplied (rounded), and the first type in each option gets the flat bonus
   const mult = Number(process.env.SF_DMG_MULT ?? 1), add = Number(process.env.SF_DMG_ADD ?? 0);
@@ -980,7 +980,7 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
             if (w.ranged && !w.spell && a.aimAt === tt) { pen -= 3; a.aimAt = undefined; }
             // Resource-spending Traits, decided before the roll
             spent = spend(a, w, tt, option, pen, st);
-            if (spent.ignore || spent.breach || spent.extra) log?.(`${a.name} spends for ${[spent.ignore && `+${spent.ignore} to hit`, spent.breach && `Breach ${spent.breach}`, spent.extra && `+${spent.extra} damage`].filter(Boolean).join(", ")}`);
+            if (spent.ignore || spent.breach || spent.extra) log?.(`${a.name} spends for ${[spent.ignore && `+${spent.ignore} to hit`, spent.breach && `(Breach: ${spent.breach})`, spent.extra && `+${spent.extra} damage`].filter(Boolean).join(", ")}`);
             margin = d20() + attackBonus(a, w, tt) - pen - Math.max(0, targetNumber(w, tt) - spent.ignore);
             sev = severity(margin);
           }

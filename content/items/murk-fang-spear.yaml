@@ -9,7 +9,7 @@ category: weapon
 damage: "12 Piercing"
 attackType: "Melee"
 maxRange: "3 m"
-modifiers: "Breach 2"
+modifiers: "(Breach: 2)"
 value: 2500
 currency: "Luras"
 weight: 2

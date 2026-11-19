@@ -9,7 +9,7 @@ category: weapon
 damage: "10 Slashing / 9 Piercing"
 attackType: "Melee"
 maxRange: "1 m"
-modifiers: "Breach 3"
+modifiers: "(Breach: 3)"
 value: 15000
 currency: "ERC"
 weight: 1

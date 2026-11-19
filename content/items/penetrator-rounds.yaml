@@ -6,7 +6,7 @@ summary: "A magazine of armor-piercing rounds for a pistol, rifle, submachine gu
 tags: [ammunition, firearm]
 type: misc
 category: consumable
-modifiers: "Breach 3 (Pistol, Rifle, Submachine Gun, Machine Gun)"
+modifiers: "(Breach: 3) (Pistol, Rifle, Submachine Gun, Machine Gun)"
 uses: "uses 1: per reload"
 value: 400
 currency: "ERC"
