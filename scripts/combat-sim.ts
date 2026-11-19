@@ -48,7 +48,7 @@ const ASSUMPTIONS = [
   "Asleep: Defense 0 and no Actions until damaged. Every Attack in the same Priority step lands before the damage wakes them.",
   "Breach X ignores X of the target's Resistance to each damage type; ignoring Defense lowers the number the roll must meet. Spending Traits pay before the roll: enough Ignore Defense to reach about a 60% hit, enough Breach to clear the Resistance, then damage. Casters keep 3 MP for Heal; nobody spends HP below half.",
   "Full reload weapons (Rail Rifle, Hydrogen Lance) fire, then need a Full RP Action to reload; the AI uses another weapon unless it's less than half as good.",
-  "Rage doubles all of an Attack's damage, including what Wild Swing adds.",
+  "Rage doubles weapon damage only; what Wild Swing and other spending Traits add isn't doubled.",
   "Not modeled: Bodyguard's Cover, Weak Point, Second Wind, Daze, Shield, Charm, Grenadier and other Traits that need positions or choices the line model can't make.",
 ];
 
@@ -575,8 +575,9 @@ function damageOf(option: Damage[], sevMod: number, t: Combatant, a: Combatant, 
     if (dealt > 0) types.push(d.type);
     total += dealt;
   }
-  total += extra;
+  // Rage doubles the weapon's damage; what spending Traits add isn't doubled
   if (a.rage) total *= 2;
+  total += extra;
   if (total > 0) total += 2 * t.injuries.organ;
   return { total, types };
 }

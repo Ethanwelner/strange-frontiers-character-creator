@@ -7,4 +7,4 @@ tags: [combat, rage]
 category: condition
 conveyed: true
 temporary: "Ends after any turn in which this character didn't make an Attack."
-effect: "- This character's Attacks deal x2 damage.\n- -10 to this character's Social and Mental rolls.\n- This character is immune to the Frightened Condition."
+effect: "- This character's Attacks deal x2 weapon damage. Damage added by Traits, like Wild Swing, isn't doubled.\n- -10 to this character's Social and Mental rolls.\n- This character is immune to the Frightened Condition."
