@@ -8,6 +8,7 @@
 //   npm run sim -- --only murk          only scenarios whose id starts with "murk"
 //   npm run sim -- --even               front line spends every third Level on Social or Mental
 //   SF_RAGE=3 npm run sim            Rage at +3 per Barbarian Rank instead of +2, for testing
+//   npm run sim -- --suppress           the Soldier also carries a Machine Gun for Suppressing Fire
 //   npm run sim -- --gear               the party with higher-class weapons and the resource-spending Traits
 //   npm run sim -- --stats knight       one build's Stats, Traits and resources at every Level
 //
@@ -53,7 +54,8 @@ const ASSUMPTIONS = [
   "Debuffs lower Defense: Flat-Footed -3, Frightened -1 per Rank. Flanking (another ally in melee reach of the target) is a source of Advantage, +3 to Melee Attacks.",
   "Cover (Light -3, Heavy -6) applies to Ranged Attacks against a side's characters on Rounds they don't move. The Pulse Carbine ignores Light Cover.",
   "Aim: a Full RP Action when a shot's hit chance is under 35%; the next Ranged Attack at that target gets Advantage (+3).",
-  "Not modeled: Distract, Suppressing Fire, Prone, Slowed, Restrained, Blinded, higher ground and hiding. Not modeled: Bodyguard's Cover, Weak Point, Second Wind, Daze, Shield, Charm, Grenadier and other Traits that need positions or choices the line model can't make.",
+  "Distract: a Full RP Action within 30 m, Persuasion or Demeanor against 10 + Empathy, taken when the character's own Attack has under a 40% chance and a success is at least even odds. Suppressing Fire: a Full Action with an automatic weapon when it catches two or more foes (5 m area) that someone on its side can shoot (the shooter's own other gun counts); Demeanor against 10 + 3 per Wield Rank or Flat-Footed. In firefights each side stands 3 m apart, and the 5 m area can be centered between two people.",
+  "Not modeled: Prone, Slowed, Restrained, Blinded, higher ground and hiding. Not modeled: Bodyguard's Cover, Weak Point, Second Wind, Daze, Shield, Charm, Grenadier and other Traits that need positions or choices the line model can't make.",
 ];
 
 // ---------- content ----------
@@ -119,6 +121,8 @@ interface Spell {
 }
 
 // Rage makes a character immune to Frightened
+const distractStat = (c: Combatant) => Math.max(c.stats.persuasion, c.stats.demeanor);
+
 function frighten(t: Combatant, rank: number) {
   if (!t.rage) t.frightened = Math.max(t.frightened, rank);
 }
@@ -133,7 +137,8 @@ interface Weapon {
   firearm?: boolean;
   natural?: boolean;
   reloadFull?: boolean;
-  ignoreLightCover?: boolean; // fires, then takes a Full RP Action to reload
+  ignoreLightCover?: boolean;
+  automatic?: boolean; // can lay down Suppressing Fire // fires, then takes a Full RP Action to reload
   breach?: number; // ignores this much of the target's Resistance to each damage type
   ranged: boolean;
   range: number; // meters
@@ -222,6 +227,7 @@ function weaponFrom(id: string, c: Combatant): Weapon {
     blade: tags.includes("blade") || tags.includes("axe") || tags.includes("sword"),
     firearm: tags.includes("firearm"),
     natural: tags.includes("natural weapon"),
+    automatic: tags.includes("automatic"),
     reloadFull: it.reload === "Full",
     ignoreLightCover: /Light Cover counts as no Cover/.test(it.modifiers ?? ""),
     breach: breach ? Number(breach[1]) : 0,
@@ -500,6 +506,12 @@ const RIFLEMAN: Build = {
   traits: ["combat-instincts"],
   weapons: ["rifle"], armor: ["ballistic-vest", "combat-helmet"],
 };
+const MACHINE_GUNNER: Build = {
+  name: "Machine Gunner", kind: HUMAN, origin: "power", ai: "fighter", cores: "PPMPPSPPMPPSPPMPPSPP",
+  wants: [...wieldWants("machine-gun", 3)],
+  traits: ["combat-instincts", "armor-training"],
+  weapons: ["machine-gun"], armor: ["ballistic-vest", "combat-helmet"],
+};
 const SHAMAN: Build = {
   name: "Goblinoid Shaman", kind: GOBLINOID, origin: "intuition", ai: "caster",
   cores: "AAPAAMAASAAMAAPAAMAA",
@@ -534,9 +546,12 @@ const G_MAGE: Build = {
   weapons: ["lodestaff"],
 };
 const GEAR = process.argv.includes("--gear");
+// --suppress: the Soldier also carries a Machine Gun for Suppressing Fire
+const SUPPRESS = process.argv.includes("--suppress");
+const withMG = (b: Build): Build => (SUPPRESS && b.name === "Soldier" ? { ...b, weapons: [...b.weapons, "machine-gun"] } : b);
 
-const BUILDS = [...(GEAR ? [G_SOLDIER, G_KNIGHT, G_BRUISER, G_MAGE] : [SOLDIER, KNIGHT, BRUISER, MAGE]), BANDIT, RAIDER, RIFLEMAN, SHAMAN];
-const party = (level: number) => (GEAR ? [G_SOLDIER, G_KNIGHT, G_BRUISER, G_MAGE] : [SOLDIER, KNIGHT, BRUISER, MAGE]).map((b) => build(b, level, "party"));
+const BUILDS = [...(GEAR ? [G_SOLDIER, G_KNIGHT, G_BRUISER, G_MAGE] : [SOLDIER, KNIGHT, BRUISER, MAGE]), BANDIT, RAIDER, RIFLEMAN, MACHINE_GUNNER, SHAMAN];
+const party = (level: number) => (GEAR ? [G_SOLDIER, G_KNIGHT, G_BRUISER, G_MAGE] : [SOLDIER, KNIGHT, BRUISER, MAGE]).map((b) => build(withMG(b), level, "party"));
 const crowd = (b: Build, level: number, n: number) =>
   Array.from({ length: n }, (_, i) => build(b, level, "enemy", `${b.name} ${i + 1}`));
 
@@ -545,6 +560,7 @@ interface Scenario {
   title: string;
   distance: number; // meters between the sides at the start
   cover?: Partial<Record<"party" | "enemy", number>>; // Light 3 or Heavy 6 against Ranged Attacks, lost on a Round the character moves
+  spread?: number; // meters between enemies, so a 5 m area doesn't catch a whole side
   ambush?: boolean; // the party strikes first: enemies are surprised (Defense 0, no Action) in Round 1, melee starts in reach
   make: () => { party: Combatant[]; enemies: Combatant[] };
 }
@@ -556,9 +572,10 @@ const SCENARIOS: Scenario[] = [
   { id: "raiders-10", title: "Level 10 party vs 3 Level 10 Orcoid Raiders and a Goblinoid Shaman", distance: 20, make: () => ({ party: party(10), enemies: [...crowd(RAIDER, 10, 3), build(SHAMAN, 10, "enemy", "Goblinoid Shaman")] }) },
   ...[6, 8, 10, 12, 15].map((L): Scenario => ({ id: `murk-${L}`, title: `Level ${L} party vs Murk Legs, head on`, distance: 20, make: () => ({ party: party(L), enemies: [murkLegs(true)] }) })),
   ...[6, 8, 10, 12].map((L): Scenario => ({ id: `murk-${L}-ambush`, title: `Level ${L} party ambushes Murk Legs`, distance: 25, ambush: true, make: () => ({ party: party(L), enemies: [murkLegs(true)] }) })),
-  ...[[6, 150], [10, 150], [10, 300]].map(([L, d]): Scenario => ({ id: `firefight-${L}-${d}`, title: `Level ${L} party vs 4 Level ${L} Riflemen, ${d} m apart, both sides in Light Cover`, distance: d!, cover: { party: 3, enemy: 3 }, make: () => ({ party: party(L!), enemies: crowd(RIFLEMAN, L!, 4) }) })),
-  { id: "firefight-10-150-heavy", title: "Level 10 party vs 4 Level 10 Riflemen, 150 m apart, both sides in Heavy Cover", distance: 150, cover: { party: 6, enemy: 6 }, make: () => ({ party: party(10), enemies: crowd(RIFLEMAN, 10, 4) }) },
-  { id: "firefight-10-150-open", title: "Level 10 party vs 4 Level 10 Riflemen, 150 m apart, no cover", distance: 150, make: () => ({ party: party(10), enemies: crowd(RIFLEMAN, 10, 4) }) },
+  ...[[6, 150], [10, 150], [10, 300]].map(([L, d]): Scenario => ({ id: `firefight-${L}-${d}`, title: `Level ${L} party vs 4 Level ${L} Riflemen, ${d} m apart, both sides in Light Cover`, distance: d!, spread: 3, cover: { party: 3, enemy: 3 }, make: () => ({ party: party(L!), enemies: crowd(RIFLEMAN, L!, 4) }) })),
+  { id: "firefight-10-150-heavy", title: "Level 10 party vs 4 Level 10 Riflemen, 150 m apart, both sides in Heavy Cover", distance: 150, spread: 3, cover: { party: 6, enemy: 6 }, make: () => ({ party: party(10), enemies: crowd(RIFLEMAN, 10, 4) }) },
+  { id: "firefight-10-150-mg", title: "Level 10 party vs 3 Level 10 Riflemen and a Machine Gunner, 150 m apart, both sides in Light Cover", distance: 150, spread: 3, cover: { party: 3, enemy: 3 }, make: () => ({ party: party(10), enemies: [...crowd(RIFLEMAN, 10, 3), build(MACHINE_GUNNER, 10, "enemy", "Machine Gunner")] }) },
+  { id: "firefight-10-150-open", title: "Level 10 party vs 4 Level 10 Riflemen, 150 m apart, no cover", distance: 150, spread: 3, make: () => ({ party: party(10), enemies: crowd(RIFLEMAN, 10, 4) }) },
   { id: "murk-10-plain", title: "Level 10 party vs Murk Legs without Dark Haze or Fearsome, head on", distance: 20, make: () => ({ party: party(10), enemies: [murkLegs(false, false)] }) },
 ];
 
@@ -686,6 +703,10 @@ interface Stats {
   rages: number;
   reloads: number;
   aims: number;
+  distracts: number;
+  distracted: number;
+  suppressions: number;
+  suppressed: number;
   spent: { vp: number; sp: number; mp: number; hp: number };
 }
 
@@ -736,16 +757,18 @@ function spend(a: Combatant, w: Weapon, t: Combatant, option: Damage[], pen: num
 
 type Plan = {
   c: Combatant;
-  kind: "attack" | "flurry" | "move" | "defend" | "heal" | "potion" | "sleep" | "toward" | "reload" | "aim";
+  kind: "attack" | "flurry" | "move" | "defend" | "heal" | "potion" | "sleep" | "toward" | "reload" | "aim" | "distract" | "suppress";
   w?: Weapon;
   t?: Combatant;
   option?: Damage[];
   heal?: { spell: string; mp: number; amount: number; range: number };
+  at?: number; // where an area Action is centered
 };
 
 function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
   const { party: P, enemies: E } = sc.make();
-  for (const e of E) e.pos = sc.distance;
+  E.forEach((e, i) => { e.pos = sc.distance + i * (sc.spread ?? 0); });
+  P.forEach((p, i) => { p.pos = -i * (sc.spread ?? 0); });
   if (sc.ambush) {
     for (const e of E) e.surprised = true;
     for (const p of P) if (!p.weapons[0]!.ranged && p.ai !== "caster") p.pos = sc.distance - 2;
@@ -784,7 +807,17 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
       // RP: potions, healing, Sleep
       for (const p of here) {
         const c = p.c;
-        if (p.kind === "aim" && p.t) {
+        if (p.kind === "distract" && p.t) {
+          // Distract: Persuasion or Demeanor against 10 + the target's Empathy
+          const roll = d20() + distractStat(c) - (c.rage ? 10 : 0);
+          if (st) st.distracts++;
+          if (up(p.t) && roll >= 10 + p.t.stats.empathy) {
+            p.t.flatFooted = true;
+            p.t.flatNext = true;
+            if (st) st.distracted++;
+            log?.(`${c.name} distracts ${p.t.name}: Flat-Footed`);
+          } else log?.(`${c.name} tries to distract ${p.t.name} and fails`);
+        } else if (p.kind === "aim" && p.t) {
           c.aimAt = p.t;
           if (st) st.aims++;
           log?.(`${c.name} takes aim at ${p.t.name}`);
@@ -817,6 +850,7 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
       // Attacks: all resolve against Defense as it stands, then damage lands
       const hits: { t: Combatant; dmg: number; text: string; crit: boolean; types: string[]; a: Combatant; w: Weapon }[] = [];
       const counters: { a: Combatant; t: Combatant }[] = [];
+      const suppressedNow: Combatant[] = [];
       const attack = (a: Combatant, w: Weapon, t: Combatant, option: Damage[], extraPenalty = 0) => {
         if (!up(t)) return;
         if (Math.abs(t.pos - a.pos) > w.range) { log?.(`${a.name} can't reach ${t.name}`); return; }
@@ -889,6 +923,16 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
       };
       for (const p of here) {
         if ((p.kind === "attack" || p.kind === "sleep") && p.w && p.t) attack(p.c, p.w, p.t, p.option ?? p.w.options[0]!);
+        if (p.kind === "suppress" && p.w && p.t && Math.abs((p.at ?? p.t.pos) - p.c.pos) <= p.w.range) {
+          // Suppressing Fire: Demeanor against 10 + 3 per Wield Rank for everyone within 2.5 m of the target
+          const dc = 10 + 3 * (p.w.wieldRank ?? 0);
+          const center = p.at ?? p.t.pos;
+          const caught = all.filter((x) => up(x) && Math.abs(x.pos - center) <= 2.5);
+          if (p.w.reloadFull) p.c.mustReload.add(p.w);
+          if (st) st.suppressions++;
+          for (const x of caught) if (d20() + x.stats.demeanor - (x.rage ? 10 : 0) < dc) suppressedNow.push(x);
+          log?.(`${p.c.name} lays down Suppressing Fire near ${p.t.name} (${caught.length} in the area)`);
+        }
         if (p.kind === "flurry" && p.w && p.t) {
           attack(p.c, p.w, p.t, p.option ?? p.w.options[0]!, 3);
           attack(p.c, p.w, p.t, p.option ?? p.w.options[0]!, 3);
@@ -912,6 +956,12 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
       };
       land(hits);
       hits.length = 0;
+      for (const x of suppressedNow) {
+        x.flatFooted = true;
+        x.flatNext = true;
+        if (st) st.suppressed++;
+        log?.(`${x.name} is pinned down: Flat-Footed`);
+      }
       // Ripostes come in the next Priority step
       for (const k of counters) {
         if (!canAct(k.a)) continue;
@@ -1000,6 +1050,23 @@ function decide(
     targets.some((t) => !t.asleep && Math.abs(t.pos - c.pos) <= meleeReach(t) + 1)
   ) return { c, kind: "defend" };
 
+  // Suppressing Fire: with an automatic weapon, when it pins two or more foes that allies can shoot
+  const auto = c.weapons.find((w) => w.automatic && !c.mustReload.has(w));
+  if (auto && !process.env.SF_NO_SUPPRESS) {
+    // The 5 m area can be centered on a foe or between two of them
+    let bestSpot: { t: Combatant; at: number; n: number } | undefined;
+    for (const t of targets) {
+      for (const at of [t.pos, t.pos + 1.5, t.pos - 1.5]) {
+        if (Math.abs(at - c.pos) > auto.range) continue;
+        const n = targets.filter((x) => !x.flatNext && Math.abs(x.pos - at) <= 2.5).length;
+        if (!bestSpot || n > bestSpot.n) bestSpot = { t, at, n };
+      }
+    }
+    // Someone has to shoot the pinned foes: an ally, or the shooter itself next Round with another gun
+    const shooters = friends(c).filter((f) => canAct(f) && f.weapons.some((w) => w.ranged && !w.spell && (f !== c || w !== auto) && bestSpot && Math.abs(bestSpot.t.pos - f.pos) <= w.range));
+    if (bestSpot && bestSpot.n >= 2 && shooters.length) return { c, kind: "suppress", w: auto, t: bestSpot.t, at: bestSpot.at };
+  }
+
   // Best Attack this Round
   let best: Plan & { score: number } = { c, kind: "move", score: 0 };
   let unloaded = 0; // the best a weapon that needs reloading would do
@@ -1032,6 +1099,15 @@ function decide(
   if (best.kind === "attack" && best.w?.ranged && !best.w.spell && best.t && c.aimAt !== best.t) {
     const need = targetNumber(best.w, best.t) + coverPenalty(best.w, best.t) - attackBonus(c, best.w, best.t);
     if ((21 - need) / 20 < 0.35) return { c, kind: "aim", t: best.t };
+  }
+  // Distract (a Full RP Action, 30 m) when this character's own Attack is a poor one and allies can follow up
+  if (distractStat(c) >= 4 && c.ai !== "caster" && !process.env.SF_NO_DISTRACT) {
+    const own = best.kind === "attack" && best.w && best.t ? (21 - (targetNumber(best.w, best.t) + coverPenalty(best.w, best.t) - attackBonus(c, best.w, best.t))) / 20 : 0;
+    const mark = targets
+      .filter((t) => !t.flatNext && Math.abs(t.pos - c.pos) <= 30)
+      .filter((t) => friends(c).some((f) => f !== c && canAct(f) && f.weapons.some((w) => Math.abs(t.pos - f.pos) <= w.range)))
+      .sort((x, y) => x.stats.empathy - y.stats.empathy)[0];
+    if (mark && own < 0.4 && (21 - (10 + mark.stats.empathy - distractStat(c))) / 20 >= 0.5) return { c, kind: "distract", t: mark };
   }
   if (best.kind === "move" || !best.t) {
     // Casters keep their distance; everyone else closes in
@@ -1094,7 +1170,7 @@ if (logId) {
 
 console.log(`Party: Soldier (rifle, monster hunter), Knight (longsword, shield), Bruiser (greatsword, plate, Barbarian), Mage (Goblinoid healer and mentalist). Human but the Mage.${EVEN ? " Front line built evenly." : ""}${GEAR ? " Geared: Rail Rifle and Hand Cannon with Penetrator Rounds, Masterwork Longsword, Vibro-Axe, Lodestaff, and the spending Traits." : ""}\n`);
 for (const sc of SCENARIOS.filter((s) => (logId ? s.id === logId : !only || s.id.startsWith(only)))) {
-  const st: Stats = { wins: 0, rounds: 0, partyDown: 0, partyDead: 0, attacks: {}, hazeBlocked: 0, fearBlocked: 0, injuries: 0, roundsCapped: 0, healed: 0, revived: 0, potions: 0, sleeps: 0, ripostes: 0, rages: 0, reloads: 0, aims: 0, spent: { vp: 0, sp: 0, mp: 0, hp: 0 } };
+  const st: Stats = { wins: 0, rounds: 0, partyDown: 0, partyDead: 0, attacks: {}, hazeBlocked: 0, fearBlocked: 0, injuries: 0, roundsCapped: 0, healed: 0, revived: 0, potions: 0, sleeps: 0, ripostes: 0, rages: 0, reloads: 0, aims: 0, distracts: 0, distracted: 0, suppressions: 0, suppressed: 0, spent: { vp: 0, sp: 0, mp: 0, hp: 0 } };
   for (let i = 0; i < N; i++) fight(sc, undefined, st);
   const per = (x: number) => (x / N).toFixed(1);
   console.log(`## ${sc.title}`);
@@ -1112,6 +1188,8 @@ for (const sc of SCENARIOS.filter((s) => (logId ? s.id === logId : !only || s.id
     st.rages && `${per(st.rages)} Rages`,
     st.reloads && `${per(st.reloads)} reloads`,
     st.aims && `${per(st.aims)} Aims`,
+    st.distracts && `${per(st.distracts)} Distracts (${pct(st.distracted / st.distracts)} work)`,
+    st.suppressions && `${per(st.suppressions)} Suppressing Fires (${(st.suppressed / st.suppressions).toFixed(1)} Flat-Footed each)`,
     (st.spent.vp || st.spent.sp || st.spent.mp || st.spent.hp) && `spent ${Object.entries(st.spent).filter(([, v]) => v).map(([k, v]) => `${per(v)} ${k.toUpperCase()}`).join(", ")}`,
     st.injuries && `${per(st.injuries)} injuries`,
   ].filter(Boolean);
