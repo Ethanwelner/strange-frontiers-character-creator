@@ -9,4 +9,4 @@ category: ability
 ranked: true
 minStats: { grace: 4, persuasion: 4 }
 prerequisites: [swordsman]
-effect: "When this character makes a Melee Attack with a sword, they may spend up to 1 VP per Rank before rolling. The Attack ignores 3 Defense for each VP spent."
+effect: "When this character makes a Melee Attack with a sword, they may spend up to 1 VP per Rank before rolling. The Attack Roll gains +3 for each VP spent."

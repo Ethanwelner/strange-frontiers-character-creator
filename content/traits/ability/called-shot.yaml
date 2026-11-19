@@ -8,4 +8,4 @@ backgroundKeywords: [modern-ranged, archaic-ranged]
 category: ability
 ranked: true
 minStats: { intuition: 5, grace: 3 }
-effect: "When this character makes a Ranged Attack, they may spend up to 1 SP per Rank before rolling. The Attack ignores 3 Defense for each SP spent."
+effect: "When this character makes a Ranged Attack, they may spend up to 1 SP per Rank before rolling. The Attack Roll gains +3 for each SP spent."

@@ -10,4 +10,4 @@ ranked: true
 minStats: { magic: 5, memory: 3 }
 prerequisites: [empower-spell]
 list: magic
-effect: "When this character uses a Cast: Action that makes an Attack, they may spend up to 1 extra MP per Rank. The spell has Breach 2 for each extra MP spent."
+effect: "When this character uses a Cast: Action that makes an Attack, they may spend up to 1 extra MP per Rank. The spell has (Breach: 2) for each extra MP spent."

@@ -9,7 +9,7 @@ category: weapon
 damage: "15 Blunt"
 attackType: "Melee"
 maxRange: "2 m"
-modifiers: "Breach 4"
+modifiers: "(Breach: 4)"
 value: 60000
 currency: "ERC"
 weight: 14

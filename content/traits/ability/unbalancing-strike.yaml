@@ -9,4 +9,4 @@ category: ability
 ranked: true
 minStats: { grace: 5, empathy: 3 }
 prerequisites: [brawler]
-effect: "When this character makes an Attack with a natural weapon, they may spend up to 1 VP per Rank before rolling. The Attack ignores 3 Defense for each VP spent."
+effect: "When this character makes an Attack with a natural weapon, they may spend up to 1 VP per Rank before rolling. The Attack Roll gains +3 for each VP spent."
