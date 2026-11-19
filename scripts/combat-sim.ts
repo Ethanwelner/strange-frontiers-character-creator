@@ -8,6 +8,7 @@
 //   npm run sim -- --only murk          only scenarios whose id starts with "murk"
 //   npm run sim -- --even               front line spends every third Level on Social or Mental
 //   SF_RAGE=3 npm run sim            Rage at +3 per Barbarian Rank instead of +2, for testing
+//   npm run sim -- --shooters           a party of four guns: Soldier, Marksman, Trooper and a Machine Gunner
 //   npm run sim -- --suppress           the Soldier also carries a Machine Gun for Suppressing Fire
 //   npm run sim -- --gear               the party with higher-class weapons and the resource-spending Traits
 //   npm run sim -- --stats knight       one build's Stats, Traits and resources at every Level
@@ -552,13 +553,42 @@ const G_MAGE: Build = {
   traits: [...MAGE.traits, "empower-spell", "precise-casting", "spellbreach"],
   weapons: ["lodestaff"],
 };
+// --shooters: a party of four guns, one of them a Machine Gun for Suppressing Fire
+const MARKSMAN: Build = {
+  name: "Marksman", kind: HUMAN, origin: "intuition", ai: "fighter", potions: 2,
+  wants: [...wieldSteps("sniper-rifle", 1, 1), ...traitWants("combat-instincts"), ...wieldSteps("sniper-rifle", 2, 3), ["endurance", 6], ["endurance", 15]],
+  traits: ["combat-instincts", "armor-training"],
+  weapons: ["sniper-rifle"], armor: ["ballistic-vest", "combat-helmet"],
+};
+const TROOPER: Build = {
+  name: "Trooper", kind: HUMAN, origin: "grace", ai: "fighter", potions: 2,
+  wants: [...wieldSteps("rifle", 1, 1), ...traitWants("combat-instincts"), ...wieldSteps("rifle", 2, 3), ["endurance", 6], ["endurance", 15]],
+  traits: ["combat-instincts", "armor-training"],
+  weapons: ["rifle"], armor: ["ballistic-vest", "combat-helmet"],
+};
+const GUNNER: Build = {
+  name: "Gunner", kind: HUMAN, origin: "power", ai: "fighter", potions: 2,
+  wants: [...wieldSteps("machine-gun", 1, 3), ...traitWants("armor-training"), ["endurance", 6], ...wieldSteps("pistol", 1, 2), ["endurance", 15]],
+  traits: ["combat-instincts", "armor-training"],
+  weapons: ["machine-gun", "pistol"], armor: ["ballistic-vest", "combat-helmet"],
+};
+const geared = (b: Build): Build => ({
+  ...b, ammo: "penetrator-rounds",
+  wants: [...b.wants.slice(0, 6), ...traitWants("called-shot", "vital-shot", "through-the-plates"), ...b.wants.slice(6)],
+  traits: [...b.traits, "called-shot", "vital-shot", "through-the-plates"],
+});
+const SHOOTERS = process.argv.includes("--shooters");
 const GEAR = process.argv.includes("--gear");
 // --suppress: the Soldier also carries a Machine Gun for Suppressing Fire
 const SUPPRESS = process.argv.includes("--suppress");
 const withMG = (b: Build): Build => (SUPPRESS && b.name === "Soldier" ? { ...b, weapons: [...b.weapons, "machine-gun"] } : b);
 
-const BUILDS = [...(GEAR ? [G_SOLDIER, G_KNIGHT, G_BRUISER, G_MAGE] : [SOLDIER, KNIGHT, BRUISER, MAGE]), BANDIT, RAIDER, RIFLEMAN, MACHINE_GUNNER, SHAMAN];
-const party = (level: number) => (GEAR ? [G_SOLDIER, G_KNIGHT, G_BRUISER, G_MAGE] : [SOLDIER, KNIGHT, BRUISER, MAGE]).map((b) => build(withMG(b), level, "party"));
+const BUILDS = () => [...partyBuilds(), BANDIT, RAIDER, RIFLEMAN, MACHINE_GUNNER, SHAMAN];
+const partyBuilds = () =>
+  SHOOTERS
+    ? GEAR ? [G_SOLDIER, geared(MARKSMAN), geared(TROOPER), geared(GUNNER)] : [SOLDIER, MARKSMAN, TROOPER, GUNNER]
+    : GEAR ? [G_SOLDIER, G_KNIGHT, G_BRUISER, G_MAGE] : [SOLDIER, KNIGHT, BRUISER, MAGE];
+const party = (level: number) => partyBuilds().map((b) => build(withMG(b), level, "party"));
 const crowd = (b: Build, level: number, n: number) =>
   Array.from({ length: n }, (_, i) => build(b, level, "enemy", `${b.name} ${i + 1}`));
 
@@ -1142,7 +1172,8 @@ function decide(
         return { x: t.pos + r * (Math.cos(ang) * t.facing.x + Math.sin(ang) * nx), y: t.y + r * (Math.cos(ang) * t.facing.y + Math.sin(ang) * ny) };
       });
       const at = sides.sort((a2, b2) => distPt(c, a2) - distPt(c, b2))[0]!;
-      if (distPt(c, at) > 1) return { c, kind: "flank", t, at };
+      // Only short flanks: two Rounds of Movement at most
+      if (distPt(c, at) > 1 && distPt(c, at) <= 20) return { c, kind: "flank", t, at };
     }
   }
   // Aim (a Full RP Action) when a shot is a long one: the next Ranged Attack at that target gets Advantage
@@ -1187,8 +1218,8 @@ const pct = (x: number) => `${Math.round(x * 100)}%`;
 // --stats knight: one build's Stats, Traits and resources at every Level, then stop
 const statsFor = args.includes("--stats") ? args[args.indexOf("--stats") + 1] : undefined;
 if (statsFor) {
-  const b = BUILDS.find((x) => x.name.toLowerCase().replace(/ /g, "-").includes(statsFor.toLowerCase()));
-  if (!b) throw new Error(`No build ${statsFor}. Try: ${BUILDS.map((x) => x.name).join(", ")}`);
+  const b = BUILDS().find((x) => x.name.toLowerCase().replace(/ /g, "-").includes(statsFor.toLowerCase()));
+  if (!b) throw new Error(`No build ${statsFor}. Try: ${BUILDS().map((x) => x.name).join(", ")}`);
   const short: Record<Stat, string> = { endurance: "End", power: "Pow", grace: "Gra", empathy: "Emp", persuasion: "Per", demeanor: "Dem", logic: "Log", intuition: "Int", memory: "Mem" };
   console.log(`# ${b.name}${EVEN && b.frontLine ? " (even)" : ""}\n`);
   console.log(["Lvl", "P/S/M/A", ...Object.values(short), "HP", "Def", "Pri", "MP", "Attack", "Traits"].join(" | "));
@@ -1209,7 +1240,8 @@ if (logId) {
   console.log("");
 }
 
-console.log(`Party: Soldier (rifle, monster hunter), Knight (longsword, shield), Bruiser (greatsword, plate, Barbarian), Mage (Goblinoid healer and mentalist). Human but the Mage.${EVEN ? " Front line built evenly." : ""}${GEAR ? " Geared: Rail Rifle and Hand Cannon with Penetrator Rounds, Masterwork Longsword, Vibro-Axe, Lodestaff, and the spending Traits." : ""}\n`);
+console.log(SHOOTERS ? `Party: Soldier, Marksman (Sniper Rifle), Trooper (Rifle) and Gunner (Machine Gun), all Human.${GEAR ? " Geared: the Soldier's Rail Rifle and Hand Cannon, Penetrator Rounds and the ranged spending Traits for the rest." : ""}
+` : `Party: Soldier (rifle, monster hunter), Knight (longsword, shield), Bruiser (greatsword, plate, Barbarian), Mage (Goblinoid healer and mentalist). Human but the Mage.${EVEN ? " Front line built evenly." : ""}${GEAR ? " Geared: Rail Rifle and Hand Cannon with Penetrator Rounds, Masterwork Longsword, Vibro-Axe, Lodestaff, and the spending Traits." : ""}\n`);
 for (const sc of SCENARIOS.filter((s) => (logId ? s.id === logId : !only || s.id.startsWith(only)))) {
   const st: Stats = { wins: 0, rounds: 0, partyDown: 0, partyDead: 0, attacks: {}, hazeBlocked: 0, fearBlocked: 0, injuries: 0, roundsCapped: 0, healed: 0, revived: 0, potions: 0, sleeps: 0, ripostes: 0, rages: 0, reloads: 0, aims: 0, suppressions: 0, suppressed: 0, flanks: 0, spent: { vp: 0, sp: 0, mp: 0, hp: 0 } };
   for (let i = 0; i < N; i++) fight(sc, undefined, st);
