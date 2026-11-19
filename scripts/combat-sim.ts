@@ -31,7 +31,7 @@ import { parse } from "yaml";
 import { parseDamage, type Damage } from "../src/engine/damage.js";
 
 const ASSUMPTIONS = [
-  "Flat Attacks: every conscious character has Defense 11, so an unmodified roll hits half the time. Wield Skills add nothing to hit; without one, -3 (natural weapons exempt). Spells and monster attacks add nothing either. Severity bands are 3 wide: Glancing 0-2, Solid 3-5, Devastating 6-8, Critical 9+; only a Critical Failure (miss by 10+) leaves the attacker Flat-Footed. SF_OLD_ATTACKS=1 restores the old rules. Old note: Attack Rolls add no Stat; Wield Skills give +3 per Rank. Spells add Magic, as their profiles say. Monster weapons use their stat block's formula.",
+  "Flat Attacks: every conscious character has Defense 10, so an unmodified roll hits 55% of the time. Sleep targets 8 + Demeanor; Mind Spike and Mind Shatter 5 + highest Mental focus Stat. Wield Skills add nothing to hit; without one, -3 (natural weapons exempt). Spells and monster attacks add nothing either. Severity bands are 3 wide: Glancing 0-2, Solid 3-5, Devastating 6-8, Critical 9+; only a Critical Failure (miss by 10+) leaves the attacker Flat-Footed. SF_OLD_ATTACKS=1 restores the old rules. Old note: Attack Rolls add no Stat; Wield Skills give +3 per Rank. Spells add Magic, as their profiles say. Monster weapons use their stat block's formula.",
   "Damage after Resistance can't go below 0; a Severity's damage change applies to each damage type in the Attack.",
   "Incapacitated (below a quarter of max HP) takes a character out of the fight until healed; nobody finishes them off.",
   "Coverage-limited Resistances, like a helmet's '(head)', are ignored: there are no hit locations yet.",
@@ -64,7 +64,7 @@ const ASSUMPTIONS = [
 
 // ---------- content ----------
 
-// Flat d20 Attacks: Defense 11 for everyone, no Stat or Wield bonus to hit (SF_OLD_ATTACKS=1 for the old rules)
+// Flat d20 Attacks: Defense 10 for everyone, no Stat or Wield bonus to hit (SF_OLD_ATTACKS=1 for the old rules)
 const FLAT = !process.env.SF_OLD_ATTACKS;
 
 const CONTENT = join(import.meta.dirname, "..", "content");
@@ -122,7 +122,7 @@ interface Spell {
   id: string;
   mp: number;
   vsMental?: boolean; // Mind Spike and Mind Shatter: 5 + highest Mental focus Stat
-  vsDemeanor?: boolean; // Sleep: 5 + Demeanor
+  vsDemeanor?: boolean; // Sleep: 8 + Demeanor
   onDamage?: (t: Combatant, rank: number) => void;
   onHit?: (t: Combatant, rank: number) => void; // a hit with no damage, like Sleep
 }
@@ -369,7 +369,7 @@ function build(b: Build, level: number, side: Combatant["side"], label?: string)
     stats,
     hpMax,
     hp: hpMax,
-    defense: FLAT ? 11 : 10 + core.physical,
+    defense: FLAT ? 10 : 10 + core.physical,
     resist,
     defendResist,
     defendBonus,
@@ -429,7 +429,7 @@ function murkLegs(darkHaze: boolean, fearsome = true): Combatant {
     stats,
     hpMax,
     hp: hpMax,
-    defense: FLAT ? 11 : 10 + 12,
+    defense: FLAT ? 10 : 10 + 12,
     resist: { Blunt: 2, Slashing: 1 },
     defendResist: {},
     defendBonus: 0,
@@ -661,7 +661,7 @@ const highestMental = (t: Combatant) => Math.max(t.stats.logic, t.stats.intuitio
 
 function severity(margin: number): { name: string; mod: number } {
   if (FLAT) {
-    // Bands of 3 for a flat 50/50 roll against Defense 11
+    // Bands of 3 for a flat 50/50 roll against Defense 10
     if (margin >= 9) return { name: "Critical Hit", mod: 3 };
     if (margin >= 6) return { name: "Devastating Hit", mod: 1 };
     if (margin >= 3) return { name: "Solid Hit", mod: 0 };
@@ -714,7 +714,7 @@ function attackBonus(a: Combatant, w: Weapon, t?: Combatant): number {
 function targetNumber(w: Weapon, t: Combatant): number {
   if (!up(t) || t.asleep || t.surprised) return 0;
   if (w.spell?.vsMental) return 5 + highestMental(t);
-  if (w.spell?.vsDemeanor) return 5 + t.stats.demeanor;
+  if (w.spell?.vsDemeanor) return (FLAT ? 8 : 5) + t.stats.demeanor;
   // Flat-Footed -3, Frightened -1 per Rank
   return t.defense + (t.defending ? 3 + t.defendBonus + (t.shieldwall ? 4 : 0) : 0) - (t.flatFooted ? 3 : 0) - t.frightened;
 }
