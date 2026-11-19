@@ -7,6 +7,7 @@
 //   npm run sim -- --n 10000            more fights per scenario
 //   npm run sim -- --only murk          only scenarios whose id starts with "murk"
 //   npm run sim -- --even               front line spends every third Level on Social or Mental
+//   SF_RAGE=3 npm run sim            Rage at +3 per Barbarian Rank instead of +2, for testing
 //   npm run sim -- --gear               the party with higher-class weapons and the resource-spending Traits
 //   npm run sim -- --stats knight       one build's Stats, Traits and resources at every Level
 //
@@ -48,7 +49,7 @@ const ASSUMPTIONS = [
   "Asleep: Defense 0 and no Actions until damaged. Every Attack in the same Priority step lands before the damage wakes them.",
   "Breach X ignores X of the target's Resistance to each damage type; ignoring Defense lowers the number the roll must meet. Spending Traits pay before the roll: enough Ignore Defense to reach about a 60% hit, enough Breach to clear the Resistance, then damage. Casters keep 3 MP for Heal; nobody spends HP below half.",
   "Full reload weapons (Rail Rifle, Hydrogen Lance) fire, then need a Full RP Action to reload; the AI uses another weapon unless it's less than half as good.",
-  "Rage doubles weapon damage only; what Wild Swing and other spending Traits add isn't doubled.",
+  "Rage adds a flat +2 weapon damage per Barbarian Rank on a hit that gets through (SF_RAGE sets the amount for testing).",
   "Not modeled: Bodyguard's Cover, Weak Point, Second Wind, Daze, Shield, Charm, Grenadier and other Traits that need positions or choices the line model can't make.",
 ];
 
@@ -486,6 +487,12 @@ const RAIDER: Build = {
   traits: ["barbarian", "thick-hide", "armor-training"],
   weapons: ["greatsword"], armor: ["hide-armor"],
 };
+const RIFLEMAN: Build = {
+  name: "Rifleman", kind: HUMAN, origin: "grace", ai: "fighter", cores: "PPMPPSPPMPPSPPMPPSPP",
+  wants: [...wieldWants("rifle", 3)],
+  traits: ["combat-instincts"],
+  weapons: ["rifle"], armor: ["ballistic-vest", "combat-helmet"],
+};
 const SHAMAN: Build = {
   name: "Goblinoid Shaman", kind: GOBLINOID, origin: "intuition", ai: "caster",
   cores: "AAPAAMAASAAMAAPAAMAA",
@@ -521,7 +528,7 @@ const G_MAGE: Build = {
 };
 const GEAR = process.argv.includes("--gear");
 
-const BUILDS = [...(GEAR ? [G_SOLDIER, G_KNIGHT, G_BRUISER, G_MAGE] : [SOLDIER, KNIGHT, BRUISER, MAGE]), BANDIT, RAIDER, SHAMAN];
+const BUILDS = [...(GEAR ? [G_SOLDIER, G_KNIGHT, G_BRUISER, G_MAGE] : [SOLDIER, KNIGHT, BRUISER, MAGE]), BANDIT, RAIDER, RIFLEMAN, SHAMAN];
 const party = (level: number) => (GEAR ? [G_SOLDIER, G_KNIGHT, G_BRUISER, G_MAGE] : [SOLDIER, KNIGHT, BRUISER, MAGE]).map((b) => build(b, level, "party"));
 const crowd = (b: Build, level: number, n: number) =>
   Array.from({ length: n }, (_, i) => build(b, level, "enemy", `${b.name} ${i + 1}`));
@@ -541,6 +548,7 @@ const SCENARIOS: Scenario[] = [
   { id: "raiders-10", title: "Level 10 party vs 3 Level 10 Orcoid Raiders and a Goblinoid Shaman", distance: 20, make: () => ({ party: party(10), enemies: [...crowd(RAIDER, 10, 3), build(SHAMAN, 10, "enemy", "Goblinoid Shaman")] }) },
   ...[6, 8, 10, 12, 15].map((L): Scenario => ({ id: `murk-${L}`, title: `Level ${L} party vs Murk Legs, head on`, distance: 20, make: () => ({ party: party(L), enemies: [murkLegs(true)] }) })),
   ...[6, 8, 10, 12].map((L): Scenario => ({ id: `murk-${L}-ambush`, title: `Level ${L} party ambushes Murk Legs`, distance: 25, ambush: true, make: () => ({ party: party(L), enemies: [murkLegs(true)] }) })),
+  ...[[6, 150], [10, 150], [10, 300]].map(([L, d]): Scenario => ({ id: `firefight-${L}-${d}`, title: `Level ${L} party vs 4 Level ${L} Riflemen, ${d} m apart`, distance: d!, make: () => ({ party: party(L!), enemies: crowd(RIFLEMAN, L!, 4) }) })),
   { id: "murk-10-plain", title: "Level 10 party vs Murk Legs without Dark Haze or Fearsome, head on", distance: 20, make: () => ({ party: party(10), enemies: [murkLegs(false, false)] }) },
 ];
 
@@ -563,6 +571,8 @@ function severity(margin: number): { name: string; mod: number } {
   return { name: "Critical Failure", mod: 0 };
 }
 
+const RAGE_PER_RANK = Number(process.env.SF_RAGE ?? 2);
+
 // Breach X ignores X of the target's Resistance to each damage type; extra is
 // damage a spending Trait adds on a hit
 function damageOf(option: Damage[], sevMod: number, t: Combatant, a: Combatant, breach = 0, extra = 0): { total: number; types: string[] } {
@@ -575,8 +585,8 @@ function damageOf(option: Damage[], sevMod: number, t: Combatant, a: Combatant, 
     if (dealt > 0) types.push(d.type);
     total += dealt;
   }
-  // Rage doubles the weapon's damage; what spending Traits add isn't doubled
-  if (a.rage) total *= 2;
+  // Rage adds a flat bonus per Barbarian Rank to weapon damage
+  if (a.rage && total > 0) total += RAGE_PER_RANK * (a.ranks["barbarian"] ?? 1);
   total += extra;
   if (total > 0) total += 2 * t.injuries.organ;
   return { total, types };
