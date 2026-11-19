@@ -6,7 +6,7 @@ summary: "A slender sword built for thrusting, with a swept hilt."
 tags: [melee, blade, sword]
 type: weapon
 category: weapon
-damage: "3 Slashing / 5 Piercing"
+damage: "7 Slashing / 9 Piercing"
 attackType: "Melee"
 maxRange: "1 m"
 value: 450

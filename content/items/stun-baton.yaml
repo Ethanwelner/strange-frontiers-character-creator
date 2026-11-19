@@ -6,7 +6,7 @@ summary: "A police baton that delivers a disabling electric shock."
 tags: [melee, blunt, nonlethal, police]
 type: weapon
 category: weapon
-damage: "2 Blunt, 2 Electrical"
+damage: "6 Blunt, 2 Electrical"
 attackType: "Melee"
 maxRange: "1 m"
 onHit: "Solid Hit or better: the target loses its next Action"

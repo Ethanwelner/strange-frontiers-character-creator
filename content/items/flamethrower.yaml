@@ -6,7 +6,7 @@ summary: "A backpack fuel tank and nozzle that projects burning fuel."
 tags: [ranged, heavy, fire]
 type: weapon
 category: weapon
-damage: "7 Heat"
+damage: "11 Heat"
 attackType: "Ranged"
 maxRange: "15 m"
 reload: "Full"

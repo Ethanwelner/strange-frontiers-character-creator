@@ -6,7 +6,7 @@ summary: "A bow mounted on a stock, slow to load but easy to aim."
 tags: [ranged, archery, two-handed]
 type: weapon
 category: weapon
-damage: "5 Piercing"
+damage: "9 Piercing"
 attackType: "Ranged"
 maxRange: "100 m"
 reload: "Full"

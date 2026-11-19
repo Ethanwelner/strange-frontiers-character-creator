@@ -6,7 +6,7 @@ summary: "A composite bow of horn, wood and sinew that pulls far harder than its
 tags: [ranged, archery, two-handed, masterwork]
 type: weapon
 category: weapon
-damage: "7 Piercing"
+damage: "12 Piercing"
 attackType: "Ranged"
 maxRange: "300 m"
 value: 700

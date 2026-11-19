@@ -6,7 +6,7 @@ summary: "A long shaft with a sharpened head, cheap to make and deadly in a line
 tags: [melee, polearm, reach]
 type: weapon
 category: weapon
-damage: "5 Piercing"
+damage: "9 Piercing"
 attackType: "Melee"
 maxRange: "3 m"
 value: 150

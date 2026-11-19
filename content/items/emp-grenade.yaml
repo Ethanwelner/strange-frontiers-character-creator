@@ -6,7 +6,7 @@ summary: "A grenade that releases an electromagnetic pulse, harming only machine
 tags: [explosive, thrown, anti-machine]
 type: weapon
 category: consumable
-damage: "7 EMP"
+damage: "11 EMP"
 attackType: "Ranged, Thrown"
 areaOfEffect: "5 m"
 uses: "uses 1: when thrown"

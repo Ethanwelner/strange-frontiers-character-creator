@@ -6,7 +6,7 @@ summary: "A hammer with a spike on its back, for denting plate or punching throu
 tags: [melee, blunt]
 type: weapon
 category: weapon
-damage: "5 Blunt / 4 Piercing"
+damage: "9 Blunt / 8 Piercing"
 attackType: "Melee"
 maxRange: "1 m"
 value: 300

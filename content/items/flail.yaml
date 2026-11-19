@@ -6,7 +6,7 @@ summary: "A spiked iron ball on a chain, swung from a wooden haft."
 tags: [melee, blunt]
 type: weapon
 category: weapon
-damage: "6 Blunt"
+damage: "10 Blunt"
 attackType: "Melee"
 maxRange: "1 m"
 value: 350

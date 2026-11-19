@@ -6,7 +6,7 @@ summary: "A grenade that bursts into burning chemical fire."
 tags: [explosive, thrown, fire, military]
 type: weapon
 category: consumable
-damage: "2 Blunt, 6 Heat"
+damage: "6 Blunt, 6 Heat"
 attackType: "Ranged, Thrown"
 areaOfEffect: "4 m"
 uses: "uses 1: when thrown"

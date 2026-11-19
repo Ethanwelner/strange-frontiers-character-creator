@@ -6,7 +6,7 @@ summary: "A heavy-caliber handgun. Nothing exotic, just a better gun."
 tags: [ranged, firearm, sidearm]
 type: weapon
 category: weapon
-damage: "10 Piercing"
+damage: "15 Piercing"
 attackType: "Ranged"
 maxRange: "40 m"
 reload: "Partial"

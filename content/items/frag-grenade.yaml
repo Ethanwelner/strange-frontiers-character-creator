@@ -6,7 +6,7 @@ summary: "A hand grenade that bursts into a blast of fragments."
 tags: [explosive, thrown, military]
 type: weapon
 category: consumable
-damage: "5 Blunt, 5 Piercing"
+damage: "9 Blunt, 5 Piercing"
 attackType: "Ranged, Thrown"
 areaOfEffect: "5 m"
 uses: "uses 1: when thrown"
