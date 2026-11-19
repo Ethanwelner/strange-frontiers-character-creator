@@ -1,0 +1,12 @@
+id: vital-shot
+name: "Vital Shot"
+status: draft
+plane: any
+summary: "Knows where a body breaks."
+tags: [combat, ranged, damage]
+backgroundKeywords: [modern-ranged, archaic-ranged]
+category: ability
+ranked: true
+minStats: { logic: 4, intuition: 4 }
+prerequisites: [called-shot]
+effect: "When this character makes a Ranged Attack, they may spend up to 1 SP per Rank before rolling. On a hit, the Attack deals +3 damage for each SP spent."

@@ -1,0 +1,12 @@
+id: precise-casting
+name: "Precise Casting"
+status: draft
+plane: any
+summary: "Threads a spell past a target's guard."
+tags: [magic, metamagic, accuracy]
+backgroundKeywords: [magic]
+category: ability
+ranked: true
+minStats: { magic: 4, logic: 3 }
+list: magic
+effect: "When this character uses a Cast: Action that makes an Attack, they may spend up to 1 extra MP per Rank. The Attack ignores 3 of the target's Defense, or of whatever it's made against instead, for each extra MP spent."

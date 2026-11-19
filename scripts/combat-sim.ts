@@ -7,6 +7,7 @@
 //   npm run sim -- --n 10000            more fights per scenario
 //   npm run sim -- --only murk          only scenarios whose id starts with "murk"
 //   npm run sim -- --even               front line spends every third Level on Social or Mental
+//   npm run sim -- --gear               the party with higher-class weapons and the resource-spending Traits
 //   npm run sim -- --stats knight       one build's Stats, Traits and resources at every Level
 //
 // Weapons, armor, Wield Skills, Abilities and spells come from content/.
@@ -45,6 +46,9 @@ const ASSUMPTIONS = [
   "Mark Quarry's Knowledge check always succeeds: the party prepared for the hunt.",
   "A Healing Potion heals like Heal at its Rank, without the caster's Magic: 4 HP per Rank. Drinking one is a Full RP Action. Each party member carries two Rank 1 potions.",
   "Asleep: Defense 0 and no Actions until damaged. Every Attack in the same Priority step lands before the damage wakes them.",
+  "Breach X ignores X of the target's Resistance to each damage type; ignoring Defense lowers the number the roll must meet. Spending Traits pay before the roll: enough Ignore Defense to reach about a 60% hit, enough Breach to clear the Resistance, then damage. Casters keep 3 MP for Heal; nobody spends HP below half.",
+  "Full reload weapons (Rail Rifle, Hydrogen Lance) fire, then need a Full RP Action to reload; the AI uses another weapon unless it's less than half as good.",
+  "Rage doubles weapon damage only; what Wild Swing and other spending Traits add isn't doubled.",
   "Not modeled: Bodyguard's Cover, Weak Point, Second Wind, Daze, Shield, Charm, Grenadier and other Traits that need positions or choices the line model can't make.",
 ];
 
@@ -67,6 +71,11 @@ for (const dir of readdirSync(join(CONTENT, "traits"))) {
 }
 const wieldFor = (itemName: string) =>
   Object.values(traits).find((t) => t.list === "wield" && new RegExp(`\\(${itemName}\\)`, "i").test(t.modifiers ?? ""));
+// A weapon's Wield Skill: its own name, or the one its notes name ("Wielded with Wield: Rifle.")
+const wieldForItem = (it: any) => {
+  const named = String(it.notes ?? "").match(/Wielded with Wield: ([A-Za-z ]+)\./);
+  return wieldFor(named ? named[1]! : it.name);
+};
 
 type Stat =
   | "endurance" | "power" | "grace"
@@ -116,6 +125,11 @@ interface Weapon {
   bonus: number; // Wield Skill (+3 per Rank), a spell's Magic, a monster's formula
   wieldRank?: number;
   sword?: boolean;
+  blade?: boolean;
+  firearm?: boolean;
+  natural?: boolean;
+  reloadFull?: boolean; // fires, then takes a Full RP Action to reload
+  breach?: number; // ignores this much of the target's Resistance to each damage type
   ranged: boolean;
   range: number; // meters
   area?: number; // Area of Effect radius
@@ -143,6 +157,7 @@ interface Combatant {
   vp: number;
   sp: number;
   potions: number;
+  mustReload: Set<Weapon>;
   ai: "fighter" | "knight" | "bruiser" | "caster" | "monster";
   monster?: boolean;
   darkHaze?: number; // Rank
@@ -186,15 +201,22 @@ function rankFor(id: string, c: { stats: Record<Stat, number>; core: Record<stri
 function weaponFrom(id: string, c: Combatant): Weapon {
   const it = items[id];
   if (!it) throw new Error(`No item ${id}`);
-  const wield = wieldFor(it.name);
+  const wield = wieldForItem(it);
   const rank = wield ? rankFor(wield.id, c, c.ranks) : 0;
   if (wield && rank) c.ranks[wield.id] = rank;
+  const tags: string[] = it.tags ?? [];
+  const breach = String(it.modifiers ?? "").match(/^Breach (\d+)$/);
   return {
     name: it.name,
     options: parseDamage(it.damage)!,
     bonus: 3 * rank,
     wieldRank: rank,
-    sword: (it.tags ?? []).includes("sword"),
+    sword: tags.includes("sword"),
+    blade: tags.includes("blade") || tags.includes("axe") || tags.includes("sword"),
+    firearm: tags.includes("firearm"),
+    natural: tags.includes("natural weapon"),
+    reloadFull: it.reload === "Full",
+    breach: breach ? Number(breach[1]) : 0,
     ranged: String(it.attackType).startsWith("Ranged"),
     range: parseFloat(it.maxRange ?? "1"),
     area: it.areaOfEffect ? parseFloat(it.areaOfEffect) : undefined,
@@ -231,6 +253,7 @@ interface Build {
   weapons: string[];
   armor: string[];
   potions?: number;
+  ammo?: "penetrator-rounds" | "fast-hydrogen-rounds"; // loaded in its firearms
   ai: Combatant["ai"];
   frontLine?: boolean; // --even applies
 }
@@ -328,6 +351,7 @@ function build(b: Build, level: number, side: Combatant["side"], label?: string)
     vp: stats.empathy + stats.persuasion + stats.demeanor,
     sp: stats.logic + stats.intuition + stats.memory,
     potions: b.potions ?? 0,
+    mustReload: new Set(),
     ai: b.ai,
     notes,
     pos: 0,
@@ -344,12 +368,21 @@ function build(b: Build, level: number, side: Combatant["side"], label?: string)
     injuries: { organ: 0, broken: 0 },
   };
   c.weapons = [...b.weapons.filter((id) => items[id]?.damage), "fists"].map((id) => weaponFrom(id, c));
+  // Ammunition in its firearms (Pistol, Rifle, Submachine Gun and Machine Gun class)
+  for (const w of c.weapons.filter((w) => w.firearm && !w.reloadFull)) {
+    if (b.ammo === "penetrator-rounds") w.breach = (w.breach ?? 0) + 3;
+    if (b.ammo === "fast-hydrogen-rounds") w.options = w.options.map((o) => [...o, { type: "Heat", amount: 3 }]);
+  }
+  const lodestaff = b.weapons.includes("lodestaff");
   for (const [id, make] of Object.entries(ATTACK_SPELLS)) {
     const r = ranks[id];
     if (!r) continue;
     const w = make(r);
+    // A Lodestaff adds +1 damage per Rank to attack spells
+    if (lodestaff) w.options = w.options.map((o) => o.map((d, i) => (i === 0 ? { ...d, amount: (d.amount ?? 0) + r } : d)));
     c.weapons.unshift({ ...w, bonus: core.magic, spell: { ...w.spell, rank: r } });
   }
+  if (b.ammo) notes.push(items[b.ammo].name);
   return c;
 }
 
@@ -376,6 +409,7 @@ function murkLegs(darkHaze: boolean, fearsome = true): Combatant {
     ],
     ranks: {},
     mpMax: 0, mp: 0, vp: 0, sp: 0, potions: 0,
+    mustReload: new Set(),
     ai: "monster",
     monster: true,
     darkHaze: darkHaze ? 2 : undefined,
@@ -402,7 +436,7 @@ function murkLegs(darkHaze: boolean, fearsome = true): Combatant {
 
 // A Wield Skill's Rank steps: every required Stat at its requirement × Rank
 function wieldWants(itemId: string, upTo: number): Want[] {
-  const t = wieldFor(items[itemId].name);
+  const t = wieldForItem(items[itemId]);
   const needs = Object.entries(t.minStats) as [Stat, number][];
   const out: Want[] = [];
   for (let r = 1; r <= upTo; r++) for (const [s, n] of needs) out.push([s, n * r]);
@@ -460,8 +494,35 @@ const SHAMAN: Build = {
   weapons: ["dagger"], armor: ["hide-armor"],
 };
 
-const BUILDS = [SOLDIER, KNIGHT, BRUISER, MAGE, BANDIT, RAIDER, SHAMAN];
-const party = (level: number) => [SOLDIER, KNIGHT, BRUISER, MAGE].map((b) => build(b, level, "party"));
+// --gear: the same party with higher-class weapons and the resource-spending Traits
+const G_SOLDIER: Build = {
+  ...SOLDIER, name: "Soldier", ammo: "penetrator-rounds",
+  wants: [...wieldSteps("rifle", 1, 1), ...traitWants("combat-instincts", "called-shot", "tracker", "hunter", "monster-hunter"), ...wieldSteps("rifle", 2, 2), ...traitWants("vital-shot", "through-the-plates"), ...wieldSteps("rifle", 3, 3), ["endurance", 6], ...wieldSteps("rifle", 4, 5), ["endurance", 15]],
+  traits: [...SOLDIER.traits, "called-shot", "vital-shot", "through-the-plates", "wielder-pistol"],
+  weapons: ["rail-rifle", "hand-cannon"],
+};
+const G_KNIGHT: Build = {
+  ...KNIGHT, name: "Knight",
+  wants: [...wieldSteps("longsword", 1, 1), ...traitWants("shield-bearer", "armor-training", "swordsman", "shield-wall", "feint", "find-the-gap"), ...wieldSteps("longsword", 2, 2), ...traitWants("expert-swordsman"), ...wieldSteps("longsword", 3, 5), ["endurance", 15]],
+  traits: [...KNIGHT.traits, "feint", "find-the-gap"],
+  weapons: ["masterwork-longsword"],
+};
+const G_BRUISER: Build = {
+  ...BRUISER, name: "Bruiser",
+  wants: [...wieldSteps("vibro-axe", 1, 1), ...traitWants("barbarian", "armor-training", "wild-swing"), ...wieldSteps("vibro-axe", 2, 2), ["endurance", 6], ...wieldSteps("vibro-axe", 3, 5), ["endurance", 15]],
+  traits: [...BRUISER.traits, "wild-swing"],
+  weapons: ["vibro-axe"],
+};
+const G_MAGE: Build = {
+  ...MAGE, name: "Mage",
+  wants: [["grace", 4], ["endurance", 4], ["intuition", 6], ["logic", 3], ["memory", 3]],
+  traits: [...MAGE.traits, "empower-spell", "precise-casting", "spellbreach"],
+  weapons: ["lodestaff"],
+};
+const GEAR = process.argv.includes("--gear");
+
+const BUILDS = [...(GEAR ? [G_SOLDIER, G_KNIGHT, G_BRUISER, G_MAGE] : [SOLDIER, KNIGHT, BRUISER, MAGE]), BANDIT, RAIDER, SHAMAN];
+const party = (level: number) => (GEAR ? [G_SOLDIER, G_KNIGHT, G_BRUISER, G_MAGE] : [SOLDIER, KNIGHT, BRUISER, MAGE]).map((b) => build(b, level, "party"));
 const crowd = (b: Build, level: number, n: number) =>
   Array.from({ length: n }, (_, i) => build(b, level, "enemy", `${b.name} ${i + 1}`));
 
@@ -502,17 +563,21 @@ function severity(margin: number): { name: string; mod: number } {
   return { name: "Critical Failure", mod: 0 };
 }
 
-function damageOf(option: Damage[], sevMod: number, t: Combatant, a: Combatant): { total: number; types: string[] } {
+// Breach X ignores X of the target's Resistance to each damage type; extra is
+// damage a spending Trait adds on a hit
+function damageOf(option: Damage[], sevMod: number, t: Combatant, a: Combatant, breach = 0, extra = 0): { total: number; types: string[] } {
   let total = 0;
   const types: string[] = [];
   for (const d of option) {
     const plus = d.plus ? (d.plus === "Physical" ? a.core.physical : a.stats[d.plus.toLowerCase() as Stat] ?? 0) : 0;
-    const resist = (t.resist[d.type] ?? 0) + (t.defending ? t.defendResist[d.type] ?? 0 : 0);
+    const resist = Math.max(0, (t.resist[d.type] ?? 0) + (t.defending ? t.defendResist[d.type] ?? 0 : 0) - breach);
     const dealt = Math.max(0, (d.amount ?? 0) + plus + sevMod - resist);
     if (dealt > 0) types.push(d.type);
     total += dealt;
   }
+  // Rage doubles the weapon's damage; what spending Traits add isn't doubled
   if (a.rage) total *= 2;
+  total += extra;
   if (total > 0) total += 2 * t.injuries.organ;
   return { total, types };
 }
@@ -551,7 +616,7 @@ function expected(a: Combatant, w: Weapon, t: Combatant, penalty: number): { dmg
       let sum = 0;
       for (let r = 1; r <= 20; r++) {
         const margin = r + attackBonus(a, w, t) - pen - targetNumber(w, t);
-        if (margin >= 0) sum += damageOf(option, severity(margin).mod, t, a).total;
+        if (margin >= 0) sum += damageOf(option, severity(margin).mod, t, a, w.breach ?? 0).total;
       }
       return sum / 20;
     };
@@ -585,11 +650,58 @@ interface Stats {
   sleeps: number;
   ripostes: number;
   rages: number;
+  reloads: number;
+  spent: { vp: number; sp: number; mp: number; hp: number };
+}
+
+// The resource-spending Traits: [Trait, resource, what it buys, amount per point, which Attacks]
+const SPENDERS: [string, "vp" | "sp" | "mp" | "hp", "ignore" | "breach" | "extra", number, (w: Weapon) => boolean][] = [
+  ["feint", "vp", "ignore", 3, (w) => !w.ranged && !!w.sword],
+  ["called-shot", "sp", "ignore", 3, (w) => w.ranged && !w.spell],
+  ["unbalancing-strike", "vp", "ignore", 3, (w) => !!w.natural],
+  ["precise-casting", "mp", "ignore", 3, (w) => !!w.spell],
+  ["find-the-gap", "sp", "breach", 2, (w) => !w.ranged && !!w.blade],
+  ["through-the-plates", "sp", "breach", 2, (w) => !!w.firearm],
+  ["pressure-point", "sp", "breach", 3, (w) => !!w.natural],
+  ["spellbreach", "mp", "breach", 2, (w) => !!w.spell],
+  ["wild-swing", "vp", "extra", 3, (w) => !w.ranged && !w.natural && !w.spell],
+  ["vital-shot", "sp", "extra", 3, (w) => w.ranged && !w.spell],
+  ["focused-strike", "hp", "extra", 4, (w) => !!w.natural],
+  ["empower-spell", "mp", "extra", 3, (w) => !!w.spell],
+];
+
+// How much to spend on an Attack: enough Ignore Defense to reach about a
+// 60% hit, enough Breach to clear the target's Resistance, then damage.
+// Casters keep 3 MP for Heal; nobody spends HP below half.
+function spend(a: Combatant, w: Weapon, t: Combatant, option: Damage[], pen: number, st?: Stats) {
+  const out = { ignore: 0, breach: 0, extra: 0 };
+  if (w.spell?.onHit || t.hp <= 4) return out;
+  const reserve = { vp: 0, sp: 0, mp: a.ranks["heal"] ? 3 : 0, hp: Math.ceil(a.hpMax / 2) };
+  const pay = (res: "vp" | "sp" | "mp" | "hp", n: number) => {
+    const can = Math.max(0, Math.min(n, a[res] - reserve[res]));
+    a[res] -= can;
+    if (st) st.spent[res] += can;
+    return can;
+  };
+  let need = targetNumber(w, t) + pen - attackBonus(a, w, t); // the d20 roll that hits
+  const resist = Math.max(0, ...option.map((d) => (t.resist[d.type] ?? 0) - (w.breach ?? 0)));
+  for (const kind of ["ignore", "breach", "extra"] as const) {
+    for (const [id, res, k, per, fits] of SPENDERS) {
+      if (k !== kind || !a.ranks[id] || !fits(w)) continue;
+      let want = a.ranks[id]!;
+      if (kind === "ignore") want = Math.min(want, Math.max(0, Math.ceil((need - 9) / per)));
+      if (kind === "breach") want = Math.min(want, Math.ceil(Math.max(0, resist - out.breach) / per));
+      const got = pay(res, want);
+      out[kind] += got * per;
+      if (kind === "ignore") need -= got * per;
+    }
+  }
+  return out;
 }
 
 type Plan = {
   c: Combatant;
-  kind: "attack" | "flurry" | "move" | "defend" | "heal" | "potion" | "sleep" | "toward";
+  kind: "attack" | "flurry" | "move" | "defend" | "heal" | "potion" | "sleep" | "toward" | "reload";
   w?: Weapon;
   t?: Combatant;
   option?: Damage[];
@@ -635,7 +747,11 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
       // RP: potions, healing, Sleep
       for (const p of here) {
         const c = p.c;
-        if (p.kind === "potion") {
+        if (p.kind === "reload") {
+          c.mustReload.clear();
+          if (st) st.reloads++;
+          log?.(`${c.name} reloads`);
+        } else if (p.kind === "potion") {
           c.potions--;
           c.hp = Math.min(c.hpMax, c.hp + 4);
           if (st) st.potions++;
@@ -690,7 +806,9 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
           }
           if (t.hazeSeen.get(a) !== true) hazePen = 6;
         }
+        if (w.reloadFull) a.mustReload.add(w);
         const targets = w.area ? all.filter((x) => x !== a && up(x) && Math.abs(x.pos - a.pos) <= w.area!) : [t];
+        let spent = { ignore: 0, breach: 0, extra: 0 };
         for (const tt of targets) {
           let margin: number;
           let sev: { name: string; mod: number };
@@ -701,7 +819,10 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
             let pen = extraPenalty + (tt === t ? hazePen : 0);
             if (w.ranged && Math.abs(tt.pos - a.pos) > w.range / 2) pen += 2;
             if (w.ranged && !w.spell && foes(a).some((f) => !f.asleep && meleeReach(f) >= Math.abs(f.pos - a.pos))) pen += 3;
-            margin = d20() + attackBonus(a, w, tt) - pen - targetNumber(w, tt);
+            // Resource-spending Traits, decided before the roll
+            spent = spend(a, w, tt, option, pen, st);
+            if (spent.ignore || spent.breach || spent.extra) log?.(`${a.name} spends for ${[spent.ignore && `Ignore ${spent.ignore} Defense`, spent.breach && `Breach ${spent.breach}`, spent.extra && `+${spent.extra} damage`].filter(Boolean).join(", ")}`);
+            margin = d20() + attackBonus(a, w, tt) - pen - Math.max(0, targetNumber(w, tt) - spent.ignore);
             sev = severity(margin);
           }
           const rec = st && (st.attacks[`${a.side}:${w.name}`] ??= { n: 0, hits: 0, dmg: 0, crits: 0 });
@@ -718,7 +839,7 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
             hits.push({ t: tt, dmg: 0, text: `${a.name} → ${tt.name} with ${w.name}: hit`, crit: false, types: [], a, w });
             continue;
           }
-          const d = damageOf(option, sev.mod, tt, a);
+          const d = damageOf(option, sev.mod, tt, a, (w.breach ?? 0) + spent.breach, spent.extra);
           if (rec) { rec.hits++; rec.dmg += d.total; if (sev.name === "Critical Hit") rec.crits++; }
           hits.push({ t: tt, dmg: d.total, text: `${a.name} → ${tt.name} with ${w.name}: ${sev.name}, ${d.total} damage`, crit: sev.name === "Critical Hit", types: d.types, a, w });
         }
@@ -837,10 +958,15 @@ function decide(
 
   // Best Attack this Round
   let best: Plan & { score: number } = { c, kind: "move", score: 0 };
+  let unloaded = 0; // the best a weapon that needs reloading would do
   for (const t of targets) {
     const dist = Math.abs(t.pos - c.pos);
     for (const w of c.weapons) {
       if (w.spell && c.mp < w.spell.mp + (c.side === "party" && c.ranks["heal"] ? 1 : 0)) continue;
+      if (c.mustReload.has(w)) {
+        if (dist <= w.range) unloaded = Math.max(unloaded, expected(c, w, t, 0).dmg * (1 + (1 - t.hp / t.hpMax)));
+        continue;
+      }
       if (dist > w.range) continue;
       let penalty = 0;
       if (w.ranged && dist > w.range / 2) penalty += 2;
@@ -855,6 +981,8 @@ function decide(
       }
     }
   }
+  // Reload (a Full RP Action) when the loaded options are less than half as good
+  if (unloaded > 0 && best.score < unloaded / 2) return { c, kind: "reload" };
   if (best.kind === "move" || !best.t) {
     // Casters keep their distance; everyone else closes in
     if (c.ai === "caster" && targets.some((t) => Math.abs(t.pos - c.pos) <= 40)) return undefined;
@@ -914,9 +1042,9 @@ if (logId) {
   console.log("");
 }
 
-console.log(`Party: Soldier (rifle, monster hunter), Knight (longsword, shield), Bruiser (greatsword, plate, Barbarian), Mage (Goblinoid healer and mentalist). Human but the Mage.${EVEN ? " Front line built evenly." : ""}\n`);
+console.log(`Party: Soldier (rifle, monster hunter), Knight (longsword, shield), Bruiser (greatsword, plate, Barbarian), Mage (Goblinoid healer and mentalist). Human but the Mage.${EVEN ? " Front line built evenly." : ""}${GEAR ? " Geared: Rail Rifle and Hand Cannon with Penetrator Rounds, Masterwork Longsword, Vibro-Axe, Lodestaff, and the spending Traits." : ""}\n`);
 for (const sc of SCENARIOS.filter((s) => (logId ? s.id === logId : !only || s.id.startsWith(only)))) {
-  const st: Stats = { wins: 0, rounds: 0, partyDown: 0, partyDead: 0, attacks: {}, hazeBlocked: 0, fearBlocked: 0, injuries: 0, roundsCapped: 0, healed: 0, revived: 0, potions: 0, sleeps: 0, ripostes: 0, rages: 0 };
+  const st: Stats = { wins: 0, rounds: 0, partyDown: 0, partyDead: 0, attacks: {}, hazeBlocked: 0, fearBlocked: 0, injuries: 0, roundsCapped: 0, healed: 0, revived: 0, potions: 0, sleeps: 0, ripostes: 0, rages: 0, reloads: 0, spent: { vp: 0, sp: 0, mp: 0, hp: 0 } };
   for (let i = 0; i < N; i++) fight(sc, undefined, st);
   const per = (x: number) => (x / N).toFixed(1);
   console.log(`## ${sc.title}`);
@@ -932,6 +1060,8 @@ for (const sc of SCENARIOS.filter((s) => (logId ? s.id === logId : !only || s.id
     st.sleeps && `${per(st.sleeps)} Sleeps`,
     st.ripostes && `${per(st.ripostes)} Ripostes`,
     st.rages && `${per(st.rages)} Rages`,
+    st.reloads && `${per(st.reloads)} reloads`,
+    (st.spent.vp || st.spent.sp || st.spent.mp || st.spent.hp) && `spent ${Object.entries(st.spent).filter(([, v]) => v).map(([k, v]) => `${per(v)} ${k.toUpperCase()}`).join(", ")}`,
     st.injuries && `${per(st.injuries)} injuries`,
   ].filter(Boolean);
   if (extras.length) console.log(`  a fight: ${extras.join(" | ")}`);

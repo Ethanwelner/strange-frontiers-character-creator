@@ -1,0 +1,16 @@
+id: monomolecular-blade
+name: "Monomolecular Blade"
+status: draft
+plane: earth
+summary: "An edge one molecule wide, held rigid by a ceramic spine."
+tags: [melee, blade, sword, exotic]
+type: weapon
+category: weapon
+damage: "7 Slashing / 6 Piercing"
+attackType: "Melee"
+maxRange: "1 m"
+modifiers: "Breach 3"
+value: 15000
+currency: "ERC"
+weight: 1
+notes: "Wielded with Wield: Shortsword."

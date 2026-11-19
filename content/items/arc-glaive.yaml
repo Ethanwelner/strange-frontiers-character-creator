@@ -1,0 +1,15 @@
+id: arc-glaive
+name: "Arc Glaive"
+status: draft
+plane: earth
+summary: "A glaive with a capacitor in the haft that discharges through the blade on contact."
+tags: [melee, polearm, reach, two-handed, electrical]
+type: weapon
+category: weapon
+damage: "7 Slashing, 4 Electrical / 5 Piercing, 4 Electrical"
+attackType: "Melee"
+maxRange: "3 m"
+value: 18000
+currency: "ERC"
+weight: 3.5
+notes: "Wielded with Wield: Polearm."

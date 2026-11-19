@@ -1,0 +1,12 @@
+id: pressure-point
+name: "Pressure Point"
+status: draft
+plane: any
+summary: "Strikes the nerve, not the armor over it."
+tags: [combat, martial arts]
+backgroundKeywords: [hand-to-hand]
+category: ability
+ranked: true
+minStats: { intuition: 6, memory: 3 }
+prerequisites: [martial-artist]
+effect: "When this character makes an Attack with a natural weapon, they may spend up to 1 SP per Rank before rolling. The Attack has Breach 3 for each SP spent."

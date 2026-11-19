@@ -1,0 +1,16 @@
+id: hand-cannon
+name: "Hand Cannon"
+status: draft
+plane: earth
+summary: "A heavy-caliber handgun. Nothing exotic, just a better gun."
+tags: [ranged, firearm, sidearm]
+type: weapon
+category: weapon
+damage: "10 Piercing"
+attackType: "Ranged"
+maxRange: "40 m"
+reload: "Partial"
+value: 8000
+currency: "ERC"
+weight: 1.8
+notes: "Wielded with Wield: Pistol."

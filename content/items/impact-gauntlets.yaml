@@ -1,0 +1,13 @@
+id: impact-gauntlets
+name: "Impact Gauntlets"
+status: draft
+plane: earth
+summary: "Armored gloves with hydraulic strikers across the knuckles."
+tags: [martial arts, punch, exotic]
+type: equipment
+category: gear
+modifiers: "Punches deal +3 Blunt damage and have Breach 1"
+slot: "Gloves"
+value: 6000
+currency: "ERC"
+weight: 2

@@ -1,0 +1,17 @@
+id: pulse-carbine
+name: "Pulse Carbine"
+status: draft
+plane: earth
+summary: "A burst laser that boils through light cover."
+tags: [ranged, laser, two-handed, exotic]
+type: weapon
+category: weapon
+damage: "9 Heat"
+attackType: "Ranged"
+maxRange: "200 m"
+reload: "Partial"
+modifiers: "Light Cover counts as no Cover"
+value: 30000
+currency: "ERC"
+weight: 3
+notes: "Wielded with Wield: Rifle."

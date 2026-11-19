@@ -1,0 +1,16 @@
+id: inane-hammer
+name: "Inane Hammer"
+status: draft
+plane: earth
+summary: "A hammer with a head of St-245/E6. A trigger in the grip runs current through the crystal, warping space-time at the moment of impact."
+tags: [melee, blunt, two-handed, exotic, solum-inane]
+type: weapon
+category: weapon
+damage: "12 Blunt"
+attackType: "Melee"
+maxRange: "2 m"
+modifiers: "Breach 4"
+value: 60000
+currency: "ERC"
+weight: 14
+notes: "Wielded with Wield: Mace."

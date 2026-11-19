@@ -1,0 +1,11 @@
+id: wild-swing
+name: "Wild Swing"
+status: draft
+plane: any
+summary: "Throws everything into one blow."
+tags: [combat, melee, damage]
+backgroundKeywords: [close-combat]
+category: ability
+ranked: true
+minStats: { power: 5, demeanor: 3 }
+effect: "When this character makes a Melee Attack with a weapon, they may spend up to 1 VP per Rank before rolling. On a hit, the Attack deals +3 damage for each VP spent."

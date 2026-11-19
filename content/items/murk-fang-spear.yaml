@@ -1,0 +1,16 @@
+id: murk-fang-spear
+name: "Murk-Fang Spear"
+status: draft
+plane: isekai
+summary: "A spear headed with a Murk Legs fang, traded through the hunting guilds."
+tags: [melee, polearm, reach, monster part]
+type: weapon
+category: weapon
+damage: "9 Piercing"
+attackType: "Melee"
+maxRange: "3 m"
+modifiers: "Breach 2"
+value: 2500
+currency: "Luras"
+weight: 2
+notes: "Wielded with Wield: Spear."

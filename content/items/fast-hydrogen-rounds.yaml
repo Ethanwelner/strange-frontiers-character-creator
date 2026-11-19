@@ -1,0 +1,14 @@
+id: fast-hydrogen-rounds
+name: "Fast Hydrogen Rounds"
+status: draft
+plane: earth
+summary: "A magazine of rounds packed with Fast Hydrogen, which reacts the instant the casing breaks."
+tags: [ammunition, firearm, fire, fast-hydrogen]
+type: misc
+category: consumable
+onHit: "Characters and Items damaged by it gain one rank of the Burning Condition"
+modifiers: "+3 Heat damage (Pistol, Rifle, Submachine Gun, Machine Gun)"
+uses: "uses 1: per reload"
+value: 600
+currency: "ERC"
+weight: 0.4

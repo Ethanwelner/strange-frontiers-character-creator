@@ -97,7 +97,7 @@ The assistant's loop runs in the browser and sends each turn to `api/messages` i
 | `npm run typecheck` | Type-checks everything |
 | `npm run check-build -- <file.json>` | Checks a Build JSON file with the rules engine and the unknown-id check |
 | `npm run eval` | Runs the sample prompts through the build loop with the configured model |
-| `npm run sim` | Combat simulator: runs a party against monsters and NPCs under the Incidents rules and reports win rates, hit rates and damage. `-- --log <scenario>` prints one fight, `-- --only <prefix>` picks scenarios, `-- --stats <build>` prints a build by Level, `-- --even` builds the front line evenly |
+| `npm run sim` | Combat simulator: runs a party against monsters and NPCs under the Incidents rules and reports win rates, hit rates and damage. `-- --log <scenario>` prints one fight, `-- --only <prefix>` picks scenarios, `-- --stats <build>` prints a build by Level, `-- --even` builds the front line evenly, `-- --gear` gives the party higher-class weapons and the resource-spending Traits |
 
 ## Layout
 

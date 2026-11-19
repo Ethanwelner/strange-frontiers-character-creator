@@ -1,0 +1,11 @@
+id: find-the-gap
+name: "Find the Gap"
+status: draft
+plane: any
+summary: "Slips a blade between the plates."
+tags: [combat, melee, blades]
+backgroundKeywords: [close-combat]
+category: ability
+ranked: true
+minStats: { grace: 5, intuition: 4 }
+effect: "When this character makes a Melee Attack with a bladed weapon, they may spend up to 1 SP per Rank before rolling. The Attack has Breach 2 for each SP spent."

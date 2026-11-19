@@ -1,0 +1,13 @@
+id: penetrator-rounds
+name: "Penetrator Rounds"
+status: draft
+plane: earth
+summary: "A magazine of armor-piercing rounds for a pistol, rifle, submachine gun or machine gun."
+tags: [ammunition, firearm]
+type: misc
+category: consumable
+modifiers: "Breach 3 (Pistol, Rifle, Submachine Gun, Machine Gun)"
+uses: "uses 1: per reload"
+value: 400
+currency: "ERC"
+weight: 0.4
