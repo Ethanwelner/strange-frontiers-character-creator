@@ -12,4 +12,4 @@ minStats: { magic: 2 }
 # On the Magic list: its own tab on the Traits step, open to every character.
 list: magic
 effect: "This character gains the Cast Earthen Spike Action."
-action: "Cast Earthen Spike: This character may spend 2 MP to Attack a target standing on earth or stone with a temporary weapon that has the following profile: (Ranged) (max range 20 m) (4 Piercing per Rank) (Attack Stat: Magic). Characters damaged by Cast Earthen Spike gain the Prone Condition."
+action: "Cast Earthen Spike: This character may spend 2 MP to Attack a target standing on earth or stone with a temporary weapon that has the following profile: (Ranged) (max range 20 m) (4 Piercing per Rank). Characters damaged by Cast Earthen Spike gain the Prone Condition."

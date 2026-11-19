@@ -6,7 +6,7 @@ summary: "A small one-handed axe, as useful for chopping wood as for fighting."
 tags: [melee, axe]
 type: weapon
 category: weapon
-damage: "4 Slashing"
+damage: "6 Slashing"
 attackType: "Melee"
 maxRange: "1 m"
 value: 80

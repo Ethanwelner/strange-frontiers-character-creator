@@ -7,5 +7,5 @@ tags: [combat]
 category: condition
 conveyed: true
 temporary: "Lost when the character stands up."
-effect: "This character is lying on the ground and has -1 Priority. Standing up takes half its Movement."
-modifiers: "Priority -1"
+effect: "This character is lying on the ground and has -1 Priority. It has -3 Defense against Melee Attacks and +3 Defense against Ranged Attacks from more than 10 m away. Standing up takes half its Movement."
+modifiers: "Priority -1, Defense -3 (Melee), Defense +3 (Ranged from beyond 10 m)"

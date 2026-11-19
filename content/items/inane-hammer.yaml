@@ -6,7 +6,7 @@ summary: "A hammer with a head of St-245/E6. A trigger in the grip runs current 
 tags: [melee, blunt, two-handed, exotic, solum-inane]
 type: weapon
 category: weapon
-damage: "12 Blunt"
+damage: "15 Blunt"
 attackType: "Melee"
 maxRange: "2 m"
 modifiers: "Breach 4"

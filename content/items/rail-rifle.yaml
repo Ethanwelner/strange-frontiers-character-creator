@@ -6,10 +6,10 @@ summary: "St-245/E6 rails throw a slug at a fraction of light speed."
 tags: [ranged, firearm, two-handed, exotic, solum-inane]
 type: weapon
 category: weapon
-damage: "11 Piercing"
+damage: "14 Piercing"
 attackType: "Ranged"
 maxRange: "800 m"
-reload: "Full"
+reload: "Partial"
 modifiers: "Breach 4"
 value: 60000
 currency: "ERC"

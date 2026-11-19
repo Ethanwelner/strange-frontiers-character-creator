@@ -6,7 +6,7 @@ summary: "A compact bow, easy to carry and to shoot from horseback."
 tags: [ranged, archery, two-handed]
 type: weapon
 category: weapon
-damage: "3 Piercing"
+damage: "5 Piercing"
 attackType: "Ranged"
 maxRange: "80 m"
 reload: "Partial"

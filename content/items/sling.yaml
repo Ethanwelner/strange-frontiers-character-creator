@@ -6,7 +6,7 @@ summary: "A strap of leather or cord that hurls stones."
 tags: [ranged, cheap]
 type: weapon
 category: weapon
-damage: "3 Blunt"
+damage: "5 Blunt"
 attackType: "Ranged"
 maxRange: "60 m"
 reload: "Partial"

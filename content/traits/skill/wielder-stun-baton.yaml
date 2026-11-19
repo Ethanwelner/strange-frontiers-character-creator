@@ -9,5 +9,4 @@ category: skill
 list: wield
 ranked: true
 minStats: { power: 2, grace: 2 }
-effect: "- Rank *5 added to skill check rolls involving a Stun Baton.\n- +3 per Rank to Attack Rolls made with a Stun Baton.\n- This character is capable of performing the basic tasks of maintaining a Stun Baton without a skill check."
-modifiers: "Attack Rolls +3 per Rank (Stun Baton)"
+effect: "- Rank *5 added to skill check rolls involving a Stun Baton.\n- This character is capable of performing the basic tasks of maintaining a Stun Baton without a skill check."

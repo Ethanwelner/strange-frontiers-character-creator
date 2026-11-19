@@ -6,7 +6,7 @@ summary: "A stout length of wood, or anything else heavy enough to swing."
 tags: [melee, blunt, improvised]
 type: weapon
 category: weapon
-damage: "3 Blunt"
+damage: "5 Blunt"
 attackType: "Melee"
 maxRange: "1 m"
 value: 20

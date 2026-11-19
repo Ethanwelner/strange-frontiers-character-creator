@@ -6,7 +6,7 @@ summary: "A heavy two-handed sword built to cleave through armor and ranks."
 tags: [melee, blade, sword, two-handed]
 type: weapon
 category: weapon
-damage: "7 Slashing"
+damage: "9 Slashing"
 attackType: "Melee"
 maxRange: "2 m"
 value: 1000

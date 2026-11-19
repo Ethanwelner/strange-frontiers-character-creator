@@ -6,7 +6,7 @@ summary: "A tall bow with a heavy draw and a long reach."
 tags: [ranged, archery, two-handed]
 type: weapon
 category: weapon
-damage: "4 Piercing"
+damage: "6 Piercing"
 attackType: "Ranged"
 maxRange: "150 m"
 reload: "Partial"

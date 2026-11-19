@@ -6,7 +6,7 @@ summary: "A heavy flanged head on a short haft, made to crush through armor."
 tags: [melee, blunt]
 type: weapon
 category: weapon
-damage: "5 Blunt"
+damage: "7 Blunt"
 attackType: "Melee"
 maxRange: "1 m"
 value: 250

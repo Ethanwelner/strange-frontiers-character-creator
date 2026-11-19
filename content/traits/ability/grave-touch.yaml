@@ -11,4 +11,4 @@ ranked: true
 minStats: { magic: 2 }
 list: magic
 effect: "This character gains the Cast Grave Touch Action."
-action: "Cast Grave Touch: This character may spend 1 MP to Attack a target with a temporary weapon that has the following profile: (Melee) (max range 1 m) (5 Death per Rank) (Attack Stat: Magic)."
+action: "Cast Grave Touch: This character may spend 1 MP to Attack a target with a temporary weapon that has the following profile: (Melee) (max range 1 m) (5 Death per Rank)."

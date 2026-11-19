@@ -6,7 +6,7 @@ summary: "A smoothbore gun firing shot or slugs, brutal at short range."
 tags: [ranged, firearm, two-handed]
 type: weapon
 category: weapon
-damage: "8 Piercing"
+damage: "10 Piercing"
 attackType: "Ranged"
 maxRange: "30 m"
 reload: "Partial"

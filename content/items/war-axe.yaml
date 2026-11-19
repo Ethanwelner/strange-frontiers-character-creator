@@ -6,7 +6,7 @@ summary: "A broad-headed axe made for fighting rather than firewood."
 tags: [melee, axe]
 type: weapon
 category: weapon
-damage: "7 Slashing"
+damage: "9 Slashing"
 attackType: "Melee"
 maxRange: "1 m"
 value: 300

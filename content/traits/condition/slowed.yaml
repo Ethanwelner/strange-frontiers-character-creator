@@ -9,5 +9,5 @@ types: [enchantment]
 ranked: true
 conveyed: true
 temporary: "Every combat Round or 10 seconds after a character is affected by Slowed, it loses one Rank of Slowed."
-effect: "This character has -1 Priority per Rank and half its usual Movement."
-modifiers: "Priority -1 per Rank"
+effect: "This character has -1 Priority and -1 Defense per Rank, and half its usual Movement."
+modifiers: "Priority -1 per Rank, Defense -1 per Rank"

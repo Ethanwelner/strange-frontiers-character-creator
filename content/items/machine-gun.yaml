@@ -3,10 +3,10 @@ name: "Machine Gun"
 status: draft
 plane: earth
 summary: "A heavy automatic gun fired from the hip, a bipod or a mount."
-tags: [ranged, firearm, military, heavy]
+tags: [ranged, firearm, military, heavy, automatic]
 type: weapon
 category: weapon
-damage: "7 Piercing"
+damage: "9 Piercing"
 attackType: "Ranged"
 maxRange: "600 m"
 reload: "Full"

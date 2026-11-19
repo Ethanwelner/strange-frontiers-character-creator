@@ -6,7 +6,7 @@ summary: "A long straight sword wielded in one or two hands."
 tags: [melee, blade, sword]
 type: weapon
 category: weapon
-damage: "6 Slashing / 4 Piercing"
+damage: "8 Slashing / 6 Piercing"
 attackType: "Melee"
 maxRange: "2 m"
 value: 600
