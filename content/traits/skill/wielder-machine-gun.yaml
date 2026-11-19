@@ -9,5 +9,4 @@ category: skill
 list: wield
 ranked: true
 minStats: { power: 3, endurance: 3, logic: 2 }
-effect: "- Rank *5 added to skill check rolls involving a Machine Gun.\n- +3 per Rank to Attack Rolls made with a Machine Gun.\n- This character is capable of performing the basic tasks of maintaining a Machine Gun without a skill check."
-modifiers: "Attack Rolls +3 per Rank (Machine Gun)"
+effect: "- Rank *5 added to skill check rolls involving a Machine Gun.\n- This character is capable of performing the basic tasks of maintaining a Machine Gun without a skill check."

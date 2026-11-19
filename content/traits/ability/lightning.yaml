@@ -12,4 +12,4 @@ minStats: { magic: 3 }
 # On the Magic list: its own tab on the Traits step, open to every character.
 list: magic
 effect: "This character gains the Cast Lightning Action."
-action: "Cast Lightning: This character may spend 2 MP to Attack a target with a temporary weapon that has the following profile: (Ranged) (max range 60 m) (1 Heat per Rank, 5 Electrical per Rank, 2 EMP per Rank) (Attack Stat: Magic)."
+action: "Cast Lightning: This character may spend 2 MP to Attack a target with a temporary weapon that has the following profile: (Ranged) (max range 60 m) (1 Heat per Rank, 5 Electrical per Rank, 2 EMP per Rank)."

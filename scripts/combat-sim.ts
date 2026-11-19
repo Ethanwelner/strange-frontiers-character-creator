@@ -31,7 +31,7 @@ import { parse } from "yaml";
 import { parseDamage, type Damage } from "../src/engine/damage.js";
 
 const ASSUMPTIONS = [
-  "Attack Rolls add no Stat; Wield Skills give +3 per Rank. Spells add Magic, as their profiles say. Monster weapons use their stat block's formula.",
+  "Flat Attacks: every conscious character has Defense 11, so an unmodified roll hits half the time. Wield Skills add nothing to hit; without one, -3 (natural weapons exempt). Spells and monster attacks add nothing either. Severity bands are 3 wide: Glancing 0-2, Solid 3-5, Devastating 6-8, Critical 9+; only a Critical Failure (miss by 10+) leaves the attacker Flat-Footed. SF_OLD_ATTACKS=1 restores the old rules. Old note: Attack Rolls add no Stat; Wield Skills give +3 per Rank. Spells add Magic, as their profiles say. Monster weapons use their stat block's formula.",
   "Damage after Resistance can't go below 0; a Severity's damage change applies to each damage type in the Attack.",
   "Incapacitated (below a quarter of max HP) takes a character out of the fight until healed; nobody finishes them off.",
   "Coverage-limited Resistances, like a helmet's '(head)', are ignored: there are no hit locations yet.",
@@ -64,6 +64,9 @@ const ASSUMPTIONS = [
 
 // ---------- content ----------
 
+// Flat d20 Attacks: Defense 11 for everyone, no Stat or Wield bonus to hit (SF_OLD_ATTACKS=1 for the old rules)
+const FLAT = !process.env.SF_OLD_ATTACKS;
+
 const CONTENT = join(import.meta.dirname, "..", "content");
 const readYaml = (path: string) => parse(readFileSync(path, "utf8"));
 const items: Record<string, any> = Object.fromEntries(
@@ -80,7 +83,7 @@ for (const dir of readdirSync(join(CONTENT, "traits"))) {
   }
 }
 const wieldFor = (itemName: string) =>
-  Object.values(traits).find((t) => t.list === "wield" && new RegExp(`\\(${itemName}\\)`, "i").test(t.modifiers ?? ""));
+  Object.values(traits).find((t) => t.list === "wield" && String(t.name).toLowerCase() === `wield: ${itemName}`.toLowerCase());
 // A weapon's Wield Skill: its own name, or the one its notes name ("Wielded with Wield: Rifle.")
 const wieldForItem = (it: any) => {
   const named = String(it.notes ?? "").match(/Wielded with Wield: ([A-Za-z ]+)\./);
@@ -231,7 +234,8 @@ function weaponFrom(id: string, c: Combatant): Weapon {
   return {
     name: it.name,
     options,
-    bonus: 3 * rank,
+    // Flat d20: Wield gives no bonus; fighting without one is -3 (natural weapons exempt)
+    bonus: FLAT ? (rank || tags.includes("natural weapon") ? 0 : -3) : 3 * rank,
     wieldRank: rank,
     sword: tags.includes("sword"),
     blade: tags.includes("blade") || tags.includes("axe") || tags.includes("sword"),
@@ -263,7 +267,7 @@ const ATTACK_SPELLS: Record<string, (r: number) => Omit<Weapon, "bonus" | "spell
   }),
 };
 const sleepSpell = (magic: number, rank: number): Weapon => ({
-  name: "Sleep", options: [[]], bonus: magic, ranged: true, range: 20,
+  name: "Sleep", options: [[]], bonus: FLAT ? 0 : magic, ranged: true, range: 20,
   spell: { id: "sleep", mp: 2, rank, vsDemeanor: true, onHit: (t) => { t.asleep = true; } },
 });
 
@@ -365,7 +369,7 @@ function build(b: Build, level: number, side: Combatant["side"], label?: string)
     stats,
     hpMax,
     hp: hpMax,
-    defense: 10 + core.physical,
+    defense: FLAT ? 11 : 10 + core.physical,
     resist,
     defendResist,
     defendBonus,
@@ -408,7 +412,7 @@ function build(b: Build, level: number, side: Combatant["side"], label?: string)
     const w = make(r);
     // A Lodestaff adds +1 damage per Rank to attack spells
     if (lodestaff) w.options = w.options.map((o) => o.map((d, i) => (i === 0 ? { ...d, amount: (d.amount ?? 0) + r } : d)));
-    c.weapons.unshift({ ...w, bonus: core.magic, spell: { ...w.spell, rank: r } });
+    c.weapons.unshift({ ...w, bonus: FLAT ? 0 : core.magic, spell: { ...w.spell, rank: r } });
   }
   if (b.ammo) notes.push(items[b.ammo].name);
   return c;
@@ -425,15 +429,15 @@ function murkLegs(darkHaze: boolean, fearsome = true): Combatant {
     stats,
     hpMax,
     hp: hpMax,
-    defense: 10 + 12,
+    defense: FLAT ? 11 : 10 + 12,
     resist: { Blunt: 2, Slashing: 1 },
     defendResist: {},
     defendBonus: 0,
     basePriority: 0,
     weapons: [
       // formula "Power - 5" and "Power": the Attack Roll bonus
-      { name: "Massive Claws", options: [[{ type: "Slashing", amount: 10 }]], bonus: 10, ranged: false, range: 3, area: 3 },
-      { name: "Horrid Bite", options: [[{ type: "Piercing", amount: 15 }]], bonus: 15, ranged: false, range: 3 },
+      { name: "Massive Claws", options: [[{ type: "Slashing", amount: 10 }]], bonus: FLAT ? 0 : 10, ranged: false, range: 3, area: 3 },
+      { name: "Horrid Bite", options: [[{ type: "Piercing", amount: 15 }]], bonus: FLAT ? 0 : 15, ranged: false, range: 3 },
     ],
     ranks: {},
     mpMax: 0, mp: 0, vp: 0, sp: 0, potions: 0,
@@ -656,6 +660,17 @@ const status = (c: Combatant) => (c.hp <= 0 ? "Dead" : c.hp < c.hpMax / 4 ? "Inc
 const highestMental = (t: Combatant) => Math.max(t.stats.logic, t.stats.intuition, t.stats.memory);
 
 function severity(margin: number): { name: string; mod: number } {
+  if (FLAT) {
+    // Bands of 3 for a flat 50/50 roll against Defense 11
+    if (margin >= 9) return { name: "Critical Hit", mod: 3 };
+    if (margin >= 6) return { name: "Devastating Hit", mod: 1 };
+    if (margin >= 3) return { name: "Solid Hit", mod: 0 };
+    if (margin >= 0) return { name: "Glancing Blow", mod: -1 };
+    if (margin >= -3) return { name: "Deflected", mod: 0 };
+    if (margin >= -6) return { name: "Near Miss", mod: 0 };
+    if (margin >= -9) return { name: "Overextended", mod: 0 };
+    return { name: "Critical Failure", mod: 0 };
+  }
   if (margin >= 16) return { name: "Critical Hit", mod: 3 };
   if (margin >= 11) return { name: "Devastating Hit", mod: 1 };
   if (margin >= 6) return { name: "Solid Hit", mod: 0 };
@@ -971,7 +986,7 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
           const rec = st && (st.attacks[`${a.side}:${w.name}`] ??= { n: 0, hits: 0, dmg: 0, crits: 0 });
           if (rec) rec.n++;
           if (margin < 0) {
-            if (margin <= -11) a.flatNext = true;
+            if (margin <= (FLAT ? -10 : -11)) a.flatNext = true;
             if (tt.riposte && !w.ranged && margin <= -4) counters.push({ a: tt, t: a });
             log?.(`${a.name} → ${tt.name} with ${w.name}: ${sev.name}`);
             continue;

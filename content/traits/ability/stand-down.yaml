@@ -9,4 +9,4 @@ category: ability
 minStats: { demeanor: 5 }
 prerequisites: [intimidation]
 effect: "This character gains the Command Action."
-action: "Command: This character may make an Attack Roll with Demeanor against a character within 10 m who can see and hear it. On a hit, the target gains one Rank of Frightened. If the target was already Frightened, it drops its weapon instead."
+action: "Command: This character may make an Attack Roll against a character within 10 m who can see and hear it. On a hit, the target gains one Rank of Frightened. If the target was already Frightened, it drops its weapon instead."

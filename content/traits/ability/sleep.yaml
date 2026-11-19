@@ -12,4 +12,4 @@ minStats: { magic: 3 }
 # On the Magic list: its own tab on the Traits step, open to every character.
 list: magic
 effect: "This character gains the Cast Sleep Action."
-action: "Cast Sleep: This character may spend 2 MP to Attack a character within 20 m (Attack Stat: Magic). The Attack is made against 5 + the target's Demeanor as if it were their Defense. On a hit, the target gains the Asleep Condition, at a Rank equal to the caster's Sleep Rank."
+action: "Cast Sleep: This character may spend 2 MP to Attack a character within 20 m. The Attack is made against 5 + the target's Demeanor as if it were their Defense. On a hit, the target gains the Asleep Condition, at a Rank equal to the caster's Sleep Rank."

@@ -9,5 +9,4 @@ category: skill
 list: wield
 ranked: true
 minStats: { power: 4, endurance: 3 }
-effect: "- Rank *5 added to skill check rolls involving a Mace.\n- +3 per Rank to Attack Rolls made with a Mace.\n- This character is capable of performing the basic tasks of maintaining a Mace without a skill check."
-modifiers: "Attack Rolls +3 per Rank (Mace)"
+effect: "- Rank *5 added to skill check rolls involving a Mace.\n- This character is capable of performing the basic tasks of maintaining a Mace without a skill check."

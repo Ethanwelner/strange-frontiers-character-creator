@@ -9,5 +9,4 @@ category: ability
 ranked: true
 minStats: { power: 3, grace: 3, endurance: 3 }
 prerequisites: [brawler]
-effect: "- This character can Attack with the Haymaker and Uppercut natural weapons.\n- Rank *5 added to Skill Check rolls involving boxing.\n- +3 to Attack Rolls made with punches: Fists, Haymaker, Uppercut and Superman Punch."
-modifiers: "Attack Rolls +3 (punches)"
+effect: "- This character can Attack with the Haymaker and Uppercut natural weapons.\n- Rank *5 added to Skill Check rolls involving boxing."
