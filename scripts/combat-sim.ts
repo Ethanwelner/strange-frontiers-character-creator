@@ -55,6 +55,7 @@ const ASSUMPTIONS = [
   "Cover (Light -3, Heavy -6) applies to Ranged Attacks against a side's characters on Rounds they don't move. The Pulse Carbine ignores Light Cover.",
   "Aim: a Full RP Action when a shot's hit chance is under 35%; the next Ranged Attack at that target gets Advantage (+3).",
   "Suppressing Fire: a Full Action with an automatic weapon when it would catch two or more foes in a 5 m area (centered on one or between two) that someone on its side can shoot. Each makes a Demeanor check against 10 + 3 per Wield Rank or is Pinned: a Full Defend Action on its next Round (+3 Defense, no Attack, no Move). In firefights each side stands 3 m apart.",
+  "Positions are on a plane. Each character's cover faces the enemy's starting side; an attacker more than 45° off that facing ignores it (flanking beats cover, not yet a written rule). A shooter whose target has cover moves to a spot 55° off it when no more than one foe who could shoot back isn't Pinned (SF_NO_FLANK turns this off). Melee flanking needs an ally at least 90° around the target.",
   "Not modeled: Prone, Slowed, Restrained, Blinded, higher ground and hiding. Not modeled: Bodyguard's Cover, Weak Point, Second Wind, Daze, Shield, Charm, Grenadier and other Traits that need positions or choices the line model can't make.",
 ];
 
@@ -174,7 +175,9 @@ interface Combatant {
   fearsome?: boolean;
   notes: string[];
   // state
-  pos: number;
+  pos: number; // x, meters
+  y: number;
+  facing: Pt; // where its cover faces
   flatFooted: boolean;
   flatNext: boolean;
   frightened: number; // Rank
@@ -369,6 +372,8 @@ function build(b: Build, level: number, side: Combatant["side"], label?: string)
     ai: b.ai,
     notes,
     pos: 0,
+    y: 0,
+    facing: { x: 1, y: 0 },
     flatFooted: false,
     flatNext: false,
     frightened: 0,
@@ -432,6 +437,8 @@ function murkLegs(darkHaze: boolean, fearsome = true): Combatant {
     fearsome,
     notes: [],
     pos: 0,
+    y: 0,
+    facing: { x: -1, y: 0 },
     flatFooted: false,
     flatNext: false,
     frightened: 0,
@@ -575,6 +582,7 @@ const SCENARIOS: Scenario[] = [
   ...[[6, 150], [10, 150], [10, 300]].map(([L, d]): Scenario => ({ id: `firefight-${L}-${d}`, title: `Level ${L} party vs 4 Level ${L} Riflemen, ${d} m apart, both sides in Light Cover`, distance: d!, spread: 3, cover: { party: 3, enemy: 3 }, make: () => ({ party: party(L!), enemies: crowd(RIFLEMAN, L!, 4) }) })),
   { id: "firefight-10-150-heavy", title: "Level 10 party vs 4 Level 10 Riflemen, 150 m apart, both sides in Heavy Cover", distance: 150, spread: 3, cover: { party: 6, enemy: 6 }, make: () => ({ party: party(10), enemies: crowd(RIFLEMAN, 10, 4) }) },
   { id: "firefight-10-150-mg", title: "Level 10 party vs 3 Level 10 Riflemen and a Machine Gunner, 150 m apart, both sides in Light Cover", distance: 150, spread: 3, cover: { party: 3, enemy: 3 }, make: () => ({ party: party(10), enemies: [...crowd(RIFLEMAN, 10, 3), build(MACHINE_GUNNER, 10, "enemy", "Machine Gunner")] }) },
+  ...([["light", 3], ["heavy", 6]] as const).map(([k, cov]): Scenario => ({ id: `skirmish-10-${k}`, title: `Level 10 party vs 3 Level 10 Riflemen and a Machine Gunner, 40 m apart, both sides in ${k === "light" ? "Light" : "Heavy"} Cover`, distance: 40, spread: 4, cover: { party: cov, enemy: cov }, make: () => ({ party: party(10), enemies: [...crowd(RIFLEMAN, 10, 3), build(MACHINE_GUNNER, 10, "enemy", "Machine Gunner")] }) })),
   { id: "firefight-10-150-open", title: "Level 10 party vs 4 Level 10 Riflemen, 150 m apart, no cover", distance: 150, spread: 3, make: () => ({ party: party(10), enemies: crowd(RIFLEMAN, 10, 4) }) },
   { id: "murk-10-plain", title: "Level 10 party vs Murk Legs without Dark Haze or Fearsome, head on", distance: 20, make: () => ({ party: party(10), enemies: [murkLegs(false, false)] }) },
 ];
@@ -582,6 +590,28 @@ const SCENARIOS: Scenario[] = [
 // ---------- rules ----------
 
 const d20 = () => 1 + Math.floor(Math.random() * 20);
+
+// Positions are on a plane, in meters. Each character's cover faces the
+// enemy's starting side; an attacker more than 45° off that facing flanks it.
+type Pt = { x: number; y: number };
+const ptOf = (c: Combatant): Pt => ({ x: c.pos, y: c.y });
+const distPt = (c: Combatant, q: Pt) => Math.hypot(c.pos - q.x, c.y - q.y);
+const dist = (a: Combatant, b: Combatant) => Math.hypot(a.pos - b.pos, a.y - b.y);
+const FLANK_COS = Math.cos((45 * Math.PI) / 180);
+// Is the attacker inside the arc the target's cover protects?
+function coveredFrom(t: Combatant, a: Combatant): boolean {
+  const dx = a.pos - t.pos, dy = a.y - t.y, d = Math.hypot(dx, dy);
+  if (!d) return false;
+  return (dx * t.facing.x + dy * t.facing.y) / d >= FLANK_COS;
+}
+// Step toward a point, stopping `stopAt` meters short
+function stepToward(c: Combatant, q: Pt, meters: number, stopAt = 0) {
+  const dx = q.x - c.pos, dy = q.y - c.y, d = Math.hypot(dx, dy);
+  const step = Math.min(meters, Math.max(0, d - stopAt));
+  if (!d || !step) return;
+  c.pos += (dx / d) * step;
+  c.y += (dy / d) * step;
+}
 const up = (c: Combatant) => c.hp >= c.hpMax / 4 && c.hp > 0;
 const canAct = (c: Combatant) => up(c) && !c.asleep && !c.surprised;
 const status = (c: Combatant) => (c.hp <= 0 ? "Dead" : c.hp < c.hpMax / 4 ? "Incapacitated" : c.hp < c.hpMax / 2 ? "Severely Injured" : "");
@@ -636,15 +666,20 @@ function targetNumber(w: Weapon, t: Combatant): number {
 }
 
 // Cover against Ranged Attacks: the side's cover while the target hasn't moved this Round
-function coverPenalty(w: Weapon, t: Combatant): number {
-  if (!w.ranged || t.moved) return 0;
+function coverPenalty(w: Weapon, t: Combatant, a: Combatant): number {
+  if (!w.ranged || t.moved || !coveredFrom(t, a)) return 0; // flanking beats cover
   const c = currentCover[t.side] ?? 0;
   return w.ignoreLightCover && c <= 3 ? 0 : c;
 }
-// Flanking: another ally of the attacker can reach the target in melee too (+3, a source of Advantage)
+// Flanking: another ally can reach the target in melee from a side at least 90° away (+3, a source of Advantage)
 function flanking(a: Combatant, w: Weapon, t: Combatant): number {
   if (w.ranged || w.spell) return 0;
-  return current.some((f) => f !== a && f.side === a.side && up(f) && !f.asleep && f.weapons.some((x) => !x.ranged && Math.abs(t.pos - f.pos) <= x.range)) ? 3 : 0;
+  const ax = a.pos - t.pos, ay = a.y - t.y;
+  return current.some((f) => {
+    if (f === a || f.side !== a.side || !up(f) || f.asleep || !f.weapons.some((x) => !x.ranged && dist(t, f) <= x.range)) return false;
+    const fx = f.pos - t.pos, fy = f.y - t.y;
+    return ax * fx + ay * fy <= 0;
+  }) ? 3 : 0;
 }
 
 const priorityOf = (c: Combatant) => c.basePriority - (c.flatFooted ? 1 : 0) - c.injuries.organ - c.injuries.broken;
@@ -655,7 +690,7 @@ function expected(a: Combatant, w: Weapon, t: Combatant, penalty: number): { dmg
   if (w.area) {
     let dmg = 0;
     for (const x of current) {
-      if (x === a || !up(x) || Math.abs(x.pos - a.pos) > w.area) continue;
+      if (x === a || !up(x) || dist(x, a) > w.area) continue;
       dmg += (x.side === a.side ? -1 : 1) * damageOf(w.options[0]!, -1, x, a).total;
     }
     return { dmg, option: w.options[0]! };
@@ -704,6 +739,7 @@ interface Stats {
   reloads: number;
   aims: number;
   suppressions: number;
+  flanks: number;
   suppressed: number;
   spent: { vp: number; sp: number; mp: number; hp: number };
 }
@@ -755,21 +791,22 @@ function spend(a: Combatant, w: Weapon, t: Combatant, option: Damage[], pen: num
 
 type Plan = {
   c: Combatant;
-  kind: "attack" | "flurry" | "move" | "defend" | "heal" | "potion" | "sleep" | "toward" | "reload" | "aim" | "suppress";
+  kind: "attack" | "flurry" | "move" | "defend" | "heal" | "potion" | "sleep" | "toward" | "reload" | "aim" | "suppress" | "flank";
   w?: Weapon;
   t?: Combatant;
   option?: Damage[];
   heal?: { spell: string; mp: number; amount: number; range: number };
-  at?: number; // where an area Action is centered
+  at?: Pt; // where an area Action is centered, or where a flanker is headed
 };
 
 function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
   const { party: P, enemies: E } = sc.make();
-  E.forEach((e, i) => { e.pos = sc.distance + i * (sc.spread ?? 0); });
-  P.forEach((p, i) => { p.pos = -i * (sc.spread ?? 0); });
+  const sp = sc.spread ?? 0;
+  E.forEach((e, i) => { e.pos = sc.distance; e.y = (i - (E.length - 1) / 2) * sp; e.facing = { x: -1, y: 0 }; });
+  P.forEach((p, i) => { p.pos = 0; p.y = (i - (P.length - 1) / 2) * sp; p.facing = { x: 1, y: 0 }; });
   if (sc.ambush) {
     for (const e of E) e.surprised = true;
-    for (const p of P) if (!p.weapons[0]!.ranged && p.ai !== "caster") p.pos = sc.distance - 2;
+    for (const p of P) if (!p.weapons[0]!.ranged && p.ai !== "caster") { const e = E[0]!; p.pos = e.pos - 2; p.y = e.y; }
   }
   const all = [...P, ...E];
   current = all;
@@ -821,7 +858,7 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
           if (st) st.potions++;
           log?.(`${c.name} drinks a Healing Potion (${c.hp}/${c.hpMax})`);
         } else if (p.kind === "heal" && p.t && p.heal && p.t.hp > 0 && c.mp >= p.heal.mp) {
-          if (Math.abs(p.t.pos - c.pos) > p.heal.range) continue;
+          if (dist(p.t, c) > p.heal.range) continue;
           const wasDown = !up(p.t);
           c.mp -= p.heal.mp;
           const before = p.t.hp;
@@ -843,7 +880,7 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
       const suppressedNow: Combatant[] = [];
       const attack = (a: Combatant, w: Weapon, t: Combatant, option: Damage[], extraPenalty = 0) => {
         if (!up(t)) return;
-        if (Math.abs(t.pos - a.pos) > w.range) { log?.(`${a.name} can't reach ${t.name}`); return; }
+        if (dist(t, a) > w.range) { log?.(`${a.name} can't reach ${t.name}`); return; }
         if (w.spell) {
           if (a.mp < w.spell.mp) return;
           a.mp -= w.spell.mp;
@@ -872,7 +909,7 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
           if (t.hazeSeen.get(a) !== true) hazePen = 6;
         }
         if (w.reloadFull) a.mustReload.add(w);
-        const targets = w.area ? all.filter((x) => x !== a && up(x) && Math.abs(x.pos - a.pos) <= w.area!) : [t];
+        const targets = w.area ? all.filter((x) => x !== a && up(x) && dist(x, a) <= w.area!) : [t];
         let spent = { ignore: 0, breach: 0, extra: 0 };
         for (const tt of targets) {
           let margin: number;
@@ -882,9 +919,9 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
             sev = { name: "Glancing Blow (Area)", mod: -1 };
           } else {
             let pen = extraPenalty + (tt === t ? hazePen : 0);
-            if (w.ranged && Math.abs(tt.pos - a.pos) > w.range / 2) pen += 2;
-            if (w.ranged && !w.spell && foes(a).some((f) => !f.asleep && meleeReach(f) >= Math.abs(f.pos - a.pos))) pen += 3;
-            pen += coverPenalty(w, tt) - flanking(a, w, tt);
+            if (w.ranged && dist(tt, a) > w.range / 2) pen += 2;
+            if (w.ranged && !w.spell && foes(a).some((f) => !f.asleep && meleeReach(f) >= dist(f, a))) pen += 3;
+            pen += coverPenalty(w, tt, a) - flanking(a, w, tt);
             if (w.ranged && !w.spell && a.aimAt === tt) { pen -= 3; a.aimAt = undefined; }
             // Resource-spending Traits, decided before the roll
             spent = spend(a, w, tt, option, pen, st);
@@ -913,11 +950,11 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
       };
       for (const p of here) {
         if ((p.kind === "attack" || p.kind === "sleep") && p.w && p.t) attack(p.c, p.w, p.t, p.option ?? p.w.options[0]!);
-        if (p.kind === "suppress" && p.w && p.t && Math.abs((p.at ?? p.t.pos) - p.c.pos) <= p.w.range) {
+        if (p.kind === "suppress" && p.w && p.t && distPt(p.c, p.at ?? ptOf(p.t)) <= p.w.range) {
           // Suppressing Fire: Demeanor against 10 + 3 per Wield Rank for everyone within 2.5 m of the target
           const dc = 10 + 3 * (p.w.wieldRank ?? 0);
-          const center = p.at ?? p.t.pos;
-          const caught = all.filter((x) => up(x) && Math.abs(x.pos - center) <= 2.5);
+          const center = p.at ?? ptOf(p.t);
+          const caught = all.filter((x) => up(x) && distPt(x, center) <= 2.5);
           if (p.w.reloadFull) p.c.mustReload.add(p.w);
           if (st) st.suppressions++;
           for (const x of caught) if (d20() + x.stats.demeanor - (x.rage ? 10 : 0) < dc) suppressedNow.push(x);
@@ -961,15 +998,20 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
       }
       land(hits);
       // Movement
+      for (const p of here.filter((p) => p.kind === "flank" && p.at && canAct(p.c))) {
+        p.c.moved = true;
+        stepToward(p.c, p.at!, 10);
+        if (st) st.flanks++;
+        log?.(`${p.c.name} moves to flank ${p.t?.name ?? ""} (${Math.round(distPt(p.c, p.at!))} m to go)`);
+      }
       for (const p of here.filter((p) => (p.kind === "move" || p.kind === "toward") && canAct(p.c))) {
-        const target = p.kind === "toward" && p.t ? p.t : foes(p.c).sort((x, y) => Math.abs(x.pos - p.c.pos) - Math.abs(y.pos - p.c.pos))[0];
+        const target = p.kind === "toward" && p.t ? p.t : foes(p.c).sort((x, y) => dist(x, p.c) - dist(y, p.c))[0];
         if (!target) continue;
         if (p.kind === "move" && p.c.frightened && target.fearsome) { log?.(`${p.c.name} is too Frightened to close in`); continue; }
         const reach = p.kind === "toward" ? 1 : Math.max(1, meleeReach(p.c));
-        const dist = target.pos - p.c.pos;
         p.c.moved = true;
-        p.c.pos += Math.sign(dist) * Math.min(10, Math.max(0, Math.abs(dist) - reach));
-        log?.(`${p.c.name} moves (now ${Math.abs(target.pos - p.c.pos)} m from ${target.name})`);
+        stepToward(p.c, ptOf(target), 10, reach);
+        log?.(`${p.c.name} moves (now ${Math.round(dist(target, p.c))} m from ${target.name})`);
       }
     }
     // End of the Round
@@ -1013,7 +1055,7 @@ function decide(
       const healMp = Math.min(heal, c.mp, Math.ceil((hurt.hpMax - hurt.hp) / 4));
       if (healMp >= 1) {
         const pick = { spell: `Heal (${healMp} MP)`, mp: healMp, amount: 4 * healMp, range: 3 * heal };
-        if (Math.abs(hurt.pos - c.pos) <= pick.range) return { c, kind: "heal", t: hurt, heal: pick };
+        if (dist(hurt, c) <= pick.range) return { c, kind: "heal", t: hurt, heal: pick };
         return { c, kind: "toward", t: hurt };
       }
     }
@@ -1021,8 +1063,8 @@ function decide(
     if (c.ranks["sleep"] && c.mp >= 2 + (c.side === "party" ? 2 : 0)) {
       const threat = (t: Combatant) => Math.max(...t.weapons.map((w) => w.bonus + (w.options[0]![0]!.amount ?? 0)));
       const sleeper = targets
-        .filter((t) => !t.asleep && Math.abs(t.pos - c.pos) <= 20)
-        .filter((t) => friends(c).some((f) => f !== c && canAct(f) && f.weapons.some((w) => Math.abs(t.pos - f.pos) <= w.range)))
+        .filter((t) => !t.asleep && dist(t, c) <= 20)
+        .filter((t) => friends(c).some((f) => f !== c && canAct(f) && f.weapons.some((w) => dist(t, f) <= w.range)))
         .sort((x, y) => threat(y) - threat(x))[0];
       const spell = sleepSpell(c.core.magic, c.ranks["sleep"]);
       const hitChance = sleeper ? (21 - (targetNumber(spell, sleeper) - attackBonus(c, spell, sleeper))) / 20 : 0;
@@ -1038,23 +1080,24 @@ function decide(
   // is coming or Shieldwall or Riposte makes holding worth it
   if (
     c.ai === "knight" && c.hp < c.hpMax / 2 && (healer || c.ranks["shield-wall"] || c.ranks["swordsman"]) &&
-    targets.some((t) => !t.asleep && Math.abs(t.pos - c.pos) <= meleeReach(t) + 1)
+    targets.some((t) => !t.asleep && dist(t, c) <= meleeReach(t) + 1)
   ) return { c, kind: "defend" };
 
   // Suppressing Fire: with an automatic weapon, when it pins two or more foes that allies can shoot
   const auto = c.weapons.find((w) => w.automatic && !c.mustReload.has(w));
   if (auto && !process.env.SF_NO_SUPPRESS) {
     // The 5 m area can be centered on a foe or between two of them
-    let bestSpot: { t: Combatant; at: number; n: number } | undefined;
+    let bestSpot: { t: Combatant; at: Pt; n: number } | undefined;
     for (const t of targets) {
-      for (const at of [t.pos, t.pos + 1.5, t.pos - 1.5]) {
-        if (Math.abs(at - c.pos) > auto.range) continue;
-        const n = targets.filter((x) => !x.pinnedNext && Math.abs(x.pos - at) <= 2.5).length;
+      const spots: Pt[] = [ptOf(t), ...targets.filter((o) => o !== t && dist(o, t) <= 5).map((o) => ({ x: (o.pos + t.pos) / 2, y: (o.y + t.y) / 2 }))];
+      for (const at of spots) {
+        if (distPt(c, at) > auto.range) continue;
+        const n = targets.filter((x) => !x.pinnedNext && distPt(x, at) <= 2.5).length;
         if (!bestSpot || n > bestSpot.n) bestSpot = { t, at, n };
       }
     }
     // Someone has to shoot the pinned foes: an ally, or the shooter itself next Round with another gun
-    const shooters = friends(c).filter((f) => canAct(f) && f.weapons.some((w) => w.ranged && !w.spell && (f !== c || w !== auto) && bestSpot && Math.abs(bestSpot.t.pos - f.pos) <= w.range));
+    const shooters = friends(c).filter((f) => canAct(f) && f.weapons.some((w) => w.ranged && !w.spell && (f !== c || w !== auto) && bestSpot && dist(bestSpot.t, f) <= w.range));
     if (bestSpot && bestSpot.n >= 2 && shooters.length) return { c, kind: "suppress", w: auto, t: bestSpot.t, at: bestSpot.at };
   }
 
@@ -1062,18 +1105,18 @@ function decide(
   let best: Plan & { score: number } = { c, kind: "move", score: 0 };
   let unloaded = 0; // the best a weapon that needs reloading would do
   for (const t of targets) {
-    const dist = Math.abs(t.pos - c.pos);
+    const range = dist(t, c);
     for (const w of c.weapons) {
       if (w.spell && c.mp < w.spell.mp + (c.side === "party" && c.ranks["heal"] ? 1 : 0)) continue;
       if (c.mustReload.has(w)) {
-        if (dist <= w.range) unloaded = Math.max(unloaded, expected(c, w, t, 0).dmg * (1 + (1 - t.hp / t.hpMax)));
+        if (range <= w.range) unloaded = Math.max(unloaded, expected(c, w, t, 0).dmg * (1 + (1 - t.hp / t.hpMax)));
         continue;
       }
-      if (dist > w.range) continue;
+      if (range > w.range) continue;
       let penalty = 0;
-      if (w.ranged && dist > w.range / 2) penalty += 2;
-      if (w.ranged && !w.spell && targets.some((f) => !f.asleep && meleeReach(f) >= Math.abs(f.pos - c.pos))) penalty += 3;
-      penalty += coverPenalty(w, t) - flanking(c, w, t) - (w.ranged && !w.spell && c.aimAt === t ? 3 : 0);
+      if (w.ranged && range > w.range / 2) penalty += 2;
+      if (w.ranged && !w.spell && targets.some((f) => !f.asleep && meleeReach(f) >= dist(f, c))) penalty += 3;
+      penalty += coverPenalty(w, t, c) - flanking(c, w, t) - (w.ranged && !w.spell && c.aimAt === t ? 3 : 0);
       const ex = expected(c, w, t, penalty);
       const score = ex.dmg * (1 + (1 - t.hp / t.hpMax)) * (w.spell ? 0.8 : 1); // spells cost MP
       if (score > best.score) best = { c, kind: "attack", w, t, option: ex.option, score };
@@ -1086,14 +1129,30 @@ function decide(
   }
   // Reload (a Full RP Action) when the loaded options are less than half as good
   if (unloaded > 0 && best.score < unloaded / 2) return { c, kind: "reload" };
+  // Flank: when the best target has cover from here and no more than one foe who could shoot this
+  // character is free to (the rest are Pinned), move to a spot 55° off the target's cover
+  if (!process.env.SF_NO_FLANK && c.ai !== "caster" && best.kind === "attack" && best.w?.ranged && !best.w.spell && best.t && coverPenalty(best.w, best.t, c) > 0) {
+    const t = best.t;
+    const free = targets.filter((f) => !f.pinned && f.weapons.some((w) => w.ranged && dist(f, c) <= w.range)).length;
+    if (free <= 1) {
+      const r = Math.min(dist(c, t), best.w.range / 2, 30);
+      const ang = (55 * Math.PI) / 180;
+      const sides = [1, -1].map((sgn) => {
+        const nx = -t.facing.y * sgn, ny = t.facing.x * sgn; // a normal to the cover's facing
+        return { x: t.pos + r * (Math.cos(ang) * t.facing.x + Math.sin(ang) * nx), y: t.y + r * (Math.cos(ang) * t.facing.y + Math.sin(ang) * ny) };
+      });
+      const at = sides.sort((a2, b2) => distPt(c, a2) - distPt(c, b2))[0]!;
+      if (distPt(c, at) > 1) return { c, kind: "flank", t, at };
+    }
+  }
   // Aim (a Full RP Action) when a shot is a long one: the next Ranged Attack at that target gets Advantage
   if (best.kind === "attack" && best.w?.ranged && !best.w.spell && best.t && c.aimAt !== best.t) {
-    const need = targetNumber(best.w, best.t) + coverPenalty(best.w, best.t) - attackBonus(c, best.w, best.t);
+    const need = targetNumber(best.w, best.t) + coverPenalty(best.w, best.t, c) - attackBonus(c, best.w, best.t);
     if ((21 - need) / 20 < 0.35) return { c, kind: "aim", t: best.t };
   }
   if (best.kind === "move" || !best.t) {
     // Casters keep their distance; everyone else closes in
-    if (c.ai === "caster" && targets.some((t) => Math.abs(t.pos - c.pos) <= 40)) return undefined;
+    if (c.ai === "caster" && targets.some((t) => dist(t, c) <= 40)) return undefined;
     return best;
   }
   // Mark Quarry rides along as a Partial RP Action
@@ -1152,7 +1211,7 @@ if (logId) {
 
 console.log(`Party: Soldier (rifle, monster hunter), Knight (longsword, shield), Bruiser (greatsword, plate, Barbarian), Mage (Goblinoid healer and mentalist). Human but the Mage.${EVEN ? " Front line built evenly." : ""}${GEAR ? " Geared: Rail Rifle and Hand Cannon with Penetrator Rounds, Masterwork Longsword, Vibro-Axe, Lodestaff, and the spending Traits." : ""}\n`);
 for (const sc of SCENARIOS.filter((s) => (logId ? s.id === logId : !only || s.id.startsWith(only)))) {
-  const st: Stats = { wins: 0, rounds: 0, partyDown: 0, partyDead: 0, attacks: {}, hazeBlocked: 0, fearBlocked: 0, injuries: 0, roundsCapped: 0, healed: 0, revived: 0, potions: 0, sleeps: 0, ripostes: 0, rages: 0, reloads: 0, aims: 0, suppressions: 0, suppressed: 0, spent: { vp: 0, sp: 0, mp: 0, hp: 0 } };
+  const st: Stats = { wins: 0, rounds: 0, partyDown: 0, partyDead: 0, attacks: {}, hazeBlocked: 0, fearBlocked: 0, injuries: 0, roundsCapped: 0, healed: 0, revived: 0, potions: 0, sleeps: 0, ripostes: 0, rages: 0, reloads: 0, aims: 0, suppressions: 0, suppressed: 0, flanks: 0, spent: { vp: 0, sp: 0, mp: 0, hp: 0 } };
   for (let i = 0; i < N; i++) fight(sc, undefined, st);
   const per = (x: number) => (x / N).toFixed(1);
   console.log(`## ${sc.title}`);
@@ -1170,6 +1229,7 @@ for (const sc of SCENARIOS.filter((s) => (logId ? s.id === logId : !only || s.id
     st.rages && `${per(st.rages)} Rages`,
     st.reloads && `${per(st.reloads)} reloads`,
     st.aims && `${per(st.aims)} Aims`,
+    st.flanks && `${per(st.flanks)} flanking moves`,
     st.suppressions && `${per(st.suppressions)} Suppressing Fires (${(st.suppressed / st.suppressions).toFixed(1)} Pinned each)`,
     (st.spent.vp || st.spent.sp || st.spent.mp || st.spent.hp) && `spent ${Object.entries(st.spent).filter(([, v]) => v).map(([k, v]) => `${per(v)} ${k.toUpperCase()}`).join(", ")}`,
     st.injuries && `${per(st.injuries)} injuries`,
