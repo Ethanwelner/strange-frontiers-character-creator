@@ -7,4 +7,4 @@ tags: [combat, suppression, cover]
 category: condition
 conveyed: true
 temporary: "Lasts through the following combat Round"
-effect: "On its next Round, this character must take a Full Defend Action, keeping its head down: it can't Attack, and it can only Move to reach cover."
+effect: "On its next Round, this character must take a Full Defend Action, keeping its head down: it can't Attack or Move."
