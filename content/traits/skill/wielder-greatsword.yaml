@@ -9,4 +9,5 @@ category: skill
 list: wield
 ranked: true
 minStats: { power: 5, grace: 3, demeanor: 4 }
-effect: "- Rank *5 added to skill check rolls involving a Greatsword.\n- This character is capable of performing the basic tasks of maintaining a Greatsword without a skill check."
+effect: "- This character can use and maintain a Greatsword without a Skill Check.\n- Rank *5 added to Skill Check rolls involving a Greatsword.\n- Rank *1 added to Attack Rolls using a Greatsword."
+modifiers: "Attack Rolls +1 per Rank (Greatsword)"

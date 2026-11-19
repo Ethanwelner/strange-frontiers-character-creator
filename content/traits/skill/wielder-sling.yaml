@@ -9,4 +9,5 @@ category: skill
 list: wield
 ranked: true
 minStats: { grace: 3, intuition: 3 }
-effect: "- Rank *5 added to skill check rolls involving a Sling.\n- This character is capable of performing the basic tasks of maintaining a Sling without a skill check."
+effect: "- This character can use and maintain a Sling without a Skill Check.\n- Rank *5 added to Skill Check rolls involving a Sling.\n- Rank *1 added to Attack Rolls using a Sling."
+modifiers: "Attack Rolls +1 per Rank (Sling)"

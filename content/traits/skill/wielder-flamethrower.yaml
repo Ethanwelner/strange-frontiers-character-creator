@@ -9,4 +9,5 @@ category: skill
 list: wield
 ranked: true
 minStats: { endurance: 3, power: 3 }
-effect: "- Rank *5 added to skill check rolls involving a Flamethrower.\n- This character is capable of performing the basic tasks of maintaining a Flamethrower without a skill check."
+effect: "- This character can use and maintain a Flamethrower without a Skill Check.\n- Rank *5 added to Skill Check rolls involving a Flamethrower.\n- Rank *1 added to Attack Rolls using a Flamethrower."
+modifiers: "Attack Rolls +1 per Rank (Flamethrower)"

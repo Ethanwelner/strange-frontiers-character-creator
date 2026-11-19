@@ -31,7 +31,7 @@ import { parse } from "yaml";
 import { parseDamage, type Damage } from "../src/engine/damage.js";
 
 const ASSUMPTIONS = [
-  "Flat Attacks: every conscious character has Defense 10, so an unmodified roll hits 55% of the time. Sleep targets 8 + Demeanor; Mind Spike and Mind Shatter 5 + highest Mental focus Stat. Wield Skills add nothing to hit; without one, -3 (natural weapons exempt). Spells and monster attacks add nothing either. Severity bands are 3 wide: Glancing 0-2, Solid 3-5, Devastating 6-8, Critical 9+; only a Critical Failure (miss by 10+) leaves the attacker Flat-Footed. SF_OLD_ATTACKS=1 restores the old rules. Old note: Attack Rolls add no Stat; Wield Skills give +3 per Rank. Spells add Magic, as their profiles say. Monster weapons use their stat block's formula.",
+  "Flat Attacks: every conscious character has Defense 10, so an unmodified roll hits 55% of the time. Sleep targets 8 + Demeanor; Mind Spike and Mind Shatter 5 + highest Mental focus Stat. A Wield Skill adds +1 per Rank to hit. Spells and monster attacks add nothing either. Severity bands are 3 wide: Glancing 0-2, Solid 3-5, Devastating 6-8, Critical 9+; only a Critical Failure (miss by 10+) leaves the attacker Flat-Footed. SF_OLD_ATTACKS=1 restores the old rules. Old note: Attack Rolls add no Stat; Wield Skills give +3 per Rank. Spells add Magic, as their profiles say. Monster weapons use their stat block's formula.",
   "Damage after Resistance can't go below 0; a Severity's damage change applies to each damage type in the Attack.",
   "Incapacitated (below a quarter of max HP) takes a character out of the fight until healed; nobody finishes them off.",
   "Coverage-limited Resistances, like a helmet's '(head)', are ignored: there are no hit locations yet.",
@@ -57,7 +57,7 @@ const ASSUMPTIONS = [
   "Debuffs lower Defense: Flat-Footed -3, Frightened -1 per Rank. Flanking (another ally in melee reach of the target) is a source of Advantage, +3 to Melee Attacks.",
   "Cover (Light -3, Heavy -6) applies to Ranged Attacks against a side's characters on Rounds they don't move. The Pulse Carbine ignores Light Cover.",
   "Aim: a Full RP Action when a shot's hit chance is under 35%; the next Ranged Attack at that target gets Advantage (+3).",
-  "Suppressing Fire: a Full Action with an automatic weapon when it would catch two or more foes in a 5 m area (centered on one or between two) that someone on its side can shoot. Each makes a Demeanor check against 10 + 3 per Wield Rank or is Pinned: a Full Defend Action on its next Round (+3 Defense, no Attack, no Movement). In firefights each side stands 3 m apart.",
+  "Suppressing Fire: a Full Action with a Suppression weapon when it would catch two or more foes in a 5 m area (centered on one or between two) that someone on its side can shoot. Each makes a Demeanor check against 10 + 3 per Wield Rank or is Pinned: a Full Defend Action on its next Round (+3 Defense, no Attack, no Movement). In firefights each side stands 3 m apart.",
   "Positions are on a plane. Each character's cover faces the enemy's starting side; an attacker more than 45° off that facing ignores it (flanking beats cover). A shooter whose target has cover moves to a spot 55° off it when no more than one foe who could shoot back isn't Pinned (SF_NO_FLANK turns this off). Melee flanking needs an ally at least 90° around the target.",
   "Not modeled: Prone, Slowed, Restrained, Blinded, higher ground and hiding. Not modeled: Bodyguard's Cover, Weak Point, Second Wind, Daze, Shield, Charm, Grenadier and other Traits that need positions or choices the line model can't make.",
 ];
@@ -235,13 +235,13 @@ function weaponFrom(id: string, c: Combatant): Weapon {
     name: it.name,
     options,
     // Flat d20: Wield gives no bonus; fighting without one is -3 (natural weapons exempt)
-    bonus: FLAT ? (rank || tags.includes("natural weapon") ? 0 : -3) : 3 * rank,
+    bonus: FLAT ? rank : 3 * rank,
     wieldRank: rank,
     sword: tags.includes("sword"),
     blade: tags.includes("blade") || tags.includes("axe") || tags.includes("sword"),
     firearm: tags.includes("firearm"),
     natural: tags.includes("natural weapon"),
-    automatic: tags.includes("automatic"),
+    automatic: /Suppression/.test(it.modifiers ?? ""),
     reloadFull: it.reload === "Full",
     ignoreLightCover: /Light Cover counts as no Cover/.test(it.modifiers ?? ""),
     breach: breach ? Number(breach[1]) : 0,

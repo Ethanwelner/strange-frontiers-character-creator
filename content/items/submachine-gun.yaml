@@ -10,6 +10,7 @@ damage: "8 Piercing"
 attackType: "Ranged"
 maxRange: "100 m"
 reload: "Partial"
+modifiers: "Suppression"
 value: 2500
 currency: "ERC"
 weight: 3

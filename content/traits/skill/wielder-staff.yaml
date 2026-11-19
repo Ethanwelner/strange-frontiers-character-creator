@@ -9,4 +9,5 @@ category: skill
 list: wield
 ranked: true
 minStats: { grace: 3, endurance: 2 }
-effect: "- Rank *5 added to skill check rolls involving a Staff.\n- This character is capable of performing the basic tasks of maintaining a Staff without a skill check."
+effect: "- This character can use and maintain a Staff without a Skill Check.\n- Rank *5 added to Skill Check rolls involving a Staff.\n- Rank *1 added to Attack Rolls using a Staff."
+modifiers: "Attack Rolls +1 per Rank (Staff)"
