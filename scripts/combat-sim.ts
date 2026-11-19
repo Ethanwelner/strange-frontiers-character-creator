@@ -54,7 +54,7 @@ const ASSUMPTIONS = [
   "Debuffs lower Defense: Flat-Footed -3, Frightened -1 per Rank. Flanking (another ally in melee reach of the target) is a source of Advantage, +3 to Melee Attacks.",
   "Cover (Light -3, Heavy -6) applies to Ranged Attacks against a side's characters on Rounds they don't move. The Pulse Carbine ignores Light Cover.",
   "Aim: a Full RP Action when a shot's hit chance is under 35%; the next Ranged Attack at that target gets Advantage (+3).",
-  "Distract: a Full RP Action within 30 m, Persuasion or Demeanor against 10 + Empathy, taken when the character's own Attack has under a 40% chance and a success is at least even odds. Suppressing Fire: a Full Action with an automatic weapon when it catches two or more foes (5 m area) that someone on its side can shoot (the shooter's own other gun counts); Demeanor against 10 + 3 per Wield Rank or Flat-Footed. In firefights each side stands 3 m apart, and the 5 m area can be centered between two people.",
+  "Suppressing Fire: a Full Action with an automatic weapon when it would catch two or more foes in a 5 m area (centered on one or between two) that someone on its side can shoot. Each makes a Demeanor check against 10 + 3 per Wield Rank or is Pinned: a Full Defend Action on its next Round (+3 Defense, no Attack, no Move). In firefights each side stands 3 m apart.",
   "Not modeled: Prone, Slowed, Restrained, Blinded, higher ground and hiding. Not modeled: Bodyguard's Cover, Weak Point, Second Wind, Daze, Shield, Charm, Grenadier and other Traits that need positions or choices the line model can't make.",
 ];
 
@@ -121,8 +121,6 @@ interface Spell {
 }
 
 // Rage makes a character immune to Frightened
-const distractStat = (c: Combatant) => Math.max(c.stats.persuasion, c.stats.demeanor);
-
 function frighten(t: Combatant, rank: number) {
   if (!t.rage) t.frightened = Math.max(t.frightened, rank);
 }
@@ -190,6 +188,8 @@ interface Combatant {
   riposte: boolean;
   injuries: { organ: number; broken: number };
   moved?: boolean; // moved this Round, so out of cover
+  pinned?: boolean; // must take a Full Defend Action this Round
+  pinnedNext?: boolean;
   aimAt?: Combatant; // Aimed last Round: Advantage on the first Ranged Attack at it
 }
 
@@ -703,8 +703,6 @@ interface Stats {
   rages: number;
   reloads: number;
   aims: number;
-  distracts: number;
-  distracted: number;
   suppressions: number;
   suppressed: number;
   spent: { vp: number; sp: number; mp: number; hp: number };
@@ -757,7 +755,7 @@ function spend(a: Combatant, w: Weapon, t: Combatant, option: Damage[], pen: num
 
 type Plan = {
   c: Combatant;
-  kind: "attack" | "flurry" | "move" | "defend" | "heal" | "potion" | "sleep" | "toward" | "reload" | "aim" | "distract" | "suppress";
+  kind: "attack" | "flurry" | "move" | "defend" | "heal" | "potion" | "sleep" | "toward" | "reload" | "aim" | "suppress";
   w?: Weapon;
   t?: Combatant;
   option?: Damage[];
@@ -795,6 +793,8 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
       c.defending = c.shieldwall = c.riposte = false;
       c.attackedThisRound = false;
       c.moved = false;
+      c.pinned = !!c.pinnedNext;
+      c.pinnedNext = false;
     }
     const plans: Plan[] = [];
     for (const c of all.filter(canAct)) {
@@ -807,17 +807,7 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
       // RP: potions, healing, Sleep
       for (const p of here) {
         const c = p.c;
-        if (p.kind === "distract" && p.t) {
-          // Distract: Persuasion or Demeanor against 10 + the target's Empathy
-          const roll = d20() + distractStat(c) - (c.rage ? 10 : 0);
-          if (st) st.distracts++;
-          if (up(p.t) && roll >= 10 + p.t.stats.empathy) {
-            p.t.flatFooted = true;
-            p.t.flatNext = true;
-            if (st) st.distracted++;
-            log?.(`${c.name} distracts ${p.t.name}: Flat-Footed`);
-          } else log?.(`${c.name} tries to distract ${p.t.name} and fails`);
-        } else if (p.kind === "aim" && p.t) {
+        if (p.kind === "aim" && p.t) {
           c.aimAt = p.t;
           if (st) st.aims++;
           log?.(`${c.name} takes aim at ${p.t.name}`);
@@ -957,10 +947,9 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
       land(hits);
       hits.length = 0;
       for (const x of suppressedNow) {
-        x.flatFooted = true;
-        x.flatNext = true;
+        x.pinnedNext = true;
         if (st) st.suppressed++;
-        log?.(`${x.name} is pinned down: Flat-Footed`);
+        log?.(`${x.name} is Pinned: a Full Defend Action next Round`);
       }
       // Ripostes come in the next Priority step
       for (const k of counters) {
@@ -1012,6 +1001,8 @@ function decide(
 ): Plan | undefined {
   const targets = foes(c);
   if (!targets.length) return undefined;
+  // Pinned: heads down, a Full Defend Action
+  if (c.pinned) return { c, kind: "defend" };
 
   // Casters heal first: anyone down or below a third
   if (c.ai === "caster") {
@@ -1058,7 +1049,7 @@ function decide(
     for (const t of targets) {
       for (const at of [t.pos, t.pos + 1.5, t.pos - 1.5]) {
         if (Math.abs(at - c.pos) > auto.range) continue;
-        const n = targets.filter((x) => !x.flatNext && Math.abs(x.pos - at) <= 2.5).length;
+        const n = targets.filter((x) => !x.pinnedNext && Math.abs(x.pos - at) <= 2.5).length;
         if (!bestSpot || n > bestSpot.n) bestSpot = { t, at, n };
       }
     }
@@ -1099,15 +1090,6 @@ function decide(
   if (best.kind === "attack" && best.w?.ranged && !best.w.spell && best.t && c.aimAt !== best.t) {
     const need = targetNumber(best.w, best.t) + coverPenalty(best.w, best.t) - attackBonus(c, best.w, best.t);
     if ((21 - need) / 20 < 0.35) return { c, kind: "aim", t: best.t };
-  }
-  // Distract (a Full RP Action, 30 m) when this character's own Attack is a poor one and allies can follow up
-  if (distractStat(c) >= 4 && c.ai !== "caster" && !process.env.SF_NO_DISTRACT) {
-    const own = best.kind === "attack" && best.w && best.t ? (21 - (targetNumber(best.w, best.t) + coverPenalty(best.w, best.t) - attackBonus(c, best.w, best.t))) / 20 : 0;
-    const mark = targets
-      .filter((t) => !t.flatNext && Math.abs(t.pos - c.pos) <= 30)
-      .filter((t) => friends(c).some((f) => f !== c && canAct(f) && f.weapons.some((w) => Math.abs(t.pos - f.pos) <= w.range)))
-      .sort((x, y) => x.stats.empathy - y.stats.empathy)[0];
-    if (mark && own < 0.4 && (21 - (10 + mark.stats.empathy - distractStat(c))) / 20 >= 0.5) return { c, kind: "distract", t: mark };
   }
   if (best.kind === "move" || !best.t) {
     // Casters keep their distance; everyone else closes in
@@ -1170,7 +1152,7 @@ if (logId) {
 
 console.log(`Party: Soldier (rifle, monster hunter), Knight (longsword, shield), Bruiser (greatsword, plate, Barbarian), Mage (Goblinoid healer and mentalist). Human but the Mage.${EVEN ? " Front line built evenly." : ""}${GEAR ? " Geared: Rail Rifle and Hand Cannon with Penetrator Rounds, Masterwork Longsword, Vibro-Axe, Lodestaff, and the spending Traits." : ""}\n`);
 for (const sc of SCENARIOS.filter((s) => (logId ? s.id === logId : !only || s.id.startsWith(only)))) {
-  const st: Stats = { wins: 0, rounds: 0, partyDown: 0, partyDead: 0, attacks: {}, hazeBlocked: 0, fearBlocked: 0, injuries: 0, roundsCapped: 0, healed: 0, revived: 0, potions: 0, sleeps: 0, ripostes: 0, rages: 0, reloads: 0, aims: 0, distracts: 0, distracted: 0, suppressions: 0, suppressed: 0, spent: { vp: 0, sp: 0, mp: 0, hp: 0 } };
+  const st: Stats = { wins: 0, rounds: 0, partyDown: 0, partyDead: 0, attacks: {}, hazeBlocked: 0, fearBlocked: 0, injuries: 0, roundsCapped: 0, healed: 0, revived: 0, potions: 0, sleeps: 0, ripostes: 0, rages: 0, reloads: 0, aims: 0, suppressions: 0, suppressed: 0, spent: { vp: 0, sp: 0, mp: 0, hp: 0 } };
   for (let i = 0; i < N; i++) fight(sc, undefined, st);
   const per = (x: number) => (x / N).toFixed(1);
   console.log(`## ${sc.title}`);
@@ -1188,8 +1170,7 @@ for (const sc of SCENARIOS.filter((s) => (logId ? s.id === logId : !only || s.id
     st.rages && `${per(st.rages)} Rages`,
     st.reloads && `${per(st.reloads)} reloads`,
     st.aims && `${per(st.aims)} Aims`,
-    st.distracts && `${per(st.distracts)} Distracts (${pct(st.distracted / st.distracts)} work)`,
-    st.suppressions && `${per(st.suppressions)} Suppressing Fires (${(st.suppressed / st.suppressions).toFixed(1)} Flat-Footed each)`,
+    st.suppressions && `${per(st.suppressions)} Suppressing Fires (${(st.suppressed / st.suppressions).toFixed(1)} Pinned each)`,
     (st.spent.vp || st.spent.sp || st.spent.mp || st.spent.hp) && `spent ${Object.entries(st.spent).filter(([, v]) => v).map(([k, v]) => `${per(v)} ${k.toUpperCase()}`).join(", ")}`,
     st.injuries && `${per(st.injuries)} injuries`,
   ].filter(Boolean);
