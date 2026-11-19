@@ -129,7 +129,7 @@ interface Spell {
 
 // Rage makes a character immune to Frightened
 function frighten(t: Combatant, rank: number) {
-  if (!t.rage) t.frightened = Math.max(t.frightened, rank);
+  if (!t.rage && !t.undead) t.frightened = Math.max(t.frightened, rank);
 }
 
 interface Weapon {
@@ -190,6 +190,7 @@ interface Combatant {
   asleep: boolean;
   surprised: boolean;
   rage: boolean;
+  undead?: boolean;
   attackedThisRound: boolean;
   marked?: Combatant;
   defending: boolean;
@@ -268,7 +269,7 @@ const ATTACK_SPELLS: Record<string, (r: number) => Omit<Weapon, "bonus" | "spell
 };
 const sleepSpell = (magic: number, rank: number): Weapon => ({
   name: "Sleep", options: [[]], bonus: FLAT ? 0 : magic, ranged: true, range: 20,
-  spell: { id: "sleep", mp: 2, rank, vsDemeanor: true, onHit: (t) => { t.asleep = true; } },
+  spell: { id: "sleep", mp: 2, rank, vsDemeanor: true, onHit: (t) => { if (!t.undead) t.asleep = true; } },
 });
 
 interface Build {
@@ -284,6 +285,10 @@ interface Build {
   ammo?: "penetrator-rounds" | "fast-hydrogen-rounds"; // loaded in its firearms
   ai: Combatant["ai"];
   frontLine?: boolean; // --even applies
+  // A stat sheet's exact Stats (the site's encounter sheets), instead of building up by Level
+  fixed?: { core: Record<Core | "magic", number>; stats: Partial<Record<Stat, number>> };
+  resist?: string; // natural Resistances, like a Skeleton's
+  undead?: boolean; // immune to Asleep, Frightened and Psychic damage
 }
 
 const HUMAN = {
@@ -303,12 +308,12 @@ const GOBLINOID = {
 const EVEN = process.argv.includes("--even");
 
 function build(b: Build, level: number, side: Combatant["side"], label?: string): Combatant {
-  const stats = Object.fromEntries(ALL_STATS.map((s) => [s, b.kind.bonus[s] ?? 0])) as Record<Stat, number>;
+  const stats = Object.fromEntries(ALL_STATS.map((s) => [s, b.fixed ? (b.fixed.stats[s] ?? 0) : (b.kind.bonus[s] ?? 0)])) as Record<Stat, number>;
   const max = (s: Stat) => b.kind.max[s] ?? 20;
-  stats[b.origin] += 1;
-  const core: Record<Core | "magic", number> = { physical: 0, social: 0, mental: 0, magic: 0 };
+  if (!b.fixed) stats[b.origin] += 1;
+  const core: Record<Core | "magic", number> = b.fixed ? { ...b.fixed.core } : { physical: 0, social: 0, mental: 0, magic: 0 };
   const unmet = ([s, n]: Want) => (s === "magic" ? core.magic < n : stats[s] < n && stats[s] < max(s));
-  for (let l = 0; l < level; l++) {
+  for (let l = 0; l < (b.fixed ? 0 : level); l++) {
     let c: Core | "magic";
     if (b.cores) {
       const letter = b.cores[Math.min(l, b.cores.length - 1)]!;
@@ -353,6 +358,8 @@ function build(b: Build, level: number, side: Combatant["side"], label?: string)
     const m = String(it.modifiers ?? "").match(/Defense \+(\d+) \(when Defending\)/);
     if (m) defendBonus += Number(m[1]);
   }
+  for (const [t, n] of Object.entries(parseResistances(b.resist).always)) resist[t] = (resist[t] ?? 0) + n;
+  if (b.undead) resist.Psychic = 99;
   if (ranks["thick-hide"]) { resist.Slashing = (resist.Slashing ?? 0) + 1; resist.Piercing = (resist.Piercing ?? 0) + 1; }
   const carry = 20 + 10 * core.physical;
   const encumbered = weight > carry / 2;
@@ -399,6 +406,7 @@ function build(b: Build, level: number, side: Combatant["side"], label?: string)
     riposte: false,
     injuries: { organ: 0, broken: 0 },
   };
+  c.undead = b.undead;
   c.weapons = [...b.weapons.filter((id) => items[id]?.damage), "fists"].map((id) => weaponFrom(id, c));
   // Ammunition in its firearms (Pistol, Rifle, Submachine Gun and Machine Gun class)
   for (const w of c.weapons.filter((w) => w.firearm && !w.reloadFull)) {
@@ -540,6 +548,24 @@ const SHAMAN: Build = {
   weapons: ["dagger"], armor: ["hide-armor"],
 };
 
+// The site's encounter sheets (php/rpg/encounters.php), Stats exactly as written
+const SHEET_BANDIT: Build = {
+  name: "Bandit", kind: HUMAN, origin: "grace", ai: "fighter", wants: [], traits: [],
+  fixed: { core: { physical: 1, social: 0, mental: 0, magic: 0 }, stats: { endurance: 1, power: 3, grace: 3, empathy: 1, persuasion: 1, demeanor: 1, logic: 1, intuition: 1, memory: 1 } },
+  weapons: ["spear", "dagger"], armor: ["gambeson"],
+};
+const SHEET_SKELETON: Build = {
+  name: "Skeleton", kind: HUMAN, origin: "grace", ai: "fighter", wants: [], traits: [],
+  fixed: { core: { physical: 4, social: 0, mental: 0, magic: 0 }, stats: { endurance: 3, power: 4, grace: 5 } },
+  resist: "3 Piercing, 2 Slashing, -2 Blunt", undead: true,
+  weapons: ["shortsword"], armor: [],
+};
+const SHEET_MERCENARY: Build = {
+  name: "Dreftian Mercenary", kind: HUMAN, origin: "power", ai: "knight", wants: [], traits: ["shield-wall"],
+  fixed: { core: { physical: 5, social: 1, mental: 2, magic: 0 }, stats: { endurance: 5, power: 7, grace: 7, empathy: 1, persuasion: 3, demeanor: 2, logic: 2, intuition: 3, memory: 4 } },
+  weapons: ["longsword", "dagger"], armor: ["brigandine", "wooden-shield"],
+};
+
 // --gear: the same party with higher-class weapons and the resource-spending Traits
 const G_SOLDIER: Build = {
   ...SOLDIER, name: "Soldier", ammo: "penetrator-rounds",
@@ -626,6 +652,9 @@ const SCENARIOS: Scenario[] = [
   { id: "firefight-10-150-mg", title: "Level 10 party vs 3 Level 10 Riflemen and a Machine Gunner, 150 m apart, both sides in Light Cover", distance: 150, spread: 3, cover: { party: 3, enemy: 3 }, make: () => ({ party: party(10), enemies: [...crowd(RIFLEMAN, 10, 3), build(MACHINE_GUNNER, 10, "enemy", "Machine Gunner")] }) },
   ...([["light", 3], ["heavy", 6]] as const).map(([k, cov]): Scenario => ({ id: `skirmish-10-${k}`, title: `Level 10 party vs 3 Level 10 Riflemen and a Machine Gunner, 40 m apart, both sides in ${k === "light" ? "Light" : "Heavy"} Cover`, distance: 40, spread: 4, cover: { party: cov, enemy: cov }, make: () => ({ party: party(10), enemies: [...crowd(RIFLEMAN, 10, 3), build(MACHINE_GUNNER, 10, "enemy", "Machine Gunner")] }) })),
   { id: "firefight-10-150-open", title: "Level 10 party vs 4 Level 10 Riflemen, 150 m apart, no cover", distance: 150, spread: 3, make: () => ({ party: party(10), enemies: crowd(RIFLEMAN, 10, 4) }) },
+  ...[1, 2, 3, 4].map((n): Scenario => ({ id: `sheet-bandits-1-x${n}`, title: `Level 1 party vs ${n} Bandit${n > 1 ? "s" : ""} (stat sheet)`, distance: 20, make: () => ({ party: party(1), enemies: crowd(SHEET_BANDIT, 1, n) }) })),
+  ...[2, 3, 4, 6].map((n): Scenario => ({ id: `sheet-skeletons-4-x${n}`, title: `Level 4 party vs ${n} Skeletons (stat sheet)`, distance: 20, make: () => ({ party: party(4), enemies: crowd(SHEET_SKELETON, 4, n) }) })),
+  ...[1, 2, 3, 4, 6, 8].map((n): Scenario => ({ id: `sheet-mercs-8-x${n}`, title: `Level 8 party vs ${n} Dreftian Mercenar${n > 1 ? "ies" : "y"} (stat sheet)`, distance: 20, make: () => ({ party: party(8), enemies: crowd(SHEET_MERCENARY, 8, n) }) })),
   { id: "murk-10-plain", title: "Level 10 party vs Murk Legs without Dark Haze or Fearsome, head on", distance: 20, make: () => ({ party: party(10), enemies: [murkLegs(false, false)] }) },
 ];
 
