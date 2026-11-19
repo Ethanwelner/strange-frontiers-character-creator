@@ -551,7 +551,7 @@ const SHAMAN: Build = {
 // The site's encounter sheets (php/rpg/encounters.php), Stats exactly as written
 const SHEET_BANDIT: Build = {
   name: "Bandit", kind: HUMAN, origin: "grace", ai: "fighter", wants: [], traits: [],
-  fixed: { core: { physical: 1, social: 0, mental: 0, magic: 0 }, stats: { endurance: 2, power: 3, grace: 3, empathy: 1, persuasion: 1, demeanor: 1, logic: 1, intuition: 2, memory: 1 } },
+  fixed: { core: { physical: 1, social: 0, mental: 0, magic: 0 }, stats: { endurance: 1, power: 3, grace: 3, empathy: 1, persuasion: 1, demeanor: 1, logic: 1, intuition: 1, memory: 1 } },
   weapons: ["spear", "dagger"], armor: ["gambeson"],
 };
 const SHEET_SKELETON: Build = {
@@ -562,7 +562,7 @@ const SHEET_SKELETON: Build = {
 };
 const SHEET_MERCENARY: Build = {
   name: "Dreftian Mercenary", kind: HUMAN, origin: "power", ai: "knight", wants: [], traits: ["shield-wall"],
-  fixed: { core: { physical: 5, social: 1, mental: 2, magic: 0 }, stats: { endurance: 6, power: 7, grace: 7, empathy: 1, persuasion: 4, demeanor: 2, logic: 2, intuition: 3, memory: 4 } },
+  fixed: { core: { physical: 5, social: 1, mental: 2, magic: 0 }, stats: { endurance: 5, power: 7, grace: 7, empathy: 1, persuasion: 3, demeanor: 2, logic: 2, intuition: 3, memory: 4 } },
   weapons: ["longsword", "dagger"], armor: ["brigandine", "wooden-shield"],
 };
 
