@@ -44,7 +44,7 @@ const ASSUMPTIONS = [
   "Dark Haze: d20 + Intuition >= 10 per Rank, rolled on a character's first Attack at the creature each Round until they pass; until then they Attack the haze at -6 (Heavy Cover).",
   "Fearsome: d20 + Demeanor >= 13 on a character's first Attack (spells included) at the creature, once per Incident, rolled before Dark Haze. Frightened loses a Rank at the end of each Round; a Frightened character won't move toward a Fearsome one.",
   "Rage's -10 to Social and Mental rolls applies to the Fearsome and Dark Haze checks; Rage makes a character immune to Frightened. A Barbarian Rages when doubled damage beats the lost checks.",
-  "Advantage on Attack Rolls is +3 per source (Expert Swordsman with swords).",
+  "Advantage on Attack Rolls is the GM's call in the rules; the sim assumes +3 per source (Expert Swordsman with swords, Aim).",
   "Ranked Traits: Rank r needs every required Stat at its requirement × r, and Ranks cap at 3.",
   "Sleep is an Attack (Magic) against 5 + Demeanor, so Fearsome and Dark Haze apply to it; a hit lands with the step's other hits.",
   "Heal spends up to 1 MP per Rank, 4 HP per MP.",
@@ -707,7 +707,7 @@ function attackBonus(a: Combatant, w: Weapon, t?: Combatant): number {
   let b = w.bonus - (a.flatFooted ? 1 : 0) - a.frightened - 2 * a.injuries.broken;
   if (t && a.marked === t) b += 3;
   if (t?.monster) b += a.ranks["monster-hunter"] ?? 0;
-  if (w.sword && a.ranks["expert-swordsman"]) b += 3; // Advantage: +3 per source
+  if (w.sword && a.ranks["expert-swordsman"]) b += 3; // Advantage: the GM decides; the sim assumes +3
   return b;
 }
 
