@@ -1,0 +1,15 @@
+id: hornbow
+name: "Hornbow"
+status: draft
+plane: isekai
+summary: "A composite bow of horn, wood and sinew that pulls far harder than its size suggests."
+tags: [ranged, archery, two-handed, masterwork]
+type: weapon
+category: weapon
+damage: "7 Piercing"
+attackType: "Ranged"
+maxRange: "300 m"
+value: 700
+currency: "Luras"
+weight: 1
+notes: "Wielded with Wield: Bow. Fires Arrows."

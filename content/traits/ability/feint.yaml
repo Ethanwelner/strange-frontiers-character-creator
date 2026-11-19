@@ -1,0 +1,12 @@
+id: feint
+name: "Feint"
+status: draft
+plane: any
+summary: "Sells a false opening, then strikes where the guard went."
+tags: [combat, melee, swords, deception]
+backgroundKeywords: [close-combat]
+category: ability
+ranked: true
+minStats: { grace: 4, persuasion: 4 }
+prerequisites: [swordsman]
+effect: "When this character makes a Melee Attack with a sword, they may spend up to 1 VP per Rank before rolling. The Attack ignores 3 Defense for each VP spent."

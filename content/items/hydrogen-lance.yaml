@@ -1,0 +1,18 @@
+id: hydrogen-lance
+name: "Hydrogen Lance"
+status: draft
+plane: earth
+summary: "A flamethrower that sprays Fast Hydrogen, which ignites the moment it meets the air."
+tags: [ranged, heavy, fire, exotic, fast-hydrogen]
+type: weapon
+category: weapon
+damage: "11 Heat"
+attackType: "Ranged"
+maxRange: "15 m"
+areaOfEffect: "3 m"
+reload: "Full"
+onHit: "Characters and Items damaged by it gain one rank of the Burning Condition"
+value: 20000
+currency: "ERC"
+weight: 18
+notes: "Wielded with Wield: Flamethrower."

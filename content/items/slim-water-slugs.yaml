@@ -1,0 +1,14 @@
+id: slim-water-slugs
+name: "Slim Water Slugs"
+status: draft
+plane: earth
+summary: "Shotgun slugs of Slim Water packed to 8.35% of its volume. Firing heats it past 94°C, and it expands to full size inside the target."
+tags: [ammunition, firearm, slim-water]
+type: misc
+category: consumable
+modifiers: "+4 Blunt damage (Shotgun)"
+uses: "uses 1: when fired"
+bundle: 10
+value: 500
+currency: "ERC"
+weight: 0.6

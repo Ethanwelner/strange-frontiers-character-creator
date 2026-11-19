@@ -1,0 +1,16 @@
+id: vibro-axe
+name: "Vibro-Axe"
+status: draft
+plane: earth
+summary: "An axe head that shivers thousands of times a second, chewing through plate."
+tags: [melee, axe, two-handed, exotic]
+type: weapon
+category: weapon
+damage: "10 Slashing"
+attackType: "Melee"
+maxRange: "2 m"
+modifiers: "Breach 2"
+value: 25000
+currency: "ERC"
+weight: 3
+notes: "Wielded with Wield: War Axe."

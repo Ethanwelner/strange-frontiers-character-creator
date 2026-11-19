@@ -1,0 +1,12 @@
+id: empower-spell
+name: "Empower Spell"
+status: draft
+plane: any
+summary: "Pours more mana into a spell than it strictly needs."
+tags: [magic, metamagic, damage]
+backgroundKeywords: [magic]
+category: ability
+ranked: true
+minStats: { magic: 3, intuition: 3 }
+list: magic
+effect: "When this character uses a Cast: Action that makes an Attack, they may spend up to 1 extra MP per Rank. On a hit, the spell deals +3 damage for each extra MP spent."

@@ -1,0 +1,16 @@
+id: lodestaff
+name: "Lodestaff"
+status: draft
+plane: isekai
+summary: "A staff bound with lodestone that steadies a caster's spells."
+tags: [melee, staff, magic, two-handed]
+type: weapon
+category: weapon
+damage: "4 Blunt"
+attackType: "Melee"
+maxRange: "2 m"
+modifiers: "Attack spells cast while holding it deal +1 damage per Rank"
+value: 1500
+currency: "Luras"
+weight: 2
+notes: "Wielded with Wield: Staff."
