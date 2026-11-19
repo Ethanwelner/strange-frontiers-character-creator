@@ -9,4 +9,5 @@ category: skill
 list: wield
 ranked: true
 minStats: { grace: 3, intuition: 2 }
-effect: "- Rank *5 added to skill check rolls involving a Pistol.\n- This character is capable of performing the basic tasks of maintaining a Pistol without a skill check."
+effect: "- This character can use and maintain a Pistol without a Skill Check.\n- Rank *5 added to Skill Check rolls involving a Pistol.\n- Rank *1 added to Attack Rolls using a Pistol."
+modifiers: "Attack Rolls +1 per Rank (Pistol)"

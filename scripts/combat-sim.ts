@@ -31,7 +31,7 @@ import { parse } from "yaml";
 import { parseDamage, type Damage } from "../src/engine/damage.js";
 
 const ASSUMPTIONS = [
-  "Flat Attacks: every conscious character has Defense 10, so an unmodified roll hits 55% of the time. Sleep targets 8 + Demeanor; Mind Spike and Mind Shatter 5 + highest Mental focus Stat. Wield Skills add nothing to hit. Spells and monster attacks add nothing either. Severity bands are 3 wide: Glancing 0-2, Solid 3-5, Devastating 6-8, Critical 9+; only a Critical Failure (miss by 10+) leaves the attacker Flat-Footed. SF_OLD_ATTACKS=1 restores the old rules. Old note: Attack Rolls add no Stat; Wield Skills give +3 per Rank. Spells add Magic, as their profiles say. Monster weapons use their stat block's formula.",
+  "Flat Attacks: every conscious character has Defense 10, so an unmodified roll hits 55% of the time. Sleep targets 8 + Demeanor; Mind Spike and Mind Shatter 5 + highest Mental focus Stat. A Wield Skill adds +1 per Rank to hit. Spells and monster attacks add nothing either. Severity bands are 3 wide: Glancing 0-2, Solid 3-5, Devastating 6-8, Critical 9+; only a Critical Failure (miss by 10+) leaves the attacker Flat-Footed. SF_OLD_ATTACKS=1 restores the old rules. Old note: Attack Rolls add no Stat; Wield Skills give +3 per Rank. Spells add Magic, as their profiles say. Monster weapons use their stat block's formula.",
   "Damage after Resistance can't go below 0; a Severity's damage change applies to each damage type in the Attack.",
   "Incapacitated (below a quarter of max HP) takes a character out of the fight until healed; nobody finishes them off.",
   "Coverage-limited Resistances, like a helmet's '(head)', are ignored: there are no hit locations yet.",
@@ -235,7 +235,7 @@ function weaponFrom(id: string, c: Combatant): Weapon {
     name: it.name,
     options,
     // Flat d20: Wield gives no bonus; fighting without one is -3 (natural weapons exempt)
-    bonus: FLAT ? 0 : 3 * rank,
+    bonus: FLAT ? rank : 3 * rank,
     wieldRank: rank,
     sword: tags.includes("sword"),
     blade: tags.includes("blade") || tags.includes("axe") || tags.includes("sword"),
