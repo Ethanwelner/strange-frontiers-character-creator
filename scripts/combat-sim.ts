@@ -54,12 +54,12 @@ const ASSUMPTIONS = [
   "Breach X ignores X of the target's Resistance to each damage type; ignoring Defense lowers the number the roll must meet. Spending Traits pay before the roll: enough Ignore Defense to reach about a 60% hit, enough Breach to clear the Resistance, then damage. Casters keep 3 MP for Heal; nobody spends HP below half.",
   "Full reload weapons (Rail Rifle, Hydrogen Lance) fire, then need a Full RP Action to reload; the AI uses another weapon unless it's less than half as good.",
   "Rage adds a flat +2 weapon damage per Barbarian Rank on a hit that gets through (SF_RAGE sets the amount for testing).",
-  "Debuffs lower Defense: Flat-Footed -3, Frightened -1 per Rank. Flanking (another ally in melee reach of the target) is a source of Advantage, +3 to Melee Attacks.",
+  "Debuffs lower Defense: Flat-Footed -3, Frightened -1 per Rank. Flanking gives no bonus to hit; it only beats cover. The only stock to-hit bonuses are Aim (+3) and firing from an elevated position (+3, not modeled).",
   "Cover (Light -3, Heavy -6) applies to Ranged Attacks against a side's characters on Rounds they don't move. The Pulse Carbine ignores Light Cover.",
   "Aim: a Full RP Action when a shot's hit chance is under 35%; the next Ranged Attack at that target gets Advantage (+3).",
   "Suppressing Fire: a Full Action with a Suppression weapon when it would catch two or more foes in a 5 m area (centered on one or between two) that someone on its side can shoot. Each makes a Demeanor check against 10 + 3 per Wield Rank or is Pinned: a Full Defend Action on its next Round (+3 Defense, no Attack, no Movement). In firefights each side stands 3 m apart.",
   "Positions are on a plane. Each character's cover faces the enemy's starting side; an attacker more than 45° off that facing ignores it (flanking beats cover). A shooter whose target has cover moves to a spot 55° off it when no more than one foe who could shoot back isn't Pinned (SF_NO_FLANK turns this off). Melee flanking needs an ally at least 90° around the target.",
-  "Not modeled: Prone, Slowed, Restrained, Blinded, higher ground and hiding. Not modeled: Bodyguard's Cover, Weak Point, Second Wind, Daze, Shield, Charm, Grenadier and other Traits that need positions or choices the line model can't make.",
+  "Not modeled: Prone, Slowed, Restrained, Blinded, elevated positions and hiding. Not modeled: Bodyguard's Cover, Weak Point, Second Wind, Daze, Shield, Charm, Grenadier and other Traits that need positions or choices the line model can't make.",
 ];
 
 // ---------- content ----------
@@ -725,9 +725,10 @@ function coverPenalty(w: Weapon, t: Combatant, a: Combatant): number {
   const c = currentCover[t.side] ?? 0;
   return w.ignoreLightCover && c <= 3 ? 0 : c;
 }
-// Flanking: another ally can reach the target in melee from a side at least 90° away (+3, a source of Advantage)
+// Flanking: another ally can reach the target in melee from a side at least 90° away. No bonus to hit any more
+// (SF_FLANK_BONUS=1 restores the old +3); flanking still beats cover.
 function flanking(a: Combatant, w: Weapon, t: Combatant): number {
-  if (w.ranged || w.spell) return 0;
+  if (!process.env.SF_FLANK_BONUS || w.ranged || w.spell) return 0;
   const ax = a.pos - t.pos, ay = a.y - t.y;
   return current.some((f) => {
     if (f === a || f.side !== a.side || !up(f) || f.asleep || !f.weapons.some((x) => !x.ranged && dist(t, f) <= x.range)) return false;
