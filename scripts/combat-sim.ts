@@ -7,6 +7,7 @@
 //   npm run sim -- --n 10000            more fights per scenario
 //   npm run sim -- --only murk          only scenarios whose id starts with "murk"
 //   npm run sim -- --even               front line spends every third Level on Social or Mental
+//   SF_PIERCE=0.5 npm run sim          armor and shields with half their Piercing Resistance, for testing
 //   SF_RAGE=3 npm run sim            Rage at +3 per Barbarian Rank instead of +2, for testing
 //   npm run sim -- --shooters           a party of four guns: Soldier, Marksman, Trooper and a Machine Gunner
 //   npm run sim -- --suppress           the Soldier also carries a Machine Gun for Suppressing Fire
@@ -336,8 +337,10 @@ function build(b: Build, level: number, side: Combatant["side"], label?: string)
     if (isArmor && ranks["armor-training"]) w = ranks["armor-training"] >= 2 ? 0 : w / 2;
     weight += w;
     const r = parseResistances(it.resistances);
-    for (const [t, n] of Object.entries(r.always)) resist[t] = (resist[t] ?? 0) + n;
-    for (const [t, n] of Object.entries(r.defending)) defendResist[t] = (defendResist[t] ?? 0) + n;
+    // SF_PIERCE scales gear's Piercing Resistance for testing (0.5 halves it, rounded down)
+    const scale = (t: string, n: number) => (t === "Piercing" ? Math.floor(n * PIERCE_SCALE) : n);
+    for (const [t, n] of Object.entries(r.always)) resist[t] = (resist[t] ?? 0) + scale(t, n);
+    for (const [t, n] of Object.entries(r.defending)) defendResist[t] = (defendResist[t] ?? 0) + scale(t, n);
     const m = String(it.modifiers ?? "").match(/Defense \+(\d+) \(when Defending\)/);
     if (m) defendBonus += Number(m[1]);
   }
@@ -659,6 +662,7 @@ function severity(margin: number): { name: string; mod: number } {
 }
 
 const RAGE_PER_RANK = Number(process.env.SF_RAGE ?? 2);
+const PIERCE_SCALE = Number(process.env.SF_PIERCE ?? 1);
 
 // Breach X ignores X of the target's Resistance to each damage type; extra is
 // damage a spending Trait adds on a hit
