@@ -9,4 +9,5 @@ category: ability
 mastery: true
 minStats: { power: 8, grace: 6, endurance: 6, intuition: 4 }
 prerequisites: [boxing]
-effect: "- This character can Attack with the Superman Punch natural weapon.\n- This character can request Advantage on Attack Rolls made with punches: Fists, Haymaker, Uppercut and Superman Punch."
+effect: "- This character can Attack with the Superman Punch natural weapon.\n- This character gains +1 to Attack Rolls made with punches: Fists, Haymaker, Uppercut and Superman Punch."
+modifiers: "Attack Rolls +1 (punches)"

@@ -7,6 +7,7 @@ tags: [social, clothing]
 type: wearable
 category: gear
 slot: "Clothing"
+resistances: "1 Cold"
 value: 800
 currency: "ERC"
 weight: 1.5
