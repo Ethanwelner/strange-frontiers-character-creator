@@ -482,21 +482,21 @@ const briarBoar = () => makeMonster({
   stats: { endurance: 5, power: 5, grace: 2 }, resist: { Blunt: 1, Slashing: 1, Piercing: 1 }, massive: Number(process.env.SF_BOAR_MASSIVE ?? 1),
   weapons: [natural("Gore", "Piercing", 7, 1, 1, { pounce: true })], cornered: true,
 });
-// Mire Lurker: Ambusher, Seize, Drag Under, Massive 1, Natural Armor 2, Regeneration 1, Honed Instincts 2
+// Mire Lurker: Ambusher, Seize, Drag Under, Massive 2, Natural Armor 3, Regeneration 1, Honed Instincts 1
 const mireLurker = () => makeMonster({
   name: "Mire Lurker", core: { physical: 8, social: 0, mental: 0, magic: 0 },
-  stats: { endurance: 9, power: 9, grace: 6 }, resist: { Blunt: 3, Slashing: 3, Piercing: 3 }, massive: Number(process.env.SF_LURKER_MASSIVE ?? 3),
-  weapons: [natural("Jaws", "Piercing", 9, 2, 2, { breach: 1, seize: true })], regen: 1, ambusher: true, dragUnder: true,
+  stats: { endurance: 9, power: 9, grace: 6 }, resist: { Blunt: 3, Slashing: 3, Piercing: 3 }, massive: Number(process.env.SF_LURKER_MASSIVE ?? 2),
+  weapons: [natural("Jaws", "Piercing", 9, 2, Number(process.env.SF_LURKER_HONED ?? 1), { breach: 1, seize: true })], regen: 1, ambusher: true, dragUnder: true,
 });
 // Murk Legs: Apex, Many Limbs (Massive Claws), Massive 2, Natural Armor 2, Honed Instincts 3, Dark Haze, Fearsome
 function murkLegs(darkHaze: boolean, fearsome = true): Combatant {
   return makeMonster({
     name: "Murk Legs", core: { physical: 12, social: 1, mental: 2, magic: 0 },
     stats: { endurance: 10, power: 15, grace: 11, empathy: 2, persuasion: 1, demeanor: 0, logic: 1, intuition: 4, memory: 1 },
-    resist: { Blunt: 4, Slashing: 3, Piercing: 2 }, massive: 2,
+    resist: { Blunt: 4, Slashing: 3, Piercing: 2 }, massive: Number(process.env.SF_MURK_MASSIVE ?? 2),
     weapons: [
-      natural("Massive Claws", "Slashing", 10, 3, 3, { area: 3, twice: true }),
-      natural("Horrid Bite", "Piercing", 15, 3, 3, { breach: 2 }),
+      natural("Massive Claws", "Slashing", Number(process.env.SF_MURK_CLAW ?? 9), 3, Number(process.env.SF_MURK_HONED ?? 3), { area: 3, twice: !process.env.SF_MURK_ONE_CLAW }),
+      natural("Horrid Bite", "Piercing", Number(process.env.SF_MURK_BITE ?? 12), 3, Number(process.env.SF_MURK_HONED ?? 3), { breach: 2 }),
     ],
     apex: true, darkHaze: darkHaze ? 2 : undefined, fearsome,
   });
@@ -945,8 +945,8 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
       // Monster Traits at the start of the Round
       if (c.ambusher) c.basePriority += round === 1 ? 3 : round === 2 ? -3 : 0;
       if (c.prone && (c.proneUntil ?? 0) < round) c.prone = false;
-      if (c.seizedBy && !up(c.seizedBy)) { c.seizedBy = undefined; c.under = false; }
-      if (c.under && c.hp > 0) { const d = 1 + Math.floor(Math.random() * 6); c.hp -= d; log?.(`${c.name} is held under: ${d} HP (${Math.max(c.hp, 0)}/${c.hpMax})`); }
+      if (c.seizedBy && (!up(c.seizedBy) || !up(c))) { c.seizedBy = undefined; c.under = false; } // let go once either is out of the fight
+      if (c.under && c.hp > 0 && !process.env.SF_NO_DROWN) { const d = 1 + Math.floor(Math.random() * 6); c.hp -= d; log?.(`${c.name} is held under: ${d} HP (${Math.max(c.hp, 0)}/${c.hpMax})`); }
       if (c.regen && c.hp > 0 && c.hp < c.hpMax && c.heatRound !== round - 1) c.hp = Math.min(c.hpMax, c.hp + 2 * c.regen);
       c.flatFooted = c.flatNext;
       c.flatNext = false;
