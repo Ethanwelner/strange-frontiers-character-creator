@@ -2,7 +2,8 @@ id: grace-potion
 name: "Grace Potion"
 status: draft
 plane: isekai
-summary: "Whoever drinks it gains the Magical Grace Condition at the potion's Rank."
+summary: ""
+effect: "Whoever drinks it gains the Magical Grace Condition at the potion's Rank."
 tags: [potion, magic, enhancement, grace]
 type: misc
 category: consumable

@@ -2,7 +2,8 @@ id: potion-of-infravision
 name: "Potion of Infravision"
 status: draft
 plane: isekai
-summary: "Whoever drinks it gains the Infravision Condition at the potion's Rank."
+summary: ""
+effect: "Whoever drinks it gains the Infravision Condition at the potion's Rank."
 tags: [potion, magic, enhancement, senses]
 type: misc
 category: consumable

@@ -322,6 +322,12 @@ export type Chassis = z.infer<typeof Chassis>;
 // A stock item, from the Sheet's Items tab. No item needs a Trait: a related
 // Trait only removes the penalty for unfamiliarity.
 export const Item = BaseEntry.extend({
+  // The italic flavor line: what it is, never its rules. An item that's all
+  // rules (most potions) leaves it empty.
+  summary: z.string(),
+  // What it does, as rules, on its own line under the summary: a potion's or
+  // flask's effect, like "Whoever drinks it is healed 4 HP per Rank."
+  effect: z.string().optional(),
   type: ItemType,
   category: z.enum(ITEM_CATEGORIES),
   // The damage it deals, as the Sheet words it: types separated by commas are

@@ -2,7 +2,8 @@ id: acid-flask
 name: "Acid Flask"
 status: draft
 plane: isekai
-summary: "The flask breaks where it lands and sprays acid like Acid Spray."
+summary: "The flask breaks where it lands and sprays acid."
+effect: "It works like Acid Spray."
 tags: [potion, magic, thrown, acid]
 type: weapon
 category: consumable

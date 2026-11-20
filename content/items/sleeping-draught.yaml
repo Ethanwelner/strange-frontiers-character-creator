@@ -2,7 +2,8 @@ id: sleeping-draught
 name: "Sleeping Draught"
 status: draft
 plane: isekai
-summary: "Whoever drinks it gains the Asleep Condition at the potion's Rank."
+summary: ""
+effect: "Whoever drinks it gains the Asleep Condition at the potion's Rank."
 tags: [potion, magic, enchantment, sleep]
 type: misc
 category: consumable

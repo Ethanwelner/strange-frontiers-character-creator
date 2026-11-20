@@ -2,7 +2,8 @@ id: potion-of-flight
 name: "Potion of Flight"
 status: draft
 plane: isekai
-summary: "Whoever drinks it gains the Magical Flight Condition at the potion's Rank."
+summary: ""
+effect: "Whoever drinks it gains the Magical Flight Condition at the potion's Rank."
 tags: [potion, magic, enhancement, flight]
 type: misc
 category: consumable

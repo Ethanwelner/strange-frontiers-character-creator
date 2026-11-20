@@ -2,7 +2,8 @@ id: gust-flask
 name: "Gust Flask"
 status: draft
 plane: isekai
-summary: "The flask breaks where it lands in a burst of wind. Every character within 2 m per Rank of it is pushed 3 m per Rank away and gains the Prone Condition."
+summary: "The flask breaks where it lands in a burst of wind."
+effect: "Every character within 2 m per Rank of it is pushed 3 m per Rank away and gains the Prone Condition."
 tags: [potion, magic, thrown, wind]
 type: equipment
 category: consumable

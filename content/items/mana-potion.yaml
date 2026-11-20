@@ -2,7 +2,8 @@ id: mana-potion
 name: "Mana Potion"
 status: draft
 plane: isekai
-summary: "Whoever drinks it gains 6 bonus MP per Rank, if they have the Magic Stat. Bonus MP not spent within 1 hour per Rank is lost."
+summary: ""
+effect: "Whoever drinks it gains 6 bonus MP per Rank, if they have the Magic Stat. Bonus MP not spent within 1 hour per Rank is lost."
 tags: [potion, magic, mana]
 type: misc
 category: consumable

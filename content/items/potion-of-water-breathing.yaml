@@ -2,7 +2,8 @@ id: potion-of-water-breathing
 name: "Potion of Water Breathing"
 status: draft
 plane: isekai
-summary: "Whoever drinks it gains the Water Breathing Condition at the potion's Rank."
+summary: ""
+effect: "Whoever drinks it gains the Water Breathing Condition at the potion's Rank."
 tags: [potion, magic, enhancement, water]
 type: misc
 category: consumable

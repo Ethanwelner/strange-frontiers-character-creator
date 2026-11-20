@@ -442,8 +442,10 @@ export function ItemCard({
           {edit?.editing && <div className="equipment-row sf-item-fields">{edit.fields}</div>}
           {stock && (
             <div className="sf-item-stock">
-              {/* The description, then the rules on their own line under it */}
-              <p className="equipment-description">{stock.summary}</p>
+              {/* The flavor in italics, then the rules on their own lines
+                  under it: what it does, then its uses and modifiers */}
+              {stock.summary && <p className="equipment-description">{stock.summary}</p>}
+              {stock.effect && <p className="equipment-effect">{stock.effect}</p>}
               {uses && <p className="equipment-effect">{uses}</p>}
             </div>
           )}

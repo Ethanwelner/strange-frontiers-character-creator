@@ -2,7 +2,8 @@ id: explosive-flask
 name: "Explosive Flask"
 status: draft
 plane: isekai
-summary: "The flask breaks where it lands and explodes like a Fireball."
+summary: "The flask breaks where it lands and explodes."
+effect: "It works like Fireball."
 tags: [potion, magic, thrown, fire, explosive]
 type: weapon
 category: consumable

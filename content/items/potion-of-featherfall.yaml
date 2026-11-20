@@ -2,7 +2,8 @@ id: potion-of-featherfall
 name: "Potion of Featherfall"
 status: draft
 plane: isekai
-summary: "Whoever drinks it gains the Featherfall Condition at the potion's Rank."
+summary: ""
+effect: "Whoever drinks it gains the Featherfall Condition at the potion's Rank."
 tags: [potion, magic, enhancement, falling]
 type: misc
 category: consumable
