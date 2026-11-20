@@ -2,7 +2,8 @@ id: endurance-potion
 name: "Endurance Potion"
 status: draft
 plane: isekai
-summary: "Whoever drinks it gains the Magical Endurance Condition at the potion's Rank."
+summary: ""
+effect: "Whoever drinks it gains the Magical Endurance Condition at the potion's Rank."
 tags: [potion, magic, enhancement, endurance]
 type: misc
 category: consumable

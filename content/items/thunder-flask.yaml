@@ -2,7 +2,8 @@ id: thunder-flask
 name: "Thunder Flask"
 status: draft
 plane: isekai
-summary: "The flask breaks where it lands with a Thunderclap."
+summary: "The flask breaks where it lands with a thunderclap."
+effect: "It works like Thunderclap."
 tags: [potion, magic, thrown, sound]
 type: weapon
 category: consumable

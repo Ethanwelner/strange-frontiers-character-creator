@@ -2,7 +2,8 @@ id: slowing-flask
 name: "Slowing Flask"
 status: draft
 plane: isekai
-summary: "Breaks on the character it hits, who gains the Slowed Condition at the flask's Rank."
+summary: ""
+effect: "Breaks on the character it hits, who gains the Slowed Condition at the flask's Rank."
 tags: [potion, magic, thrown, enchantment, movement]
 type: equipment
 category: consumable

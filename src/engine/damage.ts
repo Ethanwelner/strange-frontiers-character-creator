@@ -61,9 +61,17 @@ export function damageText(text: string): string {
   return options.map(and).join(" or ");
 }
 
+// A weapon's attack type as badges: "Melee Attack" or "Ranged Attack", and
+// "Thrown" on its own for a thrown one ("Ranged, Thrown")
+export function attackTypeBadges(attackType?: string): string[] {
+  if (!attackType) return [];
+  const [kind, ...more] = attackType.split(",").map((s) => s.trim());
+  return [`${kind} Attack`, ...more];
+}
+
 // How a weapon Attacks, in a line with each part labeled, like
 // "Melee Attack; Max Range: 2 m; Attack Stat: Grace / Power" or
-// "Ranged, Thrown Attack; Attack Stat: Grace; Area of Effect: 5 m; Reload: Full Action".
+// "Ranged Attack; Thrown; Attack Stat: Grace; Area of Effect: 5 m; Reload: Full Action".
 export function attackText(item: {
   attackType?: string;
   maxRange?: string;
@@ -73,7 +81,7 @@ export function attackText(item: {
   onHit?: string;
 }): string {
   return [
-    item.attackType ? `${item.attackType} Attack` : "",
+    ...attackTypeBadges(item.attackType),
     item.maxRange ? `Max Range: ${item.maxRange}` : "",
     item.attackStat ? `Attack Stat: ${item.attackStat}` : "",
     item.areaOfEffect ? `Area of Effect: ${item.areaOfEffect}` : "",

@@ -2,7 +2,8 @@ id: mending-oil
 name: "Mending Oil"
 status: draft
 plane: isekai
-summary: "Poured over an object, it restores 4 HP per Rank. It can't repair a Destroyed object."
+summary: ""
+effect: "Poured over an object, it restores 4 HP per Rank. It can't repair a Destroyed object."
 tags: [potion, magic, repair]
 type: misc
 category: consumable

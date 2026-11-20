@@ -9,7 +9,7 @@
 // equipped and noted on its own.
 import { ITEM_CATEGORIES, isCounted } from "../engine/build.js";
 import type { Item as StockItem } from "../schema/index.js";
-import { attackText, damageText } from "../engine/damage.js";
+import { attackText, attackTypeBadges, damageText } from "../engine/damage.js";
 import { itemById } from "./content.js";
 
 export { ITEM_CATEGORIES };
@@ -111,6 +111,7 @@ export function readItems(input: unknown): Item[] {
 export function itemDetails(stock: StockItem): string {
   const line = [
     stock.damage ? `${damageText(stock.damage)} damage` : "",
+    stock.effect ? stock.effect.replace(/\.$/, "") : "",
     attackText(stock),
     stock.resistances ? `resists ${stock.resistances}` : "",
     stock.modifiers ?? "",
@@ -128,14 +129,18 @@ export function itemDetails(stock: StockItem): string {
 export const weightText = (stock: StockItem) => (stock.weight !== undefined ? `${stock.weight} kg${stock.bundle ? ` per ${stock.bundle}` : ""}` : "");
 
 // A stock item's rules that read as badges, under an open card's top line:
-// its cost and weight, how it Attacks, and the slot it takes, like "60 ERC",
-// "0.5 kg", "Melee Attack", "Max Range: 1 m", "Grace" (the Attack Stat),
-// "Slot: Headwear".
+// its cost and weight, how it Attacks (with "Thrown" for a thrown weapon),
+// whether it's a natural or built-in weapon, and the slot it takes, like
+// "60 ERC", "0.5 kg", "Melee Attack", "Natural Weapon", "Max Range: 1 m",
+// "Grace" (the Attack Stat), "Slot: Headwear". Rules go here or in the
+// rules line, never in the italic summary.
 export function itemBadges(stock: StockItem): string[] {
   return [
     stock.value !== undefined && stock.currency ? `${stock.value.toLocaleString("en-US")} ${stock.currency}${stock.bundle ? ` per ${stock.bundle}` : ""}` : "",
     weightText(stock),
-    stock.attackType ? `${stock.attackType} Attack` : "",
+    ...attackTypeBadges(stock.attackType),
+    stock.tags.includes("natural weapon") ? "Natural Weapon" : "",
+    stock.tags.includes("built-in") ? "Built-in" : "",
     stock.maxRange ? `Max Range: ${stock.maxRange}` : "",
     stock.attackStat ? stock.attackStat : "",
     stock.areaOfEffect ? `Area of Effect: ${stock.areaOfEffect}` : "",

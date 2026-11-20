@@ -2,7 +2,8 @@ id: deathproof-potion
 name: "Deathproof Potion"
 status: draft
 plane: isekai
-summary: "Drunk, or poured over a character or object, it gives the Magically Deathproof Condition at the potion's Rank."
+summary: ""
+effect: "Drunk, or poured over a character or object, it gives the Magically Deathproof Condition at the potion's Rank."
 tags: [potion, magic, enhancement, defense, death, necromancy]
 type: misc
 category: consumable

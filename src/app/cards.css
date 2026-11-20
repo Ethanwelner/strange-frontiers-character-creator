@@ -1151,13 +1151,16 @@
 
 /* A badge's lead: a circle of the checkbox's pale olive with a dark olive
    crosshairs, sword, arc, burst or shield, standing in for the badge's left
-   edge. The badge rounds its left side to match. */
+   edge. The badge is a pill: both ends rounded to the lead's circle, the
+   right one mirroring the left, with room for its number to clear the
+   curve. */
 :is(.sf-item-card, .sf-card-action-badges) .chip.equipment-stat:has(> .item-stat-lead) {
     flex-wrap: nowrap;
     padding-top: 0;
+    padding-right: .75rem;
     padding-bottom: 0;
     padding-left: 0;
-    border-radius: calc((1lh + .4rem + 2px) / 2) 4px 4px calc((1lh + .4rem + 2px) / 2);
+    border-radius: calc((1lh + .4rem + 2px) / 2);
 }
 
 .item-stat-lead {

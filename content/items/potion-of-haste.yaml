@@ -2,7 +2,8 @@ id: potion-of-haste
 name: "Potion of Haste"
 status: draft
 plane: isekai
-summary: "Whoever drinks it gains the Hasted Condition at the potion's Rank."
+summary: ""
+effect: "Whoever drinks it gains the Hasted Condition at the potion's Rank."
 tags: [potion, magic, enhancement, movement]
 type: misc
 category: consumable

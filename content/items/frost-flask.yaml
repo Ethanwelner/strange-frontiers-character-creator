@@ -2,7 +2,8 @@ id: frost-flask
 name: "Frost Flask"
 status: draft
 plane: isekai
-summary: "The flask breaks where it lands and bursts into frost like Hoarfrost."
+summary: "The flask breaks where it lands and bursts into frost."
+effect: "It works like Hoarfrost."
 tags: [potion, magic, thrown, cold]
 type: weapon
 category: consumable

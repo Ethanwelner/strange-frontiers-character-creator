@@ -2,7 +2,8 @@ id: potion-of-spider-climb
 name: "Potion of Spider Climb"
 status: draft
 plane: isekai
-summary: "Whoever drinks it gains the Spider Climb Condition at the potion's Rank."
+summary: ""
+effect: "Whoever drinks it gains the Spider Climb Condition at the potion's Rank."
 tags: [potion, magic, enhancement, climbing]
 type: misc
 category: consumable

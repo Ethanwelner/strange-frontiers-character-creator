@@ -2,7 +2,8 @@ id: glowing-oil
 name: "Glowing Oil"
 status: draft
 plane: isekai
-summary: "Poured over an object, it gives the object the Glowing Condition at the oil's Rank."
+summary: ""
+effect: "Poured over an object, it gives the object the Glowing Condition at the oil's Rank."
 tags: [potion, magic, light]
 type: misc
 category: consumable

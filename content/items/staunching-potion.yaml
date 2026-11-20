@@ -2,7 +2,8 @@ id: staunching-potion
 name: "Staunching Potion"
 status: draft
 plane: isekai
-summary: "Whoever drinks it loses the Severe Bleeding Condition."
+summary: ""
+effect: "Whoever drinks it loses the Severe Bleeding Condition."
 tags: [potion, magic, healing]
 type: misc
 category: consumable

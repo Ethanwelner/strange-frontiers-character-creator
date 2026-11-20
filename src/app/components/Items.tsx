@@ -80,7 +80,7 @@ function ItemPicker({ onAdd, custom, kit }: { onAdd: (picked: { stock: StockItem
   const setCount = (id: string, n: number) => setPicked(new Map(picked).set(id, Math.max(1, n)));
   const words = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
   const matches = (i: StockItem) => {
-    const hay = [i.name, i.summary, i.type ?? "", ...(i.tags ?? [])].join(" ").toLowerCase();
+    const hay = [i.name, i.summary, i.effect ?? "", i.type ?? "", ...(i.tags ?? [])].join(" ").toLowerCase();
     return words.every((w) => hay.includes(w));
   };
   const shown = STOCK.filter((i) => i.category === tab && matches(i));

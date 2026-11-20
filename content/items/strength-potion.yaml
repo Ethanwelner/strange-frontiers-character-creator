@@ -2,7 +2,8 @@ id: strength-potion
 name: "Strength Potion"
 status: draft
 plane: isekai
-summary: "Whoever drinks it gains the Magical Strength Condition at the potion's Rank."
+summary: ""
+effect: "Whoever drinks it gains the Magical Strength Condition at the potion's Rank."
 tags: [potion, magic, enhancement, strength]
 type: misc
 category: consumable

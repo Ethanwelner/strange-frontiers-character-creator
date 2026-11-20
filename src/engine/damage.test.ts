@@ -49,7 +49,7 @@ describe("weapon damage", () => {
 describe("attackText", () => {
   it("lists how a weapon Attacks", () => {
     expect(attackText({ attackType: "Melee", maxRange: "2 m", attackStat: "Grace / Power" })).toBe("Melee Attack; Max Range: 2 m; Attack Stat: Grace / Power");
-    expect(attackText({ attackType: "Ranged, Thrown", attackStat: "Grace", areaOfEffect: "5 m" })).toBe("Ranged, Thrown Attack; Attack Stat: Grace; Area of Effect: 5 m");
+    expect(attackText({ attackType: "Ranged, Thrown", attackStat: "Grace", areaOfEffect: "5 m" })).toBe("Ranged Attack; Thrown; Attack Stat: Grace; Area of Effect: 5 m");
     expect(attackText({ attackType: "Ranged", maxRange: "100 m", attackStat: "Grace", reload: "Full" })).toBe("Ranged Attack; Max Range: 100 m; Attack Stat: Grace; Reload: Full Action");
     expect(attackText({})).toBe("");
   });

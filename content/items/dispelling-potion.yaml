@@ -2,7 +2,8 @@ id: dispelling-potion
 name: "Dispelling Potion"
 status: draft
 plane: isekai
-summary: "Drunk, or poured over a character or object, it reduces the Rank of one (Enchantment) Condition on them by 1 per Rank. A Condition reduced to Rank 0 ends, and one that isn't ranked ends outright."
+summary: ""
+effect: "Drunk, or poured over a character or object, it reduces the Rank of one (Enchantment) Condition on them by 1 per Rank. A Condition reduced to Rank 0 ends, and one that isn't ranked ends outright."
 tags: [potion, magic, dispel]
 type: misc
 category: consumable

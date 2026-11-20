@@ -2,7 +2,8 @@ id: healing-potion
 name: "Healing Potion"
 status: draft
 plane: isekai
-summary: "Whoever drinks it is healed 4 HP per Rank."
+summary: ""
+effect: "Whoever drinks it is healed 4 HP per Rank."
 tags: [potion, magic, healing]
 type: misc
 category: consumable
