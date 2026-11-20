@@ -44,6 +44,7 @@ const ASSUMPTIONS = [
   "Dark Haze: d20 + Intuition >= 10 per Rank, rolled on a character's first Attack at the creature each Round until they pass; until then they Attack the haze at -6 (Heavy Cover).",
   "Fearsome: d20 + Demeanor >= 13 on a character's first Attack (spells included) at the creature, once per Incident, rolled before Dark Haze. Frightened loses a Rank at the end of each Round; a Frightened character won't move toward a Fearsome one.",
   "Rage's -10 to Social and Mental rolls applies to the Fearsome and Dark Haze checks; Rage makes a character immune to Frightened. A Barbarian Rages when doubled damage beats the lost checks.",
+  "Monsters are built from Physical plus Monster Traits (makeMonster): Honed Instincts, Natural Armor, Massive, Many Limbs, Apex (a second Action at Priority -5), Ambusher, Cornered, Regeneration, Seize, Pounce and Drag Under, as on the site's sheets. SF_MONSTER_NO_SLEEP=1 makes monsters immune to Sleep; SF_BOAR_MASSIVE and SF_LURKER_MASSIVE try other Massive Ranks.",
   "Advantage is the GM's call in the rules and isn't modeled. Expert Swordsman gives +1 with swords; Aim gives +4 on the next Ranged Attack at that target.",
   "Ranked Traits: Rank r needs every required Stat at its requirement × r, and Ranks cap at 3.",
   "Sleep is an Attack (Magic) against 5 + Demeanor, so Fearsome and Dark Haze apply to it; a hit lands with the step's other hits.",
@@ -149,6 +150,9 @@ interface Weapon {
   range: number; // meters
   area?: number; // Area of Effect radius
   spell?: Spell & { rank: number };
+  twice?: boolean; // Many Limbs: each Attack Action with it makes two Attacks
+  seize?: boolean; // Seize: a Solid Hit or better leaves the target Rooted in its grip
+  pounce?: boolean; // Pounce: Full Movement and this Attack in one Action; a Solid Hit or better knocks the target Prone
 }
 
 interface Combatant {
@@ -201,6 +205,17 @@ interface Combatant {
   pinned?: boolean; // must take a Full Defend Action this Round
   pinnedNext?: boolean;
   aimAt?: Combatant; // Aimed last Round: Advantage on the first Ranged Attack at it
+  // Monster Traits (php/rpg/encounters.php and the Murk Legs sheet)
+  apex?: boolean; // a second full Action each Round, at Priority -5
+  regen?: number; // Regeneration Rank: 2 HP per Rank at the start of each Round, unless it took Heat damage last Round
+  heatRound?: number; // the last Round it took Heat damage
+  cornered?: boolean; // +2 damage while below half HP
+  ambusher?: boolean; // +3 Priority on the first Round
+  dragUnder?: boolean; // can drag a character it has Seized under the water
+  seizedBy?: Combatant; // Rooted in a monster's grip
+  under?: boolean; // dragged under: Blinded (-6 Defense, -6 to Attack Rolls), loses 1d6 HP a Round
+  prone?: boolean; // -3 Defense against Melee Attacks
+  proneUntil?: number; // the Round it stands back up after
 }
 
 const statValue = (c: { stats: Record<Stat, number>; core: Record<string, number> }, s: string) =>
@@ -269,7 +284,7 @@ const ATTACK_SPELLS: Record<string, (r: number) => Omit<Weapon, "bonus" | "spell
 };
 const sleepSpell = (magic: number, rank: number): Weapon => ({
   name: "Sleep", options: [[]], bonus: FLAT ? 0 : magic, ranged: true, range: 20,
-  spell: { id: "sleep", mp: 2, rank, vsDemeanor: true, onHit: (t) => { if (!t.undead) t.asleep = true; } },
+  spell: { id: "sleep", mp: 2, rank, vsDemeanor: true, onHit: (t) => { if (!t.undead && !(t.monster && process.env.SF_MONSTER_NO_SLEEP)) t.asleep = true; } },
 });
 
 interface Build {
@@ -426,52 +441,65 @@ function build(b: Build, level: number, side: Combatant["side"], label?: string)
   return c;
 }
 
-// The Murk Legs stat block from php/rpg/lore/murk-legs.php
-function murkLegs(darkHaze: boolean, fearsome = true): Combatant {
-  const stats = { endurance: 10, power: 15, grace: 11, empathy: 2, persuasion: 1, demeanor: 0, logic: 1, intuition: 4, memory: 1 };
-  const hpMax = 10 + 10 + 15 + 11;
+// Monsters: built from Physical, then made dangerous by bespoke Monster Traits
+// (the sheets in php/rpg/encounters.php and php/rpg/lore/murk-legs.php)
+interface MonsterSpec {
+  name: string;
+  core: Record<Core | "magic", number>;
+  stats: Partial<Record<Stat, number>>;
+  resist: Record<string, number>; // Natural Armor and the like
+  massive?: number; // +10 HP per Rank
+  weapons: Weapon[];
+  apex?: boolean;
+  regen?: number;
+  cornered?: boolean;
+  ambusher?: boolean;
+  dragUnder?: boolean;
+  darkHaze?: number;
+  fearsome?: boolean;
+}
+function makeMonster(m: MonsterSpec): Combatant {
+  const stats = Object.fromEntries(ALL_STATS.map((s) => [s, m.stats[s] ?? 0])) as Record<Stat, number>;
+  const hpMax = 10 + stats.endurance + stats.power + stats.grace + 10 * (m.massive ?? 0);
   return {
-    name: "Murk Legs",
-    side: "enemy",
-    core: { physical: 12, social: 1, mental: 2, magic: 0 },
-    stats,
-    hpMax,
-    hp: hpMax,
-    defense: FLAT ? 10 : 10 + 12,
-    resist: { Blunt: 2, Slashing: 1 },
-    defendResist: {},
-    defendBonus: 0,
-    basePriority: 0,
-    weapons: [
-      // formula "Power - 5" and "Power": the Attack Roll bonus
-      { name: "Massive Claws", options: [[{ type: "Slashing", amount: 10 }]], bonus: FLAT ? 0 : 10, ranged: false, range: 3, area: 3 },
-      { name: "Horrid Bite", options: [[{ type: "Piercing", amount: 15 }]], bonus: FLAT ? 0 : 15, ranged: false, range: 3 },
-    ],
-    ranks: {},
-    mpMax: 0, mp: 0, vp: 0, sp: 0, potions: 0,
-    mustReload: new Set(),
-    ai: "monster",
-    monster: true,
-    darkHaze: darkHaze ? 2 : undefined,
-    hazeSeen: new Map(),
-    fearChecked: new Set(),
-    fearsome,
-    notes: [],
-    pos: 0,
-    y: 0,
-    facing: { x: -1, y: 0 },
-    flatFooted: false,
-    flatNext: false,
-    frightened: 0,
-    asleep: false,
-    surprised: false,
-    rage: false,
-    attackedThisRound: false,
-    defending: false,
-    shieldwall: false,
-    riposte: false,
-    injuries: { organ: 0, broken: 0 },
+    name: m.name, side: "enemy", core: m.core, stats, hpMax, hp: hpMax, defense: 10,
+    resist: { ...m.resist }, defendResist: {}, defendBonus: 0, basePriority: 0,
+    weapons: m.weapons, ranks: {}, mpMax: 0, mp: 0, vp: 0, sp: 0, potions: 0, mustReload: new Set(),
+    ai: "monster", monster: true,
+    darkHaze: m.darkHaze, hazeSeen: new Map(), fearChecked: new Set(), fearsome: m.fearsome,
+    apex: m.apex, regen: m.regen, cornered: m.cornered, ambusher: m.ambusher, dragUnder: m.dragUnder,
+    notes: [], pos: 0, y: 0, facing: { x: -1, y: 0 },
+    flatFooted: false, flatNext: false, frightened: 0, asleep: false, surprised: false, rage: false,
+    attackedThisRound: false, defending: false, shieldwall: false, riposte: false, injuries: { organ: 0, broken: 0 },
   };
+}
+const natural = (name: string, type: Damage["type"], amount: number, range: number, honed: number, extra: Partial<Weapon> = {}): Weapon =>
+  ({ name, options: [[{ type, amount }]], bonus: honed, ranged: false, range, natural: true, ...extra });
+
+// Briar Boar: Pounce, Natural Armor 1, Honed Instincts 1, Cornered
+const briarBoar = () => makeMonster({
+  name: "Briar Boar", core: { physical: 4, social: 0, mental: 0, magic: 0 },
+  stats: { endurance: 5, power: 5, grace: 2 }, resist: { Blunt: 1, Slashing: 1, Piercing: 1 }, massive: Number(process.env.SF_BOAR_MASSIVE ?? 1),
+  weapons: [natural("Gore", "Piercing", 7, 1, 1, { pounce: true })], cornered: true,
+});
+// Mire Lurker: Ambusher, Seize, Drag Under, Massive 1, Natural Armor 2, Regeneration 1, Honed Instincts 2
+const mireLurker = () => makeMonster({
+  name: "Mire Lurker", core: { physical: 8, social: 0, mental: 0, magic: 0 },
+  stats: { endurance: 9, power: 9, grace: 6 }, resist: { Blunt: 3, Slashing: 3, Piercing: 3 }, massive: Number(process.env.SF_LURKER_MASSIVE ?? 3),
+  weapons: [natural("Jaws", "Piercing", 9, 2, 2, { breach: 1, seize: true })], regen: 1, ambusher: true, dragUnder: true,
+});
+// Murk Legs: Apex, Many Limbs (Massive Claws), Massive 2, Natural Armor 2, Honed Instincts 3, Dark Haze, Fearsome
+function murkLegs(darkHaze: boolean, fearsome = true): Combatant {
+  return makeMonster({
+    name: "Murk Legs", core: { physical: 12, social: 1, mental: 2, magic: 0 },
+    stats: { endurance: 10, power: 15, grace: 11, empathy: 2, persuasion: 1, demeanor: 0, logic: 1, intuition: 4, memory: 1 },
+    resist: { Blunt: 4, Slashing: 3, Piercing: 2 }, massive: 2,
+    weapons: [
+      natural("Massive Claws", "Slashing", 10, 3, 3, { area: 3, twice: true }),
+      natural("Horrid Bite", "Piercing", 15, 3, 3, { breach: 2 }),
+    ],
+    apex: true, darkHaze: darkHaze ? 2 : undefined, fearsome,
+  });
 }
 
 // ---------- builds ----------
@@ -655,6 +683,9 @@ const SCENARIOS: Scenario[] = [
   ...[1, 2, 3, 4].map((n): Scenario => ({ id: `sheet-bandits-1-x${n}`, title: `Level 1 party vs ${n} Bandit${n > 1 ? "s" : ""} (stat sheet)`, distance: 20, make: () => ({ party: party(1), enemies: crowd(SHEET_BANDIT, 1, n) }) })),
   ...[2, 3, 4, 6].map((n): Scenario => ({ id: `sheet-skeletons-4-x${n}`, title: `Level 4 party vs ${n} Skeletons (stat sheet)`, distance: 20, make: () => ({ party: party(4), enemies: crowd(SHEET_SKELETON, 4, n) }) })),
   ...[1, 2, 3, 4, 6, 8].map((n): Scenario => ({ id: `sheet-mercs-8-x${n}`, title: `Level 8 party vs ${n} Dreftian Mercenar${n > 1 ? "ies" : "y"} (stat sheet)`, distance: 20, make: () => ({ party: party(8), enemies: crowd(SHEET_MERCENARY, 8, n) }) })),
+  ...[1, 2, 3].flatMap((L) => [1, 2].map((n): Scenario => ({ id: `boar-${L}-x${n}`, title: `Level ${L} party vs ${n} Briar Boar${n > 1 ? "s" : ""}`, distance: 20, make: () => ({ party: party(L), enemies: Array.from({ length: n }, briarBoar) }) }))),
+  ...[4, 5, 6, 7, 8].map((L): Scenario => ({ id: `lurker-${L}`, title: `Level ${L} party vs a Mire Lurker that surfaces beside them`, distance: 2, make: () => ({ party: party(L), enemies: [mireLurker()] }) })),
+  { id: "lurker-8-x2", title: "Level 8 party vs 2 Mire Lurkers that surface beside them", distance: 2, spread: 4, make: () => ({ party: party(8), enemies: [mireLurker(), mireLurker()] }) },
   { id: "murk-10-plain", title: "Level 10 party vs Murk Legs without Dark Haze or Fearsome, head on", distance: 20, make: () => ({ party: party(10), enemies: [murkLegs(false, false)] }) },
 ];
 
@@ -733,7 +764,7 @@ function damageOf(option: Damage[], sevMod: number, t: Combatant, a: Combatant, 
 }
 
 function attackBonus(a: Combatant, w: Weapon, t?: Combatant): number {
-  let b = w.bonus - (a.flatFooted ? 1 : 0) - a.frightened - 2 * a.injuries.broken;
+  let b = w.bonus - (a.flatFooted ? 1 : 0) - a.frightened - 2 * a.injuries.broken - (a.under ? 6 : 0);
   if (t && a.marked === t) b += 3;
   if (t?.monster) b += a.ranks["monster-hunter"] ?? 0;
   if (w.sword && a.ranks["expert-swordsman"]) b += 1; // Expert Swordsman: +1 with swords
@@ -745,7 +776,8 @@ function targetNumber(w: Weapon, t: Combatant): number {
   if (w.spell?.vsMental) return 5 + highestMental(t);
   if (w.spell?.vsDemeanor) return (FLAT ? 8 : 5) + t.stats.demeanor;
   // Flat-Footed -3, Frightened -1 per Rank
-  return t.defense + (t.defending ? 3 + t.defendBonus + (t.shieldwall ? 4 : 0) : 0) - (t.flatFooted ? 3 : 0) - t.frightened;
+  return t.defense + (t.defending ? 3 + t.defendBonus + (t.shieldwall ? 4 : 0) : 0) - (t.flatFooted ? 3 : 0) - t.frightened -
+    (t.prone && !w.ranged ? 3 : 0) - (t.under ? 6 : 0);
 }
 
 // Cover against Ranged Attacks: the side's cover while the target hasn't moved this Round
@@ -875,7 +907,8 @@ function spend(a: Combatant, w: Weapon, t: Combatant, option: Damage[], pen: num
 
 type Plan = {
   c: Combatant;
-  kind: "attack" | "flurry" | "move" | "defend" | "heal" | "potion" | "sleep" | "toward" | "reload" | "aim" | "suppress" | "flank";
+  kind: "attack" | "flurry" | "move" | "defend" | "heal" | "potion" | "sleep" | "toward" | "reload" | "aim" | "suppress" | "flank" | "pounce" | "drag" | "struggle" | "apex";
+  late?: boolean; // an Apex monster's second Action, at Priority -5
   w?: Weapon;
   t?: Combatant;
   option?: Damage[];
@@ -909,6 +942,12 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
     round++;
     log?.(`\n-- Round ${round}`);
     for (const c of all) {
+      // Monster Traits at the start of the Round
+      if (c.ambusher) c.basePriority += round === 1 ? 3 : round === 2 ? -3 : 0;
+      if (c.prone && (c.proneUntil ?? 0) < round) c.prone = false;
+      if (c.seizedBy && !up(c.seizedBy)) { c.seizedBy = undefined; c.under = false; }
+      if (c.under && c.hp > 0) { const d = 1 + Math.floor(Math.random() * 6); c.hp -= d; log?.(`${c.name} is held under: ${d} HP (${Math.max(c.hp, 0)}/${c.hpMax})`); }
+      if (c.regen && c.hp > 0 && c.hp < c.hpMax && c.heatRound !== round - 1) c.hp = Math.min(c.hpMax, c.hp + 2 * c.regen);
       c.flatFooted = c.flatNext;
       c.flatNext = false;
       c.defending = c.shieldwall = c.riposte = false;
@@ -921,10 +960,16 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
     for (const c of all.filter(canAct)) {
       const p = decide(c, foes, friends, meleeReach, st);
       if (p) plans.push(p);
+      // Apex: a second full Action, decided when its turn comes
+      if (c.apex) plans.push({ c, kind: "apex", late: true });
     }
-    const steps = [...new Set(plans.map((p) => priorityOf(p.c)))].sort((a, b) => b - a);
+    const prioOf = (p: Plan) => priorityOf(p.c) - (p.late ? 5 : 0);
+    const steps = [...new Set(plans.map(prioOf))].sort((a, b) => b - a);
     for (const step of steps) {
-      const here = plans.filter((p) => priorityOf(p.c) === step && canAct(p.c));
+      const here = plans
+        .filter((p) => prioOf(p) === step && canAct(p.c))
+        .map((p) => (p.kind === "apex" ? decide(p.c, foes, friends, meleeReach, st) : p))
+        .filter((p): p is Plan => !!p);
       // RP: potions, healing, Sleep
       for (const p of here) {
         const c = p.c;
@@ -962,7 +1007,7 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
       const hits: { t: Combatant; dmg: number; text: string; crit: boolean; types: string[]; a: Combatant; w: Weapon }[] = [];
       const counters: { a: Combatant; t: Combatant }[] = [];
       const suppressedNow: Combatant[] = [];
-      const attack = (a: Combatant, w: Weapon, t: Combatant, option: Damage[], extraPenalty = 0) => {
+      const attack = (a: Combatant, w: Weapon, t: Combatant, option: Damage[], extraPenalty = 0, pouncing = false) => {
         if (!up(t)) return;
         if (dist(t, a) > w.range) { log?.(`${a.name} can't reach ${t.name}`); return; }
         if (w.spell) {
@@ -1027,13 +1072,33 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
             hits.push({ t: tt, dmg: 0, text: `${a.name} → ${tt.name} with ${w.name}: hit`, crit: false, types: [], a, w });
             continue;
           }
-          const d = damageOf(option, sev.mod, tt, a, (w.breach ?? 0) + spent.breach, spent.extra);
+          const d = damageOf(option, sev.mod, tt, a, (w.breach ?? 0) + spent.breach, spent.extra + (a.cornered && a.hp < a.hpMax / 2 ? 2 : 0));
+          // Seize and Pounce: a Solid Hit or better
+          if (!w.area && sev.mod >= 0 && sev.name !== "Glancing Blow") {
+            if (w.seize && !tt.seizedBy) { tt.seizedBy = a; log?.(`${tt.name} is Seized by ${a.name}`); }
+            if (pouncing) { tt.prone = true; tt.proneUntil = round + 1; log?.(`${tt.name} is knocked Prone`); }
+          }
           if (rec) { rec.hits++; rec.dmg += d.total; if (sev.name === "Critical Hit") rec.crits++; }
           hits.push({ t: tt, dmg: d.total, text: `${a.name} → ${tt.name} with ${w.name}: ${sev.name}, ${d.total} damage`, crit: sev.name === "Critical Hit", types: d.types, a, w });
         }
       };
       for (const p of here) {
-        if ((p.kind === "attack" || p.kind === "sleep") && p.w && p.t) attack(p.c, p.w, p.t, p.option ?? p.w.options[0]!);
+        if ((p.kind === "attack" || p.kind === "sleep") && p.w && p.t) {
+          attack(p.c, p.w, p.t, p.option ?? p.w.options[0]!);
+          if (p.w.twice) attack(p.c, p.w, p.t, p.option ?? p.w.options[0]!); // Many Limbs
+        }
+        if (p.kind === "pounce" && p.w && p.t && up(p.t)) {
+          p.c.moved = true;
+          stepToward(p.c, ptOf(p.t), 12, Math.max(0.5, p.w.range - 0.5));
+          log?.(`${p.c.name} Pounces on ${p.t.name}`);
+          attack(p.c, p.w, p.t, p.w.options[0]!, 0, true);
+        }
+        if (p.kind === "drag" && p.t && p.t.seizedBy === p.c) { p.t.under = true; log?.(`${p.c.name} drags ${p.t.name} under the water`); }
+        if (p.kind === "struggle") {
+          const free = d20() + p.c.stats.power >= 15;
+          log?.(`${p.c.name} struggles${free ? " free" : ", still held"}`);
+          if (free) { p.c.seizedBy = undefined; p.c.under = false; }
+        }
         if (p.kind === "suppress" && p.w && p.t && distPt(p.c, p.at ?? ptOf(p.t)) <= p.w.range) {
           // Suppressing Fire: Demeanor against 10 + 3 per Wield Rank for everyone within 2.5 m of the target
           const dc = 10 + 3 * (p.w.wieldRank ?? 0);
@@ -1052,6 +1117,7 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
       const land = (list: typeof hits) => {
         for (const h of list) {
           h.t.hp -= h.dmg;
+          if (h.dmg > 0 && h.types.includes("Heat")) h.t.heatRound = round;
           if (h.dmg > 0) h.t.asleep = false;
           if (h.dmg > 0) h.w.spell?.onDamage?.(h.t, h.w.spell.rank);
           h.w.spell?.onHit?.(h.t, h.w.spell.rank);
@@ -1088,7 +1154,7 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
         if (st) st.flanks++;
         log?.(`${p.c.name} moves to flank ${p.t?.name ?? ""} (${Math.round(distPt(p.c, p.at!))} m to go)`);
       }
-      for (const p of here.filter((p) => (p.kind === "move" || p.kind === "toward") && canAct(p.c))) {
+      for (const p of here.filter((p) => (p.kind === "move" || p.kind === "toward") && canAct(p.c) && !p.c.seizedBy)) {
         const target = p.kind === "toward" && p.t ? p.t : foes(p.c).sort((x, y) => dist(x, p.c) - dist(y, p.c))[0];
         if (!target) continue;
         if (p.kind === "move" && p.c.frightened && target.fearsome) { log?.(`${p.c.name} is too Frightened to close in`); continue; }
@@ -1129,6 +1195,13 @@ function decide(
   if (!targets.length) return undefined;
   // Pinned: heads down, a Full Defend Action
   if (c.pinned) return { c, kind: "defend" };
+  // Held under the water: all it can do is struggle
+  if (c.under && c.seizedBy) return { c, kind: "struggle" };
+  // Drag Under: a monster pulls the character it has Seized into the water
+  if (c.dragUnder) {
+    const held = targets.find((t) => t.seizedBy === c && !t.under);
+    if (held) return { c, kind: "drag", t: held };
+  }
 
   // Casters heal first: anyone down or below a third
   if (c.ai === "caster") {
@@ -1234,6 +1307,12 @@ function decide(
   if (best.kind === "attack" && best.w?.ranged && !best.w.spell && best.t && c.aimAt !== best.t) {
     const need = targetNumber(best.w, best.t) + coverPenalty(best.w, best.t, c) - attackBonus(c, best.w, best.t);
     if ((21 - need) / 20 < 0.35) return { c, kind: "aim", t: best.t };
+  }
+  // Pounce: out of reach, a monster closes and strikes in one Action
+  const pounceW = c.weapons.find((w) => w.pounce);
+  if (pounceW && best.kind === "move") {
+    const near = targets.filter((t) => dist(t, c) <= 12 + pounceW.range).sort((x, y) => dist(x, c) - dist(y, c))[0];
+    if (near) return { c, kind: "pounce", w: pounceW, t: near };
   }
   if (best.kind === "move" || !best.t) {
     // Casters keep their distance; everyone else closes in
