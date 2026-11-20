@@ -44,7 +44,7 @@ const ASSUMPTIONS = [
   "Dark Haze: d20 + Intuition >= 10 per Rank, rolled on a character's first Attack at the creature each Round until they pass; until then they Attack the haze at -6 (Heavy Cover).",
   "Fearsome: d20 + Demeanor >= 13 on a character's first Attack (spells included) at the creature, once per Incident, rolled before Dark Haze. Frightened loses a Rank at the end of each Round; a Frightened character won't move toward a Fearsome one.",
   "Rage's -10 to Social and Mental rolls applies to the Fearsome and Dark Haze checks; Rage makes a character immune to Frightened. A Barbarian Rages when doubled damage beats the lost checks.",
-  "Advantage on Attack Rolls is the GM's call in the rules; the sim assumes +3 per source (Expert Swordsman with swords, Aim).",
+  "Advantage is the GM's call in the rules and isn't modeled. Expert Swordsman gives +1 with swords; Aim gives +4 on the next Ranged Attack at that target.",
   "Ranked Traits: Rank r needs every required Stat at its requirement × r, and Ranks cap at 3.",
   "Sleep is an Attack (Magic) against 5 + Demeanor, so Fearsome and Dark Haze apply to it; a hit lands with the step's other hits.",
   "Heal spends up to 1 MP per Rank, 4 HP per MP.",
@@ -54,9 +54,9 @@ const ASSUMPTIONS = [
   "Breach X ignores X of the target's Resistance to each damage type; to-hit spending adds to the roll. Spending Traits pay before the roll: enough to-hit bonus to reach about a 60% hit, enough Breach to clear the Resistance, then damage. Casters keep 3 MP for Heal; nobody spends HP below half.",
   "Full reload weapons (Rail Rifle, Hydrogen Lance) fire, then need a Full RP Action to reload; the AI uses another weapon unless it's less than half as good.",
   "Rage adds a flat +2 weapon damage per Barbarian Rank on a hit that gets through (SF_RAGE sets the amount for testing).",
-  "Debuffs lower Defense: Flat-Footed -3, Frightened -1 per Rank. Flanking gives no bonus to hit; it only beats cover. The only stock to-hit bonuses are Aim (+3) and firing from an elevated position (+3, not modeled).",
+  "Debuffs lower Defense: Flat-Footed -3, Frightened -1 per Rank. Flanking gives no bonus to hit; it only beats cover. The only stock to-hit bonuses are Aim (+4) and firing from an elevated position (+3, not modeled).",
   "Cover (Light -3, Heavy -6) applies to Ranged Attacks against a side's characters on Rounds they don't move. The Pulse Carbine ignores Light Cover.",
-  "Aim: a Full RP Action when a shot's hit chance is under 35%; the next Ranged Attack at that target gets Advantage (+3).",
+  "Aim: a Full RP Action when a shot's hit chance is under 35%; the next Ranged Attack at that target gets +4.",
   "Suppressing Fire: a Full Action with a Suppression weapon when it would catch two or more foes in a 5 m area (centered on one or between two) that someone on its side can shoot. Each makes a Demeanor check against 10 + 3 per Wield Rank or is Pinned: a Full Defend Action on its next Round (+3 Defense, no Attack, no Movement). In firefights each side stands 3 m apart.",
   "Positions are on a plane. Each character's cover faces the enemy's starting side; an attacker more than 45° off that facing ignores it (flanking beats cover). A shooter whose target has cover moves to a spot 55° off it when no more than one foe who could shoot back isn't Pinned (SF_NO_FLANK turns this off). Melee flanking needs an ally at least 90° around the target.",
   "Not modeled: Prone, Slowed, Restrained, Blinded, elevated positions and hiding. Not modeled: Bodyguard's Cover, Weak Point, Second Wind, Daze, Shield, Charm, Grenadier and other Traits that need positions or choices the line model can't make.",
@@ -736,7 +736,7 @@ function attackBonus(a: Combatant, w: Weapon, t?: Combatant): number {
   let b = w.bonus - (a.flatFooted ? 1 : 0) - a.frightened - 2 * a.injuries.broken;
   if (t && a.marked === t) b += 3;
   if (t?.monster) b += a.ranks["monster-hunter"] ?? 0;
-  if (w.sword && a.ranks["expert-swordsman"]) b += 3; // Advantage: the GM decides; the sim assumes +3
+  if (w.sword && a.ranks["expert-swordsman"]) b += 1; // Expert Swordsman: +1 with swords
   return b;
 }
 
@@ -1006,7 +1006,7 @@ function fight(sc: Scenario, log?: (s: string) => void, st?: Stats): boolean {
             if (w.ranged && dist(tt, a) > w.range / 2) pen += 2;
             if (w.ranged && !w.spell && foes(a).some((f) => !f.asleep && meleeReach(f) >= dist(f, a))) pen += 3;
             pen += coverPenalty(w, tt, a) - flanking(a, w, tt);
-            if (w.ranged && !w.spell && a.aimAt === tt) { pen -= 3; a.aimAt = undefined; }
+            if (w.ranged && !w.spell && a.aimAt === tt) { pen -= 4; a.aimAt = undefined; }
             // Resource-spending Traits, decided before the roll
             spent = spend(a, w, tt, option, pen, st);
             if (spent.ignore || spent.breach || spent.extra) log?.(`${a.name} spends for ${[spent.ignore && `+${spent.ignore} to hit`, spent.breach && `(Breach: ${spent.breach})`, spent.extra && `+${spent.extra} damage`].filter(Boolean).join(", ")}`);
@@ -1200,7 +1200,7 @@ function decide(
       let penalty = 0;
       if (w.ranged && range > w.range / 2) penalty += 2;
       if (w.ranged && !w.spell && targets.some((f) => !f.asleep && meleeReach(f) >= dist(f, c))) penalty += 3;
-      penalty += coverPenalty(w, t, c) - flanking(c, w, t) - (w.ranged && !w.spell && c.aimAt === t ? 3 : 0);
+      penalty += coverPenalty(w, t, c) - flanking(c, w, t) - (w.ranged && !w.spell && c.aimAt === t ? 4 : 0);
       const ex = expected(c, w, t, penalty);
       const score = ex.dmg * (1 + (1 - t.hp / t.hpMax)) * (w.spell ? 0.8 : 1); // spells cost MP
       if (score > best.score) best = { c, kind: "attack", w, t, option: ex.option, score };
