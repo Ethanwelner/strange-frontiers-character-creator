@@ -1,0 +1,14 @@
+id: grave-call
+name: "Grave Call"
+status: draft
+plane: any
+summary: "Calls the dying toward the grave."
+tags: [magic, spell, death, attack]
+backgroundKeywords: [magic]
+category: ability
+types: [necromancy]
+ranked: true
+minStats: { magic: 3 }
+list: magic
+effect: "This character gains the Cast Grave Call Action."
+action: "Cast Grave Call: This character may spend 1 MP to Attack a target with a temporary weapon that has the following profile: (Melee) (max range 1 m) (4 Death per Rank). Against a Severely Injured target, the Attack deals an additional 4 Death per Rank."
