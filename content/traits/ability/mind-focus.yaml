@@ -1,0 +1,13 @@
+id: mind-focus
+name: "Mind Focus"
+status: draft
+plane: any
+summary: "Sharpens a spell until it cuts deeper into the mind."
+tags: [magic, metamagic, damage, psychic]
+backgroundKeywords: [magic]
+category: ability
+ranked: true
+minStats: { magic: 4, intuition: 3 }
+prerequisites: [empower-spell]
+list: magic
+effect: "When this character uses a Cast: Action that makes an Attack dealing Psychic damage, they may spend up to 1 extra MP per Rank. On a hit, the spell deals +3 Psychic damage for each extra MP spent."

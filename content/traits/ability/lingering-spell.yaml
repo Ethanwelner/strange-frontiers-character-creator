@@ -1,0 +1,13 @@
+id: lingering-spell
+name: "Lingering Spell"
+status: draft
+plane: any
+summary: "Makes a spell's harm cling and spread."
+tags: [magic, metamagic, conditions]
+backgroundKeywords: [magic]
+category: ability
+ranked: true
+minStats: { magic: 4, empathy: 3 }
+prerequisites: [empower-spell]
+list: magic
+effect: "When this character uses a Cast: Action whose Attack gives a ranked Condition to the characters and Items it damages, they may spend up to 1 extra MP per Rank. The Condition is given at 1 more Rank for each extra MP spent."

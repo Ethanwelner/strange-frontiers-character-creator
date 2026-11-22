@@ -1,0 +1,13 @@
+id: piercing-focus
+name: "Piercing Focus"
+status: draft
+plane: any
+summary: "Hones a spell to a finer point."
+tags: [magic, metamagic, damage, piercing]
+backgroundKeywords: [magic]
+category: ability
+ranked: true
+minStats: { magic: 4, grace: 3 }
+prerequisites: [empower-spell]
+list: magic
+effect: "When this character uses a Cast: Action that makes an Attack dealing Piercing damage, they may spend up to 1 extra MP per Rank. On a hit, the spell deals +3 Piercing damage for each extra MP spent."

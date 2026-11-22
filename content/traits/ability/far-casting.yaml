@@ -1,0 +1,12 @@
+id: far-casting
+name: "Far Casting"
+status: draft
+plane: any
+summary: "Throws a spell farther than it was meant to reach."
+tags: [magic, metamagic, range]
+backgroundKeywords: [magic]
+category: ability
+ranked: true
+minStats: { magic: 3, intuition: 3 }
+list: magic
+effect: "When this character uses a Cast: Action, they may spend up to 1 extra MP per Rank. For each extra MP spent, the spell's max range, or the distance within which it reaches its target, increases by its normal amount."
