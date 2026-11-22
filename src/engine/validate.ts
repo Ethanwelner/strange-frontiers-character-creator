@@ -1,7 +1,7 @@
 // Checks a character build against the creation rules in docs/PLAN.md
 // (Decisions → Character creation). Deterministic: same build and content,
 // same result.
-import { OPEN_CORE_STATS, STAT_CAP, STAT_GROUPS, StatId, type BackgroundPackage, type StatBlock, type Trait, type TraitChoice } from "../schema/index.js";
+import { OPEN_CORE_STATS, SPECIAL_STAT_CAP, STAT_CAP, STAT_GROUPS, StatId, type BackgroundPackage, type StatBlock, type Trait, type TraitChoice } from "../schema/index.js";
 import { Build, DEFAULT_CAMPAIGN, isCounted, type Campaign, type PickKind, type StatGroup } from "./build.js";
 import type { Content } from "./content.js";
 import { clampWealth, FREE_CHASSIS_COST, kitBudget, kitCeiling, kitCostOf, levelKitWealth, startingCash } from "./wealth.js";
@@ -326,6 +326,14 @@ export function validateBuild(input: unknown, content: Content, campaign: Campai
       error("allocation", `Level ${i + 1} spends ${total} focus points; each Level gives exactly ${FOCUS_POINTS_PER_LEVEL}`, path);
     }
   });
+
+  // Rule 4: no more than 10 points spent on a Special Stat, like Magic. A
+  // package's core bonus (rule 13) can still add past it.
+  for (const g of Object.keys(coreStats) as StatGroup[]) {
+    if ((OPEN_CORE_STATS as readonly string[]).includes(g) || coreStats[g] <= SPECIAL_STAT_CAP) continue;
+    const name = g.charAt(0).toUpperCase() + g.slice(1);
+    error("stat-cap", `${coreStats[g]} Levels go to ${name}; no more than ${SPECIAL_STAT_CAP} points can be spent on a Special Stat`, "levels");
+  }
 
   // Rule 4: no stat above its Kind max, and nothing above 20.
   if (base) {

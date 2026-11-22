@@ -7,7 +7,7 @@
 // and skipping any the engine rejects. It also packs the stock items the
 // concept lists. Deterministic and browser-safe.
 import { z } from "zod";
-import { STAT_CAP, STAT_GROUPS, StatId, type StatBlock, type Trait } from "../schema/index.js";
+import { SPECIAL_STAT_CAP, STAT_CAP, STAT_GROUPS, StatId, type StatBlock, type Trait } from "../schema/index.js";
 import { Build, ChoiceAnswer, DEFAULT_CAMPAIGN, isCounted, type BuildItem, type Campaign, type LevelAllocation, type PickKind, type StatGroup } from "./build.js";
 import type { Content } from "./content.js";
 import { answers, bonusPointsOf, choicePool, coreAccessOf, isFreeTextPool, FOCUS_POINTS_PER_LEVEL, validateBuild, type BuildResult } from "./validate.js";
@@ -315,7 +315,8 @@ export function solveConcept(input: unknown, content: Content, campaign: Campaig
     granted.map((g) => g.trait),
     content,
   ).includes("magic");
-  const magicLevels = canMagic ? Math.min(concept.magic, campaign.startingLevel) : 0;
+  // A Special Stat takes no more than 10 points
+  const magicLevels = canMagic ? Math.min(concept.magic, campaign.startingLevel, SPECIAL_STAT_CAP) : 0;
   const solved = solveItems(concept, content);
 
   let build: Build = Build.parse({

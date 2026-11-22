@@ -853,6 +853,20 @@ describe("rule 13: Magic", () => {
     expect(r.summary!.picks).toEqual(check(isek).summary!.picks);
   });
 
+  it("takes no more than 10 points, as a Special Stat, though a package's bonus adds past it", () => {
+    const magicLevels = (n: number) => Array.from({ length: n }, () => ({ group: "magic" as const, points: {} }));
+    const ten = { ...isek, level: 11, levels: [...isek.levels!, ...magicLevels(10)] };
+    expect(check(ten, content, { startingLevel: 11 }).errors.map((e) => e.code)).not.toContain("stat-cap");
+    const eleven = { ...isek, level: 12, levels: [...isek.levels!, ...magicLevels(11)] };
+    expect(check(eleven, content, { startingLevel: 12 }).errors).toContainEqual(
+      expect.objectContaining({ code: "stat-cap", message: "11 Levels go to Magic; no more than 10 points can be spent on a Special Stat", path: "levels" }),
+    );
+    // The Licensed Mage's 1 Magic is a bonus, not a point spent
+    const bonus = check({ ...ten, profession: "licensed-mage", choices: [] }, content, { startingLevel: 11 });
+    expect(bonus.summary!.coreStats.magic).toBe(11);
+    expect(bonus.errors.map((e) => e.code)).not.toContain("stat-cap");
+  });
+
   it("rejects Magic for a character without the Trait that opens it", () => {
     const humanMage = { ...human, level: 2, levels: [...human.levels!, { group: "magic" as const, points: {} }] };
     expect(check(humanMage, content, { startingLevel: 2 }).errors).toEqual([

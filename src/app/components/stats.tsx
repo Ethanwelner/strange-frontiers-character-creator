@@ -1,7 +1,7 @@
 import { useRef, type ReactNode } from "react";
 import type { StatGroup } from "../../engine/build.js";
 import { MP_PER_MAGIC, type BuildResult } from "../../engine/validate.js";
-import { STAT_GROUPS, type StatId } from "../../schema/index.js";
+import { SPECIAL_STAT_CAP, STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { Button } from "./Button.js";
 import { coreStatsShown } from "../check.js";
 import { content } from "../content.js";
@@ -105,13 +105,15 @@ export function StatBar({ bonus, value, max }: { bonus: number; value: number; m
   );
 }
 
-// Magic's bar: a diamond per point, any bonus first. No Kind sets a Magic
-// maximum, so every slot past the points is open.
+// Magic's bar: a diamond per point, any bonus first. A Special Stat takes
+// no more than 10 points, so it has 10 slots, more only when a bonus (a
+// package's, like the Licensed Mage's) takes it past 10. No Kind sets a
+// Magic maximum, so every slot past the points is open.
 export function CoreBar({ bonus = 0, value }: { bonus?: number; value: number }) {
   const from = useAddedFrom(value);
   return (
     <div className="sf-stat-line" aria-hidden="true">
-      {Array.from({ length: STAT_SLOTS }, (_, n) => (
+      {Array.from({ length: Math.min(STAT_SLOTS, Math.max(SPECIAL_STAT_CAP, value)) }, (_, n) => (
         <span key={n} className={`sf-stat-slot sf-stat-slot--diamond is-${n < bonus ? "bonus" : n < value ? `filled${n >= from ? " is-new" : ""}` : "empty"}`} />
       ))}
     </div>
