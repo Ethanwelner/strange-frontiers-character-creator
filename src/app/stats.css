@@ -170,9 +170,13 @@
 }
 
 /* Magic's points: diamonds, each two of the bar's 20 columns wide, so a
-   Special Stat's 10 fill the same width as a focus stat's 20 slots */
+   Special Stat's 10 fill the same width as a focus stat's 20 slots. 4px
+   narrower than their cells, centered, twice the bar's gap shows between
+   them. */
 .sf-stat-slot--diamond {
     grid-column: span 2;
+    justify-self: center;
+    width: calc(100% - 4px);
     border-radius: 2px;
     transform: rotate(45deg) scale(.72);
 }
