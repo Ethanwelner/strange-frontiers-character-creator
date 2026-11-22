@@ -1,0 +1,12 @@
+id: reagent-substitution
+name: "Reagent Substitution"
+status: draft
+plane: any
+summary: "Knows which reagents can stand in for one another."
+tags: [magic, crafting, reagents]
+backgroundKeywords: [craft, magic]
+category: skill
+minStats: { magic: 3, logic: 3 }
+prerequisites: [alchemy]
+list: magic
+effect: "When making an Artifact, Enchantment or Potion, this character may spend extra MP to replace one required reagent with another of the same rarity and equal or greater value: 1 MP for a common reagent, 2 for an uncommon one, or 4 for a rare one. This can be done once per Item."
