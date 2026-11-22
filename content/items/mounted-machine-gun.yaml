@@ -2,7 +2,8 @@ id: mounted-machine-gun
 name: "Mounted Machine Gun"
 status: draft
 plane: earth
-summary: "A heavy automatic gun on a turret in the frame's body. It can't be taken off or disarmed."
+summary: "A heavy automatic gun on a turret in the frame's body."
+effect: "It can't be taken off or disarmed."
 tags: [ranged, firearm, built-in, chassis, automatic]
 type: weapon
 category: weapon
