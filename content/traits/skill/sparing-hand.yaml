@@ -1,0 +1,12 @@
+id: sparing-hand
+name: "Sparing Hand"
+status: draft
+plane: any
+summary: "Wastes nothing; every shaving of a reagent goes into the work."
+tags: [magic, crafting, reagents]
+backgroundKeywords: [craft, magic]
+category: skill
+minStats: { magic: 3, grace: 3, memory: 3 }
+prerequisites: [reagent-preparation]
+list: magic
+effect: "When making an Artifact, Enchantment or Potion, each reagent its Cast effects require is needed in 1 fewer quantity, to a minimum of 1."

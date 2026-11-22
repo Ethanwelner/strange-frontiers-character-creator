@@ -1,0 +1,13 @@
+id: master-of-reagents
+name: "Master of Reagents"
+status: draft
+plane: any
+summary: "Coaxes a working from less than anyone thought it needed."
+tags: [magic, crafting, reagents, expert]
+backgroundKeywords: [craft, magic]
+category: skill
+mastery: true
+minStats: { magic: 5, grace: 5, memory: 5 }
+prerequisites: [sparing-hand]
+list: magic
+effect: "Once per Item this character makes, one common reagent it requires isn't consumed."

@@ -1,0 +1,12 @@
+id: wellspring-crafting
+name: "Wellspring Crafting"
+status: draft
+plane: any
+summary: "Draws on the ambient magic of the reagents themselves."
+tags: [magic, crafting, mana]
+backgroundKeywords: [craft, magic]
+category: skill
+minStats: { magic: 4, intuition: 3 }
+prerequisites: [enchanting]
+list: magic
+effect: "When making an Artifact, Enchantment or Potion, 5 MP counts toward the MP the making requires without this character spending it. For an Enchantment, any of that MP left over goes into the Item's MP store."
