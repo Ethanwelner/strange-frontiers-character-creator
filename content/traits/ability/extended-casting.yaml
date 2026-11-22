@@ -1,0 +1,12 @@
+id: extended-casting
+name: "Extended Casting"
+status: draft
+plane: any
+summary: "Holds a spell together long after it should fade."
+tags: [magic, metamagic, duration]
+backgroundKeywords: [magic]
+category: ability
+ranked: true
+minStats: { magic: 3, memory: 3 }
+list: magic
+effect: "When this character uses a Cast: Action with a set duration, like Darkness or Lighten, they may spend up to 1 extra MP per Rank. For each extra MP spent, the duration increases by its normal length."

@@ -1,0 +1,13 @@
+id: searing-focus
+name: "Searing Focus"
+status: draft
+plane: any
+summary: "Feeds a spell's fire until it burns hotter."
+tags: [magic, metamagic, damage, fire]
+backgroundKeywords: [magic]
+category: ability
+ranked: true
+minStats: { magic: 4 }
+prerequisites: [empower-spell]
+list: magic
+effect: "When this character uses a Cast: Action that makes an Attack dealing Heat damage, they may spend up to 1 extra MP per Rank. On a hit, the spell deals +3 Heat damage for each extra MP spent."

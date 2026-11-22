@@ -1,0 +1,13 @@
+id: static-focus
+name: "Static Focus"
+status: draft
+plane: any
+summary: "Floods a spell with static that drowns out machines and magic."
+tags: [magic, metamagic, damage, emp]
+backgroundKeywords: [magic]
+category: ability
+ranked: true
+minStats: { magic: 4 }
+prerequisites: [empower-spell]
+list: magic
+effect: "When this character uses a Cast: Action that makes an Attack dealing EMP damage, they may spend up to 1 extra MP per Rank. On a hit, the spell deals +3 EMP damage for each extra MP spent."

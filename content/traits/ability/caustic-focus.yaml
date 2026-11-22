@@ -1,0 +1,13 @@
+id: caustic-focus
+name: "Caustic Focus"
+status: draft
+plane: any
+summary: "Thickens a spell's acid until it eats deeper."
+tags: [magic, metamagic, damage, acid, corrosion]
+backgroundKeywords: [magic]
+category: ability
+ranked: true
+minStats: { magic: 4 }
+prerequisites: [empower-spell]
+list: magic
+effect: "When this character uses a Cast: Action that makes an Attack dealing Corrosive damage, they may spend up to 1 extra MP per Rank. On a hit, the spell deals +3 Corrosive damage for each extra MP spent."
