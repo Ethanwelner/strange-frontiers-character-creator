@@ -178,7 +178,7 @@
     justify-self: center;
     width: calc(100% - 4px);
     border-radius: 2px;
-    transform: rotate(45deg) scale(.72);
+    transform: rotate(45deg) scale(.62);
 }
 
 .sf-stat-slot.is-bonus {
