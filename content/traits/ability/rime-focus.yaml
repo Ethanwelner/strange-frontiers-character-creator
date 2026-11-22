@@ -7,7 +7,7 @@ tags: [magic, metamagic, damage, ice, cold]
 backgroundKeywords: [magic]
 category: ability
 ranked: true
-minStats: { magic: 4 }
+minStats: { magic: 4, demeanor: 3 }
 prerequisites: [empower-spell]
 list: magic
 effect: "When this character uses a Cast: Action that makes an Attack dealing Cold damage, they may spend up to 1 extra MP per Rank. On a hit, the spell deals +3 Cold damage for each extra MP spent."
