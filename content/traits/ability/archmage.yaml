@@ -7,7 +7,7 @@ tags: [magic, metamagic, expert]
 backgroundKeywords: [magic]
 category: ability
 mastery: true
-minStats: { magic: 12, intuition: 8 }
+minStats: { magic: 10, intuition: 8 }
 prerequisites: [master-mage]
 # On the Magic list: its own tab on the Traits step, open to every character.
 list: magic

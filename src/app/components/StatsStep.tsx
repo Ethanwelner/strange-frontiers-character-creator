@@ -1,6 +1,6 @@
 import type { StatGroup } from "../../engine/build.js";
 import { bonusPointsOf, MP_PER_MAGIC, FOCUS_POINTS_PER_LEVEL as POINTS_PER_LEVEL } from "../../engine/validate.js";
-import { STAT_GROUPS, type StatId } from "../../schema/index.js";
+import { SPECIAL_STAT_CAP, STAT_GROUPS, type StatId } from "../../schema/index.js";
 import { coreAccessFor, coreStatsShown } from "../check.js";
 import { content, kindById, packageById } from "../content.js";
 import { withCore, type Draft } from "../draft.js";
@@ -103,18 +103,25 @@ export function StatsStep({ draft, onChange, floor, traitBonus = {} }: Props) {
     const core = draft.core[g];
     const take = { onClick: () => takeCore(g), disabled: core <= coreFloor(g) };
     if (!STAT_GROUPS[g].length) {
-      // Magic: each point adds MP, so its count is its MP
-      const canLevel = coreLeft > 0 && open.includes(g);
+      // Magic: each point adds MP, so its count is its MP. A Special Stat
+      // takes no more than 10 points.
+      const full = core >= SPECIAL_STAT_CAP;
+      const canLevel = coreLeft > 0 && open.includes(g) && !full;
       const total = core + extraOf(g);
       return {
         take,
         put: {
           onClick: () => onChange(withCore(draft, g, core + 1)),
           disabled: !canLevel,
-          title: coreLeft > 0 && !open.includes(g) ? `This character can't Level ${title(g)}` : undefined,
+          title:
+            coreLeft > 0 && !open.includes(g)
+              ? `This character can't Level ${title(g)}`
+              : full
+                ? `No more than ${SPECIAL_STAT_CAP} points can go to ${title(g)}`
+                : undefined,
         },
         count: { text: `${MP_PER_MAGIC * total} MP`, tone: total === 0 ? ("muted" as const) : ("mp" as const) },
-        locked: core === 0 && !canLevel,
+        locked: core === 0 && !canLevel && !full,
         hint: !open.includes(g) ? `This character can't Level ${title(g)}; take these points back.` : undefined,
       };
     }

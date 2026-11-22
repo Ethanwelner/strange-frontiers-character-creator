@@ -27,6 +27,11 @@ export type Resources = z.infer<typeof Resources>;
 // Focus stats can't be raised above 20 without Traits or equipment.
 export const STAT_CAP = 20;
 
+// Special Stats (the core stats beyond Physical, Social and Mental, like
+// Magic) take no more than 10 points, so they stay a side to a character
+// rather than a fourth full stat. Traits and packages can add past it.
+export const SPECIAL_STAT_CAP = 10;
+
 export const Id = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "must be kebab-case");
 
 export const Status = z.enum(["placeholder", "draft", "final"]);
