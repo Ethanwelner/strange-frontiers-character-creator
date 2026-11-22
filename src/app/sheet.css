@@ -165,10 +165,10 @@
     display: flex;
 }
 
-/* From 1200px to 1399px the site's column runs nearly to the page's edges,
-   so the blob comes in off the corner, its left edge 12px inside the
-   sheet's */
-@media (min-width: 1200px) and (max-width: 1399.98px) {
+/* Below 1400px the site's column runs nearly to the page's edges, so the
+   blob comes in off the corner, its left edge 12px inside the sheet's, and
+   stays in at every narrower width */
+@media (max-width: 1399.98px) {
     .sf-sheet-level {
         left: 11px;
     }
@@ -178,11 +178,11 @@
     }
 }
 
-/* Narrower screens: a 56px blob, further in */
+/* Narrower screens: a 56px blob, still 12px inside the sheet's left edge */
 @media (max-width: 991px) {
     .sf-sheet-level {
         top: -24px;
-        left: -8px;
+        left: 11px;
         width: 56px;
         height: 56px;
     }
@@ -197,14 +197,14 @@
 
     .sf-sheet-corner {
         top: -24px;
-        left: calc(-8px + 56px - 14px);
+        left: calc(11px + 56px - 14px);
     }
 }
 
 /* A sheet in a popup (the Game Master's view of a player's) is drawn as on a
-   small screen, whatever the screen: the 56px blob, inside the popup's
-   padding so the scrolling panel doesn't cut it off, the boxes' tighter
-   padding and gaps, and the head's columns stacked. */
+   small screen, whatever the screen: the 56px blob, 12px inside the
+   sheet's left edge, the boxes' tighter padding and gaps, and the head's
+   columns stacked. */
 .sf-popup .sf-sheet {
     --sheet-gap: 16px;
     --sheet-box-pad: 1rem;
@@ -213,7 +213,7 @@
 
     .sf-sheet-level {
         top: -24px;
-        left: -8px;
+        left: 11px;
         width: 56px;
         height: 56px;
     }
@@ -232,18 +232,6 @@
 
     .sf-sheet-main {
         flex-basis: 10rem;
-    }
-}
-
-/* On phones the sheet reaches within a few px of the screen's edge, so the
-   blob comes in to stay on screen */
-@media (max-width: 767px) {
-    .sf-sheet-level {
-        left: -3px;
-    }
-
-    .sf-sheet-corner {
-        left: calc(-3px + 56px - 14px);
     }
 }
 
