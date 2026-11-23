@@ -1,5 +1,5 @@
 /* The creator's own styles. Everything it shares with the Strange Frontiers
-   site comes from the site's CSS (portfolio_site css/: bootstrap, tokens,
+   site comes from the site's CSS (strange-frontiers-site css/: bootstrap, tokens,
    portfolio-nested, portfolio-media-queries, rpg, rpg-night), which creator.php
    loads on the site and vite.config.ts links in development: the colors
    (--portfolio-*, --frontiers-*), fonts, .container and flex columns, .title,

@@ -6,7 +6,7 @@
 
      strange-frontiers-character-creator  src/app/stats.css (this file)
                                           src/app/components/stats.tsx
-     portfolio_site                       css/sf-stats.css (a copy)
+     strange-frontiers-site               css/sf-stats.css (a copy)
                                           php/rpg/components/stats.php
 
    Both copies must stay identical: change it in the creator, then copy it

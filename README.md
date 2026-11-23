@@ -6,7 +6,7 @@ Early work in progress. See [docs/PLAN.md](docs/PLAN.md) for the roadmap and [do
 
 ## Setup
 
-Needs Node 24 or newer (`.nvmrc` pins it, so `nvm use` picks it up), and the [portfolio_site](https://github.com/Ethanwelner/portfolio_site) repo checked out beside this one: the builder wears the Strange Frontiers site's CSS, and `npm run dev` serves it from there (set `SF_SITE_DIR` in `.env` if the site lives elsewhere).
+Needs Node 24 or newer (`.nvmrc` pins it, so `nvm use` picks it up), and the [strange-frontiers-site](https://github.com/Ethanwelner/strange-frontiers-site) repo (private) checked out beside this one: the builder wears the Strange Frontiers site's CSS, and `npm run dev` serves it from there (set `SF_SITE_DIR` in `.env` if the site lives elsewhere).
 
 ```bash
 nvm use
@@ -66,7 +66,7 @@ npm run dev      # http://localhost:5173
 npm run build    # static site in dist/; Build it calls creator-api.php next to the page
 ```
 
-**Publishing to the site:** `npm run build:site` builds the builder and Game Tools into `../portfolio_site/creator/` (or `SF_SITE_DIR`), replacing what's there. It writes just the scripts, the stylesheets and `.vite/manifest.json`, which `creator.php` and `game-tools.php` read. Commit `creator/` in the site's repo and merge, and the site's deploy publishes it. Content and code changes reach the site only this way.
+**Publishing to the site:** `npm run build:site` builds the builder and Game Tools into `../strange-frontiers-site/creator/` (or `SF_SITE_DIR`), replacing what's there. It writes just the scripts, the stylesheets and `.vite/manifest.json`, which `creator.php` and `game-tools.php` read. Commit `creator/` in the site's repo and merge, and the site's deploy publishes it. Content and code changes reach the site only this way.
 
 - Every legality check comes from `validateBuild`. The Trait picker tries each pick against the engine, greys out the ones it would reject, and shows the engine's reason.
 - The in-progress build is saved in the browser's localStorage. **Export** downloads it as a `Build` JSON file and **Import** loads one back; an imported build's level becomes the campaign's starting level.

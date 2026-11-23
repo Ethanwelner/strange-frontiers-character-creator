@@ -1,5 +1,5 @@
 // Combat simulator: runs a party against monsters and NPCs under the Incidents
-// rules (portfolio_site php/rpg/rpg-incidents.php) many times and reports how
+// rules (strange-frontiers-site php/rpg/rpg-incidents.php) many times and reports how
 // the fights go, so the combat system's numbers can be checked.
 //
 //   npm run sim                         every scenario, 2,000 fights each
