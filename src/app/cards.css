@@ -859,7 +859,7 @@
     position: relative;
     container: item / inline-size;
     width: 100%;
-    padding: 12px 12px 12px 22px;
+    padding: 12px;
     background-color: var(--card-bg);
     border: 1px solid var(--sf-olive-600);
     border-radius: 12px;
@@ -871,6 +871,12 @@
     @supports (corner-shape: scoop) {
         border-radius: 6px;
         corner-shape: scoop;
+    }
+
+    /* With a count, 10px more on the left, clear of its circle on the
+       card's edge; without one, even on both sides */
+    &:has(> .sf-item-count) {
+        padding-left: 22px;
     }
 
     /* Its fields in a darker olive to match */
@@ -971,6 +977,13 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     font-weight: 600;
+
+    /* The Rank it was made at, in a Trait card's square (.sf-card-rank),
+       before the name with a Trait card's gap */
+    > .sf-card-rank {
+        margin-right: .45em;
+        vertical-align: .1em;
+    }
 }
 
 /* How many (count), in a circle on the card's left edge, a set distance
@@ -991,6 +1004,12 @@
     font-size: .8125rem;
     font-weight: 600;
     line-height: 1;
+}
+
+/* Without Equip, the top line is a name or badge tall (24px) instead of
+   Equip's 30px, so the count sits higher to stay centered on it */
+.sf-item-card:not(:has(.sf-item-equip)) > .sf-item-count {
+    top: 11px;
 }
 
 /* Equip (equip): an 18px box in the fields' dark olive, filling pale olive
