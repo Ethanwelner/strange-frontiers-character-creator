@@ -1262,13 +1262,15 @@
   .panel {
     --rule: rgb(255 255 255 / 18%);
     position: sticky;
-    top: 1rem;
+    /* 1rem below the window's top, or below the site's pinned header while it
+       shows (--sf-topbar-clear, set by the site's php/rpg/top-bar.php) */
+    top: calc(1rem + var(--sf-topbar-clear, 0px));
     color: var(--panel-text);
     background: var(--panel);
     border: 1px solid rgb(255 255 255 / 15%);
     border-radius: 16px;
     box-shadow: 0 4px 10px #00000030;
-    max-height: calc(100vh - 2rem);
+    max-height: calc(100vh - 2rem - var(--sf-topbar-clear, 0px));
     overflow-y: auto;
 
     h4 {
