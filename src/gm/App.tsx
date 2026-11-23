@@ -241,10 +241,7 @@ export function GmApp() {
         <div className="container d-flex builder-row">
           <div className="builder-main hero-main">
             <div className="builder-statement">
-              <h1 className="title hero-title frontiers-accent frontiers-glitch" data-text="Strange Frontiers">
-                Strange Frontiers
-              </h1>
-              <p className="title section-title">Game Master Tools</p>
+              <h1 className="title section-title">Game Master Tools</h1>
             </div>
           </div>
         </div>

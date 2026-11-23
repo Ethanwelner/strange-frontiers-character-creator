@@ -224,7 +224,8 @@
      scrolls on its own: the conversation takes the column's leftover
      height and scrolls inside.
 
-     The column is always the window's height less 16px above and below, so
+     The column is always the window's height less 16px above and below (and
+     less the site's pinned header while it shows, --sf-topbar-clear), so
      nothing in it is laid out again as the page scrolls. Before it sticks,
      its bottom is below the window, so the conversation, any error and the
      message box slide up by that much, ending 16px above the bottom of the
@@ -238,18 +239,20 @@
      column. */
   .tools-body {
     view-timeline: --tools-body block;
-    view-timeline-inset: 16px;
+    /* 16px, and below the site's pinned header while it shows (--sf-topbar-clear,
+       set by the site's php/rpg/top-bar.php; 0 when it isn't pinned) */
+    view-timeline-inset: calc(16px + var(--sf-topbar-clear, 0px)) 16px;
   }
 
   .tools-chat-side {
     grid-column: 2;
     grid-row: 1;
     position: sticky;
-    top: 16px;
+    top: calc(16px + var(--sf-topbar-clear, 0px));
     align-self: start;
     display: flex;
     flex-direction: column;
-    height: calc(100dvh - 32px);
+    height: calc(100dvh - 32px - var(--sf-topbar-clear, 0px));
     /* What slides past the column's edges is hidden, and its rounded
        corners clip the conversation sliding up under the d20's */
     border-radius: 16px;
@@ -869,7 +872,7 @@
    (.tools-chat-side) */
 @keyframes tools-side-lift {
   from {
-    transform: translateY(calc(32px - 100dvh));
+    transform: translateY(calc(32px + var(--sf-topbar-clear, 0px) - 100dvh));
   }
   to {
     transform: none;
@@ -881,7 +884,7 @@
     transform: none;
   }
   to {
-    transform: translateY(calc(100dvh - 32px));
+    transform: translateY(calc(100dvh - 32px - var(--sf-topbar-clear, 0px)));
   }
 }
 
@@ -918,7 +921,7 @@
    plus its own padding (.tools-chat-box) */
 @keyframes tools-chat-uncover {
   from {
-    padding-top: calc(var(--chat-pad-top) + 100dvh - 32px);
+    padding-top: calc(var(--chat-pad-top) + 100dvh - 32px - var(--sf-topbar-clear, 0px));
   }
   to {
     padding-top: var(--chat-pad-top);
@@ -933,7 +936,7 @@
     clip-path: inset(0);
   }
   to {
-    clip-path: inset(calc(100dvh - 32px) 0 0 0);
+    clip-path: inset(calc(100dvh - 32px - var(--sf-topbar-clear, 0px)) 0 0 0);
   }
 }
 
@@ -942,6 +945,6 @@
     margin-top: 0;
   }
   to {
-    margin-top: calc(100dvh - 32px);
+    margin-top: calc(100dvh - 32px - var(--sf-topbar-clear, 0px));
   }
 }
