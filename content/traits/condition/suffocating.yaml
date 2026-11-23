@@ -1,0 +1,11 @@
+id: suffocating
+name: "Suffocating"
+status: draft
+plane: any
+summary: "Unable to breathe."
+tags: [environment, hazard]
+category: condition
+ranked: true
+conveyed: true
+temporary: "This character loses all Ranks of Suffocating immediately when it takes a breath."
+effect: "This character gains 1 Rank of Suffocating at the start of every Round it can’t breathe. From Rank 6, it takes Unresistable damage equal to its Ranks at the end of every Round."

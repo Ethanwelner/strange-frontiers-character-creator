@@ -1,0 +1,9 @@
+id: hovering
+name: "Hovering"
+status: draft
+plane: any
+summary: "Floating free of the ground."
+tags: [movement, environment]
+category: condition
+conveyed: true
+effect: "This character floats free of the ground. Without the Flight Condition, it can move only by crawling along surfaces or pushing off from them."
