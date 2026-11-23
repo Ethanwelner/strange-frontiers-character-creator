@@ -6,7 +6,7 @@
 
      strange-frontiers-character-creator  src/app/buttons.css (this file)
                                           src/app/components/Button.tsx
-     portfolio_site                       css/sf-buttons.css (a copy)
+     strange-frontiers-site               css/sf-buttons.css (a copy)
                                           php/rpg/components/buttons.php
 
    Both copies must stay identical: change it in the creator, then copy it

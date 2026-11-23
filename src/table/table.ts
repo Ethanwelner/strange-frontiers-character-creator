@@ -1,5 +1,5 @@
 // Game Master tables, shared by Player Tools and the Game Master tools. A table
-// lives on the site (game-table-api.php in portfolio_site, php/rpg/game-table.php),
+// lives on the site (game-table-api.php in strange-frontiers-site, php/rpg/game-table.php),
 // reached at __SF_AI__.tableEndpoint: the site's PHP server in development,
 // through Vite's proxy.
 //

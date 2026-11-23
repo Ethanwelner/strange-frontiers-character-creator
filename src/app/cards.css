@@ -6,7 +6,7 @@
 
      strange-frontiers-character-creator  src/app/cards.css (this file)
                                           src/app/components/cards.tsx
-     portfolio_site                       css/sf-cards.css (a copy)
+     strange-frontiers-site               css/sf-cards.css (a copy)
                                           php/rpg/components/cards.php
 
    Both copies must stay identical: change it in the creator, then copy it

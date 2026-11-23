@@ -18,7 +18,7 @@ const TYPES: Record<string, string> = {
 };
 
 // In development the creator wears the Strange Frontiers site's real CSS,
-// served as is from the portfolio_site repo beside this one, and linked ahead
+// served as is from the strange-frontiers-site repo beside this one, and linked ahead
 // of the creator's own styles, as on creator.php. A build leaves it out: the
 // site's page already loads it.
 function siteCss(siteDir: string): Plugin {
@@ -42,7 +42,7 @@ export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
   const dev = command === "serve";
   // SF_SITE_DIR in .env points at the site's repo if it isn't beside this one.
-  const siteDir = resolve(env.SF_SITE_DIR || "../portfolio_site");
+  const siteDir = resolve(env.SF_SITE_DIR || "../strange-frontiers-site");
   // How Build it reaches a model, read in src/app/components/DescribeBox.tsx.
   // Claude runs the loop in the browser and sends each turn to `endpoint`:
   // the local AI server in development, the website's PHP proxy
