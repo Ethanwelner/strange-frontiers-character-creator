@@ -80,8 +80,23 @@ export function Popup({
       opener?.focus();
     };
   }, []);
+  // A click on the dimmed page closes it, but only one that started there too:
+  // a drag from a field (selecting its text) can end outside the panel
+  const pressedOutside = useRef(false);
   return (
-    <div className={popupClass({ tone, size, card, scroll }, className)} role="dialog" aria-modal="true" aria-label={label} onClick={(e) => e.target === e.currentTarget && onClose()}>
+    <div
+      className={popupClass({ tone, size, card, scroll }, className)}
+      role="dialog"
+      aria-modal="true"
+      aria-label={label}
+      onPointerDown={(e) => {
+        pressedOutside.current = e.target === e.currentTarget;
+      }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget && pressedOutside.current) onClose();
+        pressedOutside.current = false;
+      }}
+    >
       <div className="sf-popup-panel">
         <Button ref={close} round="lg" tone={tone === "dark" ? "light" : "dark"} className="sf-popup-close" aria-label="Close" onClick={onClose}>
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true">
