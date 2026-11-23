@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent } f
 import { Popup } from "../app/components/popup.js";
 import { endpointCreate } from "../ai/remote.js";
 import { content, contentErrors } from "../app/content.js";
-import { slug, toBuild, type Draft } from "../app/draft.js";
+import { fromBuild, slug, toBuild, type Draft } from "../app/draft.js";
 import { Icon, Notice } from "../app/components/ui.js";
 import { describe } from "../app/check.js";
 import { checkPlay, creatorDraft, load, playBuild, pointsToPlace, save, startPlay, withGmChange, withStartingCash, type Play } from "./play.js";
@@ -14,24 +14,50 @@ import { showCode } from "../table/table.js";
 import { useSeat } from "./seat.js";
 
 // The character the Character Creator's Load Into Player Tools button sent
-// (tools page?from=creator), read from the creator's saved data.
-const sentFromCreator = () => (new URLSearchParams(location.search).get("from") === "creator" ? creatorDraft() : undefined);
+// (tools page?from=creator), read from the creator's saved data, or the file
+// the site header's Upload Character opened (?from=upload), which it leaves
+// in session storage.
+const UPLOAD_KEY = "sf-upload:v1";
+type Sent = { draft: Draft; from: string };
+function sentCharacter(): Sent | undefined {
+  const from = new URLSearchParams(location.search).get("from");
+  if (from === "creator") {
+    const draft = creatorDraft();
+    return draft && { draft, from: "the Character Creator" };
+  }
+  if (from === "upload") {
+    try {
+      const raw = sessionStorage.getItem(UPLOAD_KEY);
+      if (!raw) return undefined;
+      const saved = JSON.parse(raw) as { file?: unknown; build?: unknown };
+      return { draft: fromBuild(saved.build), from: typeof saved.file === "string" && saved.file ? saved.file : "the uploaded file" };
+    } catch {
+      return undefined;
+    }
+  }
+  return undefined;
+}
 const playOf = (draft: Draft) => withStartingCash(startPlay(toBuild(draft)), content);
 
 export function ToolsApp() {
   // A character sent from the creator comes straight in when Player Tools is
   // empty, and asks first when it would replace the one here.
-  const [sent] = useState(sentFromCreator);
-  const [play, setPlay] = useState<Play | undefined>(() => load() ?? (sent && playOf(sent)));
-  const [incoming, setIncoming] = useState<Draft | undefined>(() => (sent && load() ? sent : undefined));
+  const [sent] = useState(sentCharacter);
+  const [play, setPlay] = useState<Play | undefined>(() => load() ?? (sent && playOf(sent.draft)));
+  const [incoming, setIncoming] = useState<Sent | undefined>(() => (sent && load() ? sent : undefined));
   const closeIncoming = useCallback(() => setIncoming(undefined), []);
   // A passing notice fades on its own; an error stays.
   const [notice, setNotice] = useState<{ text: string; fades?: boolean } | undefined>(() =>
-    sent && !load() ? { text: `Brought in ${sent.name || "the character"} from the Character Creator.`, fades: true } : undefined,
+    sent && !load() ? { text: `Brought in ${sent.draft.name || "the character"} from ${sent.from}.`, fades: true } : undefined,
   );
   // The request is used up: a reload doesn't send the character again.
   useEffect(() => {
     if (location.search) history.replaceState(history.state, "", location.pathname + location.hash);
+    try {
+      sessionStorage.removeItem(UPLOAD_KEY);
+    } catch {
+      // Nothing to clear.
+    }
   }, []);
   // Switching characters asks in a popup; native confirm() dialogs are blocked in some browsers.
   const [confirmingSwitch, setConfirmingSwitch] = useState(false);
@@ -255,20 +281,20 @@ export function ToolsApp() {
               {play && incoming && (
                 <Popup label="Bring in a character" title="Bring in a character" onClose={closeIncoming} size="narrow" className="tools-switch-popup">
                   <p>
-                    Replace {play.draft.name || "this character"} with {incoming.name || "the character"} from the Character Creator?{" "}
+                    Replace {play.draft.name || "this character"} with {incoming.draft.name || "the character"} from {incoming.from}?{" "}
                     {play.draft.name || "This character"}’s tracker, items and chat are cleared.
                   </p>
                   <div className="tools-switch-actions">
                     <Button
                       tone="dark"
                       onClick={() => {
-                        setPlay(playOf(incoming));
+                        setPlay(playOf(incoming.draft));
                         setLevelDraft(undefined);
                         setIncoming(undefined);
-                        setNotice({ text: `Brought in ${incoming.name || "the character"} from the Character Creator.`, fades: true });
+                        setNotice({ text: `Brought in ${incoming.draft.name || "the character"} from ${incoming.from}.`, fades: true });
                       }}
                     >
-                      Bring in {incoming.name || "the character"}
+                      Bring in {incoming.draft.name || "the character"}
                     </Button>
                     <Button onClick={closeIncoming}>Keep {play.draft.name || "this character"}</Button>
                   </div>
