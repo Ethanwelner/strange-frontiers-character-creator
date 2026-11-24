@@ -1,10 +1,27 @@
 /* The Game Master tools: the creator's and Player Tools' styles plus these,
    under .sf-gm. */
 .sf-gm {
+  /* Run a table, before there is one: like the creator's Start step, a block
+     centered on the page (rather than Player Tools' left gutter), its heading
+     and the name and button centered, its text left-aligned */
+  .tools-start {
+    margin-left: auto;
+    margin-right: auto;
+
+    @media (min-width: 1200px) {
+      margin-left: auto;
+    }
+
+    h2 {
+      text-align: center;
+    }
+  }
+
   /* Make a table: the name and the button on one line, wrapping on phones */
   .gm-make {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 12px;
     align-items: center;
     margin: 24px 0 12px;
