@@ -5,6 +5,7 @@ import { BackgroundStep } from "./components/BackgroundStep.js";
 import { CharacterStep } from "./components/CharacterStep.js";
 import { ChoicesStep } from "./components/ChoicesStep.js";
 import { DescribeBox } from "./components/DescribeBox.js";
+import { StartStep } from "./components/StartStep.js";
 import { StatsStep } from "./components/StatsStep.js";
 import { Sheet } from "./components/Sheet.js";
 import { TraitsStep } from "./components/TraitsStep.js";
@@ -15,6 +16,7 @@ import type { DescribeResult } from "../ai/types.js";
 import { clearSaved, EMPTY, fromBuild, load, save, slug, STEPS, toBuild, withLevel, type Draft, type Saved, type Step } from "./draft.js";
 
 const LABELS: Record<Step, string> = {
+  start: "Start",
   character: "Character",
   background: "Background",
   stats: "Stats",
@@ -43,12 +45,15 @@ export function App() {
   // until a Kind and all three packages are picked. Traits also wants every
   // pick spent, though banking them is legal. The Sheet is done once the build
   // is legal, banked picks and all.
+  const hasBuild = Boolean(draft.kind || draft.origin || draft.profession || draft.past || draft.traits.length);
   const done = useMemo(() => {
     const wrong = new Set(result.errors.map(stepOf));
     const picks = result.summary?.picks;
     const spent = Boolean(picks) && Object.values(picks!).every((p) => p.banked === 0);
     const picked = !wrong.has("character") && !wrong.has("background");
     const d: Partial<Record<Step, boolean>> = {
+      // Start is done once there's a build under way, made either way
+      start: hasBuild,
       character: !wrong.has("character"),
       background: !wrong.has("background"),
       stats: picked && !wrong.has("stats"),
@@ -57,7 +62,7 @@ export function App() {
     };
     d.sheet = Boolean(result.summary) && result.errors.length === 0;
     return d;
-  }, [result]);
+  }, [result, hasBuild]);
 
   // The current step's errors, shown beside the next step button.
   // Each once: two packages can both need a language
@@ -134,42 +139,14 @@ export function App() {
 
   return (
     <div className="sf-creator">
+      {/* The Sheet's Import opens this, on any step */}
+      <input ref={fileInput} type="file" accept="application/json,.json" hidden onChange={importBuild} />
       <header className="builder-hero">
         <div className="container d-flex builder-row">
           <div className="builder-main hero-main">
             <div className="builder-statement">
-              <h1 className="title section-title">Character Builder</h1>
+              <h1 className="title section-title">Character Creator</h1>
             </div>
-
-            <DescribeBox
-              draft={draft}
-              notes={saved.ai}
-              showNotes={justBuilt}
-              startingLevel={campaign.startingLevel}
-              hasBuild={Boolean(draft.kind || draft.origin || draft.profession || draft.past || draft.traits.length)}
-              onBuilt={applyDescribed}
-              actions={
-                <div className="hero-bar">
-                  {confirmingNew ? (
-                    <span className="hero-confirm">
-                      Clear this build?
-                      <Button tone="ghost" onClick={reset}>
-                        Yes
-                      </Button>
-                      <Button tone="ghost" onClick={() => setConfirmingNew(false)}>
-                        Cancel
-                      </Button>
-                    </span>
-                  ) : (
-                    <Button tone="ghost" onClick={() => setConfirmingNew(true)}>
-                      New
-                    </Button>
-                  )}
-                  <input ref={fileInput} type="file" accept="application/json,.json" hidden onChange={importBuild} />
-                </div>
-              }
-            />
-
             <nav className="builder-tabs rpg-tab-list" aria-label="Steps">
               {STEPS.map((s, n) => (
                 <button
@@ -188,10 +165,11 @@ export function App() {
       </header>
 
       {/* The character box on the left, the step beside it. The Sheet already
-          shows everything the box does, so it gets the full width. */}
+          shows everything the box does, and Start has nothing to check yet,
+          so both get the full width. */}
       <div className="section unlimited white-bg builder-panel">
-        <div className={`container builder-body${step === "sheet" ? " no-side" : ""}`}>
-          {step !== "sheet" && (
+        <div className={`container builder-body${step === "sheet" || step === "start" ? " no-side" : ""}`}>
+          {step !== "sheet" && step !== "start" && (
             <aside className="builder-side">
               <ValidationPanel draft={draft} result={result} onName={(name) => setDraft({ ...draft, name })} />
             </aside>
@@ -200,25 +178,27 @@ export function App() {
             <>
               {/* The previous and next steps, above the step's title, with what's
                   left to fix on this step to the left of the next one */}
-              <div className="pager">
-                {i > 0 ? <Button onClick={() => setStep(STEPS[i - 1]!)}><Arrow to="left" /> {LABELS[STEPS[i - 1]!]}</Button> : <span />}
-                <div className="pager-next">
-                  {stepErrors.length > 0 && (
-                    <ul className="issues bad step-issues">
-                      {stepErrors.map((e, n) => (
-                        <li key={n}>{e}</li>
-                      ))}
-                    </ul>
-                  )}
-                  {i < STEPS.length - 1 && (
-                    // The creator's green, faded until this step is finished, then
-                    // glitching; it works either way, so steps can be skipped
-                    <Button tone="primary" waiting={!done[step]} ready={done[step]} className="step-next" onClick={() => setStep(STEPS[i + 1]!)}>
-                      {LABELS[STEPS[i + 1]!]} <Arrow to="right" />
-                    </Button>
-                  )}
+              {step !== "start" && (
+                <div className="pager">
+                  {i > 0 ? <Button onClick={() => setStep(STEPS[i - 1]!)}><Arrow to="left" /> {LABELS[STEPS[i - 1]!]}</Button> : <span />}
+                  <div className="pager-next">
+                    {stepErrors.length > 0 && (
+                      <ul className="issues bad step-issues">
+                        {stepErrors.map((e, n) => (
+                          <li key={n}>{e}</li>
+                        ))}
+                      </ul>
+                    )}
+                    {i < STEPS.length - 1 && (
+                      // The creator's green, faded until this step is finished, then
+                      // glitching; it works either way, so steps can be skipped
+                      <Button tone="primary" waiting={!done[step]} ready={done[step]} className="step-next" onClick={() => setStep(STEPS[i + 1]!)}>
+                        {LABELS[STEPS[i + 1]!]} <Arrow to="right" />
+                      </Button>
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
               {contentErrors.length > 0 && (
                 <div className="notice bad">
                   Content failed to load: {contentErrors.join("; ")}
@@ -230,6 +210,40 @@ export function App() {
                 </Notice>
               )}
 
+              {step === "start" && (
+                <StartStep
+                  onManual={() => setStep("character")}
+                  describe={
+                    <DescribeBox
+                      draft={draft}
+                      notes={saved.ai}
+                      showNotes={justBuilt}
+                      startingLevel={campaign.startingLevel}
+                      hasBuild={hasBuild}
+                      onBuilt={applyDescribed}
+                      actions={
+                        <div className="hero-bar">
+                          {confirmingNew ? (
+                            <span className="hero-confirm">
+                              Clear this build?
+                              <Button tone="ghost" onClick={reset}>
+                                Yes
+                              </Button>
+                              <Button tone="ghost" onClick={() => setConfirmingNew(false)}>
+                                Cancel
+                              </Button>
+                            </span>
+                          ) : (
+                            <Button tone="ghost" onClick={() => setConfirmingNew(true)}>
+                              New
+                            </Button>
+                          )}
+                        </div>
+                      }
+                    />
+                  }
+                />
+              )}
               {step === "character" && (
                 <CharacterStep draft={draft} startingLevel={campaign.startingLevel} onChange={setDraft} onStartingLevel={setStartingLevel} />
               )}
