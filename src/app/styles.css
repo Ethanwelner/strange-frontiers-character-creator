@@ -190,22 +190,30 @@
 
   /* Hero: the site's black section with the green title */
 
-  /* At least 65vh or 768px tall, whichever is larger. The title
-     and describe box (with New beside Build it) are centered, and the tabs sit
-     at the bottom. On creator.php, --sf-creator-top clears the site's logo and
-     search, and --sf-creator-left moves the title and describe box beside the
-     site's page nav (both set in the site's css/rpg.css). */
+  /* Half the window or 480px tall, whichever is larger, with the page's title
+     centered between the site's header and the content, and (on the creator)
+     the step tabs along the bottom. --sf-creator-top is the site's header
+     height and --sf-creator-left any room kept on the left (both set in the
+     site's css/sf-top-nav.css). */
   .builder-hero {
     display: grid;
     /* One column the step tabs can scroll inside, instead of widening it */
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: 1fr;
-    min-height: max(50vh, 668px);
+    /* Half the window, at least 480px (Player Tools and the Game Master
+       Tools share it) */
+    min-height: max(50vh, 480px);
     color: var(--sf-gray-0);
+    /* It starts below the site's header (--sf-creator-top is the header's
+       height), so the title sits in the middle between the header and the
+       content below on every page. The creator's step tabs sit on the hero's
+       bottom edge without moving it (.builder-tabs). */
     padding-top: var(--sf-creator-top, 24px);
+    padding-bottom: 0;
   }
 
   .hero-main {
+    position: relative;
     flex: 1;
     /* The step tabs scroll inside it instead of widening the page */
     min-width: 0;
@@ -248,11 +256,12 @@
     color: var(--sf-gray-0);
   }
 
-  /* .title.hero-title.frontiers-accent over .title.section-title */
-  /* Auto margins above it and above the tabs center it and the describe box. */
+  /* The page's title, in the middle of the hero above the step tabs, only as
+     wide as its text, like Player Tools' and the Game Master Tools' (the auto
+     margins above it and above the tabs center it) */
   .builder-statement {
     margin-top: auto;
-    margin-bottom: 40px;
+    margin-bottom: auto;
     line-height: 1;
 
     > * {
@@ -261,13 +270,63 @@
     }
   }
 
+  .hero-main > .builder-statement {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Start: build from a description (the describe form, in a popup) or by hand.
+     The step has the full width; its content is a 760px block (the form's
+     width) centered on the page, its text left-aligned. */
+  .start-step {
+    max-width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Its heading and the two buttons sit in the middle of the block; the
+     paragraph stays left-aligned */
+  .start-step .step-head > h2 {
+    text-align: center;
+  }
+
+  .start-choices {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 12px 16px;
+  }
+
+  /* The "or" between them, in the step's soft text */
+  .start-or {
+    color: var(--sf-gray-200);
+  }
+
   /* Step tabs: the site's .rpg-tab bar along the bottom of the hero, sitting
      on the panel */
+  /* Pinned to the hero's bottom edge, so they don't move the title off the
+     middle */
   .builder-tabs {
-    margin-top: auto;
-    padding-top: 48px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
     overflow-x: auto;
     scrollbar-width: none;
+
+    /* Centered. Auto margins on the ends rather than justify-content, so on a
+       phone, where the tabs are wider than the screen, the first stays
+       reachable when they scroll. */
+    > :first-child {
+      margin-left: auto;
+    }
+
+    > :last-child {
+      margin-right: auto;
+    }
   }
 
   .rpg-tab {
@@ -527,6 +586,10 @@
     /* Card edges fade into the dark box instead of outlining it in light gray */
     --card-border: var(--sf-gray-400);
     position: relative;
+    /* At least half the window tall, so a short step (Start, the Game Master
+       Tools before a table) doesn't leave the footer riding up (the creator,
+       Player Tools and the Game Master Tools share it) */
+    min-height: 50vh;
     /* Clear of the site's .white-bg; the gray is the layer below */
     background: none;
     color: var(--panel-text);
@@ -2824,16 +2887,11 @@
   }
 
   @media (max-width: 575px) {
-    .builder-statement {
-      margin-bottom: 28px;
-    }
-
     h2 {
       font-size: 1.9rem;
     }
 
     .builder-tabs {
-      padding-top: 32px;
       gap: 0.35rem;
     }
 

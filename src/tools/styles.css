@@ -41,30 +41,11 @@
     }
   }
 
-  /* The title sits in the middle of the hero, above the tabs, like the
-     site's other heroes. The creator's leans low to make room for its
-     describe box. */
-  .builder-statement {
-    margin-top: auto;
-    margin-bottom: auto;
-  }
-
-  /* With no describe box under it, the title is only as wide as its text and
-     centered across the hero, like the site's other hero titles. */
-  .hero-main > .builder-statement {
-    width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
-  }
+  /* (The title's centering and size come from src/app/styles.css, which the
+     creator shares.) */
 
   .builder-tabs {
     margin-top: 0;
-  }
-
-  /* With no character there are no tabs, so the bottom matches the room
-     the top leaves for the site's nav. */
-  .builder-hero:not(:has(.builder-tabs)) {
-    padding-bottom: var(--sf-creator-top, 24px);
   }
 
   /* Level up, a green + (Cancel while leveling), round like the rules

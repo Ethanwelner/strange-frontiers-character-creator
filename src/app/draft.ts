@@ -61,7 +61,9 @@ export interface Draft {
   cash?: Record<string, number>;
 }
 
-export const STEPS = ["character", "background", "stats", "traits", "choices", "sheet"] as const;
+// Start picks how to build (from a description, or step by step); the rest are
+// the build's own steps.
+export const STEPS = ["start", "character", "background", "stats", "traits", "choices", "sheet"] as const;
 export type Step = (typeof STEPS)[number];
 
 // What the builder keeps from the last AI build, so the reasons survive a reload.
@@ -96,7 +98,7 @@ export const noCore = (): Record<StatGroup, number> => ({ physical: 0, social: 0
 export const EMPTY: Saved = {
   draft: { level: 3, core: noCore(), points: {}, traits: [], choices: [] },
   campaign: { startingLevel: 3 },
-  step: "character",
+  step: "start",
 };
 
 // The pool as level allocations: each core point becomes a level in its
@@ -280,7 +282,7 @@ export function load(): Saved {
     const startingLevel = saved.campaign?.startingLevel ?? draft.level;
     // The Stats step used to be called Levels.
     const savedStep = (saved.step as string) === "levels" ? "stats" : saved.step;
-    const step = STEPS.includes(savedStep as Step) ? (savedStep as Step) : "character";
+    const step = STEPS.includes(savedStep as Step) ? (savedStep as Step) : "start";
     const ai = saved.ai && Array.isArray(saved.ai.reasons) ? saved.ai : undefined;
     return { draft, campaign: { startingLevel }, step, ai };
   } catch {
